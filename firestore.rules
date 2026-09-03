@@ -1,0 +1,40 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function me() { return get(/databases/$(database)/documents/users/$(request.auth.uid)); }
+    function role() { return signedIn() && exists(/databases/$(database)/documents/users/$(request.auth.uid)) ? me().data.role : 'none'; }
+    function isOwner() { return role() == 'owner'; }
+    function isManager() { return role() == 'owner' || role() == 'manager'; }
+    function isStaff() { return isManager() || role() == 'staff'; }
+
+    // 직원 프로필: 본인은 읽기, 관리자는 읽기/쓰기. 첫 사장님은 본인 프로필을 직접 만들 수 있음 (settings.ownerUid 가 없을 때)
+    match /users/{uid} {
+      allow read: if isStaff() || request.auth.uid == uid;
+      allow create: if isManager() || (request.auth.uid == uid && !exists(/databases/$(database)/documents/settings/main));
+      allow update, delete: if isOwner() || (isManager() && resource.data.role != 'owner');
+    }
+    match /settings/{doc} {
+      allow read: if signedIn();
+      allow write: if isOwner() || !exists(/databases/$(database)/documents/settings/main);
+    }
+    // 출퇴근: 본인 기록 생성/수정, 관리자 전체 수정
+    match /attendance/{id} {
+      allow read: if isStaff();
+      allow create, update: if isManager() || (isStaff() && request.resource.data.uid == request.auth.uid);
+      allow delete: if isManager();
+    }
+    // 근무표·근무 템플릿·스케줄·체크리스트 템플릿·직원 관리: 관리자만 쓰기
+    match /shifts/{id} { allow read: if isStaff(); allow write: if isManager(); }
+    match /shiftTemplates/{id} { allow read: if isStaff(); allow write: if isManager(); }
+    match /schedule/{id} { allow read: if isStaff(); allow write: if isManager(); }
+    match /checklistTemplates/{id} { allow read: if isStaff(); allow write: if isManager(); }
+    match /stockConfig/{id} { allow read: if isStaff(); allow write: if isManager(); }
+    match /manual/{id} { allow read: if isStaff(); allow write: if isManager(); }
+    // 일일 기록: 직원 모두 쓰기
+    match /checklists/{id} { allow read, write: if isStaff(); }
+    match /cleaning/{id} { allow read, write: if isStaff(); }
+    match /stock/{id} { allow read, write: if isStaff(); }
+    match /logs/{id} { allow read, write: if isStaff(); }
+  }
+}
