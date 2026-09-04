@@ -81,22 +81,22 @@ async function home(){const d=today();const v=$('#view');const mgr=isMgr();
       +step('✅',`${DEFAULT_CHECKLISTS[sh].title} 체크리스트`,ck?`${dn}/${items.length} 완료`:'하면서 체크만 하면 끝',ck&&items.length&&dn===items.length,'열기','check')
       +step('📦','재고·발주 체크',state.st?`작성됨 (${state.st.updatedBy||''})`:'14~16시 · 어제 숫자에서 바뀐 것만',!!state.st,'열기','stock')
       +step('📝','일지',state.log?`작성됨 (${state.log.updatedBy||''})`:'마감 전 · 숫자 몇 개 + 메모',!!state.log,'열기','log')
-      +step('🔴','퇴근 찍기',a?.out?`${a.out} 퇴근 · ${hours(a.in,a.out)}시간`:'마감 보고 후 위 버튼',!!a?.out);
+      +step('🔴','퇴근 찍기',a?.out?`${a.out} 퇴근`:'마감 보고 후 위 버튼',!!a?.out);
     $$('[data-go]',box).forEach(b=>b.onclick=()=>go(b.dataset.go))};
   S.unsub.push(DB.watch('attendance',[['date','==',d]],rows=>{state.att=rows.find(r=>r.uid===S.me.id)||null;renderFlow()}));
   S.unsub.push(DB.watch('checklists',[['date','==',d]],rows=>{state.ck=rows;renderFlow();const box=$('#ckProg');if(!box)return;box.innerHTML=['open','mid','close'].map(k=>{const doc=rows.find(r=>r.shift===k);const items=(doc?.items||[]).filter(i=>i.type!=='h');const dn=items.filter(i=>i.done).length;const p=items.length?Math.round(dn/items.length*100):0;
       return `<div style="margin-bottom:8px"><div class="row" style="justify-content:space-between"><b>${DEFAULT_CHECKLISTS[k].title}</b><span class="tip">${doc?dn+'/'+items.length:'시작 전'}</span></div><div class="bar"><i style="width:${p}%"></i></div></div>`}).join('')}));
   S.unsub.push(DB.watch('logs',[['date','==',d]],rows=>{state.log=rows[0]||null;renderFlow()}));
   S.unsub.push(DB.watch('stock',[['date','==',d]],rows=>{state.st=rows[0]||null;renderFlow()}));
-  S.unsub.push(DB.watch('shifts',[['date','==',d]],rows=>{const box=$('#todayShifts');if(!box)return;const w=rows.filter(r=>!r.off).sort((a,b)=>(a.start||'').localeCompare(b.start||''));const off=rows.filter(r=>r.off);const mine=rows.find(r=>r.uid===S.me.id);
-    if($('#myShift'))$('#myShift').textContent=mine?(mine.off?'오늘 휴무':`내 근무 ${mine.start}~${mine.end}`):'';
-    box.innerHTML=(w.length?w.map(r=>`<div class="ev"><span class="dot" style="background:${colorOf(r.uid)}"></span><b>${esc(r.name)}</b><span class="tip">${esc(r.start||'')}~${esc(r.end||'')} ${esc(r.memo||'')}</span></div>`).join(''):'<p class="tip">등록된 근무가 없습니다.</p>')+(off.length?`<p class="tip" style="margin:6px 0 0">휴무: ${off.map(r=>esc(r.name)).join(', ')}</p>`:'')}));
+  S.unsub.push(DB.watch('shifts',[['date','==',d]],rows=>{const box=$('#todayShifts');if(!box)return;const w=rows.filter(r=>!r.off).sort((a,b)=>a.name.localeCompare(b.name));const off=rows.filter(r=>r.off);const mine=rows.find(r=>r.uid===S.me.id);
+    if($('#myShift'))$('#myShift').textContent=mine?(mine.off?'오늘 휴무':'오늘 근무'+(mine.memo?' · '+mine.memo:'')):'';
+    box.innerHTML=(w.length?w.map(r=>`<div class="ev"><span class="dot" style="background:${colorOf(r.uid)}"></span><b>${esc(r.name)}</b><span class="tip">${esc(r.memo||'')}</span></div>`).join(''):'<p class="tip">등록된 근무가 없습니다.</p>')+(off.length?`<p class="tip" style="margin:6px 0 0">휴무: ${off.map(r=>esc(r.name)).join(', ')}</p>`:'')}));
   const evs=(await DB.query('schedule',[['year','==',Number(d.slice(0,4))]])).concat(d.slice(5,7)==='12'?await DB.query('schedule',[['year','==',Number(d.slice(0,4))+1]]):[]).filter(e=>e.date>=d&&e.date<=addDays(d,14)).sort((a,b)=>a.date.localeCompare(b.date));
   $('#upcoming').innerHTML=evs.length?evs.slice(0,6).map(e=>`<div class="ev"><span class="dt">${e.date.slice(5)} (${dow(e.date)})</span><span>${SCHED_CATS[e.cat]?.slice(0,2)||''} ${esc(e.title)}</span></div>`).join(''):'<p class="tip">2주 내 일정이 없습니다.</p>';
 }
 /* 출근/퇴근 박스 (홈·출퇴근 공용) */
 async function renderAttBox(){const box=$('#attBox');if(!box)return;const d=today();const id=`${S.me.id}_${d}`;const a=await DB.get('attendance',id);
-  box.innerHTML=`<div class="row" style="margin-bottom:8px"><b>${esc(S.me.name)}</b>${a?.in?`<span class="tag green">출근 ${a.in}</span>`:''}${a?.out?`<span class="tag green">퇴근 ${a.out}</span>`:''}${a?.in&&a?.out?`<span class="tag">${hours(a.in,a.out)}시간</span>`:''}</div>
+  box.innerHTML=`<div class="row" style="margin-bottom:8px"><b>${esc(S.me.name)}</b>${a?.in?`<span class="tag green">출근 ${a.in}</span>`:''}${a?.out?`<span class="tag green">퇴근 ${a.out}</span>`:''}</div>
     <div class="att-btns"><button class="btn big sec" id="btnIn" ${a?.in?'disabled':''}>🟢 출근</button><button class="btn big pri" id="btnOut" ${!a?.in||a?.out?'disabled':''}>🔴 퇴근</button></div>`;
   $('#btnIn').onclick=async()=>{if(!confirm(`${nowHM()} 출근 처리할까요?`))return;await DB.set('attendance',id,{uid:S.me.id,name:S.me.name,date:d,month:d.slice(0,7),in:nowHM(),out:a?.out||'',memo:a?.memo||''});toast('출근 완료. 오늘도 힘내요!');renderAttBox()};
   $('#btnOut').onclick=async()=>{if(!confirm(`${nowHM()} 퇴근 처리할까요?`))return;await DB.update('attendance',id,{out:nowHM()});toast('퇴근 완료. 수고하셨습니다!');renderAttBox()};
@@ -105,32 +105,23 @@ async function renderAttBox(){const box=$('#attBox');if(!box)return;const d=toda
 /* ==================== 출퇴근 ==================== */
 async function attend(){const v=$('#view');const m=today().slice(0,7);
   v.innerHTML=`<div class="card"><h2>출퇴근</h2><div id="attBox"></div></div>
-    <div class="card"><h2>기록 <input type="month" id="attMonth" value="${m}" style="width:150px">${isMgr()?`<select id="attWho" style="width:150px"><option value="">전체</option>${S.roster.filter(u=>u.active!==false).map(u=>`<option value="${u.id}" ${u.id===S.me.id?'selected':''}>${esc(u.name)}</option>`).join('')}</select>`:''}<span class="sp"></span>${isMgr()?'<button class="btn sm" id="attCsv">CSV</button><button class="btn sm" id="attAdd">+ 수기 등록</button>':''}</h2>
-    <div id="attSum" class="kpi"></div><div class="wrap"><table><thead><tr><th>날짜</th><th>이름</th><th>출근</th><th>퇴근</th><th>시간</th><th>근무표</th><th>메모</th><th class="noprint"></th></tr></thead><tbody id="attRows"></tbody></table></div><div id="attCheck"></div></div>`;
+    <div class="card"><h2>기록 <input type="month" id="attMonth" value="${m}" style="width:150px">${isMgr()?`<select id="attWho" style="width:150px"><option value="">전체</option>${S.roster.filter(u=>u.active!==false).map(u=>`<option value="${u.id}">${esc(u.name)}</option>`).join('')}</select>`:''}<span class="sp"></span>${isMgr()?'<button class="btn sm" id="attCsv">CSV</button><button class="btn sm" id="attAdd">+ 수기 등록</button>':''}</h2>
+    <div class="wrap"><table><thead><tr><th>날짜</th><th>이름</th><th>출근</th><th>퇴근</th><th>메모</th><th class="noprint"></th></tr></thead><tbody id="attRows"></tbody></table></div></div>`;
   renderAttBox();
   const load=async()=>{const mm=$('#attMonth').value;const who=isMgr()?$('#attWho').value:S.me.id;
     let rows=await DB.query('attendance',[['month','==',mm]]);if(who)rows=rows.filter(r=>r.uid===who);rows.sort((a,b)=>b.date.localeCompare(a.date)||a.name.localeCompare(b.name));
-    const shifts=await DB.query('shifts',[['month','==',mm]]);
-    const per={};rows.forEach(r=>{const h=hours(r.in,r.out)||0;per[r.name]=(per[r.name]||0)+h});
-    $('#attSum').innerHTML=Object.entries(per).map(([n,h])=>`<div><span>${esc(n)}</span><b>${Math.round(h*10)/10}h</b></div>`).join('')+`<div><span>기록 수</span><b>${rows.length}</b></div>`;
-    // 점검용(관리자만, 작게): 예정보다 늦게 출근한 시간 · 예정보다 적게 근무한 시간
-    const diff=r=>{const s=shifts.find(x=>x.uid===r.uid&&x.date===r.date);if(!s||s.off||!r.in)return null;const late=Math.max(0,hm2min(r.in)-hm2min(s.start));const plan=hours(s.start,s.end)||0;const real=hours(r.in,r.out);const short=real==null?0:Math.max(0,Math.round((plan-real)*10)/10);return {s,late,short}};
-    const tiny=r=>{if(!isMgr())return '';const d=diff(r);if(!d||(d.late<=10&&d.short<0.5))return '';return `<span class="faint">${d.late>10?d.late+'분 늦음':''}${d.late>10&&d.short>=0.5?' · ':''}${d.short>=0.5?d.short+'h 적음':''}</span>`};
-    $('#attRows').innerHTML=rows.map(r=>{const s=shifts.find(x=>x.uid===r.uid&&x.date===r.date);
-      return `<tr><td>${r.date.slice(5)} (${dow(r.date)})</td><td>${esc(r.name)}</td><td>${esc(r.in||'')}</td><td>${esc(r.out||'')}</td><td class="num">${hours(r.in,r.out)??''}</td><td class="tip">${s?(s.off?'휴무':s.start+'~'+s.end):''}${tiny(r)}</td><td class="tip">${esc(r.memo||'')}</td><td class="noprint"><button class="btn sm" data-edit="${r.id}">${isMgr()||r.uid===S.me.id?'수정':''}</button></td></tr>`}).join('')||'<tr><td colspan="8" class="tip">기록이 없습니다.</td></tr>';
-    if(isMgr()){const tot={};rows.forEach(r=>{const d=diff(r);if(!d)return;const t=tot[r.name]||(tot[r.name]={late:0,short:0,n:0});t.late+=d.late;t.short+=d.short;if(d.late>10)t.n++});
-      $('#attCheck').innerHTML=Object.keys(tot).length?`<details class="tipd"><summary class="faint">점검용</summary><p class="faint">${Object.entries(tot).map(([n,t])=>`${n}: 늦게 출근 ${t.n}회 (${Math.round(t.late/6)/10}h) · 적게 근무 ${Math.round(t.short*10)/10}h`).join(' / ')}</p></details>`:''}
+    $('#attRows').innerHTML=rows.map(r=>`<tr><td>${r.date.slice(5)} (${dow(r.date)})</td><td>${esc(r.name)}</td><td>${esc(r.in||'')}</td><td>${esc(r.out||'')}</td><td class="tip">${esc(r.memo||'')}</td><td class="noprint"><button class="btn sm" data-edit="${r.id}">${isMgr()||r.uid===S.me.id?'메모':''}</button></td></tr>`).join('')||'<tr><td colspan="6" class="tip">기록이 없습니다.</td></tr>';
     $$('#attRows [data-edit]').forEach(b=>b.onclick=()=>editAtt(rows.find(r=>r.id===b.dataset.edit),load));
-    if($('#attCsv'))$('#attCsv').onclick=()=>{const q=s=>'"'+String(s??'').replace(/"/g,'""')+'"';dl('﻿'+['날짜,요일,이름,출근,퇴근,시간,메모',...rows.map(r=>[r.date,dow(r.date),r.name,r.in,r.out,hours(r.in,r.out)??'',r.memo].map(q).join(','))].join('\n'),`출퇴근_${mm}.csv`,'text/csv')}};
+    if($('#attCsv'))$('#attCsv').onclick=()=>{const q=s=>'"'+String(s??'').replace(/"/g,'""')+'"';dl('﻿'+['날짜,요일,이름,출근,퇴근,메모',...rows.map(r=>[r.date,dow(r.date),r.name,r.in,r.out,r.memo].map(q).join(','))].join('\n'),`출퇴근_${mm}.csv`,'text/csv')}};
   $('#attMonth').onchange=load;if($('#attWho'))$('#attWho').onchange=load;
   if($('#attAdd'))$('#attAdd').onclick=()=>editAtt(null,load);
   load();
 }
 function editAtt(r,after){const mgr=isMgr();
-  openModal({title:r?`${r.date} ${r.name} 출퇴근 수정`:'출퇴근 수기 등록',body:`<div class="grid">
+  openModal({title:r?`${r.date} ${r.name}`:'출퇴근 수기 등록',body:`<div class="grid">
     ${r?'':`<div><label>직원</label><select id="ea_uid">${S.roster.map(u=>`<option value="${u.id}">${esc(u.name)}</option>`).join('')}</select></div><div><label>날짜</label><input type="date" id="ea_date" value="${today()}"></div>`}
     <div><label>출근</label><input type="time" id="ea_in" value="${esc(r?.in||'')}" ${mgr?'':'disabled'}></div><div><label>퇴근</label><input type="time" id="ea_out" value="${esc(r?.out||'')}" ${mgr?'':'disabled'}></div>
-    <div class="w2"><label>메모 (시간 정정 요청 등)</label><input type="text" id="ea_memo" value="${esc(r?.memo||'')}"></div></div>${mgr?'':'<p class="tip">시간 수정은 관리자만 가능합니다. 메모로 정정 요청을 남겨주세요.</p>'}`,
+    <div class="w2"><label>메모</label><input type="text" id="ea_memo" value="${esc(r?.memo||'')}" placeholder="늦게 출근 / 일찍 퇴근 / 연차 / 휴가 등"></div></div>`,
     onSave:async bg=>{if(r){const p={memo:$('#ea_memo',bg).value};if(mgr){p.in=$('#ea_in',bg).value;p.out=$('#ea_out',bg).value}await DB.update('attendance',r.id,p)}
       else{const uid=$('#ea_uid',bg).value,d=$('#ea_date',bg).value;const u=S.roster.find(x=>x.id===uid);await DB.set('attendance',`${uid}_${d}`,{uid,name:u.name,date:d,month:d.slice(0,7),in:$('#ea_in',bg).value,out:$('#ea_out',bg).value,memo:$('#ea_memo',bg).value})}toast('저장했습니다');after()},
     onDelete:mgr&&r?async()=>{await DB.del('attendance',r.id);after()}:null})}
@@ -140,40 +131,38 @@ function calCells(ym){const first=new Date(ym+'-01T00:00:00');const start=addDay
 async function shifts(){const v=$('#view');let ym=today().slice(0,7);let onlyMe=false;
   v.innerHTML=`<div class="card"><h2><button class="btn sm" id="pm">‹</button><span id="ymLabel" style="font-size:16px"></span><button class="btn sm" id="nm">›</button><input type="month" id="ymPick" style="width:140px">
     <span class="sp"></span><label style="margin:0"><input type="checkbox" id="onlyMe"> 내 근무만</label>${isMgr()?'<button class="btn sm" id="tplBtn">주간 기본 근무</button><button class="btn sm" id="fillBtn">기본 근무로 채우기</button>':''}<button class="btn sm" id="printSh">인쇄</button></h2>
-    <p class="tip">${isMgr()?'날짜를 누르면 그날 근무·휴무·시간을 편집합니다. ':''}칩 색은 직원별 색, 취소선은 휴무입니다. 근무표는 매월 중순 사장님께 보고합니다.</p>
+    <p class="tip">${isMgr()?'날짜를 누르면 그날 근무·휴무를 바꿉니다. ':''}이름 옆 글자는 포지션(오픈·마감·케이크), 취소선은 휴무입니다.</p>
     <div class="cal" id="cal"></div></div>
     <div class="card"><h2>이번 달 요약</h2><div class="wrap"><table><thead><tr><th>이름</th><th>근무일</th><th>휴무</th></tr></thead><tbody id="shSum"></tbody></table></div></div>`;
   const render=async()=>{$('#ymLabel').textContent=ym.replace('-','년 ')+'월';$('#ymPick').value=ym;
     const rows=await DB.query('shifts',[['month','==',ym]]);const cells=calCells(ym);const t=today();
-    $('#cal').innerHTML=['월','화','수','목','금','토','일'].map(x=>`<div class="hd">${x}</div>`).join('')+cells.map(d=>{const day=rows.filter(r=>r.date===d&&(!onlyMe||r.uid===S.me.id)).sort((a,b)=>(a.off?1:0)-(b.off?1:0)||(a.start||'').localeCompare(b.start||''));
-      return `<div class="d ${d.slice(0,7)!==ym?'out':''} ${d===t?'today':''} ${dow(d)==='일'?'sun':''}" data-d="${d}"><div class="n">${Number(d.slice(8))}</div>${day.map(r=>`<span class="chip ${r.off?'off':''}" style="${r.off?'':'background:'+colorOf(r.uid)}" title="${esc(r.memo||'')}">${esc(r.name)}${r.off?' 휴무':' '+r.start.replace(/^0/,'')+'-'+r.end.replace(/^0/,'')}</span>`).join('')}</div>`}).join('');
+    $('#cal').innerHTML=['월','화','수','목','금','토','일'].map(x=>`<div class="hd">${x}</div>`).join('')+cells.map(d=>{const day=rows.filter(r=>r.date===d&&(!onlyMe||r.uid===S.me.id)).sort((a,b)=>(a.off?1:0)-(b.off?1:0)||a.name.localeCompare(b.name));
+      return `<div class="d ${d.slice(0,7)!==ym?'out':''} ${d===t?'today':''} ${dow(d)==='일'?'sun':''}" data-d="${d}"><div class="n">${Number(d.slice(8))}</div>${day.map(r=>`<span class="chip ${r.off?'off':''}" style="${r.off?'':'background:'+colorOf(r.uid)}">${esc(r.name)}${r.off?' 휴무':(r.memo?' '+esc(r.memo):'')}</span>`).join('')}</div>`}).join('');
     if(isMgr())$$('#cal .d').forEach(c=>c.onclick=()=>editDay(c.dataset.d,rows.filter(r=>r.date===c.dataset.d),render));
     $('#shSum').innerHTML=S.roster.filter(u=>u.active!==false).map(u=>{const my=rows.filter(r=>r.uid===u.id);const w=my.filter(r=>!r.off);
       return `<tr><td><span class="dot" style="background:${colorOf(u.id)}"></span>${esc(u.name)}</td><td class="num">${w.length}</td><td class="num">${my.length-w.length}</td></tr>`}).join('')};
   $('#pm').onclick=()=>{ym=addMonths(ym+'-01',-1).slice(0,7);render()};$('#nm').onclick=()=>{ym=addMonths(ym+'-01',1).slice(0,7);render()};$('#ymPick').onchange=e=>{ym=e.target.value;render()};
   $('#onlyMe').onchange=e=>{onlyMe=e.target.checked;render()};$('#printSh').onclick=()=>window.print();
   if($('#tplBtn'))$('#tplBtn').onclick=()=>editTemplates();
-  if($('#fillBtn'))$('#fillBtn').onclick=async()=>{if(!confirm(`${ym} 중 근무가 비어 있는 날을 각 직원의 주간 기본 근무로 채웁니다. 진행할까요?`))return;
+  if($('#fillBtn'))$('#fillBtn').onclick=async()=>{if(!confirm(`${ym} 중 비어 있는 날을 각 직원의 주간 기본 근무로 채웁니다. 진행할까요?`))return;
     const tpls=await DB.query('shiftTemplates');const rows=await DB.query('shifts',[['month','==',ym]]);let n=0;
     for(const d of calCells(ym).filter(x=>x.slice(0,7)===ym)){const wd=new Date(d+'T00:00:00').getDay();for(const u of S.roster.filter(u=>u.active!==false)){if(rows.some(r=>r.uid===u.id&&r.date===d))continue;const tp=tpls.find(t=>t.id===u.id);const day=tp?.days?.[wd];if(!day||day.skip)continue;
-      await DB.set('shifts',`${d}_${u.id}`,{date:d,month:ym,uid:u.id,name:u.name,off:!!day.off,start:day.off?'':day.start,end:day.off?'':day.end,memo:''});n++}}
+      await DB.set('shifts',`${d}_${u.id}`,{date:d,month:ym,uid:u.id,name:u.name,off:!!day.off,memo:day.memo||''});n++}}
     toast(`${n}건 채웠습니다`);render()};
   render();
 }
 function editDay(d,rows,after){const staff=S.roster.filter(u=>u.active!==false);
-  openModal({title:`${d} (${dow(d)}) 근무 편집`,body:`<div class="wrap"><table><thead><tr><th>직원</th><th>상태</th><th>출근</th><th>퇴근</th><th>메모</th></tr></thead><tbody>${staff.map(u=>{const r=rows.find(x=>x.uid===u.id);const st=r?(r.off?'off':'work'):'none';
-    return `<tr data-uid="${u.id}"><td><span class="dot" style="background:${colorOf(u.id)}"></span>${esc(u.name)}</td><td><select data-k="st"><option value="none" ${st==='none'?'selected':''}>-</option><option value="work" ${st==='work'?'selected':''}>근무</option><option value="off" ${st==='off'?'selected':''}>휴무</option></select></td>
-      <td><input type="time" data-k="start" value="${esc(r?.start||'09:30')}" style="width:105px"></td><td><input type="time" data-k="end" value="${esc(r?.end||'18:30')}" style="width:105px"></td><td><input type="text" data-k="memo" value="${esc(r?.memo||'')}" placeholder="오픈/마감/케이크"></td></tr>`}).join('')}</tbody></table></div>
-    <p class="tip">평일 영업 9:30~18:30 (마감 19:30 종료) · 토 10:30~17:30 (마감 18:30 종료). 오픈 8:30 출근.</p>`,
+  openModal({title:`${d} (${dow(d)}) 근무`,body:`<div class="wrap"><table><thead><tr><th>직원</th><th>상태</th><th>포지션 (선택)</th></tr></thead><tbody>${staff.map(u=>{const r=rows.find(x=>x.uid===u.id);const st=r?(r.off?'off':'work'):'none';
+    return `<tr data-uid="${u.id}"><td><span class="dot" style="background:${colorOf(u.id)}"></span>${esc(u.name)}</td><td><select data-k="st"><option value="none" ${st==='none'?'selected':''}>-</option><option value="work" ${st==='work'?'selected':''}>근무</option><option value="off" ${st==='off'?'selected':''}>휴무</option></select></td><td><input type="text" data-k="memo" value="${esc(r?.memo||'')}" placeholder="오픈 / 마감 / 케이크" list="posList"></td></tr>`}).join('')}</tbody></table></div><datalist id="posList"><option value="오픈"><option value="마감"><option value="케이크"><option value="오픈·마감"><option value="연차"><option value="휴가"></datalist>`,
     onSave:async bg=>{for(const tr of $$('tbody tr',bg)){const uid=tr.dataset.uid;const u=staff.find(x=>x.id===uid);const st=$('[data-k=st]',tr).value;const id=`${d}_${uid}`;
       if(st==='none'){if(rows.some(r=>r.uid===uid))await DB.del('shifts',id);continue}
-      await DB.set('shifts',id,{date:d,month:d.slice(0,7),uid,name:u.name,off:st==='off',start:st==='off'?'':$('[data-k=start]',tr).value,end:st==='off'?'':$('[data-k=end]',tr).value,memo:$('[data-k=memo]',tr).value})}
+      await DB.set('shifts',id,{date:d,month:d.slice(0,7),uid,name:u.name,off:st==='off',memo:$('[data-k=memo]',tr).value})}
       toast('저장했습니다');after()}})}
 async function editTemplates(){const tpls=await DB.query('shiftTemplates');const staff=S.roster.filter(u=>u.active!==false);const DN=['일','월','화','수','목','금','토'];
-  openModal({title:'주간 기본 근무 (직원별)',body:`<p class="tip">요일별 기본 근무를 정해두면 "기본 근무로 채우기"로 한 달을 한 번에 채울 수 있습니다. 비워두면(‑) 그 요일은 건너뜁니다.</p>
-    ${staff.map(u=>{const tp=tpls.find(t=>t.id===u.id)?.days||{};return `<details open data-uid="${u.id}"><summary><span class="dot" style="background:${colorOf(u.id)}"></span>${esc(u.name)}</summary><div class="wrap"><table><thead><tr><th>요일</th><th>상태</th><th>출근</th><th>퇴근</th></tr></thead><tbody>
-      ${[1,2,3,4,5,6,0].map(wd=>{const dd=tp[wd]||{};const st=dd.skip||!(wd in tp)?'skip':dd.off?'off':'work';return `<tr data-wd="${wd}"><td>${DN[wd]}</td><td><select data-k="st"><option value="skip" ${st==='skip'?'selected':''}>-</option><option value="work" ${st==='work'?'selected':''}>근무</option><option value="off" ${st==='off'?'selected':''}>휴무</option></select></td><td><input type="time" data-k="start" value="${esc(dd.start||'09:30')}" style="width:105px"></td><td><input type="time" data-k="end" value="${esc(dd.end||'18:30')}" style="width:105px"></td></tr>`}).join('')}</tbody></table></div></details>`}).join('')}`,
-    onSave:async bg=>{for(const det of $$('details[data-uid]',bg)){const days={};$$('tr[data-wd]',det).forEach(tr=>{const st=$('[data-k=st]',tr).value;days[tr.dataset.wd]=st==='skip'?{skip:true}:{off:st==='off',start:$('[data-k=start]',tr).value,end:$('[data-k=end]',tr).value}});await DB.set('shiftTemplates',det.dataset.uid,{days})}toast('저장했습니다')}})}
+  openModal({title:'주간 기본 근무 (직원별)',body:`<p class="tip">요일별 근무/휴무만 정해두면 "기본 근무로 채우기"로 한 달을 한 번에 채웁니다. (‑)는 건너뜀.</p>
+    ${staff.map(u=>{const tp=tpls.find(t=>t.id===u.id)?.days||{};return `<details open data-uid="${u.id}"><summary><span class="dot" style="background:${colorOf(u.id)}"></span>${esc(u.name)}</summary><div class="row" style="margin:8px 0 4px">
+      ${[1,2,3,4,5,6,0].map(wd=>{const dd=tp[wd]||{};const st=dd.skip||!(wd in tp)?'skip':dd.off?'off':'work';return `<label style="margin:0;display:flex;flex-direction:column;align-items:center;gap:2px">${DN[wd]}<select data-wd="${wd}" style="width:64px"><option value="skip" ${st==='skip'?'selected':''}>-</option><option value="work" ${st==='work'?'selected':''}>근무</option><option value="off" ${st==='off'?'selected':''}>휴무</option></select></label>`}).join('')}</div></details>`}).join('')}`,
+    onSave:async bg=>{for(const det of $$('details[data-uid]',bg)){const days={};$$('select[data-wd]',det).forEach(sel=>{const st=sel.value;days[sel.dataset.wd]=st==='skip'?{skip:true}:{off:st==='off'}});await DB.set('shiftTemplates',det.dataset.uid,{days})}toast('저장했습니다')}})}
 
 /* ==================== 체크리스트 ==================== */
 function parseTemplate(text){return text.split('\n').map(s=>s.trim()).filter(Boolean).map((s,i)=>s.startsWith('##')?{type:'h',t:s.replace(/^#+\s*/,'')}:{t:s,done:false,by:'',at:''})}
@@ -338,7 +327,7 @@ async function log(){const v=$('#view');let cur=null;let month=today().slice(0,7
     if(!isMgr())return;const sum=k=>rows.reduce((a,l)=>a+(Number(l[k])||0),0);$('#logKpi').innerHTML=[['영업일',rows.length,'일'],['총매출',fmt(sum('sales')),'원'],['에그타르트',sum('egg'),'개'],['홀케이크',sum('whole'),'개'],['조각케이크',sum('pieceCnt'),'개'],['빙수',sum('bingsu'),'개'],['배달',sum('baemin')+sum('coupang')+sum('naver'),'건']].map(([t,n,u])=>`<div><span>${t}</span><b>${n}<small style="font-size:11px;font-weight:400"> ${u}</small></b></div>`).join('');
     $('#csvLog').onclick=()=>{const q=s=>'"'+String(s??'').replace(/"/g,'""')+'"';dl('﻿'+['날짜,요일,'+LF.slice(1).join(','),...rows.slice().reverse().map(l=>[l.date,dow(l.date),...LF.slice(1).map(k=>l[k])].map(q).join(','))].join('\n'),`운영일지_${month}.csv`,'text/csv')};$('#printLog').onclick=()=>window.print()}
   async function open(d){cur=d;const l=(await DB.get('logs',d))||{date:d};LF.forEach(k=>{$('#f_'+k).value=l[k]??''});$('#f_date').value=d;$('#logTitle').textContent=`${d} (${dow(d)})`+(l.updatedBy?` · ${l.updatedBy}`:'');$('#logStatus').textContent='';renderMemo();renderList();
-    if(!l.staffOpen&&!l.staffClose){const sh=await DB.query('shifts',[['date','==',d]]);const w=sh.filter(s=>!s.off).sort((a,b)=>a.start.localeCompare(b.start));if(w.length){$('#f_staffOpen').value=w[0].name;$('#f_staffClose').value=w[w.length-1].name;$('#f_staffMid').value=w.slice(1,-1).map(s=>s.name).join(', ')}$('#f_staffOff').value=sh.filter(s=>s.off).map(s=>s.name).join(', ')}}
+    if(!l.staffOpen&&!l.staffClose){const sh=await DB.query('shifts',[['date','==',d]]);const w=sh.filter(s=>!s.off);const has=(s,k)=>(s.memo||'').includes(k);$('#f_staffOpen').value=w.filter(s=>has(s,'오픈')).map(s=>s.name).join(', ');$('#f_staffClose').value=w.filter(s=>has(s,'마감')).map(s=>s.name).join(', ');$('#f_staffMid').value=w.filter(s=>!has(s,'오픈')&&!has(s,'마감')).map(s=>s.name).join(', ');$('#f_staffOff').value=sh.filter(s=>s.off).map(s=>s.name).join(', ')}}
   const read=()=>{const o={};LF.forEach(k=>{o[k]=$('#f_'+k).value});o.month=o.date.slice(0,7);return o};
   const save=async()=>{const o=read();if(!o.date)return;if(cur&&cur!==o.date)await DB.del('logs',cur);await DB.set('logs',o.date,o);cur=o.date;renderList()};
   autosave($('#logForm'),save,'#logStatus');
