@@ -33,8 +33,13 @@ function openModal(o){const bg=document.createElement('div');bg.className='modal
 const S={view:'home',roster:[],me:null,unsub:[]};
 const isMgr=()=>['owner','manager'].includes(S.me?.role);
 const isOwner=()=>S.me?.role==='owner';
-const colorOf=uid=>{const i=S.roster.findIndex(u=>u.id===uid);return PALETTE[(i<0?7:i)%PALETTE.length]};
+const ROLE_COLOR={owner:'#d9603f',manager:'#3f7a5c',staff:'#2f6ea8'};const ROLE_NAME={owner:'사장',manager:'매니저',staff:'직원'};
+const roleColor=r=>ROLE_COLOR[r]||'#7f8c8d';
+const colorOf=uid=>roleColor((uid===S.me?.id?S.me:S.roster.find(u=>u.id===uid))?.role);
 const nameOf=uid=>S.roster.find(u=>u.id===uid)?.name||'?';
+const nm=(name,role)=>`<span class="nm-r" style="color:${roleColor(role)}">${esc(name)}</span>`;
+const nmU=uid=>{const u=uid===S.me?.id?S.me:S.roster.find(x=>x.id===uid);return u?nm(u.name,u.role):'?'};
+const roleLegend=()=>`<span class="tip">${Object.entries(ROLE_NAME).map(([k,n])=>`<span class="dot" style="background:${ROLE_COLOR[k]}"></span>${n}`).join(' ')}</span>`;
 async function loadRoster(){S.roster=(await DB.query('users')).filter(u=>u.role!=='pending').sort((a,b)=>(a.createdAt||0)-(b.createdAt||0))}
 
 /* ---------- 로그인 ---------- */
@@ -67,7 +72,7 @@ function renderNav(){const top=isMgr()?VIEWS:VIEWS.filter(v=>STAFF_TOP.includes(
   $$('[data-v]').forEach(b=>b.onclick=()=>go(b.dataset.v))}
 function go(v,param){S.view=v;location.hash=v;S.unsub.forEach(f=>f&&f());S.unsub=[];renderNav();window.scrollTo(0,0);({home,attend,shifts,check,stock,sched,log,manual,settings})[v](param)}
 async function start(){S.me=DB.user;if(!S.me)return renderLogin();if(S.me.role==='pending'||S.me.active===false){$('#view').innerHTML=`<div id="login"><h1>승인 대기</h1><p>관리자가 직원 프로필을 만들어야 사용할 수 있습니다. (${esc(S.me.loginId)})</p><button class="btn" onclick="DB.logout().then(()=>location.reload())">로그아웃</button></div>`;return}
-  await loadRoster();$('#hdr').hidden=false;$('#navBottom').hidden=false;$('#modeTag').textContent=DB.mode==='local'?'로컬 데모':'';$('#meName').textContent=`${S.me.name} (${{owner:'사장',manager:'매니저',staff:'직원'}[S.me.role]||S.me.role})`;
+  await loadRoster();$('#hdr').hidden=false;$('#navBottom').hidden=false;$('#modeTag').textContent=DB.mode==='local'?'로컬 데모':'';$('#meName').innerHTML=`${nm(S.me.name,S.me.role)} <span class="tip">${ROLE_NAME[S.me.role]||S.me.role}</span>`;
   $('#logoutBtn').onclick=async()=>{await DB.logout();location.hash='';renderLogin()};
   const h=location.hash.replace('#','');go(VIEWS.some(v=>v[0]===h)?h:'home')}
 
@@ -98,13 +103,13 @@ async function home(){const d=today();const v=$('#view');const mgr=isMgr();
   S.unsub.push(DB.watch('stock',[['date','==',d]],rows=>{state.st=rows[0]||null;renderFlow()}));
   S.unsub.push(DB.watch('shifts',[['date','==',d]],rows=>{const box=$('#todayShifts');if(!box)return;const w=rows.filter(r=>!r.off).sort((a,b)=>a.name.localeCompare(b.name));const off=rows.filter(r=>r.off);const mine=rows.find(r=>r.uid===S.me.id);
     if($('#myShift'))$('#myShift').textContent=mine?(mine.off?'오늘 휴무':'오늘 근무'+(mine.memo?' · '+mine.memo:'')):'';
-    box.innerHTML=(w.length?w.map(r=>`<div class="ev"><span class="dot" style="background:${colorOf(r.uid)}"></span><b>${esc(r.name)}</b><span class="tip">${esc(r.memo||'')}</span></div>`).join(''):'<p class="tip">등록된 근무가 없습니다.</p>')+(off.length?`<p class="tip" style="margin:6px 0 0">휴무: ${off.map(r=>esc(r.name)).join(', ')}</p>`:'')}));
+    box.innerHTML=(w.length?w.map(r=>`<div class="ev"><b>${nmU(r.uid)}</b><span class="tip">${esc(r.memo||'')}</span></div>`).join(''):'<p class="tip">등록된 근무가 없습니다.</p>')+(off.length?`<p class="tip" style="margin:6px 0 0">휴무: ${off.map(r=>esc(r.name)).join(', ')}</p>`:'')}));
   const evs=(await DB.query('schedule',[['year','==',Number(d.slice(0,4))]])).concat(d.slice(5,7)==='12'?await DB.query('schedule',[['year','==',Number(d.slice(0,4))+1]]):[]).filter(e=>e.date>=d&&e.date<=addDays(d,14)).sort((a,b)=>a.date.localeCompare(b.date));
   $('#upcoming').innerHTML=evs.length?evs.slice(0,6).map(e=>`<div class="ev"><span class="dt">${e.date.slice(5)} (${dow(e.date)})</span><span>${SCHED_CATS[e.cat]?.slice(0,2)||''} ${esc(e.title)}</span></div>`).join(''):'<p class="tip">2주 내 일정이 없습니다.</p>';
 }
 /* 출근/퇴근 박스 (홈·출퇴근 공용) */
 async function renderAttBox(){const box=$('#attBox');if(!box)return;const d=today();const id=`${S.me.id}_${d}`;const a=await DB.get('attendance',id);
-  box.innerHTML=`<div class="row" style="margin-bottom:8px"><b>${esc(S.me.name)}</b>${a?.in?`<span class="tag green">출근 ${a.in}</span>`:''}${a?.out?`<span class="tag green">퇴근 ${a.out}</span>`:''}</div>
+  box.innerHTML=`<div class="row" style="margin-bottom:8px"><b>${nm(S.me.name,S.me.role)}</b>${a?.in?`<span class="tag green">출근 ${a.in}</span>`:''}${a?.out?`<span class="tag green">퇴근 ${a.out}</span>`:''}</div>
     <div class="att-btns"><button class="btn big sec" id="btnIn" ${a?.in?'disabled':''}>🟢 출근</button><button class="btn big pri" id="btnOut" ${!a?.in||a?.out?'disabled':''}>🔴 퇴근</button></div>`;
   $('#btnIn').onclick=async()=>{if(!confirm(`${nowHM()} 출근 처리할까요?`))return;await DB.set('attendance',id,{uid:S.me.id,name:S.me.name,date:d,month:d.slice(0,7),in:nowHM(),out:a?.out||'',memo:a?.memo||''});toast('출근 완료. 오늘도 힘내요!');renderAttBox()};
   $('#btnOut').onclick=async()=>{if(!confirm(`${nowHM()} 퇴근 처리할까요?`))return;await DB.update('attendance',id,{out:nowHM()});toast('퇴근 완료. 수고하셨습니다!');renderAttBox()};
@@ -118,7 +123,7 @@ async function attend(){const v=$('#view');const m=today().slice(0,7);
   renderAttBox();
   const load=async()=>{const mm=$('#attMonth').value;const who=isMgr()?$('#attWho').value:S.me.id;
     let rows=await DB.query('attendance',[['month','==',mm]]);if(who)rows=rows.filter(r=>r.uid===who);rows.sort((a,b)=>b.date.localeCompare(a.date)||a.name.localeCompare(b.name));
-    $('#attRows').innerHTML=rows.map(r=>`<tr><td>${r.date.slice(5)} (${dow(r.date)})</td><td>${esc(r.name)}</td><td>${esc(r.in||'')}</td><td>${esc(r.out||'')}</td><td class="tip">${esc(r.memo||'')}</td><td class="noprint"><button class="btn sm" data-edit="${r.id}">${isMgr()||r.uid===S.me.id?'메모':''}</button></td></tr>`).join('')||'<tr><td colspan="6" class="tip">기록이 없습니다.</td></tr>';
+    $('#attRows').innerHTML=rows.map(r=>`<tr><td>${r.date.slice(5)} (${dow(r.date)})</td><td>${nmU(r.uid)}</td><td>${esc(r.in||'')}</td><td>${esc(r.out||'')}</td><td class="tip">${esc(r.memo||'')}</td><td class="noprint"><button class="btn sm" data-edit="${r.id}">${isMgr()||r.uid===S.me.id?'메모':''}</button></td></tr>`).join('')||'<tr><td colspan="6" class="tip">기록이 없습니다.</td></tr>';
     $$('#attRows [data-edit]').forEach(b=>b.onclick=()=>editAtt(rows.find(r=>r.id===b.dataset.edit),load));
     if($('#attCsv'))$('#attCsv').onclick=()=>{const q=s=>'"'+String(s??'').replace(/"/g,'""')+'"';dl('﻿'+['날짜,요일,이름,출근,퇴근,메모',...rows.map(r=>[r.date,dow(r.date),r.name,r.in,r.out,r.memo].map(q).join(','))].join('\n'),`출퇴근_${mm}.csv`,'text/csv')}};
   $('#attMonth').onchange=load;if($('#attWho'))$('#attWho').onchange=load;
@@ -139,7 +144,7 @@ function calCells(ym){const first=new Date(ym+'-01T00:00:00');const start=addDay
 async function shifts(){const v=$('#view');let ym=today().slice(0,7);let onlyMe=false;
   v.innerHTML=`<div class="card"><h2><button class="btn sm" id="pm">‹</button><span id="ymLabel" style="font-size:16px"></span><button class="btn sm" id="nm">›</button><input type="month" id="ymPick" style="width:140px">
     <span class="sp"></span><label style="margin:0"><input type="checkbox" id="onlyMe"> 내 근무만</label>${isMgr()?'<button class="btn sm" id="tplBtn">주간 기본 근무</button><button class="btn sm" id="fillBtn">기본 근무로 채우기</button>':''}<button class="btn sm" id="printSh">인쇄</button></h2>
-    <p class="tip">${isMgr()?'날짜를 누르면 그날 근무·휴무를 바꿉니다. ':''}이름 옆 글자는 포지션(오픈·마감·케이크), 취소선은 휴무입니다.</p>
+    <p class="tip">${isMgr()?'날짜를 누르면 그날 근무·휴무를 바꿉니다. ':''}이름 옆 글자는 포지션(오픈·마감·케이크), 취소선은 휴무. 색: ${roleLegend()}</p>
     <div class="cal" id="cal"></div></div>`;
   const render=async()=>{$('#ymLabel').textContent=ym.replace('-','년 ')+'월';$('#ymPick').value=ym;
     const rows=await DB.query('shifts',[['month','==',ym]]);const cells=calCells(ym);const t=today();
@@ -158,22 +163,22 @@ async function shifts(){const v=$('#view');let ym=today().slice(0,7);let onlyMe=
 }
 function editDay(d,rows,after){const staff=S.roster.filter(u=>u.active!==false);
   openModal({title:`${d} (${dow(d)}) 근무`,body:`<div class="wrap"><table><thead><tr><th>직원</th><th>상태</th><th>포지션 (선택)</th></tr></thead><tbody>${staff.map(u=>{const r=rows.find(x=>x.uid===u.id);const st=r?(r.off?'off':'work'):'none';
-    return `<tr data-uid="${u.id}"><td><span class="dot" style="background:${colorOf(u.id)}"></span>${esc(u.name)}</td><td><select data-k="st"><option value="none" ${st==='none'?'selected':''}>-</option><option value="work" ${st==='work'?'selected':''}>근무</option><option value="off" ${st==='off'?'selected':''}>휴무</option></select></td><td><input type="text" data-k="memo" value="${esc(r?.memo||'')}" placeholder="오픈 / 마감 / 케이크" list="posList"></td></tr>`}).join('')}</tbody></table></div><datalist id="posList"><option value="오픈"><option value="마감"><option value="케이크"><option value="오픈·마감"><option value="연차"><option value="휴가"></datalist>`,
+    return `<tr data-uid="${u.id}"><td>${nm(u.name,u.role)}</td><td><select data-k="st"><option value="none" ${st==='none'?'selected':''}>-</option><option value="work" ${st==='work'?'selected':''}>근무</option><option value="off" ${st==='off'?'selected':''}>휴무</option></select></td><td><input type="text" data-k="memo" value="${esc(r?.memo||'')}" placeholder="오픈 / 마감 / 케이크" list="posList"></td></tr>`}).join('')}</tbody></table></div><datalist id="posList"><option value="오픈"><option value="마감"><option value="케이크"><option value="오픈·마감"><option value="연차"><option value="휴가"></datalist>`,
     onSave:async bg=>{for(const tr of $$('tbody tr',bg)){const uid=tr.dataset.uid;const u=staff.find(x=>x.id===uid);const st=$('[data-k=st]',tr).value;const id=`${d}_${uid}`;
       if(st==='none'){if(rows.some(r=>r.uid===uid))await DB.del('shifts',id);continue}
       await DB.set('shifts',id,{date:d,month:d.slice(0,7),uid,name:u.name,off:st==='off',memo:$('[data-k=memo]',tr).value})}
       toast('저장했습니다');after()}})}
 async function editTemplates(){const tpls=await DB.query('shiftTemplates');const staff=S.roster.filter(u=>u.active!==false);const DN=['일','월','화','수','목','금','토'];
   openModal({title:'주간 기본 근무 (직원별)',body:`<p class="tip">요일별 근무/휴무만 정해두면 "기본 근무로 채우기"로 한 달을 한 번에 채웁니다. (‑)는 건너뜀.</p>
-    ${staff.map(u=>{const tp=tpls.find(t=>t.id===u.id)?.days||{};return `<details open data-uid="${u.id}"><summary><span class="dot" style="background:${colorOf(u.id)}"></span>${esc(u.name)}</summary><div class="row" style="margin:8px 0 4px">
+    ${staff.map(u=>{const tp=tpls.find(t=>t.id===u.id)?.days||{};return `<details open data-uid="${u.id}"><summary>${nm(u.name,u.role)}</summary><div class="row" style="margin:8px 0 4px">
       ${[1,2,3,4,5,6,0].map(wd=>{const dd=tp[wd]||{};const st=dd.skip||!(wd in tp)?'skip':dd.off?'off':'work';return `<label style="margin:0;display:flex;flex-direction:column;align-items:center;gap:2px">${DN[wd]}<select data-wd="${wd}" style="width:64px"><option value="skip" ${st==='skip'?'selected':''}>-</option><option value="work" ${st==='work'?'selected':''}>근무</option><option value="off" ${st==='off'?'selected':''}>휴무</option></select></label>`}).join('')}</div></details>`}).join('')}`,
     onSave:async bg=>{for(const det of $$('details[data-uid]',bg)){const days={};$$('select[data-wd]',det).forEach(sel=>{const st=sel.value;days[sel.dataset.wd]=st==='skip'?{skip:true}:{off:st==='off'}});await DB.set('shiftTemplates',det.dataset.uid,{days})}toast('저장했습니다')}})}
 
 /* ==================== 체크리스트 ==================== */
 function parseTemplate(text){return text.split('\n').map(s=>s.trim()).filter(Boolean).map((s,i)=>s.startsWith('##')?{type:'h',t:s.replace(/^#+\s*/,'')}:{t:s,done:false,by:'',at:''})}
 async function getTemplate(k){const t=await DB.get('checklistTemplates',k);return t?.text||DEFAULT_CHECKLISTS[k].text}
-async function check(){const v=$('#view');let tab=shiftNow();let date=today();
-  v.innerHTML=`<div class="card"><h2>체크리스트 <input type="date" id="ckDate" value="${date}" style="width:150px"><span class="sp"></span>${isMgr()?'<button class="btn sm" id="ckTpl">템플릿 편집</button>':''}<button class="btn sm" id="ckAdd">+ 오늘만 추가</button></h2>
+async function check(){const v=$('#view');let tab=shiftNow();let date=today();let editMode=false;
+  v.innerHTML=`<div class="card"><h2>체크리스트 <input type="date" id="ckDate" value="${date}" style="width:150px"><span class="sp"></span>${isMgr()?'<button class="btn sm" id="ckEdit">✏️ 항목 편집</button><button class="btn sm" id="ckTpl">전체 텍스트 편집</button>':''}<button class="btn sm" id="ckAdd">+ 오늘만 추가</button></h2>
     <div class="subtabs" id="ckTabs">${['open','mid','close'].map(k=>`<button data-t="${k}">${DEFAULT_CHECKLISTS[k].title}</button>`).join('')}<button data-t="clean">🧹 월간 청소</button></div>
     <div id="ckBody"></div></div>`;
   const setTab=t=>{tab=t;$$('#ckTabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));S.unsub.forEach(f=>f&&f());S.unsub=[];tab==='clean'?renderClean():renderCk()};
@@ -182,15 +187,27 @@ async function check(){const v=$('#view');let tab=shiftNow();let date=today();
   async function renderCk(){const id=`${date}_${tab}`;const box=$('#ckBody');
     S.unsub.push(DB.watch('checklists',[['date','==',date],['shift','==',tab]],async rows=>{let doc=rows[0];const fresh=!doc;if(fresh)doc={date,shift:tab,items:parseTemplate(await getTemplate(tab))};
       const items=doc.items.filter(i=>i.type!=='h');const dn=items.filter(i=>i.done).length;const p=items.length?Math.round(dn/items.length*100):0;
-      box.innerHTML=`<div class="row" style="margin-bottom:6px"><b>${dn}/${items.length}</b><span class="tip">${p===100?'🎉 끝! 텔레그램 보고만 남았어요.':'하면서 체크만 하면 됩니다.'}</span><span class="sp"></span><button class="btn sm" id="ckCopy">📋 보고용 복사</button></div><div class="bar"><i style="width:${p}%"></i></div>
-        <ul class="ck">${doc.items.map((it,i)=>it.type==='h'?`<li class="h">${esc(it.t)}</li>`:`<li class="${it.done?'dn':''}" data-i="${i}"><input type="checkbox" ${it.done?'checked':''}><span class="t">${esc(it.t)}${it.done?`<small>✓ ${esc(it.by)} ${esc(it.at)}</small>`:''}</span>${it.adhoc?`<button class="btn sm danger" data-rm="${i}">×</button>`:''}</li>`).join('')}</ul>`;
-      $$('li[data-i]',box).forEach(li=>{const cb=$('input',li);const tog=async()=>{const i=Number(li.dataset.i);const it=doc.items[i];it.done=!it.done;it.by=it.done?S.me.name:'';it.at=it.done?nowHM():'';await DB.set('checklists',id,doc)};
+      const byName=n=>{const u=S.roster.find(x=>x.name===n);return u?nm(n,u.role):esc(n)};
+      box.innerHTML=`<div class="row" style="margin-bottom:6px"><b>${dn}/${items.length}</b><span class="tip">${editMode?'✏️ 편집 중: × 로 빼고, + 로 넣습니다. 바로 저장되고 다음 날부터도 적용됩니다.':p===100?'🎉 끝! 텔레그램 보고만 남았어요.':'하면서 체크만 하면 됩니다.'}</span><span class="sp"></span>${editMode?'<button class="btn sm" data-addh>+ 소제목</button>':'<button class="btn sm" id="ckCopy">📋 보고용 복사</button>'}</div><div class="bar"><i style="width:${p}%"></i></div>
+        <ul class="ck ${editMode?'edit':''}">${doc.items.map((it,i)=>it.type==='h'?`<li class="h">${esc(it.t)}<span class="sp"></span>${editMode?`<button class="btn sm" data-addi="${i}">+ 항목</button><button class="btn sm danger" data-rmh="${i}">×</button>`:''}</li>`:`<li class="${it.done?'dn':''}" data-i="${i}"><input type="checkbox" ${it.done?'checked':''} ${editMode?'disabled':''}><span class="t">${esc(it.t)}${it.done?`<small>✓ ${byName(it.by)} ${esc(it.at)}</small>`:''}</span>${editMode?`<button class="btn sm danger" data-rmt="${i}" title="이 항목 빼기">×</button>`:it.adhoc?`<button class="btn sm danger" data-rm="${i}">×</button>`:''}</li>`).join('')}${editMode?'<li class="h" style="background:transparent"><button class="btn sm" data-addi="-1">+ 맨 아래에 항목</button></li>':''}</ul>`;
+      if(!editMode){$$('li[data-i]',box).forEach(li=>{const cb=$('input',li);const tog=async()=>{const i=Number(li.dataset.i);const it=doc.items[i];it.done=!it.done;it.by=it.done?S.me.name:'';it.at=it.done?nowHM():'';await DB.set('checklists',id,doc)};
         cb.onclick=e=>{e.stopPropagation();tog()};li.onclick=e=>{if(e.target.tagName==='BUTTON')return;tog()}});
-      $$('[data-rm]',box).forEach(b=>b.onclick=async e=>{e.stopPropagation();doc.items.splice(Number(b.dataset.rm),1);await DB.set('checklists',id,doc)});
-      $('#ckCopy').onclick=()=>copyText(`[${date} ${DEFAULT_CHECKLISTS[tab].title} 체크] ${dn}/${items.length} 완료\n`+doc.items.filter(i=>i.type!=='h').map(i=>`${i.done?'✅':'⬜'} ${i.t}${i.done?' ('+i.by+' '+i.at+')':''}`).join('\n'))}));}
+      $$('[data-rm]',box).forEach(b=>b.onclick=async e=>{e.stopPropagation();doc.items.splice(Number(b.dataset.rm),1);await DB.set('checklists',id,doc)});}
+      /* 편집 모드: 템플릿(영구)과 오늘 문서를 같이 고침 */
+      const applyEdit=async fn=>{const lines=(await getTemplate(tab)).split('\n');fn(doc.items,lines);await DB.set('checklistTemplates',tab,{text:lines.filter(l=>l.trim()).join('\n')});await DB.set('checklists',id,doc);toast('반영했습니다')};
+      const lineIdx=(lines,it)=>lines.findIndex(l=>(it.type==='h'?l.replace(/^#+\s*/,'').trim()===it.t&&l.trim().startsWith('#'):l.trim()===it.t));
+      $$('[data-rmt]',box).forEach(b=>b.onclick=()=>{const i=Number(b.dataset.rmt);const it=doc.items[i];if(!confirm(`"${it.t}" 항목을 뺄까요? (이후 매일 체크리스트에서도 빠집니다)`))return;applyEdit((items,lines)=>{const li=lineIdx(lines,it);if(li>=0)lines.splice(li,1);items.splice(i,1)})});
+      $$('[data-rmh]',box).forEach(b=>b.onclick=()=>{const i=Number(b.dataset.rmh);const it=doc.items[i];if(!confirm(`소제목 "${it.t}"만 뺄까요? (아래 항목은 남습니다)`))return;applyEdit((items,lines)=>{const li=lineIdx(lines,it);if(li>=0)lines.splice(li,1);items.splice(i,1)})});
+      $$('[data-addi]',box).forEach(b=>b.onclick=()=>{const i=Number(b.dataset.addi);const t=prompt('추가할 항목');if(!t||!t.trim())return;applyEdit((items,lines)=>{
+        if(i<0){lines.push(t.trim());items.push({t:t.trim(),done:false,by:'',at:''});return}
+        // 해당 소제목 아래 마지막 항목 뒤에 삽입
+        let j=i+1;while(j<items.length&&items[j].type!=='h')j++;const anchor=items[j-1];const li=lineIdx(lines,anchor);lines.splice(li>=0?li+1:lines.length,0,t.trim());items.splice(j,0,{t:t.trim(),done:false,by:'',at:''})})});
+      const ah=$('[data-addh]',box);if(ah)ah.onclick=()=>{const t=prompt('새 소제목 (예: 16시 이후)');if(!t||!t.trim())return;applyEdit((items,lines)=>{lines.push('## '+t.trim());items.push({type:'h',t:t.trim()})})};
+      if($('#ckCopy'))$('#ckCopy').onclick=()=>copyText(`[${date} ${DEFAULT_CHECKLISTS[tab].title} 체크] ${dn}/${items.length} 완료\n`+doc.items.filter(i=>i.type!=='h').map(i=>`${i.done?'✅':'⬜'} ${i.t}${i.done?' ('+i.by+' '+i.at+')':''}`).join('\n'))}));}
+  if($('#ckEdit'))$('#ckEdit').onclick=()=>{if(tab==='clean')return;editMode=!editMode;$('#ckEdit').textContent=editMode?'✅ 편집 끝':'✏️ 항목 편집';$('#ckEdit').classList.toggle('pri',editMode);setTab(tab)};
   $('#ckAdd').onclick=async()=>{if(tab==='clean')return;const t=prompt('오늘만 추가할 항목');if(!t)return;const id=`${date}_${tab}`;let doc=await DB.get('checklists',id);if(!doc)doc={date,shift:tab,items:parseTemplate(await getTemplate(tab))};doc.items.push({t,done:false,by:'',at:'',adhoc:true});await DB.set('checklists',id,doc)};
   if($('#ckTpl'))$('#ckTpl').onclick=async()=>{if(tab==='clean')return;const text=await getTemplate(tab);
-    openModal({title:`${DEFAULT_CHECKLISTS[tab].title} 체크리스트 템플릿`,body:`<p class="tip">한 줄에 한 항목. "## 제목" 줄은 소제목입니다. 저장하면 다음에 새로 시작하는 체크리스트부터 적용됩니다.</p><textarea id="tplText" style="min-height:55vh;font-size:13px">${esc(text)}</textarea><div class="row" style="margin-top:6px"><button class="btn sm" id="tplReset">기본값으로 되돌리기</button></div>`,
+    openModal({title:`${DEFAULT_CHECKLISTS[tab].title} 체크리스트 템플릿`,body:`<p class="tip">한 줄에 한 항목. "## 제목" 줄은 소제목입니다. 순서를 크게 바꿀 때 쓰세요. 저장하면 다음에 새로 시작하는 체크리스트부터 적용됩니다.</p><textarea id="tplText" style="min-height:55vh;font-size:13px">${esc(text)}</textarea><div class="row" style="margin-top:6px"><button class="btn sm" id="tplReset">기본값으로 되돌리기</button></div>`,
       onOpen:bg=>{$('#tplReset',bg).onclick=()=>{$('#tplText',bg).value=DEFAULT_CHECKLISTS[tab].text}},
       onSave:async bg=>{await DB.set('checklistTemplates',tab,{text:$('#tplText',bg).value});toast('템플릿을 저장했습니다')}})};
   async function renderClean(){const m=date.slice(0,7);const box=$('#ckBody');let doc=await DB.get('cleaning',m);
@@ -360,7 +377,7 @@ async function manual(){const v=$('#view');let cur=null;
 /* ==================== 설정 ==================== */
 async function settings(){const v=$('#view');
   v.innerHTML=`<div class="card"><h2>내 계정</h2><p>${esc(S.me.name)} · 아이디 <b>${esc(S.me.loginId||'')}</b> · ${{owner:'사장',manager:'매니저',staff:'직원'}[S.me.role]}</p><button class="btn sm" id="pwBtn">비밀번호 변경</button></div>
-    ${isMgr()?`<div class="card"><h2>직원 관리 <span class="sp"></span><button class="btn sm pri" id="addUser">+ 직원 추가</button></h2><p class="tip">사장·매니저는 근무표·스케줄·체크리스트 템플릿·재고 항목·매뉴얼을 편집할 수 있고, 직원은 출퇴근·체크·일지·발주 체크를 작성합니다. 퇴사자는 "비활성"으로 바꾸면 로그인이 막히고 기록은 남습니다.</p>
+    ${isMgr()?`<div class="card"><h2>직원 관리 <span class="sp"></span><button class="btn sm pri" id="addUser">+ 직원 추가</button></h2><p class="tip">이름 색: ${roleLegend()} · 사장·매니저는 근무표·스케줄·체크리스트 항목·재고 항목·매뉴얼을 편집할 수 있고, 직원은 출퇴근·체크·일지·발주 체크를 작성합니다. 퇴사자는 "비활성"으로 바꾸면 로그인이 막히고 기록은 남습니다.</p>
       <div class="wrap"><table><thead><tr><th>이름</th><th>아이디</th><th>권한</th><th>상태</th><th></th></tr></thead><tbody id="userRows"></tbody></table></div></div>`:''}
     <div class="card"><h2>데이터 · 백업</h2><p class="tip">현재 모드: <b>${DB.mode==='local'?'로컬 데모 (이 브라우저에만 저장)':'Firebase (여러 기기 공유)'}</b>. ${DB.mode==='local'?'실제 운영에는 README의 Firebase 설정을 따라 주세요. 그전까지는 이 기기에서만 데이터가 보입니다.':''}</p>
       <div class="row"><button class="btn" id="exportAll">전체 JSON 내보내기</button>${DB.mode==='local'?'<label class="btn" style="display:inline-block">JSON 불러오기 <input type="file" id="importAll" accept="application/json" style="display:none"></label>':''}</div></div>`;
@@ -368,7 +385,7 @@ async function settings(){const v=$('#view');
   $('#exportAll').onclick=async()=>dl(await DB.exportAll(),`sonjoy_backup_${today()}.json`,'application/json');
   if($('#importAll'))$('#importAll').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{if(confirm('현재 로컬 데이터를 파일 내용으로 교체합니다. 진행할까요?'))try{DB.importLocal(r.result)}catch(x){alert(x.message)}};r.readAsText(f)};
   if(!isMgr())return;
-  const renderUsers=async()=>{await loadRoster();$('#userRows').innerHTML=S.roster.map(u=>`<tr><td><span class="dot" style="background:${colorOf(u.id)}"></span>${esc(u.name)}</td><td>${esc(u.loginId||'')}</td><td>${isOwner()&&u.id!==S.me.id?`<select data-role="${u.id}"><option value="staff" ${u.role==='staff'?'selected':''}>직원</option><option value="manager" ${u.role==='manager'?'selected':''}>매니저</option><option value="owner" ${u.role==='owner'?'selected':''}>사장</option></select>`:{owner:'사장',manager:'매니저',staff:'직원'}[u.role]}</td><td>${u.active===false?'<span class="tag red">비활성</span>':'<span class="tag green">활성</span>'}</td><td class="row">${u.id!==S.me.id&&u.role!=='owner'?`<button class="btn sm" data-tog="${u.id}">${u.active===false?'활성화':'비활성'}</button>`:''}${DB.mode==='local'&&u.id!==S.me.id?`<button class="btn sm" data-pw="${u.id}">비번 초기화</button>`:''}</td></tr>`).join('');
+  const renderUsers=async()=>{await loadRoster();$('#userRows').innerHTML=S.roster.map(u=>`<tr><td>${nm(u.name,u.role)}</td><td>${esc(u.loginId||'')}</td><td>${isOwner()&&u.id!==S.me.id?`<select data-role="${u.id}"><option value="staff" ${u.role==='staff'?'selected':''}>직원</option><option value="manager" ${u.role==='manager'?'selected':''}>매니저</option><option value="owner" ${u.role==='owner'?'selected':''}>사장</option></select>`:{owner:'사장',manager:'매니저',staff:'직원'}[u.role]}</td><td>${u.active===false?'<span class="tag red">비활성</span>':'<span class="tag green">활성</span>'}</td><td class="row">${u.id!==S.me.id&&u.role!=='owner'?`<button class="btn sm" data-tog="${u.id}">${u.active===false?'활성화':'비활성'}</button>`:''}${DB.mode==='local'&&u.id!==S.me.id?`<button class="btn sm" data-pw="${u.id}">비번 초기화</button>`:''}</td></tr>`).join('');
     $$('[data-role]').forEach(s=>s.onchange=async()=>{await DB.update('users',s.dataset.role,{role:s.value});toast('권한 변경');renderUsers()});
     $$('[data-tog]').forEach(b=>b.onclick=async()=>{const u=S.roster.find(x=>x.id===b.dataset.tog);await DB.update('users',u.id,{active:u.active===false});renderUsers()});
     $$('[data-pw]').forEach(b=>b.onclick=async()=>{const p=prompt('새 비밀번호 (6자 이상)');if(p&&p.length>=6){await DB.resetPassword(b.dataset.pw,p);toast('초기화했습니다')}})};
