@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 215" fill="none" stroke="#a5683f" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+  <!-- 컵 몸통 -->
+  <path d="M22 62 C18 58 26 54 34 54 L176 50 C186 50 190 56 188 64 L182 150 C180 168 166 178 148 180 L60 182 C44 182 30 172 28 156 Z"/>
+  <path d="M30 62 C60 66 120 66 180 60" stroke-width="5"/>
+  <!-- 손잡이 -->
+  <path d="M188 84 C214 82 224 98 218 118 C214 132 202 140 186 138"/>
+  <path d="M190 96 C204 96 208 106 204 116 C201 124 195 128 188 127" stroke-width="5"/>
+  <!-- 얼굴 -->
+  <circle cx="82" cy="126" r="5" fill="#a5683f" stroke="none"/>
+  <circle cx="132" cy="124" r="5" fill="#a5683f" stroke="none"/>
+  <path d="M98 140 C104 150 114 150 120 140" stroke-width="6"/>
+  <!-- 꽃 -->
+  <circle cx="126" cy="44" r="6"/>
+  <path d="M118 36 C110 30 112 20 120 22 M134 36 C142 30 140 20 132 22 M118 52 C110 58 112 68 120 66 M134 52 C142 58 140 68 132 66"/>
+  <!-- 받침 -->
+  <path d="M12 190 C40 202 90 208 116 208 C150 208 198 202 222 190"/>
+  <path d="M40 196 C70 204 160 204 198 194" stroke-width="5"/>
+</svg>

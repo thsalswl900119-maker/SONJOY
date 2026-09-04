@@ -39,15 +39,23 @@ async function loadRoster(){S.roster=(await DB.query('users')).filter(u=>u.role!
 
 /* ---------- 로그인 ---------- */
 function renderLogin(msg){$('#hdr').hidden=true;$('#navBottom').hidden=true;
-  $('#view').innerHTML=`<div id="login"><h1>카페스이 운영노트</h1><p>${DB.mode==='local'?'로컬 데모 모드 · 기본 계정: minji / hyanga / hyebin / haesun, 비밀번호 000000':'아이디와 비밀번호로 로그인하세요'}</p>
-    <div class="f"><label>아이디</label><input type="text" id="lid" autocapitalize="off" autocomplete="username" value="${esc(localStorage.getItem('sonjoy.lastId')||'')}"></div>
-    <div class="f"><label>비밀번호</label><input type="password" id="lpw" autocomplete="current-password"></div>
-    <div class="f row"><label style="margin:0"><input type="checkbox" id="lrem" checked> 이 기기에서 로그인 유지</label></div>
-    <p class="tip" style="color:var(--red)">${esc(msg||'')}</p>
-    <button class="btn pri" id="lbtn" style="width:100%;padding:12px">로그인</button></div>`;
+  $('#view').innerHTML=`<div id="login">
+    <div class="logo"><img src="assets/logo.png" alt="카페스이" onerror="this.onerror=null;this.src='assets/logo.svg'"></div>
+    <div class="eyebrow">CAFE SUI INTERNAL</div>
+    <h1>카페스이 운영노트</h1>
+    <p class="sub">오늘 해야 할 일을 확인하고 바로 기록하세요.</p>
+    <div class="f"><label>아이디</label><input type="text" id="lid" autocapitalize="off" autocomplete="username" placeholder="발급받은 아이디" value="${esc(localStorage.getItem('sonjoy.lastId')||'')}"></div>
+    <div class="f"><label>비밀번호</label><div class="pw"><input type="password" id="lpw" autocomplete="current-password" placeholder="••••••"><button type="button" id="lEye" title="보기">👁</button></div></div>
+    <div class="f row" style="margin-top:4px"><label style="margin:0;font-size:13px;color:var(--ink)"><input type="checkbox" id="lrem" checked> 이 기기에서 로그인 유지</label></div>
+    <p class="err">${esc(msg||'')}</p>
+    <button class="btn pri go" id="lbtn">들어가기</button>
+    <div class="foot"><b>내부 구성원 전용</b><span>화면 캡처 및 외부 전달을 금지합니다.</span>${DB.mode==='local'?'<span class="demo">로컬 데모 · minji / hyanga / hyebin / haesun · 비밀번호 000000</span>':''}</div>
+  </div>`;
   const go=async()=>{const id=$('#lid').value,pw=$('#lpw').value;$('#lbtn').disabled=true;
     try{await DB.login(id,pw,$('#lrem').checked);localStorage.setItem('sonjoy.lastId',id);await start()}catch(e){renderLogin(e.code==='auth/invalid-credential'||e.code==='auth/wrong-password'||e.code==='auth/user-not-found'?'아이디 또는 비밀번호가 틀립니다':e.message)}};
-  $('#lbtn').onclick=go;$('#lpw').onkeydown=e=>{if(e.key==='Enter')go()};$('#lid').focus()}
+  $('#lbtn').onclick=go;$('#lpw').onkeydown=e=>{if(e.key==='Enter')go()};$('#lid').onkeydown=e=>{if(e.key==='Enter')$('#lpw').focus()};
+  $('#lEye').onclick=()=>{const i=$('#lpw');i.type=i.type==='password'?'text':'password'};
+  ($('#lid').value?$('#lpw'):$('#lid')).focus()}
 
 /* ---------- 네비 ---------- */
 const VIEWS=[['home','홈','🏠'],['attend','출퇴근','⏰'],['shifts','근무표','📅'],['check','체크리스트','✅','체크'],['stock','재고·발주','📦','재고'],['sched','스케줄','🗓'],['log','일지','📝'],['settings','설정','⚙️']];
