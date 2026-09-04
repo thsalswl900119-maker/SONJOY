@@ -132,15 +132,12 @@ async function shifts(){const v=$('#view');let ym=today().slice(0,7);let onlyMe=
   v.innerHTML=`<div class="card"><h2><button class="btn sm" id="pm">‹</button><span id="ymLabel" style="font-size:16px"></span><button class="btn sm" id="nm">›</button><input type="month" id="ymPick" style="width:140px">
     <span class="sp"></span><label style="margin:0"><input type="checkbox" id="onlyMe"> 내 근무만</label>${isMgr()?'<button class="btn sm" id="tplBtn">주간 기본 근무</button><button class="btn sm" id="fillBtn">기본 근무로 채우기</button>':''}<button class="btn sm" id="printSh">인쇄</button></h2>
     <p class="tip">${isMgr()?'날짜를 누르면 그날 근무·휴무를 바꿉니다. ':''}이름 옆 글자는 포지션(오픈·마감·케이크), 취소선은 휴무입니다.</p>
-    <div class="cal" id="cal"></div></div>
-    <div class="card"><h2>이번 달 요약</h2><div class="wrap"><table><thead><tr><th>이름</th><th>근무일</th><th>휴무</th></tr></thead><tbody id="shSum"></tbody></table></div></div>`;
+    <div class="cal" id="cal"></div></div>`;
   const render=async()=>{$('#ymLabel').textContent=ym.replace('-','년 ')+'월';$('#ymPick').value=ym;
     const rows=await DB.query('shifts',[['month','==',ym]]);const cells=calCells(ym);const t=today();
     $('#cal').innerHTML=['월','화','수','목','금','토','일'].map(x=>`<div class="hd">${x}</div>`).join('')+cells.map(d=>{const day=rows.filter(r=>r.date===d&&(!onlyMe||r.uid===S.me.id)).sort((a,b)=>(a.off?1:0)-(b.off?1:0)||a.name.localeCompare(b.name));
       return `<div class="d ${d.slice(0,7)!==ym?'out':''} ${d===t?'today':''} ${dow(d)==='일'?'sun':''}" data-d="${d}"><div class="n">${Number(d.slice(8))}</div>${day.map(r=>`<span class="chip ${r.off?'off':''}" style="${r.off?'':'background:'+colorOf(r.uid)}">${esc(r.name)}${r.off?' 휴무':(r.memo?' '+esc(r.memo):'')}</span>`).join('')}</div>`}).join('');
-    if(isMgr())$$('#cal .d').forEach(c=>c.onclick=()=>editDay(c.dataset.d,rows.filter(r=>r.date===c.dataset.d),render));
-    $('#shSum').innerHTML=S.roster.filter(u=>u.active!==false).map(u=>{const my=rows.filter(r=>r.uid===u.id);const w=my.filter(r=>!r.off);
-      return `<tr><td><span class="dot" style="background:${colorOf(u.id)}"></span>${esc(u.name)}</td><td class="num">${w.length}</td><td class="num">${my.length-w.length}</td></tr>`}).join('')};
+    if(isMgr())$$('#cal .d').forEach(c=>c.onclick=()=>editDay(c.dataset.d,rows.filter(r=>r.date===c.dataset.d),render))};
   $('#pm').onclick=()=>{ym=addMonths(ym+'-01',-1).slice(0,7);render()};$('#nm').onclick=()=>{ym=addMonths(ym+'-01',1).slice(0,7);render()};$('#ymPick').onchange=e=>{ym=e.target.value;render()};
   $('#onlyMe').onchange=e=>{onlyMe=e.target.checked;render()};$('#printSh').onclick=()=>window.print();
   if($('#tplBtn'))$('#tplBtn').onclick=()=>editTemplates();
