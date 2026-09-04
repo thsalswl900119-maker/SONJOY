@@ -31,9 +31,9 @@ function openModal(o){const bg=document.createElement('div');bg.className='modal
 
 /* ---------- 상태 ---------- */
 const S={view:'home',roster:[],me:null,unsub:[]};
-const isMgr=()=>['owner','manager'].includes(S.me?.role);
+const isMgr=()=>['owner','head','manager'].includes(S.me?.role);
 const isOwner=()=>S.me?.role==='owner';
-const ROLE_COLOR={owner:'#d9603f',manager:'#3f7a5c',staff:'#2f6ea8'};const ROLE_NAME={owner:'사장',manager:'매니저',staff:'직원'};
+const ROLE_COLOR={owner:'#d9603f',head:'#7b4fa3',manager:'#3f7a5c',staff:'#2f6ea8',parttime:'#b8860b'};const ROLE_NAME={owner:'사장',head:'점장',manager:'매니저',staff:'직원',parttime:'알바'};const ROLE_ORDER=['owner','head','manager','staff','parttime'];
 const roleColor=r=>ROLE_COLOR[r]||'#7f8c8d';
 const colorOf=uid=>roleColor((uid===S.me?.id?S.me:S.roster.find(u=>u.id===uid))?.role);
 const nameOf=uid=>S.roster.find(u=>u.id===uid)?.name||'?';
@@ -376,8 +376,8 @@ async function manual(){const v=$('#view');let cur=null;
 
 /* ==================== 설정 ==================== */
 async function settings(){const v=$('#view');
-  v.innerHTML=`<div class="card"><h2>내 계정</h2><p>${esc(S.me.name)} · 아이디 <b>${esc(S.me.loginId||'')}</b> · ${{owner:'사장',manager:'매니저',staff:'직원'}[S.me.role]}</p><button class="btn sm" id="pwBtn">비밀번호 변경</button></div>
-    ${isMgr()?`<div class="card"><h2>직원 관리 <span class="sp"></span><button class="btn sm pri" id="addUser">+ 직원 추가</button></h2><p class="tip">이름 색: ${roleLegend()} · 사장·매니저는 근무표·스케줄·체크리스트 항목·재고 항목·매뉴얼을 편집할 수 있고, 직원은 출퇴근·체크·일지·발주 체크를 작성합니다. 퇴사자는 "비활성"으로 바꾸면 로그인이 막히고 기록은 남습니다.</p>
+  v.innerHTML=`<div class="card"><h2>내 계정</h2><p>${nm(S.me.name,S.me.role)} · 아이디 <b>${esc(S.me.loginId||'')}</b> · ${ROLE_NAME[S.me.role]||S.me.role}</p><button class="btn sm" id="pwBtn">비밀번호 변경</button></div>
+    ${isMgr()?`<div class="card"><h2>직원 관리 <span class="sp"></span><button class="btn sm pri" id="addUser">+ 직원 추가</button></h2><p class="tip">이름 색: ${roleLegend()} · 사장·점장·매니저는 근무표·스케줄·체크리스트 항목·재고 항목·매뉴얼을 편집할 수 있고, 직원·알바는 출퇴근·체크·일지·발주 체크를 작성합니다. 퇴사자는 "비활성"으로 바꾸면 로그인이 막히고 기록은 남습니다.</p>
       <div class="wrap"><table><thead><tr><th>이름</th><th>아이디</th><th>권한</th><th>상태</th><th></th></tr></thead><tbody id="userRows"></tbody></table></div></div>`:''}
     <div class="card"><h2>데이터 · 백업</h2><p class="tip">현재 모드: <b>${DB.mode==='local'?'로컬 데모 (이 브라우저에만 저장)':'Firebase (여러 기기 공유)'}</b>. ${DB.mode==='local'?'실제 운영에는 README의 Firebase 설정을 따라 주세요. 그전까지는 이 기기에서만 데이터가 보입니다.':''}</p>
       <div class="row"><button class="btn" id="exportAll">전체 JSON 내보내기</button>${DB.mode==='local'?'<label class="btn" style="display:inline-block">JSON 불러오기 <input type="file" id="importAll" accept="application/json" style="display:none"></label>':''}</div></div>`;
@@ -385,11 +385,11 @@ async function settings(){const v=$('#view');
   $('#exportAll').onclick=async()=>dl(await DB.exportAll(),`sonjoy_backup_${today()}.json`,'application/json');
   if($('#importAll'))$('#importAll').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{if(confirm('현재 로컬 데이터를 파일 내용으로 교체합니다. 진행할까요?'))try{DB.importLocal(r.result)}catch(x){alert(x.message)}};r.readAsText(f)};
   if(!isMgr())return;
-  const renderUsers=async()=>{await loadRoster();$('#userRows').innerHTML=S.roster.map(u=>`<tr><td>${nm(u.name,u.role)}</td><td>${esc(u.loginId||'')}</td><td>${isOwner()&&u.id!==S.me.id?`<select data-role="${u.id}"><option value="staff" ${u.role==='staff'?'selected':''}>직원</option><option value="manager" ${u.role==='manager'?'selected':''}>매니저</option><option value="owner" ${u.role==='owner'?'selected':''}>사장</option></select>`:{owner:'사장',manager:'매니저',staff:'직원'}[u.role]}</td><td>${u.active===false?'<span class="tag red">비활성</span>':'<span class="tag green">활성</span>'}</td><td class="row">${u.id!==S.me.id&&u.role!=='owner'?`<button class="btn sm" data-tog="${u.id}">${u.active===false?'활성화':'비활성'}</button>`:''}${DB.mode==='local'&&u.id!==S.me.id?`<button class="btn sm" data-pw="${u.id}">비번 초기화</button>`:''}</td></tr>`).join('');
+  const renderUsers=async()=>{await loadRoster();$('#userRows').innerHTML=S.roster.map(u=>`<tr><td>${nm(u.name,u.role)}</td><td>${esc(u.loginId||'')}</td><td>${isOwner()&&u.id!==S.me.id?`<select data-role="${u.id}">${ROLE_ORDER.map(r=>`<option value="${r}" ${u.role===r?'selected':''}>${ROLE_NAME[r]}</option>`).join('')}</select>`:ROLE_NAME[u.role]||u.role}</td><td>${u.active===false?'<span class="tag red">비활성</span>':'<span class="tag green">활성</span>'}</td><td class="row">${u.id!==S.me.id&&u.role!=='owner'?`<button class="btn sm" data-tog="${u.id}">${u.active===false?'활성화':'비활성'}</button>`:''}${DB.mode==='local'&&u.id!==S.me.id?`<button class="btn sm" data-pw="${u.id}">비번 초기화</button>`:''}</td></tr>`).join('');
     $$('[data-role]').forEach(s=>s.onchange=async()=>{await DB.update('users',s.dataset.role,{role:s.value});toast('권한 변경');renderUsers()});
     $$('[data-tog]').forEach(b=>b.onclick=async()=>{const u=S.roster.find(x=>x.id===b.dataset.tog);await DB.update('users',u.id,{active:u.active===false});renderUsers()});
     $$('[data-pw]').forEach(b=>b.onclick=async()=>{const p=prompt('새 비밀번호 (6자 이상)');if(p&&p.length>=6){await DB.resetPassword(b.dataset.pw,p);toast('초기화했습니다')}})};
-  $('#addUser').onclick=()=>openModal({title:'직원 추가',body:`<div class="grid"><div><label>이름</label><input type="text" id="nu_name"></div><div><label>아이디 (영문 소문자)</label><input type="text" id="nu_id" autocapitalize="off" placeholder="hyebin"></div><div><label>권한</label><select id="nu_role"><option value="staff">직원</option><option value="manager">매니저</option></select></div><div><label>초기 비밀번호 (6자 이상)</label><input type="text" id="nu_pw" value="000000"></div></div><p class="tip">${DB.mode==='firebase'?'직원에게 아이디와 초기 비밀번호를 알려주고, 로그인 후 설정에서 비밀번호를 바꾸게 하세요.':''}</p>`,
+  $('#addUser').onclick=()=>openModal({title:'직원 추가',body:`<div class="grid"><div><label>이름</label><input type="text" id="nu_name"></div><div><label>아이디 (영문 소문자)</label><input type="text" id="nu_id" autocapitalize="off" placeholder="hyebin"></div><div><label>직급</label><select id="nu_role">${ROLE_ORDER.filter(r=>r!=='owner').map(r=>`<option value="${r}" ${r==='staff'?'selected':''}>${ROLE_NAME[r]}</option>`).join('')}</select></div><div><label>초기 비밀번호 (6자 이상)</label><input type="text" id="nu_pw" value="000000"></div></div><p class="tip">${DB.mode==='firebase'?'직원에게 아이디와 초기 비밀번호를 알려주고, 로그인 후 설정에서 비밀번호를 바꾸게 하세요.':''}</p>`,
     onSave:async bg=>{await DB.createUser({name:$('#nu_name',bg).value.trim(),loginId:$('#nu_id',bg).value,role:$('#nu_role',bg).value,pw:$('#nu_pw',bg).value});toast('추가했습니다');renderUsers()}});
   renderUsers();
 }

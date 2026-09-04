@@ -5,8 +5,8 @@ service cloud.firestore {
     function me() { return get(/databases/$(database)/documents/users/$(request.auth.uid)); }
     function role() { return signedIn() && exists(/databases/$(database)/documents/users/$(request.auth.uid)) ? me().data.role : 'none'; }
     function isOwner() { return role() == 'owner'; }
-    function isManager() { return role() == 'owner' || role() == 'manager'; }
-    function isStaff() { return isManager() || role() == 'staff'; }
+    function isManager() { return role() == 'owner' || role() == 'head' || role() == 'manager'; }
+    function isStaff() { return isManager() || role() == 'staff' || role() == 'parttime'; }
 
     // 직원 프로필: 본인은 읽기, 관리자는 읽기/쓰기. 첫 사장님은 본인 프로필을 직접 만들 수 있음 (settings.ownerUid 가 없을 때)
     match /users/{uid} {

@@ -12,7 +12,7 @@
     data:null,
     load(){try{this.data=JSON.parse(localStorage.getItem(LOCAL_KEY))||{}}catch(e){this.data={}}
       if(!this.data.users){this.data.users={};this.data.__auth={};
-        const seed=[['u_minji','minji','손민지','owner'],['u_hyanga','hyanga','정향아','manager'],['u_hyebin','hyebin','박혜빈','staff'],['u_haesun','haesun','이해선','staff']];
+        const seed=[['u_minji','minji','손민지','owner'],['u_hyanga','hyanga','정향아','manager'],['u_hyebin','hyebin','박혜빈','staff'],['u_haesun','haesun','이해선','parttime']];
         seed.forEach(([uid,id,name,role])=>{this.data.users[uid]={id:uid,loginId:id,name,role,active:true,createdAt:Date.now()};this.data.__auth[id]={uid,pw:'000000'}});
         this.save()}
       return this},
