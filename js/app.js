@@ -106,15 +106,20 @@ async function renderAttBox(){const box=$('#attBox');if(!box)return;const d=toda
 async function attend(){const v=$('#view');const m=today().slice(0,7);
   v.innerHTML=`<div class="card"><h2>출퇴근</h2><div id="attBox"></div></div>
     <div class="card"><h2>기록 <input type="month" id="attMonth" value="${m}" style="width:150px">${isMgr()?`<select id="attWho" style="width:150px"><option value="">전체</option>${S.roster.filter(u=>u.active!==false).map(u=>`<option value="${u.id}" ${u.id===S.me.id?'selected':''}>${esc(u.name)}</option>`).join('')}</select>`:''}<span class="sp"></span>${isMgr()?'<button class="btn sm" id="attCsv">CSV</button><button class="btn sm" id="attAdd">+ 수기 등록</button>':''}</h2>
-    <div id="attSum" class="kpi"></div><div class="wrap"><table><thead><tr><th>날짜</th><th>이름</th><th>출근</th><th>퇴근</th><th>시간</th><th>근무표</th><th>메모</th><th class="noprint"></th></tr></thead><tbody id="attRows"></tbody></table></div></div>`;
+    <div id="attSum" class="kpi"></div><div class="wrap"><table><thead><tr><th>날짜</th><th>이름</th><th>출근</th><th>퇴근</th><th>시간</th><th>근무표</th><th>메모</th><th class="noprint"></th></tr></thead><tbody id="attRows"></tbody></table></div><div id="attCheck"></div></div>`;
   renderAttBox();
   const load=async()=>{const mm=$('#attMonth').value;const who=isMgr()?$('#attWho').value:S.me.id;
     let rows=await DB.query('attendance',[['month','==',mm]]);if(who)rows=rows.filter(r=>r.uid===who);rows.sort((a,b)=>b.date.localeCompare(a.date)||a.name.localeCompare(b.name));
     const shifts=await DB.query('shifts',[['month','==',mm]]);
     const per={};rows.forEach(r=>{const h=hours(r.in,r.out)||0;per[r.name]=(per[r.name]||0)+h});
     $('#attSum').innerHTML=Object.entries(per).map(([n,h])=>`<div><span>${esc(n)}</span><b>${Math.round(h*10)/10}h</b></div>`).join('')+`<div><span>기록 수</span><b>${rows.length}</b></div>`;
-    $('#attRows').innerHTML=rows.map(r=>{const s=shifts.find(x=>x.uid===r.uid&&x.date===r.date);const late=s&&!s.off&&r.in&&hm2min(r.in)>hm2min(s.start)+10;
-      return `<tr><td>${r.date.slice(5)} (${dow(r.date)})</td><td>${esc(r.name)}</td><td>${esc(r.in||'')}${late?'<span class="tag red">지각</span>':''}</td><td>${esc(r.out||'')}</td><td class="num">${hours(r.in,r.out)??''}</td><td class="tip">${s?(s.off?'휴무':s.start+'~'+s.end):''}</td><td class="tip">${esc(r.memo||'')}</td><td class="noprint"><button class="btn sm" data-edit="${r.id}">${isMgr()||r.uid===S.me.id?'수정':''}</button></td></tr>`}).join('')||'<tr><td colspan="8" class="tip">기록이 없습니다.</td></tr>';
+    // 점검용(관리자만, 작게): 예정보다 늦게 출근한 시간 · 예정보다 적게 근무한 시간
+    const diff=r=>{const s=shifts.find(x=>x.uid===r.uid&&x.date===r.date);if(!s||s.off||!r.in)return null;const late=Math.max(0,hm2min(r.in)-hm2min(s.start));const plan=hours(s.start,s.end)||0;const real=hours(r.in,r.out);const short=real==null?0:Math.max(0,Math.round((plan-real)*10)/10);return {s,late,short}};
+    const tiny=r=>{if(!isMgr())return '';const d=diff(r);if(!d||(d.late<=10&&d.short<0.5))return '';return `<span class="faint">${d.late>10?d.late+'분 늦음':''}${d.late>10&&d.short>=0.5?' · ':''}${d.short>=0.5?d.short+'h 적음':''}</span>`};
+    $('#attRows').innerHTML=rows.map(r=>{const s=shifts.find(x=>x.uid===r.uid&&x.date===r.date);
+      return `<tr><td>${r.date.slice(5)} (${dow(r.date)})</td><td>${esc(r.name)}</td><td>${esc(r.in||'')}</td><td>${esc(r.out||'')}</td><td class="num">${hours(r.in,r.out)??''}</td><td class="tip">${s?(s.off?'휴무':s.start+'~'+s.end):''}${tiny(r)}</td><td class="tip">${esc(r.memo||'')}</td><td class="noprint"><button class="btn sm" data-edit="${r.id}">${isMgr()||r.uid===S.me.id?'수정':''}</button></td></tr>`}).join('')||'<tr><td colspan="8" class="tip">기록이 없습니다.</td></tr>';
+    if(isMgr()){const tot={};rows.forEach(r=>{const d=diff(r);if(!d)return;const t=tot[r.name]||(tot[r.name]={late:0,short:0,n:0});t.late+=d.late;t.short+=d.short;if(d.late>10)t.n++});
+      $('#attCheck').innerHTML=Object.keys(tot).length?`<details class="tipd"><summary class="faint">점검용</summary><p class="faint">${Object.entries(tot).map(([n,t])=>`${n}: 늦게 출근 ${t.n}회 (${Math.round(t.late/6)/10}h) · 적게 근무 ${Math.round(t.short*10)/10}h`).join(' / ')}</p></details>`:''}
     $$('#attRows [data-edit]').forEach(b=>b.onclick=()=>editAtt(rows.find(r=>r.id===b.dataset.edit),load));
     if($('#attCsv'))$('#attCsv').onclick=()=>{const q=s=>'"'+String(s??'').replace(/"/g,'""')+'"';dl('﻿'+['날짜,요일,이름,출근,퇴근,시간,메모',...rows.map(r=>[r.date,dow(r.date),r.name,r.in,r.out,hours(r.in,r.out)??'',r.memo].map(q).join(','))].join('\n'),`출퇴근_${mm}.csv`,'text/csv')}};
   $('#attMonth').onchange=load;if($('#attWho'))$('#attWho').onchange=load;
