@@ -137,14 +137,14 @@ async function shifts(){const v=$('#view');let ym=today().slice(0,7);let onlyMe=
     <span class="sp"></span><label style="margin:0"><input type="checkbox" id="onlyMe"> 내 근무만</label>${isMgr()?'<button class="btn sm" id="tplBtn">주간 기본 근무</button><button class="btn sm" id="fillBtn">기본 근무로 채우기</button>':''}<button class="btn sm" id="printSh">인쇄</button></h2>
     <p class="tip">${isMgr()?'날짜를 누르면 그날 근무·휴무·시간을 편집합니다. ':''}칩 색은 직원별 색, 취소선은 휴무입니다. 근무표는 매월 중순 사장님께 보고합니다.</p>
     <div class="cal" id="cal"></div></div>
-    <div class="card"><h2>이번 달 요약</h2><div class="wrap"><table><thead><tr><th>이름</th><th>근무일</th><th>휴무</th><th>예정 시간</th><th>실제 출퇴근 시간</th></tr></thead><tbody id="shSum"></tbody></table></div></div>`;
+    <div class="card"><h2>이번 달 요약</h2><div class="wrap"><table><thead><tr><th>이름</th><th>근무일</th><th>휴무</th></tr></thead><tbody id="shSum"></tbody></table></div></div>`;
   const render=async()=>{$('#ymLabel').textContent=ym.replace('-','년 ')+'월';$('#ymPick').value=ym;
-    const rows=await DB.query('shifts',[['month','==',ym]]);const att=await DB.query('attendance',[['month','==',ym]]);const cells=calCells(ym);const t=today();
+    const rows=await DB.query('shifts',[['month','==',ym]]);const cells=calCells(ym);const t=today();
     $('#cal').innerHTML=['월','화','수','목','금','토','일'].map(x=>`<div class="hd">${x}</div>`).join('')+cells.map(d=>{const day=rows.filter(r=>r.date===d&&(!onlyMe||r.uid===S.me.id)).sort((a,b)=>(a.off?1:0)-(b.off?1:0)||(a.start||'').localeCompare(b.start||''));
       return `<div class="d ${d.slice(0,7)!==ym?'out':''} ${d===t?'today':''} ${dow(d)==='일'?'sun':''}" data-d="${d}"><div class="n">${Number(d.slice(8))}</div>${day.map(r=>`<span class="chip ${r.off?'off':''}" style="${r.off?'':'background:'+colorOf(r.uid)}" title="${esc(r.memo||'')}">${esc(r.name)}${r.off?' 휴무':' '+r.start.replace(/^0/,'')+'-'+r.end.replace(/^0/,'')}</span>`).join('')}</div>`}).join('');
     if(isMgr())$$('#cal .d').forEach(c=>c.onclick=()=>editDay(c.dataset.d,rows.filter(r=>r.date===c.dataset.d),render));
-    $('#shSum').innerHTML=S.roster.filter(u=>u.active!==false).map(u=>{const my=rows.filter(r=>r.uid===u.id);const w=my.filter(r=>!r.off);const plan=w.reduce((a,r)=>a+(hours(r.start,r.end)||0),0);const real=att.filter(a=>a.uid===u.id).reduce((a,r)=>a+(hours(r.in,r.out)||0),0);
-      return `<tr><td><span class="dot" style="background:${colorOf(u.id)}"></span>${esc(u.name)}</td><td class="num">${w.length}</td><td class="num">${my.length-w.length}</td><td class="num">${Math.round(plan*10)/10}h</td><td class="num">${Math.round(real*10)/10}h</td></tr>`}).join('')};
+    $('#shSum').innerHTML=S.roster.filter(u=>u.active!==false).map(u=>{const my=rows.filter(r=>r.uid===u.id);const w=my.filter(r=>!r.off);
+      return `<tr><td><span class="dot" style="background:${colorOf(u.id)}"></span>${esc(u.name)}</td><td class="num">${w.length}</td><td class="num">${my.length-w.length}</td></tr>`}).join('')};
   $('#pm').onclick=()=>{ym=addMonths(ym+'-01',-1).slice(0,7);render()};$('#nm').onclick=()=>{ym=addMonths(ym+'-01',1).slice(0,7);render()};$('#ymPick').onchange=e=>{ym=e.target.value;render()};
   $('#onlyMe').onchange=e=>{onlyMe=e.target.checked;render()};$('#printSh').onclick=()=>window.print();
   if($('#tplBtn'))$('#tplBtn').onclick=()=>editTemplates();
