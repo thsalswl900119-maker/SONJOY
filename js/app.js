@@ -43,24 +43,32 @@ const roleLegend=()=>`<span class="tip">${Object.entries(ROLE_NAME).map(([k,n])=
 async function loadRoster(){S.roster=(await DB.query('users')).filter(u=>u.role!=='pending').sort((a,b)=>(a.createdAt||0)-(b.createdAt||0))}
 
 /* ---------- 로그인 ---------- */
-function renderLogin(msg){$('#hdr').hidden=true;$('#navBottom').hidden=true;
+const KIOSK=()=>localStorage.getItem('sonjoy.kiosk')==='1';
+const rosterCache=()=>{try{return JSON.parse(localStorage.getItem('sonjoy.roster'))||[]}catch(e){return []}};
+function renderLogin(msg){$('#hdr').hidden=true;$('#navBottom').hidden=true;const kiosk=KIOSK();const names=rosterCache();
   $('#view').innerHTML=`<div id="login">
     <div class="logo"><img src="assets/logo.png" alt="카페스이" onerror="this.onerror=null;this.src='assets/logo.svg'"></div>
     <div class="eyebrow">CAFE SUI INTERNAL</div>
     <h1>카페스이 운영노트</h1>
-    <p class="sub">오늘 해야 할 일을 확인하고 바로 기록하세요.</p>
-    <div class="f"><label>아이디</label><input type="text" id="lid" autocapitalize="off" autocomplete="username" placeholder="발급받은 아이디" value="${esc(localStorage.getItem('sonjoy.lastId')||'')}"></div>
-    <div class="f"><label>비밀번호</label><div class="pw"><input type="password" id="lpw" autocomplete="current-password" placeholder="••••••"><button type="button" id="lEye" title="보기">👁</button></div></div>
-    <div class="f row" style="margin-top:4px"><label style="margin:0;font-size:13px;color:var(--ink)"><input type="checkbox" id="lrem" checked> 이 기기에서 로그인 유지</label></div>
+    <p class="sub">${kiosk?'이름을 누르고 비밀번호를 입력하세요.':'오늘 해야 할 일을 확인하고 바로 기록하세요.'}</p>
+    ${kiosk&&names.length?`<div class="names">${names.map(u=>`<button type="button" class="nb" data-id="${esc(u.loginId)}" style="border-color:${roleColor(u.role)};color:${roleColor(u.role)}">${esc(u.name)}</button>`).join('')}</div>`:''}
+    <div class="f" ${kiosk&&names.length?'hidden':''}><label>아이디</label><input type="text" id="lid" autocapitalize="off" autocomplete="username" placeholder="발급받은 아이디" value="${esc(kiosk?'':(localStorage.getItem('sonjoy.lastId')||''))}"></div>
+    <div class="f"><label>비밀번호 <span class="tip" id="whoLbl"></span></label><div class="pw"><input type="password" id="lpw" autocomplete="current-password" placeholder="••••••"><button type="button" id="lEye" title="보기">👁</button></div></div>
+    <div class="f row" style="margin-top:4px;gap:16px"><label style="margin:0;font-size:13px;color:var(--ink)" ${kiosk?'hidden':''}><input type="checkbox" id="lrem" ${kiosk?'':'checked'}> 이 기기에서 로그인 유지</label><label style="margin:0;font-size:12px;color:var(--muted)"><input type="checkbox" id="lkiosk" ${kiosk?'checked':''}> 매장 공용 컴퓨터</label></div>
     <p class="err">${esc(msg||'')}</p>
     <button class="btn pri go" id="lbtn">들어가기</button>
-    <div class="foot"><b>내부 구성원 전용</b><span>화면 캡처 및 외부 전달을 금지합니다.</span>${DB.mode==='local'?'<span class="demo">로컬 데모 · minji / hyanga / hyebin / haesun · 비밀번호 000000</span>':''}</div>
+    <div class="foot"><b>내부 구성원 전용</b><span>화면 캡처 및 외부 전달을 금지합니다.</span>${kiosk?'<span>쓰고 나면 오른쪽 위 "사용자 바꾸기"를 눌러 주세요. 10분간 조작이 없으면 자동으로 잠깁니다.</span>':''}${DB.mode==='local'?'<span class="demo">로컬 데모 · minji / hyanga / hyebin / haesun · 비밀번호 000000</span>':''}</div>
   </div>`;
-  const go=async()=>{const id=$('#lid').value,pw=$('#lpw').value;$('#lbtn').disabled=true;
-    try{await DB.login(id,pw,$('#lrem').checked);localStorage.setItem('sonjoy.lastId',id);await start()}catch(e){renderLogin(e.code==='auth/invalid-credential'||e.code==='auth/wrong-password'||e.code==='auth/user-not-found'?'아이디 또는 비밀번호가 틀립니다':e.message)}};
+  const go=async()=>{const id=$('#lid').value,pw=$('#lpw').value;if(!id)return $('#whoLbl').textContent='이름을 먼저 눌러 주세요';$('#lbtn').disabled=true;
+    try{await DB.login(id,pw,!KIOSK()&&$('#lrem').checked);if(!KIOSK())localStorage.setItem('sonjoy.lastId',id);await start()}catch(e){renderLogin(e.code==='auth/invalid-credential'||e.code==='auth/wrong-password'||e.code==='auth/user-not-found'?'아이디 또는 비밀번호가 틀립니다':e.message)}};
   $('#lbtn').onclick=go;$('#lpw').onkeydown=e=>{if(e.key==='Enter')go()};$('#lid').onkeydown=e=>{if(e.key==='Enter')$('#lpw').focus()};
   $('#lEye').onclick=()=>{const i=$('#lpw');i.type=i.type==='password'?'text':'password'};
-  ($('#lid').value?$('#lpw'):$('#lid')).focus()}
+  $('#lkiosk').onchange=e=>{localStorage.setItem('sonjoy.kiosk',e.target.checked?'1':'0');if(!e.target.checked)localStorage.removeItem('sonjoy.uid');renderLogin()};
+  $$('.nb').forEach(b=>b.onclick=()=>{$$('.nb').forEach(x=>x.classList.toggle('on',x===b));$('#lid').value=b.dataset.id;$('#whoLbl').textContent=b.textContent+' 님';$('#lpw').value='';$('#lpw').focus()});
+  ($('#lid').value||kiosk?$('#lpw'):$('#lid')).focus()}
+/* 공용 컴퓨터: 10분 무조작 시 자동 잠금 */
+let idleT=null;function armIdle(){clearTimeout(idleT);if(!KIOSK()||!S.me)return;idleT=setTimeout(async()=>{await DB.logout();location.hash='';renderLogin('10분간 조작이 없어 잠겼습니다. 다시 이름을 눌러 주세요.')},10*60*1000)}
+['pointerdown','keydown','touchstart','scroll'].forEach(ev=>document.addEventListener(ev,()=>{if(idleT)armIdle()},{passive:true}));
 
 /* ---------- 네비 ---------- */
 const VIEWS=[['home','홈','🏠'],['attend','출퇴근','⏰'],['shifts','근무표','📅'],['check','체크리스트','✅','체크'],['stock','재고·발주','📦','재고'],['sched','스케줄','🗓'],['log','일지','📝'],['settings','설정','⚙️']];
@@ -72,7 +80,8 @@ function renderNav(){const top=isMgr()?VIEWS:VIEWS.filter(v=>STAFF_TOP.includes(
   $$('[data-v]').forEach(b=>b.onclick=()=>go(b.dataset.v))}
 function go(v,param){S.view=v;location.hash=v;S.unsub.forEach(f=>f&&f());S.unsub=[];renderNav();window.scrollTo(0,0);({home,attend,shifts,check,stock,sched,log,manual,settings})[v](param)}
 async function start(){S.me=DB.user;if(!S.me)return renderLogin();if(S.me.role==='pending'||S.me.active===false){$('#view').innerHTML=`<div id="login"><h1>승인 대기</h1><p>관리자가 직원 프로필을 만들어야 사용할 수 있습니다. (${esc(S.me.loginId)})</p><button class="btn" onclick="DB.logout().then(()=>location.reload())">로그아웃</button></div>`;return}
-  await loadRoster();$('#hdr').hidden=false;$('#navBottom').hidden=false;$('#modeTag').textContent=DB.mode==='local'?'로컬 데모':'';$('#meName').innerHTML=`${nm(S.me.name,S.me.role)} <span class="tip">${ROLE_NAME[S.me.role]||S.me.role}</span>`;
+  await loadRoster();localStorage.setItem('sonjoy.roster',JSON.stringify(S.roster.filter(u=>u.active!==false).map(u=>({loginId:u.loginId,name:u.name,role:u.role}))));
+  $('#hdr').hidden=false;$('#navBottom').hidden=false;$('#modeTag').textContent=DB.mode==='local'?'로컬 데모':'';$('#logoutBtn').textContent=KIOSK()?'사용자 바꾸기':'로그아웃';armIdle();$('#meName').innerHTML=`${nm(S.me.name,S.me.role)} <span class="tip">${ROLE_NAME[S.me.role]||S.me.role}</span>`;
   $('#logoutBtn').onclick=async()=>{await DB.logout();location.hash='';renderLogin()};
   const h=location.hash.replace('#','');go(VIEWS.some(v=>v[0]===h)?h:'home')}
 
