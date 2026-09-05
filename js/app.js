@@ -90,12 +90,20 @@ async function start(){S.me=DB.user;if(!S.me)return renderLogin();if(S.me.role==
 /* ==================== 홈 ==================== */
 const shiftNow=()=>{const m=hm2min(nowHM());return m<630?'open':m<990?'mid':'close'};
 async function home(){const d=today();const v=$('#view');const mgr=isMgr();
-  v.innerHTML=`<div class="card"><h2>${d} (${dow(d)}) <span class="tip" id="myShift"></span><span class="clock" id="clock" style="margin-left:auto"></span></h2><div id="attBox"></div></div>
+  v.innerHTML=`<div class="card notice"><h2>📣 잊지 말고! <span class="tip">전체 알림</span><span class="sp"></span>${mgr?'<button class="btn sm pri" id="ntAdd">+ 알림</button>':''}</h2><div id="ntList" class="tip">…</div></div>
+    <div class="card"><h2>${d} (${dow(d)}) <span class="tip" id="myShift"></span><span class="clock" id="clock" style="margin-left:auto"></span></h2><div id="attBox"></div></div>
     <div class="card"><h2>오늘 할 일 <span class="tip">위에서부터 차례로</span></h2><div class="flow" id="flow"></div></div>
     <div class="two half"><div class="card"><h2>오늘 근무 ${mgr?'<button class="btn sm" style="margin-left:auto" data-go="shifts">근무표</button>':''}</h2><div id="todayShifts" class="tip">…</div></div>
     <div class="card"><h2>다가오는 일정 <button class="btn sm" style="margin-left:auto" data-go="sched">전체</button></h2><div id="upcoming"></div></div></div>
     ${mgr?`<div class="card"><h2>체크리스트 진행 <button class="btn sm" style="margin-left:auto" data-go="check">열기</button></h2><div id="ckProg"></div></div>`:''}`;
   $$('[data-go]',v).forEach(b=>b.onclick=()=>go(b.dataset.go));
+  /* 전체 알림: checklists 컬렉션에 shift='notice' 로 저장 (직원 모두 완료 처리 가능) */
+  S.unsub.push(DB.watch('checklists',[['shift','==','notice']],rows=>{const box=$('#ntList');if(!box)return;const live=rows.filter(r=>!r.done&&(!r.until||r.until>=d)).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+    box.innerHTML=live.length?live.map(r=>`<div class="ev nt"><span class="nt-t">${esc(r.text)}<small class="tip">${esc(r.by||'')}${r.until?' · '+r.until.slice(5)+'까지':''}</small></span>${mgr?`<button class="btn sm danger" data-del="${r.id}">×</button>`:''}<button class="btn sm sec" data-done="${r.id}">완료</button></div>`).join(''):'<span class="tip">지금 잊지 말아야 할 알림이 없습니다.</span>';
+    $$('[data-done]',box).forEach(b=>b.onclick=async()=>{const r=rows.find(x=>x.id===b.dataset.done);if(!confirm(`"${r.text}" 완료 처리할까요?`))return;await DB.update('checklists',r.id,{done:true,doneBy:S.me.name,doneAt:d+' '+nowHM()});toast('완료!')});
+    $$('[data-del]',box).forEach(b=>b.onclick=async()=>{if(confirm('알림을 지울까요?'))await DB.del('checklists',b.dataset.del)})}));
+  if($('#ntAdd'))$('#ntAdd').onclick=()=>openModal({title:'전체 알림 올리기',body:`<div class="grid"><div class="w3"><label>내용</label><input type="text" id="nt_text" placeholder="예: 토요일 마감 전 망고 2박스 주문 넣기"></div><div><label>언제까지 (선택)</label><input type="date" id="nt_until"></div></div><p class="tip">모든 직원 홈 맨 위에 뜨고, 누구든 "완료"를 누르면 이름과 함께 사라집니다.</p>`,
+    onSave:async bg=>{const text=$('#nt_text',bg).value.trim();if(!text)throw new Error('내용을 입력하세요');await DB.set('checklists','notice_'+Date.now().toString(36),{shift:'notice',date:'',text,until:$('#nt_until',bg).value,by:S.me.name,done:false,createdAt:Date.now()});toast('올렸습니다')}});
   const tick=()=>{const c=$('#clock');if(c)c.textContent=nowHM()};tick();const iv=setInterval(tick,15000);S.unsub.push(()=>clearInterval(iv));
   renderAttBox();
   const state={att:null,ck:[],log:null,st:null};
