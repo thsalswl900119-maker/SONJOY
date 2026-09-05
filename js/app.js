@@ -47,7 +47,7 @@ const KIOSK=()=>localStorage.getItem('sonjoy.kiosk')==='1';
 const rosterCache=()=>{try{return JSON.parse(localStorage.getItem('sonjoy.roster'))||[]}catch(e){return []}};
 function renderLogin(msg){$('#hdr').hidden=true;$('#navBottom').hidden=true;const kiosk=KIOSK();const names=rosterCache();
   $('#view').innerHTML=`<div id="login">
-    <div class="logo"><img src="assets/logo.png" alt="카페스이" onerror="this.onerror=null;this.src='assets/logo.svg'"></div>
+    <div class="logo"><img src="assets/logo.png" alt="카페스이" onerror="if(!this.dataset.n){this.dataset.n=1;this.src='assets/logo.jpg'}else{this.onerror=null;this.src='assets/logo.svg'}"></div>
     <div class="eyebrow">CAFE SUI INTERNAL</div>
     <h1>카페스이 운영노트</h1>
     <p class="sub">${kiosk?'이름을 누르고 비밀번호를 입력하세요.':'오늘 해야 할 일을 확인하고 바로 기록하세요.'}</p>
