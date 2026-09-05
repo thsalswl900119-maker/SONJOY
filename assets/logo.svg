@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 210" fill="none" stroke="#a1704f" stroke-linecap="round" stroke-linejoin="round">
+  <!-- 컵 몸통 (손그림 느낌: 겹선) -->
+  <path stroke-width="9" d="M20 58 C30 52 60 50 92 50 C124 50 160 52 186 56 C190 58 192 62 190 68 L184 142 C182 162 168 174 150 177 C120 181 84 181 58 177 C40 174 30 162 28 146 L22 70 C21 64 18 60 20 58 Z"/>
+  <path stroke-width="4" opacity=".55" d="M24 66 C56 70 130 70 184 62"/>
+  <path stroke-width="4" opacity=".45" d="M34 150 C40 166 60 172 88 174 C120 176 150 174 176 154"/>
+  <!-- 손잡이 -->
+  <path stroke-width="9" d="M190 86 C212 84 226 100 222 120 C219 136 206 146 190 144"/>
+  <path stroke-width="5" opacity=".6" d="M192 98 C206 98 212 108 208 120 C205 129 199 133 192 132"/>
+  <!-- 얼굴 -->
+  <ellipse cx="82" cy="126" rx="5.5" ry="6.5" fill="#a1704f" stroke="none"/>
+  <ellipse cx="134" cy="124" rx="5.5" ry="6.5" fill="#a1704f" stroke="none"/>
+  <path stroke-width="6" d="M100 140 C105 150 113 150 118 140"/>
+  <!-- 꽃 (테두리 위) -->
+  <circle cx="134" cy="42" r="4.5" fill="#a1704f" stroke="none"/>
+  <circle cx="134" cy="29" r="6" stroke-width="4.5"/>
+  <circle cx="147" cy="42" r="6" stroke-width="4.5"/>
+  <circle cx="121" cy="42" r="6" stroke-width="4.5"/>
+  <circle cx="134" cy="55" r="6" stroke-width="4.5"/>
+  <!-- 받침 -->
+  <path stroke-width="8" d="M10 186 C36 198 84 204 116 204 C150 204 196 198 220 186"/>
+  <path stroke-width="8" d="M18 184 C40 178 80 176 116 176 C150 176 190 178 214 184"/>
+  <path stroke-width="4" opacity=".5" d="M40 194 C70 200 160 200 194 192"/>
+</svg>
