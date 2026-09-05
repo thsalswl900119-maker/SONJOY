@@ -71,7 +71,7 @@ let idleT=null;function armIdle(){clearTimeout(idleT);if(!KIOSK()||!S.me)return;
 ['pointerdown','keydown','touchstart','scroll'].forEach(ev=>document.addEventListener(ev,()=>{if(idleT)armIdle()},{passive:true}));
 
 /* ---------- 네비 ---------- */
-const VIEWS=[['home','홈','🏠'],['attend','출퇴근','⏰'],['shifts','근무표','📅'],['check','체크리스트','✅','체크'],['stock','재고·발주','📦','재고'],['sched','스케줄','🗓'],['log','일지','📝'],['settings','설정','⚙️']];
+const VIEWS=[['home','홈','🏠'],['attend','퇴근','⏰'],['shifts','근무표','📅'],['check','체크리스트','✅','체크'],['stock','재고·발주','📦','재고'],['sched','스케줄','🗓'],['log','일지','📝'],['settings','설정','⚙️']];
 const STAFF_TOP=['home','check','stock','log','shifts','sched','manual'],STAFF_BOTTOM=['home','check','stock','log','shifts'];
 function renderNav(){const top=isMgr()?VIEWS:VIEWS.filter(v=>STAFF_TOP.includes(v[0]));const bottom=isMgr()?VIEWS.filter(x=>x[0]!=='settings'):VIEWS.filter(v=>STAFF_BOTTOM.includes(v[0]));
   $('#navTop').innerHTML=top.map(([k,n])=>`<button data-v="${k}" class="${S.view===k?'on':''}">${n}</button>`).join('');
@@ -99,11 +99,10 @@ async function home(){const d=today();const v=$('#view');const mgr=isMgr();
   const state={att:null,ck:[],log:null,st:null};
   const step=(icon,title,sub,done,btn,view,skip)=>`<div class="st ${done?'ok':''}${skip?' skip':''}"><span class="ic">${done?'✅':icon}</span><div class="tx"><b>${title}</b><small>${sub}</small></div>${view?`<button class="btn sm ${done?'':'pri'}" data-go="${view}">${btn}</button>`:''}</div>`;
   const renderFlow=()=>{const box=$('#flow');if(!box)return;const a=state.att;const sh=shiftNow();const ck=state.ck.find(r=>r.shift===sh);const items=(ck?.items||[]).filter(i=>i.type!=='h');const dn=items.filter(i=>i.done).length;
-    box.innerHTML=step('🟢','출근 찍기',a?.in?`${a.in} 출근`:'매장 도착하면 위 버튼',!!a?.in)
-      +step('✅',`${DEFAULT_CHECKLISTS[sh].title} 체크리스트`,ck?`${dn}/${items.length} 완료`:'하면서 체크만 하면 끝',ck&&items.length&&dn===items.length,'열기','check')
+    box.innerHTML=step('✅',`${DEFAULT_CHECKLISTS[sh].title} 체크리스트`,ck?`${dn}/${items.length} 완료`:'하면서 체크만 하면 끝',ck&&items.length&&dn===items.length,'열기','check')
       +step('📦','재고·발주 체크',state.st?`작성됨 (${state.st.updatedBy||''})`:'14~16시 · 어제 숫자에서 바뀐 것만',!!state.st,'열기','stock')
       +step('📝','일지',state.log?`작성됨 (${state.log.updatedBy||''})`:'마감 전 · 숫자 몇 개 + 메모',!!state.log,'열기','log')
-      +step('🔴','퇴근 찍기',a?.out?`${a.out} 퇴근`:'마감 보고 후 위 버튼',!!a?.out);
+      +step('🔴','퇴근 찍기',a?.out?`${a.out} 퇴근`:'다 끝나고 위 버튼 한 번',!!a?.out);
     $$('[data-go]',box).forEach(b=>b.onclick=()=>go(b.dataset.go))};
   S.unsub.push(DB.watch('attendance',[['date','==',d]],rows=>{state.att=rows.find(r=>r.uid===S.me.id)||null;renderFlow()}));
   S.unsub.push(DB.watch('checklists',[['date','==',d]],rows=>{state.ck=rows;renderFlow();const box=$('#ckProg');if(!box)return;box.innerHTML=['open','mid','close'].map(k=>{const doc=rows.find(r=>r.shift===k);const items=(doc?.items||[]).filter(i=>i.type!=='h');const dn=items.filter(i=>i.done).length;const p=items.length?Math.round(dn/items.length*100):0;
@@ -116,36 +115,35 @@ async function home(){const d=today();const v=$('#view');const mgr=isMgr();
   const evs=(await DB.query('schedule',[['year','==',Number(d.slice(0,4))]])).concat(d.slice(5,7)==='12'?await DB.query('schedule',[['year','==',Number(d.slice(0,4))+1]]):[]).filter(e=>e.date>=d&&e.date<=addDays(d,14)).sort((a,b)=>a.date.localeCompare(b.date));
   $('#upcoming').innerHTML=evs.length?evs.slice(0,6).map(e=>`<div class="ev"><span class="dt">${e.date.slice(5)} (${dow(e.date)})</span><span>${SCHED_CATS[e.cat]?.slice(0,2)||''} ${esc(e.title)}</span></div>`).join(''):'<p class="tip">2주 내 일정이 없습니다.</p>';
 }
-/* 출근/퇴근 박스 (홈·출퇴근 공용) */
+/* 퇴근 박스 (홈·퇴근 공용) — 출근은 기록하지 않음 */
 async function renderAttBox(){const box=$('#attBox');if(!box)return;const d=today();const id=`${S.me.id}_${d}`;const a=await DB.get('attendance',id);
-  box.innerHTML=`<div class="row" style="margin-bottom:8px"><b>${nm(S.me.name,S.me.role)}</b>${a?.in?`<span class="tag green">출근 ${a.in}</span>`:''}${a?.out?`<span class="tag green">퇴근 ${a.out}</span>`:''}</div>
-    <div class="att-btns"><button class="btn big sec" id="btnIn" ${a?.in?'disabled':''}>🟢 출근</button><button class="btn big pri" id="btnOut" ${!a?.in||a?.out?'disabled':''}>🔴 퇴근</button></div>`;
-  $('#btnIn').onclick=async()=>{if(!confirm(`${nowHM()} 출근 처리할까요?`))return;await DB.set('attendance',id,{uid:S.me.id,name:S.me.name,date:d,month:d.slice(0,7),in:nowHM(),out:a?.out||'',memo:a?.memo||''});toast('출근 완료. 오늘도 힘내요!');renderAttBox()};
-  $('#btnOut').onclick=async()=>{if(!confirm(`${nowHM()} 퇴근 처리할까요?`))return;await DB.update('attendance',id,{out:nowHM()});toast('퇴근 완료. 수고하셨습니다!');renderAttBox()};
+  box.innerHTML=`<div class="row" style="margin-bottom:8px"><b>${nm(S.me.name,S.me.role)}</b>${a?.out?`<span class="tag green">퇴근 ${a.out}</span>`:'<span class="tip">퇴근할 때 한 번만 눌러 주세요</span>'}</div>
+    <div class="att-btns"><button class="btn big pri" id="btnOut" ${a?.out?'disabled':''}>🔴 퇴근</button></div>`;
+  $('#btnOut').onclick=async()=>{if(!confirm(`${nowHM()} 퇴근 처리할까요?`))return;await DB.set('attendance',id,{uid:S.me.id,name:S.me.name,date:d,month:d.slice(0,7),out:nowHM(),memo:a?.memo||''});toast('퇴근 완료. 수고하셨습니다!');renderAttBox()};
 }
 
 /* ==================== 출퇴근 ==================== */
 async function attend(){const v=$('#view');const m=today().slice(0,7);
-  v.innerHTML=`<div class="card"><h2>출퇴근</h2><div id="attBox"></div></div>
+  v.innerHTML=`<div class="card"><h2>퇴근</h2><div id="attBox"></div></div>
     <div class="card"><h2>기록 <input type="month" id="attMonth" value="${m}" style="width:150px">${isMgr()?`<select id="attWho" style="width:150px"><option value="">전체</option>${S.roster.filter(u=>u.active!==false).map(u=>`<option value="${u.id}">${esc(u.name)}</option>`).join('')}</select>`:''}<span class="sp"></span>${isMgr()?'<button class="btn sm" id="attCsv">CSV</button><button class="btn sm" id="attAdd">+ 수기 등록</button>':''}</h2>
-    <div class="wrap"><table><thead><tr><th>날짜</th><th>이름</th><th>출근</th><th>퇴근</th><th>메모</th><th class="noprint"></th></tr></thead><tbody id="attRows"></tbody></table></div></div>`;
+    <p class="tip">늦게까지 남은 날을 봐두었다가 다른 날 일찍 보내주기 위한 기록입니다. 출근 시각은 기록하지 않습니다.</p><div class="wrap"><table><thead><tr><th>날짜</th><th>이름</th><th>퇴근</th><th>메모</th><th class="noprint"></th></tr></thead><tbody id="attRows"></tbody></table></div></div>`;
   renderAttBox();
   const load=async()=>{const mm=$('#attMonth').value;const who=isMgr()?$('#attWho').value:S.me.id;
     let rows=await DB.query('attendance',[['month','==',mm]]);if(who)rows=rows.filter(r=>r.uid===who);rows.sort((a,b)=>b.date.localeCompare(a.date)||a.name.localeCompare(b.name));
-    $('#attRows').innerHTML=rows.map(r=>`<tr><td>${r.date.slice(5)} (${dow(r.date)})</td><td>${nmU(r.uid)}</td><td>${esc(r.in||'')}</td><td>${esc(r.out||'')}</td><td class="tip">${esc(r.memo||'')}</td><td class="noprint"><button class="btn sm" data-edit="${r.id}">${isMgr()||r.uid===S.me.id?'메모':''}</button></td></tr>`).join('')||'<tr><td colspan="6" class="tip">기록이 없습니다.</td></tr>';
+    $('#attRows').innerHTML=rows.map(r=>`<tr><td>${r.date.slice(5)} (${dow(r.date)})</td><td>${nmU(r.uid)}</td><td>${esc(r.out||'')}</td><td class="tip">${esc(r.memo||'')}</td><td class="noprint"><button class="btn sm" data-edit="${r.id}">${isMgr()||r.uid===S.me.id?'메모':''}</button></td></tr>`).join('')||'<tr><td colspan="5" class="tip">기록이 없습니다.</td></tr>';
     $$('#attRows [data-edit]').forEach(b=>b.onclick=()=>editAtt(rows.find(r=>r.id===b.dataset.edit),load));
-    if($('#attCsv'))$('#attCsv').onclick=()=>{const q=s=>'"'+String(s??'').replace(/"/g,'""')+'"';dl('﻿'+['날짜,요일,이름,출근,퇴근,메모',...rows.map(r=>[r.date,dow(r.date),r.name,r.in,r.out,r.memo].map(q).join(','))].join('\n'),`출퇴근_${mm}.csv`,'text/csv')}};
+    if($('#attCsv'))$('#attCsv').onclick=()=>{const q=s=>'"'+String(s??'').replace(/"/g,'""')+'"';dl('﻿'+['날짜,요일,이름,퇴근,메모',...rows.map(r=>[r.date,dow(r.date),r.name,r.out,r.memo].map(q).join(','))].join('\n'),`퇴근기록_${mm}.csv`,'text/csv')}};
   $('#attMonth').onchange=load;if($('#attWho'))$('#attWho').onchange=load;
   if($('#attAdd'))$('#attAdd').onclick=()=>editAtt(null,load);
   load();
 }
 function editAtt(r,after){const mgr=isMgr();
-  openModal({title:r?`${r.date} ${r.name}`:'출퇴근 수기 등록',body:`<div class="grid">
+  openModal({title:r?`${r.date} ${r.name}`:'퇴근 수기 등록',body:`<div class="grid">
     ${r?'':`<div><label>직원</label><select id="ea_uid">${S.roster.map(u=>`<option value="${u.id}">${esc(u.name)}</option>`).join('')}</select></div><div><label>날짜</label><input type="date" id="ea_date" value="${today()}"></div>`}
-    <div><label>출근</label><input type="time" id="ea_in" value="${esc(r?.in||'')}" ${mgr?'':'disabled'}></div><div><label>퇴근</label><input type="time" id="ea_out" value="${esc(r?.out||'')}" ${mgr?'':'disabled'}></div>
-    <div class="w2"><label>메모</label><input type="text" id="ea_memo" value="${esc(r?.memo||'')}" placeholder="늦게 출근 / 일찍 퇴근 / 연차 / 휴가 등"></div></div>`,
-    onSave:async bg=>{if(r){const p={memo:$('#ea_memo',bg).value};if(mgr){p.in=$('#ea_in',bg).value;p.out=$('#ea_out',bg).value}await DB.update('attendance',r.id,p)}
-      else{const uid=$('#ea_uid',bg).value,d=$('#ea_date',bg).value;const u=S.roster.find(x=>x.id===uid);await DB.set('attendance',`${uid}_${d}`,{uid,name:u.name,date:d,month:d.slice(0,7),in:$('#ea_in',bg).value,out:$('#ea_out',bg).value,memo:$('#ea_memo',bg).value})}toast('저장했습니다');after()},
+    <div><label>퇴근</label><input type="time" id="ea_out" value="${esc(r?.out||'')}" ${mgr?'':'disabled'}></div>
+    <div class="w2"><label>메모</label><input type="text" id="ea_memo" value="${esc(r?.memo||'')}" placeholder="마감 정리로 늦게 감 / 조퇴 등"></div></div>`,
+    onSave:async bg=>{if(r){const p={memo:$('#ea_memo',bg).value};if(mgr){p.out=$('#ea_out',bg).value}await DB.update('attendance',r.id,p)}
+      else{const uid=$('#ea_uid',bg).value,d=$('#ea_date',bg).value;const u=S.roster.find(x=>x.id===uid);await DB.set('attendance',`${uid}_${d}`,{uid,name:u.name,date:d,month:d.slice(0,7),out:$('#ea_out',bg).value,memo:$('#ea_memo',bg).value})}toast('저장했습니다');after()},
     onDelete:mgr&&r?async()=>{await DB.del('attendance',r.id);after()}:null})}
 
 /* ==================== 근무표 ==================== */
