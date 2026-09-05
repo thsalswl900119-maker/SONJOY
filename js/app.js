@@ -328,7 +328,7 @@ const CAT_COLOR={season:'#e8735a',order:'#b8860b',event:'#8e44ad',shoot:'#2471a3
 async function sched(){const v=$('#view');let ym=today().slice(0,7);let mode='month';
   v.innerHTML=`<div class="card"><h2><div class="subtabs" style="margin:0"><button data-m="month" class="on">월</button><button data-m="year">연간</button></div>
     <button class="btn sm" id="pm">‹</button><span id="ymLabel" style="font-size:16px"></span><button class="btn sm" id="nm">›</button><span class="sp"></span>${isMgr()?'<button class="btn sm pri" id="evAdd">+ 일정</button><button class="btn sm" id="planFill">연간 기본 플랜 채우기</button><button class="btn sm" id="planCopy">전년도 복사</button>':''}</h2>
-    <p class="tip">가게 월별 스케줄은 1~2달 전에 미리 잡고, 연간 뷰로 내년 1년치를 계획합니다. ${Object.entries(SCHED_CATS).map(([k,n])=>`<span class="dot" style="background:${CAT_COLOR[k]}"></span>${n.slice(2)}`).join(' · ')}</p>
+    <p class="tip">시즌 과일 전환(4월 망고, 6월 애플망고·복숭아, 8월 무화과, 11월 딸기), 오븐 청소, 크리스마스 촬영, 월말 회의 같은 기본 일정이 자동으로 들어가 있습니다. 날짜를 눌러 추가하고, 연간 탭에서 내년까지 봅니다. ${Object.entries(SCHED_CATS).map(([k,n])=>`<span class="dot" style="background:${CAT_COLOR[k]}"></span>${n.slice(2)}`).join(' · ')}</p>
     <div id="schBody"></div></div>`;
   const yr=()=>Number(ym.slice(0,4));
   const load=async()=>{const rows=await DB.query('schedule',[['year','==',yr()]]);return rows.sort((a,b)=>a.date.localeCompare(b.date))};
@@ -342,10 +342,14 @@ async function sched(){const v=$('#view');let ym=today().slice(0,7);let mode='mo
   $$('[data-m]',v).forEach(bt=>bt.onclick=()=>{mode=bt.dataset.m;$$('[data-m]',v).forEach(x=>x.classList.toggle('on',x===bt));render()});
   $('#pm').onclick=()=>{ym=mode==='month'?addMonths(ym+'-01',-1).slice(0,7):(yr()-1)+ym.slice(4);render()};$('#nm').onclick=()=>{ym=mode==='month'?addMonths(ym+'-01',1).slice(0,7):(yr()+1)+ym.slice(4);render()};
   if($('#evAdd'))$('#evAdd').onclick=()=>editEvent({date:mode==='month'?ym+'-01':today()},render);
-  if($('#planFill'))$('#planFill').onclick=async()=>{const y=Number(prompt('어느 해에 채울까요? (예: 내년 1년치)',yr()+1));if(!y)return;const rows=await DB.query('schedule',[['year','==',y]]);let n=0;
+  /* 연간 기본 플랜 채우기 (같은 날짜·제목은 건너뜀) */
+  async function seedYear(y){const rows=await DB.query('schedule',[['year','==',y]]);let n=0;
     const lastDay=m=>new Date(y,m,0).getDate();const put=async(m,d,cat,title,memo)=>{const date=`${y}-${pad(m)}-${pad(d)}`;if(rows.some(e=>e.date===date&&e.title===title))return;await DB.set('schedule',`ev_${date}_${Math.random().toString(36).slice(2,6)}`,{date,endDate:'',year:y,month:date.slice(0,7),cat,title,memo:memo||'',auto:true});n++};
-    for(const [m,d,cat,t,memo] of ANNUAL_PLAN)await put(m,d,cat,t,memo);for(let m=1;m<=12;m++)for(const [d,cat,t] of MONTHLY_PLAN)await put(m,d===0?lastDay(m):d,cat,t,'');
+    for(const [m,d,cat,t,memo] of ANNUAL_PLAN)await put(m,d,cat,t,memo);for(let m=1;m<=12;m++)for(const [d,cat,t] of MONTHLY_PLAN)await put(m,d===0?lastDay(m):d,cat,t,'');return n}
+  if($('#planFill'))$('#planFill').onclick=async()=>{const y=Number(prompt('어느 해에 채울까요? (예: 내년 1년치)',yr()+1));if(!y)return;const n=await seedYear(y);
     toast(`${y}년 기본 플랜 ${n}건 추가`);ym=`${y}-01`;mode='year';$$('[data-m]',v).forEach(x=>x.classList.toggle('on',x.dataset.m==='year'));render()};
+  /* 처음 열었을 때 비어 있으면 올해·내년을 자동으로 채움 (관리자 계정에서 1회) */
+  if(isMgr()){const cur=await DB.query('schedule',[['year','==',yr()]]);if(!cur.length){toast('기본 연간 플랜을 채우는 중…');const n1=await seedYear(yr());const n2=await seedYear(yr()+1);toast(`올해 ${n1}건, 내년 ${n2}건 기본 플랜을 넣었습니다`)}}
   if($('#planCopy'))$('#planCopy').onclick=async()=>{const y=yr();const prev=await DB.query('schedule',[['year','==',y-1]]);if(!prev.length)return alert(`${y-1}년 일정이 없습니다`);if(!confirm(`${y-1}년 일정 ${prev.length}건을 ${y}년으로 복사할까요? (같은 날짜·제목은 건너뜀)`))return;const rows=await load();let n=0;
     for(const e of prev){const date=String(y)+e.date.slice(4);if(rows.some(x=>x.date===date&&x.title===e.title))continue;await DB.set('schedule',`ev_${date}_${Math.random().toString(36).slice(2,6)}`,{...e,date,endDate:e.endDate?String(y)+e.endDate.slice(4):'',year:y,month:date.slice(0,7)});n++}toast(`${n}건 복사`);render()};
   render();
