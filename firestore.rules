@@ -36,5 +36,22 @@ service cloud.firestore {
     match /cleaning/{id} { allow read, write: if isStaff(); }
     match /stock/{id} { allow read, write: if isStaff(); }
     match /logs/{id} { allow read, write: if isStaff(); }
+
+    // 브랜드 북 워크북(workbook/): 수강생은 로그인 없이 "이름_뒤4자리" 문서 하나만 읽고 씀.
+    // 목록 조회(list)는 막아 다른 수강생 답을 훑어볼 수 없게 하고, 필드·크기를 제한한다.
+    match /workbook/{id} {
+      function wbOk() {
+        let d = request.resource.data;
+        return d.keys().hasOnly(['name','code','day','a','updatedAt'])
+          && d.name is string && d.name.size() >= 1 && d.name.size() <= 30
+          && d.code is string && d.code.matches('^[0-9]{4}$')
+          && d.day is number && d.a is map && d.updatedAt is number
+          && id == d.name.replace('[/\\s]+', '') + '_' + d.code;
+      }
+      allow get: if true;
+      allow list: if isManager();
+      allow create, update: if wbOk();
+      allow delete: if isManager();
+    }
   }
 }
