@@ -27,6 +27,7 @@
 
 - 주소: `https://thsalswl900119-maker.github.io/SONJOY/workbook/`
 - 파일: `workbook/index.html`(워크북), `workbook/cost-calc.xlsx`(원가계산표), `workbook/pl-blank.xlsx`(손익계산서 빈 양식)
+- 강의 슬라이드: `workbook/slides/day1.html` · `day2.html` · `day3.html` (브라우저에서 열고 ← → 키로 넘김, 인쇄하면 PDF)
 - 저장 방식: 서버(Firestore) + 이 기기 사본(localStorage). 서버가 안 되면 화면 위 상태 표시가 "이 기기에만 저장됨"으로 바뀝니다.
 - 로그인 없음. 같은 이름과 뒤 4자리를 아는 사람은 그 답을 볼 수 있으니, 수강생에게 이름은 본명, 번호는 본인 번호를 쓰게 하세요.
 

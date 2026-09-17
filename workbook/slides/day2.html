@@ -1,0 +1,267 @@
+
+<title>브랜드 북 강의 DAY 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Nanum+Gothic:wght@400;700;800&display=swap">
+<style>
+:root{
+  --coral:#C67F68; --corald:#A85A45; --corall:#E7C6B6; --cream:#F8F0E7;
+  --panel:#F2E7D8; --panel2:#FBF5EC; --ink:#4A403B; --grey:#9A8B80; --white:#FFFFFF;
+  --oncoral:#FCEFE8; --oncoral2:#FBE7DD; --line:#EADBC8; --shadow:#DFCDB8;
+  --sage:#8A9A6B; --ground:#EADFCF; --s:1;
+  --head:"BM HANNA 11yrs Old OTF","BMHANNA11yrsold","BM HANNA","Do Hyeon",sans-serif;
+  --body:"NanumGothic","Nanum Gothic","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--body);overflow:hidden;word-break:keep-all;overflow-wrap:break-word}
+.stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform:translate(-50%,-50%) scale(var(--s));transform-origin:center;background:var(--white)}
+.slide{position:absolute;inset:0;padding:96px 124px 110px;display:flex;flex-direction:column;overflow:hidden;background:var(--white);color:var(--ink);opacity:0;visibility:hidden;transition:opacity .2s ease}
+.slide.on{opacity:1;visibility:visible}
+.slide::before{content:"";position:absolute;inset:18px;border-radius:26px;background:var(--coral);z-index:0}
+.slide::after{content:"";position:absolute;inset:42px;border-radius:20px;background:var(--cream);z-index:0}
+.slide>*{position:relative;z-index:1}
+@media (prefers-reduced-motion:reduce){.slide{transition:none}}
+h1,h2,h3{font-family:var(--head);font-weight:400;margin:0;line-height:1.2;letter-spacing:-.01em;text-wrap:balance}
+h2{font-size:64px;color:var(--corald)}
+h2 mark{background:none;color:var(--coral);padding:0}
+h2 u{text-decoration:none;background:linear-gradient(transparent 62%,var(--corall) 62%,var(--corall) 94%,transparent 94%)}
+.chip{display:inline-flex;align-items:center;align-self:flex-start;background:var(--coral);color:var(--white);font-family:var(--head);font-size:24px;padding:8px 22px;border-radius:12px;margin:0 0 26px;letter-spacing:.02em}
+.chip.soft{background:var(--corall);color:var(--corald)}
+.lead{font-size:32px;line-height:1.6;margin:30px 0 0;max-width:1560px;color:var(--ink)}
+.lead b{color:var(--corald);font-weight:800}
+.foot{margin-top:auto;padding-top:26px}
+.note{font-size:24px;color:var(--grey);margin:0;line-height:1.5}
+.note b{color:var(--corald)}
+.mascot{position:absolute;right:58px;bottom:44px;width:120px;height:100px;z-index:2;pointer-events:none}
+.pn{position:absolute;left:66px;bottom:52px;font-family:var(--head);font-size:22px;color:var(--coral);z-index:2}
+.tag{position:absolute;right:196px;bottom:52px;font-size:20px;color:var(--grey);z-index:2;font-family:var(--body)}
+
+/* 표지 */
+.cover{justify-content:center;align-items:center;text-align:center}
+.cover .chip{align-self:center;font-size:26px;padding:10px 26px}
+.cover h1{font-size:96px;color:var(--corald);line-height:1.18;margin-top:10px}
+.cover h1 mark{background:none;color:var(--coral);padding:0}
+.cover .by{font-size:32px;color:var(--grey);margin-top:44px;line-height:1.6}
+.cover .by b{color:var(--corald);font-weight:800}
+.cover .cupbig{width:220px;height:184px;margin:0 auto 18px}
+
+/* PART 구분 */
+.sec{justify-content:center;align-items:center;text-align:center}
+.sec .box{background:var(--coral);border-radius:28px;padding:80px 110px;max-width:1480px;box-shadow:0 12px 30px rgba(166,90,69,.25)}
+.sec .part{font-family:var(--head);font-size:30px;color:var(--oncoral);letter-spacing:.08em;margin:0 0 22px}
+.sec h2{font-size:84px;color:var(--white)}
+.sec .sub{font-size:30px;color:var(--oncoral2);margin:26px 0 0;line-height:1.5}
+
+/* 카드 */
+.cards{display:grid;gap:26px;margin-top:44px}
+.cards>div{background:var(--panel2);border:1.5px solid var(--line);border-radius:18px;padding:34px 34px 36px;min-height:220px;box-shadow:0 4px 12px rgba(223,205,184,.45);display:flex;flex-direction:column}
+.cards .k{font-family:var(--head);font-size:22px;color:var(--coral);margin:0 0 16px;letter-spacing:.03em}
+.cards .t{font-family:var(--head);font-size:34px;line-height:1.35;margin:0;color:var(--corald);text-wrap:balance}
+.cards .d{font-size:24px;line-height:1.55;color:var(--ink);margin:16px 0 0}
+.cards>div.hi{background:var(--coral);border-color:var(--coral)}
+.cards>div.hi .k{color:var(--oncoral)} .cards>div.hi .t{color:var(--white)} .cards>div.hi .d{color:var(--oncoral)}
+.cards .num{width:52px;height:52px;border-radius:50%;background:var(--coral);color:var(--white);font-family:var(--head);font-size:26px;display:grid;place-items:center;margin-bottom:18px}
+.cards>div.hi .num{background:var(--white);color:var(--coral)}
+
+/* 말풍선 장면 */
+.scenes{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:46px}
+.scene{background:var(--panel2);border:1.5px solid var(--line);border-radius:18px;padding:38px 36px;display:flex;flex-direction:column;min-height:470px;box-shadow:0 4px 12px rgba(223,205,184,.45)}
+.scene .when{font-family:var(--head);font-size:22px;color:var(--coral);margin:0 0 24px}
+.scene .q{font-family:var(--head);font-size:38px;line-height:1.4;margin:0;color:var(--corald);text-wrap:balance}
+.scene .q::before{content:"“";color:var(--coral)} .scene .q::after{content:"”";color:var(--coral)}
+.scene .d{font-size:25px;color:var(--ink);line-height:1.55;margin:auto 0 0;padding-top:26px}
+
+/* 표 */
+.table{width:100%;border-collapse:collapse;margin-top:40px;font-size:26px;table-layout:fixed;background:var(--panel2);border-radius:16px;overflow:hidden}
+.table th{text-align:left;font-family:var(--head);font-weight:400;font-size:24px;color:var(--white);background:var(--coral);padding:16px 24px}
+.table td{padding:18px 24px;border-bottom:1.5px solid var(--line);vertical-align:top;line-height:1.45;color:var(--ink)}
+.table td:first-child{font-family:var(--head);color:var(--corald);font-size:27px}
+.table td small{display:block;font-size:21px;color:var(--grey);margin-top:6px}
+.table tr.hi td{background:#F1E2CF}
+.table tr:last-child td{border-bottom:0}
+.table .r{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.table .ok{color:#5F7F4A;font-weight:800} .table .no{color:#B0443C;font-weight:800}
+
+/* 두 열 */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:44px}
+.split>div{background:var(--panel2);border:1.5px solid var(--line);border-radius:18px;padding:40px 44px;box-shadow:0 4px 12px rgba(223,205,184,.45)}
+.split .head{display:flex;align-items:baseline;gap:18px;margin:0 0 26px;flex-wrap:wrap}
+.split .head strong{font-family:var(--head);font-weight:400;font-size:40px;color:var(--corald)}
+.split .head span{font-size:22px;color:var(--grey)}
+.split ul{list-style:none;margin:0;padding:0;display:grid;gap:18px}
+.split li{font-size:28px;line-height:1.45;padding-left:38px;position:relative;color:var(--ink)}
+.split li::before{content:"";position:absolute;left:0;top:.58em;width:16px;height:4px;border-radius:2px;background:var(--coral)}
+.split li b{color:var(--corald);font-weight:800}
+.split>div.hi{background:var(--coral);border-color:var(--coral)}
+.split>div.hi .head strong{color:var(--white)} .split>div.hi .head span{color:var(--oncoral)}
+.split>div.hi li{color:var(--white)} .split>div.hi li b{color:var(--oncoral2)} .split>div.hi li::before{background:var(--white)}
+.split>div.no li::before{width:18px;height:18px;top:.36em;background:none;border:3px solid #B0443C;border-radius:50%}
+.split>div.no li::after{content:"";position:absolute;left:-2px;top:calc(.36em + 8px);width:24px;height:3px;background:#B0443C;transform:rotate(-45deg)}
+
+/* 단계 */
+.steps{display:grid;gap:22px;margin-top:44px}
+.steps>div{display:grid;grid-template-columns:72px 1fr;gap:26px;align-items:start;background:var(--panel2);border:1.5px solid var(--line);border-radius:16px;padding:24px 30px}
+.steps .n{width:60px;height:60px;border-radius:50%;background:var(--coral);color:var(--white);font-family:var(--head);font-size:28px;display:grid;place-items:center}
+.steps .t{font-family:var(--head);font-size:32px;color:var(--corald);margin:0 0 6px;line-height:1.3}
+.steps .d{font-size:25px;line-height:1.5;margin:0;color:var(--ink)}
+.steps .d b{color:var(--corald)}
+.steps.two{grid-template-columns:1fr 1fr}
+
+/* 사진 자리 · 프롬프트 · 인용 */
+.ph{background:#F3E8D9;border:2px dashed var(--corall);border-radius:16px;display:grid;place-items:center;color:var(--grey);font-size:24px;font-style:italic;text-align:center;padding:30px}
+.ph b{color:var(--coral);font-style:normal;font-family:var(--head);font-weight:400}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:40px;align-items:stretch}
+.prompt{background:#F1E2CF;border:1.5px solid var(--corall);border-radius:16px;padding:32px 38px;margin-top:40px;font-size:26px;line-height:1.6}
+.prompt p{margin:0 0 10px} .prompt p:last-child{margin:0}
+.prompt .h{font-family:var(--head);color:var(--corald);font-size:28px}
+.quote{background:var(--panel);border-left:10px solid var(--coral);border-radius:0 16px 16px 0;padding:30px 40px;font-family:var(--head);font-size:40px;color:var(--corald);line-height:1.4;margin-top:40px}
+.formula{display:flex;align-items:center;justify-content:center;gap:22px;flex-wrap:wrap;margin-top:44px}
+.formula .b{background:var(--panel2);border:1.5px solid var(--line);border-radius:16px;padding:26px 36px;font-family:var(--head);font-size:36px;color:var(--corald);text-align:center;min-width:260px}
+.formula .b small{display:block;font-family:var(--body);font-size:20px;color:var(--grey);margin-top:6px}
+.formula .op{font-family:var(--head);font-size:48px;color:var(--coral)}
+.formula .b.hi{background:var(--coral);border-color:var(--coral);color:var(--white)} .formula .b.hi small{color:var(--oncoral)}
+.sw{display:flex;gap:22px;margin-top:20px}
+.sw div{width:120px;height:120px;border-radius:22px;border:1.5px solid var(--line);display:flex;align-items:flex-end;justify-content:center;padding-bottom:10px;font-size:18px;color:#fff;text-shadow:0 0 4px rgba(0,0,0,.45);font-family:var(--body)}
+
+/* 마무리 */
+.close{justify-content:center;align-items:center;text-align:center}
+.close .jp{font-family:var(--head);font-size:110px;color:var(--corald);line-height:1.2}
+.close .ko{font-size:40px;color:var(--coral);font-family:var(--head);margin-top:22px}
+.close .sub{font-size:28px;color:var(--ink);margin-top:40px;line-height:1.7;max-width:1300px}
+.close .sub b{color:var(--corald)}
+
+/* 조작 */
+.nav{position:fixed;right:18px;top:calc(12px + env(safe-area-inset-top,0px));display:flex;gap:8px;align-items:center;z-index:9;font-family:var(--head)}
+.nav button{width:46px;height:46px;border-radius:50%;border:1.5px solid var(--corall);background:var(--white);color:var(--corald);font-size:20px;cursor:pointer}
+.nav button:hover{background:var(--coral);color:var(--white)}
+.nav button:focus-visible{outline:3px solid var(--corald);outline-offset:2px}
+.nav .count{font-size:16px;color:var(--corald);font-variant-numeric:tabular-nums;margin:0 6px}
+.bar{position:fixed;left:0;top:env(safe-area-inset-top,0px);height:4px;background:var(--coral);width:0;z-index:9;transition:width .2s}
+.help{position:fixed;left:18px;top:calc(16px + env(safe-area-inset-top,0px));font-size:14px;color:var(--corald);z-index:9;font-family:var(--body);background:rgba(255,255,255,.7);padding:6px 10px;border-radius:8px}
+@media print{
+  body{overflow:visible;background:#fff} .stage{position:static;transform:none;width:auto;height:auto;background:none}
+  .slide{position:relative;inset:auto;width:1920px;height:1080px;opacity:1;visibility:visible;page-break-after:always;transition:none}
+  .nav,.bar,.help{display:none!important}
+}
+</style>
+
+<div class="bar" id="bar"></div>
+<div class="stage" id="stage">
+<section class="slide cover">
+<div class="cupbig"><svg viewBox="0 0 240 200" aria-hidden="true"><g fill="none" stroke="#C67F68" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M55 70 L165 70 L152 150 Q150 165 135 165 L85 165 Q70 165 68 150 Z"/><path d="M165 82 Q200 84 198 112 Q196 138 160 134"/><path d="M45 176 Q120 196 195 176"/><path d="M100 122 Q114 134 128 122"/><path d="M188 44 L188 64 M178 54 L198 54"/></g><circle cx="98" cy="108" r="3.2" fill="#C67F68"/><circle cx="130" cy="108" r="3.2" fill="#C67F68"/></svg></div><span class="chip">2026 부산 청년잡(JOB) 성장프로젝트 · DAY 2</span><h1>팔리는 카페 만들기,<br><mark>메뉴 개발</mark>과 <mark>원가</mark></h1><p class="by">돈이 남는 구조를 먼저 만듭니다<br>9/29(화) 13:00~18:00 · 강사 <b>손민지</b> (카페스이 · 부산 명지)</p>
+<div class="pn">01</div><div class="tag">DAY 2 · 메뉴와 원가 · 카페스이 손민지</div><div class="mascot"><svg viewBox="0 0 240 200" aria-hidden="true"><g fill="none" stroke="#C67F68" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M55 70 L165 70 L152 150 Q150 165 135 165 L85 165 Q70 165 68 150 Z"/><path d="M165 82 Q200 84 198 112 Q196 138 160 134"/><path d="M45 176 Q120 196 195 176"/><path d="M100 122 Q114 134 128 122"/><path d="M188 44 L188 64 M178 54 L198 54"/></g><circle cx="98" cy="108" r="3.2" fill="#C67F68"/><circle cx="130" cy="108" r="3.2" fill="#C67F68"/></svg></div>
+</section>
+<section class="slide ">
+<span class="chip">오늘의 흐름</span><h2>오늘은 <u>돈이 남는 구조</u>를 만드는 날이에요</h2><table class="table"><colgroup><col style="width:14%"><col style="width:46%"><col style="width:40%"></colgroup><tr><th>시간</th><th>교시</th><th>오늘 워크북에 적는 것</th></tr><tr><td>13:00</td><td>1교시 · 팔리는 디저트·베이커리 메뉴 구성 · 시그니처 메뉴 기획</td><td>메뉴 구성 방향 + 시그니처 후보 3개</td></tr><tr><td>14:00</td><td>2교시 · 메뉴명·설명·가격 설정 방법</td><td>메뉴명 · 한 줄 설명 · 판매가</td></tr><tr><td>15:00</td><td>3교시 · 원가와 판매가 기초 · 원가율 계산 실습</td><td>1개 원가 · 원가율 · 월 손익 미리보기</td></tr><tr><td>16:00</td><td>4교시 · 메뉴판 구성 · 브랜드 비주얼(컬러·폰트·로고)</td><td>메뉴판 순서 · 대표 컬러 3개</td></tr><tr class="hi"><td>17:00</td><td>5교시 · [실습] 시그니처 메뉴 & 메뉴판 기획안 완성</td><td><b>메뉴·가격 기획 시트 완성</b></td></tr></table><div class="foot"><p class="note">워크북 2일차 화면 맨 위에 <b>어제 정한 것</b>(카페 이름·콘셉트·키워드·대표 고객·굳이 올 이유·상권)이 보여요. 오늘은 그 위에 쌓습니다.</p></div>
+<div class="pn">02</div><div class="tag">DAY 2 · 메뉴와 원가 · 카페스이 손민지</div><div class="mascot"><svg viewBox="0 0 240 200" aria-hidden="true"><g fill="none" stroke="#C67F68" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M55 70 L165 70 L152 150 Q150 165 135 165 L85 165 Q70 165 68 150 Z"/><path d="M165 82 Q200 84 198 112 Q196 138 160 134"/><path d="M45 176 Q120 196 195 176"/><path d="M100 122 Q114 134 128 122"/><path d="M188 44 L188 64 M178 54 L198 54"/></g><circle cx="98" cy="108" r="3.2" fill="#C67F68"/><circle cx="130" cy="108" r="3.2" fill="#C67F68"/></svg></div>
+</section>
+<section class="slide ">
+<span class="chip">먼저 여쭤볼게요</span><h2>카페 사장님들이 <u>제일 많이 하는 말</u> 세 가지</h2><div class="scenes"><div class="scene"><p class="when">오픈 준비할 때</p><p class="q">메뉴는 많을수록 좋은 거 아니에요?</p><p class="d">메뉴 하나가 늘면 재료·냉장고 자리·준비 시간·폐기가 같이 늘어요. 손님은 많은 메뉴를 "다양하다"가 아니라 "뭘 잘하는지 모르겠다"로 읽어요.</p></div><div class="scene"><p class="when">오픈하고 반년 뒤</p><p class="q">매출은 나오는데 돈이 안 남아요.</p><p class="d">제일 흔하고 제일 늦게 알아채는 문제예요. 오늘 3교시가 이 문제의 답이에요. 매출 100만원이 어디로 가는지 표로 봅니다.</p></div><div class="scene"><p class="when">가격표 만들 때</p><p class="q">가격을 얼마로 해야 할지 모르겠어요.</p><p class="d">옆 가게 보고 정하면 옆 가게 원가로 장사하는 거예요. 내 원가율·동네 기준가·대표 고객 객단가, 세 개가 만나는 곳이 내 가격.</p></div></div><div class="foot"><p class="note">오늘이 끝나면 "케이크 한 조각 얼마에 팔아야 남는지"를 <b>내 숫자</b>로 말할 수 있어요.</p></div>
+<div class="pn">03</div><div class="tag">DAY 2 · 메뉴와 원가 · 카페스이 손민지</div><div class="mascot"><svg viewBox="0 0 240 200" aria-hidden="true"><g fill="none" stroke="#C67F68" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M55 70 L165 70 L152 150 Q150 165 135 165 L85 165 Q70 165 68 150 Z"/><path d="M165 82 Q200 84 198 112 Q196 138 160 134"/><path d="M45 176 Q120 196 195 176"/><path d="M100 122 Q114 134 128 122"/><path d="M188 44 L188 64 M178 54 L198 54"/></g><circle cx="98" cy="108" r="3.2" fill="#C67F68"/><circle cx="130" cy="108" r="3.2" fill="#C67F68"/></svg></div>
+</section>
+<section class="slide sec">
+<div class="box"><p class="part">1교시 · 13:00</p><h2>팔리는 메뉴 구성,<br>시그니처 메뉴 기획</h2><p class="sub">잘 팔리는 메뉴 구성 전략과, 카페스이 대표 메뉴가 만들어지고 빠지던 과정.</p></div>
+<div class="pn">04</div><div class="tag">DAY 2 · 메뉴와 원가 · 카페스이 손민지</div><div class="mascot"><svg viewBox="0 0 240 200" aria-hidden="true"><g fill="none" stroke="#C67F68" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M55 70 L165 70 L152 150 Q150 165 135 165 L85 165 Q70 165 68 150 Z"/><path d="M165 82 Q200 84 198 112 Q196 138 160 134"/><path d="M45 176 Q120 196 195 176"/><path d="M100 122 Q114 134 128 122"/><path d="M188 44 L188 64 M178 54 L198 54"/></g><circle cx="98" cy="108" r="3.2" fill="#C67F68"/><circle cx="130" cy="108" r="3.2" fill="#C67F68"/></svg></div>
+</section>
+<section class="slide ">
+<span class="chip">1교시</span><h2>메뉴 구성은 <u>중심 하나 + 곁들이</u>, 처음엔 12개면 충분해요</h2><p class="lead">다 잘하려 하면 재료가 남고 돈이 새요. 처음 오픈은 <b>12개 안팎</b>이 안전하고, 잘 팔리는 걸 보고 나중에 늘려요.</p><div class="cards" style="grid-template-columns:repeat(3,1fr)"><div class="hi"><p class="k">중심 메뉴</p><p class="t">우리 가게가 돈을 버는 것</p><p class="d">디저트·베이커리(빵)·음료 중 하나만 중심. 카페스이는 디저트. 시그니처 3개가 여기 들어가요.</p></div><div><p class="k">곁들이</p><p class="t">객단가를 올리는 것</p><p class="d">중심 메뉴와 같이 주문되는 것. 케이크와 어울리는 음료 5가지. 혼자서는 안 팔려도 돼요.</p></div><div><p class="k">없애는 것</p><p class="t">재료를 남기는 것</p><p class="d">중심과 재료를 공유하지 않는 메뉴. 브런치·빙수처럼 장비와 재료가 따로 노는 것부터 뺍니다.</p></div></div><div class="foot"><p class="note">워크북 1교시 "메뉴 구성 방향" 칸에 한 문장으로. 예) 계절과일 케이크가 중심, 음료는 케이크와 어울리는 5가지만, 빵은 하지 않는다.</p></div>
+<div class="pn">05</div><div class="tag">DAY 2 · 메뉴와 원가 · 카페스이 손민지</div><div class="mascot"><svg viewBox="0 0 240 200" aria-hidden="true"><g fill="none" stroke="#C67F68" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M55 70 L165 70 L152 150 Q150 165 135 165 L85 165 Q70 165 68 150 Z"/><path d="M165 82 Q200 84 198 112 Q196 138 160 134"/><path d="M45 176 Q120 196 195 176"/><path d="M100 122 Q114 134 128 122"/><path d="M188 44 L188 64 M178 54 L198 54"/></g><circle cx="98" cy="108" r="3.2" fill="#C67F68"/><circle cx="130" cy="108" r="3.2" fill="#C67F68"/></svg></div>
+</section>
+<section class="slide ">
+<span class="chip">1교시</span><h2>시그니처 메뉴의 조건 <u>네 가지</u>, 하나라도 빠지면 시그니처가 아니에요</h2><div class="cards" style="grid-template-columns:repeat(4,1fr)"><div><div class="num">1</div><p class="k">조건 1</p><p class="t">콘셉트가<br>한눈에 보인다</p><p class="d">"계절과일 카페"의 시그니처가 초코 브라우니면 손님이 헷갈려요. 어제 키워드 3개와 이어져야.</p></div><div><div class="num">2</div><p class="k">조건 2</p><p class="t">사진 찍고 싶다</p><p class="d">단면·높이·색. 손님이 올린 사진이 곧 광고예요. 3일차 인스타와 이어져요.</p></div><div><div class="num">3</div><p class="k">조건 3</p><p class="t">매일 같은 품질로<br>만들 수 있다</p><p class="d">사장이 없는 날에도, 바쁜 토요일에도. 레시피가 숫자로 적혀 있어야 해요.</p></div><div class="hi"><div class="num">4</div><p class="k">조건 4</p><p class="t">재료 손실이 적다</p><p class="d">계절과일은 그달 과일로 바꾸면 손실이 줄어요. 한 재료가 여러 메뉴에 쓰이면 더 좋고요.</p></div></div><div class="foot"><p class="note">워크북 1교시 프롬프트가 후보 7개를 주고 "처음 오픈 때 3개만 고른다면"을 골라줘요. 후보는 후보일 뿐, 2교시에서 이름과 가격을 붙이며 바뀝니다.</p></div>
+<div class="pn">06</div><div class="tag">DAY 2 · 메뉴와 원가 · 카페스이 손민지</div><div class="mascot"><svg viewBox="0 0 240 200" aria-hidden="true"><g fill="none" stroke="#C67F68" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M55 70 L165 70 L152 150 Q150 165 135 165 L85 165 Q70 165 68 150 Z"/><path d="M165 82 Q200 84 198 112 Q196 138 160 134"/><path d="M45 176 Q120 196 195 176"/><path d="M100 122 Q114 134 128 122"/><path d="M188 44 L188 64 M178 54 L198 54"/></g><circle cx="98" cy="108" r="3.2" fill="#C67F68"/><circle cx="130" cy="108" r="3.2" fill="#C67F68"/></svg></div>
+</section>
+<section class="slide ">
+<span class="chip">1교시 · 카페스이 사례</span><h2>카페스이 대표 메뉴, <u>남은 것과 빠진 것</u></h2><table class="table"><colgroup><col style="width:22%"><col style="width:26%"><col style="width:22%"><col style="width:30%"></colgroup><tr><th>메뉴</th><th>시도한 이유</th><th>결과</th><th>배운 것</th></tr><tr><td>▣ 실제 메뉴 1</td><td>▣</td><td><span class="ok">시그니처로 남음</span></td><td>▣ 강사가 채움</td></tr><tr><td>▣ 실제 메뉴 2</td><td>▣</td><td><span class="no">빠짐</span></td><td>▣</td></tr><tr><td>▣ 실제 메뉴 3</td><td>▣</td><td><span class="no">빠짐</span></td><td>▣</td></tr><tr class="hi"><td>공통점</td><td>트렌드를 따라 넣은 메뉴</td><td>오래 못 감</td><td><b>콘셉트가 보이고 매일 같은 품질이 나오는 것</b>만 남았다</td></tr></table><div class="foot"><p class="note">▣ 표시 칸은 카페스이 실제 메뉴·사진·판매 수치로 채웁니다. 실패 사례가 성공 사례보다 더 남아요.</p></div>
+<div class="pn">07</div><div class="tag">DAY 2 · 메뉴와 원가 · 카페스이 손민지</div><div class="mascot"><svg viewBox="0 0 240 200" aria-hidden="true"><g fill="none" stroke="#C67F68" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M55 70 L165 70 L152 150 Q150 165 135 165 L85 165 Q70 165 68 150 Z"/><path d="M165 82 Q200 84 198 112 Q196 138 160 134"/><path d="M45 176 Q120 196 195 176"/><path d="M100 122 Q114 134 128 122"/><path d="M188 44 L188 64 M178 54 L198 54"/></g><circle cx="98" cy="108" r="3.2" fill="#C67F68"/><circle cx="130" cy="108" r="3.2" fill="#C67F68"/></svg></div>
+</section>
+<section class="slide sec">
+<div class="box"><p class="part">2교시 · 14:00</p><h2>메뉴명 · 한 줄 설명 · 판매가</h2><p class="sub">고객이 "비싸다"고 느끼지 않게 하는 메뉴 표현법. 같은 케이크가 이름과 설명으로 값이 달라져요.</p></div>
+<div class="pn">08</div><div class="tag">DAY 2 · 메뉴와 원가 · 카페스이 손민지</div><div class="mascot"><svg viewBox="0 0 240 200" aria-hidden="true"><g fill="none" stroke="#C67F68" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M55 70 L165 70 L152 150 Q150 165 135 165 L85 165 Q70 165 68 150 Z"/><path d="M165 82 Q200 84 198 112 Q196 138 160 134"/><path d="M45 176 Q120 196 195 176"/><path d="M100 122 Q114 134 128 122"/><path d="M188 44 L188 64 M178 54 L198 54"/></g><circle cx="98" cy="108" r="3.2" fill="#C67F68"/><circle cx="130" cy="108" r="3.2" fill="#C67F68"/></svg></div>
+</section>
+<section class="slide ">
+<span class="chip">2교시</span><h2>같은 케이크인데 <u>표현이 값을 정해요</u></h2><table class="table"><colgroup><col style="width:20%"><col style="width:40%"><col style="width:40%"></colgroup><tr><th>요소</th><th>이렇게 쓰면 비싸 보여요</th><th>이렇게 쓰면 가치가 보여요</th></tr><tr><td>메뉴명</td><td>딸기 케이크</td><td><b>이달의 과일 케이크</b> — 재료나 장면이 그려지게</td></tr><tr><td>한 줄 설명</td><td>(없음)</td><td><b>그달 가장 맛있는 과일을 올린 생크림 케이크, 매일 아침 굽습니다</b> — 25자 안팎, 왜 이 값인지</td></tr><tr><td>판매가</td><td>7,500원 (숫자만 덩그러니)</td><td>7,500 — 설명 밑에, 원 표시 없이. 값은 3교시 원가율 보고 조정</td></tr><tr class="hi"><td>손님 머릿속</td><td>"케이크 하나에 7,500?"</td><td>"매일 굽는 제철 과일 케이크가 7,500"</td></tr></table><div class="foot"><p class="note">설명에 들어가는 세 가지: <b>재료 원산지 · 만드는 시간 · 크기</b>. 부산 무화과, 매일 아침, 두툼한 한 조각.</p></div>
+<div class="pn">09</div><div class="tag">DAY 2 · 메뉴와 원가 · 카페스이 손민지</div><div class="mascot"><svg viewBox="0 0 240 200" aria-hidden="true"><g fill="none" stroke="#C67F68" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M55 70 L165 70 L152 150 Q150 165 135 165 L85 165 Q70 165 68 150 Z"/><path d="M165 82 Q200 84 198 112 Q196 138 160 134"/><path d="M45 176 Q120 196 195 176"/><path d="M100 122 Q114 134 128 122"/><path d="M188 44 L188 64 M178 54 L198 54"/></g><circle cx="98" cy="108" r="3.2" fill="#C67F68"/><circle cx="130" cy="108" r="3.2" fill="#C67F68"/></svg></div>
+</section>
+<section class="slide ">
+<span class="chip">2교시</span><h2>가격은 <u>세 개가 만나는 곳</u>에서 정해요</h2><p class="lead">옆 가게 가격만 보면 옆 가게 원가로 장사하게 돼요. 내 원가에서 출발하고, 동네에서 확인하고, 대표 고객이 낼 수 있는 값으로 맞춥니다.</p><div class="formula"><div class="b">원가율 30~35%<small>재료비 ÷ 판매가 · 3교시</small></div><span class="op">∩</span><div class="b">동네 기준가<small>경쟁 카페 3곳의 같은 메뉴</small></div><span class="op">∩</span><div class="b hi">객단가 12,000원<small>어제 정한 대표 고객</small></div></div><div class="quote">원가 2,600원인 케이크는 30~35%를 맞추려면 7,400~8,700원. 동네가 6,500~8,000원이면 7,500원이 답이에요. (예시 숫자)</div><div class="foot"><p class="note">워크북 2교시 프롬프트가 메뉴명 후보 3개, 설명 후보 2개를 주고 "내 판매가가 이 동네 기준으로 어떤지"를 솔직하게 말해줘요.</p></div>
+<div class="pn">10</div><div class="tag">DAY 2 · 메뉴와 원가 · 카페스이 손민지</div><div class="mascot"><svg viewBox="0 0 240 200" aria-hidden="true"><g fill="none" stroke="#C67F68" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M55 70 L165 70 L152 150 Q150 165 135 165 L85 165 Q70 165 68 150 Z"/><path d="M165 82 Q200 84 198 112 Q196 138 160 134"/><path d="M45 176 Q120 196 195 176"/><path d="M100 122 Q114 134 128 122"/><path d="M188 44 L188 64 M178 54 L198 54"/></g><circle cx="98" cy="108" r="3.2" fill="#C67F68"/><circle cx="130" cy="108" r="3.2" fill="#C67F68"/></svg></div>
+</section>
+<section class="slide sec">
+<div class="box"><p class="part">3교시 · 15:00</p><h2>원가와 판매가 기초,<br>원가율 계산 실습</h2><p class="sub">"매출은 나오는데 돈이 안 남는" 이유를 숫자로 봅니다. 오늘 제일 중요한 한 시간.</p></div>
+<div class="pn">11</div><div class="tag">DAY 2 · 메뉴와 원가 · 카페스이 손민지</div><div class="mascot"><svg viewBox="0 0 240 200" aria-hidden="true"><g fill="none" stroke="#C67F68" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M55 70 L165 70 L152 150 Q150 165 135 165 L85 165 Q70 165 68 150 Z"/><path d="M165 82 Q200 84 198 112 Q196 138 160 134"/><path d="M45 176 Q120 196 195 176"/><path d="M100 122 Q114 134 128 122"/><path d="M188 44 L188 64 M178 54 L198 54"/></g><circle cx="98" cy="108" r="3.2" fill="#C67F68"/><circle cx="130" cy="108" r="3.2" fill="#C67F68"/></svg></div>
+</section>
+<section class="slide ">
+<span class="chip">3교시</span><h2>원가율 = <u>재료비 ÷ 판매가</u>, 업종마다 기준이 달라요</h2><p class="lead">여기서 재료비는 <b>그 메뉴 하나에 들어간 재료와 포장</b>만. 인건비·월세는 따로 봅니다.</p><table class="table"><colgroup><col style="width:26%"><col style="width:24%"><col style="width:50%"></colgroup><tr><th>메뉴 종류</th><th>통상 원가율</th><th>뜻</th></tr><tr><td>커피 · 음료</td><td><span class="r">20 ~ 30%</span></td><td>원두·우유·시럽. 음료가 돈을 남기는 이유</td></tr><tr><td>디저트 · 베이커리</td><td><span class="r">30 ~ 40%</span></td><td>과일·버터·생크림이 비쌈. 35% 넘으면 레시피나 가격 점검</td></tr><tr><td>식사류 (브런치 등)</td><td><span class="r">35 ~ 45%</span></td><td>재료가 많이 들어 원가율이 높음</td></tr><tr class="hi"><td>케이크 카페 목표</td><td><span class="r"><b>30 ~ 35%</b></span></td><td>워크북 표 색깔 기준: 35% 이하 초록 · 45% 이하 노랑 · 그 위 빨강</td></tr></table><div class="foot"><p class="note">7,500원 케이크의 재료비가 2,600원이면 원가율 34.7%. 이 숫자 하나로 "이 메뉴를 계속 팔아도 되는지"가 정해져요.</p></div>
+<div class="pn">12</div><div class="tag">DAY 2 · 메뉴와 원가 · 카페스이 손민지</div><div class="mascot"><svg viewBox="0 0 240 200" aria-hidden="true"><g fill="none" stroke="#C67F68" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M55 70 L165 70 L152 150 Q150 165 135 165 L85 165 Q70 165 68 150 Z"/><path d="M165 82 Q200 84 198 112 Q196 138 160 134"/><path d="M45 176 Q120 196 195 176"/><path d="M100 122 Q114 134 128 122"/><path d="M188 44 L188 64 M178 54 L198 54"/></g><circle cx="98" cy="108" r="3.2" fill="#C67F68"/><circle cx="130" cy="108" r="3.2" fill="#C67F68"/></svg></div>
+</section>
+<section class="slide ">
+<span class="chip">3교시 · 예시</span><h2>케이크 한 조각, <u>재료 네 가지</u>만 더해도 감이 잡혀요</h2><div class="formula"><div class="b">900원<small>과일</small></div><span class="op">+</span><div class="b">700원<small>생크림</small></div><span class="op">+</span><div class="b">600원<small>시트</small></div><span class="op">+</span><div class="b">400원<small>상자</small></div><span class="op">=</span><div class="b hi">2,600원<small>1개 원가</small></div></div><div class="quote">2,600 ÷ 7,500 = 34.7% → 케이크 카페 목표 안. 상자 400원을 빼면 29%, 그래서 포장도 원가예요.</div><div class="foot"><p class="note">워크북 <b>원가계산표</b>(엑셀)에 재료·단가·기준수량·레시피 양을 넣으면 1개 원가가 나와요. "예시" 시트를 보고 메뉴 1·2·3 시트의 노란 칸만 채우세요.</p></div>
+<div class="pn">13</div><div class="tag">DAY 2 · 메뉴와 원가 · 카페스이 손민지</div><div class="mascot"><svg viewBox="0 0 240 200" aria-hidden="true"><g fill="none" stroke="#C67F68" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M55 70 L165 70 L152 150 Q150 165 135 165 L85 165 Q70 165 68 150 Z"/><path d="M165 82 Q200 84 198 112 Q196 138 160 134"/><path d="M45 176 Q120 196 195 176"/><path d="M100 122 Q114 134 128 122"/><path d="M188 44 L188 64 M178 54 L198 54"/></g><circle cx="98" cy="108" r="3.2" fill="#C67F68"/><circle cx="130" cy="108" r="3.2" fill="#C67F68"/></svg></div>
+</section>
+<section class="slide ">
+<span class="chip">3교시</span><h2>매출 100만원이 들어오면 <u>어디로 가나</u> (동네 카페 통상 범위)</h2><table class="table"><colgroup><col style="width:22%"><col style="width:16%"><col style="width:16%"><col style="width:46%"></colgroup><tr><th>항목</th><th>매출 대비</th><th>100만원이면</th><th>이렇게 보세요</th></tr><tr><td>재료비 (매출원가)</td><td><span class="r">30~35%</span></td><td><span class="r">30~35만</span></td><td>40% 넘으면 가격을 올리거나 레시피를 줄인다</td></tr><tr><td>인건비</td><td><span class="r">20~30%</span></td><td><span class="r">20~30만</span></td><td>혼자 하면 <b>내 월급</b>도 여기 넣어야 진짜 계산</td></tr><tr><td>월세 · 관리비</td><td><span class="r">10~15%</span></td><td><span class="r">10~15만</span></td><td>15% 넘는 자리는 위험. 월세 100만원이면 월매출 700만원은 나와야</td></tr><tr><td>공과금 · 통신 · 보험</td><td><span class="r">5~8%</span></td><td><span class="r">5~8만</span></td><td>전기·수도·가스·인터넷·화재보험</td></tr><tr><td>카드 · 배달 수수료</td><td><span class="r">3~10%</span></td><td><span class="r">3~10만</span></td><td>카드 약 1~2%, 배달앱은 주문의 15~25%</td></tr><tr><td>포장 · 소모품 · 광고</td><td><span class="r">3~5%</span></td><td><span class="r">3~5만</span></td><td>케이크 상자, 컵, 네이버 광고</td></tr><tr class="hi"><td><b>남는 돈 (영업이익)</b></td><td><span class="r"><b>10~20%</b></span></td><td><span class="r"><b>10~20만</b></span></td><td>여기서 대출 이자와 세금을 내요. 10% 아래면 구조를 다시</td></tr></table><div class="foot"><p class="note">▣ 카페스이 실제 비율은 수업에서 강사가 공개합니다. 배달 비중이 크거나 임대료가 비싼 상권은 범위가 달라져요.</p></div>
+<div class="pn">14</div><div class="tag">DAY 2 · 메뉴와 원가 · 카페스이 손민지</div><div class="mascot"><svg viewBox="0 0 240 200" aria-hidden="true"><g fill="none" stroke="#C67F68" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M55 70 L165 70 L152 150 Q150 165 135 165 L85 165 Q70 165 68 150 Z"/><path d="M165 82 Q200 84 198 112 Q196 138 160 134"/><path d="M45 176 Q120 196 195 176"/><path d="M100 122 Q114 134 128 122"/><path d="M188 44 L188 64 M178 54 L198 54"/></g><circle cx="98" cy="108" r="3.2" fill="#C67F68"/><circle cx="130" cy="108" r="3.2" fill="#C67F68"/></svg></div>
+</section>
+<section class="slide ">
+<span class="chip">3교시</span><h2>"매출은 나오는데 돈이 안 남는" <u>다섯 가지 이유</u></h2><div class="cards" style="grid-template-columns:repeat(5,1fr)"><div><div class="num">1</div><p class="k">이유 1</p><p class="t">내 월급을<br>비용에 안 넣음</p><p class="d">"남는 돈"이 사실은 내 월급이었던 것. 인건비에 내 월급을 넣고 다시 계산하면 진짜 이익이 보여요.</p></div><div><div class="num">2</div><p class="k">이유 2</p><p class="t">배달 수수료</p><p class="d">배달 매출 100만원은 실제로 75~85만원. 배달 비중이 크면 원가율이 통째로 올라가요.</p></div><div><div class="num">3</div><p class="k">이유 3</p><p class="t">재료 폐기</p><p class="d">과일·생크림은 며칠이면 끝. 메뉴가 많을수록 버리는 게 많아져요. 폐기는 장부에 안 보이는 원가.</p></div><div><div class="num">4</div><p class="k">이유 4</p><p class="t">월세 15% 초과</p><p class="d">좋은 자리라서 비싼 월세. 매출이 그만큼 안 나오면 매달 자리에 돈을 내는 셈이에요.</p></div><div class="hi"><div class="num">5</div><p class="k">이유 5</p><p class="t">손익계산서를<br>안 씀</p><p class="d">매출은 포스가 알려주지만, 남는 돈은 아무도 안 알려줘요. 매달 네 줄만 적으면 어디서 새는지 보여요.</p></div></div><div class="foot"><p class="note">워크북 3교시 <b>월 손익 미리보기</b>에 예상 월매출·월세·인건비·공과금 네 개만 넣으면 남는 돈이 바로 나와요.</p></div>
+<div class="pn">15</div><div class="tag">DAY 2 · 메뉴와 원가 · 카페스이 손민지</div><div class="mascot"><svg viewBox="0 0 240 200" aria-hidden="true"><g fill="none" stroke="#C67F68" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M55 70 L165 70 L152 150 Q150 165 135 165 L85 165 Q70 165 68 150 Z"/><path d="M165 82 Q200 84 198 112 Q196 138 160 134"/><path d="M45 176 Q120 196 195 176"/><path d="M100 122 Q114 134 128 122"/><path d="M188 44 L188 64 M178 54 L198 54"/></g><circle cx="98" cy="108" r="3.2" fill="#C67F68"/><circle cx="130" cy="108" r="3.2" fill="#C67F68"/></svg></div>
+</section>
+<section class="slide ">
+<span class="chip">3교시</span><h2>손익계산서는 <u>딱 네 줄</u>이에요</h2><p class="lead">워크북에서 내려받는 <b>손익계산서 빈 양식</b>은 카페스이가 실제로 매달 쓰는 표예요. 1월~12월 시트에 날짜와 금액만 적으면 오른쪽에 그 달 매출과 영업이익이 계산돼요.</p><div class="formula"><div class="b">매출<small>들어온 돈</small></div><span class="op">−</span><div class="b">매출원가<small>재료 · 포장</small></div><span class="op">−</span><div class="b">고정비<small>월세 · 인건비 · 보험 · 통신</small></div><span class="op">−</span><div class="b">변동비<small>공과금 · 수수료 · 광고</small></div><span class="op">=</span><div class="b hi">영업이익<small>남는 돈</small></div></div><div class="foot"><p class="note">오픈 후 매달 채우세요. 석 달만 쌓이면 "어디서 새는지"가 보이고, 1년이면 "언제 바쁘고 언제 쉬는지"가 보여요.</p></div>
+<div class="pn">16</div><div class="tag">DAY 2 · 메뉴와 원가 · 카페스이 손민지</div><div class="mascot"><svg viewBox="0 0 240 200" aria-hidden="true"><g fill="none" stroke="#C67F68" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M55 70 L165 70 L152 150 Q150 165 135 165 L85 165 Q70 165 68 150 Z"/><path d="M165 82 Q200 84 198 112 Q196 138 160 134"/><path d="M45 176 Q120 196 195 176"/><path d="M100 122 Q114 134 128 122"/><path d="M188 44 L188 64 M178 54 L198 54"/></g><circle cx="98" cy="108" r="3.2" fill="#C67F68"/><circle cx="130" cy="108" r="3.2" fill="#C67F68"/></svg></div>
+</section>
+<section class="slide sec">
+<div class="box"><p class="part">4교시 · 16:00</p><h2>메뉴판 구성,<br>브랜드 비주얼 콘셉트</h2><p class="sub">브랜드에 맞는 메뉴 디자인과 컬러·폰트·로고의 방향. 시안은 나중에, 오늘은 방향만.</p></div>
+<div class="pn">17</div><div class="tag">DAY 2 · 메뉴와 원가 · 카페스이 손민지</div><div class="mascot"><svg viewBox="0 0 240 200" aria-hidden="true"><g fill="none" stroke="#C67F68" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M55 70 L165 70 L152 150 Q150 165 135 165 L85 165 Q70 165 68 150 Z"/><path d="M165 82 Q200 84 198 112 Q196 138 160 134"/><path d="M45 176 Q120 196 195 176"/><path d="M100 122 Q114 134 128 122"/><path d="M188 44 L188 64 M178 54 L198 54"/></g><circle cx="98" cy="108" r="3.2" fill="#C67F68"/><circle cx="130" cy="108" r="3.2" fill="#C67F68"/></svg></div>
+</section>
+<section class="slide ">
+<span class="chip">4교시</span><h2>메뉴판은 <u>순서가 전부</u>예요</h2><div class="split"><div class="no"><p class="head"><strong>이런 메뉴판</strong><span>손님이 고르다 지쳐요</span></p><ul><li>커피가 <b>맨 앞</b>에 20가지</li><li>디저트는 <b>맨 뒤</b>에 작게</li><li>카테고리가 <b>7개</b>, 메뉴는 30개</li><li>시그니처가 어디 있는지 <b>찾아야</b> 해요</li></ul></div><div class="hi"><p class="head"><strong>이런 메뉴판</strong><span>손님이 3초 만에 골라요</span></p><ul><li><b>이달의 케이크</b>가 맨 앞, 사진 하나 크게</li><li>타르트·파운드 → 커피 → 차·논커피</li><li>카테고리 <b>3~4개</b>, 메뉴 12개</li><li>설명 한 줄이 <b>왜 이 값인지</b> 말해줘요</li></ul></div></div><div class="foot"><p class="note">손님이 처음 보는 자리에 시그니처. 음료는 뒤. 메뉴판은 "다 있어요"가 아니라 "이걸 드세요"를 말하는 종이예요.</p></div>
+<div class="pn">18</div><div class="tag">DAY 2 · 메뉴와 원가 · 카페스이 손민지</div><div class="mascot"><svg viewBox="0 0 240 200" aria-hidden="true"><g fill="none" stroke="#C67F68" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M55 70 L165 70 L152 150 Q150 165 135 165 L85 165 Q70 165 68 150 Z"/><path d="M165 82 Q200 84 198 112 Q196 138 160 134"/><path d="M45 176 Q120 196 195 176"/><path d="M100 122 Q114 134 128 122"/><path d="M188 44 L188 64 M178 54 L198 54"/></g><circle cx="98" cy="108" r="3.2" fill="#C67F68"/><circle cx="130" cy="108" r="3.2" fill="#C67F68"/></svg></div>
+</section>
+<section class="slide ">
+<span class="chip">4교시</span><h2>컬러 <u>세 가지</u>, 폰트는 느낌만, 로고는 키워드만</h2><p class="lead">색은 <b>메인(간판·로고) · 배경(벽·메뉴판) · 포인트(작게 강조)</b> 세 가지면 충분해요. 카페스이 예시:</p><div class="sw"><div style="background:#C67F68">#C67F68</div><div style="background:#F8F0E7;color:#9A8B80;text-shadow:none">#F8F0E7</div><div style="background:#8A9A6B">#8A9A6B</div></div><div class="cards" style="grid-template-columns:repeat(3,1fr);margin-top:30px"><div><p class="k">컬러</p><p class="t">코럴 · 크림 · 세이지</p><p class="d">따뜻한 메인, 부드러운 배경, 잎사귀 같은 포인트. 간판·메뉴판·인스타 피드에서 <b>같은 색이 반복</b>되는 게 핵심이에요. 워크북 4교시 프롬프트가 조합 3가지와 색 코드를 줘요.</p></div><div><p class="k">폰트 느낌</p><p class="t">글꼴 이름을 몰라도 돼요</p><p class="d">둥글다/각지다, 굵다/얇다, 손글씨/인쇄체. "제목은 둥글고 손글씨 같은, 본문은 얇고 단정하게"면 디자이너가 알아들어요.</p></div><div><p class="k">로고 방향</p><p class="t">키워드 2~3개만</p><p class="d">"잘린 과일 단면, 작은 창문, 손글씨 이름". 시안은 디자이너나 AI 이미지 도구에 맡기고, 오늘은 방향만 정합니다.</p></div></div><div class="foot"><p class="note">색 코드 3개를 워크북에 붙여 넣고 "색 칸에 넣기"를 누르면 브랜드 북에 색 견본이 들어가요.</p></div>
+<div class="pn">19</div><div class="tag">DAY 2 · 메뉴와 원가 · 카페스이 손민지</div><div class="mascot"><svg viewBox="0 0 240 200" aria-hidden="true"><g fill="none" stroke="#C67F68" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M55 70 L165 70 L152 150 Q150 165 135 165 L85 165 Q70 165 68 150 Z"/><path d="M165 82 Q200 84 198 112 Q196 138 160 134"/><path d="M45 176 Q120 196 195 176"/><path d="M100 122 Q114 134 128 122"/><path d="M188 44 L188 64 M178 54 L198 54"/></g><circle cx="98" cy="108" r="3.2" fill="#C67F68"/><circle cx="130" cy="108" r="3.2" fill="#C67F68"/></svg></div>
+</section>
+<section class="slide sec">
+<div class="box"><p class="part">5교시 · 17:00</p><h2>[실습] 시그니처 메뉴 &<br>메뉴판 기획안 완성</h2><p class="sub">오늘 정한 메뉴·가격·메뉴판을 손님에게 설명하듯 3~4문장으로. 오늘의 결과물, 메뉴·가격 기획 시트.</p></div>
+<div class="pn">20</div><div class="tag">DAY 2 · 메뉴와 원가 · 카페스이 손민지</div><div class="mascot"><svg viewBox="0 0 240 200" aria-hidden="true"><g fill="none" stroke="#C67F68" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M55 70 L165 70 L152 150 Q150 165 135 165 L85 165 Q70 165 68 150 Z"/><path d="M165 82 Q200 84 198 112 Q196 138 160 134"/><path d="M45 176 Q120 196 195 176"/><path d="M100 122 Q114 134 128 122"/><path d="M188 44 L188 64 M178 54 L198 54"/></g><circle cx="98" cy="108" r="3.2" fill="#C67F68"/><circle cx="130" cy="108" r="3.2" fill="#C67F68"/></svg></div>
+</section>
+<section class="slide ">
+<span class="chip">5교시</span><h2>기획안은 <u>왜 이 메뉴만 두는지</u>가 들어가면 완성이에요</h2><p class="lead">메뉴를 정하고 나니 어제 콘셉트 문장이 바뀌었으면 고쳐 써도 돼요. 그대로면 비워 두세요.</p><div class="prompt"><p class="h">예시 (카페 온기)</p><p>케이크 3종을 중심으로 12개 메뉴만 둡니다. 이달의 케이크는 매달 과일이 바뀌고, 나머지 두 개는 늘 있습니다. 음료는 케이크와 어울리는 5가지로 줄여서 재료 손실을 막고, 케이크 원가율은 35% 안에서 맞춥니다.</p><p class="h">점검 방법 (워크북 5교시 프롬프트)</p><p>이 기획안을 손님 · 투자자 · 같이 일할 직원, 세 사람의 눈으로 읽고 한 사람당 "좋은 점 1개, 걱정되는 점 1개, 질문 1개". 콘셉트 문장과 메뉴가 서로 맞는지 점검.</p></div><div class="foot"><p class="note">예) "퇴근길 직장인을 위한 계절과일 케이크 카페" → "퇴근길에 들르는, 매달 과일이 바뀌는 조용한 동네 케이크 카페"</p></div>
+<div class="pn">21</div><div class="tag">DAY 2 · 메뉴와 원가 · 카페스이 손민지</div><div class="mascot"><svg viewBox="0 0 240 200" aria-hidden="true"><g fill="none" stroke="#C67F68" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M55 70 L165 70 L152 150 Q150 165 135 165 L85 165 Q70 165 68 150 Z"/><path d="M165 82 Q200 84 198 112 Q196 138 160 134"/><path d="M45 176 Q120 196 195 176"/><path d="M100 122 Q114 134 128 122"/><path d="M188 44 L188 64 M178 54 L198 54"/></g><circle cx="98" cy="108" r="3.2" fill="#C67F68"/><circle cx="130" cy="108" r="3.2" fill="#C67F68"/></svg></div>
+</section>
+<section class="slide ">
+<span class="chip">5교시 · 총복습</span><h2>오늘 워크북에 <u>다섯 가지</u>가 들어 있으면 됩니다</h2><div class="cards" style="grid-template-columns:repeat(5,1fr)"><div><div class="num">1</div><p class="k">1교시</p><p class="t">메뉴 구성 방향 + 시그니처 후보 3</p><p class="d">중심 하나, 곁들이, 없애는 것</p></div><div><div class="num">2</div><p class="k">2교시</p><p class="t">메뉴명 · 설명 · 판매가</p><p class="d">재료·시간·크기가 보이는 25자</p></div><div><div class="num">3</div><p class="k">3교시</p><p class="t">원가율 · 월 손익 미리보기</p><p class="d">케이크 30~35%, 남는 돈 10~20%</p></div><div><div class="num">4</div><p class="k">4교시</p><p class="t">메뉴판 순서 + 컬러 3개</p><p class="d">시그니처 맨 앞, 12개</p></div><div class="hi"><div class="num">5</div><p class="k">5교시</p><p class="t">기획안 3~4문장</p><p class="d">내일 3일차 화면 맨 위, 브랜드 북 3·4장</p></div></div><div class="foot"><p class="note">원가계산표와 손익계산서 양식은 워크북 3교시에서 내려받아요. 오픈 후에도 계속 쓰는 파일입니다.</p></div>
+<div class="pn">22</div><div class="tag">DAY 2 · 메뉴와 원가 · 카페스이 손민지</div><div class="mascot"><svg viewBox="0 0 240 200" aria-hidden="true"><g fill="none" stroke="#C67F68" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M55 70 L165 70 L152 150 Q150 165 135 165 L85 165 Q70 165 68 150 Z"/><path d="M165 82 Q200 84 198 112 Q196 138 160 134"/><path d="M45 176 Q120 196 195 176"/><path d="M100 122 Q114 134 128 122"/><path d="M188 44 L188 64 M178 54 L198 54"/></g><circle cx="98" cy="108" r="3.2" fill="#C67F68"/><circle cx="130" cy="108" r="3.2" fill="#C67F68"/></svg></div>
+</section>
+<section class="slide close">
+<div class="jp">売上より、残るお金</div><div class="ko">매출보다, 남는 돈</div><p class="sub">오늘 숫자 하나만 기억하세요. <b>케이크 카페 원가율 30~35%, 남는 돈 10~20%.</b><br>이 범위 안에 있으면 유행이 바뀌어도 가게는 남아요.<br><br>DAY 3 · 9/30(수) 13:00 · 알리고 다시 오게 만들기, 브랜딩과 SNS·AI 마케팅</p>
+<div class="pn">23</div><div class="tag">DAY 2 · 메뉴와 원가 · 카페스이 손민지</div><div class="mascot"><svg viewBox="0 0 240 200" aria-hidden="true"><g fill="none" stroke="#C67F68" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M55 70 L165 70 L152 150 Q150 165 135 165 L85 165 Q70 165 68 150 Z"/><path d="M165 82 Q200 84 198 112 Q196 138 160 134"/><path d="M45 176 Q120 196 195 176"/><path d="M100 122 Q114 134 128 122"/><path d="M188 44 L188 64 M178 54 L198 54"/></g><circle cx="98" cy="108" r="3.2" fill="#C67F68"/><circle cx="130" cy="108" r="3.2" fill="#C67F68"/></svg></div>
+</section>
+</div>
+<div class="help">← → 키 · 화면 좌/우 클릭 · 스와이프</div>
+<div class="nav"><button id="prev" type="button" aria-label="이전">‹</button><span class="count" id="count">01 / 01</span><button id="next" type="button" aria-label="다음">›</button></div>
+
+<script>
+(function(){
+  var slides=Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var count=document.getElementById('count'),bar=document.getElementById('bar'),i=0;
+  function pad(n){return (n<10?'0':'')+n}
+  function fit(){var s=Math.min(window.innerWidth/1920,window.innerHeight/1080);document.documentElement.style.setProperty('--s',s)}
+  function show(n){i=Math.max(0,Math.min(slides.length-1,n));slides.forEach(function(el,k){el.classList.toggle('on',k===i)});
+    count.textContent=pad(i+1)+' / '+pad(slides.length);bar.style.width=((i+1)/slides.length*100)+'%';
+    try{history.replaceState(null,'','#'+(i+1))}catch(e){}}
+  document.getElementById('prev').addEventListener('click',function(e){e.stopPropagation();show(i-1)});
+  document.getElementById('next').addEventListener('click',function(e){e.stopPropagation();show(i+1)});
+  document.addEventListener('keydown',function(e){
+    if(['ArrowRight','PageDown',' ','Enter'].indexOf(e.key)>=0){e.preventDefault();show(i+1)}
+    else if(['ArrowLeft','PageUp','Backspace'].indexOf(e.key)>=0){e.preventDefault();show(i-1)}
+    else if(e.key==='Home')show(0);else if(e.key==='End')show(slides.length-1)});
+  document.getElementById('stage').addEventListener('click',function(e){if(e.clientX<window.innerWidth/3)show(i-1);else show(i+1)});
+  var tx=null;document.addEventListener('touchstart',function(e){tx=e.touches[0].clientX},{passive:true});
+  document.addEventListener('touchend',function(e){if(tx==null)return;var dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>50)show(dx<0?i+1:i-1);tx=null});
+  window.addEventListener('resize',fit);fit();
+  var start=parseInt((location.hash||'').replace('#',''),10);show(isNaN(start)?0:start-1);
+})();
+</script>
