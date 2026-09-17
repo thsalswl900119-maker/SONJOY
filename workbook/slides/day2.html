@@ -21,6 +21,7 @@ body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--body);
 .slide::after{content:"";position:absolute;inset:42px;border-radius:20px;background:var(--cream);z-index:0}
 .slide>*{position:relative;z-index:1}
 .body{display:flex;flex-direction:column;flex:1;min-height:0;width:100%}
+.cover .body,.sec .body,.close .body{justify-content:center;align-items:center;text-align:center}
 @media (prefers-reduced-motion:reduce){.slide{transition:none}}
 h1,h2,h3{font-family:var(--head);font-weight:400;margin:0;line-height:1.2;letter-spacing:-.01em;text-wrap:balance}
 h2{font-size:60px;color:var(--corald)}
