@@ -20,14 +20,15 @@ body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--body);
 .slide::before{content:"";position:absolute;inset:18px;border-radius:26px;background:var(--coral);z-index:0}
 .slide::after{content:"";position:absolute;inset:42px;border-radius:20px;background:var(--cream);z-index:0}
 .slide>*{position:relative;z-index:1}
+.body{display:flex;flex-direction:column;flex:1;min-height:0;width:100%}
 @media (prefers-reduced-motion:reduce){.slide{transition:none}}
 h1,h2,h3{font-family:var(--head);font-weight:400;margin:0;line-height:1.2;letter-spacing:-.01em;text-wrap:balance}
-h2{font-size:64px;color:var(--corald)}
+h2{font-size:60px;color:var(--corald)}
 h2 mark{background:none;color:var(--coral);padding:0}
 h2 u{text-decoration:none;background:linear-gradient(transparent 62%,var(--corall) 62%,var(--corall) 94%,transparent 94%)}
 .chip{display:inline-flex;align-items:center;align-self:flex-start;background:var(--coral);color:var(--white);font-family:var(--head);font-size:24px;padding:8px 22px;border-radius:12px;margin:0 0 26px;letter-spacing:.02em}
 .chip.soft{background:var(--corall);color:var(--corald)}
-.lead{font-size:32px;line-height:1.6;margin:30px 0 0;max-width:1560px;color:var(--ink)}
+.lead{font-size:29px;line-height:1.55;margin:22px 0 0;max-width:1560px;color:var(--ink)}
 .lead b{color:var(--corald);font-weight:800}
 .foot{margin-top:auto;padding-top:26px}
 .note{font-size:24px;color:var(--grey);margin:0;line-height:1.5}
@@ -54,10 +55,10 @@ h2 u{text-decoration:none;background:linear-gradient(transparent 62%,var(--coral
 
 /* 카드 */
 .cards{display:grid;gap:26px;margin-top:44px}
-.cards>div{background:var(--panel2);border:1.5px solid var(--line);border-radius:18px;padding:34px 34px 36px;min-height:220px;box-shadow:0 4px 12px rgba(223,205,184,.45);display:flex;flex-direction:column}
+.cards>div{background:var(--panel2);border:1.5px solid var(--line);border-radius:18px;padding:26px 28px 28px;box-shadow:0 4px 12px rgba(223,205,184,.45);display:flex;flex-direction:column}
 .cards .k{font-family:var(--head);font-size:22px;color:var(--coral);margin:0 0 16px;letter-spacing:.03em}
-.cards .t{font-family:var(--head);font-size:34px;line-height:1.35;margin:0;color:var(--corald);text-wrap:balance}
-.cards .d{font-size:24px;line-height:1.55;color:var(--ink);margin:16px 0 0}
+.cards .t{font-family:var(--head);font-size:30px;line-height:1.35;margin:0;color:var(--corald);text-wrap:balance}
+.cards .d{font-size:22px;line-height:1.5;color:var(--ink);margin:12px 0 0}
 .cards>div.hi{background:var(--coral);border-color:var(--coral)}
 .cards>div.hi .k{color:var(--oncoral)} .cards>div.hi .t{color:var(--white)} .cards>div.hi .d{color:var(--oncoral)}
 .cards .num{width:52px;height:52px;border-radius:50%;background:var(--coral);color:var(--white);font-family:var(--head);font-size:26px;display:grid;place-items:center;margin-bottom:18px}
@@ -65,17 +66,17 @@ h2 u{text-decoration:none;background:linear-gradient(transparent 62%,var(--coral
 
 /* 말풍선 장면 */
 .scenes{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:46px}
-.scene{background:var(--panel2);border:1.5px solid var(--line);border-radius:18px;padding:38px 36px;display:flex;flex-direction:column;min-height:470px;box-shadow:0 4px 12px rgba(223,205,184,.45)}
+.scene{background:var(--panel2);border:1.5px solid var(--line);border-radius:18px;padding:34px 34px;display:flex;flex-direction:column;min-height:420px;box-shadow:0 4px 12px rgba(223,205,184,.45)}
 .scene .when{font-family:var(--head);font-size:22px;color:var(--coral);margin:0 0 24px}
 .scene .q{font-family:var(--head);font-size:38px;line-height:1.4;margin:0;color:var(--corald);text-wrap:balance}
 .scene .q::before{content:"“";color:var(--coral)} .scene .q::after{content:"”";color:var(--coral)}
 .scene .d{font-size:25px;color:var(--ink);line-height:1.55;margin:auto 0 0;padding-top:26px}
 
 /* 표 */
-.table{width:100%;border-collapse:collapse;margin-top:40px;font-size:26px;table-layout:fixed;background:var(--panel2);border-radius:16px;overflow:hidden}
+.table{width:100%;border-collapse:collapse;margin-top:30px;font-size:24px;table-layout:fixed;background:var(--panel2);border-radius:16px;overflow:hidden}
 .table th{text-align:left;font-family:var(--head);font-weight:400;font-size:24px;color:var(--white);background:var(--coral);padding:16px 24px}
-.table td{padding:18px 24px;border-bottom:1.5px solid var(--line);vertical-align:top;line-height:1.45;color:var(--ink)}
-.table td:first-child{font-family:var(--head);color:var(--corald);font-size:27px}
+.table td{padding:14px 22px;border-bottom:1.5px solid var(--line);vertical-align:top;line-height:1.45;color:var(--ink)}
+.table td:first-child{font-family:var(--head);color:var(--corald);font-size:25px}
 .table td small{display:block;font-size:21px;color:var(--grey);margin-top:6px}
 .table tr.hi td{background:#F1E2CF}
 .table tr:last-child td{border-bottom:0}
@@ -84,12 +85,12 @@ h2 u{text-decoration:none;background:linear-gradient(transparent 62%,var(--coral
 
 /* 두 열 */
 .split{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:44px}
-.split>div{background:var(--panel2);border:1.5px solid var(--line);border-radius:18px;padding:40px 44px;box-shadow:0 4px 12px rgba(223,205,184,.45)}
+.split>div{background:var(--panel2);border:1.5px solid var(--line);border-radius:18px;padding:30px 36px;box-shadow:0 4px 12px rgba(223,205,184,.45)}
 .split .head{display:flex;align-items:baseline;gap:18px;margin:0 0 26px;flex-wrap:wrap}
 .split .head strong{font-family:var(--head);font-weight:400;font-size:40px;color:var(--corald)}
 .split .head span{font-size:22px;color:var(--grey)}
 .split ul{list-style:none;margin:0;padding:0;display:grid;gap:18px}
-.split li{font-size:28px;line-height:1.45;padding-left:38px;position:relative;color:var(--ink)}
+.split li{font-size:26px;line-height:1.45;padding-left:38px;position:relative;color:var(--ink)}
 .split li::before{content:"";position:absolute;left:0;top:.58em;width:16px;height:4px;border-radius:2px;background:var(--coral)}
 .split li b{color:var(--corald);font-weight:800}
 .split>div.hi{background:var(--coral);border-color:var(--coral)}
@@ -100,10 +101,10 @@ h2 u{text-decoration:none;background:linear-gradient(transparent 62%,var(--coral
 
 /* 단계 */
 .steps{display:grid;gap:22px;margin-top:44px}
-.steps>div{display:grid;grid-template-columns:72px 1fr;gap:26px;align-items:start;background:var(--panel2);border:1.5px solid var(--line);border-radius:16px;padding:24px 30px}
+.steps>div{display:grid;grid-template-columns:72px 1fr;gap:22px;align-items:start;background:var(--panel2);border:1.5px solid var(--line);border-radius:16px;padding:18px 26px}
 .steps .n{width:60px;height:60px;border-radius:50%;background:var(--coral);color:var(--white);font-family:var(--head);font-size:28px;display:grid;place-items:center}
-.steps .t{font-family:var(--head);font-size:32px;color:var(--corald);margin:0 0 6px;line-height:1.3}
-.steps .d{font-size:25px;line-height:1.5;margin:0;color:var(--ink)}
+.steps .t{font-family:var(--head);font-size:29px;color:var(--corald);margin:0 0 6px;line-height:1.3}
+.steps .d{font-size:23px;line-height:1.5;margin:0;color:var(--ink)}
 .steps .d b{color:var(--corald)}
 .steps.two{grid-template-columns:1fr 1fr}
 
@@ -111,7 +112,7 @@ h2 u{text-decoration:none;background:linear-gradient(transparent 62%,var(--coral
 .ph{background:#F3E8D9;border:2px dashed var(--corall);border-radius:16px;display:grid;place-items:center;color:var(--grey);font-size:24px;font-style:italic;text-align:center;padding:30px}
 .ph b{color:var(--coral);font-style:normal;font-family:var(--head);font-weight:400}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:40px;align-items:stretch}
-.prompt{background:#F1E2CF;border:1.5px solid var(--corall);border-radius:16px;padding:32px 38px;margin-top:40px;font-size:26px;line-height:1.6}
+.prompt{background:#F1E2CF;border:1.5px solid var(--corall);border-radius:16px;padding:24px 32px;margin-top:30px;font-size:24px;line-height:1.55}
 .prompt p{margin:0 0 10px} .prompt p:last-child{margin:0}
 .prompt .h{font-family:var(--head);color:var(--corald);font-size:28px}
 .quote{background:var(--panel);border-left:10px solid var(--coral);border-radius:0 16px 16px 0;padding:30px 40px;font-family:var(--head);font-size:40px;color:var(--corald);line-height:1.4;margin-top:40px}
@@ -144,135 +145,135 @@ h2 u{text-decoration:none;background:linear-gradient(transparent 62%,var(--coral
   .nav,.bar,.help{display:none!important}
 }
 /* 워크북 위치 · 입력칸 모형 */
-.where{display:inline-flex;align-items:center;gap:10px;font-size:22px;color:var(--grey);margin:10px 0 18px;font-family:var(--body)}
+.where{display:inline-flex;align-items:center;gap:10px;font-size:22px;color:var(--grey);margin:8px 0 12px;font-family:var(--body)}
 .where b{font-family:var(--head);font-weight:400;color:var(--corald)}
 .where i{font-style:normal;color:var(--coral)}
-.fields{display:grid;gap:22px;margin-top:34px}
-.fields.two{grid-template-columns:1fr 1fr}
-.fld{background:var(--panel2);border:1.5px solid var(--line);border-radius:16px;padding:22px 28px}
-.fld .lb{font-family:var(--head);font-size:28px;color:var(--ink);margin:0 0 8px}
-.fld .hp{font-size:22px;color:var(--grey);line-height:1.5;margin:0 0 12px}
+.fields{display:grid;gap:16px;margin-top:26px}
+.fields.two{grid-template-columns:1fr 1fr}.fields.c3{grid-template-columns:1fr 1fr 1fr}.fields.c4{grid-template-columns:repeat(4,1fr)}
+.fld{background:var(--panel2);border:1.5px solid var(--line);border-radius:16px;padding:16px 22px}
+.fld .lb{font-family:var(--head);font-size:25px;color:var(--ink);margin:0 0 6px}
+.fld .hp{font-size:20px;color:var(--grey);line-height:1.45;margin:0 0 10px}
 .fld .hp b{color:var(--corald)}
-.fld .in{border:2px solid var(--corall);border-radius:12px;background:#fff;padding:14px 18px;font-size:24px;color:var(--ink);line-height:1.45;min-height:60px}
+.fld .in{border:2px solid var(--corall);border-radius:12px;background:#fff;padding:11px 16px;font-size:22px;color:var(--ink);line-height:1.45;min-height:48px}
 .fld .in.ph{color:#B9AC9E;font-style:italic;background:#fff;border-style:solid;display:block;text-align:left;padding:14px 18px}
 .fld .in.ex::before{content:"예) ";color:var(--coral);font-family:var(--head)}
 .btnm{display:inline-block;background:var(--coral);color:#fff;font-family:var(--head);font-size:22px;padding:8px 18px;border-radius:10px;margin:2px 6px 2px 0}
 .btnm.sub{background:var(--panel);color:var(--corald);border:1.5px solid var(--corall)}
 .todo{margin-top:34px;display:grid;grid-template-columns:1fr 1fr;gap:22px}
-.todo>div{background:var(--panel2);border:1.5px solid var(--line);border-radius:16px;padding:26px 30px}
+.todo>div{background:var(--panel2);border:1.5px solid var(--line);border-radius:16px;padding:20px 26px}
 .todo .h{font-family:var(--head);font-size:26px;color:var(--corald);margin:0 0 12px}
-.todo ol{margin:0;padding-left:30px;font-size:25px;line-height:1.55} .todo li{margin-bottom:6px} .todo li b{color:var(--corald)}
+.todo ol{margin:0;padding-left:30px;font-size:23px;line-height:1.5} .todo li{margin-bottom:6px} .todo li b{color:var(--corald)}
 </style>
 
 <div class="bar" id="bar"></div>
 <div class="stage" id="stage">
-<section class="slide cover">
+<section class="slide cover"><div class="body">
 <div class="cupbig"><img src="../../assets/logo.png" alt="카페스이 로고"></div><span class="chip">2026 부산 청년잡(JOB) 성장프로젝트 · DAY 1</span><h1>카페 창업의 시작,<br><mark>콘셉트</mark>와 <mark>상권</mark></h1><p class="by">워크북 1일차를 화면에 띄우고 함께 진행합니다<br>9/28(월) 13:00~18:00 · 강사 <b>손민지</b> (카페스이 · 부산 명지)</p>
-<div class="pn">01</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
+</div><div class="pn">01</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
 </section>
-<section class="slide ">
+<section class="slide "><div class="body">
 <span class="chip">시작 전 · 워크북 들어가기</span><h2>워크북은 <u>이름 + 휴대폰 뒤 4자리</u>로 들어갑니다</h2><div class="where">워크북 <i>▸</i> <b>입장 화면</b></div><p class="lead">답은 <b>서버에 저장</b>돼요. 폰·노트북 어디서든 같은 이름과 번호로 들어오면 그대로 이어집니다. 화면 위 "서버 저장됨" 표시를 확인하세요.</p><div class="fields two"><div class="fld"><p class="lb">이름</p><p class="hp">본명으로. 3일 동안 같은 이름을 씁니다.</p><div class="in ex">홍길동</div></div><div class="fld"><p class="lb">휴대폰 번호 뒤 4자리</p><p class="hp">본인 번호로. 다른 사람이 같은 이름·번호면 답이 섞여요.</p><div class="in ex">010-1234-5678이면 5678</div></div></div><div class="prompt" style="margin-top:26px;font-size:24px"><p><span class="btnm">예시 답 채우기</span> 버튼은 화면을 설명할 때만 씁니다. 실습 시작 전에 <span class="btnm sub">이 날 답 지우기</span>로 비우세요. 오늘 적은 답은 내일 <b>2일차 화면 맨 위</b>에 그대로 보여요.</p></div><div class="foot"><p class="note">워크북 주소는 QR로 배포. 오늘 워크북에 적는 것 다섯 가지: 키워드 3개 → 대표 고객 1명 → 상권 체크리스트 → 굳이 올 이유 → 콘셉트 한 줄.</p></div>
-<div class="pn">02</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
+</div><div class="pn">02</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
 </section>
-<section class="slide ">
+<section class="slide "><div class="body">
 <span class="chip">오늘의 흐름</span><h2>1일차, <u>내가 만들고 싶은 카페</u> 찾기</h2><table class="table"><colgroup><col style="width:14%"><col style="width:46%"><col style="width:40%"></colgroup><tr><th>시간</th><th>교시</th><th>워크북에 적는 것</th></tr><tr><td>13:00</td><td>1교시 · 카페 창업 트렌드 · 디저트 카페 사례 분석 / 콘셉트 찾기</td><td>트렌드 키워드 → 내 이야기 → 콘셉트 키워드 3개</td></tr><tr><td>14:00</td><td>2교시 · 타깃 고객 설정 / 경쟁 카페 차별화 포인트 찾기</td><td>타깃 한 줄 + 대표 고객 1명(페르소나)</td></tr><tr><td>15:00</td><td>3교시 · 상권분석 기초 / 유동인구·경쟁 카페 조사</td><td>동네 · 유동인구 · 고객층 · 경쟁 카페 3곳 · 장단점</td></tr><tr><td>16:00</td><td>4교시 · 차별화 포인트 심화 / 명지 상권 실전 사례</td><td>다른 점 + 굳이 와야 할 이유 한 문장</td></tr><tr class="hi"><td>17:00</td><td>5교시 · [실습] 내 카페 콘셉트 & 타깃 고객 정하기</td><td><b>카페 이름(가칭) · 콘셉트 한 줄 · 타깃 최종</b></td></tr></table><div class="foot"><p class="note">각 교시 카드 아래에 <b>AI 프롬프트 박스</b>가 있어요. 1교시 1단계에서 연 챗GPT·클로드 대화창 하나를 3일 동안 계속 씁니다.</p></div>
-<div class="pn">03</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
+</div><div class="pn">03</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
 </section>
-<section class="slide sec">
+<section class="slide sec"><div class="body">
 <div class="box"><p class="part">1교시 · 13:00</p><h2>내 카페 콘셉트 키워드 3개</h2><p class="sub">카페 창업 트렌드 · 살아남는 카페 vs 사라지는 카페. 워크북 1교시는 5단계로 되어 있어요.</p></div>
-<div class="pn">04</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
+</div><div class="pn">04</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
 </section>
-<section class="slide ">
+<section class="slide "><div class="body">
 <span class="chip">1교시 · 1단계</span><h2>AI와 대화 시작, <u>역할 정하기 + 트렌드 키워드</u></h2><div class="where">워크북 <i>▸</i> <b>1일차</b> <i>▸</i> <b>1교시</b> <i>▸</i> <b>1단계 · 시작 프롬프트</b></div><div class="todo"><div><p class="h">프롬프트가 AI에게 시키는 것</p><ol><li>AI를 "동네 디저트 카페를 8년 운영한 브랜드 파트너"로 정합니다. 3일 동안 이 역할이 유지돼요.</li><li>대화 규칙 6개: 새로 정한 건 [업데이트]로 보내면 기억해서 쌓기, 쉬운 말, 모르면 모른다고, 걱정되는 점 솔직히, 답 끝에 <b>브랜드 카드</b> 갱신, 다음 질문 1개.</li><li>첫 과제: 2026 디저트·베이커리 카페 트렌드 키워드 10개. 메뉴·공간·운영 방식 골고루, 오래 갈지 금방 식을지 판단 붙여서.</li></ol></div><div><p class="h">결과를 어디에 적나</p><ol><li>마지막 줄에 온 <b>키워드 10개</b>를 복사</li><li>워크북 칸 <b>"AI가 뽑아준 트렌드 키워드"</b>에 붙여넣기</li><li>브랜드 카드는 아직 전부 "미정"이면 정상</li></ol></div></div><div class="prompt" style="margin-top:24px;font-size:24px"><p><span class="btnm">복사</span> 버튼 → 챗GPT·클로드 <b>새 대화</b>에 붙여넣기 → 답이 오면 위 오른쪽대로 옮겨 적기. AI 답은 <b>후보</b>예요. 마음에 드는 것만 골라 씁니다.</p></div><div class="foot"><p class="note"><b>트렌드 키워드</b>란 요즘 사람들이 카페에서 많이 찾는 것을 짧은 말로 적은 것. 모르는 말이 있어도 괜찮아요, 2단계에서 확인합니다.</p></div>
-<div class="pn">05</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
+</div><div class="pn">05</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
 </section>
-<section class="slide ">
+<section class="slide "><div class="body">
 <span class="chip">1교시 · 1단계</span><h2>붙여 넣으면 이렇게 보여요</h2><div class="where">워크북 <i>▸</i> <b>1일차</b> <i>▸</i> <b>1교시</b> <i>▸</i> <b>AI가 뽑아준 트렌드 키워드</b></div><div class="fields"><div class="fld"><p class="lb">AI가 뽑아준 트렌드 키워드</p><p class="hp">1단계에서 챗GPT가 마지막 줄에 준 10개를 그대로.</p><div class="in ex">소금빵, 베이커리카페, 크루키, 말차, 과일케이크, 예약제 케이크, 우드톤 소형 공간, 테이크아웃 전문, 시즌 한정, 반려동물 동반</div></div></div><div class="cards" style="grid-template-columns:repeat(3,1fr);margin-top:26px"><div><p class="k">메뉴</p><p class="t">소금빵 · 크루키 · 말차 · 계절과일</p><p class="d">뜨는 속도가 빠른 메뉴는 식는 속도도 빨라요.</p></div><div><p class="k">공간 · 분위기</p><p class="t">우드톤 소형 · 조용한 동네 카페</p><p class="d">"사진 찍는 카페"에서 "머무는 카페"로.</p></div><div><p class="k">운영 방식</p><p class="t">예약제 홀케이크 · 테이크아웃 · 시즌 한정</p><p class="d">재료 손실을 줄이고 사장 시간을 지키는 방식.</p></div></div><div class="foot"><p class="note">키워드는 세 갈래로 나뉘어요. 세 갈래가 다 있어야 콘셉트가 한쪽으로 치우치지 않습니다.</p></div>
-<div class="pn">06</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
+</div><div class="pn">06</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
 </section>
-<section class="slide ">
+<section class="slide "><div class="body">
 <span class="chip">1교시 · 2단계</span><h2>진짜 사람들이 찾는 말인지 <u>확인하기</u></h2><div class="where">워크북 <i>▸</i> <b>1일차</b> <i>▸</i> <b>1교시</b> <i>▸</i> <b>2단계 · 안내 박스</b></div><div class="steps"><div><div class="n">1</div><div><p class="t">키워드 복사 → 네이버 데이터랩</p><p class="d"><span class="btnm">키워드 복사</span> 누르고 <span class="btnm">네이버 데이터랩</span> 열기. 키워드 5개씩 넣고 기간 <b>1년</b>. 검색량이 오르는지 내리는지만 봅니다. 올라가는 말이 지금 트렌드, 꾸준한 말이 기본기.</p></div></div><div><div class="n">2</div><div><p class="t">소상공인365 인기 키워드·메뉴와 비교</p><p class="d"><span class="btnm sub">소상공인365</span> 상권분석에서 카페 업종의 인기 키워드·인기 메뉴를 봅니다. 3교시에서 다시 쓰니 지금 <b>회원가입</b>까지 해 두면 좋아요.</p></div></div><div><div class="n">3</div><div><p class="t">유튜브에서 "카페 폐업 이유" 1~2개</p><p class="d"><span class="btnm sub">유튜브 검색</span>. 잘된 이유보다 <b>망한 이유</b>가 배울 게 많아요. 적을 건 없고, 눈에 들어온 것만 기억해 두면 3단계에서 씁니다.</p></div></div></div><div class="foot"><p class="note">이 단계는 워크북에 적는 칸이 없어요. 10분. 강사는 데이터랩 화면을 띄워 키워드 하나를 같이 봅니다. ▣ 데이터랩 실제 화면</p></div>
-<div class="pn">07</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
+</div><div class="pn">07</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
 </section>
-<section class="slide ">
+<section class="slide "><div class="body">
 <span class="chip">1교시 · 3단계</span><h2>내가 <u>좋아하는 것 · 추구하는 것</u></h2><div class="where">워크북 <i>▸</i> <b>1일차</b> <i>▸</i> <b>1교시</b> <i>▸</i> <b>3단계</b></div><div class="fields"><div class="fld"><p class="lb">내가 좋아하는 것 · 추구하는 것</p><p class="hp">트렌드와 상관없이 <b>나</b>에 대한 것. 잘 만드는 것(없으면 배우고 싶은 것), 좋아하는 카페 분위기, 카페를 열어 이루고 싶은 것. 정답이 없어요. 카페를 잘 몰라도 "내가 손님이었을 때 좋았던 카페"를 떠올리면 됩니다. 2단계에서 마음이 간 트렌드도 같이.</p><div class="in ex">과일 케이크를 잘 만듦 / 시끄러운 곳보다 조용한 동네 카페가 좋음 / 손님 이름을 기억하는 가게를 하고 싶음 / 아이 학교 보내고 낮 시간에만 일하고 싶음 / 데이터랩에서 베이커리카페가 꾸준한 게 눈에 띔</div></div></div><div class="foot"><p class="note">"/"로 끊어서 4~5개. 영업시간 희망("낮 시간에만")도 콘셉트예요. 이 칸이 비면 4단계 프롬프트가 일반적인 답만 줍니다.</p></div>
-<div class="pn">08</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
+</div><div class="pn">08</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
 </section>
-<section class="slide ">
+<section class="slide "><div class="body">
 <span class="chip">1교시 · 4단계</span><h2>AI에게 <u>키워드 후보 추천</u>받기</h2><div class="where">워크북 <i>▸</i> <b>1일차</b> <i>▸</i> <b>1교시</b> <i>▸</i> <b>4단계 · 이어서 프롬프트</b></div><div class="todo"><div><p class="h">프롬프트가 AI에게 시키는 것</p><ol><li>1단계 키워드와 3단계(내가 추구하는 것)가 <b>만나는 지점</b>에서 콘셉트 키워드 후보 10개.</li><li>한 단어 또는 두 단어, 손님이 들었을 때 바로 그림이 그려질 것.</li><li>트렌드를 따른 것 5개 + 살짝 비튼 것 5개, 각각 이유 한 줄. 검색량 빠지는 것 같으면 "확인 필요".</li><li>마지막에 "이 중 3개를 고르면 이런 카페가 됩니다" 조합 예시 2개.</li></ol></div><div><p class="h">결과를 어디에 적나</p><ol><li>추천 10개 중 <b>3개</b>를 고르거나 내 말로 바꿔서</li><li>5단계 칸 <b>키워드 1 · 2 · 3</b>에 적기</li></ol></div></div><div class="prompt" style="margin-top:24px;font-size:24px"><p><span class="btnm">복사</span> 버튼 → 같은 대화창에 이어서 붙여넣기 → 답이 오면 위 오른쪽대로 옮겨 적기. AI 답은 <b>후보</b>예요. 마음에 드는 것만 골라 씁니다.</p></div><div class="foot"><p class="note">프롬프트에는 3단계 답이 자동으로 들어가 있어요. 3단계를 비우면 "(아직 없음 — 먼저 3단계를 적어 주세요)"라고 나갑니다.</p></div>
-<div class="pn">09</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
+</div><div class="pn">09</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
 </section>
-<section class="slide ">
-<span class="chip">1교시 · 5단계</span><h2>내 카페 콘셉트 <u>키워드 3개</u> 고르기</h2><div class="where">워크북 <i>▸</i> <b>1일차</b> <i>▸</i> <b>1교시</b> <i>▸</i> <b>5단계</b></div><p class="lead"><b>키워드</b>는 내 카페를 세 단어로 말한 것. 손님이 듣고 바로 그림이 그려져야 해요. 나중에 바꿔도 됩니다.</p><div class="fields"><div class="fld"><p class="lb">키워드 1</p><p class="hp"></p><div class="in ex">동네</div></div><div class="fld"><p class="lb">키워드 2</p><p class="hp"></p><div class="in ex">계절과일</div></div><div class="fld"><p class="lb">키워드 3</p><p class="hp"></p><div class="in ex">조용함</div></div></div><div class="todo" style="margin-top:24px"><div><p class="h">이어서 · 고른 키워드로 콘셉트 넓혀 보기 (프롬프트)</p><ol><li>세 단어가 합쳐졌을 때 어떤 카페가 그려지는지 <b>서로 다른 모습 3가지</b></li><li>이 조합이 요즘 흔한지 드문지 솔직하게</li><li>더 뾰족하게 만들 키워드 후보 3개</li></ol></div><div><p class="h">강사 체크</p><ol><li>세 단어 중 <b>메뉴·공간·운영</b>이 섞여 있는가</li><li>"맛있는", "예쁜"처럼 누구나 쓰는 말은 없는가</li><li>한 명씩 세 단어를 소리 내어 말해 보기 (1분)</li></ol></div></div><div class="foot"><p class="note">1교시 끝. 진도 바가 "5교시 중 1교시 작성"으로 바뀌면 됩니다.</p></div>
-<div class="pn">10</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
+<section class="slide "><div class="body">
+<span class="chip">1교시 · 5단계</span><h2>내 카페 콘셉트 <u>키워드 3개</u> 고르기</h2><div class="where">워크북 <i>▸</i> <b>1일차</b> <i>▸</i> <b>1교시</b> <i>▸</i> <b>5단계</b></div><p class="lead"><b>키워드</b>는 내 카페를 세 단어로 말한 것. 손님이 듣고 바로 그림이 그려져야 해요. 나중에 바꿔도 됩니다.</p><div class="fields c3"><div class="fld"><p class="lb">키워드 1</p><p class="hp"></p><div class="in ex">동네</div></div><div class="fld"><p class="lb">키워드 2</p><p class="hp"></p><div class="in ex">계절과일</div></div><div class="fld"><p class="lb">키워드 3</p><p class="hp"></p><div class="in ex">조용함</div></div></div><div class="todo" style="margin-top:24px"><div><p class="h">이어서 · 고른 키워드로 콘셉트 넓혀 보기 (프롬프트)</p><ol><li>세 단어가 합쳐졌을 때 어떤 카페가 그려지는지 <b>서로 다른 모습 3가지</b></li><li>이 조합이 요즘 흔한지 드문지 솔직하게</li><li>더 뾰족하게 만들 키워드 후보 3개</li></ol></div><div><p class="h">강사 체크</p><ol><li>세 단어 중 <b>메뉴·공간·운영</b>이 섞여 있는가</li><li>"맛있는", "예쁜"처럼 누구나 쓰는 말은 없는가</li><li>한 명씩 세 단어를 소리 내어 말해 보기 (1분)</li></ol></div></div><div class="foot"><p class="note">1교시 끝. 진도 바가 "5교시 중 1교시 작성"으로 바뀌면 됩니다.</p></div>
+</div><div class="pn">10</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
 </section>
-<section class="slide sec">
+<section class="slide sec"><div class="body">
 <div class="box"><p class="part">2교시 · 14:00</p><h2>누가 내 카페에 올까,<br>대표 고객 1명</h2><p class="sub">타깃 고객 설정 · 경쟁 카페 분석과 차별화 포인트. 모두를 위한 카페는 아무도 안 와요.</p></div>
-<div class="pn">11</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
+</div><div class="pn">11</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
 </section>
-<section class="slide ">
+<section class="slide "><div class="body">
 <span class="chip">2교시</span><h2>타깃 고객 <u>한 줄</u></h2><div class="where">워크북 <i>▸</i> <b>1일차</b> <i>▸</i> <b>2교시</b> <i>▸</i> <b>타깃 고객 한 줄</b></div><div class="fields"><div class="fld"><p class="lb">타깃 고객 한 줄</p><p class="hp"><b>타깃 고객</b>은 "우리 카페가 제일 반가운 한 종류의 사람". 누가, 언제, 어떤 마음으로 올지 한 줄로.</p><div class="in ex">퇴근길에 혼자 조용히 쉬고 싶은 30대 직장인</div></div></div><div class="cards" style="grid-template-columns:repeat(3,1fr);margin-top:26px"><div><p class="k">누가</p><p class="t">30대 직장인</p><p class="d">나이·직업·혼자인지 둘인지</p></div><div><p class="k">언제</p><p class="t">퇴근길</p><p class="d">영업시간과 피크가 여기서 정해져요</p></div><div><p class="k">어떤 마음으로</p><p class="t">혼자 조용히 쉬고 싶은</p><p class="d">좌석·음악·조명이 여기서 정해져요</p></div></div><div class="foot"><p class="note">한 명을 정한다고 다른 손님이 안 오는 게 아니에요. 제일 반가운 한 사람에게 맞추면 비슷한 사람들이 따라옵니다.</p></div>
-<div class="pn">12</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
+</div><div class="pn">12</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
 </section>
-<section class="slide ">
-<span class="chip">2교시</span><h2>내 카페 <u>페르소나</u>, 대표 고객 1명</h2><div class="where">워크북 <i>▸</i> <b>1일차</b> <i>▸</i> <b>2교시</b> <i>▸</i> <b>페르소나 6칸</b></div><div class="fields two"><div class="fld"><p class="lb">이름 (가상) · 나이대</p><p class="hp">실제 아는 사람을 떠올려도 됩니다.</p><div class="in ex">지영 · 30대 초반</div></div><div class="fld"><p class="lb">하는 일</p><p class="hp"></p><div class="in ex">명지국제신도시 회사원, 혼자 삶</div></div><div class="fld"><p class="lb">언제, 왜 우리 카페에 오나요?</p><p class="hp">구체적일수록 메뉴·가격·SNS 답이 저절로 나와요.</p><div class="in ex">평일 저녁 7시쯤, 집에 바로 들어가기 아쉬워서 30분만 앉아 있고 싶을 때</div></div><div class="fld"><p class="lb">와서 뭘 주문하나요?</p><p class="hp"></p><div class="in ex">아메리카노와 그날의 조각 케이크 하나</div></div><div class="fld"><p class="lb">한 번 올 때 얼마쯤 쓰나요? (객단가, 원)</p><p class="hp"><b>객단가</b> = 한 사람이 한 번 와서 쓰는 돈(음료+디저트). 모르면 "커피 한 잔 + 디저트 하나" 값. 숫자만.</p><div class="in ex">12000</div></div><div class="fld"><p class="lb">강사 메모</p><p class="hp">객단가는 내일 3교시 <b>하루 손님 수</b> 계산에 자동으로 쓰여요.</p><div class="in ex">9,000,000 ÷ 26일 ÷ 12,000 = 하루 29명</div></div></div><div class="foot"><p class="note"><b>페르소나</b>는 타깃 고객 중 한 사람을 이름까지 붙여 상상한 것입니다.</p></div>
-<div class="pn">13</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
+<section class="slide "><div class="body">
+<span class="chip">2교시</span><h2>내 카페 <u>페르소나</u>, 대표 고객 1명</h2><div class="where">워크북 <i>▸</i> <b>1일차</b> <i>▸</i> <b>2교시</b> <i>▸</i> <b>페르소나 6칸</b></div><div class="fields c3"><div class="fld"><p class="lb">이름 (가상) · 나이대</p><p class="hp">실제 아는 사람을 떠올려도 됩니다.</p><div class="in ex">지영 · 30대 초반</div></div><div class="fld"><p class="lb">하는 일</p><p class="hp"></p><div class="in ex">명지국제신도시 회사원, 혼자 삶</div></div><div class="fld"><p class="lb">언제, 왜 우리 카페에 오나요?</p><p class="hp">구체적일수록 메뉴·가격·SNS 답이 저절로 나와요.</p><div class="in ex">평일 저녁 7시쯤, 집에 바로 들어가기 아쉬워서 30분만 앉아 있고 싶을 때</div></div><div class="fld"><p class="lb">와서 뭘 주문하나요?</p><p class="hp"></p><div class="in ex">아메리카노와 그날의 조각 케이크 하나</div></div><div class="fld"><p class="lb">한 번 올 때 얼마쯤 쓰나요? (객단가, 원)</p><p class="hp"><b>객단가</b> = 한 사람이 한 번 와서 쓰는 돈(음료+디저트). 모르면 "커피 한 잔 + 디저트 하나" 값. 숫자만.</p><div class="in ex">12000</div></div><div class="fld"><p class="lb">강사 메모</p><p class="hp">객단가는 내일 3교시 <b>하루 손님 수</b> 계산에 자동으로 쓰여요.</p><div class="in ex">9,000,000 ÷ 26일 ÷ 12,000 = 하루 29명</div></div></div><div class="foot"><p class="note"><b>페르소나</b>는 타깃 고객 중 한 사람을 이름까지 붙여 상상한 것입니다.</p></div>
+</div><div class="pn">13</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
 </section>
-<section class="slide ">
+<section class="slide "><div class="body">
 <span class="chip">2교시</span><h2>이어서 · <u>대표 고객 다듬기</u></h2><div class="where">워크북 <i>▸</i> <b>1일차</b> <i>▸</i> <b>2교시</b> <i>▸</i> <b>이어서 프롬프트</b></div><div class="todo"><div><p class="h">프롬프트가 AI에게 시키는 것</p><ol><li>이 손님의 하루를 아침부터 밤까지 짧게.</li><li>카페에서 진짜로 원하는 것 3가지, 싫어할 만한 것 3가지.</li><li>객단가가 현실적인지, 이 객단가면 하루 몇 명이 와야 월세·인건비가 나오는지 예시 숫자.</li><li>내가 빠뜨린 게 있으면 질문.</li></ol></div><div><p class="h">결과를 어디에 적나</p><ol><li>마음에 드는 것만 위 페르소나 칸에 <b>옮겨 적기</b></li><li>"싫어할 만한 것 3가지"는 4교시 차별화에서 다시 씁니다</li></ol></div></div><div class="prompt" style="margin-top:24px;font-size:24px"><p><span class="btnm">복사</span> 버튼 → 같은 대화창에 이어서 붙여넣기 → 답이 오면 위 오른쪽대로 옮겨 적기. AI 답은 <b>후보</b>예요. 마음에 드는 것만 골라 씁니다.</p></div><div class="foot"><p class="note">2교시 끝. 강사: 두세 명의 페르소나를 읽어 주고 "이 사람이면 영업시간이 어떻게 되나요?"를 묻습니다.</p></div>
-<div class="pn">14</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
+</div><div class="pn">14</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
 </section>
-<section class="slide sec">
+<section class="slide sec"><div class="body">
 <div class="box"><p class="part">3교시 · 15:00</p><h2>내가 들어갈 상권 체크리스트</h2><p class="sub">상권분석 기초 · 유동인구·주요 고객층 · 주변 경쟁 카페 조사. 직접 가지 않아도 되는 조사법.</p></div>
-<div class="pn">15</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
+</div><div class="pn">15</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
 </section>
-<section class="slide ">
+<section class="slide "><div class="body">
 <span class="chip">3교시</span><h2>들어가려는 <u>동네 · 상권</u></h2><div class="where">워크북 <i>▸</i> <b>1일차</b> <i>▸</i> <b>3교시</b> <i>▸</i> <b>들어가려는 동네·상권</b></div><div class="fields"><div class="fld"><p class="lb">들어가려는 동네·상권</p><p class="hp">아직 못 정했으면 살고 있는 동네나 자주 가는 동네. <b>상권</b> = 손님이 걸어서 올 수 있는 범위(보통 반경 500m). <b>시·구까지</b> 적어야 지도 버튼이 정확히 검색돼요.</p><div class="in ex">부산 강서구 명지동 명지국제신도시 아파트 단지 초입</div></div></div><div class="steps" style="margin-top:26px"><div><div class="n">1</div><div><p class="t">소상공인365 회원가입 → 로그인</p><p class="d">무료, 휴대폰 본인인증만. <span class="btnm">소상공인365 열기</span></p></div></div><div><div class="n">2</div><div><p class="t">상권분석에서 위 동네 검색 → 업종 "카페"</p><p class="d"><b>유동인구 · 주변 업소 수 · 매출 추정</b> 화면을 캡처하고 숫자를 아래 칸에 옮겨 적기. 추정치라 "참고값"으로.</p></div></div><div><div class="n">3</div><div><p class="t">지도에서 경쟁 카페 3곳 + 리뷰 읽기</p><p class="d"><span class="btnm sub">카카오맵에서 카페 찾기</span> <span class="btnm sub">네이버 지도에서 카페 찾기</span> 버튼은 적은 동네로 바로 검색돼요.</p></div></div></div><div class="foot"><p class="note">▣ 소상공인365 실제 화면 캡처 (명지동 카페 업종) — 강사가 화면 공유로 한 번 보여주고 시작.</p></div>
-<div class="pn">16</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
+</div><div class="pn">16</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
 </section>
-<section class="slide ">
+<section class="slide "><div class="body">
 <span class="chip">3교시</span><h2>상권 칸 <u>네 개</u> 채우기</h2><div class="where">워크북 <i>▸</i> <b>1일차</b> <i>▸</i> <b>3교시</b> <i>▸</i> <b>유동인구 · 주요 고객층 · 경쟁 카페 · 장단점</b></div><div class="fields two"><div class="fld"><p class="lb">유동인구 특징</p><p class="hp">그 길을 지나가는 사람. 언제(아침·점심·저녁·주말) 많고 어떤 사람(직장인·주민·학생·관광객)인지.</p><div class="in ex">평일 저녁 6~8시 퇴근 인파가 많고, 주말 오후는 가족 단위</div></div><div class="fld"><p class="lb">주요 고객층</p><p class="hp">실제로 살거나 일하는 사람(<b>배후 인구</b>). 아파트 세대수, 회사, 학교.</p><div class="in ex">30~40대 직장인과 아파트 주민, 초등학교 2곳</div></div><div class="fld"><p class="lb">주변 경쟁 카페 3곳</p><p class="hp">반경 500m 안, 우리 손님이 지금 갈 만한 곳. 프랜차이즈 1 + 개인 카페 2. 리뷰의 칭찬과 불만 기억해 두기.</p><div class="in ex">스타벅스 명지강변DT점 / 투썸플레이스 명지대방점 / 카페진목</div></div><div class="fld"><p class="lb">이 상권의 장점 / 단점</p><p class="hp">주차, 임대료, 사람 흐름, 경쟁 카페 수, 배달 가능 여부.</p><div class="in ex">장점: 배후 아파트 세대가 많고 저녁에 사람이 꾸준함 / 단점: 주차가 어렵고 대형 프랜차이즈가 가까움</div></div></div><div class="foot"><p class="note">리뷰에서 <b>칭찬은 기준, 불만은 기회</b>. "케이크가 그냥 그래요"가 자주 보이면 매일 굽는 케이크가 기회예요.</p></div>
-<div class="pn">17</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
+</div><div class="pn">17</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
 </section>
-<section class="slide ">
+<section class="slide "><div class="body">
 <span class="chip">3교시</span><h2>이어서 · <u>상권 조사</u></h2><div class="where">워크북 <i>▸</i> <b>1일차</b> <i>▸</i> <b>3교시</b> <i>▸</i> <b>이어서 프롬프트</b></div><div class="todo"><div><p class="h">프롬프트가 AI에게 시키는 것</p><ol><li>이 상권을 직접 걸어보며 확인할 <b>체크리스트 10개</b> (시간대별 사람 흐름, 경쟁 카페에서 볼 것, 임대료 감 잡는 법).</li><li>내 콘셉트와 대표 고객이 이 상권에 잘 맞는 점 3가지, 위험한 점 3가지. 솔직하게.</li></ol></div><div><p class="h">결과를 어디에 적나</p><ol><li>체크리스트는 워크북 칸이 없어요. <b>이번 주 안에 한 번 걸어보는 숙제</b></li><li>위험한 점 3가지 중 하나를 "단점" 칸에 추가</li></ol></div></div><div class="prompt" style="margin-top:24px;font-size:24px"><p><span class="btnm">복사</span> 버튼 → 같은 대화창에 이어서 붙여넣기 → 답이 오면 위 오른쪽대로 옮겨 적기. AI 답은 <b>후보</b>예요. 마음에 드는 것만 골라 씁니다.</p></div><div class="foot"><p class="note">3교시 끝. 오늘 저녁 명지동을 걷는다면: 저녁 7시 아파트 단지 초입에서 30분, 지나가는 사람 세어 보기.</p></div>
-<div class="pn">18</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
+</div><div class="pn">18</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
 </section>
-<section class="slide sec">
+<section class="slide sec"><div class="body">
 <div class="box"><p class="part">4교시 · 16:00</p><h2>손님이 굳이 우리 가게까지<br>와야 할 이유</h2><p class="sub">차별화 포인트 심화 · 카페스이 명지 상권 실전 사례.</p></div>
-<div class="pn">19</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
+</div><div class="pn">19</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
 </section>
-<section class="slide ">
+<section class="slide "><div class="body">
 <span class="chip">4교시 · 카페스이 사례</span><h2>명지에서 8년, <u>카페스이가 확인한 것</u></h2><div class="two"><div class="ph"><span><b>▣ 실제 사진·화면 삽입</b><br>카페스이 위치 지도 · 주변 경쟁 카페 · 시간대별 손님 사진</span></div><div class="split" style="margin:0;grid-template-columns:1fr"><div><ul><li><b>배후</b>: 신도시 아파트 + 초등학교. 평일 오후와 저녁, 주말이 다른 손님</li><li><b>경쟁</b>: 대형 프랜차이즈 DT점이 가까움. 커피로는 못 이기고 <b>디저트로 이긴</b> 이유</li><li><b>실제 수치</b>: 시간대별 매출 비중 · 재방문 비율 · 케이크 예약 비중</li><li><b>흔들렸던 것</b>: 인테리어·메뉴 수·가격, 세 가지 착각</li></ul></div></div></div><div class="foot"><p class="note">▣ 강사가 카페스이 실제 지도·수치·사진으로 채웁니다. 이 사례를 본 뒤 수강생은 자기 상권에 같은 틀을 적용.</p></div>
-<div class="pn">20</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
+</div><div class="pn">20</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
 </section>
-<section class="slide ">
+<section class="slide "><div class="body">
 <span class="chip">4교시</span><h2>경쟁 카페와 <u>다른 점</u></h2><div class="where">워크북 <i>▸</i> <b>1일차</b> <i>▸</i> <b>4교시</b> <i>▸</i> <b>경쟁 카페와 다른 점</b></div><div class="fields"><div class="fld"><p class="lb">경쟁 카페와 다른 점</p><p class="hp">3교시 경쟁 카페 3곳에는 없고 우리에게는 있는 것. 메뉴·분위기·영업시간·사장·가격 중 하나면 됩니다. 크지 않아도 돼요.</p><div class="in ex">프랜차이즈 케이크는 공장 제품이고 개인 카페는 커피 위주라 케이크가 약함 → 우리는 매일 굽는 과일 케이크</div></div></div><div class="split" style="margin-top:26px"><div class="no"><p class="head"><strong>차별화라고 착각하는 것</strong></p><ul><li><b>인테리어</b>가 차별화다 — 사진은 한 번 찍고 끝</li><li>메뉴가 <b>많으면</b> 좋다 — 무엇으로도 기억되지 않음</li><li><b>싸면</b> 온다 — 더 싼 곳이 생기면 감</li></ul></div><div class="hi"><p class="head"><strong>진짜 다른 점이 되는 것</strong></p><ul><li>경쟁 카페 리뷰의 <b>불만</b>을 우리가 해결</li><li>매일 같은 품질로 <b>반복</b>되는 것</li><li>대표 고객이 "싫어할 것 3가지"가 <b>없는</b> 가게</li></ul></div></div><div class="foot"><p class="note">2교시 프롬프트가 준 "이 손님이 싫어할 만한 것 3가지"를 다시 보세요. 그걸 없앤 것이 곧 다른 점입니다.</p></div>
-<div class="pn">21</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
+</div><div class="pn">21</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
 </section>
-<section class="slide ">
+<section class="slide "><div class="body">
 <span class="chip">4교시</span><h2>"굳이 우리 가게까지 와야 할 이유" <u>한 문장</u></h2><div class="where">워크북 <i>▸</i> <b>1일차</b> <i>▸</i> <b>4교시</b> <i>▸</i> <b>한 문장</b></div><div class="fields"><div class="fld"><p class="lb">"손님이 굳이 우리 가게까지 와야 할 이유" 한 문장</p><p class="hp">손님이 집 앞 카페를 지나쳐 굳이 우리 가게까지 오는 이유. 멋진 말보다 손님이 바로 이해하는 말. <b>20자 안팎</b>.</p><div class="in ex">명지에서 계절과일 케이크를 매일 굽는 유일한 동네 카페</div></div></div><div class="todo" style="margin-top:24px"><div><p class="h">이어서 프롬프트가 하는 것</p><ol><li>먼저 내 강점을 끌어낼 <b>질문 3개</b></li><li>그다음 후보 문장 <b>5개</b>, 서로 다른 방향(메뉴·시간·사장·공간·가격)</li><li>멋있는 말보다 손님 입장에서 진짜 이유가 되는 문장</li></ol></div><div><p class="h">좋은 문장의 조건</p><ol><li><b>동네</b>가 들어간다 (명지에서)</li><li><b>무엇을 어떻게</b>가 들어간다 (매일 굽는)</li><li>"맛있다", "분위기 좋다"는 없다</li></ol></div></div><div class="foot"><p class="note">4교시 끝. 한 사람씩 한 문장을 읽고, 옆 사람이 "그럼 갈게요 / 안 갈 것 같아요"로 답해 보기.</p></div>
-<div class="pn">22</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
+</div><div class="pn">22</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
 </section>
-<section class="slide sec">
+<section class="slide sec"><div class="body">
 <div class="box"><p class="part">5교시 · 17:00</p><h2>[실습] 나만의 카페<br>콘셉트 시트 완성</h2><p class="sub">내 카페 콘셉트 & 타깃 고객 정하기. 오늘 적은 것을 한 문장으로 모읍니다.</p></div>
-<div class="pn">23</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
+</div><div class="pn">23</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
 </section>
-<section class="slide ">
+<section class="slide "><div class="body">
 <span class="chip">5교시</span><h2>카페 이름(가칭)과 <u>콘셉트 한 줄</u></h2><div class="where">워크북 <i>▸</i> <b>1일차</b> <i>▸</i> <b>5교시</b> <i>▸</i> <b>카페 이름 · 콘셉트 한 줄 · 타깃 최종</b></div><div class="fields"><div class="fld"><p class="lb">카페 이름 (가칭)</p><p class="hp">임시 이름. 부르기 쉽고, 검색되고, 콘셉트가 느껴지면 좋아요. 한글 2~4글자. 내일 바뀌어도 됩니다.</p><div class="in ex">카페 온기 / 오늘의 과일</div></div><div class="fld"><p class="lb">내 카페 콘셉트 한 줄 정의</p><p class="hp"><b>누구를 위한 + 무엇이 있는 + 어떤 분위기의</b> 카페. 힌트 칸에 1교시 키워드가 자동으로 보여요.</p><div class="in ex">퇴근길 직장인을 위한, 계절과일 케이크가 있는 조용한 동네 카페</div></div><div class="fld"><p class="lb">타깃 고객 최종 정리</p><p class="hp">2교시 타깃을 상권과 이유를 반영해 다시. 그대로면 복사해도 됩니다. 힌트 칸에 2교시 타깃이 보여요.</p><div class="in ex">명지국제신도시에 사는 30~40대 직장인, 혼자 또는 둘이서 조용히 쉬고 싶은 사람</div></div></div><div class="foot"><p class="note">콘셉트 한 줄은 내일 2일차 5교시, 모레 3일차 5교시에서 두 번 더 다듬어요. 브랜드 북에는 처음 문장 → 최종 문장이 나란히 실립니다.</p></div>
-<div class="pn">24</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
+</div><div class="pn">24</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
 </section>
-<section class="slide ">
+<section class="slide "><div class="body">
 <span class="chip">5교시</span><h2>이어서 · <u>콘셉트 한 줄 다듬기</u>, 오늘의 브랜드 카드 완성</h2><div class="where">워크북 <i>▸</i> <b>1일차</b> <i>▸</i> <b>5교시</b> <i>▸</i> <b>이어서 프롬프트</b></div><div class="todo"><div><p class="h">프롬프트가 AI에게 시키는 것</p><ol><li>콘셉트 한 줄을 더 쉽고 또렷하게 다듬은 버전 5개 (누구를 위한 카페인지 보이게, 20자 안팎).</li><li>카페 이름 후보 5개 (키워드와 연결).</li><li>오늘 정한 것 중 아직 빠져 있는 것 하나를 짚어 주기.</li><li>브랜드 카드를 <b>오늘 기준으로 완성</b>.</li></ol></div><div><p class="h">결과를 어디에 적나</p><ol><li>마음에 드는 문장을 콘셉트 칸에, 이름을 가칭 칸에</li><li>브랜드 카드는 AI 대화창에 남겨 두기. 내일 2일차 시작 프롬프트에 어제 정한 것이 자동으로 들어갑니다</li></ol></div></div><div class="prompt" style="margin-top:24px;font-size:24px"><p><span class="btnm">복사</span> 버튼 → 같은 대화창에 이어서 붙여넣기 → 답이 오면 위 오른쪽대로 옮겨 적기. AI 답은 <b>후보</b>예요. 마음에 드는 것만 골라 씁니다.</p></div><div class="foot"><p class="note">마지막 10분: 진도 바 "5교시 중 5교시 작성" 확인 → <span class="btnm">브랜드 북 보기</span>로 1장 "콘셉트와 고객", 2장 "상권"이 채워진 것 확인.</p></div>
-<div class="pn">25</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
+</div><div class="pn">25</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
 </section>
-<section class="slide ">
+<section class="slide "><div class="body">
 <span class="chip">5교시 · 총복습</span><h2>오늘 워크북에 <u>다섯 가지</u>가 들어 있으면 됩니다</h2><div class="cards" style="grid-template-columns:repeat(5,1fr)"><div><div class="num">1</div><p class="k">1교시</p><p class="t">콘셉트 키워드 3개</p><p class="d">트렌드 × 내 이야기</p></div><div><div class="num">2</div><p class="k">2교시</p><p class="t">대표 고객 1명</p><p class="d">이름·언제·왜·주문·객단가</p></div><div><div class="num">3</div><p class="k">3교시</p><p class="t">상권 칸 4개</p><p class="d">유동·배후·경쟁 3곳·장단점</p></div><div><div class="num">4</div><p class="k">4교시</p><p class="t">굳이 와야 할 이유</p><p class="d">20자 한 문장</p></div><div class="hi"><div class="num">5</div><p class="k">5교시</p><p class="t">이름 · 콘셉트 한 줄 · 타깃</p><p class="d">내일 2일차 맨 위에 보여요</p></div></div><div class="foot"><p class="note">비어 있는 칸은 집에서 폰으로 채워도 돼요. 같은 이름·번호로 들어가면 그대로 이어집니다. 내일 시작 전 소상공인365 가입, 명지동 한 번 걸어보기.</p></div>
-<div class="pn">26</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
+</div><div class="pn">26</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
 </section>
-<section class="slide close">
+<section class="slide close"><div class="body">
 <div class="jp">誰のための店か</div><div class="ko">누구를 위한 가게인가</div><p class="sub">내일은 이 한 줄을 들고 <b>메뉴와 원가</b>로 갑니다.<br>"무엇을 팔까"가 아니라 "이 사람에게 무엇을 팔까"로 시작하면 메뉴는 저절로 줄어들어요.<br><br>DAY 2 · 9/29(화) 13:00 · 팔리는 카페 만들기, 메뉴 개발과 원가</p>
-<div class="pn">27</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
+</div><div class="pn">27</div><div class="tag">DAY 1 · 콘셉트와 상권 · 워크북 진행용</div><div class="mascot"><img src="../../assets/logo.png" alt="카페스이 로고"></div>
 </section>
 </div>
 <div class="help">← → 키 · 화면 좌/우 클릭 · 스와이프</div>
@@ -296,6 +297,9 @@ h2 u{text-decoration:none;background:linear-gradient(transparent 62%,var(--coral
   document.getElementById('stage').addEventListener('click',function(e){if(e.clientX<window.innerWidth/3)show(i-1);else show(i+1)});
   var tx=null;document.addEventListener('touchstart',function(e){tx=e.touches[0].clientX},{passive:true});
   document.addEventListener('touchend',function(e){if(tx==null)return;var dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>50)show(dx<0?i+1:i-1);tx=null});
+  function fitAll(){slides.forEach(function(s){var b=s.querySelector('.body');if(!b)return;b.style.zoom='';b.style.width='';b.style.height='';
+    var avail=b.clientHeight,need=b.scrollHeight;if(need>avail+2){var z=Math.max(.55,avail/need);b.style.zoom=z;b.style.width=(100/z)+'%';b.style.height=(100/z)+'%';}});}
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitAll);fitAll();setTimeout(fitAll,800);
   window.addEventListener('resize',fit);fit();
   var start=parseInt((location.hash||'').replace('#',''),10);show(isNaN(start)?0:start-1);
 })();
