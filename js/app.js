@@ -162,7 +162,7 @@ function editAtt(r,after){const mgr=isMgr();
 function calCells(ym){const first=new Date(ym+'-01T00:00:00');const start=addDays(ymd(first),-((first.getDay()+6)%7));const cells=[];for(let i=0;i<42;i++){const d=addDays(start,i);cells.push(d);if(i>=34&&d.slice(0,7)>ym&&(i+1)%7===0)break}return cells}
 async function shifts(){const v=$('#view');let ym=today().slice(0,7);let onlyMe=false;
   v.innerHTML=`<div class="card"><h2><button class="btn sm" id="pm">‹</button><span id="ymLabel" style="font-size:16px"></span><button class="btn sm" id="nm">›</button><input type="month" id="ymPick" style="width:140px">
-    <span class="sp"></span><label style="margin:0"><input type="checkbox" id="onlyMe"> 내 근무만</label>${isMgr()?'<button class="btn sm" id="tplBtn">주간 기본 근무</button><button class="btn sm" id="fillBtn">기본 근무로 채우기</button>':''}<button class="btn sm" id="printSh">인쇄</button></h2>
+    <span class="sp"></span><label style="margin:0"><input type="checkbox" id="onlyMe"> 내 근무만</label>${isMgr()?'<button class="btn sm" id="tplBtn">주간 기본 근무</button><button class="btn sm" id="fillBtn">기본 근무로 채우기</button>':''}<button class="btn sm" id="printSh">인쇄</button><button class="btn sm" id="toOps" title="이 기기의 매장 운영 배정표(ops)에 이 달 근무표를 넣습니다">📋 배정표로 보내기</button></h2>
     <p class="tip">${isMgr()?'날짜를 누르면 그날 근무·휴무를 바꿉니다. ':''}이름 옆 글자는 포지션(오픈·마감·케이크), 취소선은 휴무. 색: ${roleLegend()}</p>
     <div class="cal" id="cal"></div></div>`;
   const render=async()=>{$('#ymLabel').textContent=ym.replace('-','년 ')+'월';$('#ymPick').value=ym;
@@ -172,6 +172,12 @@ async function shifts(){const v=$('#view');let ym=today().slice(0,7);let onlyMe=
     if(isMgr())$$('#cal .d').forEach(c=>c.onclick=()=>editDay(c.dataset.d,rows.filter(r=>r.date===c.dataset.d),render))};
   $('#pm').onclick=()=>{ym=addMonths(ym+'-01',-1).slice(0,7);render()};$('#nm').onclick=()=>{ym=addMonths(ym+'-01',1).slice(0,7);render()};$('#ymPick').onchange=e=>{ym=e.target.value;render()};
   $('#onlyMe').onchange=e=>{onlyMe=e.target.checked;render()};$('#printSh').onclick=()=>window.print();
+  /* 매장 운영 배정표(ops/)와 같은 주소라 localStorage를 공유한다 → 이 달 근무표를 배정표 형식(cafesui.sched.YYYY-MM)으로 넣어 준다. 기기마다 한 번씩. */
+  $('#toOps').onclick=async()=>{const rows=await DB.query('shifts',[['month','==',ym]]);if(!rows.length)return toast(`${ym.replace('-','년 ')}월 근무표가 비어 있습니다`);
+    const role=r=>{if(r.off)return '휴무';const m=r.memo||'';if(m.includes('오픈')&&m.includes('마감'))return '전일';if(m.includes('오픈'))return '오픈';if(m.includes('마감'))return '마감';if(m.includes('케이크')||m.includes('반죽'))return '반죽';return r.name==='손민지'?'종일':'미들'};
+    const o={};for(const r of rows){const k=Number(ym.slice(5))+'-'+Number(r.date.slice(8));(o[k]||(o[k]={}))[r.name]=role(r)}
+    try{localStorage.setItem('cafesui.sched.'+ym,JSON.stringify(o))}catch(e){return toast('이 기기에 저장하지 못했습니다')}
+    toast(`${ym.replace('-','년 ')}월 근무 ${rows.length}건을 배정표로 보냈습니다 (이 기기)`);if(confirm('배정표 근무표를 열까요?'))location.href='ops/#tp1'};
   if($('#tplBtn'))$('#tplBtn').onclick=()=>editTemplates();
   if($('#fillBtn'))$('#fillBtn').onclick=async()=>{if(!confirm(`${ym} 중 비어 있는 날을 각 직원의 주간 기본 근무로 채웁니다. 진행할까요?`))return;
     const tpls=await DB.query('shiftTemplates');const rows=await DB.query('shifts',[['month','==',ym]]);let n=0;
@@ -327,7 +333,7 @@ function stockSeason(){const mo=new Date().getMonth()+1;$('#stBody').innerHTML=`
 const CAT_COLOR={season:'#e8735a',order:'#b8860b',event:'#8e44ad',shoot:'#2471a3',clean:'#5a7d6a',edu:'#16a085',off:'#7f8c8d',meet:'#c0392b',etc:'#a08c7a'};
 async function sched(){const v=$('#view');let ym=today().slice(0,7);let mode='month';
   v.innerHTML=`<div class="card"><h2><div class="subtabs" style="margin:0"><button data-m="month" class="on">월</button><button data-m="year">연간</button></div>
-    <button class="btn sm" id="pm">‹</button><span id="ymLabel" style="font-size:16px"></span><button class="btn sm" id="nm">›</button><span class="sp"></span>${isMgr()?'<button class="btn sm pri" id="evAdd">+ 일정</button><button class="btn sm" id="planFill">연간 기본 플랜 채우기</button><button class="btn sm" id="planCopy">전년도 복사</button>':''}</h2>
+    <button class="btn sm" id="pm">‹</button><span id="ymLabel" style="font-size:16px"></span><button class="btn sm" id="nm">›</button><span class="sp"></span>${isMgr()?'<button class="btn sm pri" id="evAdd">+ 일정</button><button class="btn sm" id="planFill">연간 기본 플랜 채우기</button><button class="btn sm" id="planCopy">전년도 복사</button>':''}<button class="btn sm" id="toOpsEv" title="이 기기의 매장 운영 배정표(ops) 연간 행사에 이 달 일정을 넣습니다">📋 배정표로 보내기</button></h2>
     <p class="tip">시즌 과일 전환(4월 망고, 6월 애플망고·복숭아, 8월 무화과, 11월 딸기), 오븐 청소, 크리스마스 촬영, 월말 회의 같은 기본 일정이 자동으로 들어가 있습니다. 날짜를 눌러 추가하고, 연간 탭에서 내년까지 봅니다. ${Object.entries(SCHED_CATS).map(([k,n])=>`<span class="dot" style="background:${CAT_COLOR[k]}"></span>${n.slice(2)}`).join(' · ')}</p>
     <div id="schBody"></div></div>`;
   const yr=()=>Number(ym.slice(0,4));
@@ -350,6 +356,13 @@ async function sched(){const v=$('#view');let ym=today().slice(0,7);let mode='mo
     toast(`${y}년 기본 플랜 ${n}건 추가`);ym=`${y}-01`;mode='year';$$('[data-m]',v).forEach(x=>x.classList.toggle('on',x.dataset.m==='year'));render()};
   /* 처음 열었을 때 비어 있으면 올해·내년을 자동으로 채움 (관리자 계정에서 1회) */
   if(isMgr()){const cur=await DB.query('schedule',[['year','==',yr()]]);if(!cur.length){toast('기본 연간 플랜을 채우는 중…');const n1=await seedYear(yr());const n2=await seedYear(yr()+1);toast(`올해 ${n1}건, 내년 ${n2}건 기본 플랜을 넣었습니다`)}}
+  /* 이 달 일정을 배정표(ops/) 연간 행사에 넣는다 (cafesui.annual 의 adds). 같은 달·날·제목은 건너뜀 */
+  $('#toOpsEv').onclick=async()=>{const rows=(await load()).filter(e=>e.month===ym);if(!rows.length)return toast(`${ym.replace('-','년 ')}월 일정이 없습니다`);
+    let st={edits:{},adds:[]};try{const raw=localStorage.getItem('cafesui.annual');if(raw){const p=JSON.parse(raw)||{};st.edits=p.edits||{};st.adds=p.adds||[]}}catch(e){}
+    const cat=e=>e.cat==='season'?((e.title||'').includes('빙수')?'bingsu':'fruit'):e.cat==='order'?'order':e.cat==='off'?'holiday':(e.title||'').includes('선물')?'giftset':'event';
+    let n=0;for(const e of rows){const m=Number(ym.slice(5)),d=Number(e.date.slice(8));if(st.adds.some(x=>x.m===m&&x.d===d&&x.t===e.title))continue;st.adds.push({id:'u'+Date.now()+'_'+(n++),m,d,t:e.title,a:e.memo||'',c:cat(e)})}
+    try{localStorage.setItem('cafesui.annual',JSON.stringify(st))}catch(e){return toast('이 기기에 저장하지 못했습니다')}
+    toast(`${ym.replace('-','년 ')}월 일정 ${n}건을 배정표로 보냈습니다 (이 기기)`);if(confirm('배정표 연간 행사를 열까요?'))location.href='ops/#tp6'};
   if($('#planCopy'))$('#planCopy').onclick=async()=>{const y=yr();const prev=await DB.query('schedule',[['year','==',y-1]]);if(!prev.length)return alert(`${y-1}년 일정이 없습니다`);if(!confirm(`${y-1}년 일정 ${prev.length}건을 ${y}년으로 복사할까요? (같은 날짜·제목은 건너뜀)`))return;const rows=await load();let n=0;
     for(const e of prev){const date=String(y)+e.date.slice(4);if(rows.some(x=>x.date===date&&x.title===e.title))continue;await DB.set('schedule',`ev_${date}_${Math.random().toString(36).slice(2,6)}`,{...e,date,endDate:e.endDate?String(y)+e.endDate.slice(4):'',year:y,month:date.slice(0,7)});n++}toast(`${n}건 복사`);render()};
   render();

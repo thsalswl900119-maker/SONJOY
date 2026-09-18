@@ -1631,7 +1631,7 @@ input,select,textarea{border-radius:var(--r3)!important}
   <button type="button" id="myOff">내가 아니에요</button>
 </div>
 
-<nav class="tabs" role="tablist" aria-label="화면 선택"><button type="button" class="tab" role="tab" data-p="tp0" aria-controls="tp0" aria-selected="true">출퇴근</button><button type="button" class="tab" role="tab" data-p="tp1" aria-controls="tp1" aria-selected="false">근무표</button><button type="button" class="tab" role="tab" data-p="tp2" aria-controls="tp2" aria-selected="false">오늘 할 일</button><button type="button" class="tab" role="tab" data-p="tp3" aria-controls="tp3" aria-selected="false">청소·정비</button><button type="button" class="tab" role="tab" data-p="tp4" aria-controls="tp4" aria-selected="false">일지</button><button type="button" class="tab" role="tab" data-p="tp5" aria-controls="tp5" aria-selected="false">월말회의</button><button type="button" class="tab" role="tab" data-p="tp6" aria-controls="tp6" aria-selected="false">연간 행사</button><button type="button" class="tab" role="tab" data-p="tp7" aria-controls="tp7" aria-selected="false">과일</button><button type="button" class="tab" role="tab" data-p="tp8" aria-controls="tp8" aria-selected="false">월말 평가</button><button type="button" class="tab" role="tab" data-p="tp9" aria-controls="tp9" aria-selected="false">워크샵</button><button type="button" class="tab" role="tab" data-p="tp10" aria-controls="tp10" aria-selected="false">고객 응대</button><button type="button" class="tab" role="tab" data-p="tp11" aria-controls="tp11" aria-selected="false">사용법</button></nav><div class="panel" id="tp0" role="tabpanel"><section>
+<nav class="tabs" role="tablist" aria-label="화면 선택"><button type="button" class="tab" role="tab" data-p="tp0" aria-controls="tp0" aria-selected="true">출퇴근</button><button type="button" class="tab" role="tab" data-p="tp1" aria-controls="tp1" aria-selected="false">근무표</button><button type="button" class="tab" role="tab" data-p="tp2" aria-controls="tp2" aria-selected="false">오늘 할 일</button><button type="button" class="tab" role="tab" data-p="tp3" aria-controls="tp3" aria-selected="false">청소·정비</button><button type="button" class="tab" role="tab" data-p="tp12" aria-controls="tp12" aria-selected="false">재고·발주</button><button type="button" class="tab" role="tab" data-p="tp4" aria-controls="tp4" aria-selected="false">일지</button><button type="button" class="tab" role="tab" data-p="tp5" aria-controls="tp5" aria-selected="false">월말회의</button><button type="button" class="tab" role="tab" data-p="tp6" aria-controls="tp6" aria-selected="false">연간 행사</button><button type="button" class="tab" role="tab" data-p="tp7" aria-controls="tp7" aria-selected="false">과일</button><button type="button" class="tab" role="tab" data-p="tp8" aria-controls="tp8" aria-selected="false">월말 평가</button><button type="button" class="tab" role="tab" data-p="tp9" aria-controls="tp9" aria-selected="false">워크샵</button><button type="button" class="tab" role="tab" data-p="tp10" aria-controls="tp10" aria-selected="false">고객 응대</button><button type="button" class="tab" role="tab" data-p="tp11" aria-controls="tp11" aria-selected="false">사용법</button></nav><div class="panel" id="tp0" role="tabpanel"><section>
   <div class="shead"><h2>출퇴근</h2><span class="en">clock out</span>
     <span class="sub">갈 때 본인 칸의 퇴근만 누르세요 · 출근은 10분 일찍, 서로 챙깁니다</span></div>
   <div class="lgbar">
@@ -1710,7 +1710,57 @@ input,select,textarea{border-radius:var(--r3)!important}
       <span>마지막 교체일을 넣으면 <b>다음 교체일이 자동으로 계산</b>됩니다</span>
     </div>
   </div>
-</section></div><div class="panel" id="tp4" role="tabpanel" hidden><section>
+</section></div><div class="panel" id="tp12" role="tabpanel" hidden><section>
+  <div class="shead"><h2>재고 · 발주</h2>
+    <span class="sub">어제 숫자가 들어 있어요 · 바뀐 것만 고치면 자동 저장 · 주황색은 발주 넣을 때</span></div>
+  <nav class="sktabs" role="tablist" aria-label="재고 화면"><button type="button" class="sktab" data-c="sk0" aria-selected="true">📦 발주·재고 체크</button><button type="button" class="sktab" data-c="sk1" aria-selected="false">📒 발주 기준표</button><button type="button" class="sktab" data-c="sk2" aria-selected="false">🍓 과일 시즌</button></nav>
+  <div id="sk0">
+    <div class="skbar">
+      <label>날짜 <input type="date" id="skDate" class="dinp"></label>
+      <button type="button" class="skbtn" id="skToday">오늘</button>
+      <span class="who" id="skBy"></span>
+      <span class="st" id="skStatus"></span>
+      <button type="button" class="skbtn prim" id="skSend">📤 보내기</button>
+      <button type="button" class="skbtn danger" id="skDel" hidden>삭제</button>
+    </div>
+    <div class="skgrid">
+      <div class="skcol">
+        <div class="skbox hot"><div class="skh">🛒 발주 넣을 것 <span class="n" id="skOrdN"></span></div><div class="skb">
+          <div class="skneed" id="skNeed"></div>
+          <textarea id="skOrders" class="skta" placeholder="한 줄에 하나씩&#10;난황 10개&#10;에타용 휘핑크림 12통"></textarea>
+          <div id="skChecks"></div>
+          <p class="tip" style="margin:8px 0 0">발주 넣어야 하는 목록은 캡처해서 텔레그램방에도 꼭 올려주세요 (누락 이슈). 주문 안 된 줄은 다음 날로 넘어갑니다.</p>
+        </div></div>
+        <div class="skbox"><div class="skh">🍰 오늘 숫자</div><div class="skb"><div class="skf">
+          <label class="w">오늘 조각케이크 생산<input type="text" id="sk_prod" class="skin" placeholder="망2 무피2 초체1 복1 멜1"></label>
+          <label>과일 사용 (알)<input type="number" step="0.5" inputmode="decimal" id="sk_fruitUseA" class="skin num"></label>
+          <label>과일 사용 (병)<input type="number" step="0.5" inputmode="decimal" id="sk_fruitUseB" class="skin num"></label>
+          <label>생크림 사용 (통)<input type="number" step="1" inputmode="numeric" id="sk_creamUse" class="skin num"></label>
+          <label class="w">과일 주문·입고 예정<input type="text" id="sk_fruitOrder" class="skin" placeholder="월요일 망고 2박스"></label>
+          <label class="w">생크림 주문 계획<input type="text" id="sk_creamPlan" class="skin" placeholder="목요일 12통"></label>
+          <label class="w">총괄 보고할 특이사항<textarea id="sk_report" class="skta" style="min-height:52px" placeholder="냉장고 고장, 키위 3일 전 미리 말하기 등"></textarea></label>
+        </div></div></div>
+        <div class="skbox"><div class="skh">📅 이번 주 사용량 <span class="n" id="skWeekLabel"></span></div><div class="skb">
+          <p class="tip">과일 (알 / 병)</p><div class="skweek" id="skWeekFruit"></div>
+          <p class="tip">생크림 (통)</p><div class="skweek" id="skWeekCream"></div>
+          <p class="tip" style="margin:6px 0 0">토요일 마감 전에 이 숫자로 주 단위 발주.</p>
+        </div></div>
+        <div class="skbox"><div class="skh">🗂 이달 체크 <span class="n"><input type="month" id="skMonth" class="dinp" style="width:auto"></span></div><div class="skb"><div class="sklist" id="skList"></div></div></div>
+      </div>
+      <div class="skcol" id="skGroups"></div>
+    </div>
+  </div>
+  <div id="sk1" hidden>
+    <p class="tip" style="font-size:12px;color:var(--muted);margin:0 0 8px">노션 「재료 재고 관리」 기준. 네이버 주문 거래처를 모르겠으면 네이버페이 결제내역에서 검색해서 재구매. 연휴 전에는 미리미리 주문.</p>
+    <input type="search" id="skRefQ" class="sksearch" placeholder="품목 · 거래처 검색">
+    <div id="skRef"></div>
+  </div>
+  <div id="sk2" hidden>
+    <p class="tip" style="font-size:12px;color:var(--muted);margin:0 0 8px">과일은 거의 다 망고 사장님(010-3748-9994)께 주문. 복숭아는 미스터돌 병조림, 6~8월, 반박스 남을 때 꼭 주문. 과일은 재고 + 제품 선별이 중요하므로 입고 시 잘 체크.</p>
+    <div class="ztable-wrap"><table class="skref" style="min-width:420px"><thead><tr><th>시기</th><th>종류</th><th>중량 (한판 기준)</th></tr></thead><tbody id="skSeason"></tbody></table></div>
+  </div>
+</section></div>
+<div class="panel" id="tp4" role="tabpanel" hidden><section>
   <div class="shead"><h2>마감 일지</h2><span class="en">daily log</span>
     <span class="sub">퇴근 전에 채우고 복사해서 텔레그램으로 보고하세요</span></div>
   <div class="lgbar">
@@ -2910,8 +2960,8 @@ input,select,textarea{border-radius:var(--r3)!important}
     }
     function store(ym, o) {
       try {
-        if (Object.keys(o).length) localStorage.setItem(keyOf(i), JSON.stringify(o));
-        else localStorage.removeItem(keyOf(i));
+        if (Object.keys(o).length) localStorage.setItem(keyOf(ym), JSON.stringify(o));
+        else localStorage.removeItem(keyOf(ym));
       } catch (e) {}
     }
     function esc(v) {
@@ -4805,4 +4855,440 @@ input,select,textarea{border-radius:var(--r3)!important}
   if (want && document.getElementById(want)) showPanel(want);
 </script>
 
+<style>
+/* 재고 · 발주 */
+.sktabs{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
+.sktab{font:inherit;font-size:12.5px;font-weight:700;padding:6px 13px;cursor:pointer;
+  background:var(--surface);color:var(--ink2);border:1px solid var(--rule2);border-radius:999px}
+.sktab:hover{background:var(--raise)}
+.sktab[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.skbar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;border:1px solid var(--open);
+  border-radius:4px;background:var(--openbg);padding:9px 13px;margin-bottom:12px}
+.skbar label{font-size:12px;font-weight:700;color:var(--ink2);display:flex;align-items:center;gap:6px}
+.skbar .dinp{width:auto;min-width:140px}
+.skbar .who{font-family:var(--serif);font-weight:700;font-size:14px;color:var(--open)}
+.skbar .st{font-size:11.5px;color:var(--muted);margin-left:auto}
+.skbtn{font:inherit;font-size:12.5px;font-weight:700;padding:6px 13px;cursor:pointer;
+  background:var(--surface);color:var(--ink);border:1px solid var(--rule2);border-radius:2px}
+.skbtn:hover{background:var(--raise)}
+.skbtn.prim{background:var(--open);color:#FFFCF6;border-color:var(--open)}
+.skbtn.danger{color:var(--off);border-color:var(--off)}
+.skgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;align-items:start}
+@media (max-width:900px){.skgrid{grid-template-columns:1fr}}
+.skcol{display:flex;flex-direction:column;gap:10px;min-width:0}
+.skbox{border:1px solid var(--rule2);border-radius:3px;background:var(--surface);overflow:hidden}
+.skbox.hot{border-color:var(--open)}
+.skh{display:flex;align-items:center;gap:8px;padding:8px 13px;background:var(--raise);
+  border-bottom:1px solid var(--rule);font-family:var(--serif);font-weight:700;font-size:14px}
+.skbox.hot .skh{background:var(--openbg);color:var(--open)}
+.skh .n{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--muted);font-weight:400}
+.skb{padding:10px 13px 12px}
+.skb p.tip{font-size:11.5px;color:var(--muted);margin:0 0 7px;line-height:1.55}
+.skneed{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;min-height:20px}
+.sktag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:2px;background:var(--midbg);color:var(--mid)}
+.sktag.red{background:var(--offbg);color:var(--off)}
+.sktag.blue{background:var(--closebg);color:var(--close)}
+.sktag.grey{background:var(--raise);color:var(--muted)}
+.skadd{font:inherit;font-size:11.5px;font-weight:700;padding:2px 9px;cursor:pointer;
+  background:var(--surface);color:var(--off);border:1px dashed var(--off);border-radius:999px}
+.skadd:hover{background:var(--offbg)}
+.skta{font:inherit;font-size:13.5px;width:100%;min-height:74px;padding:7px 9px;background:var(--bg);
+  color:var(--ink);border:1px solid var(--rule2);border-radius:2px;resize:vertical;line-height:1.6}
+.skta:focus-visible,.skin:focus-visible{outline:2px solid var(--open);outline-offset:1px}
+.skoc{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:4px}
+.skoc li{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:6px 9px;border:1px solid var(--rule);
+  border-radius:2px;background:var(--bg);font-size:12.5px}
+.skoc li.dn{opacity:.6}
+.skoc li.dn .t{text-decoration:line-through}
+.skoc .t{flex:1;min-width:120px}
+.skoc small{display:block;font-size:10.5px;color:var(--muted)}
+.skoc label{display:flex;align-items:center;gap:4px;font-size:11.5px;font-weight:700;color:var(--ink2);cursor:pointer}
+.skoc input{width:15px;height:15px;accent-color:var(--open)}
+.skitems{display:flex;flex-direction:column}
+.skit{display:grid;grid-template-columns:1fr 78px 34px auto;align-items:center;gap:6px;padding:5px 13px;
+  border-top:1px solid var(--rule)}
+.skit:first-child{border-top:0}
+.skit.need{background:var(--openbg)}
+.skit .nm{font-size:13px;font-weight:500;min-width:0}
+.skit .nm small{display:block;font-size:10.5px;color:var(--muted);line-height:1.4}
+.skit.need .nm{color:var(--open);font-weight:700}
+.skin{font:inherit;font-family:var(--mono);font-size:13px;padding:4px 6px;width:100%;text-align:right;
+  background:var(--bg);color:var(--ink);border:1px solid var(--rule2);border-radius:2px}
+.skit .u{font-size:11.5px;color:var(--muted)}
+.skit .x{font:inherit;font-size:12px;color:var(--muted);background:none;border:0;cursor:pointer;padding:0 4px}
+.skit .x:hover{color:var(--off)}
+.skgrp{border:1px solid var(--rule2);border-radius:3px;background:var(--surface);overflow:hidden}
+.skgrp>summary{font-family:var(--serif);font-weight:700;font-size:13.5px;padding:8px 13px;cursor:pointer;
+  list-style:none;background:var(--raise);display:flex;align-items:center;gap:7px}
+.skgrp>summary::-webkit-details-marker{display:none}
+.skgrp>summary::before{content:"▸";font-size:11px;color:var(--muted)}
+.skgrp[open]>summary::before{content:"▾"}
+.skgrp>summary .n{margin-left:auto;font-family:var(--mono);font-size:10.5px;font-weight:400;color:var(--muted)}
+.skgrp>summary .n.hot{color:var(--off);font-weight:700}
+.skgrp .tipq{font-size:11.5px;color:var(--ink2);background:var(--openbg);padding:7px 13px;line-height:1.55;
+  border-top:1px solid var(--rule)}
+.skf{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.skf label{display:flex;flex-direction:column;gap:3px;font-size:11.5px;font-weight:700;color:var(--ink2)}
+.skf label.w{grid-column:1/-1}
+.skf .skin{text-align:left;font-family:var(--sans)}
+.skf .skin.num{text-align:right;font-family:var(--mono)}
+.skweek{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:6px}
+.skweek div{text-align:center;background:var(--bg);border:1px solid var(--rule);border-radius:2px;padding:4px 2px}
+.skweek span{display:block;font-size:10.5px;color:var(--muted)}
+.skweek b{font-family:var(--mono);font-size:12.5px}
+.skweek .tot{background:var(--raise);border-color:var(--rule2)}
+.sklist{display:flex;flex-direction:column;gap:3px;max-height:260px;overflow:auto}
+.sklist button{font:inherit;text-align:left;font-size:12.5px;padding:6px 9px;cursor:pointer;background:var(--bg);
+  color:var(--ink);border:1px solid var(--rule);border-radius:2px;display:flex;gap:8px;align-items:baseline}
+.sklist button.on{background:var(--openbg);border-color:var(--open)}
+.sklist button b{font-family:var(--mono);font-size:12px;white-space:nowrap}
+.sklist button small{color:var(--muted);font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.skref{width:100%;border-collapse:collapse;min-width:720px;font-size:12.5px}
+.skref th{background:var(--bg);font-size:11.5px;font-weight:700;color:var(--muted);text-align:left;padding:6px 9px;
+  border-bottom:1px solid var(--rule2)}
+.skref td{padding:6px 9px;border-bottom:1px solid var(--rule);vertical-align:top}
+.skref td.now{background:var(--openbg);font-weight:700}
+.sksearch{font:inherit;font-size:13px;padding:6px 9px;width:100%;max-width:300px;background:var(--bg);color:var(--ink);
+  border:1px solid var(--rule2);border-radius:2px;margin-bottom:10px}
+</style>
+<script>
+  // ── 재고 · 발주 ─────────────────────────────────────────────
+  // 운영노트(sonjoy)의 재고·발주 화면을 그대로 옮겼다. 기기별 저장(cafesui.stock.날짜).
+  (function () {
+    var root = document.getElementById("tp12");
+    if (!root) return;
+  var GROUPS={"sheet":"🍞 시트","fruit":"🥭 과일","cream":"🥛 생크림","bar":"☕ 우유·원두·휘핑","sub":"🥚 매일 쓰는 부재료","pack":"📦 포장 재료","etc":"🍧 빙수·기타"};
+  var ITEMS=[["sheet","기본 시트","개",2,"문자 주문 · 6개 단위 · 목요일 도착"],["sheet","초코 시트","개",1,""],["sheet","말차 시트","개",1,""],["fruit","망고 (안 익은 것)","알",null,"망고사장님 · 1박스 남으면 2박스 · 후숙 정도 요청"],["fruit","망고 (익은 것)","알",null,""],["fruit","애플망고","알",null,"6월~"],["fruit","멜론","통",1,"망고사장님 · 1박스 · 당도 체크"],["fruit","복숭아 조림","병",12,"미스터돌 · 24병 1박스 · 반박스 남으면 문자"],["fruit","체리","박스",0.5,"망고사장님 · 반박스 남으면 · 알 큰 것"],["fruit","무화과","박스",2,"쿠팡/망고사장님 · 4박스 · 2박스 남으면"],["fruit","샤인머스켓","박스",null,"망고사장님 · 당도 체크"],["fruit","골드키위","알",4,"3일 전에 미리 말하기"],["fruit","바나나","손",1,""],["fruit","딸기","통",2,"11~4월 · 망고사장님 · 매일~2일 간격"],["cream","생크림 500ml","통",4,"녹산대리점 010-4173-3859 · 20개 · 2일 전 문자 · 월정산"],["bar","우유 밀크마스터","통",3,"녹산대리점 · 전날 12시 전 문자"],["bar","우유 나100","통",3,""],["bar","원두 RR2 1kg","개",2,"러프로스터리 앱 · 4kg · 즉시결제"],["bar","원두 디카페인","개",1,""],["bar","휘핑크림 케이크용 (매일 1L)","통",2,"네이버페이 · 10개 · 2통 남으면"],["bar","휘핑크림 에타용 (앵커/라르사)","통",4,"베이킹맘 · 12~17통 · 3~4병 남으면"],["sub","난황 1L","통",4,"아이엠에그 1544-6519 · 10개 · 3~4병 남으면"],["sub","마스카포네 500g","개",2,"베이킹맘 · 5통 · 2통 남으면"],["sub","설탕 15kg","포",1,"통에 한통 가득일 때 · 2~4포"],["sub","크림치즈 1kg","통",1,"베이킹맘 · 5통 · 1통 남으면"],["sub","계란 30구","판",2,"아재유통 010-4901-4949 · 5판 · 전화"],["sub","판버터 1kg","판",5,"네이버페이 · 10판 · 반쯤 남으면"],["sub","밀가루 (박력/강력)","포",0.5,"굿푸드몰 · 20kg · 반 남으면"],["pack","조각 상자 1개용 (케상)","개",20,"j-팩토리 · 400개"],["pack","조각 상자 2개용","개",20,"패키지팩토리 · 3~5묶음"],["pack","케이크 상자 미니","개",20,"패키지팩토리 070-8265-5664"],["pack","케이크 하판 미니","개",20,""],["pack","케이크 상자 1호","개",20,""],["pack","케이크 하판 1호","개",20,""],["pack","케이크 상자 2호","개",20,""],["pack","케이크 하판 2호","개",20,""],["pack","케이크 상자 3호","개",20,""],["pack","케이크 하판 3호","개",20,""],["pack","케이크 상자 4호","개",5,""],["pack","케이크 하판 4호","개",5,""],["pack","케이크 칼","개",20,"이룸팩 · 5세트"],["pack","케이크 초","통",1,"베이킹스타 · 5묶음"],["pack","에타 각대봉투 1개용","묶음",2,"쿠팡 · 5개"],["pack","에타 각대봉투 2개용","묶음",2,""],["pack","에타 4구 박스","개",50,"패키지팩토리 카톡 · 1000개"],["pack","에타 6구 박스","개",50,"패키지팩토리 카톡 · 1000개"],["pack","종이가방","개",50,"패키지팩토리 · 1000개"],["etc","빙수 통단팥 3kg","통",1,"네이버페이 · 3통"],["etc","홀토마토 (토마토소스)","통",3,"푸드올마켓 · 5통 · 만든 소스 3통 남으면"],["etc","연유 5kg","통",1,"브론스코리아 · 2개 세트"],["etc","코코넛밀크 1L","병",1,"노브랜드 · 3~5병"],["etc","인절미 다이스 1kg","봉",2,"네이버페이 · 5~8봉"],["etc","인절미 가루 1kg","봉",1,"베이킹맘 · 3봉"],["etc","잉어 모나카 100개","봉",0.5,"일본 EMS · 10일 전 주문"],["etc","다크블라썸 1kg","박스",1,"네이버페이 · 2박스"],["etc","말차 빙수가루 1kg","봉",1,"쿠팡 · 2봉"],["etc","냉동망고 1kg","봉",1,"네이버페이 · 5봉"],["etc","레몬즙 1L","병",1,"베이킹맘 · 3병 · 반통 남으면"],["etc","토마토청 (만든 것)","통",0.5,"반통 남으면 담그기 · 대추토마토 대과 4~5kg · 숙성 3~4일"],["etc","빙수 백 1인용","개",20,""],["etc","빙수 백 2인용","개",20,""],["etc","패션후르츠 퓨레 1kg","봉",1,"유니오션 · 6~10봉"],["etc","더치커피","병",1,""],["etc","말차가루 (선인) 1kg","봉",0.3,"베이킹맘 · 1/3 남으면"]];
+  var REF={"커피 재료":[["원두","1kg (RR2)","4kg (월 12-16kg)","원두두 어플로 주문","러프 로스터리","010-7475-1158","즉시 결제"],["우유","밀크마스터 1L","64L (월 130~175L)","전날까지 문자, 오후 12시 전","서울우유 녹산대리점","010-4173-3859","매월 1일 정산"],["테이크아웃 컵/뚜껑","아이스 16oz / 핫 10oz","1000개/박스","2~3줄 남으면 (네이버검색)","칼라컵","1644-2421","인터넷"],["빨대","버블티용 / 일반용","버블티 3200개, 일반 2500개","1봉지 남으면","칼라컵 / 네이버","1644-2421","인터넷"],["냅킨","갈색 무지","8000장/박스","2봉지 남으면","쿠팡","냅킨공장","인터넷"],["물티슈","무지 일회용","2000개/박스","2봉지 남으면","쿠팡","그린위생산업","인터넷"],["일회용 포크","플라스틱 (화이트)","2000개/박스","2팩 남으면","네이버페이","해피팩 1644-3702","인터넷"]],"디저트":[["박력분&강력분","20kg (곰표 강력 / 맥선 박력1등)","1포대","반쯤 남았을 때","네이버페이/쿠팡","굿푸드몰","인터넷"],["판버터 (앵커+칸디아)","1kg","10판","반쯤 남았을 때","네이버페이/진보람","빵수니베이킹","인터넷"],["노른자","1L","10개","3~4병 남았을 때","아이엠에그","1544-6519","인터넷 (연휴 전 미리)"],["휘핑크림 (에그타르트)","1L (앵커/라르사, 유지방 35%)","12~17통","3~4병 남았을 때","네이버페이/베이킹맘 (싼 것)","빨리 오는 곳","인터넷 (연휴 전 미리)"],["설탕","15kg (큐원/백설)","2~4포대","설탕통에 한통 가득 담겨 있을 때","네이버페이/베이킹맘/쿠팡","","인터넷 (연휴 전 미리)"],["계란","특란 30개 1판","5판","냉장고에 1~2판 남았을 때 (전화)","아재유통/식자재마트","010-4901-4949","받고 바로 송금"],["생크림","500ml","20개","2일 전 주문. 케이크 주문량 보고 3~4병 남을 때 (문자). 주 단위 주문","서울녹산대리점","010-4173-3859","월정산"],["럼/밤술/아몬드술/깔루아","1.8L 디종 화이트 럼 / 1L","3통 / 1~2병","반통 남았을 때","베이킹 트리","010-7697-0808","배송요청에 \"매번 시키는 카페스이입니다\" 쓰기"],["휘핑크림 (케이크)","1L 매일 휘핑크림 35%, 파란 뚜껑","10개","2통 남았을 때","네이버페이 (싼 것)","카페세상","인터넷"],["딸기","1kg (진주/하동)","5~10통","매일~2일 간격","망고배달사장님","010-3748-9994","전날 or 주 단위"],["망고","10~14수","2박스씩","1박스 남았을 때 (전화 후 픽업)","망고배달사장님","010-3748-9994","후숙 이슈로 꼭 주 단위 · 후숙 정도 요청 · 1박스 58,000원 넘으면 안 됨"],["무화과","500g (영암)","4박스씩","2박스 남았을 때","쿠팡/망고사장님","쿠팡 전라도청년","전날 or 주 단위"],["메론","1개","1박스씩","","망고배달사장님","010-3748-9994","주 단위 · 당도 체크 필수"],["복숭아조림 (미스터돌)","분홍백도 병조림 24병","1박스","전날 주문 (문자) · 반박스 남을 때","미스터돌","","6~8월"],["체리","1박스","제일 알 큰 것","반박스 남으면","망고배달사장님","010-3748-9994",""],["샤인머스켓","3수","1박스","들어오면 주문 (복합주문)","망고배달사장님","010-3748-9994","주 단위 · 당도 체크"],["인절미떡","1kg 인절미 다이스","5~8봉지","1~2봉지 남았을 때","네이버페이","비즈캔/엠제이커피로스터리","인터넷"],["인절미가루","1kg 대두식품 콩고물","3봉지","1봉지 남았을 때","베이킹맘","070-7101-8349","인터넷"],["팥앙금 (앙버터용)","5kg 태산 통팥","1봉지","1/3 남으면","베이킹맘","070-7101-8349","인터넷"],["가염버터","200g 페이장브레통 빨강","10개","1통 남으면","베이킹맘","070-7101-8349","인터넷"],["데코화이트","1kg 선인","1~2봉지","1/3 남으면","베이킹맘/네이버페이","070-7101-8349","인터넷"],["초코파우더","1.36kg 기라델리 스위트 그라운드","1통","1/3 남으면","베이킹맘/네이버페이","070-7101-8349","인터넷"],["다크초콜릿","2.5kg 칼리바우트 다크 커버춰","1봉지","1/3 남으면","베이킹맘/네이버페이","070-7101-8349","인터넷"],["화이트초콜릿","2.5kg 칼리바우트","1봉지","1/3 남으면","베이킹맘/네이버페이","070-7101-8349","인터넷"],["패션후르츠","1kg 냉동 퓨레 (씨 있고 다 까진 것)","6~10봉지","청병 한통 쓰고 있을 때","네이버페이","유니오션 031-527-3036","인터넷"],["냉동딸기","1kg 딜라잇가든 칠레산","5~10봉지 (5kg 묶음)","청병 한통 쓰고 있을 때","네이버페이","딜라잇가든 1577-8437","인터넷"],["피스타치오 분태","1kg 굽지 않은 것","1봉지","1/3 남으면","네이버페이","디에이푸드마켓/다반사","인터넷"],["피스타치오 가루","1kg 파피루","2~3봉지","1/3 남으면","네이버페이","엘리네찻집/커피창고","인터넷"],["파마산가루","1kg 아담스팜코리아","2봉지","1/3 남으면","베이킹맘","070-7101-8349","인터넷"],["파슬리가루","1kg 이슬나라 후레이크","1통","1/3 남으면","베이킹맘/식자재마트","070-7101-8349","인터넷"],["알옥수수","1kg 냉동 삶은 옥수수알","10봉지","2봉지 남으면","네이버페이","아지매장터 010-3059-5803","인터넷"],["크림치즈","1kg 앵커","5통","1통 남으면","베이킹맘","070-7101-8349","인터넷"],["마스카포네","500g 밀라","5통","2통 남으면","베이킹맘","070-7101-8349","인터넷"],["샤워크림","970g 덴마크","1통","1/2통 남으면","쿠팡/트레이더스","로켓배송","현장+인터넷"],["냉동감자 / 냉동대파","1kg 마당발","3봉지","싼 것으로","네이버페이","검색","인터넷"],["베이컨찹","567g 코스트코","2봉지","싼 것으로","네이버페이","검색","인터넷"],["말차가루","1kg 선인 우지말차믹스","1봉지","1/3 남으면","베이킹맘","070-7101-8349","인터넷"]],"빙수":[["연유","5kg 서강 크리밀","2개 세트","1/3 남으면","네이버페이","브론스코리아 02-1566-2975","인터넷"],["토마토소스","2.55kg 골든투스카니 필드 토마토","5통","만든 소스 3통 남으면","네이버페이","푸드올마켓 031-797-6468","인터넷"],["대추 방울토마토","2kg 1/2번과","4~5kg","토마토청 반통 남으면","망고배달사장님","010-3748-9994","제일 큰 대과로 요청"],["레몬즙","1L 선인 농축액","3통","반통 남으면","베이킹맘","070-7101-8349","인터넷"],["통옥수수","2.5kg 베트남산 냉동","5봉지","1봉지 남으면","쿠팡/네이버페이","로켓프레시","인터넷"],["빙수팥","3kg 동서 리치스","3통","1개 남으면","메가커피/네이버페이","검색","인터넷"],["잉어모나카","100개 모나카 깍지","1봉지","반봉지 남으면 (일본 EMS, 10일 전)","네이버페이","카와이라라","인터넷"],["말차빙수가루","1kg","2봉지","","쿠팡","로켓프레시","인터넷"],["다크블로썸","1kg","2박스","싼 것으로","네이버페이","검색","인터넷"],["코코넛밀크","1L 노브랜드","3~5병","싼 것으로","네이버페이","검색","인터넷"],["냉동망고","1kg","5봉지","싼 것으로","네이버페이","검색","인터넷"],["타임허브","50g 레몬타임 생잎 + 로즈마리","1봉지","1/3 남으면","네이버페이","천향허브 010-9656-8894","인터넷"]],"포장 재료":[["케이크 띠지 (조각)","8cm","1000장 (5세트)","1세트 남았을 때","네이버페이","로티","인터넷"],["케이크 띠지 (홀)","8×51cm","100장 (6세트)","1세트 남았을 때","네이버페이","구디패키지","인터넷"],["떡싸개지","1000장 22×22","5묶음","1~3묶음 남았을 때","네이버페이","착한포장 02-2279-6682","인터넷"],["에그타르트 밑지","1000장 12×12 재단 요청","3묶음","1~2묶음 남았을 때","네이버페이","올페이퍼 031-592-7250","배송요청에 재단 요청 필수"],["에그타르트 포장 봉투","100매 good given 종이봉투 소 화이트","5개","1~2묶음 남았을 때","쿠팡","로켓와우","인터넷"],["에그타르트 4구/6구 박스","1000개 (+칸막이, 깔개)","1번","30~50개 남았을 때 (카톡)","패키지팩토리","070-8265-5664","플러스친구"],["종이가방","1000개 (+종이끈)","1번","30~50개 남았을 때 (카톡)","패키지팩토리","070-8265-5664","플러스친구"],["비닐봉투 소/중/대","50장 투명 무지 24호/33호/39호","10묶음","2~3묶음 남았을 때","베이킹맘/네이버검색","070-7101-8349","인터넷"],["케이크박스 미니/1호/2호","아이보리 누드 투명 + 화이트 사각 받침","30~100개","10~20개 남았을 때","패키지팩토리","070-8265-5664","인터넷"],["조각케이크 박스 (소)","JP-3001W 12.5×7.5×8","400개씩","10~20개 남았을 때","j-팩토리","","네이버"],["조각케이크 박스 (중)","앞열림 3호 옐로우 20×13×14","3~5묶음","10~20개 남았을 때","패키지팩토리","070-8265-5664","플러스친구"],["리본끈","15mm×45m 갈색","5묶음","커팅해둔 것 한묶음 남을 때","네이버페이","리본리에 010-4451-2045","인터넷"],["생일초","100개","5묶음","1박스 남았을 때","네이버페이","베이킹스타 010-8075-3985","인터넷"],["디저트 스티커 (인쇄물 전부)","1000장","2묶음","100개 남았을 때. 인쇄 오래 걸려 마지막 통 쓸 때 주문","도도디자인","","카톡"],["케이크 칼","20개 일회용 케이크서버 투명 소","5세트","10~20개 남았을 때","네이버페이","이룸팩 1577-1851","인터넷"],["클립","500개 블루마토 128mm","4묶음","1통 남았을 때","쿠팡","로켓와우","인터넷"],["스카치 테이프","12롤 12mm 리필","1세트","1~2개 남았을 때","쿠팡","로켓와우","인터넷"]]};
+  var SEASON=[["11~3월말 4월초","딸기","560g",[11,12,1,2,3,4]],["사계절","망고 & 애플망고","12수짜리 3.5개",[1,2,3,4,5,6,7,8,9,10,11,12]],["6~8월","체리","22알",[6,7,8]],["5~10월","메론","1.5kg 반통",[5,6,7,8,9,10]],["6~8월","복숭아 졸임","1병 반",[6,7,8]],["7~10월","샤인머스켓","1손 (알 약간 큰 것)",[7,8,9,10]],["8~11월","무화과 (영암)","500g",[8,9,10,11]],["6~8월","초당옥수수","반개~1개",[6,7,8]],["9~2월","고구마 (거의 안 함)","500~600g",[9,10,11,12,1,2]],["9~11월","밤 (통조림 보늬밤)","500~600g",[9,10,11]],["항상","티라미수","",[1,2,3,4,5,6,7,8,9,10,11,12]],["6~8월","말차 티라미수","",[6,7,8]],["5~6월","바나나","긴 것 3.5개",[5,6]]];
+
+    var MGR = ["정항아", "손민지"];
+    var PRE = "cafesui.stock.";
+    var FIELDS = ["prod", "fruitUseA", "fruitUseB", "creamUse", "fruitOrder", "creamPlan", "report"];
+    var NL = String.fromCharCode(10);
+    var TIP = {
+      fruit: "사장님 꿀팁 — 망고 1박스 최대 58,000원. 후숙 과일은 1~1.5박스 여유. 조림 복숭아 반박스 남으면 미리 주문. 주마다 과일 단가 체크. 파손 시 바로 A/S.",
+      etc: "빙수 재료 메모 — 시즈너리 빙수는 종류에 따라 달라지니 그때그때 체크. 코코넛밀크(노브랜드) · 패션후르츠 퓨레는 웬만하면 넣기."
+    };
+    var OPEN = { sheet: 1, fruit: 1, cream: 1, bar: 1, sub: 1 };
+
+    function me() { try { return localStorage.getItem("cafesui.me") || ""; } catch (e) { return ""; } }
+    function isMgr() { return MGR.indexOf(me()) >= 0; }
+    function pad(n) { return String(n).padStart(2, "0"); }
+    function ymd(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
+    function today() { return ymd(new Date()); }
+    function nowHM() { var d = new Date(); return pad(d.getHours()) + ":" + pad(d.getMinutes()); }
+    function dow(s) { return ["일", "월", "화", "수", "목", "금", "토"][new Date(s + "T00:00:00").getDay()]; }
+    function addDays(s, n) { var d = new Date(s + "T00:00:00"); d.setDate(d.getDate() + n); return ymd(d); }
+    function weekMon(s) { var d = new Date(s + "T00:00:00"); return addDays(s, -((d.getDay() + 6) % 7)); }
+    function esc(v) {
+      return String(v == null ? "" : v).replace(/&/g, "&amp;").replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+    function $(s, r) { return (r || root).querySelector(s); }
+    function $$(s, r) { return Array.prototype.slice.call((r || root).querySelectorAll(s)); }
+    function load(d) { try { var r = localStorage.getItem(PRE + d); return r ? JSON.parse(r) : null; } catch (e) { return null; } }
+    function store(d, o) { try { localStorage.setItem(PRE + d, JSON.stringify(o)); } catch (e) {} }
+    function remove(d) { try { localStorage.removeItem(PRE + d); } catch (e) {} }
+    function allDates() {
+      var out = [];
+      try {
+        for (var i = 0; i < localStorage.length; i++) {
+          var k = localStorage.key(i);
+          if (k && k.indexOf(PRE) === 0 && k.length === PRE.length + 10) out.push(k.slice(PRE.length));
+        }
+      } catch (e) {}
+      return out.sort();
+    }
+    function customItems() { try { return JSON.parse(localStorage.getItem("cafesui.stockitems") || "[]"); } catch (e) { return []; } }
+    function setCustom(a) { try { localStorage.setItem("cafesui.stockitems", JSON.stringify(a)); } catch (e) {} }
+    function allItems() {
+      return ITEMS.concat(customItems().map(function (c) { return [c.g, c.name, c.unit, c.re, c.memo, true]; }));
+    }
+
+    var cur = null, stock = {}, checks = {}, saveT = null;
+    var dateEl = $("#skDate"), ordEl = $("#skOrders"), statusEl = $("#skStatus"), byEl = $("#skBy");
+
+    function needs() {
+      return allItems().filter(function (it) {
+        var v = stock[it[1]];
+        return it[3] != null && v !== "" && v != null && Number(v) <= it[3];
+      }).map(function (it) { return it[1]; });
+    }
+
+    // 재고 묶음
+    function renderGroups() {
+      var box = $("#skGroups"); box.innerHTML = "";
+      var items = allItems();
+      Object.keys(GROUPS).forEach(function (g) {
+        var list = items.filter(function (it) { return it[0] === g; });
+        var d = document.createElement("details");
+        d.className = "skgrp"; d.open = !!OPEN[g]; d.dataset.g = g;
+        d.innerHTML = '<summary>' + esc(GROUPS[g]) + '<span class="n"></span></summary>' +
+          (TIP[g] ? '<div class="tipq">' + esc(TIP[g]) + "</div>" : "") + '<div class="skitems"></div>';
+        var wrap = d.querySelector(".skitems");
+        list.forEach(function (it) {
+          var name = it[1], unit = it[2], re = it[3], memo = it[4], custom = it[5];
+          var val = stock[name] == null ? "" : stock[name];
+          var row = document.createElement("div");
+          row.className = "skit";
+          row.innerHTML = '<span class="nm">' + esc(name) +
+            (re != null ? "<small>" + re + unit + " 이하면 발주" + (memo ? " · " + esc(memo) : "") + "</small>"
+                        : (memo ? "<small>" + esc(memo) + "</small>" : "")) + "</span>" +
+            '<input type="number" step="0.5" inputmode="decimal" class="skin" value="' + esc(val) + '">' +
+            '<span class="u">' + esc(unit) + "</span>" +
+            (custom && isMgr() ? '<button type="button" class="x" title="항목 삭제">×</button>' : "<span></span>");
+          var inp = row.querySelector("input");
+          var paint = function () {
+            var need = re != null && inp.value !== "" && Number(inp.value) <= re;
+            row.classList.toggle("need", need);
+          };
+          paint();
+          inp.addEventListener("input", function () { stock[name] = inp.value; paint(); renderNeed(); queueSave(); });
+          var x = row.querySelector(".x");
+          if (x) x.addEventListener("click", function () {
+            if (!confirm('"' + name + '" 항목을 지울까요?')) return;
+            setCustom(customItems().filter(function (c) { return c.name !== name; }));
+            renderGroups();
+          });
+          wrap.appendChild(row);
+        });
+        box.appendChild(d);
+      });
+      if (isMgr()) {
+        var add = document.createElement("button");
+        add.type = "button"; add.className = "skbtn"; add.textContent = "+ 재고 항목 추가";
+        add.addEventListener("click", function () {
+          var g = prompt("묶음: sheet(시트) fruit(과일) cream(생크림) bar(우유·원두·휘핑) sub(부재료) pack(포장) etc(빙수·기타)", "etc");
+          if (!g || !GROUPS[g]) return;
+          var name = prompt("품목명"); if (!name) return;
+          var unit = prompt("단위", "개") || "개";
+          var re = prompt("발주점 (이 수량 이하면 발주 표시 · 없으면 비워두기)", "");
+          var memo = prompt("발주 메모 (거래처 · 주문량)", "") || "";
+          var c = customItems(); c.push({ g: g, name: name, unit: unit, re: re === "" ? null : Number(re), memo: memo });
+          setCustom(c); renderGroups();
+        });
+        box.appendChild(add);
+      }
+      renderNeed();
+    }
+    function renderNeed() {
+      var n = needs();
+      $("#skNeed").innerHTML = n.length
+        ? '<span class="sktag red">발주점 이하 ' + n.length + "</span>" +
+          n.map(function (x) { return '<button type="button" class="skadd" data-add="' + esc(x) + '">+ ' + esc(x) + "</button>"; }).join("")
+        : '<span class="sktag">발주점 이하 없음</span>';
+      $$("#skNeed [data-add]").forEach(function (b) {
+        b.addEventListener("click", function () {
+          var it = allItems().filter(function (x) { return x[1] === b.dataset.add; })[0];
+          if (!it || ordEl.value.indexOf(it[1]) >= 0) return;
+          ordEl.value = (ordEl.value ? ordEl.value.replace(/\n?$/, NL) : "") + it[1] + (it[4] ? " (" + it[4] + ")" : "");
+          renderChecks(); queueSave();
+        });
+      });
+      $$(".skgrp").forEach(function (d) {
+        var g = d.dataset.g, cnt = 0;
+        allItems().forEach(function (it) { if (it[0] === g && n.indexOf(it[1]) >= 0) cnt++; });
+        var s = d.querySelector("summary .n");
+        s.textContent = cnt ? "발주 " + cnt : "";
+        s.classList.toggle("hot", !!cnt);
+      });
+    }
+    function lines() { return ordEl.value.split(NL).map(function (l) { return l.trim(); }).filter(Boolean); }
+
+    // 발주 확인 — 사장·매니저가 "확인 → 주문함" 순서로 체크. 직원은 상태만 본다
+    function renderChecks() {
+      var box = $("#skChecks"), ls = lines();
+      $("#skOrdN").textContent = ls.length ? ls.length + "줄" : "";
+      if (!ls.length) { box.innerHTML = ""; return; }
+      var mgr = isMgr();
+      box.innerHTML = '<ul class="skoc">' + ls.map(function (l) {
+        var c = checks[l] || {};
+        return '<li class="' + (c.ordered ? "dn" : "") + '"><span class="t">' + esc(l) + "<small>" +
+          (c.from ? c.from.slice(5) + "부터 · " : "") +
+          (c.ok ? "확인 " + esc(c.by) + " " + esc(c.at) : "") +
+          (c.ordered ? " · 주문 완료 " + esc(c.oBy) + " " + esc(c.oAt) : "") + "</small></span>" +
+          (mgr ? '<label><input type="checkbox" data-ok="' + esc(l) + '"' + (c.ok ? " checked" : "") + "> 확인</label>" +
+                 '<label><input type="checkbox" data-ord="' + esc(l) + '"' + (c.ordered ? " checked" : "") + "> 주문함</label>"
+               : (c.ordered ? '<span class="sktag">주문 완료</span>' : c.ok ? '<span class="sktag blue">확인됨</span>' : '<span class="sktag grey">대기</span>')) +
+          "</li>";
+      }).join("") + "</ul>";
+      $$("[data-ok]", box).forEach(function (cb) {
+        cb.addEventListener("change", function () {
+          var c = checks[cb.dataset.ok] || (checks[cb.dataset.ok] = {});
+          c.ok = cb.checked; c.by = cb.checked ? me() : ""; c.at = cb.checked ? nowHM() : "";
+          if (!cb.checked) c.ordered = false;
+          renderChecks(); queueSave();
+        });
+      });
+      $$("[data-ord]", box).forEach(function (cb) {
+        cb.addEventListener("change", function () {
+          var c = checks[cb.dataset.ord] || (checks[cb.dataset.ord] = {});
+          c.ordered = cb.checked; c.oBy = cb.checked ? me() : ""; c.oAt = cb.checked ? nowHM() : "";
+          if (cb.checked && !c.ok) { c.ok = true; c.by = me(); c.at = nowHM(); }
+          renderChecks(); queueSave();
+        });
+      });
+    }
+
+    function read() {
+      var o = { date: cur, month: cur.slice(0, 7), by: byEl.textContent, stock: stock, orders: ordEl.value, orderChecks: checks };
+      FIELDS.forEach(function (k) { o[k] = $("#sk_" + k).value; });
+      return o;
+    }
+    function saveNow() {
+      if (!cur) return;
+      store(cur, read());
+      statusEl.textContent = "자동 저장됨 " + nowHM();
+      renderList(); renderWeek();
+    }
+    function queueSave() { statusEl.textContent = "입력 중…"; clearTimeout(saveT); saveT = setTimeout(saveNow, 900); }
+
+    // 날짜 열기 — 없으면 가장 최근 날의 재고 숫자를 깔고, 주문 안 된 발주 줄을 넘겨받는다
+    function open(d) {
+      clearTimeout(saveT);
+      cur = d; dateEl.value = d;
+      var o = load(d);
+      if (!o) {
+        var prevDates = allDates().filter(function (x) { return x < d; });
+        var prev = prevDates.length ? load(prevDates[prevDates.length - 1]) : null;
+        o = { date: d, month: d.slice(0, 7), by: me(), stock: prev ? JSON.parse(JSON.stringify(prev.stock || {})) : {},
+              creamPlan: prev ? prev.creamPlan || "" : "", orders: "", orderChecks: {} };
+        if (prev) {
+          var pc = prev.orderChecks || {};
+          var carry = (prev.orders || "").split(NL).map(function (l) { return l.trim(); })
+            .filter(function (l) { return l && !(pc[l] || {}).ordered; });
+          if (carry.length) {
+            o.orders = carry.join(NL);
+            carry.forEach(function (l) {
+              var c = {}; for (var k in (pc[l] || {})) c[k] = pc[l][k];
+              c.from = c.from || prev.date; o.orderChecks[l] = c;
+            });
+          }
+        }
+        $("#skDel").hidden = true;
+      } else {
+        $("#skDel").hidden = !isMgr();
+      }
+      stock = o.stock || {}; checks = o.orderChecks || {};
+      ordEl.value = o.orders || "";
+      FIELDS.forEach(function (k) { $("#sk_" + k).value = o[k] == null ? "" : o[k]; });
+      byEl.textContent = o.by || me();
+      statusEl.textContent = load(d) ? "" : "새 날 · 어제 숫자를 깔아뒀어요";
+      renderGroups(); renderChecks(); renderList(); renderWeek();
+    }
+    function renderList() {
+      var m = $("#skMonth").value || cur.slice(0, 7);
+      var ds = allDates().filter(function (x) { return x.slice(0, 7) === m; }).reverse();
+      var box = $("#skList");
+      box.innerHTML = ds.length ? ds.map(function (d) {
+        var o = load(d) || {};
+        var ord = (o.orders || "").split(NL).filter(Boolean).join(", ");
+        return '<button type="button" class="' + (d === cur ? "on" : "") + '" data-d="' + d + '"><b>' + d.slice(5) + " (" + dow(d) + ")</b>" +
+          (o.by ? "<span>" + esc(o.by) + "</span>" : "") + "<small>" + (esc(ord).slice(0, 40) || "발주 없음") + "</small></button>";
+      }).join("") : '<p class="tip">이 달 체크가 없습니다.</p>';
+      $$("[data-d]", box).forEach(function (b) { b.addEventListener("click", function () { open(b.dataset.d); }); });
+    }
+    function renderWeek() {
+      var mon = weekMon(cur || today());
+      var days = [0, 1, 2, 3, 4, 5].map(function (i) { return addDays(mon, i); });
+      $("#skWeekLabel").textContent = mon.slice(5) + " ~ " + days[5].slice(5);
+      var tA = 0, tB = 0, tC = 0;
+      var f = "", c = "";
+      days.forEach(function (d) {
+        var o = (d === cur) ? read() : (load(d) || {});
+        var a = Number(o.fruitUseA) || 0, b = Number(o.fruitUseB) || 0, cc = Number(o.creamUse) || 0;
+        tA += a; tB += b; tC += cc;
+        f += "<div><span>" + dow(d) + "</span><b>" + ((o.fruitUseA || o.fruitUseB) ? (o.fruitUseA || 0) + "/" + (o.fruitUseB || 0) : "·") + "</b></div>";
+        c += "<div><span>" + dow(d) + "</span><b>" + (o.creamUse !== "" && o.creamUse != null ? o.creamUse : "·") + "</b></div>";
+      });
+      $("#skWeekFruit").innerHTML = f + '<div class="tot"><span>합계</span><b>' + tA + "알 " + tB + "병</b></div>";
+      $("#skWeekCream").innerHTML = c + '<div class="tot"><span>합계</span><b>' + tC + "</b></div>";
+    }
+
+    // 보내기 — 텔레그램방에 붙여 넣는 글
+    function sendText() {
+      saveNow();
+      var o = read(), n = needs();
+      var grp = function (g) {
+        return allItems().filter(function (it) { return it[0] === g && stock[it[1]] !== "" && stock[it[1]] != null; })
+          .map(function (it) { return it[1] + " " + stock[it[1]] + it[2]; }).join(", ") || "-";
+      };
+      var ord = lines().map(function (l) { var c = checks[l] || {}; return (c.ordered ? "✅ " : c.ok ? "☑ " : "⬜ ") + l; }).join(NL);
+      var t = ["[발주·재고 체크] " + o.date + " (" + dow(o.date) + ") " + (o.by || ""),
+        "■ 발주 넣을 것 (⬜대기 ☑확인 ✅주문완료)", ord || "-",
+        n.length ? "(발주점 이하: " + n.join(", ") + ")" : "",
+        "■ 특이사항", o.report || "-",
+        "■ 조각케이크 생산: " + (o.prod || "-"),
+        "■ 시트: " + grp("sheet"),
+        "■ 과일 사용 " + (o.fruitUseA || 0) + "알 / " + (o.fruitUseB || 0) + "병 · 재고: " + grp("fruit"),
+        "  주문: " + (o.fruitOrder || "-"),
+        "■ 생크림 사용 " + (o.creamUse || 0) + "통 · 재고 " + grp("cream") + " · " + (o.creamPlan || ""),
+        "■ 우유·원두·휘핑: " + grp("bar"),
+        "■ 부재료: " + grp("sub")].filter(function (x) { return x !== ""; }).join(NL);
+      var done = function () { statusEl.textContent = "복사됐습니다 · 텔레그램방에 붙여 넣으세요"; };
+      if (navigator.share) { navigator.share({ text: t }).then(done, function () { copy(t, done); }); return; }
+      copy(t, done);
+    }
+    function copy(t, done) {
+      if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(t).then(done, function () { fb(t, done); }); }
+      else fb(t, done);
+    }
+    function fb(t, done) {
+      var ta = document.createElement("textarea"); ta.value = t; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); done(); } catch (e) { statusEl.textContent = "복사가 안 됩니다"; }
+      ta.remove();
+    }
+
+    // 발주 기준표 · 과일 시즌표
+    function renderRef() {
+      var q = ($("#skRefQ").value || "").trim().toLowerCase();
+      var box = $("#skRef"); box.innerHTML = "";
+      Object.keys(REF).forEach(function (g) {
+        var rows = REF[g].filter(function (r) { return !q || r.join(" ").toLowerCase().indexOf(q) >= 0; });
+        if (!rows.length) return;
+        var d = document.createElement("details");
+        d.className = "skgrp"; d.open = !!q || g === "디저트"; d.style.marginBottom = "8px";
+        d.innerHTML = "<summary>" + esc(g) + '<span class="n">' + rows.length + "</span></summary>" +
+          '<div class="ztable-wrap" style="border:0"><table class="skref"><thead><tr><th>품목</th><th>규격</th><th>1회 주문량</th><th>주문 시기</th><th>주문처</th><th>연락처</th><th>정산/비고</th></tr></thead><tbody>' +
+          rows.map(function (r) { return "<tr>" + r.map(function (c) { return "<td>" + esc(c) + "</td>"; }).join("") + "</tr>"; }).join("") +
+          "</tbody></table></div>";
+        box.appendChild(d);
+      });
+    }
+    function renderSeason() {
+      var mo = new Date().getMonth() + 1;
+      $("#skSeason").innerHTML = SEASON.map(function (r) {
+        var on = r[3].indexOf(mo) >= 0;
+        return "<tr>" + [r[0], r[1], r[2]].map(function (c) { return '<td class="' + (on ? "now" : "") + '">' + esc(c) + "</td>"; }).join("") + "</tr>";
+      }).join("");
+    }
+
+    // 묶기
+    ["#skOrders"].forEach(function (s) { $(s).addEventListener("input", function () { renderChecks(); queueSave(); }); });
+    FIELDS.forEach(function (k) { $("#sk_" + k).addEventListener("input", queueSave); });
+    dateEl.addEventListener("change", function () { if (dateEl.value) { $("#skMonth").value = dateEl.value.slice(0, 7); open(dateEl.value); } });
+    $("#skToday").addEventListener("click", function () { $("#skMonth").value = today().slice(0, 7); open(today()); });
+    $("#skMonth").addEventListener("change", renderList);
+    $("#skSend").addEventListener("click", sendText);
+    $("#skDel").addEventListener("click", function () {
+      if (!cur || !confirm(cur + " 체크를 지울까요?")) return;
+      remove(cur); open(cur);
+    });
+    $("#skRefQ").addEventListener("input", renderRef);
+    var tabs = $$(".sktab", document.getElementById("tp12"));
+    tabs.forEach(function (t) {
+      t.addEventListener("click", function () {
+        tabs.forEach(function (x) {
+          var on = x === t; x.setAttribute("aria-selected", String(on));
+          var p = document.getElementById(x.dataset.c); if (p) p.hidden = !on;
+        });
+      });
+    });
+    $("#skMonth").value = today().slice(0, 7);
+    renderRef(); renderSeason();
+    open(today());
+  })();
+</script>
 </body></html>
