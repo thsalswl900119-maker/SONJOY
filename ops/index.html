@@ -1828,7 +1828,11 @@ input,select,textarea{border-radius:var(--r3)!important}
       <button type="button" class="skbtn danger" id="skDel" hidden>삭제</button>
     </div>
     <div class="skgrid">
-      <div class="skcol skrpcol"><div class="skrp" id="skReport"></div></div>
+      <div class="skcol skrpcol"><div class="skrp" id="skReport"></div>
+        <div class="skbox skuse"><div class="skh">📅 사용량 달력 <span class="n" id="skUseLabel"></span></div><div class="skb">
+          <div class="skusecal" id="skUseCal"></div>
+          <p class="tip" style="margin:6px 0 0">칸 위 = 과일 알/병 · 칸 아래 = 생크림 통 · 오른쪽 = 그 주 합계 · 토요일 마감 전에 주 합계로 발주</p>
+        </div></div></div>
       <div class="skcol">
         <div class="skbox hot"><div class="skh">🛒 발주 넣을 것 <span class="n" id="skOrdN"></span></div><div class="skb">
           <div class="skneed" id="skNeed"></div>
@@ -1845,11 +1849,6 @@ input,select,textarea{border-radius:var(--r3)!important}
           <label class="w">생크림 주문 계획<input type="text" id="sk_creamPlan" class="skin" placeholder="목요일 12통"></label>
           <label class="w">총괄 보고할 특이사항<textarea id="sk_report" class="skta" style="min-height:52px" placeholder="냉장고 고장, 키위 3일 전 미리 말하기 등"></textarea></label>
         </div></div></div>
-        <div class="skbox"><div class="skh">📅 이번 주 사용량 <span class="n" id="skWeekLabel"></span></div><div class="skb">
-          <p class="tip">과일 (알 / 병)</p><div class="skweek" id="skWeekFruit"></div>
-          <p class="tip">생크림 (통)</p><div class="skweek" id="skWeekCream"></div>
-          <p class="tip" style="margin:6px 0 0">토요일 마감 전에 이 숫자로 주 단위 발주.</p>
-        </div></div>
         <div class="skbox"><div class="skh">🗂 이달 체크 <span class="n"><input type="month" id="skMonth" class="dinp" style="width:auto"></span></div><div class="skb"><div class="sklist" id="skList"></div></div></div>
       </div>
       <div class="skcol" id="skGroups"></div>
@@ -5459,6 +5458,22 @@ input,select,textarea{border-radius:var(--r3)!important}
 .savebar #bkPaste .wsin{width:100%}
 .skrpcol{top:60px}
 @media (max-width:620px){.savebar .sep{display:none}.savebar .svlab{display:none}}
+.skuse{margin-top:10px}
+.skusecal{display:grid;grid-template-columns:repeat(7,1fr) 1.35fr;gap:2px;font-size:10px}
+.skusecal .h{text-align:center;font-weight:700;color:var(--muted);padding:2px 0}
+.skusecal .h.s{color:var(--close)} .skusecal .h.tot{color:var(--ink)}
+.skusecal .c{background:var(--bg);border:1px solid var(--rule);border-radius:2px;padding:2px 3px;min-height:34px;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer}
+.skusecal .c:hover{border-color:var(--open)}
+.skusecal .c.pad{background:transparent;border-color:transparent;cursor:default}
+.skusecal .c.sun{background:var(--raise);color:var(--muted)}
+.skusecal .c.on{border-color:var(--open);background:var(--openbg)}
+.skusecal .c.today .d{color:var(--open)}
+.skusecal .d{font-family:var(--mono);font-size:9.5px;font-weight:700;color:var(--muted)}
+.skusecal .f{font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--mid);line-height:1.2}
+.skusecal .cr{font-family:var(--mono);font-size:10px;color:var(--close);line-height:1.2}
+.skusecal .t{background:var(--raise);border:1px solid var(--rule2);border-radius:2px;padding:2px 4px;min-height:34px;display:flex;flex-direction:column;justify-content:center}
+.skusecal .t b{font-family:var(--mono);font-size:10.5px;color:var(--ink);display:block;line-height:1.3}
+.skusecal .t small{font-size:9px;color:var(--muted)}
 .sksearch{font:inherit;font-size:13px;padding:6px 9px;width:100%;max-width:300px;background:var(--bg);color:var(--ink);
   border:1px solid var(--rule2);border-radius:2px;margin-bottom:10px}
 </style>
@@ -5701,7 +5716,36 @@ input,select,textarea{border-radius:var(--r3)!important}
       }).join("") : '<p class="tip">이 달 체크가 없습니다.</p>';
       $$("[data-d]", box).forEach(function (b) { b.addEventListener("click", function () { open(b.dataset.d); }); });
     }
+    // 사용량 달력 — 한 달치 과일(알/병) · 생크림(통)을 날짜별로, 오른쪽에 주 합계
+    function renderUseCal() {
+      var box = $("#skUseCal"); if (!box || !cur) return;
+      var ym = cur.slice(0, 7), y = +ym.slice(0, 4), m = +ym.slice(5, 7);
+      $("#skUseLabel").textContent = y + "년 " + m + "월";
+      var first = new Date(y, m - 1, 1), lead = (first.getDay() + 6) % 7, nd = new Date(y, m, 0).getDate();
+      var t = today(), curDoc = read();
+      var h = ["월", "화", "수", "목", "금", "토", "일"].map(function (w, k) { return '<div class="h' + (k >= 5 ? " s" : "") + '">' + w + "</div>"; }).join("") + '<div class="h tot">주 합계</div>';
+      var wk = { a: 0, b: 0, c: 0 }, col = 0;
+      var flush = function () { h += '<div class="t"><b>' + wk.a + "알 " + wk.b + "병</b><b>" + wk.c + "통</b><small>과일 · 생크림</small></div>"; wk = { a: 0, b: 0, c: 0 }; };
+      for (var i = 0; i < lead; i++) { h += '<div class="c pad"></div>'; col++; }
+      for (var d = 1; d <= nd; d++) {
+        var date = ym + "-" + pad(d), wd = (new Date(y, m - 1, d).getDay() + 6) % 7;
+        var o = (date === cur) ? curDoc : (load(date) || {});
+        var a = Number(o.fruitUseA) || 0, b = Number(o.fruitUseB) || 0, c = Number(o.creamUse) || 0;
+        wk.a += a; wk.b += b; wk.c += c;
+        var has = (o.fruitUseA || o.fruitUseB || o.creamUse);
+        h += '<div class="c' + (wd === 6 ? " sun" : "") + (date === t ? " today" : "") + (date === cur ? " on" : "") + '" data-d="' + date + '">' +
+          '<span class="d">' + d + "</span>" +
+          (has ? '<span class="f">' + (a || 0) + "/" + (b || 0) + '</span><span class="cr">' + (c || "·") + "</span>" : '<span class="f" style="color:var(--rule2)">·</span>') + "</div>";
+        col++;
+        if (col % 7 === 0) flush();
+      }
+      if (col % 7 !== 0) { while (col % 7 !== 0) { h += '<div class="c pad"></div>'; col++; } flush(); }
+      box.innerHTML = h;
+      $$(".c[data-d]", box).forEach(function (el) { el.addEventListener("click", function () { $("#skMonth").value = el.dataset.d.slice(0, 7); open(el.dataset.d); }); });
+    }
     function renderWeek() {
+      renderUseCal();
+      if (!$("#skWeekFruit")) return;
       var mon = weekMon(cur || today());
       var days = [0, 1, 2, 3, 4, 5].map(function (i) { return addDays(mon, i); });
       $("#skWeekLabel").textContent = mon.slice(5) + " ~ " + days[5].slice(5);
@@ -5760,6 +5804,7 @@ input,select,textarea{border-radius:var(--r3)!important}
       });
       html += '<div class="rf"><span>이번 주 사용 <i>' + tA + "알 " + tB + "병 · 생크림 " + tC + "통</i></span><span>카페스이 · 재고발주</span></div>";
       box.innerHTML = html;
+      renderUseCal();
     }
     // 보내기 — 텔레그램방에 붙여 넣는 글
     function sendText() {
