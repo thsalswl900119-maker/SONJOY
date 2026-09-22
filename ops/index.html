@@ -357,6 +357,8 @@ input.wp1,input.wp2,input.wp3,input.wp4{font-weight:500}
 .gatebtn.p3{border-left:4px solid var(--p3)}
 .gatebtn.p4{border-left:4px solid var(--p4)}
 .gatenote{font-size:11.5px;color:var(--muted);margin-top:14px}
+.gatehow{text-align:left;line-height:1.7;margin-top:14px}
+.gatehow b{color:var(--open)}
 .gatestep[hidden]{display:none}
 .gatewho{font-family:var(--serif);font-weight:700;font-size:20px;color:var(--open);
   margin-bottom:14px}
@@ -1457,7 +1459,13 @@ input,select,textarea{border-radius:var(--r3)!important}
     <div class="gatestep" id="gateStep1">
       <div class="gateask">누구세요?</div>
       <div class="gatebtns" id="gateBtns"></div>
-      <div class="gatenote">한 번만 고르면 이 기기는 기억합니다</div>
+      <div class="gatenote gatehow">
+        <b>처음이세요?</b> 이름을 누르고 <b>숫자 4자리</b>를 한 번 치면 그게 내 비밀번호가 됩니다.
+        사장님이 따로 만들어 주지 않아도 됩니다.<br>
+        비밀번호는 <b>이 기기에만</b> 저장됩니다. 아이맥 · 주방 폰에서 각각 처음 한 번씩 정하세요 (같은 숫자로 맞추면 편합니다).<br>
+        <b>공용 컴퓨터</b>라서 들어올 때마다 이름을 고릅니다. 다 쓰면 위의 "내가 아니에요"를 누르세요. 10분 동안 안 만지면 저절로 잠깁니다.<br>
+        잊어버리면 "비밀번호를 잊었어요"로 다시 정하면 되고, 적어둔 내용은 사라지지 않습니다.
+      </div>
     </div>
     <div class="gatestep" id="gateStep2" hidden>
       <div class="gateask" id="pinAsk">비밀번호</div>
@@ -1678,7 +1686,7 @@ input,select,textarea{border-radius:var(--r3)!important}
   </div>
   <div class="whobar">
     <span class="wblab">누가 체크하나요?</span>
-    <div class="wbtns"><button type="button" class="wbtn p1" data-n="정항아" aria-pressed="false">정항아</button><button type="button" class="wbtn p2" data-n="박혜빈" aria-pressed="false">박혜빈</button><button type="button" class="wbtn p3" data-n="이해선" aria-pressed="false">이해선</button><button type="button" class="wbtn p4" data-n="손민지" aria-pressed="false">손민지</button></div>
+    <div class="wbtns"><button type="button" class="wbtn p1" data-n="정항아" aria-pressed="false">정항아</button><button type="button" class="wbtn p2" data-n="박혜빈" aria-pressed="false">박혜빈</button><button type="button" class="wbtn p3" data-n="이해선" aria-pressed="false">이해선</button><button type="button" class="wbtn p4" data-n="사장님" aria-pressed="false">사장님</button></div>
     <span class="wbmsg" id="whoMsg">이름을 고르면 체크가 그 사람 색으로 칠해집니다</span>
   </div>
 
@@ -1690,7 +1698,7 @@ input,select,textarea{border-radius:var(--r3)!important}
   <div class="ztable-wrap">
     <table class="zt">
       <thead><tr><th>구역</th><th class="c3">담당</th><th class="c5">확인</th></tr></thead>
-      <tbody><tr class="keyzone"><td class="zn"><span class="keymark">중요</span>제빙기<span class="zd">내부 세척 + 필터. 빙수철에는 월 2회.</span></td><td class="zpick"><button type="button" class="chip" data-k="z1" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z1" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z1" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z1" data-v="손민지">손민지</button></td><td class="zchk"><button type="button" class="box" data-k="z1" aria-label="제빙기 완료" aria-pressed="false"></button></td></tr><tr class="keyzone"><td class="zn"><span class="keymark">중요</span>커피 그라인더 분해 청소<span class="zd">자동·수동 둘 다. 원두 기름때</span></td><td class="zpick"><button type="button" class="chip" data-k="z4" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z4" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z4" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z4" data-v="손민지">손민지</button></td><td class="zchk"><button type="button" class="box" data-k="z4" aria-label="커피 그라인더 분해 청소 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">냉장고 얼음 제거 + 내부 정리<span class="zd">얼음 걷어내고 선반 빼서 세척. 물때까지</span></td><td class="zpick"><button type="button" class="chip" data-k="z2" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z2" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z2" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z2" data-v="손민지">손민지</button></td><td class="zchk"><button type="button" class="box" data-k="z2" aria-label="냉장고 얼음 제거 + 내부 정리 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">오븐 내부<span class="zd">에그타르트 굽는 오븐. 기름때·탄 자국 제거</span></td><td class="zpick"><button type="button" class="chip" data-k="z3" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z3" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z3" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z3" data-v="손민지">손민지</button></td><td class="zchk"><button type="button" class="box" data-k="z3" aria-label="오븐 내부 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">업소용 냉장고 내부<span class="zd">선반 빼서 세척, 유통기한 지난 재료 정리</span></td><td class="zpick"><button type="button" class="chip" data-k="z5" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z5" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z5" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z5" data-v="손민지">손민지</button></td><td class="zchk"><button type="button" class="box" data-k="z5" aria-label="업소용 냉장고 내부 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">냉동실 성에 제거 + 내부 정리<span class="zd">성에 긁어내고 오래된 반죽 · 필링 확인</span></td><td class="zpick"><button type="button" class="chip" data-k="z6" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z6" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z6" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z6" data-v="손민지">손민지</button></td><td class="zchk"><button type="button" class="box" data-k="z6" aria-label="냉동실 성에 제거 + 내부 정리 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">쇼케이스 내부<span class="zd">유리 안쪽, 선반, 밑 물통</span></td><td class="zpick"><button type="button" class="chip" data-k="z7" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z7" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z7" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z7" data-v="손민지">손민지</button></td><td class="zchk"><button type="button" class="box" data-k="z7" aria-label="쇼케이스 내부 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">테이블 냉장고<span class="zd">손잡이·문·내부 선반</span></td><td class="zpick"><button type="button" class="chip" data-k="z8" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z8" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z8" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z8" data-v="손민지">손민지</button></td><td class="zchk"><button type="button" class="box" data-k="z8" aria-label="테이블 냉장고 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">유리창 전체<span class="zd">매장 앞 유리 + 내부 창</span></td><td class="zpick"><button type="button" class="chip" data-k="z9" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z9" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z9" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z9" data-v="손민지">손민지</button></td><td class="zchk"><button type="button" class="box" data-k="z9" aria-label="유리창 전체 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">선반 먼지 · 거미줄<span class="zd">천장 모서리, 높은 선반, 틈새</span></td><td class="zpick"><button type="button" class="chip" data-k="z10" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z10" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z10" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z10" data-v="손민지">손민지</button></td><td class="zchk"><button type="button" class="box" data-k="z10" aria-label="선반 먼지 · 거미줄 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">에어컨 필터<span class="zd">주방·홀. 여름 전 반드시</span></td><td class="zpick"><button type="button" class="chip" data-k="z11" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z11" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z11" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z11" data-v="손민지">손민지</button></td><td class="zchk"><button type="button" class="box" data-k="z11" aria-label="에어컨 필터 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">화장실 배수구<span class="zd">남·여 배수구 + 트렌치</span></td><td class="zpick"><button type="button" class="chip" data-k="z12" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z12" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z12" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z12" data-v="손민지">손민지</button></td><td class="zchk"><button type="button" class="box" data-k="z12" aria-label="화장실 배수구 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">주방 배수구 · 트렌치<span class="zd">기름때 제거</span></td><td class="zpick"><button type="button" class="chip" data-k="z13" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z13" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z13" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z13" data-v="손민지">손민지</button></td><td class="zchk"><button type="button" class="box" data-k="z13" aria-label="주방 배수구 · 트렌치 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">후드 · 덕트<span class="zd">기름 필터 세척</span></td><td class="zpick"><button type="button" class="chip" data-k="z14" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z14" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z14" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z14" data-v="손민지">손민지</button></td><td class="zchk"><button type="button" class="box" data-k="z14" aria-label="후드 · 덕트 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">정수기 필터 확인<span class="zd">교체 주기 확인하고 필요시 요청</span></td><td class="zpick"><button type="button" class="chip" data-k="z15" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z15" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z15" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z15" data-v="손민지">손민지</button></td><td class="zchk"><button type="button" class="box" data-k="z15" aria-label="정수기 필터 확인 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">창고 · 사무실 정리<span class="zd">부재료 재고 위치 정리, 안 쓰는 물건 정리</span></td><td class="zpick"><button type="button" class="chip" data-k="z16" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z16" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z16" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z16" data-v="손민지">손민지</button></td><td class="zchk"><button type="button" class="box" data-k="z16" aria-label="창고 · 사무실 정리 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">베이킹실 작업대 밑<span class="zd">밀가루·설탕 흘린 것</span></td><td class="zpick"><button type="button" class="chip" data-k="z17" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z17" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z17" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z17" data-v="손민지">손민지</button></td><td class="zchk"><button type="button" class="box" data-k="z17" aria-label="베이킹실 작업대 밑 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">매장 앞 · 포토존<span class="zd">바닥, 의자, 화분</span></td><td class="zpick"><button type="button" class="chip" data-k="z18" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z18" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z18" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z18" data-v="손민지">손민지</button></td><td class="zchk"><button type="button" class="box" data-k="z18" aria-label="매장 앞 · 포토존 완료" aria-pressed="false"></button></td></tr></tbody>
+      <tbody><tr class="keyzone"><td class="zn"><span class="keymark">중요</span>제빙기<span class="zd">내부 세척 + 필터. 빙수철에는 월 2회.</span></td><td class="zpick"><button type="button" class="chip" data-k="z1" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z1" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z1" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z1" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z1" aria-label="제빙기 완료" aria-pressed="false"></button></td></tr><tr class="keyzone"><td class="zn"><span class="keymark">중요</span>커피 그라인더 분해 청소<span class="zd">자동·수동 둘 다. 원두 기름때</span></td><td class="zpick"><button type="button" class="chip" data-k="z4" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z4" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z4" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z4" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z4" aria-label="커피 그라인더 분해 청소 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">냉장고 얼음 제거 + 내부 정리<span class="zd">얼음 걷어내고 선반 빼서 세척. 물때까지</span></td><td class="zpick"><button type="button" class="chip" data-k="z2" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z2" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z2" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z2" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z2" aria-label="냉장고 얼음 제거 + 내부 정리 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">오븐 내부<span class="zd">에그타르트 굽는 오븐. 기름때·탄 자국 제거</span></td><td class="zpick"><button type="button" class="chip" data-k="z3" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z3" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z3" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z3" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z3" aria-label="오븐 내부 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">업소용 냉장고 내부<span class="zd">선반 빼서 세척, 유통기한 지난 재료 정리</span></td><td class="zpick"><button type="button" class="chip" data-k="z5" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z5" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z5" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z5" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z5" aria-label="업소용 냉장고 내부 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">냉동실 성에 제거 + 내부 정리<span class="zd">성에 긁어내고 오래된 반죽 · 필링 확인</span></td><td class="zpick"><button type="button" class="chip" data-k="z6" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z6" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z6" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z6" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z6" aria-label="냉동실 성에 제거 + 내부 정리 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">쇼케이스 내부<span class="zd">유리 안쪽, 선반, 밑 물통</span></td><td class="zpick"><button type="button" class="chip" data-k="z7" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z7" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z7" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z7" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z7" aria-label="쇼케이스 내부 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">테이블 냉장고<span class="zd">손잡이·문·내부 선반</span></td><td class="zpick"><button type="button" class="chip" data-k="z8" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z8" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z8" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z8" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z8" aria-label="테이블 냉장고 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">유리창 전체<span class="zd">매장 앞 유리 + 내부 창</span></td><td class="zpick"><button type="button" class="chip" data-k="z9" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z9" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z9" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z9" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z9" aria-label="유리창 전체 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">선반 먼지 · 거미줄<span class="zd">천장 모서리, 높은 선반, 틈새</span></td><td class="zpick"><button type="button" class="chip" data-k="z10" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z10" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z10" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z10" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z10" aria-label="선반 먼지 · 거미줄 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">에어컨 필터<span class="zd">주방·홀. 여름 전 반드시</span></td><td class="zpick"><button type="button" class="chip" data-k="z11" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z11" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z11" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z11" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z11" aria-label="에어컨 필터 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">화장실 배수구<span class="zd">남·여 배수구 + 트렌치</span></td><td class="zpick"><button type="button" class="chip" data-k="z12" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z12" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z12" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z12" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z12" aria-label="화장실 배수구 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">주방 배수구 · 트렌치<span class="zd">기름때 제거</span></td><td class="zpick"><button type="button" class="chip" data-k="z13" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z13" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z13" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z13" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z13" aria-label="주방 배수구 · 트렌치 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">후드 · 덕트<span class="zd">기름 필터 세척</span></td><td class="zpick"><button type="button" class="chip" data-k="z14" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z14" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z14" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z14" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z14" aria-label="후드 · 덕트 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">정수기 필터 확인<span class="zd">교체 주기 확인하고 필요시 요청</span></td><td class="zpick"><button type="button" class="chip" data-k="z15" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z15" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z15" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z15" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z15" aria-label="정수기 필터 확인 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">창고 · 사무실 정리<span class="zd">부재료 재고 위치 정리, 안 쓰는 물건 정리</span></td><td class="zpick"><button type="button" class="chip" data-k="z16" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z16" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z16" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z16" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z16" aria-label="창고 · 사무실 정리 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">베이킹실 작업대 밑<span class="zd">밀가루·설탕 흘린 것</span></td><td class="zpick"><button type="button" class="chip" data-k="z17" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z17" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z17" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z17" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z17" aria-label="베이킹실 작업대 밑 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">매장 앞 · 포토존<span class="zd">바닥, 의자, 화분</span></td><td class="zpick"><button type="button" class="chip" data-k="z18" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z18" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z18" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z18" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z18" aria-label="매장 앞 · 포토존 완료" aria-pressed="false"></button></td></tr></tbody>
     </table>
     <div class="zfoot">
       <span>월 1회 깊은 청소 <b>18구역</b></span>
@@ -1778,11 +1786,11 @@ input,select,textarea{border-radius:var(--r3)!important}
       <button type="button" class="daynav" id="lgNext" aria-label="다음 날">▶</button>
       <button type="button" class="daynav today" id="lgToday">오늘</button></label>
     <label class="lgdate">작성자
-      <select id="lgWho" class="dinp"><option value="">고르세요</option><option>정항아</option><option>박혜빈</option><option>이해선</option><option>손민지</option></select></label>
+      <select id="lgWho" class="dinp"><option value="">고르세요</option><option>정항아</option><option>박혜빈</option><option>이해선</option><option>사장님</option></select></label>
     <span class="lgmsg" id="lgMsg"></span>
     <span class="bywho">글자 색이 쓴 사람입니다
       <i class="p1">정항아</i><i class="p2">박혜빈</i>
-      <i class="p3">이해선</i><i class="p4">손민지</i></span>
+      <i class="p3">이해선</i><i class="p4">사장님</i></span>
   </div>
   <div class="rpwrap">
     <div class="rpmain">
@@ -1951,7 +1959,7 @@ input,select,textarea{border-radius:var(--r3)!important}
   <div class="lgbar">
     <label class="lgdate">이름
       <select id="rvWho" class="dinp">
-        <option value="">고르세요</option><option>정항아</option><option>손민지</option>
+        <option value="">고르세요</option><option>정항아</option><option>사장님</option>
       </select></label>
     <label class="lgdate">직급
       <input type="text" id="rvRank" class="dinp" placeholder="매니저"></label>
@@ -2056,7 +2064,7 @@ input,select,textarea{border-radius:var(--r3)!important}
     출근해서 <b>오늘 할 일 체크</b> · 갈 때 <b>퇴근 한 번</b> ·
     마감이면 <b>일지 쓰고 복사</b>. 나머지는 필요할 때만 보면 됩니다.
   </div>
-  <div class="tsteps"><div class="tstep"><div class="tno">1</div><div class="tbody"><h4>이름 고르고 비밀번호 정하기</h4><p>처음 들어오면 「누구세요?」가 뜹니다. 본인 이름을 누르고, <b>쓰고 싶은 숫자 네 자리</b>를 넣으면 끝입니다.</p><ul><li>네 자리를 넣는 순간 바로 들어갑니다. 따로 확인 안 받습니다</li><li>다음부터는 이름 누르고 그 네 자리만 넣으면 됩니다</li><li>한 번 들어오면 그 기기는 기억해서 다음엔 바로 열립니다</li><li>잊어버리면 「비밀번호를 잊었어요」 → 사장님 번호를 넣으면 지워집니다</li></ul></div></div><div class="tstep"><div class="tno">2</div><div class="tbody"><h4>맨 위에서 오늘 내 근무 확인</h4><p>들어오면 맨 위 띠에 <b>오늘 내가 뭘 하는지</b>가 뜹니다.</p><ul><li>「오늘은 <b>오픈</b>이에요 08:30–17:30」</li><li>쉬는 날이면 「오늘은 쉬는 날이에요 · 다음 근무는 …」</li><li>내 이름이 아니면 오른쪽 「내가 아니에요」</li></ul></div></div><div class="tstep"><div class="tno">3</div><div class="tbody"><h4>오늘 할 일 — 하나씩 체크</h4><p>본인 조(오픈 · 미들 · 마감)를 누르고 위에서부터 하나씩 눌러 지웁니다.</p><ul><li>체크는 <b>본인 색</b>으로 칠해집니다 — 정항아 주황 · 박혜빈 남색 · 이해선 초록 · 손민지 자주</li><li>날이 바뀌면 <b>저절로 다 비워집니다.</b> 아침에 열면 빈 칸입니다</li><li>★ 표시는 빠뜨리면 안 되는 것입니다</li><li>「5~9월만」 같은 딱지가 붙은 건 그 달에만 합니다</li></ul></div></div><div class="tstep"><div class="tno">4</div><div class="tbody"><h4>갈 때 — 퇴근 한 번</h4><p>첫 탭 「출퇴근」에서 <b>본인 칸의 퇴근</b>만 누르고 가면 됩니다.</p><ul><li>주황 테두리가 본인 카드입니다</li><li>근무가 바뀌었으면 위 「근무」 칸만 바꾸고 누르세요</li><li>시각은 자동으로 들어갑니다. 출근은 안 찍습니다 — 10분 일찍, 서로 챙깁니다</li><li>깜빡했으면 「고치기」로 시각을 넣으면 됩니다</li></ul></div></div><div class="tstep"><div class="tno">5</div><div class="tbody"><h4>마감이면 — 일지 쓰고 복사</h4><p>「일지」 탭에서 항목을 채웁니다. 쓰는 대로 <b>오른쪽에 보고서</b>가 만들어집니다.</p><ul><li>빈 항목은 보고서에 안 나옵니다. 있는 것만 적으면 됩니다</li><li>다 쓰면 <b>「일지 저장」</b> → 아래 목록에 「저장됨」으로 남습니다</li><li><b>「복사하기」</b> → 텔레그램에 붙여넣어 보고</li><li>지난 일지는 아래 목록에서 「열기」로 다시 봅니다</li></ul></div></div><div class="tstep"><div class="tno">6</div><div class="tbody"><h4>쉬고 싶은 날 신청하기</h4><p>「근무표」 탭 → 다음 달 → 휴무 신청에서 <b>본인 이름</b>을 누르고 달력에서 쉬고 싶은 날을 누릅니다.</p><ul><li>고른 날짜마다 <b>사유 칸</b>이 생깁니다. 병원 · 가족 행사처럼 적어주세요</li><li>다시 누르면 취소됩니다</li><li>「신청 내용 복사하기」 → 매니저에게 보내기</li><li><b>전달 둘째 주까지</b> 매니저가 취합합니다</li></ul></div></div><div class="tstep"><div class="tno">7</div><div class="tbody"><h4>청소는 내 구역만</h4><p>「청소·정비」 탭에 이달 내 구역이 있습니다. 한가한 시간에 하고 체크하면 됩니다.</p><ul><li><b>중요</b> 딱지가 붙은 제빙기 · 그라인더가 제일 위입니다</li><li>요일 고정 청소는 <b>주가 바뀌면</b> 새로 시작합니다</li><li>월 1회 청소는 <b>달이 바뀌면</b> 새로 시작합니다</li></ul></div></div></div>
+  <div class="tsteps"><div class="tstep"><div class="tno">1</div><div class="tbody"><h4>이름 고르고 비밀번호 정하기</h4><p>처음 들어오면 「누구세요?」가 뜹니다. 본인 이름을 누르고, <b>쓰고 싶은 숫자 네 자리</b>를 넣으면 끝입니다.</p><ul><li>네 자리를 넣는 순간 바로 들어갑니다. 따로 확인 안 받습니다</li><li>다음부터는 이름 누르고 그 네 자리만 넣으면 됩니다</li><li>한 번 들어오면 그 기기는 기억해서 다음엔 바로 열립니다</li><li>잊어버리면 「비밀번호를 잊었어요」 → 사장님 번호를 넣으면 지워집니다</li></ul></div></div><div class="tstep"><div class="tno">2</div><div class="tbody"><h4>맨 위에서 오늘 내 근무 확인</h4><p>들어오면 맨 위 띠에 <b>오늘 내가 뭘 하는지</b>가 뜹니다.</p><ul><li>「오늘은 <b>오픈</b>이에요 08:30–17:30」</li><li>쉬는 날이면 「오늘은 쉬는 날이에요 · 다음 근무는 …」</li><li>내 이름이 아니면 오른쪽 「내가 아니에요」</li></ul></div></div><div class="tstep"><div class="tno">3</div><div class="tbody"><h4>오늘 할 일 — 하나씩 체크</h4><p>본인 조(오픈 · 미들 · 마감)를 누르고 위에서부터 하나씩 눌러 지웁니다.</p><ul><li>체크는 <b>본인 색</b>으로 칠해집니다 — 정항아 주황 · 박혜빈 남색 · 이해선 초록 · 사장님 자주</li><li>날이 바뀌면 <b>저절로 다 비워집니다.</b> 아침에 열면 빈 칸입니다</li><li>★ 표시는 빠뜨리면 안 되는 것입니다</li><li>「5~9월만」 같은 딱지가 붙은 건 그 달에만 합니다</li></ul></div></div><div class="tstep"><div class="tno">4</div><div class="tbody"><h4>갈 때 — 퇴근 한 번</h4><p>첫 탭 「출퇴근」에서 <b>본인 칸의 퇴근</b>만 누르고 가면 됩니다.</p><ul><li>주황 테두리가 본인 카드입니다</li><li>근무가 바뀌었으면 위 「근무」 칸만 바꾸고 누르세요</li><li>시각은 자동으로 들어갑니다. 출근은 안 찍습니다 — 10분 일찍, 서로 챙깁니다</li><li>깜빡했으면 「고치기」로 시각을 넣으면 됩니다</li></ul></div></div><div class="tstep"><div class="tno">5</div><div class="tbody"><h4>마감이면 — 일지 쓰고 복사</h4><p>「일지」 탭에서 항목을 채웁니다. 쓰는 대로 <b>오른쪽에 보고서</b>가 만들어집니다.</p><ul><li>빈 항목은 보고서에 안 나옵니다. 있는 것만 적으면 됩니다</li><li>다 쓰면 <b>「일지 저장」</b> → 아래 목록에 「저장됨」으로 남습니다</li><li><b>「복사하기」</b> → 텔레그램에 붙여넣어 보고</li><li>지난 일지는 아래 목록에서 「열기」로 다시 봅니다</li></ul></div></div><div class="tstep"><div class="tno">6</div><div class="tbody"><h4>쉬고 싶은 날 신청하기</h4><p>「근무표」 탭 → 다음 달 → 휴무 신청에서 <b>본인 이름</b>을 누르고 달력에서 쉬고 싶은 날을 누릅니다.</p><ul><li>고른 날짜마다 <b>사유 칸</b>이 생깁니다. 병원 · 가족 행사처럼 적어주세요</li><li>다시 누르면 취소됩니다</li><li>「신청 내용 복사하기」 → 매니저에게 보내기</li><li><b>전달 둘째 주까지</b> 매니저가 취합합니다</li></ul></div></div><div class="tstep"><div class="tno">7</div><div class="tbody"><h4>청소는 내 구역만</h4><p>「청소·정비」 탭에 이달 내 구역이 있습니다. 한가한 시간에 하고 체크하면 됩니다.</p><ul><li><b>중요</b> 딱지가 붙은 제빙기 · 그라인더가 제일 위입니다</li><li>요일 고정 청소는 <b>주가 바뀌면</b> 새로 시작합니다</li><li>월 1회 청소는 <b>달이 바뀌면</b> 새로 시작합니다</li></ul></div></div></div>
 
   <h3 class="subhead">가끔 보는 곳</h3>
   <p class="tnote">날마다 볼 필요는 없습니다. 회의 날, 시즌 바뀔 때, 발주할 때 열어보세요.</p>
@@ -2084,15 +2092,37 @@ input,select,textarea{border-radius:var(--r3)!important}
 </div>
 
 <script>
+  // 공용 컴퓨터 — 탭을 새로 열거나 10분 동안 안 만지면 이름을 다시 고른다
+  (function () {
+    var LOCK_MS = 10 * 60 * 1000;
+    try { if (!sessionStorage.getItem("cafesui.unlocked")) localStorage.removeItem("cafesui.me"); } catch (e) {}
+    function lock() {
+      try { localStorage.removeItem("cafesui.me"); sessionStorage.removeItem("cafesui.unlocked"); } catch (e) {}
+      location.reload();
+    }
+    window.__CS_LOCK = lock;
+    var t = null;
+    function arm() {
+      clearTimeout(t);
+      var me = null; try { me = localStorage.getItem("cafesui.me"); } catch (e) {}
+      if (me) t = setTimeout(lock, LOCK_MS);
+    }
+    ["pointerdown", "keydown", "input", "change", "scroll", "touchstart"].forEach(function (ev) {
+      document.addEventListener(ev, arm, true);
+    });
+    arm();
+  })();
+</script>
+<script>
 (function () {
   // ── 근무표는 화면에서 만든다 ───────────────────────────────────
   // 해가 바뀌어도 알아서 이어지도록, 로테이션 규칙만 넣고 그때그때 그린다.
   var EPOCH = new Date(2026, 8, 28);            // 로테이션 기준 월요일
   var OFFROT = [ {s:1,h:3}, {s:2,h:4}, {s:3,h:5}, {s:4,h:1}, {s:5,h:2} ];
-  var MINJI = "손민지", HANGA = "정항아", HAESUN = "이해선", HYEBIN = "박혜빈";
+  var MINJI = "사장님", HANGA = "정항아", HAESUN = "이해선", HYEBIN = "박혜빈";
   var STAFF4 = [HANGA, HYEBIN, HAESUN, MINJI];
-  var WCOL = { "정항아":"p1", "박혜빈":"p2", "이해선":"p3", "손민지":"p4" };
-  var TIMEMAP = {"정항아":{"오픈":["08:30","17:30"],"마감":["10:00","19:30"]},"박혜빈":{"오픈":["08:30","18:00"],"마감":["10:00","19:30"]},"이해선":{"미들":["09:30","16:30"],"전일":["08:30","19:30"]},"손민지":{"종일":["08:30","19:30"],"반죽":[null,null]}};
+  var WCOL = { "정항아":"p1", "박혜빈":"p2", "이해선":"p3", "사장님":"p4" };
+  var TIMEMAP = {"정항아":{"오픈":["08:30","17:30"],"마감":["10:00","19:30"]},"박혜빈":{"오픈":["08:30","18:00"],"마감":["10:00","19:30"]},"이해선":{"미들":["09:30","16:30"],"전일":["08:30","19:30"]},"사장님":{"종일":["08:30","19:30"],"반죽":[null,null]}};
   var ROLEKO = { open:"오픈", close:"마감", middle:"미들",
                  full:"전일", allday:"종일", dough:"반죽" };
   var ROLECL = { open:"open", close:"close", middle:"mid",
@@ -2451,7 +2481,7 @@ input,select,textarea{border-radius:var(--r3)!important}
   });
 
   // 누가 체크했는지 — 이름을 고르면 그 사람 색으로 칠해진다
-  var WHOC = { "정항아": "p1", "박혜빈": "p2", "이해선": "p3", "손민지": "p4" };
+  var WHOC = { "정항아": "p1", "박혜빈": "p2", "이해선": "p3", "사장님": "p4" };
   var whoBtns = Array.prototype.slice.call(document.querySelectorAll(".wbtn"));
   var whoMsg = document.getElementById("whoMsg");
   var meKey = "cafesui.me";
@@ -2479,7 +2509,7 @@ input,select,textarea{border-radius:var(--r3)!important}
     });
     if (whoMsg) {
       whoMsg.textContent = me
-        ? me + "님으로 체크됩니다"
+        ? me + (me === "사장님" ? "으로 체크됩니다" : "님으로 체크됩니다")
         : "이름을 고르면 체크가 그 사람 색으로 표시됩니다";
     }
   }
@@ -2503,7 +2533,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
   // 이달 청소 배정표 — 담당 지정과 완료 확인은 매니저 · 사장님만
   (function () {
-    var ALLOW = ["정항아", "손민지"];
+    var ALLOW = ["정항아", "사장님"];
     var who = null;
     try { who = localStorage.getItem("cafesui.me"); } catch (e) {}
     if (who && ALLOW.indexOf(who) >= 0) return;
@@ -2537,8 +2567,8 @@ input,select,textarea{border-radius:var(--r3)!important}
     });
   });
 
-  // 글자 색으로 누가 썼는지 — 정항아 주황 · 박혜빈 남색 · 이해선 초록 · 손민지 자주
-  var WCLR = { "정항아": "p1", "박혜빈": "p2", "이해선": "p3", "손민지": "p4" };
+  // 글자 색으로 누가 썼는지 — 정항아 주황 · 박혜빈 남색 · 이해선 초록 · 사장님 자주
+  var WCLR = { "정항아": "p1", "박혜빈": "p2", "이해선": "p3", "사장님": "p4" };
   function meNow() {
     try { return localStorage.getItem("cafesui.me") || ""; } catch (e) { return ""; }
   }
@@ -2546,7 +2576,7 @@ input,select,textarea{border-radius:var(--r3)!important}
     ["wp1", "wp2", "wp3", "wp4"].forEach(function (c) { el.classList.remove(c); });
     if (name && WCLR[name]) {
       el.classList.add("w" + WCLR[name]);
-      el.title = name + "님이 쓴 내용";
+      el.title = name + (name === "사장님" ? "이 쓴 내용" : "님이 쓴 내용");
     } else { el.removeAttribute("title"); }
   }
   // 칸에 글을 쓰면 그 사람 색으로 물든다
@@ -2733,9 +2763,9 @@ input,select,textarea{border-radius:var(--r3)!important}
   // 첫 화면 — 누가 쓰는지 고르고, 본인이 정한 네 자리 숫자로 들어간다.
   //           (파일 하나짜리 미리보기라 진짜 잠금은 아니다. 옆사람이 못 열게 하는 정도.)
   (function () {
-    var NAMES2 = ["정항아", "박혜빈", "이해선", "손민지"];
-    var COL2 = { "정항아": "p1", "박혜빈": "p2", "이해선": "p3", "손민지": "p4" };
-    var BOSS = "손민지";
+    var NAMES2 = ["정항아", "박혜빈", "이해선", "사장님"];
+    var COL2 = { "정항아": "p1", "박혜빈": "p2", "이해선": "p3", "사장님": "p4" };
+    var BOSS = "사장님";
     var gate = document.getElementById("gate");
     var gb = document.getElementById("gateBtns");
     if (!gate || !gb) return;
@@ -2774,7 +2804,7 @@ input,select,textarea{border-radius:var(--r3)!important}
       if (!b) return;
       picked = b.dataset.n;
       mode = get(pinKey(picked)) ? "enter" : "make";
-      pinWho.textContent = picked + "님";
+      pinWho.textContent = picked + (picked === "사장님" ? "" : "님");
       pinAsk.textContent = mode === "make" ? "쓸 비밀번호를 정하세요"
                                            : "비밀번호를 넣으세요";
       pinMsg.textContent = mode === "make" ? "숫자 네 자리 · 이 기기에만 저장됩니다" : "";
@@ -2801,6 +2831,7 @@ input,select,textarea{border-radius:var(--r3)!important}
       if (mode === "make") {
         set(pinKey(picked), mix(picked, v));
         set("cafesui.me", picked);
+        try { sessionStorage.setItem("cafesui.unlocked", "1"); } catch (e) {}
         location.reload();
         return;
       }
@@ -2811,6 +2842,7 @@ input,select,textarea{border-radius:var(--r3)!important}
         return;
       }
       set("cafesui.me", picked);
+      try { sessionStorage.setItem("cafesui.unlocked", "1"); } catch (e) {}
       location.reload();
     }
     document.getElementById("pinOk").addEventListener("click", go);
@@ -2865,7 +2897,7 @@ input,select,textarea{border-radius:var(--r3)!important}
   // 내 화면 — 고른 이름에 맞춰 화면을 맞춘다
   (function () {
     var SCHED = window.__CS_SCHED || {};
-    var NAMES = ["정항아", "박혜빈", "이해선", "손민지"];
+    var NAMES = ["정항아", "박혜빈", "이해선", "사장님"];
     var bar = document.getElementById("myBar");
     var me = "";
     try { me = localStorage.getItem("cafesui.me") || ""; } catch (e) {}
@@ -2902,7 +2934,7 @@ input,select,textarea{border-radius:var(--r3)!important}
     }
     var t = todayStr();
     var today = mineOn(t);
-    document.getElementById("myName").textContent = me + "님";
+    document.getElementById("myName").textContent = me + (me === "사장님" ? "" : "님");
     var msg;
     if (today) {
       msg = "오늘은 <b>" + today.r + "</b>" + josa(today.r) +
@@ -2923,7 +2955,7 @@ input,select,textarea{border-radius:var(--r3)!important}
     bar.hidden = false;
 
     document.getElementById("myOff").addEventListener("click", function () {
-      try { localStorage.removeItem("cafesui.me"); } catch (e) {}
+      try { localStorage.removeItem("cafesui.me"); sessionStorage.removeItem("cafesui.unlocked"); } catch (e) {}
       location.reload();
     });
 
@@ -2951,8 +2983,8 @@ input,select,textarea{border-radius:var(--r3)!important}
   // 근무표 — 어느 달이든 고칠 수 있다. 고친 것은 읽기 달력에도 바로 반영된다.
   (function () {
 
-    var TIMES = {"정항아":{"오픈":["08:30","17:30"],"마감":["10:00","19:30"]},"박혜빈":{"오픈":["08:30","18:00"],"마감":["10:00","19:30"]},"이해선":{"미들":["09:30","16:30"],"전일":["08:30","19:30"]},"손민지":{"종일":["08:30","19:30"],"반죽":[null,null]}};
-    var NAMES = ["정항아", "박혜빈", "이해선", "손민지"];
+    var TIMES = {"정항아":{"오픈":["08:30","17:30"],"마감":["10:00","19:30"]},"박혜빈":{"오픈":["08:30","18:00"],"마감":["10:00","19:30"]},"이해선":{"미들":["09:30","16:30"],"전일":["08:30","19:30"]},"사장님":{"종일":["08:30","19:30"],"반죽":[null,null]}};
+    var NAMES = ["정항아", "박혜빈", "이해선", "사장님"];
     var NL = String.fromCharCode(10);
     var RCLS = { "오픈": "open", "마감": "close", "미들": "mid",
                  "전일": "full", "종일": "own", "반죽": "own" };
@@ -3167,7 +3199,7 @@ input,select,textarea{border-radius:var(--r3)!important}
     var listEl = document.getElementById("atList");
     var msgEl = document.getElementById("atMsg");
     if (!dateEl || !listEl) return;
-    var COL = { "정항아": "p1", "박혜빈": "p2", "이해선": "p3", "손민지": "p4" };
+    var COL = { "정항아": "p1", "박혜빈": "p2", "이해선": "p3", "사장님": "p4" };
     var ROLES = ["오픈", "미들", "마감", "전일", "종일", "반죽 근무"];
     function keyOf(d) { return "cafesui.att." + d; }
     function load(d) {
@@ -3505,7 +3537,7 @@ input,select,textarea{border-radius:var(--r3)!important}
       while (wbody.querySelectorAll("tr").length < wmax) addWishRow();
     }
 
-    var SEED = {"2025":{"w1":"카페스이의 치즈케이크와 진정한 말차를 찾아서","w2":"도쿄 · 25.11.10~13 (월~목) 3박 4일","w3":"3명 / 시부야역 8분 · 2 Chome-20-5 Higashi, Shibuya, Tokyo 150-0011","w4":"1인 100,000엔 (한국돈 100만원) · 10/27까지 이해선님께 송금","w5":"11/10 에어부산 BX0112 08:20-10:25 (김해-나리타) / 11/13 진에어 LJ0224 16:30-18:55","w6":"총 4번 — 일정 짜기 · 예약 확인 · 최종 점검","w10":"손민지 · 정항아","w11":"이해선","w12":"손민지 · 정항아","w13":"손민지","w50":"마지막 밤 숙소에서 워크샵 전반 피드백 — 좋았던 것 / 아쉬웠던 점 이야기함","d1date":"2025-11-10","d1t1":"6:00","d1p1":"김해공항 집결","d1m1":"각자 짐을 들고 집결","d1t2":"11:30","d1p2":"나리타 공항 도착","d1m2":"밖으로 나오는 시간까지","d1p3":"나리타 지하 · NEX 티켓 사기","d1m3":"교통카드 충전 + 편의점 간식 / 시부야까지 1시간 30분","d1p4":"시부야역 코인락커에 짐 맡기기","d1m4":"야간 티켓도 알아보기","d1t5":"14:00","d1p5":"스시노미도리 시부야점","d1m5":"점심 · 시부야 마크시티 4층","d1p6":"백화점 지하","d1m6":"베이커리 + 케이크 구경","d1p7":"요요기로 이동","d1m7":"카멜백(커피) · 나타 데 크리스티아노(에타) · 365일(빵) · Equal(치즈케이크)","d1t8":"17:00","d1p8":"숙소 체크인","d1m8":"에어비앤비 · 짐 정리 및 휴식","d1p9":"벨츠","d1m9":"케이크 전문점 (바스크)","d1p10":"하카타 꼬치 조우몬","d1m10":"저녁 식사","d2date":"2025-11-11","d2t1":"7:00","d2p1":"기상","d2t2":"8:30","d2p2":"나카메구로로 이동","d2m2":"근처에 말차 팔면 꼭 먹어보기","d2p3":"cheese cake Johann · 마츠노스케 뉴욕","d2m3":"오리지널 치즈케이크 · 메뉴판과 브로셔 참고","d2p4":"다이칸야마 츠타야 서점","d2m4":"구경","d2t5":"15:00","d2p5":"긴자로 이동","d2m5":"긴자에서 만나기","d2p6":"Lesolca","d2m6":"고르곤졸라 치즈케이크가 유명","d2p7":"스타벅스 긴자 마로니에토오리점","d2m7":"말차를 맷돌로 가는 곳","d2t8":"15:30","d2p8":"히가시긴자 혼텐 (예약)","d2m8":"말차 코스 · 각각 다른 걸로 · 16만원 결재","d2t9":"19:15","d2p9":"샤브라쿠테이 신주쿠","d2m9":"저녁 · 알펜도쿄에서 러닝화도","d2t10":"21:00","d2p10":"숙소 복귀","d3date":"2025-11-12","d3t1":"5:30","d3p1":"기상","d3t2":"7:00","d3p2":"디즈니랜드로 이동","d3m2":"물 · 선글라스 · 운동화 / 1일패스권","d3t3":"8:00","d3p3":"입장","d3m3":"푸의 허니헌트 · 몬스터주식회사(줄서기앱) / 미녀와야수 · 스플래시(DPA 유료)","d3t4":"15:00","d3p4":"디즈니랜드 나오기","d3p5":"에비스역으로 이동","d3m5":"자영업의 거리 · 근처 구경","d3t6":"18:30","d3p6":"라 테이블 드 조엘 로부숑","d3m6":"미슐랭 1스타 프렌치 · 3명 13,800엔","d3p7":"걸어서 숙소","d3m7":"무인양품 · 칼디 구경","d3p8":"시부야 사우나","d3m8":"피로 풀기","d3p9":"마지막 야식 · 워크샵 피드백","d3m9":"좋았던 것 / 아쉬웠던 점 이야기하기","d4date":"2025-11-13","d4t1":"7:00","d4p1":"기상 · 짐 정리 · 퇴실","d4p2":"조식","d4m2":"근처에서 커피 + 샌드위치","d4t3":"10:00","d4p3":"네즈 미술관 오픈런","d4p4":"텐푸라 미야카와 (점심)","d4m4":"오모테산도로 이동 · 오모테산도 힐즈 · 블루보틀","d4p5":"나리타 1터미널로 이동","d4m5":"오모테산도 - 우에노 - 스카이라이너","d4t6":"14:30","d4p6":"공항 도착","d4m6":"짐 붙이고 대기","d4t7":"20:00","d4p7":"한국 입국","c1d":"7/18","c1n":"항공권 (3명)","c1a":"943200","c1m":"투어비스 세트 · 카페 결재","c2d":"9/24","c2n":"숙소 (3명)","c2a":"834718","c2m":"에어비앤비 · 카페 결재","c3d":"10/21","c3n":"디즈니랜드 티켓 (3명)","c3a":"255000","c3m":"클룩 · 카페 결재","c4d":"10/21","c4n":"샤브샤브집 예약","c4a":"12789","c4m":"시스템 이용료만","c5d":"10/21","c5n":"프렌치레스토랑 자리값","c5a":"2000","c5m":"자리값만","c6d":"10/21","c6n":"히가시긴자 혼텐 (3명)","c6a":"160000","c6m":"말차 코스","c7d":"11/4","c7n":"네즈미술관 티켓 (3명)","c7a":"45000","c7m":"공식홈피 결재","c8d":"11/6","c8n":"여행자보험 (3명)","c8a":"19220","c8m":"카카오페이","mg1w":"1차","mg1d":"9월","mg1n":"가고 싶은 곳 · 하고 싶은 것 5개씩","mg2w":"2차","mg2d":"10월 초","mg2n":"일정 짜기 · 예약할 것 정하기","mg3w":"3차","mg3d":"10/21 (화)","mg3n":"디즈니랜드 정하기 · 예약 재확인 · 촬영 논의","mg4w":"최종","mg4d":"11/7 (금)","mg4n":"환전 · 공금 전달 · 최종 점검","wl1p":"다 같이","wl1g":"스시노미도리 시부야점","wl1m":"1일차 점심 · 마크시티 4층","wl2p":"다 같이","wl2g":"카멜백 — 라떼 · 커피","wl2m":"요요기","wl3p":"다 같이","wl3g":"나타 데 크리스티아노 — 에그타르트","wl3m":"요요기","wl4p":"다 같이","wl4g":"365일 — 빵집","wl4m":"요요기","wl5p":"정항아","wl5g":"Equal — 치즈케이크","wl5m":"강추한 곳인데 목요일부터 휴무라 못 감","wl6p":"다 같이","wl6g":"사보 오구노 시부야 — 복숭아 빙수","wl6m":"예약했는데 못 감","wl7p":"다 같이","wl7g":"벨츠 — 케이크 전문점","wl7m":"못 감","wl8p":"다 같이","wl8g":"시부야 스카이 — 야경","wl8m":"티켓 실패해서 못 감","wl9p":"다 같이","wl9g":"cheese cake Johann","wl9m":"2일차 나카메구로","wl10p":"다 같이","wl10g":"마츠노스케 뉴욕","wl10m":"애플파이와 치즈케이크","wl11p":"다 같이","wl11g":"Lesolca — 고르곤졸라 치즈케이크","wl11m":"긴자","wl12p":"다 같이","wl12g":"스타벅스 긴자 마로니에토오리점","wl12m":"말차를 맷돌로 가는 곳","wl13p":"다 같이","wl13g":"히가시긴자 혼텐","wl13m":"말차 코스 · 예약 15:30","wl14p":"다 같이","wl14g":"이토야 문구점","wl14m":"대형 문구점 구경","wl15p":"다 같이","wl15g":"라 테이블 드 조엘 로부숑","wl15m":"미슐랭 1스타 · 3일차 저녁","wl16p":"다 같이","wl16g":"네즈 미술관","wl16m":"4일차 오픈런","wl17p":"다 같이","wl17g":"오모테산도 힐즈 · 블루보틀","wl17m":"4일차"},"2026":{"w1":"협력으로 만드는 진짜 오래 팔 수 있는 카페스이의 그것","w2":"후쿠오카 · 26.11.9~11 (월~수) 2박 3일","w3":"4명 / 하카타역 근처 · 1-chōme-22-6 Hakata Ekimae, Fukuoka 812-0011","w4":"아침 10만 + 점심 10만 + 저녁 10만 = 교통비 포함 총 80만원","w5":"8월 안으로 구매 + 여행자보험 같이","w6":"총 3번 — 2차 9/24(목) · 3차 10/9(금) · 최종 11/7(토) 퇴근 후 20~30분","w10":"손민지 · 정항아 · 박혜빈","w11":"이해선","w12":"정항아","w13":"손민지","w14":"박혜빈 (타임키퍼 · 일정체크 · 길찾기 · 우버)","d1date":"2026-11-09","d1t1":"5:30","d1p1":"김해공항 집결","d1m1":"각자 짐을 들고 집결","d1p2":"체크인 + 짐 붙이기","d1t3":"8:30","d1p3":"후쿠오카 공항 도착","d1t4":"9:30","d1p4":"하카타역 코인락커에 짐 맡기기","d1m4":"택시로 이동 · 2명씩 나눠서","d1t5":"10:00","d1p5":"다코멧카 + 아임도넛","d1m5":"하나씩 사서 길에서 먹어보기 · 아임도넛은 한 박스","d1t6":"11:00","d1p6":"하카타역 답례품 상점 전부 보기","d1m6":"1시간 정도 같이 · 최소 5~10개 구매","d1t7":"12:00","d1p7":"점심식사 + 자유시간 (미션)","d1m7":"주제에 맞는 것 3가지 사오기 · 영수증 챙기기","d1t8":"16:50","d1p8":"하카타역에서 집합","d1t9":"17:10","d1p9":"숙소로 이동 · 짐 풀기","d1p10":"사온 것 리뷰하기","d1m10":"음료 사들고 각자 설명하고 같이 먹기 · 돈키호테","d2date":"2026-11-10","d2t1":"7:00","d2p1":"기상","d2p2":"쿠루미","d2m2":"케이크샵 · 오호리 공원역 근처 (월요일 휴무)","d2t3":"12:30","d2p3":"하나노키","d2m3":"프렌치 코스요리","d3date":"2026-11-11","d3t1":"5:30","d3p1":"기상","mg1w":"1차","mg1d":"8/17 (월) 17:30","mg1n":"각자 가고 싶은 것 · 하고 싶은 것 5개씩 / 숏츠 3 · 롱폼 1","mg2w":"2차","mg2d":"9/24 (목)","mg2n":"퇴근 후 1시간 · 항아님 · 사장님 · 혜빈님","mg3w":"3차","mg3d":"10/9 (금)","mg3n":"퇴근 후 1시간 · 항아님 · 사장님 · 혜빈님","mg4w":"최종","mg4d":"11/7 (토)","mg4n":"퇴근 후 20~30분 · 최종 점검 및 체크","mg1c":"1","wl1p":"손민지","wl1g":"프렌치레스토랑 런치","wl1m":"사우나 · 서점 · 그릇투어도","wl2p":"손민지","wl2g":"아맘다코탄","wl2m":"오전 8시~5시 · 쉬는 날 없음","wl3p":"손민지","wl3g":"오미야게 샵 (하카타역)","wl3m":"답례품 구경","wl4p":"손민지","wl4g":"메이지공원 투어","wl5p":"손민지","wl5g":"테이크아웃 디저트샵","wl5m":"뭘 많이 사가는지 보기","wl6p":"이해선","wl6g":"온천 · 사우나","wl6m":"맛있는 것도","wl7p":"정항아","wl7g":"르브레통 — 갈레트 + 쁘티케이크","wl7m":"1순위 · 수요일 휴무 · 11시~7시","wl8p":"정항아","wl8g":"모모토세 — 밀푀유","wl8m":"1시 전 품절, 오픈런 · 월요일 휴무 · 11시~7시","wl9p":"정항아","wl9g":"쿠루미 — 케이크샵","wl9m":"월요일 휴무 · 10시~7시 · 오호리 공원역 근처","wl10p":"정항아","wl10g":"HOC — 치즈케이크","wl10m":"10시~5시 · 쉬는 날 없음 · 텐진에서 좀 떨어짐","wl11p":"정항아","wl11g":"아베키 — 치즈케이크","wl12p":"정항아","wl12g":"메이카페 — 특이한 빙수","wl12m":"2순위","wl13p":"정항아","wl13g":"온천 · 프렌치 식사 · 사봉 · 꼼데","wl13m":"하고 싶은 것","wl14p":"박혜빈","wl14g":"빵스톡 — 바게트","wl14m":"1순위 · 오전 8시~7시 · 월요일 휴무","wl15p":"박혜빈","wl15g":"파티스리 조르주 마르소 — 파르페 · 케이크","wl15m":"10시~7시 · 월 · 화 휴무","wl16p":"박혜빈","wl16g":"자크오호리 — 구움과자 + 케이크","wl16m":"10시~오후 4시 · 월 · 화 휴무","wl17p":"박혜빈","wl17g":"Dig inn — 베이글 샌드위치","wl18p":"박혜빈","wl18g":"Aimai — 힙한 커피집","wl19p":"박혜빈","wl19g":"브런치 · 돈키호테 · 편의점","wl19m":"하고 싶은 것"}};
+    var SEED = {"2025":{"w1":"카페스이의 치즈케이크와 진정한 말차를 찾아서","w2":"도쿄 · 25.11.10~13 (월~목) 3박 4일","w3":"3명 / 시부야역 8분 · 2 Chome-20-5 Higashi, Shibuya, Tokyo 150-0011","w4":"1인 100,000엔 (한국돈 100만원) · 10/27까지 이해선님께 송금","w5":"11/10 에어부산 BX0112 08:20-10:25 (김해-나리타) / 11/13 진에어 LJ0224 16:30-18:55","w6":"총 4번 — 일정 짜기 · 예약 확인 · 최종 점검","w10":"사장님 · 정항아","w11":"이해선","w12":"사장님 · 정항아","w13":"사장님","w50":"마지막 밤 숙소에서 워크샵 전반 피드백 — 좋았던 것 / 아쉬웠던 점 이야기함","d1date":"2025-11-10","d1t1":"6:00","d1p1":"김해공항 집결","d1m1":"각자 짐을 들고 집결","d1t2":"11:30","d1p2":"나리타 공항 도착","d1m2":"밖으로 나오는 시간까지","d1p3":"나리타 지하 · NEX 티켓 사기","d1m3":"교통카드 충전 + 편의점 간식 / 시부야까지 1시간 30분","d1p4":"시부야역 코인락커에 짐 맡기기","d1m4":"야간 티켓도 알아보기","d1t5":"14:00","d1p5":"스시노미도리 시부야점","d1m5":"점심 · 시부야 마크시티 4층","d1p6":"백화점 지하","d1m6":"베이커리 + 케이크 구경","d1p7":"요요기로 이동","d1m7":"카멜백(커피) · 나타 데 크리스티아노(에타) · 365일(빵) · Equal(치즈케이크)","d1t8":"17:00","d1p8":"숙소 체크인","d1m8":"에어비앤비 · 짐 정리 및 휴식","d1p9":"벨츠","d1m9":"케이크 전문점 (바스크)","d1p10":"하카타 꼬치 조우몬","d1m10":"저녁 식사","d2date":"2025-11-11","d2t1":"7:00","d2p1":"기상","d2t2":"8:30","d2p2":"나카메구로로 이동","d2m2":"근처에 말차 팔면 꼭 먹어보기","d2p3":"cheese cake Johann · 마츠노스케 뉴욕","d2m3":"오리지널 치즈케이크 · 메뉴판과 브로셔 참고","d2p4":"다이칸야마 츠타야 서점","d2m4":"구경","d2t5":"15:00","d2p5":"긴자로 이동","d2m5":"긴자에서 만나기","d2p6":"Lesolca","d2m6":"고르곤졸라 치즈케이크가 유명","d2p7":"스타벅스 긴자 마로니에토오리점","d2m7":"말차를 맷돌로 가는 곳","d2t8":"15:30","d2p8":"히가시긴자 혼텐 (예약)","d2m8":"말차 코스 · 각각 다른 걸로 · 16만원 결재","d2t9":"19:15","d2p9":"샤브라쿠테이 신주쿠","d2m9":"저녁 · 알펜도쿄에서 러닝화도","d2t10":"21:00","d2p10":"숙소 복귀","d3date":"2025-11-12","d3t1":"5:30","d3p1":"기상","d3t2":"7:00","d3p2":"디즈니랜드로 이동","d3m2":"물 · 선글라스 · 운동화 / 1일패스권","d3t3":"8:00","d3p3":"입장","d3m3":"푸의 허니헌트 · 몬스터주식회사(줄서기앱) / 미녀와야수 · 스플래시(DPA 유료)","d3t4":"15:00","d3p4":"디즈니랜드 나오기","d3p5":"에비스역으로 이동","d3m5":"자영업의 거리 · 근처 구경","d3t6":"18:30","d3p6":"라 테이블 드 조엘 로부숑","d3m6":"미슐랭 1스타 프렌치 · 3명 13,800엔","d3p7":"걸어서 숙소","d3m7":"무인양품 · 칼디 구경","d3p8":"시부야 사우나","d3m8":"피로 풀기","d3p9":"마지막 야식 · 워크샵 피드백","d3m9":"좋았던 것 / 아쉬웠던 점 이야기하기","d4date":"2025-11-13","d4t1":"7:00","d4p1":"기상 · 짐 정리 · 퇴실","d4p2":"조식","d4m2":"근처에서 커피 + 샌드위치","d4t3":"10:00","d4p3":"네즈 미술관 오픈런","d4p4":"텐푸라 미야카와 (점심)","d4m4":"오모테산도로 이동 · 오모테산도 힐즈 · 블루보틀","d4p5":"나리타 1터미널로 이동","d4m5":"오모테산도 - 우에노 - 스카이라이너","d4t6":"14:30","d4p6":"공항 도착","d4m6":"짐 붙이고 대기","d4t7":"20:00","d4p7":"한국 입국","c1d":"7/18","c1n":"항공권 (3명)","c1a":"943200","c1m":"투어비스 세트 · 카페 결재","c2d":"9/24","c2n":"숙소 (3명)","c2a":"834718","c2m":"에어비앤비 · 카페 결재","c3d":"10/21","c3n":"디즈니랜드 티켓 (3명)","c3a":"255000","c3m":"클룩 · 카페 결재","c4d":"10/21","c4n":"샤브샤브집 예약","c4a":"12789","c4m":"시스템 이용료만","c5d":"10/21","c5n":"프렌치레스토랑 자리값","c5a":"2000","c5m":"자리값만","c6d":"10/21","c6n":"히가시긴자 혼텐 (3명)","c6a":"160000","c6m":"말차 코스","c7d":"11/4","c7n":"네즈미술관 티켓 (3명)","c7a":"45000","c7m":"공식홈피 결재","c8d":"11/6","c8n":"여행자보험 (3명)","c8a":"19220","c8m":"카카오페이","mg1w":"1차","mg1d":"9월","mg1n":"가고 싶은 곳 · 하고 싶은 것 5개씩","mg2w":"2차","mg2d":"10월 초","mg2n":"일정 짜기 · 예약할 것 정하기","mg3w":"3차","mg3d":"10/21 (화)","mg3n":"디즈니랜드 정하기 · 예약 재확인 · 촬영 논의","mg4w":"최종","mg4d":"11/7 (금)","mg4n":"환전 · 공금 전달 · 최종 점검","wl1p":"다 같이","wl1g":"스시노미도리 시부야점","wl1m":"1일차 점심 · 마크시티 4층","wl2p":"다 같이","wl2g":"카멜백 — 라떼 · 커피","wl2m":"요요기","wl3p":"다 같이","wl3g":"나타 데 크리스티아노 — 에그타르트","wl3m":"요요기","wl4p":"다 같이","wl4g":"365일 — 빵집","wl4m":"요요기","wl5p":"정항아","wl5g":"Equal — 치즈케이크","wl5m":"강추한 곳인데 목요일부터 휴무라 못 감","wl6p":"다 같이","wl6g":"사보 오구노 시부야 — 복숭아 빙수","wl6m":"예약했는데 못 감","wl7p":"다 같이","wl7g":"벨츠 — 케이크 전문점","wl7m":"못 감","wl8p":"다 같이","wl8g":"시부야 스카이 — 야경","wl8m":"티켓 실패해서 못 감","wl9p":"다 같이","wl9g":"cheese cake Johann","wl9m":"2일차 나카메구로","wl10p":"다 같이","wl10g":"마츠노스케 뉴욕","wl10m":"애플파이와 치즈케이크","wl11p":"다 같이","wl11g":"Lesolca — 고르곤졸라 치즈케이크","wl11m":"긴자","wl12p":"다 같이","wl12g":"스타벅스 긴자 마로니에토오리점","wl12m":"말차를 맷돌로 가는 곳","wl13p":"다 같이","wl13g":"히가시긴자 혼텐","wl13m":"말차 코스 · 예약 15:30","wl14p":"다 같이","wl14g":"이토야 문구점","wl14m":"대형 문구점 구경","wl15p":"다 같이","wl15g":"라 테이블 드 조엘 로부숑","wl15m":"미슐랭 1스타 · 3일차 저녁","wl16p":"다 같이","wl16g":"네즈 미술관","wl16m":"4일차 오픈런","wl17p":"다 같이","wl17g":"오모테산도 힐즈 · 블루보틀","wl17m":"4일차"},"2026":{"w1":"협력으로 만드는 진짜 오래 팔 수 있는 카페스이의 그것","w2":"후쿠오카 · 26.11.9~11 (월~수) 2박 3일","w3":"4명 / 하카타역 근처 · 1-chōme-22-6 Hakata Ekimae, Fukuoka 812-0011","w4":"아침 10만 + 점심 10만 + 저녁 10만 = 교통비 포함 총 80만원","w5":"8월 안으로 구매 + 여행자보험 같이","w6":"총 3번 — 2차 9/24(목) · 3차 10/9(금) · 최종 11/7(토) 퇴근 후 20~30분","w10":"사장님 · 정항아 · 박혜빈","w11":"이해선","w12":"정항아","w13":"사장님","w14":"박혜빈 (타임키퍼 · 일정체크 · 길찾기 · 우버)","d1date":"2026-11-09","d1t1":"5:30","d1p1":"김해공항 집결","d1m1":"각자 짐을 들고 집결","d1p2":"체크인 + 짐 붙이기","d1t3":"8:30","d1p3":"후쿠오카 공항 도착","d1t4":"9:30","d1p4":"하카타역 코인락커에 짐 맡기기","d1m4":"택시로 이동 · 2명씩 나눠서","d1t5":"10:00","d1p5":"다코멧카 + 아임도넛","d1m5":"하나씩 사서 길에서 먹어보기 · 아임도넛은 한 박스","d1t6":"11:00","d1p6":"하카타역 답례품 상점 전부 보기","d1m6":"1시간 정도 같이 · 최소 5~10개 구매","d1t7":"12:00","d1p7":"점심식사 + 자유시간 (미션)","d1m7":"주제에 맞는 것 3가지 사오기 · 영수증 챙기기","d1t8":"16:50","d1p8":"하카타역에서 집합","d1t9":"17:10","d1p9":"숙소로 이동 · 짐 풀기","d1p10":"사온 것 리뷰하기","d1m10":"음료 사들고 각자 설명하고 같이 먹기 · 돈키호테","d2date":"2026-11-10","d2t1":"7:00","d2p1":"기상","d2p2":"쿠루미","d2m2":"케이크샵 · 오호리 공원역 근처 (월요일 휴무)","d2t3":"12:30","d2p3":"하나노키","d2m3":"프렌치 코스요리","d3date":"2026-11-11","d3t1":"5:30","d3p1":"기상","mg1w":"1차","mg1d":"8/17 (월) 17:30","mg1n":"각자 가고 싶은 것 · 하고 싶은 것 5개씩 / 숏츠 3 · 롱폼 1","mg2w":"2차","mg2d":"9/24 (목)","mg2n":"퇴근 후 1시간 · 항아님 · 사장님 · 혜빈님","mg3w":"3차","mg3d":"10/9 (금)","mg3n":"퇴근 후 1시간 · 항아님 · 사장님 · 혜빈님","mg4w":"최종","mg4d":"11/7 (토)","mg4n":"퇴근 후 20~30분 · 최종 점검 및 체크","mg1c":"1","wl1p":"사장님","wl1g":"프렌치레스토랑 런치","wl1m":"사우나 · 서점 · 그릇투어도","wl2p":"사장님","wl2g":"아맘다코탄","wl2m":"오전 8시~5시 · 쉬는 날 없음","wl3p":"사장님","wl3g":"오미야게 샵 (하카타역)","wl3m":"답례품 구경","wl4p":"사장님","wl4g":"메이지공원 투어","wl5p":"사장님","wl5g":"테이크아웃 디저트샵","wl5m":"뭘 많이 사가는지 보기","wl6p":"이해선","wl6g":"온천 · 사우나","wl6m":"맛있는 것도","wl7p":"정항아","wl7g":"르브레통 — 갈레트 + 쁘티케이크","wl7m":"1순위 · 수요일 휴무 · 11시~7시","wl8p":"정항아","wl8g":"모모토세 — 밀푀유","wl8m":"1시 전 품절, 오픈런 · 월요일 휴무 · 11시~7시","wl9p":"정항아","wl9g":"쿠루미 — 케이크샵","wl9m":"월요일 휴무 · 10시~7시 · 오호리 공원역 근처","wl10p":"정항아","wl10g":"HOC — 치즈케이크","wl10m":"10시~5시 · 쉬는 날 없음 · 텐진에서 좀 떨어짐","wl11p":"정항아","wl11g":"아베키 — 치즈케이크","wl12p":"정항아","wl12g":"메이카페 — 특이한 빙수","wl12m":"2순위","wl13p":"정항아","wl13g":"온천 · 프렌치 식사 · 사봉 · 꼼데","wl13m":"하고 싶은 것","wl14p":"박혜빈","wl14g":"빵스톡 — 바게트","wl14m":"1순위 · 오전 8시~7시 · 월요일 휴무","wl15p":"박혜빈","wl15g":"파티스리 조르주 마르소 — 파르페 · 케이크","wl15m":"10시~7시 · 월 · 화 휴무","wl16p":"박혜빈","wl16g":"자크오호리 — 구움과자 + 케이크","wl16m":"10시~오후 4시 · 월 · 화 휴무","wl17p":"박혜빈","wl17g":"Dig inn — 베이글 샌드위치","wl18p":"박혜빈","wl18g":"Aimai — 힙한 커피집","wl19p":"박혜빈","wl19g":"브런치 · 돈키호테 · 편의점","wl19m":"하고 싶은 것"}};
     function key() { return "cafesui.ws." + (yearEl.value || "2026"); }
     function load() {
       var data = {};
@@ -4618,10 +4650,10 @@ input,select,textarea{border-radius:var(--r3)!important}
         pickEl.textContent = "먼저 이름을 골라주세요";
         pickEl.className = "reqpick";
       } else if (!picked.length) {
-        pickEl.textContent = who + "님 — 달력에서 쉬고 싶은 날을 누르세요";
+        pickEl.textContent = who + (who === "사장님" ? "" : "님") + " — 달력에서 쉬고 싶은 날을 누르세요";
         pickEl.className = "reqpick";
       } else {
-        pickEl.textContent = who + "님 · " + picked.length + "일 — " +
+        pickEl.textContent = who + (who === "사장님" ? "" : "님") + " · " + picked.length + "일 — " +
           picked.map(function (d) {
             return label(d) + (reasons[d] ? " (" + reasons[d] + ")" : "");
           }).join(", ");
@@ -4650,7 +4682,7 @@ input,select,textarea{border-radius:var(--r3)!important}
           var c = cells.filter(function (x) { return x.dataset.d === el.dataset.d; })[0];
           var mk = c && c.querySelector(".pickmark");
           if (mk) mk.textContent = v ? "휴무 · " + v : "휴무 신청";
-          pickEl.textContent = who + "님 · " + picked.length + "일 — " +
+          pickEl.textContent = who + (who === "사장님" ? "" : "님") + " · " + picked.length + "일 — " +
             picked.map(function (d) {
               return label(d) + (reasons[d] ? " (" + reasons[d] + ")" : "");
             }).join(", ");
@@ -5018,7 +5050,7 @@ input,select,textarea{border-radius:var(--r3)!important}
   var REF={"커피 재료":[["원두","1kg (RR2)","4kg (월 12-16kg)","원두두 어플로 주문","러프 로스터리","010-7475-1158","즉시 결제"],["우유","밀크마스터 1L","64L (월 130~175L)","전날까지 문자, 오후 12시 전","서울우유 녹산대리점","010-4173-3859","매월 1일 정산"],["테이크아웃 컵/뚜껑","아이스 16oz / 핫 10oz","1000개/박스","2~3줄 남으면 (네이버검색)","칼라컵","1644-2421","인터넷"],["빨대","버블티용 / 일반용","버블티 3200개, 일반 2500개","1봉지 남으면","칼라컵 / 네이버","1644-2421","인터넷"],["냅킨","갈색 무지","8000장/박스","2봉지 남으면","쿠팡","냅킨공장","인터넷"],["물티슈","무지 일회용","2000개/박스","2봉지 남으면","쿠팡","그린위생산업","인터넷"],["일회용 포크","플라스틱 (화이트)","2000개/박스","2팩 남으면","네이버페이","해피팩 1644-3702","인터넷"]],"디저트":[["박력분&강력분","20kg (곰표 강력 / 맥선 박력1등)","1포대","반쯤 남았을 때","네이버페이/쿠팡","굿푸드몰","인터넷"],["판버터 (앵커+칸디아)","1kg","10판","반쯤 남았을 때","네이버페이/진보람","빵수니베이킹","인터넷"],["노른자","1L","10개","3~4병 남았을 때","아이엠에그","1544-6519","인터넷 (연휴 전 미리)"],["휘핑크림 (에그타르트)","1L (앵커/라르사, 유지방 35%)","12~17통","3~4병 남았을 때","네이버페이/베이킹맘 (싼 것)","빨리 오는 곳","인터넷 (연휴 전 미리)"],["설탕","15kg (큐원/백설)","2~4포대","설탕통에 한통 가득 담겨 있을 때","네이버페이/베이킹맘/쿠팡","","인터넷 (연휴 전 미리)"],["계란","특란 30개 1판","5판","냉장고에 1~2판 남았을 때 (전화)","아재유통/식자재마트","010-4901-4949","받고 바로 송금"],["생크림","500ml","20개","2일 전 주문. 케이크 주문량 보고 3~4병 남을 때 (문자). 주 단위 주문","서울녹산대리점","010-4173-3859","월정산"],["럼/밤술/아몬드술/깔루아","1.8L 디종 화이트 럼 / 1L","3통 / 1~2병","반통 남았을 때","베이킹 트리","010-7697-0808","배송요청에 \"매번 시키는 카페스이입니다\" 쓰기"],["휘핑크림 (케이크)","1L 매일 휘핑크림 35%, 파란 뚜껑","10개","2통 남았을 때","네이버페이 (싼 것)","카페세상","인터넷"],["딸기","1kg (진주/하동)","5~10통","매일~2일 간격","망고배달사장님","010-3748-9994","전날 or 주 단위"],["망고","10~14수","2박스씩","1박스 남았을 때 (전화 후 픽업)","망고배달사장님","010-3748-9994","후숙 이슈로 꼭 주 단위 · 후숙 정도 요청 · 1박스 58,000원 넘으면 안 됨"],["무화과","500g (영암)","4박스씩","2박스 남았을 때","쿠팡/망고사장님","쿠팡 전라도청년","전날 or 주 단위"],["메론","1개","1박스씩","","망고배달사장님","010-3748-9994","주 단위 · 당도 체크 필수"],["복숭아조림 (미스터돌)","분홍백도 병조림 24병","1박스","전날 주문 (문자) · 반박스 남을 때","미스터돌","","6~8월"],["체리","1박스","제일 알 큰 것","반박스 남으면","망고배달사장님","010-3748-9994",""],["샤인머스켓","3수","1박스","들어오면 주문 (복합주문)","망고배달사장님","010-3748-9994","주 단위 · 당도 체크"],["인절미떡","1kg 인절미 다이스","5~8봉지","1~2봉지 남았을 때","네이버페이","비즈캔/엠제이커피로스터리","인터넷"],["인절미가루","1kg 대두식품 콩고물","3봉지","1봉지 남았을 때","베이킹맘","070-7101-8349","인터넷"],["팥앙금 (앙버터용)","5kg 태산 통팥","1봉지","1/3 남으면","베이킹맘","070-7101-8349","인터넷"],["가염버터","200g 페이장브레통 빨강","10개","1통 남으면","베이킹맘","070-7101-8349","인터넷"],["데코화이트","1kg 선인","1~2봉지","1/3 남으면","베이킹맘/네이버페이","070-7101-8349","인터넷"],["초코파우더","1.36kg 기라델리 스위트 그라운드","1통","1/3 남으면","베이킹맘/네이버페이","070-7101-8349","인터넷"],["다크초콜릿","2.5kg 칼리바우트 다크 커버춰","1봉지","1/3 남으면","베이킹맘/네이버페이","070-7101-8349","인터넷"],["화이트초콜릿","2.5kg 칼리바우트","1봉지","1/3 남으면","베이킹맘/네이버페이","070-7101-8349","인터넷"],["패션후르츠","1kg 냉동 퓨레 (씨 있고 다 까진 것)","6~10봉지","청병 한통 쓰고 있을 때","네이버페이","유니오션 031-527-3036","인터넷"],["냉동딸기","1kg 딜라잇가든 칠레산","5~10봉지 (5kg 묶음)","청병 한통 쓰고 있을 때","네이버페이","딜라잇가든 1577-8437","인터넷"],["피스타치오 분태","1kg 굽지 않은 것","1봉지","1/3 남으면","네이버페이","디에이푸드마켓/다반사","인터넷"],["피스타치오 가루","1kg 파피루","2~3봉지","1/3 남으면","네이버페이","엘리네찻집/커피창고","인터넷"],["파마산가루","1kg 아담스팜코리아","2봉지","1/3 남으면","베이킹맘","070-7101-8349","인터넷"],["파슬리가루","1kg 이슬나라 후레이크","1통","1/3 남으면","베이킹맘/식자재마트","070-7101-8349","인터넷"],["알옥수수","1kg 냉동 삶은 옥수수알","10봉지","2봉지 남으면","네이버페이","아지매장터 010-3059-5803","인터넷"],["크림치즈","1kg 앵커","5통","1통 남으면","베이킹맘","070-7101-8349","인터넷"],["마스카포네","500g 밀라","5통","2통 남으면","베이킹맘","070-7101-8349","인터넷"],["샤워크림","970g 덴마크","1통","1/2통 남으면","쿠팡/트레이더스","로켓배송","현장+인터넷"],["냉동감자 / 냉동대파","1kg 마당발","3봉지","싼 것으로","네이버페이","검색","인터넷"],["베이컨찹","567g 코스트코","2봉지","싼 것으로","네이버페이","검색","인터넷"],["말차가루","1kg 선인 우지말차믹스","1봉지","1/3 남으면","베이킹맘","070-7101-8349","인터넷"]],"빙수":[["연유","5kg 서강 크리밀","2개 세트","1/3 남으면","네이버페이","브론스코리아 02-1566-2975","인터넷"],["토마토소스","2.55kg 골든투스카니 필드 토마토","5통","만든 소스 3통 남으면","네이버페이","푸드올마켓 031-797-6468","인터넷"],["대추 방울토마토","2kg 1/2번과","4~5kg","토마토청 반통 남으면","망고배달사장님","010-3748-9994","제일 큰 대과로 요청"],["레몬즙","1L 선인 농축액","3통","반통 남으면","베이킹맘","070-7101-8349","인터넷"],["통옥수수","2.5kg 베트남산 냉동","5봉지","1봉지 남으면","쿠팡/네이버페이","로켓프레시","인터넷"],["빙수팥","3kg 동서 리치스","3통","1개 남으면","메가커피/네이버페이","검색","인터넷"],["잉어모나카","100개 모나카 깍지","1봉지","반봉지 남으면 (일본 EMS, 10일 전)","네이버페이","카와이라라","인터넷"],["말차빙수가루","1kg","2봉지","","쿠팡","로켓프레시","인터넷"],["다크블로썸","1kg","2박스","싼 것으로","네이버페이","검색","인터넷"],["코코넛밀크","1L 노브랜드","3~5병","싼 것으로","네이버페이","검색","인터넷"],["냉동망고","1kg","5봉지","싼 것으로","네이버페이","검색","인터넷"],["타임허브","50g 레몬타임 생잎 + 로즈마리","1봉지","1/3 남으면","네이버페이","천향허브 010-9656-8894","인터넷"]],"포장 재료":[["케이크 띠지 (조각)","8cm","1000장 (5세트)","1세트 남았을 때","네이버페이","로티","인터넷"],["케이크 띠지 (홀)","8×51cm","100장 (6세트)","1세트 남았을 때","네이버페이","구디패키지","인터넷"],["떡싸개지","1000장 22×22","5묶음","1~3묶음 남았을 때","네이버페이","착한포장 02-2279-6682","인터넷"],["에그타르트 밑지","1000장 12×12 재단 요청","3묶음","1~2묶음 남았을 때","네이버페이","올페이퍼 031-592-7250","배송요청에 재단 요청 필수"],["에그타르트 포장 봉투","100매 good given 종이봉투 소 화이트","5개","1~2묶음 남았을 때","쿠팡","로켓와우","인터넷"],["에그타르트 4구/6구 박스","1000개 (+칸막이, 깔개)","1번","30~50개 남았을 때 (카톡)","패키지팩토리","070-8265-5664","플러스친구"],["종이가방","1000개 (+종이끈)","1번","30~50개 남았을 때 (카톡)","패키지팩토리","070-8265-5664","플러스친구"],["비닐봉투 소/중/대","50장 투명 무지 24호/33호/39호","10묶음","2~3묶음 남았을 때","베이킹맘/네이버검색","070-7101-8349","인터넷"],["케이크박스 미니/1호/2호","아이보리 누드 투명 + 화이트 사각 받침","30~100개","10~20개 남았을 때","패키지팩토리","070-8265-5664","인터넷"],["조각케이크 박스 (소)","JP-3001W 12.5×7.5×8","400개씩","10~20개 남았을 때","j-팩토리","","네이버"],["조각케이크 박스 (중)","앞열림 3호 옐로우 20×13×14","3~5묶음","10~20개 남았을 때","패키지팩토리","070-8265-5664","플러스친구"],["리본끈","15mm×45m 갈색","5묶음","커팅해둔 것 한묶음 남을 때","네이버페이","리본리에 010-4451-2045","인터넷"],["생일초","100개","5묶음","1박스 남았을 때","네이버페이","베이킹스타 010-8075-3985","인터넷"],["디저트 스티커 (인쇄물 전부)","1000장","2묶음","100개 남았을 때. 인쇄 오래 걸려 마지막 통 쓸 때 주문","도도디자인","","카톡"],["케이크 칼","20개 일회용 케이크서버 투명 소","5세트","10~20개 남았을 때","네이버페이","이룸팩 1577-1851","인터넷"],["클립","500개 블루마토 128mm","4묶음","1통 남았을 때","쿠팡","로켓와우","인터넷"],["스카치 테이프","12롤 12mm 리필","1세트","1~2개 남았을 때","쿠팡","로켓와우","인터넷"]]};
   var SEASON=[["11~3월말 4월초","딸기","560g",[11,12,1,2,3,4]],["사계절","망고 & 애플망고","12수짜리 3.5개",[1,2,3,4,5,6,7,8,9,10,11,12]],["6~8월","체리","22알",[6,7,8]],["5~10월","메론","1.5kg 반통",[5,6,7,8,9,10]],["6~8월","복숭아 졸임","1병 반",[6,7,8]],["7~10월","샤인머스켓","1손 (알 약간 큰 것)",[7,8,9,10]],["8~11월","무화과 (영암)","500g",[8,9,10,11]],["6~8월","초당옥수수","반개~1개",[6,7,8]],["9~2월","고구마 (거의 안 함)","500~600g",[9,10,11,12,1,2]],["9~11월","밤 (통조림 보늬밤)","500~600g",[9,10,11]],["항상","티라미수","",[1,2,3,4,5,6,7,8,9,10,11,12]],["6~8월","말차 티라미수","",[6,7,8]],["5~6월","바나나","긴 것 3.5개",[5,6]]];
 
-    var MGR = ["정항아", "손민지"];
+    var MGR = ["정항아", "사장님"];
     var PRE = "cafesui.stock.";
     var FIELDS = ["prod", "fruitUseA", "fruitUseB", "creamUse", "fruitOrder", "creamPlan", "report"];
     var NL = String.fromCharCode(10);

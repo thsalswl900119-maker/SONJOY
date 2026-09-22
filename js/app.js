@@ -174,8 +174,8 @@ async function shifts(){const v=$('#view');let ym=today().slice(0,7);let onlyMe=
   $('#onlyMe').onchange=e=>{onlyMe=e.target.checked;render()};$('#printSh').onclick=()=>window.print();
   /* 매장 운영 배정표(ops/)와 같은 주소라 localStorage를 공유한다 → 이 달 근무표를 배정표 형식(cafesui.sched.YYYY-MM)으로 넣어 준다. 기기마다 한 번씩. */
   $('#toOps').onclick=async()=>{const rows=await DB.query('shifts',[['month','==',ym]]);if(!rows.length)return toast(`${ym.replace('-','년 ')}월 근무표가 비어 있습니다`);
-    const role=r=>{if(r.off)return '휴무';const m=r.memo||'';if(m.includes('오픈')&&m.includes('마감'))return '전일';if(m.includes('오픈'))return '오픈';if(m.includes('마감'))return '마감';if(m.includes('케이크')||m.includes('반죽'))return '반죽';return r.name==='손민지'?'종일':'미들'};
-    const o={};for(const r of rows){const k=Number(ym.slice(5))+'-'+Number(r.date.slice(8));(o[k]||(o[k]={}))[r.name]=role(r)}
+    const role=r=>{if(r.off)return '휴무';const m=r.memo||'';if(m.includes('오픈')&&m.includes('마감'))return '전일';if(m.includes('오픈'))return '오픈';if(m.includes('마감'))return '마감';if(m.includes('케이크')||m.includes('반죽'))return '반죽';return (r.name==='손민지'||r.name==='사장님')?'종일':'미들'};const nmOf=r=>r.name==='손민지'?'사장님':r.name;
+    const o={};for(const r of rows){const k=Number(ym.slice(5))+'-'+Number(r.date.slice(8));(o[k]||(o[k]={}))[nmOf(r)]=role(r)}
     try{localStorage.setItem('cafesui.sched.'+ym,JSON.stringify(o))}catch(e){return toast('이 기기에 저장하지 못했습니다')}
     toast(`${ym.replace('-','년 ')}월 근무 ${rows.length}건을 배정표로 보냈습니다 (이 기기)`);if(confirm('배정표 근무표를 열까요?'))location.href='ops/#tp1'};
   if($('#tplBtn'))$('#tplBtn').onclick=()=>editTemplates();
