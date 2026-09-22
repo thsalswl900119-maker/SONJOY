@@ -1760,6 +1760,7 @@ input,select,textarea{border-radius:var(--r3)!important}
   <span class="svlab">백업</span>
   <span id="saveBtns"></span>
   <div class="bkrow" id="saveRow"></div>
+  <button type="button" class="newver" id="newVer" hidden>🔄 새 버전이 올라왔어요 — 눌러서 새로고침 (적은 내용은 그대로 남습니다)</button>
 </div>
 <nav class="tabs" role="tablist" aria-label="화면 선택"><button type="button" class="tab" role="tab" data-p="tp0" aria-controls="tp0" aria-selected="true">출퇴근</button><button type="button" class="tab" role="tab" data-p="tp1" aria-controls="tp1" aria-selected="false">근무표</button><button type="button" class="tab" role="tab" data-p="tp2" aria-controls="tp2" aria-selected="false">오늘 할 일</button><button type="button" class="tab" role="tab" data-p="tp3" aria-controls="tp3" aria-selected="false">청소·정비</button><button type="button" class="tab" role="tab" data-p="tp12" aria-controls="tp12" aria-selected="false">재고·발주</button><button type="button" class="tab" role="tab" data-p="tp4" aria-controls="tp4" aria-selected="false">일지</button><button type="button" class="tab" role="tab" data-p="tp5" aria-controls="tp5" aria-selected="false">월말회의</button><button type="button" class="tab" role="tab" data-p="tp6" aria-controls="tp6" aria-selected="false">연간 행사</button><button type="button" class="tab" role="tab" data-p="tp7" aria-controls="tp7" aria-selected="false">과일</button><button type="button" class="tab" role="tab" data-p="tp8" aria-controls="tp8" aria-selected="false">월말 평가</button><button type="button" class="tab" role="tab" data-p="tp9" aria-controls="tp9" aria-selected="false">워크샵</button><button type="button" class="tab" role="tab" data-p="tp10" aria-controls="tp10" aria-selected="false">고객 응대</button><button type="button" class="tab" role="tab" data-p="tp11" aria-controls="tp11" aria-selected="false">사용법</button></nav><div class="panel" id="tp0" role="tabpanel"><section>
   <div class="shead"><h2>출퇴근</h2><span class="en">clock out</span>
@@ -2383,6 +2384,25 @@ input,select,textarea{border-radius:var(--r3)!important}
       document.addEventListener(ev, arm, true);
     });
     arm();
+  })();
+  // 새 버전 확인 — 5분마다 서버 파일이 바뀌었는지 보고, 바뀌었으면 위에 새로고침 버튼을 띄운다
+  (function () {
+    if (location.protocol === "file:") return;
+    var url = location.pathname.replace(/\/$/, "/index.html") || "/index.html";
+    var tag0 = null;
+    function check(first) {
+      fetch(url, { method: "HEAD", cache: "no-store" }).then(function (r) {
+        var tag = r.headers.get("etag") || r.headers.get("last-modified") || "";
+        if (!tag) return;
+        if (first) { tag0 = tag; return; }
+        if (tag0 && tag !== tag0) {
+          var b = document.getElementById("newVer");
+          if (b) { b.hidden = false; b.onclick = function () { try { if (window.__CS_FLUSH) window.__CS_FLUSH(); } catch (e) {} location.reload(); }; }
+        }
+      }).catch(function () {});
+    }
+    window.addEventListener("load", function () { check(true); setInterval(function () { check(false); }, 5 * 60 * 1000); });
+    document.addEventListener("visibilitychange", function () { if (!document.hidden) check(false); });
   })();
 </script>
 <script>
@@ -5587,6 +5607,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 .saveall:hover{filter:brightness(1.08)}
 .saveall.hit{background:var(--open);border-color:var(--open)}
 .saveall.dirty{background:var(--off);border-color:var(--off)}
+.newver{flex-basis:100%;font:inherit;font-size:13px;font-weight:700;padding:8px 12px;cursor:pointer;background:var(--off);color:#FFFCF6;border:0;border-radius:3px;text-align:left}
 .savebar .sv{font-size:12px;font-weight:700;color:var(--ink2)}
 .savebar .sv i{font-style:normal;font-family:var(--mono);font-size:11.5px;color:var(--mid);margin-left:4px}
 .savebar .sv i.busy{color:var(--open)}
