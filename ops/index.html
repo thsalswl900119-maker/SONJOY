@@ -1864,7 +1864,6 @@ input,select,textarea{border-radius:var(--r3)!important}
     <div class="rhd">📦 발주 규칙 · 꼭 지키기</div>
     <div class="rb">빨간날이 있는 주간에는 <b>3~4일 전에 무조건 재고·발주 체크</b> 다 하기.<br><b>인쇄물 · 포장재료 · 주재료 전부</b> 빠짐없이.</div>
     <div class="rs">예) 추석 연휴가 9/24~9/26이라면 <b>9/18~9/21까지는 꼭 발주+재고 체크</b>를 해야 합니다.</div>
-    <div class="rs" id="orderRuleSoon" hidden></div>
   </div>
   <nav class="sktabs" role="tablist" aria-label="재고 화면"><button type="button" class="sktab" data-c="sk0" aria-selected="true">📦 발주·재고 체크</button><button type="button" class="sktab" data-c="sk1" aria-selected="false">📒 발주 기준표</button><button type="button" class="sktab" data-c="sk2" aria-selected="false">🍓 과일 시즌</button></nav>
   <div id="sk0">
@@ -2505,34 +2504,6 @@ input,select,textarea{border-radius:var(--r3)!important}
     "2028-01-01":"신정","2028-01-26":"설날 연휴","2028-01-27":"설날","2028-01-28":"설날 연휴","2028-03-01":"삼일절","2028-05-02":"부처님오신날","2028-05-05":"어린이날","2028-06-06":"현충일","2028-08-15":"광복절","2028-10-02":"추석 연휴","2028-10-03":"추석 · 개천절","2028-10-04":"추석 연휴","2028-10-05":"대체공휴일","2028-10-09":"한글날","2028-12-25":"성탄절",
     "2029-01-01":"신정","2029-02-12":"설날 연휴","2029-02-13":"설날","2029-02-14":"설날 연휴","2029-03-01":"삼일절","2029-05-05":"어린이날","2029-05-07":"대체공휴일","2029-05-20":"부처님오신날","2029-05-21":"대체공휴일","2029-06-06":"현충일","2029-08-15":"광복절","2029-09-21":"추석 연휴","2029-09-22":"추석","2029-09-23":"추석 연휴","2029-09-24":"대체공휴일","2029-10-03":"개천절","2029-10-09":"한글날","2029-12-25":"성탄절"
   };
-  // 발주 규칙 — 앞으로 10일 안에 빨간날(연휴)이 있으면 「3~4일 전 체크 완료」 기한을 보여준다
-  (function () {
-    var el = document.getElementById("orderRuleSoon");
-    if (!el) return;
-    var HOL = window.__CS_HOL || {};
-    function ymd(d) { return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
-    function md(d) { return (d.getMonth() + 1) + "/" + d.getDate(); }
-    var WD = ["일", "월", "화", "수", "목", "금", "토"];
-    function wd(d) { return "(" + WD[d.getDay()] + ")"; }
-    var now = new Date(); now.setHours(0, 0, 0, 0);
-    var start = null;
-    for (var i = 0; i <= 10; i++) {
-      var d = new Date(now); d.setDate(now.getDate() + i);
-      if (HOL[ymd(d)]) { start = d; break; }
-    }
-    if (!start) return;
-    var end = new Date(start);
-    while (true) { var nx = new Date(end); nx.setDate(end.getDate() + 1); if (!HOL[ymd(nx)]) break; end = nx; }
-    var name = HOL[ymd(start)].replace(/ 연휴$/, "");
-    var d6 = new Date(start); d6.setDate(start.getDate() - 6);
-    var d3 = new Date(start); d3.setDate(start.getDate() - 3);
-    var left = Math.round((d3 - now) / 86400000);
-    var tail = left > 1 ? " (" + left + "일 남음)" : left === 1 ? " (내일까지)" : left === 0 ? " (오늘까지)" : " — <b>기한이 지났습니다 · 아직이면 지금 바로</b>";
-    var when = "<b>" + md(d6) + wd(d6) + "~" + md(d3) + wd(d3) + "까지는 꼭 발주+재고 체크</b>를 해야 합니다" + tail;
-    el.innerHTML = "🎌 지금: " + name + (end > start ? " 연휴가 " : "이 ") + (end > start ? md(start) + wd(start) + "~" + md(end) + wd(end) : md(start) + wd(start)) + "이라면 " + when;
-    el.hidden = false;
-    if (left <= 0) el.style.color = "var(--r1)";
-  })();
   // 공용 컴퓨터 — 탭을 새로 열거나 30분 동안 안 만지면 이름을 다시 고른다
   (function () {
     var LOCK_MS = 30 * 60 * 1000;   // 30분 안 만지면 잠근다 (잠그기 전에 적던 것은 저장)
