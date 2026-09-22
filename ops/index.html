@@ -1050,6 +1050,7 @@ input.wp1,input.wp2,input.wp3,input.wp4{font-weight:500}
 .sh.mid{background:var(--midbg);border-color:var(--mid);color:var(--mid)}
 .sh.full{background:var(--fullbg);border-color:var(--full);color:var(--full)}
 .sh.own{background:var(--raise);border-color:var(--ink);color:var(--ink)}
+.sh.away{background:var(--bg);border-color:var(--rule2);color:var(--muted)}
 .sh .tm.free{opacity:.75;font-family:var(--sans);font-size:9.5px}
 .lnote{color:var(--muted)}
 
@@ -1696,7 +1697,7 @@ input,select,textarea{border-radius:var(--r3)!important}
     <span class="lc"><i></i>마감</span>
     <span class="lm"><i></i>미들</span>
     <span class="lf"><i></i>전일</span>
-    <span class="lw"><i></i>사장님 <span class="lnote">— 종일 08:30–19:30 (*중간에 사무업무로 자리 비움) · 반죽 근무는 시간 정해두지 않고 매장 상황 보며</span></span>
+    <span class="lw"><i></i>사장님 <span class="lnote">— 종일 08:30–19:30 (*중간에 사무업무로 자리 비움) · 반죽 근무는 시간 정해두지 않고 매장 상황 보며 · 공부 · 출강 · 서울출장은 가게 밖</span></span>
   </div>
 </section></div><div class="panel" id="tp2" role="tabpanel" hidden><section>
   <div class="shead"><h2>오늘의 할 일</h2><span class="en">today's tasks</span>
@@ -2266,6 +2267,7 @@ input,select,textarea{border-radius:var(--r3)!important}
                  full:"full", allday:"own", dough:"own" };
   var RORD = { open:0, dough:1, middle:2, full:2, allday:3, close:4 };
   var ROLEOPTS = ["휴무", "오픈", "미들", "마감", "전일", "종일", "반죽"];
+  var BOSSOPTS = ["휴무", "종일", "반죽", "오픈", "마감", "공부", "출강", "서울출장"];   // 사장님 칸
   var WDK = ["월","화","수","목","금","토","일"];
   var HOLI = { "1-1":"신정", "3-1":"삼일절", "5-5":"어린이날", "6-6":"현충일",
                "8-15":"광복절", "10-3":"개천절", "10-9":"한글날", "12-25":"크리스마스" };
@@ -2373,6 +2375,8 @@ input,select,textarea{border-radius:var(--r3)!important}
   function editCal(m) {
     var opts = '<option value=""></option>' +
       ROLEOPTS.map(function (r) { return "<option>" + r + "</option>"; }).join("");
+    var bossOpts = '<option value=""></option>' +
+      BOSSOPTS.map(function (r) { return "<option>" + r + "</option>"; }).join("");
     var out = "";
     for (var i = 0; i < m.firstWd; i++) out += '<div class="pad"></div>';
     m.days.forEach(function (c) {
@@ -2389,7 +2393,7 @@ input,select,textarea{border-radius:var(--r3)!important}
           return '<div class="prow"><span class="pn ' + WCOL[n] + '">' + n + "</span>" +
             '<select class="pslot" data-d="' + m.month + "-" + c.day +
             '" data-n="' + n + '" aria-label="' + n + " " + m.month + "월 " + c.day +
-            '일">' + opts + "</select></div>";
+            '일">' + (n === "사장님" ? bossOpts : opts) + "</select></div>";
         }).join("") + '<div class="pwarn"></div></div>';
     });
     return out;
@@ -3128,8 +3132,10 @@ input,select,textarea{border-radius:var(--r3)!important}
     var NAMES = ["정항아", "박혜빈", "이해선", "사장님"];
     var NL = String.fromCharCode(10);
     var RCLS = { "오픈": "open", "마감": "close", "미들": "mid",
-                 "전일": "full", "종일": "own", "반죽": "own" };
-    var RORDER = { "오픈": 0, "반죽": 1, "미들": 2, "전일": 2, "종일": 3, "마감": 4 };
+                 "전일": "full", "종일": "own", "반죽": "own",
+                 "공부": "away", "출강": "away", "서울출장": "away" };
+    var RORDER = { "오픈": 0, "반죽": 1, "미들": 2, "전일": 2, "종일": 3, "마감": 4,
+                   "공부": 5, "출강": 5, "서울출장": 5 };
 
     function keyOf(ym) { return "cafesui.sched." + ym; }
     function draftOf(ym) {
@@ -3183,7 +3189,8 @@ input,select,textarea{border-radius:var(--r3)!important}
               '<span class="rl">' + esc(r.r) + "</span>" +
               (r.s ? '<span class="tm">' + r.s + '<span class="dash">–</span>' + r.e +
                      "</span>"
-                   : '<span class="tm free">매장 상황 보며</span>') + "</div>";
+                   : (RCLS[r.r] === "away" ? '<span class="tm free">가게 밖</span>'
+                                           : '<span class="tm free">매장 상황 보며</span>')) + "</div>";
           }).join("");
         c.innerHTML = html;
       });
