@@ -1576,7 +1576,7 @@ input,select,textarea{border-radius:var(--r3)!important}
       <div class="gatenote gatehow">
         <b>처음이세요?</b> 이름을 누르고 <b>숫자 4자리</b>를 한 번 치면 그게 내 비밀번호가 됩니다.
         사장님이 따로 만들어 주지 않아도 됩니다.<br>
-        비밀번호는 <b>이 기기에만</b> 저장됩니다. 아이맥 · 주방 폰에서 각각 처음 한 번씩 정하세요 (같은 숫자로 맞추면 편합니다).<br>
+        비밀번호는 컴퓨터끼리 공유돼서 한 번 정하면 어느 컴퓨터에서나 같은 네 자리로 들어옵니다 (공유가 꺼진 기기는 그 기기에서 한 번 더).<br>
         <b>공용 컴퓨터</b>라서 들어올 때마다 이름을 고릅니다. 다 쓰면 위의 "내가 아니에요"를 누르세요. 30분 동안 안 만지면 저절로 잠깁니다.<br>
         잊어버리면 "비밀번호를 잊었어요"로 다시 정하면 되고, 적어둔 내용은 사라지지 않습니다.
       </div>
@@ -1755,7 +1755,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off">☁</i></span>
   <span class="sep"></span>
   <span class="svlab">백업</span>
   <span id="saveBtns"></span>
@@ -2216,7 +2216,7 @@ input,select,textarea{border-radius:var(--r3)!important}
     <div class="tstep"><div class="tno">1</div><div class="tbody"><h4>이름 고르고 비밀번호 정하기</h4>
       <p>들어오면 「누구세요?」가 뜹니다. <b>본인 이름</b>을 누르고 <b>숫자 네 자리</b>를 넣으면 끝입니다.</p>
       <ul><li><b>처음이면</b> 그때 넣는 네 자리가 그대로 내 비밀번호가 됩니다. 사장님이 따로 만들어 주지 않습니다</li>
-      <li>비밀번호는 <b>이 기기에만</b> 저장됩니다. 아이맥과 주방 폰에서 각각 한 번씩 정하세요 (같은 숫자로 맞추면 편합니다)</li>
+      <li>비밀번호는 <b>컴퓨터끼리 공유</b>됩니다. 한 번 정하면 다른 컴퓨터에서도 같은 네 자리로 들어옵니다. 사장님이 잊었을 땐 「비밀번호를 잊었어요」로 지우고 새로 정하면 됩니다 (직원은 사장님 비밀번호로 풉니다)</li>
       <li><b>공용 컴퓨터</b>라서 기억하지 않습니다. 창을 새로 열 때마다, 그리고 <b>30분 동안 안 만지면</b> 다시 이름부터 고릅니다</li>
       <li>잊어버리면 이름 누르고 「비밀번호를 잊었어요」 → 사장님 번호를 넣으면 지워지고 새로 정하면 됩니다</li></ul></div></div>
     <div class="tstep"><div class="tno">2</div><div class="tbody"><h4>맨 위 띠에서 오늘 내 근무 확인</h4>
@@ -2227,6 +2227,7 @@ input,select,textarea{border-radius:var(--r3)!important}
     <div class="tstep"><div class="tno">3</div><div class="tbody"><h4>상단 「저장 · 백업」 줄</h4>
       <p>어느 탭에 있어도 항상 위에 붙어 있는 줄입니다.</p>
       <ul><li><b>💾 저장</b>: 적는 건 즉시 저장되지만, 짜던 근무표처럼 아직 안 들어간 것까지 한 번에 저장합니다. 나가기 전에 한 번 누르세요. 근무표를 건드리면 버튼이 빨개집니다</li>
+      <li><b>☁ 표시</b>: 「컴퓨터끼리 공유 중」이면 여기서 적은 게 다른 컴퓨터에도 들어갑니다. 「공유 안 됨」이면 이 컴퓨터에만 남으니 사장님께 말씀하세요</li>
       <li><b>전체 백업 복사</b>: 이 기기에 적힌 것 전부를 글로 복사합니다. 톡방이나 메모장에 붙여 두세요 (주 1회 권장)</li>
       <li><b>백업 되살리기</b>: 새 컴퓨터에서 그 글을 붙여넣으면 그대로 돌아옵니다</li>
       <li><b>근무표 · 일지 · 월말회의 · 평가 · 워크샵 백업</b>: 그 묶음만 따로 복사합니다</li></ul></div></div>
@@ -2321,7 +2322,7 @@ input,select,textarea{border-radius:var(--r3)!important}
   <h3 class="subhead">색 · 저장 · 백업 — 꼭 알아둘 것</h3>
   <div class="tfaqs">
     <div class="tfaq"><b>누가 했는지는 색으로 봅니다</b><span>정항아 주황 · 박혜빈 남색 · 이해선 빨강 · 사장님 초록. 체크 칸, 적은 글자, 청소 담당 칩, 근무표 이름이 전부 같은 색입니다. 그래서 자리에 앉으면 위 띠의 이름부터 확인하세요.</span></div>
-    <div class="tfaq"><b>적은 것은 이 기기에만 남습니다</b><span>아이맥에서 적은 건 아이맥에, 주방 폰에서 적은 건 주방 폰에 있습니다. 서로 안 넘어갑니다. 그래서 보고는 「보내기 · 복사하기」로 톡방에 올리고, 기기 사이 옮길 땐 백업 복사 → 되살리기를 씁니다.</span></div>
+    <div class="tfaq"><b>적은 것은 컴퓨터끼리 같이 보입니다</b><span>위 「☁ 컴퓨터끼리 공유 중」이 켜져 있으면 아이맥에서 적은 게 다른 컴퓨터에도 몇 초 안에 들어갑니다. 다른 컴퓨터에서 바뀐 게 있으면 자동으로 새로 읽고, 적는 중이면 위에 「🔄 새로 읽기」 버튼이 뜹니다. 같은 칸을 두 컴퓨터가 동시에 고치면 나중에 저장한 쪽이 남습니다. 「☁ 공유 안 됨」이면 이 기기에만 남으니 백업 복사 → 되살리기로 옮깁니다.</span></div>
     <div class="tfaq"><b>저장은 자동, 확인은 버튼</b><span>글자를 치면 바로 저장됩니다. 근무표 짜기만 「저장」을 눌러야 합니다. 습관처럼 나가기 전에 위 초록 「저장」을 한 번 누르면 어느 쪽이든 안전합니다. 30분 잠금이 걸릴 때도 잠그기 전에 한 번 저장합니다.</span></div>
     <div class="tfaq"><b>백업은 주 1회</b><span>브라우저 기록을 지우거나 컴퓨터를 바꾸면 사라집니다. 「전체 백업 복사」를 눌러 톡방 「백업」 채팅에 붙여 두세요. 「자료 보관」(일지 탭 아래)에 지금 얼마나 쓰고 있는지 나옵니다.</span></div>
   </div>
@@ -2356,6 +2357,125 @@ input,select,textarea{border-radius:var(--r3)!important}
 </footer>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+<script src="../js/config.js"></script>
+<script>
+  // ☁ 여러 컴퓨터 공유 — 이 기기에 저장되는 cafesui.* 내용을 Firebase(ops 컬렉션)에도 같이 쓰고, 다른 컴퓨터에서 바뀐 건 받아온다.
+  //   · 저장 키 하나 = 문서 하나 (id = 키). 마지막에 쓴 쪽이 이긴다.
+  //   · 로그인(cafesui.me)과 잠금 상태는 기기마다 따로. 비밀번호(cafesui.pin.*)는 같이 공유해서 한 번 정하면 어느 컴퓨터에서나 통한다.
+  //   · Firebase가 없거나(오프라인·차단) 익명 로그인이 꺼져 있으면 이 기기에만 저장하고 위에 표시만 한다.
+  (function () {
+    var LOCAL_ONLY = /^cafesui\.(me|unlocked|device|syncstate)$/;
+    var origSet = Storage.prototype.setItem, origRem = Storage.prototype.removeItem;
+    var pending = {}, timers = {}, remote = {}, applying = false, ready = false, first = true, changed = false;
+    var state = { s: "off", msg: "" };
+    window.__CS_SYNC = state;
+    function setStatus(s, msg) {
+      state.s = s; state.msg = msg || "";
+      var el = document.getElementById("syncState");
+      if (!el) return;
+      el.className = "syncst " + s;
+      el.textContent = s === "on" ? "☁ 컴퓨터끼리 공유 중" : s === "wait" ? "☁ 연결 중…" : s === "err" ? "☁ 공유 안 됨 · " + (msg || "") : "☁ 이 기기에만 저장 (공유 꺼짐)";
+      el.title = msg || "";
+    }
+    document.addEventListener("DOMContentLoaded", function () { setStatus(state.s, state.msg); });
+    var cfg = window.FIREBASE_CONFIG;
+    if (!window.firebase || !cfg || !cfg.apiKey) { setStatus("off", "Firebase 파일을 못 읽었습니다"); return; }
+
+    // 이 기기의 저장을 가로채서 서버에도 보낸다
+    Storage.prototype.setItem = function (k, v) {
+      origSet.call(this, k, v);
+      if (this === localStorage && !applying && k.indexOf("cafesui.") === 0 && !LOCAL_ONLY.test(k)) queue(k, String(v));
+    };
+    Storage.prototype.removeItem = function (k) {
+      origRem.call(this, k);
+      if (this === localStorage && !applying && k.indexOf("cafesui.") === 0 && !LOCAL_ONLY.test(k)) queue(k, null);
+    };
+    function queue(k, v) {
+      pending[k] = v;
+      clearTimeout(timers[k]);
+      timers[k] = setTimeout(function () { flush(k); }, 700);
+    }
+    var dev = null;
+    try { dev = localStorage.getItem("cafesui.device"); } catch (e) {}
+    if (!dev) { dev = "d" + Math.random().toString(36).slice(2, 8); try { origSet.call(localStorage, "cafesui.device", dev); } catch (e) {} }
+
+    var app, db, col;
+    try {
+      app = firebase.apps && firebase.apps.length ? firebase.app() : firebase.initializeApp(cfg);
+      db = firebase.firestore(); col = db.collection("ops");
+    } catch (e) { setStatus("err", e.message); return; }
+
+    function flush(k) {
+      if (!ready) return;                       // 연결되면 한꺼번에 보낸다
+      if (!(k in pending)) return;
+      var v = pending[k]; delete pending[k];
+      if (remote[k] === v) return;              // 서버와 같으면 안 보냄
+      remote[k] = v;
+      var p = (v === null) ? col.doc(k).delete()
+                           : col.doc(k).set({ v: v, by: dev, t: firebase.firestore.FieldValue.serverTimestamp() });
+      p.then(function () { setStatus("on"); }).catch(function (e) { setStatus("err", e.message); });
+    }
+    function idle() {
+      var a = document.activeElement;
+      var typing = a && (a.tagName === "INPUT" || a.tagName === "TEXTAREA" || a.tagName === "SELECT") && a.type !== "checkbox" && a.type !== "date";
+      var dirty = window.__CS_SCHED_DIRTY && Object.keys(window.__CS_SCHED_DIRTY).some(function (k) { return window.__CS_SCHED_DIRTY[k]; });
+      return !typing && !dirty && (Date.now() - lastInput > 4000);
+    }
+    var lastInput = 0;
+    ["input", "change", "keydown", "pointerdown"].forEach(function (ev) { document.addEventListener(ev, function () { lastInput = Date.now(); }, true); });
+    var noticeT = null;
+    function notifyChange() {
+      // 다른 컴퓨터에서 바뀐 게 있다 — 쓰는 중이 아니면 바로 새로 읽고, 쓰는 중이면 위에 버튼만 띄운다
+      clearTimeout(noticeT);
+      noticeT = setTimeout(function () {
+        if (idle()) { location.reload(); return; }
+        var b = document.getElementById("newVer");
+        if (b) { b.hidden = false; b.textContent = "🔄 다른 컴퓨터에서 바뀐 내용이 있어요 — 눌러서 새로 읽기 (적던 것은 저장됩니다)";
+          b.onclick = function () { try { if (window.__CS_FLUSH) window.__CS_FLUSH(); } catch (e) {} location.reload(); }; }
+      }, 1200);
+    }
+
+    setStatus("wait");
+    firebase.auth().signInAnonymously().then(function () {
+      col.onSnapshot(function (snap) {
+        applying = true;
+        snap.docChanges().forEach(function (ch) {
+          var k = ch.doc.id, d = ch.doc.data() || {};
+          if (k.indexOf("cafesui.") !== 0 || LOCAL_ONLY.test(k)) return;
+          if (ch.type === "removed") {
+            remote[k] = null;
+            if (!(k in pending) && localStorage.getItem(k) !== null) { origRem.call(localStorage, k); changed = true; }
+            return;
+          }
+          remote[k] = d.v;
+          if (k in pending) return;                       // 지금 이 기기가 고치는 중
+          if (!first && d.by === dev) return;             // 내가 보낸 게 돌아온 것
+          if (localStorage.getItem(k) !== d.v) { origSet.call(localStorage, k, d.v); changed = true; }
+        });
+        applying = false;
+        if (first) {
+          first = false; ready = true;
+          // 서버에 없는 이 기기 내용은 올린다
+          try {
+            for (var i = 0; i < localStorage.length; i++) {
+              var k2 = localStorage.key(i);
+              if (k2.indexOf("cafesui.") !== 0 || LOCAL_ONLY.test(k2) || (k2 in remote)) continue;
+              pending[k2] = localStorage.getItem(k2);
+            }
+          } catch (e) {}
+          Object.keys(pending).forEach(flush);
+        }
+        setStatus("on");
+        if (changed) { changed = false; notifyChange(); }
+      }, function (e) { setStatus("err", e.code === "permission-denied" ? "규칙(ops) 게시 필요" : e.message); });
+    }).catch(function (e) {
+      setStatus("err", e.code === "auth/operation-not-allowed" ? "Firebase에서 익명 로그인 켜기 필요" : (e.code === "auth/network-request-failed" ? "인터넷 연결 없음" : e.message));
+    });
+  })();
+</script>
 <script>
   // 공휴일 — 설·추석·부처님오신날은 음력이라 해마다 다르다 (2026~2029 · 대체공휴일 포함)
   window.__CS_HOL = {
@@ -3138,7 +3258,7 @@ input,select,textarea{border-radius:var(--r3)!important}
       pinWho.textContent = picked + (picked === "사장님" ? "" : "님");
       pinAsk.textContent = mode === "make" ? "쓸 비밀번호를 정하세요"
                                            : "비밀번호를 넣으세요";
-      pinMsg.textContent = mode === "make" ? "숫자 네 자리 · 이 기기에만 저장됩니다" : "";
+      pinMsg.textContent = mode === "make" ? "숫자 네 자리 · 다른 컴퓨터에서도 같은 번호로 들어옵니다" : "";
       pinMsg.className = "pinmsg" + (mode === "make" ? " ok" : "");
       pin1.value = ""; pin2.value = "";
       pin2.hidden = true;
@@ -3190,6 +3310,14 @@ input,select,textarea{border-radius:var(--r3)!important}
     // 잊었을 때 — 사장님 비밀번호로 푼다
     pinForgot.addEventListener("click", function () {
       var boss = get(pinKey(BOSS));
+      if (picked === BOSS) {
+        if (!window.confirm("사장님 비밀번호를 지우고 새로 정할까요?")) return;
+        del(pinKey(BOSS));
+        pinMsg.className = "pinmsg ok";
+        pinMsg.textContent = "지웠습니다. 사장님을 다시 눌러 새 네 자리를 정하세요";
+        setTimeout(function () { st2.hidden = true; st1.hidden = false; }, 900);
+        return;
+      }
       if (!boss) {
         del(pinKey(picked));
         pinMsg.className = "pinmsg ok";
@@ -5611,6 +5739,10 @@ input,select,textarea{border-radius:var(--r3)!important}
 .savebar .sv{font-size:12px;font-weight:700;color:var(--ink2)}
 .savebar .sv i{font-style:normal;font-family:var(--mono);font-size:11.5px;color:var(--mid);margin-left:4px}
 .savebar .sv i.busy{color:var(--open)}
+.syncst{margin-left:10px!important;font-family:var(--sans)!important;font-size:11px!important;padding:1px 7px;border-radius:999px;background:var(--raise);color:var(--muted)!important}
+.syncst.on{background:var(--midbg);color:var(--mid)!important}
+.syncst.wait{background:var(--openbg);color:var(--open)!important}
+.syncst.err{background:var(--offbg);color:var(--off)!important}
 .savebar .sep{flex:1}
 .savebar .svlab{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em}
 .savebar #saveBtns{display:inline-flex;flex-wrap:wrap;gap:5px}
