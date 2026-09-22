@@ -1697,7 +1697,7 @@ input,select,textarea{border-radius:var(--r3)!important}
     <span class="lc"><i></i>마감</span>
     <span class="lm"><i></i>미들</span>
     <span class="lf"><i></i>전일</span>
-    <span class="lw"><i></i>사장님 <span class="lnote">— 종일 08:30–19:30 (*중간에 사무업무로 자리 비움) · 반죽 근무는 시간 정해두지 않고 매장 상황 보며 · 공부 · 출강 · 서울출장은 가게 밖</span></span>
+    <span class="lw"><i></i>사장님 <span class="lnote">— 종일 08:30–19:30 (*중간에 사무업무로 자리 비움) · 반죽 근무는 시간 정해두지 않고 매장 상황 보며 · 출장 · 공부 · 출강 · 서울출장은 가게 밖</span></span>
   </div>
 </section></div><div class="panel" id="tp2" role="tabpanel" hidden><section>
   <div class="shead"><h2>오늘의 할 일</h2><span class="en">today's tasks</span>
@@ -2266,7 +2266,7 @@ input,select,textarea{border-radius:var(--r3)!important}
   var ROLECL = { open:"open", close:"close", middle:"mid",
                  full:"full", allday:"own", dough:"own" };
   var RORD = { open:0, dough:1, middle:2, full:2, allday:3, close:4 };
-  var ROLEOPTS = ["휴무", "오픈", "미들", "마감", "전일", "종일", "반죽"];
+  var ROLEOPTS = ["휴무", "오픈", "미들", "마감", "전일", "종일", "반죽", "출장"];
   var BOSSOPTS = ["휴무", "종일", "반죽", "오픈", "마감", "공부", "출강", "서울출장"];   // 사장님 칸
   var WDK = ["월","화","수","목","금","토","일"];
   var HOLI = { "1-1":"신정", "3-1":"삼일절", "5-5":"어린이날", "6-6":"현충일",
@@ -3133,9 +3133,9 @@ input,select,textarea{border-radius:var(--r3)!important}
     var NL = String.fromCharCode(10);
     var RCLS = { "오픈": "open", "마감": "close", "미들": "mid",
                  "전일": "full", "종일": "own", "반죽": "own",
-                 "공부": "away", "출강": "away", "서울출장": "away" };
+                 "공부": "away", "출강": "away", "서울출장": "away", "출장": "away" };
     var RORDER = { "오픈": 0, "반죽": 1, "미들": 2, "전일": 2, "종일": 3, "마감": 4,
-                   "공부": 5, "출강": 5, "서울출장": 5 };
+                   "공부": 5, "출강": 5, "서울출장": 5, "출장": 5 };
 
     function keyOf(ym) { return "cafesui.sched." + ym; }
     function draftOf(ym) {
