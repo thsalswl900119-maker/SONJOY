@@ -1238,6 +1238,13 @@ table.zt th.c6{width:56px;text-align:center}
 .yychip.c-memo{border-left-color:var(--full)}
 .item.c-memo .itag{color:var(--full)}
 /* 일지 — 이달 메모 달력 */
+.rulebox{border:2px solid var(--r1);border-radius:var(--r);background:var(--fullbg);padding:14px 18px 15px;margin-bottom:14px}
+.rulebox .rhd{font-family:var(--serif);font-size:13px;letter-spacing:.06em;color:var(--r1);font-weight:700;margin-bottom:6px}
+.rulebox .rb{font-family:var(--serif);font-size:22px;line-height:1.45;font-weight:700;color:var(--ink);word-break:keep-all}
+.rulebox .rb b{color:var(--r1)}
+.rulebox .rs{font-size:15px;line-height:1.55;margin-top:8px;font-weight:700;word-break:keep-all}
+.rulebox .rs b{color:var(--r1)}
+@media (max-width:600px){.rulebox .rb{font-size:18px}.rulebox .rs{font-size:14px}}
 .mcbox{border:1px solid var(--rule2);border-left:4px solid var(--full);border-radius:var(--r);background:var(--surface);padding:11px 14px 12px;margin-bottom:14px}
 .mch{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:9px}
 .mch>b{font-family:var(--serif);font-size:15px}
@@ -1900,6 +1907,11 @@ input,select,textarea{border-radius:var(--r3)!important}
 <div class="panel" id="tp4" role="tabpanel" hidden><section>
   <div class="shead"><h2>마감 일지</h2><span class="en">daily log</span>
     <span class="sub">퇴근 전에 채우고 복사해서 텔레그램으로 보고하세요</span></div>
+  <div class="rulebox" id="prodRule">
+    <div class="rhd">🎂 생산량 규칙 · 꼭 지키기</div>
+    <div class="rb">빨간날(연휴)이 뒷날이면 <b>무조건 주말 생산량</b>으로 잡기.<br>한꺼번에 당겨서 작업하고, 뒷날부터 조절하기.</div>
+    <div class="rs">혹 케이크 양이 처지면 <b>꼭 보고하고 생산량 조절하기</b> · 마음대로 정하지 않기.</div>
+  </div>
   <div class="mcbox" id="mcBox">
     <div class="mch"><b>📅 이달 메모 달력</b>
       <span>예약 · 공지 · 챙길 것을 날짜에 적어 두세요. 적은 건 <b>연간 행사</b> 달력에도 같이 보입니다 (보라 띠).</span>
