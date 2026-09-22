@@ -1631,6 +1631,13 @@ input,select,textarea{border-radius:var(--r3)!important}
   <button type="button" id="myOff">내가 아니에요</button>
 </div>
 
+<div class="savebar" id="saveBar">
+  <span class="sv">💾 적는 즉시 이 기기에 저장 <i id="saveState">저장됨</i></span>
+  <span class="sep"></span>
+  <span class="svlab">백업</span>
+  <span id="saveBtns"></span>
+  <div class="bkrow" id="saveRow"></div>
+</div>
 <nav class="tabs" role="tablist" aria-label="화면 선택"><button type="button" class="tab" role="tab" data-p="tp0" aria-controls="tp0" aria-selected="true">출퇴근</button><button type="button" class="tab" role="tab" data-p="tp1" aria-controls="tp1" aria-selected="false">근무표</button><button type="button" class="tab" role="tab" data-p="tp2" aria-controls="tp2" aria-selected="false">오늘 할 일</button><button type="button" class="tab" role="tab" data-p="tp3" aria-controls="tp3" aria-selected="false">청소·정비</button><button type="button" class="tab" role="tab" data-p="tp12" aria-controls="tp12" aria-selected="false">재고·발주</button><button type="button" class="tab" role="tab" data-p="tp4" aria-controls="tp4" aria-selected="false">일지</button><button type="button" class="tab" role="tab" data-p="tp5" aria-controls="tp5" aria-selected="false">월말회의</button><button type="button" class="tab" role="tab" data-p="tp6" aria-controls="tp6" aria-selected="false">연간 행사</button><button type="button" class="tab" role="tab" data-p="tp7" aria-controls="tp7" aria-selected="false">과일</button><button type="button" class="tab" role="tab" data-p="tp8" aria-controls="tp8" aria-selected="false">월말 평가</button><button type="button" class="tab" role="tab" data-p="tp9" aria-controls="tp9" aria-selected="false">워크샵</button><button type="button" class="tab" role="tab" data-p="tp10" aria-controls="tp10" aria-selected="false">고객 응대</button><button type="button" class="tab" role="tab" data-p="tp11" aria-controls="tp11" aria-selected="false">사용법</button></nav><div class="panel" id="tp0" role="tabpanel"><section>
   <div class="shead"><h2>출퇴근</h2><span class="en">clock out</span>
     <span class="sub">갈 때 본인 칸의 퇴근만 누르세요 · 출근은 10분 일찍, 서로 챙깁니다</span></div>
@@ -4978,6 +4985,25 @@ input,select,textarea{border-radius:var(--r3)!important}
 .skrp .warn{background:var(--openbg);color:var(--open);border-radius:2px;padding:1px 6px;font-weight:700;font-size:11.5px;display:inline-block;margin-top:3px}
 .skrp .rf{margin-top:12px;padding-top:8px;border-top:1px dashed var(--rule2);font-size:10.5px;color:var(--muted);display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
 .skrp .rf i{font-style:normal;font-family:var(--mono)}
+
+/* 상단 저장 · 백업 줄 */
+.savebar{position:sticky;top:0;z-index:30;display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;
+  background:var(--raise);border:1px solid var(--rule2);border-radius:3px;padding:8px 12px;margin-bottom:12px;
+  box-shadow:0 4px 14px -10px rgba(42,37,31,.45)}
+.savebar .sv{font-size:12px;font-weight:700;color:var(--ink2)}
+.savebar .sv i{font-style:normal;font-family:var(--mono);font-size:11.5px;color:var(--mid);margin-left:4px}
+.savebar .sv i.busy{color:var(--open)}
+.savebar .sep{flex:1}
+.savebar .svlab{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em}
+.savebar #saveBtns{display:inline-flex;flex-wrap:wrap;gap:5px}
+.savebar .bkmini.prim{background:var(--open);color:#FFFCF6;border-color:var(--open)}
+.savebar .bkmini.prim:hover{filter:brightness(1.08)}
+.savebar .bkrow{flex-basis:100%;display:flex;flex-direction:column;gap:6px}
+.savebar .bkrow:empty{display:none}
+.savebar .bkrow .lgmsg:empty{display:none}
+.savebar #bkPaste .wsin{width:100%}
+.skrpcol{top:60px}
+@media (max-width:620px){.savebar .sep{display:none}.savebar .svlab{display:none}}
 .sksearch{font:inherit;font-size:13px;padding:6px 9px;width:100%;max-width:300px;background:var(--bg);color:var(--ink);
   border:1px solid var(--rule2);border-radius:2px;margin-bottom:10px}
 </style>
@@ -5362,6 +5388,43 @@ input,select,textarea{border-radius:var(--r3)!important}
     $("#skMonth").value = today().slice(0, 7);
     renderRef(); renderSeason();
     open(today());
+  })();
+
+  // 상단 저장 · 백업 줄 — 흩어져 있던 백업 버튼을 전부 위로 모은다 (기능은 그대로)
+  (function () {
+    var btns = document.getElementById("saveBtns"), row = document.getElementById("saveRow");
+    if (!btns) return;
+    function slim(b, cls) {
+      var em = b.querySelector("em"); if (em) em.remove();
+      var ic = b.querySelector("svg"); if (ic) { ic.setAttribute("class", "bkmi"); }
+      b.className = "bkmini" + (cls ? " " + cls : "");
+      return b;
+    }
+    var copy = document.getElementById("bkCopy"), open = document.getElementById("bkOpen");
+    if (copy) { var sp = copy.querySelector("span"); if (sp) sp.textContent = "전체 백업 복사"; btns.appendChild(slim(copy, "prim")); }
+    if (open) { var sp2 = open.querySelector("span"); if (sp2) sp2.textContent = "백업 되살리기"; btns.appendChild(slim(open)); }
+    document.querySelectorAll(".bkmini").forEach(function (b) {
+      if (b === copy || b === open) return;
+      var wrap = b.closest(".bkbar");
+      btns.appendChild(b);
+      if (wrap && !wrap.querySelector("button")) wrap.hidden = true;
+    });
+    var msg = document.getElementById("bkMsg"), paste = document.getElementById("bkPaste");
+    if (msg) row.appendChild(msg);
+    if (paste) row.appendChild(paste);
+    // 저장 표시 — 어디든 적으면 잠깐 "저장 중" 뒤에 "저장됨 시각"
+    var st = document.getElementById("saveState"), t = null;
+    function hm() { var d = new Date(); return String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0"); }
+    function bump() {
+      if (!st) return;
+      st.textContent = "저장 중…"; st.classList.add("busy");
+      clearTimeout(t);
+      t = setTimeout(function () { st.textContent = "저장됨 " + hm(); st.classList.remove("busy"); }, 900);
+    }
+    ["input", "change"].forEach(function (ev) { document.addEventListener(ev, bump, true); });
+    document.addEventListener("click", function (e) {
+      if (e.target.closest && e.target.closest(".box, .mk, .chip, .mtgck, input[type=checkbox]")) bump();
+    }, true);
   })();
 </script>
 </body></html>
