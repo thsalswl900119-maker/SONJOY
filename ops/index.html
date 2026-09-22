@@ -1260,6 +1260,10 @@ table.zt th.c6{width:56px;text-align:center}
 .mceh{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px}
 .mceh b{font-family:var(--serif);font-size:14px}
 .mcitem{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;padding:5px 0;border-bottom:1px solid var(--rule);font-size:13px}
+.mcbtns{display:inline-flex;gap:4px}
+.mcitem .e,.mcitem .s,.mcitem .c{font:inherit;font-size:12px;color:var(--ink2);background:none;border:1px solid var(--rule2);border-radius:2px;padding:1px 7px;cursor:pointer}
+.mcitem .e:hover,.mcitem .s{color:var(--mid);border-color:var(--mid)}
+.mcitem .mcei{font-family:var(--sans);font-size:13px;width:100%}
 .mcitem .t{font-weight:500}
 .mcitem .t.p1{color:var(--p1)} .mcitem .t.p2{color:var(--p2)} .mcitem .t.p3{color:var(--p3)} .mcitem .t.p4{color:var(--p4)}
 .mcitem small{font-size:10.5px;color:var(--muted);font-family:var(--mono);white-space:nowrap}
@@ -6148,14 +6152,32 @@ input,select,textarea{border-radius:var(--r3)!important}
       titleEl.textContent = (+p[1]) + "월 " + (+p[2]) + "일 (" + wd + ") 메모";
       var notes = (load()[date] || []);
       listEl.innerHTML = notes.length ? notes.map(function (n, i) {
-        return '<div class="mcitem"><span class="t ' + (COL[n.by] || "") + '">' + esc(n.t) + "</span><small>" + esc(n.by || "") + (n.at ? " · " + esc(n.at) : "") +
-          '</small><button type="button" class="x" data-i="' + i + '">지우기</button></div>';
+        return '<div class="mcitem" data-i="' + i + '"><span class="t ' + (COL[n.by] || "") + '">' + esc(n.t) + "</span><small>" + esc(n.by || "") + (n.at ? " · " + esc(n.at) : "") +
+          '</small><span class="mcbtns"><button type="button" class="e" data-i="' + i + '">고치기</button><button type="button" class="x" data-i="' + i + '">지우기</button></span></div>';
       }).join("") : '<div class="mcnone">아직 적은 게 없습니다</div>';
       listEl.querySelectorAll(".x").forEach(function (b) {
         b.addEventListener("click", function () {
           var all = load(); (all[date] || []).splice(+b.dataset.i, 1);
           if (!all[date] || !all[date].length) delete all[date];
           save(all); render(); open(date);
+        });
+      });
+      // 고치기 — 그 줄이 입력칸으로 바뀌고, Enter 또는 저장으로 반영
+      listEl.querySelectorAll(".e").forEach(function (b) {
+        b.addEventListener("click", function () {
+          var i = +b.dataset.i, row = b.closest(".mcitem"), cur = (load()[date] || [])[i];
+          if (!cur) return;
+          row.innerHTML = '<input type="text" class="dinp mcei" value="' + esc(cur.t).replace(/"/g, "&quot;") + '">' +
+            '<span class="mcbtns"><button type="button" class="s">저장</button><button type="button" class="c">취소</button></span>';
+          var inp = row.querySelector(".mcei"); inp.focus(); inp.select();
+          function commit() {
+            var t = (inp.value || "").trim(); if (!t) { open(date); return; }
+            var all = load(); if (all[date] && all[date][i]) { all[date][i].t = t; all[date][i].edit = me() + " " + today().slice(5); }
+            save(all); render(); open(date);
+          }
+          row.querySelector(".s").addEventListener("click", commit);
+          row.querySelector(".c").addEventListener("click", function () { open(date); });
+          inp.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); commit(); } if (e.key === "Escape") open(date); });
         });
       });
       edit.hidden = false; render();
