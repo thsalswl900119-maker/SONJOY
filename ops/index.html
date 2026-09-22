@@ -852,6 +852,24 @@ input.wp1,input.wp2,input.wp3,input.wp4{font-weight:500}
 .attable .give.plus{color:var(--mid)}
 .attable .give.minus{color:var(--muted)}
 
+/* 한 달 퇴근 현황 */
+.atmnav{display:inline-flex;align-items:center;gap:6px;font-weight:400}
+.atmnav .dinp{width:auto;min-width:130px}
+.atmon th,.atmon td{text-align:left!important;font-family:var(--sans)!important}
+.atmon td.dcol{font-family:var(--mono)!important;white-space:nowrap;font-weight:700;width:96px}
+.atmon td.dcol span{font-weight:400;color:var(--muted);margin-left:4px}
+.atmon tbody tr{cursor:pointer}
+.atmon tbody tr:hover td{background:var(--raise)}
+.atmon tr.sun td{background:var(--offbg);color:var(--off);font-size:12px}
+.atmon tr.today td{background:var(--openbg)}
+.atmon tr.today td.dcol{color:var(--open)}
+.atmon td b{font-family:var(--mono);font-size:13px}
+.atmon td small{color:var(--muted);font-size:11px;margin-left:4px}
+.late{color:var(--mid);font-weight:700;font-size:11px;margin-left:5px;font-style:normal}
+.miss{color:var(--off);font-size:11.5px;font-weight:700}
+.atmon td .dash{color:var(--rule2)}
+.atmon tfoot td{background:var(--raise);font-weight:700;font-size:12.5px}
+.atmon tfoot td small{display:block;margin:0;font-weight:400}
 /* 비교표 */
 .cmpwrap{margin-bottom:14px}
 .cmph{background:var(--raise);padding:9px 14px;font-family:var(--serif);font-weight:700;
@@ -1659,8 +1677,10 @@ input,select,textarea{border-radius:var(--r3)!important}
   </div>
   <div class="atlist" id="atList"></div>
   <div class="lglist">
-    <div class="lglh">퇴근 기록<span id="atCount"></span></div>
-    <div id="atLog"></div>
+    <div class="lglh">한 달 퇴근 현황<span class="atmnav"><button type="button" class="daynav" id="atPrev">‹</button> <input type="month" id="atMonth" class="dinp"> <button type="button" class="daynav" id="atNext">›</button></span></div>
+    <div class="ztable-wrap" style="border:0"><table class="attable atmon" id="atMon"></table></div>
+    <p class="tnote" style="margin:8px 12px 10px">날짜 줄을 누르면 그날 카드로 갑니다 · <b class="late">+30분</b>은 예정보다 늦게까지 남은 날(한가한 날 일찍 보내주기) · <span class="miss">미기록</span>은 근무표엔 있는데 퇴근을 안 찍은 날</p>
+    <div id="atLog" hidden></div><span id="atCount" hidden></span>
   </div>
   <div class="zfoot"><span class="lock">
 출근은 따로 찍지 않습니다 · 실제 시스템에서는 QR을 찍으면 이 자리가 자동으로 채워집니다</span></div>
@@ -3369,7 +3389,7 @@ input,select,textarea{border-radius:var(--r3)!important}
         listEl.innerHTML = '<div class="atnone">이 날은 근무표에 없습니다 ' +
           '(일요일 정기휴무이거나 근무표를 아직 안 짠 달)</div>';
         msgEl.textContent = "";
-        drawLog();
+        drawLog(); drawMonth();
         return;
       }
       plan.forEach(function (sh) {
@@ -3435,7 +3455,7 @@ input,select,textarea{border-radius:var(--r3)!important}
       var done = plan.filter(function (sh) {
         return (rec[sh.w] || {}).out; }).length;
       msgEl.textContent = done + " / " + plan.length + "명 퇴근 찍음";
-      drawLog();
+      drawLog(); drawMonth();
     }
 
     function put(who, field, val, quiet) {
@@ -3489,6 +3509,81 @@ input,select,textarea{border-radius:var(--r3)!important}
           '<span class="lgd">' + r.out + "</span>" +
           '<button type="button" class="lgopen">열기</button></div>';
       }).join("");
+    }
+    // 한 달 퇴근 현황 — 날짜 × 직원 표. 예정보다 늦게 남은 날은 +분으로 표시
+    var STAFF = ["정항아", "박혜빈", "이해선"];
+    var monEl = document.getElementById("atMonth"), tblEl = document.getElementById("atMon");
+    function mins(t) { var p = String(t || "").split(":"); return p.length === 2 ? (+p[0]) * 60 + (+p[1]) : null; }
+    function drawMonth() {
+      if (!monEl || !tblEl) return;
+      var ym = monEl.value || (dateEl.value || todayStr()).slice(0, 7);
+      monEl.value = ym;
+      var y = +ym.slice(0, 4), m = +ym.slice(5, 7);
+      var last = new Date(y, m, 0).getDate(), today = todayStr();
+      var tot = {}; STAFF.forEach(function (w) { tot[w] = { work: 0, out: 0, late: 0 }; });
+      // 기록을 시작한 날 이전은 "미기록"으로 세지 않는다
+      var firstRec = null;
+      try {
+        for (var i = 0; i < localStorage.length; i++) {
+          var k = localStorage.key(i);
+          if (k.indexOf(PRE) === 0) { var dk = k.slice(PRE.length); if (!firstRec || dk < firstRec) firstRec = dk; }
+        }
+      } catch (e) {}
+      var body = "";
+      for (var dd = 1; dd <= last; dd++) {
+        var d = ym + "-" + String(dd).padStart(2, "0");
+        var wd = new Date(y, m - 1, dd).getDay();
+        var plan = SCHED[d] || [], rec = load(d);
+        var cls = (wd === 0 ? "sun" : "") + (d === today ? " today" : "");
+        var cells = "";
+        if (wd === 0 && !plan.length && !Object.keys(rec).length) {
+          cells = '<td colspan="' + STAFF.length + '">정기휴무</td>';
+        } else {
+          STAFF.forEach(function (w) {
+            var sh = null; plan.forEach(function (x) { if (x.w === w) sh = x; });
+            var r = rec[w] || {};
+            if (r.out) {
+              tot[w].work += 1; tot[w].out += 1;
+              var late = "";
+              var pe = sh ? mins(sh.e) : null, po = mins(r.out);
+              if (pe != null && po != null && po - pe >= 20) { late = '<i class="late">+' + (po - pe) + "분</i>"; tot[w].late += (po - pe); }
+              cells += "<td><b>" + r.out + "</b><small>" + (r.role || (sh ? sh.r : "")) + "</small>" + late +
+                       (r.memo ? '<small>· ' + esc(r.memo) + "</small>" : "") + "</td>";
+            } else if (sh) {
+              var counted = d <= today && firstRec && d >= firstRec;
+              if (counted) tot[w].work += 1;
+              cells += "<td>" + (d < today ? (counted ? '<span class="miss">미기록</span><small>' + sh.r + "</small>" : '<small class="dash">' + sh.r + "</small>")
+                                            : '<small>' + sh.r + (sh.e ? " · 예정 " + sh.e : "") + "</small>") + "</td>";
+            } else {
+              cells += '<td><span class="dash">—</span></td>';
+            }
+          });
+        }
+        body += '<tr class="' + cls + '" data-d="' + d + '"><td class="dcol">' + m + "/" + dd + "<span>" + WD2[wd] + "</span></td>" + cells + "</tr>";
+      }
+      var foot = '<tr><td class="dcol">합계</td>' + STAFF.map(function (w) {
+        var t = tot[w];
+        return "<td>퇴근 " + t.out + " / 근무 " + t.work + "일" + (t.late ? '<small>늦게 남음 합계 <i class="late">+' + t.late + "분</i></small>" : "") +
+               (t.work - t.out > 0 && ym <= today.slice(0, 7) ? '<small class="miss">미기록 ' + (t.work - t.out) + "일</small>" : "") + "</td>";
+      }).join("") + "</tr>";
+      tblEl.innerHTML = "<thead><tr><th>날짜</th>" + STAFF.map(function (w) {
+        return '<th><span class="atw ' + (COL[w] || "") + '">' + w + "</span></th>"; }).join("") + "</tr></thead>" +
+        "<tbody>" + body + "</tbody><tfoot>" + foot + "</tfoot>";
+    }
+    function esc(v) { return String(v == null ? "" : v).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+    if (monEl) {
+      monEl.addEventListener("change", drawMonth);
+      document.getElementById("atPrev").addEventListener("click", function () {
+        var y = +monEl.value.slice(0, 4), m = +monEl.value.slice(5, 7) - 1; if (m < 1) { m = 12; y -= 1; }
+        monEl.value = y + "-" + String(m).padStart(2, "0"); drawMonth(); });
+      document.getElementById("atNext").addEventListener("click", function () {
+        var y = +monEl.value.slice(0, 4), m = +monEl.value.slice(5, 7) + 1; if (m > 12) { m = 1; y += 1; }
+        monEl.value = y + "-" + String(m).padStart(2, "0"); drawMonth(); });
+      tblEl.addEventListener("click", function (e) {
+        var row = e.target.closest("tr[data-d]"); if (!row) return;
+        dateEl.value = row.dataset.d; render();
+        listEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
     }
     logEl.addEventListener("click", function (e) {
       var row = e.target.closest(".lgrow");
