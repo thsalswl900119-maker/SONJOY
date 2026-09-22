@@ -715,6 +715,8 @@ input.wp1,input.wp2,input.wp3,input.wp4{font-weight:500}
   cursor:pointer;background:var(--surface);color:var(--ink);
   border:1px solid var(--rule2);border-radius:2px}
 .pbar button:hover{background:var(--raise)}
+.pbar .psave{background:var(--mid);color:#FFFCF6;border-color:var(--mid)}
+.pbar .psave.dirty{background:var(--off);border-color:var(--off)}
 .pbar .pfill{background:var(--open);color:#FFFCF6;border-color:var(--open)}
 .pmsg{font-size:12px;color:var(--muted)}
 .editbtn{margin-left:10px;font:inherit;font-size:11.5px;font-weight:700;
@@ -2288,6 +2290,7 @@ input,select,textarea{border-radius:var(--r3)!important}
       '</button><button type="button" class="reqclear" disabled>지우기</button>' +
       '<span class="reqmsg"></span></div></div>';
     var bar = '<div class="pbar">' +
+      '<button type="button" class="psave">저장</button>' +
       '<button type="button" class="pfill">로테이션대로 채우기</button>' +
       '<button type="button" class="pcopy">근무표 복사</button>' +
       '<button type="button" class="pclear">' + (isPlan ? "지우기" : "고친 것 되돌리기") +
@@ -3119,15 +3122,30 @@ input,select,textarea{border-radius:var(--r3)!important}
       apply(Object.keys(saved).length ? saved
             : (wrap.classList.contains("planmode") ? {} : draftOf(ym)));
 
+      // 한 칸씩 저장하지 않는다 — 다 채운 뒤 "저장"을 눌러야 달력에 들어간다
+      var dirty = false;
+      var saveBtn = wrap.querySelector(".psave");
+      function showDirty() {
+        if (saveBtn) { saveBtn.classList.toggle("dirty", dirty); saveBtn.textContent = dirty ? "저장 (아직 저장 안 됨)" : "저장"; }
+        if (msg) msg.textContent = dirty ? "다 채운 뒤 저장을 누르세요 · 아직 달력에 안 들어갔습니다" : msg.textContent;
+      }
+      window.__CS_SCHED_DIRTY = window.__CS_SCHED_DIRTY || {};
+      function mark(v) { dirty = v; window.__CS_SCHED_DIRTY[ym] = v; showDirty(); }
+      function commit() {
+        save(); mark(false);
+        if (msg) msg.textContent = "저장했습니다 · 달력에 반영됐습니다";
+      }
+      wrap.__csCommit = commit;
       slots.forEach(function (el) {
         el.addEventListener("change", function () {
-          paint(el); save(); check(panel, wrap);
+          paint(el); mark(true); check(panel, wrap);
         });
       });
+      if (saveBtn) saveBtn.addEventListener("click", commit);
       var fill = wrap.querySelector(".pfill");
       if (fill) fill.addEventListener("click", function () {
-        apply(draftOf(ym)); save();
-        if (msg) msg.textContent = "로테이션대로 채웠습니다 · 휴무 신청 보고 고치세요";
+        apply(draftOf(ym)); mark(true);
+        if (msg) msg.textContent = "로테이션대로 채웠습니다 · 휴무 신청 보고 고친 뒤 저장을 누르세요";
       });
       var clear = wrap.querySelector(".pclear");
       if (clear) clear.addEventListener("click", function () {
@@ -3182,6 +3200,7 @@ input,select,textarea{border-radius:var(--r3)!important}
           var wrap = document.getElementById("ew" + ym);
           var read = document.getElementById("rc" + ym);
           var on = wrap.hidden;
+          if (!on && wrap.__csCommit && (window.__CS_SCHED_DIRTY || {})[ym]) wrap.__csCommit();
           wrap.hidden = !on;
           if (read) read.hidden = on;
           b.setAttribute("aria-pressed", String(on));
@@ -5460,7 +5479,14 @@ input,select,textarea{border-radius:var(--r3)!important}
       clearTimeout(t);
       t = setTimeout(function () { st.textContent = "저장됨 " + hm(); st.classList.remove("busy"); }, 900);
     }
-    ["input", "change"].forEach(function (ev) { document.addEventListener(ev, bump, true); });
+    ["input", "change"].forEach(function (ev) { document.addEventListener(ev, function (e) {
+      if (e.target && e.target.classList && e.target.classList.contains("pslot")) return;   // 근무표는 저장 버튼으로
+      bump();
+    }, true); });
+    window.addEventListener("beforeunload", function (e) {
+      var d = window.__CS_SCHED_DIRTY || {};
+      if (Object.keys(d).some(function (k) { return d[k]; })) { e.preventDefault(); e.returnValue = ""; }
+    });
     document.addEventListener("click", function (e) {
       if (e.target.closest && e.target.closest(".box, .mk, .chip, .mtgck, input[type=checkbox]")) bump();
     }, true);
