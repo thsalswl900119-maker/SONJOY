@@ -719,7 +719,7 @@ input.wp1,input.wp2,input.wp3,input.wp4{font-weight:500}
 .pbar .psave.dirty{background:var(--off);border-color:var(--off)}
 .pbar .pfill{background:var(--open);color:#FFFCF6;border-color:var(--open)}
 .pmsg{font-size:12px;color:var(--muted)}
-.editbtn{margin-left:10px;font:inherit;font-size:11.5px;font-weight:700;
+.editbtn{margin-left:10px;font:inherit;font-size:13.5px;font-weight:700;padding:7px 16px!important;background:var(--open)!important;color:#FFFCF6!important;border-color:var(--open)!important;border-radius:3px!important;
   padding:3px 11px;cursor:pointer;background:var(--surface);color:var(--open);
   border:1px solid var(--open);border-radius:999px}
 .editbtn:hover{background:var(--openbg)}
@@ -736,7 +736,7 @@ input.wp1,input.wp2,input.wp3,input.wp4{font-weight:500}
 .pn{font-size:11px;font-weight:700}
 .pn.p1{color:var(--p1)}.pn.p2{color:var(--p2)}
 .pn.p3{color:var(--p3)}.pn.p4{color:var(--p4)}
-.pnoterow{margin-top:5px;padding-top:4px;border-top:1px dashed var(--rule)}
+.pnoterow{margin-bottom:5px;padding-bottom:4px;border-bottom:1px dashed var(--rule)}
 .pn.all{color:var(--off)}
 .pnote{font:inherit;font-size:11px;padding:2px 3px;width:100%;background:var(--bg);color:var(--muted);border:1px dashed var(--rule2);border-radius:2px}
 .pnote.set{color:var(--off);font-weight:700;background:var(--offbg);border-style:solid;border-color:var(--off)}
@@ -2427,16 +2427,15 @@ input,select,textarea{border-radius:var(--r3)!important}
       out += '<div class="' + cls + '" data-d="' + m.month + "-" + c.day +
         '" data-wd="' + WDK[c.wd] + '"><div class="dnum">' + c.day + "</div>" +
         (c.hol ? '<div class="hol">' + esc0(c.hol) + "</div>" : "") +
+        '<div class="prow pnoterow"><span class="pn all">📣 공지</span>' +
+        '<select class="pnote" data-d="' + m.month + "-" + c.day + '" aria-label="' + m.month + "월 " + c.day + '일 전체 공지">' +
+        noteOpts + "</select></div>" +
         STAFF4.map(function (n) {
           return '<div class="prow"><span class="pn ' + WCOL[n] + '">' + n + "</span>" +
             '<select class="pslot" data-d="' + m.month + "-" + c.day +
             '" data-n="' + n + '" aria-label="' + n + " " + m.month + "월 " + c.day +
             '일">' + (n === "사장님" ? bossOpts : opts) + "</select></div>";
-        }).join("") +
-        '<div class="prow pnoterow"><span class="pn all">📣 공지</span>' +
-        '<select class="pnote" data-d="' + m.month + "-" + c.day + '" aria-label="' + m.month + "월 " + c.day + '일 전체 공지">' +
-        noteOpts + "</select></div>" +
-        '<div class="pwarn"></div></div>';
+        }).join("") + '<div class="pwarn"></div></div>';
     });
     return out;
   }
@@ -2485,7 +2484,7 @@ input,select,textarea{border-radius:var(--r3)!important}
       '<div class="msub">' + m.year + "년 " + m.month + "월 · 영업 " + biz +
       "일 · 정기휴무 " + rest + "일" + note +
       '<button type="button" class="editbtn" data-k="' + key +
-      '" aria-pressed="false">' + (isPlan ? "근무표 짜기" : "근무표 수정하기") + '</button></div>' +
+      '" aria-pressed="false">✎ 근무표 수정하기</button></div>' +
       reqbar +
       '<div class="cal" id="rc' + key + '">' + WDHEAD + readCal(m) + "</div>" + editwrap + "</div>";
   }
@@ -3422,7 +3421,7 @@ input,select,textarea{border-radius:var(--r3)!important}
           wrap.hidden = !on;
           if (read) read.hidden = on;
           b.setAttribute("aria-pressed", String(on));
-          b.textContent = on ? "다 했어요 (저장하고 닫기)" : (isPlan ? "근무표 짜기" : "근무표 수정하기");
+          b.textContent = on ? "✓ 다 했어요 (저장하고 닫기)" : "✎ 근무표 수정하기";
         }
         wrap.__csClose = function () { setOpen(false); };
         b.addEventListener("click", function () {
