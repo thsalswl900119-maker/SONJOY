@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html data-theme="light"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>카페스이 근무·운영 배정표</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -781,7 +781,7 @@ input.wp1,input.wp2,input.wp3,input.wp4{font-weight:500}
 .pnote{font:inherit;font-size:11px;padding:2px 3px;width:100%;background:var(--bg);color:var(--muted);border:1px dashed var(--rule2);border-radius:2px}
 .pnote.set{color:var(--off);font-weight:700;background:var(--offbg);border-style:solid;border-color:var(--off)}
 .pnote:focus-visible{outline:2px solid var(--open);outline-offset:1px}
-.allnote{font-size:11px;font-weight:700;color:var(--off);background:var(--offbg);border:1px solid var(--off);border-radius:2px;padding:1px 6px;margin:2px 0 4px;display:inline-block}
+.allnote{font-size:11.5px;font-weight:700;color:var(--bg);background:var(--ink);border:0;border-radius:3px;padding:3px 7px;margin:3px 0 5px;display:block;text-align:center;letter-spacing:.02em;box-shadow:0 1px 0 rgba(0,0,0,.15)}
 .mynote{color:var(--off)}
 .pslot{font:inherit;font-size:11.5px;padding:2px 3px;width:100%;
   background:var(--bg);color:var(--ink);border:1px solid var(--rule2);border-radius:2px}
@@ -792,10 +792,10 @@ input.wp1,input.wp2,input.wp3,input.wp4{font-weight:500}
 @media (max-width:700px){.pgstep{grid-template-columns:1fr;gap:1px}}
 
 /* 작성 화면 — 왼쪽 서식 / 오른쪽 보고서 */
-.rpwrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,340px);
+.rpwrap{display:grid;grid-template-columns:minmax(280px,340px) minmax(0,1fr);
   gap:14px;align-items:start}
 .rpmain{min-width:0}
-.rppane{position:sticky;top:12px;border:1px solid var(--rule2);border-radius:3px;
+.rppane{order:-1;position:sticky;top:12px;border:1px solid var(--rule2);border-radius:3px;
   background:var(--surface);overflow:hidden;max-height:calc(100vh - 30px);
   display:flex;flex-direction:column}
 .rphead{padding:8px 13px;background:var(--raise);border-bottom:1px solid var(--rule);
@@ -821,7 +821,7 @@ input.wp1,input.wp2,input.wp3,input.wp4{font-weight:500}
 .rpempty{color:var(--muted);text-align:center;padding:24px 6px;font-size:12px}
 @media (max-width:900px){
   .rpwrap{grid-template-columns:1fr}
-  .rppane{position:static;max-height:none}
+  .rppane{order:0;position:static;max-height:none}
 }
 
 /* 출퇴근 */
@@ -1007,7 +1007,7 @@ input.wp1,input.wp2,input.wp3,input.wp4{font-weight:500}
 .mlab span{font-size:12.5px;font-weight:500}
 .mlab em{font-style:normal;font-size:10.5px;color:var(--muted);line-height:1.4}
 .lgin.mi{font-size:13px;padding:6px 8px}
-.lgact.plain{border:0;background:none;padding:0;margin-top:14px}
+.lgact.top{margin:0 0 12px}
 
 /* 휴무 신청 */
 .reqwhys{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
@@ -1809,14 +1809,8 @@ input,select,textarea{border-radius:var(--r3)!important}
     <span class="sub">매일 하는 업무 · 본인 조를 누르고 하나씩 체크하세요</span></div>
   <div class="rulebox" id="askRule">
     <div class="rhd">🙋 일하는 기본 · 꼭 지키기</div>
-    <div class="rb">궁금하거나 헷갈리면 <b>무조건 물어보고</b> 일하기.</div>
-    <div class="rs">혼자 판단해서 진행하지 않기 · 매니저나 사장님께 먼저 확인 · 물어보는 건 잘못이 아닙니다.</div>
-  </div>
-  <div class="daybanner">
-    <b>케이크 디자인 · 과일 높이 맞추기</b>
-    <span>매일 같은 모양으로 나가야 합니다. 만들기 전에 기준 사진과 한 번 견주고,
-      과일은 정해진 높이까지. 다르게 나간 날은 마감 일지에 적어주세요.</span>
-    <em>전 직원이 지켜 주세요. 꼭 기억하고 행동해 주세요.</em>
+    <div class="rb">궁금하거나 헷갈리면 <b>무조건 물어보고</b> 일하기.<br>케이크 디자인 · 과일 높이는 <b>매일 같은 모양</b>으로.</div>
+    <div class="rs">혼자 판단해서 진행하지 않기 · 매니저나 사장님께 먼저 확인 · 물어보는 건 잘못이 아닙니다.<br>만들기 전에 기준 사진과 한 번 견주고, 과일은 정해진 높이까지. 다르게 나간 날은 마감 일지에 적어주세요.</div>
   </div>
   <div class="hcbox" id="hcBox">
     <div class="hch"><b>🩺 보건증</b><span>1년마다 갱신 · 발급일만 넣으면 만료일과 남은 날이 자동으로 계산됩니다 · 고정 항목이라 날이 바뀌어도 지워지지 않습니다</span></div>
@@ -1868,7 +1862,7 @@ input,select,textarea{border-radius:var(--r3)!important}
     <span class="sub">어제 숫자가 들어 있어요 · 바뀐 것만 고치면 자동 저장 · 주황색은 발주 넣을 때</span></div>
   <div class="rulebox" id="orderRule">
     <div class="rhd">📦 발주 규칙 · 꼭 지키기</div>
-    <div class="rb">빨간날이 있는 주간에는 <b>2~3일 전에 무조건 재고·발주 체크</b> 다 하기.<br><b>인쇄물 · 포장재료 · 주재료 전부</b> 빠짐없이.</div>
+    <div class="rb">빨간날이 있는 주간에는 <b>3~4일 전에 무조건 재고·발주 체크</b> 다 하기.<br><b>인쇄물 · 포장재료 · 주재료 전부</b> 빠짐없이.</div>
     <div class="rs" id="orderRuleSoon" hidden></div>
   </div>
   <nav class="sktabs" role="tablist" aria-label="재고 화면"><button type="button" class="sktab" data-c="sk0" aria-selected="true">📦 발주·재고 체크</button><button type="button" class="sktab" data-c="sk1" aria-selected="false">📒 발주 기준표</button><button type="button" class="sktab" data-c="sk2" aria-selected="false">🍓 과일 시즌</button></nav>
@@ -1953,13 +1947,13 @@ input,select,textarea{border-radius:var(--r3)!important}
   </div>
   <div class="rpwrap">
     <div class="rpmain">
-      <div class="lgnums"><label class="lgnum"><span>에그타르트</span><input type="text" inputmode="numeric" class="lgin numfmt" data-k="lf101" aria-label="에그타르트"></label><label class="lgnum"><span>홀케이크</span><input type="text" inputmode="numeric" class="lgin numfmt" data-k="lf102" aria-label="홀케이크"></label><label class="lgnum"><span>조각케이크 갯수</span><input type="text" inputmode="numeric" class="lgin numfmt" data-k="lf103" aria-label="조각케이크 갯수"></label><label class="lgnum"><span>별조각</span><input type="text" inputmode="numeric" class="lgin numfmt" data-k="lf104" aria-label="별조각"></label><label class="lgnum"><span>빙수 갯수</span><input type="text" inputmode="numeric" class="lgin numfmt" data-k="lf105" aria-label="빙수 갯수"></label><label class="lgnum"><span>선물세트</span><input type="text" inputmode="numeric" class="lgin numfmt" data-k="lf106" aria-label="선물세트"></label><label class="lgnum"><span>케이크 시트</span><input type="text" inputmode="numeric" class="lgin numfmt" data-k="lf120" aria-label="케이크 시트"></label><label class="lgnum"><span>생크림</span><input type="text" inputmode="numeric" class="lgin numfmt" data-k="lf121" aria-label="생크림"></label><label class="lgnum"><span>과일</span><input type="text" inputmode="numeric" class="lgin numfmt" data-k="lf122" aria-label="과일"></label></div><div class="lgtexts"><label class="lgtext"><span>종류별 내역<em>깐 것과 전일자를 나눠서. 예) 망2,멜1,복1,무피2,초밤1 / 전일자 멜1,티2,망2</em></span><input type="text" class="lgin" data-k="lf110" aria-label="종류별 내역"></label></div><div class="memogrid"><div class="msec"><div class="msh">근무</div><div class="mrows"><div class="mrow2"><label class="mlab"><span>근무 현황</span><em>오픈 · 마감 · 휴무가 누구인지</em></label><input type="text" class="lgin mi" data-k="lf140" aria-label="근무 현황"></div><div class="mrow2"><label class="mlab"><span>사장님 업무</span><em>오늘 어떤 일을 하셨는지</em></label><input type="text" class="lgin mi" data-k="lf141" aria-label="사장님 업무"></div><div class="mrow2"><label class="mlab"><span>알바생 출근</span><em>몇 시부터 몇 시까지</em></label><input type="text" class="lgin mi" data-k="lf142" aria-label="알바생 출근"></div></div></div><div class="msec"><div class="msh">매장</div><div class="mrows"><div class="mrow2"><label class="mlab"><span>날씨</span><em>비 · 더위 · 추위. 판매량과 직결</em></label><input type="text" class="lgin mi" data-k="lf150" aria-label="날씨"></div><div class="mrow2"><label class="mlab"><span>손님 흐름 · 만석 · 웨이팅</span><em>몇 시에 몰렸는지, 만석 몇 번</em></label><textarea class="lgin mi" data-k="lf151" rows="2" aria-label="손님 흐름 · 만석 · 웨이팅"></textarea></div><div class="mrow2"><label class="mlab"><span>주로 나간 메뉴</span></label><input type="text" class="lgin mi" data-k="lf152" aria-label="주로 나간 메뉴"></div><div class="mrow2"><label class="mlab"><span>중간 매출</span><em>오후 3시 이전 기준</em></label><input type="text" class="lgin mi" data-k="lf153" aria-label="중간 매출"></div></div></div><div class="msec"><div class="msh">생산 · 재고</div><div class="mrows"><div class="mrow2"><label class="mlab"><span>에타 추가로 구운 시간 · 갯수</span><em>몇 시에 몇 개</em></label><input type="text" class="lgin mi" data-k="lf160" aria-label="에타 추가로 구운 시간 · 갯수"></div><div class="mrow2"><label class="mlab"><span>남은 재고</span><em>에그타르트 / 케이크</em></label><input type="text" class="lgin mi" data-k="lf161" aria-label="남은 재고"></div><div class="mrow2"><label class="mlab"><span>폐기</span><em>몇 개를 왜 버렸는지. 품목까지</em></label><textarea class="lgin mi" data-k="lf162" rows="2" aria-label="폐기"></textarea></div><div class="mrow2"><label class="mlab"><span>서비스 나간 것</span><em>누구에게 무엇을</em></label><input type="text" class="lgin mi" data-k="lf163" aria-label="서비스 나간 것"></div><div class="mrow2"><label class="mlab"><span>내일 예약 건</span><em>홀케이크 · 조각 · 별조각</em></label><textarea class="lgin mi" data-k="lf164" rows="2" aria-label="내일 예약 건"></textarea></div></div></div><div class="msec"><div class="msh">이슈</div><div class="mrows"><div class="mrow2"><label class="mlab"><span>컴플레인</span><em>내용과 어떻게 처리했는지</em></label><textarea class="lgin mi" data-k="lf170" rows="2" aria-label="컴플레인"></textarea></div><div class="mrow2"><label class="mlab"><span>손님 · 직원 이슈</span></label><textarea class="lgin mi" data-k="lf171" rows="2" aria-label="손님 · 직원 이슈"></textarea></div><div class="mrow2"><label class="mlab"><span>관공서 · 사장님 찾는 방문</span><em>누가 왔다 갔는지</em></label><input type="text" class="lgin mi" data-k="lf172" aria-label="관공서 · 사장님 찾는 방문"></div></div></div><div class="msec"><div class="msh">전달</div><div class="mrows"><div class="mrow2"><label class="mlab"><span>인계사항</span><em>다음 근무자가 알아야 할 것</em></label><textarea class="lgin mi" data-k="lf180" rows="2" aria-label="인계사항"></textarea></div><div class="mrow2"><label class="mlab"><span>직원들에게 알릴 것</span></label><textarea class="lgin mi" data-k="lf181" rows="2" aria-label="직원들에게 알릴 것"></textarea></div><div class="mrow2"><label class="mlab"><span>사장님께 보고할 것</span></label><textarea class="lgin mi" data-k="lf182" rows="2" aria-label="사장님께 보고할 것"></textarea></div><div class="mrow2"><label class="mlab"><span>오늘 매출</span><em>최종 금액</em></label><input type="text" class="lgin mi" data-k="lf183" aria-label="오늘 매출"></div><div class="mrow2"><label class="mlab"><span>배달 건수</span><em>배민 · 쿠팡잇츠 각각 몇 건</em></label><input type="text" class="lgin mi" data-k="lf184" aria-label="배달 건수"></div></div></div><div class="msec"><div class="msh">그 외</div><div class="mrows"><div class="mrow2"><label class="mlab"><span>그 외 메모</span><em>위 항목에 안 들어가는 것</em></label><textarea class="lgin mi" data-k="lf190" rows="2" aria-label="그 외 메모"></textarea></div></div></div></div><div class="lgact plain"><button type="button" id="lgCopy">일지 내용 복사</button><button type="button" id="lgClear">지우기</button></div>
-      <div class="lgact">
+      <div class="lgact top">
         <button type="button" id="lgSave" class="prim">일지 저장</button>
         <button type="button" id="lgCopy">복사하기</button>
         <button type="button" id="lgClear">전부 지우기</button>
         <button type="button" class="bkmini" data-pre="log" data-label="일지"><svg viewBox="0 0 24 24" class="bkmi" aria-hidden="true"><path d="M5 3h11l3 3v15H5z"/><path d="M8 3v6h7V3"/><path d="M8 13h8v8H8z"/></svg><span>일지 백업</span></button>
       </div>
+      <div class="lgnums"><label class="lgnum"><span>에그타르트</span><input type="text" inputmode="numeric" class="lgin numfmt" data-k="lf101" aria-label="에그타르트"></label><label class="lgnum"><span>홀케이크</span><input type="text" inputmode="numeric" class="lgin numfmt" data-k="lf102" aria-label="홀케이크"></label><label class="lgnum"><span>조각케이크 갯수</span><input type="text" inputmode="numeric" class="lgin numfmt" data-k="lf103" aria-label="조각케이크 갯수"></label><label class="lgnum"><span>별조각</span><input type="text" inputmode="numeric" class="lgin numfmt" data-k="lf104" aria-label="별조각"></label><label class="lgnum"><span>빙수 갯수</span><input type="text" inputmode="numeric" class="lgin numfmt" data-k="lf105" aria-label="빙수 갯수"></label><label class="lgnum"><span>선물세트</span><input type="text" inputmode="numeric" class="lgin numfmt" data-k="lf106" aria-label="선물세트"></label><label class="lgnum"><span>케이크 시트</span><input type="text" inputmode="numeric" class="lgin numfmt" data-k="lf120" aria-label="케이크 시트"></label><label class="lgnum"><span>생크림</span><input type="text" inputmode="numeric" class="lgin numfmt" data-k="lf121" aria-label="생크림"></label><label class="lgnum"><span>과일</span><input type="text" inputmode="numeric" class="lgin numfmt" data-k="lf122" aria-label="과일"></label></div><div class="lgtexts"><label class="lgtext"><span>종류별 내역<em>깐 것과 전일자를 나눠서. 예) 망2,멜1,복1,무피2,초밤1 / 전일자 멜1,티2,망2</em></span><input type="text" class="lgin" data-k="lf110" aria-label="종류별 내역"></label></div><div class="memogrid"><div class="msec"><div class="msh">근무</div><div class="mrows"><div class="mrow2"><label class="mlab"><span>근무 현황</span><em>오픈 · 마감 · 휴무가 누구인지</em></label><input type="text" class="lgin mi" data-k="lf140" aria-label="근무 현황"></div><div class="mrow2"><label class="mlab"><span>사장님 업무</span><em>오늘 어떤 일을 하셨는지</em></label><input type="text" class="lgin mi" data-k="lf141" aria-label="사장님 업무"></div><div class="mrow2"><label class="mlab"><span>알바생 출근</span><em>몇 시부터 몇 시까지</em></label><input type="text" class="lgin mi" data-k="lf142" aria-label="알바생 출근"></div></div></div><div class="msec"><div class="msh">매장</div><div class="mrows"><div class="mrow2"><label class="mlab"><span>날씨</span><em>비 · 더위 · 추위. 판매량과 직결</em></label><input type="text" class="lgin mi" data-k="lf150" aria-label="날씨"></div><div class="mrow2"><label class="mlab"><span>손님 흐름 · 만석 · 웨이팅</span><em>몇 시에 몰렸는지, 만석 몇 번</em></label><textarea class="lgin mi" data-k="lf151" rows="2" aria-label="손님 흐름 · 만석 · 웨이팅"></textarea></div><div class="mrow2"><label class="mlab"><span>주로 나간 메뉴</span></label><input type="text" class="lgin mi" data-k="lf152" aria-label="주로 나간 메뉴"></div><div class="mrow2"><label class="mlab"><span>중간 매출</span><em>오후 3시 이전 기준</em></label><input type="text" class="lgin mi" data-k="lf153" aria-label="중간 매출"></div></div></div><div class="msec"><div class="msh">생산 · 재고</div><div class="mrows"><div class="mrow2"><label class="mlab"><span>에타 추가로 구운 시간 · 갯수</span><em>몇 시에 몇 개</em></label><input type="text" class="lgin mi" data-k="lf160" aria-label="에타 추가로 구운 시간 · 갯수"></div><div class="mrow2"><label class="mlab"><span>남은 재고</span><em>에그타르트 / 케이크</em></label><input type="text" class="lgin mi" data-k="lf161" aria-label="남은 재고"></div><div class="mrow2"><label class="mlab"><span>폐기</span><em>몇 개를 왜 버렸는지. 품목까지</em></label><textarea class="lgin mi" data-k="lf162" rows="2" aria-label="폐기"></textarea></div><div class="mrow2"><label class="mlab"><span>서비스 나간 것</span><em>누구에게 무엇을</em></label><input type="text" class="lgin mi" data-k="lf163" aria-label="서비스 나간 것"></div><div class="mrow2"><label class="mlab"><span>내일 예약 건</span><em>홀케이크 · 조각 · 별조각</em></label><textarea class="lgin mi" data-k="lf164" rows="2" aria-label="내일 예약 건"></textarea></div></div></div><div class="msec"><div class="msh">이슈</div><div class="mrows"><div class="mrow2"><label class="mlab"><span>컴플레인</span><em>내용과 어떻게 처리했는지</em></label><textarea class="lgin mi" data-k="lf170" rows="2" aria-label="컴플레인"></textarea></div><div class="mrow2"><label class="mlab"><span>손님 · 직원 이슈</span></label><textarea class="lgin mi" data-k="lf171" rows="2" aria-label="손님 · 직원 이슈"></textarea></div><div class="mrow2"><label class="mlab"><span>관공서 · 사장님 찾는 방문</span><em>누가 왔다 갔는지</em></label><input type="text" class="lgin mi" data-k="lf172" aria-label="관공서 · 사장님 찾는 방문"></div></div></div><div class="msec"><div class="msh">전달</div><div class="mrows"><div class="mrow2"><label class="mlab"><span>인계사항</span><em>다음 근무자가 알아야 할 것</em></label><textarea class="lgin mi" data-k="lf180" rows="2" aria-label="인계사항"></textarea></div><div class="mrow2"><label class="mlab"><span>직원들에게 알릴 것</span></label><textarea class="lgin mi" data-k="lf181" rows="2" aria-label="직원들에게 알릴 것"></textarea></div><div class="mrow2"><label class="mlab"><span>사장님께 보고할 것</span></label><textarea class="lgin mi" data-k="lf182" rows="2" aria-label="사장님께 보고할 것"></textarea></div><div class="mrow2"><label class="mlab"><span>오늘 매출</span><em>최종 금액</em></label><input type="text" class="lgin mi" data-k="lf183" aria-label="오늘 매출"></div><div class="mrow2"><label class="mlab"><span>배달 건수</span><em>배민 · 쿠팡잇츠 각각 몇 건</em></label><input type="text" class="lgin mi" data-k="lf184" aria-label="배달 건수"></div></div></div><div class="msec"><div class="msh">그 외</div><div class="mrows"><div class="mrow2"><label class="mlab"><span>그 외 메모</span><em>위 항목에 안 들어가는 것</em></label><textarea class="lgin mi" data-k="lf190" rows="2" aria-label="그 외 메모"></textarea></div></div></div></div>
       <div class="lglist">
         <div class="lglh">저장된 일지<span id="lgCount"></span></div>
         <div id="lgSaved"></div>
@@ -2510,7 +2504,7 @@ input,select,textarea{border-radius:var(--r3)!important}
     "2028-01-01":"신정","2028-01-26":"설날 연휴","2028-01-27":"설날","2028-01-28":"설날 연휴","2028-03-01":"삼일절","2028-05-02":"부처님오신날","2028-05-05":"어린이날","2028-06-06":"현충일","2028-08-15":"광복절","2028-10-02":"추석 연휴","2028-10-03":"추석 · 개천절","2028-10-04":"추석 연휴","2028-10-05":"대체공휴일","2028-10-09":"한글날","2028-12-25":"성탄절",
     "2029-01-01":"신정","2029-02-12":"설날 연휴","2029-02-13":"설날","2029-02-14":"설날 연휴","2029-03-01":"삼일절","2029-05-05":"어린이날","2029-05-07":"대체공휴일","2029-05-20":"부처님오신날","2029-05-21":"대체공휴일","2029-06-06":"현충일","2029-08-15":"광복절","2029-09-21":"추석 연휴","2029-09-22":"추석","2029-09-23":"추석 연휴","2029-09-24":"대체공휴일","2029-10-03":"개천절","2029-10-09":"한글날","2029-12-25":"성탄절"
   };
-  // 발주 규칙 — 앞으로 10일 안에 빨간날이 있으면 발주 체크 마감(빨간날 3일 전)을 보여준다
+  // 발주 규칙 — 앞으로 10일 안에 빨간날(연휴)이 있으면 「3~4일 전 체크 완료」 기한을 보여준다
   (function () {
     var el = document.getElementById("orderRuleSoon");
     if (!el) return;
@@ -2518,21 +2512,28 @@ input,select,textarea{border-radius:var(--r3)!important}
     function ymd(d) { return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
     function md(d) { return (d.getMonth() + 1) + "/" + d.getDate(); }
     var WD = ["일", "월", "화", "수", "목", "금", "토"];
+    function wd(d) { return "(" + WD[d.getDay()] + ")"; }
     var now = new Date(); now.setHours(0, 0, 0, 0);
-    var found = null;
+    var start = null;
     for (var i = 0; i <= 10; i++) {
       var d = new Date(now); d.setDate(now.getDate() + i);
-      var name = HOL[ymd(d)];
-      if (name) { found = { d: d, name: name, i: i }; break; }
+      if (HOL[ymd(d)]) { start = d; break; }
     }
-    if (!found) return;
-    var due = new Date(found.d); due.setDate(found.d.getDate() - 3);
-    var left = Math.round((due - now) / 86400000);
-    var when = left > 0 ? "발주 체크 마감 " + md(due) + "(" + WD[due.getDay()] + ") · " + left + "일 남음"
-             : left === 0 ? "오늘이 발주 체크 마감일입니다"
-             : "발주 체크 마감이 지났습니다 · 아직이면 지금 바로";
-    el.innerHTML = "🎌 " + md(found.d) + "(" + WD[found.d.getDay()] + ") " + found.name +
-      (found.i === 0 ? " — 오늘" : " — " + found.i + "일 뒤") + " → <b>" + when + "</b>";
+    if (!start) return;
+    var end = new Date(start);
+    while (true) { var nx = new Date(end); nx.setDate(end.getDate() + 1); if (!HOL[ymd(nx)]) break; end = nx; }
+    var name = HOL[ymd(start)].replace(/ 연휴$/, "");
+    var span = (end > start) ? md(start) + wd(start) + "~" + md(end) + wd(end) + " " + name + " 연휴"
+                             : md(start) + wd(start) + " " + name;
+    var d4 = new Date(start); d4.setDate(start.getDate() - 4);
+    var d3 = new Date(start); d3.setDate(start.getDate() - 3);
+    var left = Math.round((d3 - now) / 86400000);
+    var when;
+    if (left > 1) when = "3~4일 전인 <b>" + md(d4) + wd(d4) + "~" + md(d3) + wd(d3) + "까지 체크 완료</b> (" + left + "일 남음)";
+    else if (left === 1) when = "<b>내일 " + md(d3) + wd(d3) + "까지 체크 완료</b>";
+    else if (left === 0) when = "<b>오늘 " + md(d3) + wd(d3) + "까지 체크 완료</b>";
+    else when = "3~4일 전 체크 기한(" + md(d4) + "~" + md(d3) + ")이 지났습니다 · <b>아직이면 지금 바로</b>";
+    el.innerHTML = "🎌 " + span + " → " + when;
     el.hidden = false;
     if (left <= 0) el.style.color = "var(--r1)";
   })();
@@ -5008,7 +5009,7 @@ input,select,textarea{border-radius:var(--r3)!important}
         text.push(lines.join(NL));
       });
 
-      if (!any) html += '<div class="rpempty">왼쪽에 쓰기 시작하면' +
+      if (!any) html += '<div class="rpempty">오른쪽에 쓰기 시작하면' +
                         '<br>여기에 정리됩니다</div>';
       if (repEl) repEl.innerHTML = html;
       return any ? text.join(NL) : "";
@@ -5323,7 +5324,7 @@ input,select,textarea{border-radius:var(--r3)!important}
         text.push(lines.join(NL));
       });
 
-      if (!any) html += '<div class="rpempty">왼쪽에 쓰기 시작하면' +
+      if (!any) html += '<div class="rpempty">오른쪽에 쓰기 시작하면' +
                         '<br>여기에 보고서로 정리됩니다</div>';
       if (repEl) repEl.innerHTML = html;
       return any ? text.join(NL) : "";
