@@ -2281,7 +2281,7 @@ input,select,textarea{border-radius:var(--r3)!important}
     mon.setDate(mon.getDate() - ((mon.getDay() + 6) % 7));
     return Math.floor((mon - EPOCH) / 604800000);
   }
-  function monthPlan(Y, M) {
+  function monthPlan(Y, M, shift) {
     var first = new Date(Y, M - 1, 1);
     var ndays = new Date(Y, M, 0).getDate();
     var days = [];
@@ -2290,7 +2290,7 @@ input,select,textarea{border-radius:var(--r3)!important}
       var wd = (d.getDay() + 6) % 7;                  // 0=월 … 6=일
       var cell = { day: dn, wd: wd, hol: HOLI[M + "-" + dn] || null };
       if (wd === 6) { cell.closed = true; cell.shifts = []; cell.off = []; days.push(cell); continue; }
-      var wi = weekIndex(d);
+      var wi = weekIndex(d) + (shift || 0);   // shift: 로테이션 안 바꾸기 (0~4)
       var plan = OFFROT[((wi % 5) + 5) % 5];
       var iso = wd + 1;
       var shared = iso <= 5 && iso === plan.s;
@@ -2331,9 +2331,9 @@ input,select,textarea{border-radius:var(--r3)!important}
     });
   }
   // 로테이션 초안 — 필요할 때 그때 만든다
-  window.__CS_DRAFT = function (ym) {
+  window.__CS_DRAFT = function (ym, shift) {
     var p = String(ym).split("-");
-    var mp = monthPlan(+p[0], +p[1]);
+    var mp = monthPlan(+p[0], +p[1], shift || 0);
     var dr = {};
     mp.days.forEach(function (c) {
       if (c.closed) return;
@@ -2344,6 +2344,33 @@ input,select,textarea{border-radius:var(--r3)!important}
     });
     return dr;
   };
+
+  // 매니저가 저장한 근무표가 있으면 로테이션 대신 그걸 쓴다 (퇴근 칸 · 오늘 근무 띠)
+  (function () {
+    var T = {"정항아":{"오픈":["08:30","17:30"],"마감":["10:00","19:30"]},"박혜빈":{"오픈":["08:30","18:00"],"마감":["10:00","19:30"]},"이해선":{"미들":["09:30","16:30"],"전일":["08:30","19:30"]},"사장님":{"종일":["08:30","19:30"]}};
+    var CL = { "오픈": "open", "마감": "close", "미들": "mid", "전일": "full" };
+    var AWAY = { "휴무": 1, "출장": 1, "공부": 1, "출강": 1, "서울출장": 1 };
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (k.indexOf("cafesui.sched.") !== 0) continue;
+        var ym = k.slice(14), data = JSON.parse(localStorage.getItem(k) || "{}");
+        Object.keys(data).forEach(function (md) {
+          var day = md.split("-")[1];
+          var date = ym + "-" + String(day).padStart(2, "0");
+          if (date < "2026-10-01") return;
+          var list = [];
+          Object.keys(data[md]).forEach(function (w) {
+            var r = data[md][w];
+            if (!r || AWAY[r]) return;
+            var t = (T[w] || {})[r] || [null, null];
+            list.push({ w: w, r: r, c: CL[r] || "own", s: t[0], e: t[1] });
+          });
+          if (list.length) window.__CS_SCHED[date] = list; else delete window.__CS_SCHED[date];
+        });
+      }
+    } catch (e) {}
+  })();
 
   function readCal(m) {
     var out = "";
@@ -2435,18 +2462,17 @@ input,select,textarea{border-radius:var(--r3)!important}
       '<button type="button" class="pcopy">근무표 복사</button>' +
       '<button type="button" class="pclear">' + (isPlan ? "지우기" : "고친 것 되돌리기") +
       '</button><span class="pmsg"></span></div><div class="pcheck"></div>';
-    var editwrap = isPlan ? "" :
-      '<div class="editwrap" id="ew' + key + '" hidden>' + bar +
+    var editwrap =
+      '<div class="editwrap' + (isPlan ? " planmode" : "") + '" id="ew' + key + '" hidden>' + bar +
       '<div class="cal">' + WDHEAD + editCal(m) + "</div></div>";
     return '<div class="mpanel' + (isPlan ? " plan" : "") + '" id="' + id + '" hidden' +
       ' data-plan="' + key + '">' +
       '<div class="msub">' + m.year + "년 " + m.month + "월 · 영업 " + biz +
       "일 · 정기휴무 " + rest + "일" + note +
-      (isPlan ? "" : '<button type="button" class="editbtn" data-k="' + key +
-                     '" aria-pressed="false">근무표 고치기</button>') + "</div>" +
-      reqbar + (isPlan ? bar : "") +
-      '<div class="cal" id="rc' + key + '">' + WDHEAD +
-      (isPlan ? editCal(m) : readCal(m)) + "</div>" + editwrap + "</div>";
+      '<button type="button" class="editbtn" data-k="' + key +
+      '" aria-pressed="false">' + (isPlan ? "근무표 짜기" : "근무표 수정하기") + '</button></div>' +
+      reqbar +
+      '<div class="cal" id="rc' + key + '">' + WDHEAD + readCal(m) + "</div>" + editwrap + "</div>";
   }
 
   // 해마다 바인더 한 권. 누를 때 그 해만 그린다.
@@ -3161,10 +3187,19 @@ input,select,textarea{border-radius:var(--r3)!important}
       var read = document.getElementById("rc" + ym);
       if (!read) return;
       var saved = load(ym);
+      var isPlanPanel = !!read.closest(".mpanel.plan");
       read.querySelectorAll(".cell:not(.closed)").forEach(function (c) {
         // 읽기 달력은 "10/1", 고치기 판은 "10-1" 로 날짜를 쓴다
         var day = saved[String(c.dataset.d).replace("/", "-")];
-        if (!day) return;
+        if (!day) {
+          // 짜는 달은 저장한 날만 보여준다 (로테이션 예상은 안 보여줌)
+          if (isPlanPanel) {
+            var h0 = c.querySelector(".hol");
+            c.innerHTML = '<div class="dnum">' + c.querySelector(".dnum").textContent + "</div>" + (h0 ? h0.outerHTML : "") +
+                          '<div class="offrow"><span class="offwho" style="color:var(--rule2)">아직 안 짬</span></div>';
+          }
+          return;
+        }
         var offs = [], rows = [];
         NAMES.forEach(function (n) {
           var r = day[n];
@@ -3279,6 +3314,7 @@ input,select,textarea{border-radius:var(--r3)!important}
       function commit() {
         save(); mark(false);
         if (msg) msg.textContent = "저장했습니다 · 달력에 반영됐습니다";
+        if (wrap.__csClose) wrap.__csClose();
       }
       wrap.__csCommit = commit;
       (window.__CS_SAVERS = window.__CS_SAVERS || []).push(function () { if (dirty) commit(); });
@@ -3288,10 +3324,14 @@ input,select,textarea{border-radius:var(--r3)!important}
         });
       });
       if (saveBtn) saveBtn.addEventListener("click", commit);
+      // 로테이션대로 채우기 — 다시 누를 때마다 다른 안(1~5안)으로 바뀐다
+      var variant = -1;
       var fill = wrap.querySelector(".pfill");
       if (fill) fill.addEventListener("click", function () {
-        apply(draftOf(ym)); mark(true);
-        if (msg) msg.textContent = "로테이션대로 채웠습니다 · 휴무 신청 보고 고친 뒤 저장을 누르세요";
+        variant = (variant + 1) % 5;
+        apply(window.__CS_DRAFT ? window.__CS_DRAFT(ym, variant) : {}); mark(true);
+        fill.textContent = "로테이션 " + (variant + 1) + "안 · 다시 누르면 다른 안";
+        if (msg) msg.textContent = "로테이션 " + (variant + 1) + "안으로 채웠습니다 (5가지 중) · 휴무 신청 보고 고친 뒤 저장을 누르세요";
       });
       var clear = wrap.querySelector(".pclear");
       if (clear) clear.addEventListener("click", function () {
@@ -3331,27 +3371,29 @@ input,select,textarea{border-radius:var(--r3)!important}
     function bindSched(root) {
       root.querySelectorAll(".mpanel").forEach(function (panel) {
         var ym = panel.dataset.plan;
-        if (panel.classList.contains("plan")) {
-          panel.classList.add("planmode");
-          bind(ym, panel, panel);
-        } else {
-          var wrap = document.getElementById("ew" + ym);
-          if (wrap) bind(ym, wrap, panel);
-          repaint(ym);
-        }
+        var wrap = document.getElementById("ew" + ym);
+        if (wrap) bind(ym, wrap, panel);
+        repaint(ym);
       });
       root.querySelectorAll(".editbtn").forEach(function (b) {
-        b.addEventListener("click", function () {
-          var ym = b.dataset.k;
-          var wrap = document.getElementById("ew" + ym);
-          var read = document.getElementById("rc" + ym);
-          var on = wrap.hidden;
-          if (!on && wrap.__csCommit && (window.__CS_SCHED_DIRTY || {})[ym]) wrap.__csCommit();
+        var ym = b.dataset.k;
+        var wrap = document.getElementById("ew" + ym);
+        var read = document.getElementById("rc" + ym);
+        var isPlan = !!b.closest(".mpanel.plan");
+        function setOpen(on) {
           wrap.hidden = !on;
           if (read) read.hidden = on;
           b.setAttribute("aria-pressed", String(on));
-          b.textContent = on ? "다 고쳤어요" : "근무표 고치기";
+          b.textContent = on ? "다 했어요 (저장하고 닫기)" : (isPlan ? "근무표 짜기" : "근무표 수정하기");
+        }
+        wrap.__csClose = function () { setOpen(false); };
+        b.addEventListener("click", function () {
+          var on = wrap.hidden;
+          if (!on && wrap.__csCommit && (window.__CS_SCHED_DIRTY || {})[ym]) wrap.__csCommit();
+          setOpen(on);
         });
+        // 짜는 달인데 아직 아무것도 저장 안 했으면 바로 편집 화면으로
+        if (isPlan && !Object.keys(load(ym)).length) setOpen(true);
       });
     }
     window.__CS_BINDSCHED = bindSched;
