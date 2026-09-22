@@ -352,7 +352,18 @@ input.wp1,input.wp2,input.wp3,input.wp4{font-weight:500}
   border:1px solid var(--rule2);border-radius:2px;width:100%}
 .wsrow.chk .wsin{width:16px}
 .wsin:focus-visible{outline:2px solid var(--open);outline-offset:1px}
-.wsdtabs{display:flex;gap:4px;margin-bottom:9px}
+.wsdtabs{display:flex;gap:4px;margin-bottom:9px;align-items:center;flex-wrap:wrap}
+.wsedit{margin-left:auto;font:inherit;font-size:12.5px;font-weight:700;padding:7px 14px;border-radius:999px;
+  border:1px solid var(--rule2);background:var(--surface);color:var(--ink);cursor:pointer}
+.wsedit.on{background:var(--open);color:#FFFCF6;border-color:var(--open)}
+.wsedithint{font-size:11px;color:var(--muted);flex-basis:100%;text-align:right}
+.wsday.locked .wsin{background:transparent;border-color:transparent;pointer-events:none;box-shadow:none}
+.wsday.locked .wsin::placeholder{color:transparent}
+.wsday.locked .wsaddbar,.wsday.locked .wsdel{display:none}
+.wsdel{width:34px;text-align:center}
+.wsx{font:inherit;font-size:12px;line-height:1;padding:5px 7px;border:1px solid var(--rule2);border-radius:4px;
+  background:var(--surface);color:var(--muted);cursor:pointer}
+.wsx:hover{color:var(--r1);border-color:var(--r1)}
 .wsdtab{font:inherit;font-size:12.5px;font-weight:700;padding:6px 14px;cursor:pointer;
   background:var(--surface);color:var(--ink2);border:1px solid var(--rule2);
   border-radius:2px}
@@ -2190,7 +2201,7 @@ input,select,textarea{border-radius:var(--r3)!important}
   <div class="wsrefbox" id="wsRef"></div>
 
   <h3 class="subhead">일자별 일정</h3>
-  <nav class="wsdtabs"><button type="button" class="wsdtab" data-d="wsd1" aria-selected="true">1일차</button><button type="button" class="wsdtab" data-d="wsd2" aria-selected="false">2일차</button><button type="button" class="wsdtab" data-d="wsd3" aria-selected="false">3일차</button><button type="button" class="wsdtab" data-d="wsd4" aria-selected="false">4일차</button></nav>
+  <nav class="wsdtabs"><button type="button" class="wsdtab" data-d="wsd1" aria-selected="true">1일차</button><button type="button" class="wsdtab" data-d="wsd2" aria-selected="false">2일차</button><button type="button" class="wsdtab" data-d="wsd3" aria-selected="false">3일차</button><button type="button" class="wsdtab" data-d="wsd4" aria-selected="false">4일차</button><button type="button" class="wsedit" id="wsEdit" aria-pressed="false">✎ 일정 수정하기</button><span class="wsedithint" id="wsEditHint">잘못 눌러 바뀌는 걸 막으려고 잠겨 있어요 · 고칠 땐 「일정 수정하기」</span></nav>
   <div class="rpwrap">
     <div class="rpmain"><div class="wsday" id="wsd1" data-day="1"><label class="wsdate">1일차 날짜<input type="date" class="wsin wsdin" data-k="d1date"></label><div class="ztable-wrap"><table class="wstable"><thead><tr><th class="c2">시간</th><th>일정</th><th>해야 할 일 + 메모</th></tr></thead><tbody><tr><td><input type="text" class="wsin tin" data-k="d1t1" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d1p1" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d1m1" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d1t2" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d1p2" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d1m2" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d1t3" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d1p3" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d1m3" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d1t4" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d1p4" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d1m4" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d1t5" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d1p5" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d1m5" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d1t6" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d1p6" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d1m6" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d1t7" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d1p7" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d1m7" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d1t8" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d1p8" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d1m8" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d1t9" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d1p9" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d1m9" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d1t10" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d1p10" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d1m10" placeholder="해야 할 일 · 메모"></td></tr></tbody></table></div><div class="wsaddbar"><button type="button" class="wsadd" data-day="1">＋ 줄 추가</button><span class="wsaddnote">일정이 더 있으면 눌러서 늘리세요</span></div></div><div class="wsday" id="wsd2" hidden data-day="2"><label class="wsdate">2일차 날짜<input type="date" class="wsin wsdin" data-k="d2date"></label><div class="ztable-wrap"><table class="wstable"><thead><tr><th class="c2">시간</th><th>일정</th><th>해야 할 일 + 메모</th></tr></thead><tbody><tr><td><input type="text" class="wsin tin" data-k="d2t1" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d2p1" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d2m1" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d2t2" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d2p2" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d2m2" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d2t3" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d2p3" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d2m3" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d2t4" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d2p4" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d2m4" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d2t5" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d2p5" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d2m5" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d2t6" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d2p6" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d2m6" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d2t7" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d2p7" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d2m7" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d2t8" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d2p8" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d2m8" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d2t9" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d2p9" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d2m9" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d2t10" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d2p10" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d2m10" placeholder="해야 할 일 · 메모"></td></tr></tbody></table></div><div class="wsaddbar"><button type="button" class="wsadd" data-day="2">＋ 줄 추가</button><span class="wsaddnote">일정이 더 있으면 눌러서 늘리세요</span></div></div><div class="wsday" id="wsd3" hidden data-day="3"><label class="wsdate">3일차 날짜<input type="date" class="wsin wsdin" data-k="d3date"></label><div class="ztable-wrap"><table class="wstable"><thead><tr><th class="c2">시간</th><th>일정</th><th>해야 할 일 + 메모</th></tr></thead><tbody><tr><td><input type="text" class="wsin tin" data-k="d3t1" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d3p1" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d3m1" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d3t2" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d3p2" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d3m2" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d3t3" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d3p3" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d3m3" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d3t4" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d3p4" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d3m4" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d3t5" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d3p5" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d3m5" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d3t6" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d3p6" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d3m6" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d3t7" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d3p7" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d3m7" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d3t8" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d3p8" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d3m8" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d3t9" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d3p9" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d3m9" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d3t10" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d3p10" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d3m10" placeholder="해야 할 일 · 메모"></td></tr></tbody></table></div><div class="wsaddbar"><button type="button" class="wsadd" data-day="3">＋ 줄 추가</button><span class="wsaddnote">일정이 더 있으면 눌러서 늘리세요</span></div></div><div class="wsday" id="wsd4" hidden data-day="4"><label class="wsdate">4일차 날짜<input type="date" class="wsin wsdin" data-k="d4date"></label><div class="ztable-wrap"><table class="wstable"><thead><tr><th class="c2">시간</th><th>일정</th><th>해야 할 일 + 메모</th></tr></thead><tbody><tr><td><input type="text" class="wsin tin" data-k="d4t1" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d4p1" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d4m1" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d4t2" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d4p2" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d4m2" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d4t3" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d4p3" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d4m3" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d4t4" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d4p4" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d4m4" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d4t5" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d4p5" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d4m5" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d4t6" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d4p6" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d4m6" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d4t7" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d4p7" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d4m7" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d4t8" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d4p8" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d4m8" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d4t9" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d4p9" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d4m9" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d4t10" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d4p10" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d4m10" placeholder="해야 할 일 · 메모"></td></tr></tbody></table></div><div class="wsaddbar"><button type="button" class="wsadd" data-day="4">＋ 줄 추가</button><span class="wsaddnote">일정이 더 있으면 눌러서 늘리세요</span></div></div></div>
     <aside class="rppane">
@@ -2333,6 +2344,7 @@ input,select,textarea{border-radius:var(--r3)!important}
       <p>매년 11월, 다 같이 떠나서 배워 옵니다. 그 해 준비를 여기서 합니다.</p>
       <ul><li>위에 <b>지난 워크샵 카드</b>(도쿄 · 후쿠오카)가 있습니다. 누르면 그 해 기록이 열립니다</li>
       <li>올해 칸: 정하고 갈 것 · 역할 나누기 · 미리 준비할 것 · 일차별 <b>타임테이블</b> · 경비표(자동 합계) · 회의 기록 · 다녀와서 피드백</li>
+      <li>일자별 일정표는 잘못 눌러 바뀌지 않게 <b>잠겨</b> 있습니다. 고칠 땐 「✎ 일정 수정하기」를 누르고, 줄 끝 ✕로 그 줄을 지우고, 다 고쳤으면 「✓ 다 고쳤어요」로 닫으세요</li>
       <li>「워크샵 백업」으로 그 해 것만 따로 복사해 둘 수 있습니다</li></ul></div></div>
     <div class="tstep alt"><div class="tno alt">·</div><div class="tbody"><h4>고객 응대</h4>
       <ul><li>손님 앞에서 쓰는 말을 상황별로 모아 두었습니다. 마음가짐 · 매장 응대 · 맛 · 이물질 · 서비스 · 전화</li>
@@ -4113,6 +4125,54 @@ input,select,textarea{border-radius:var(--r3)!important}
         if (f) f.focus();
       });
     });
+    // 일정 수정하기 — 일자별 일정표는 평소엔 잠가 두고, 버튼을 눌러야 고칠 수 있다 (줄 지우기도 그때만)
+    var editBtn = document.getElementById("wsEdit");
+    var editHint = document.getElementById("wsEditHint");
+    function ensureDel(tr) {
+      if (tr.querySelector(".wsdel")) return;
+      var td = document.createElement("td");
+      td.className = "wsdel";
+      td.innerHTML = '<button type="button" class="wsx" title="이 줄 지우기" aria-label="이 줄 지우기">✕</button>';
+      td.querySelector(".wsx").addEventListener("click", function () { delRow(tr); });
+      tr.appendChild(td);
+    }
+    function delRow(tr) {
+      var body = tr.parentElement;
+      var rows = Array.prototype.slice.call(body.querySelectorAll("tr"));
+      var i = rows.indexOf(tr);
+      if (i < 0) return;
+      var cur = tr.querySelectorAll("input");
+      var has = Array.prototype.some.call(cur, function (el) { return el.value.trim(); });
+      if (has && !window.confirm("이 줄을 지울까요? 아래 줄들이 한 칸씩 올라옵니다.")) return;
+      for (var j = i; j < rows.length; j++) {
+        var a = rows[j].querySelectorAll("input");
+        var b = rows[j + 1] ? rows[j + 1].querySelectorAll("input") : null;
+        for (var c = 0; c < a.length; c++) a[c].value = b ? b[c].value : "";
+      }
+      save(); total(); paintMtg(); timetable();
+    }
+    function setEdit(on) {
+      document.querySelectorAll(".wsday").forEach(function (day) {
+        day.classList.toggle("locked", !on);
+        day.querySelectorAll("input").forEach(function (el) { el.readOnly = !on; });
+        var th = day.querySelector("thead tr");
+        if (th && !th.querySelector(".wsdel")) { var h = document.createElement("th"); h.className = "wsdel"; th.appendChild(h); }
+        day.querySelectorAll("tbody tr").forEach(ensureDel);
+      });
+      if (editBtn) {
+        editBtn.textContent = on ? "✓ 다 고쳤어요 (닫기)" : "✎ 일정 수정하기";
+        editBtn.classList.toggle("on", on);
+        editBtn.setAttribute("aria-pressed", String(on));
+      }
+      if (editHint) editHint.textContent = on ? "적는 즉시 저장됩니다 · 줄 끝 ✕로 그 줄을 지웁니다 · 다 고쳤으면 닫아 주세요"
+                                            : "잘못 눌러 바뀌는 걸 막으려고 잠겨 있어요 · 고칠 땐 「일정 수정하기」";
+      if (on) {
+        var day0 = document.querySelector(".wsday:not([hidden]) tbody input");
+        if (day0) day0.focus();
+      }
+    }
+    window.__CS_WS_SETEDIT = setEdit;
+    if (editBtn) editBtn.addEventListener("click", function () { setEdit(!editBtn.classList.contains("on")); });
     // 저장해둔 줄이 기본 줄보다 많으면 그만큼 늘려둔다
     function grow(data) {
       for (var d = 1; d <= 4; d++) {
@@ -4268,6 +4328,7 @@ input,select,textarea{border-radius:var(--r3)!important}
     var now = new Date();
     yearEl.value = now.getFullYear();
     load();
+    setEdit(false);   // 일자별 일정표는 잠근 채로 시작
     fillNov();
     yearEl.addEventListener("change", function () { load(); fillNov(); });
 
@@ -4375,7 +4436,7 @@ input,select,textarea{border-radius:var(--r3)!important}
     document.querySelectorAll(".wpcard").forEach(function (c) {
       c.addEventListener("click", function () {
         yearEl.value = c.dataset.y;
-        load(); fillNov(); timetable();
+        load(); fillNov(); timetable(); setEdit(false);
         document.querySelectorAll(".wpcard").forEach(function (o) {
           o.setAttribute("aria-pressed", String(o === c));
         });
