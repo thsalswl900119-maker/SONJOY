@@ -183,6 +183,21 @@ section{margin-top:44px}
 .daynav.today{font-size:11.5px;padding:5px 11px}
 
 /* 하루 기준 띠 */
+.hcbox{border:1px solid var(--rule2);border-left:4px solid var(--mid);border-radius:var(--r);background:var(--surface);padding:11px 14px 12px;margin-bottom:14px}
+.hch{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.hch b{font-family:var(--serif);font-size:15px}
+.hch span{font-size:11.5px;color:var(--muted);line-height:1.5}
+.hcrows{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:8px}
+.hcrow{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;border:1px solid var(--rule);border-radius:3px;background:var(--bg);padding:7px 10px}
+.hcrow .nm{font-weight:700;font-size:13px;white-space:nowrap}
+.hcrow .dinp{width:auto;min-width:130px;font-size:12px}
+.hcrow .dd{font-size:11.5px;font-weight:700;text-align:right;white-space:nowrap}
+.hcrow .dd small{display:block;font-weight:400;color:var(--muted);font-family:var(--mono);font-size:10.5px}
+.hcrow .dd.ok{color:var(--mid)}
+.hcrow .dd.warn{color:var(--open)}
+.hcrow .dd.bad{color:var(--off)}
+.hcrow.bad{border-color:var(--off);background:var(--offbg)}
+.hcrow.warn{border-color:var(--open);background:var(--openbg)}
 .daybanner{border:2px solid var(--open);border-radius:var(--r);background:var(--openbg);
   padding:14px 18px 15px;margin-bottom:14px}
 .daybanner b{display:block;font-family:var(--serif);font-size:21px;color:var(--open);
@@ -1714,6 +1729,10 @@ input,select,textarea{border-radius:var(--r3)!important}
     <span>매일 같은 모양으로 나가야 합니다. 만들기 전에 기준 사진과 한 번 견주고,
       과일은 정해진 높이까지. 다르게 나간 날은 마감 일지에 적어주세요.</span>
     <em>전 직원이 지켜 주세요. 꼭 기억하고 행동해 주세요.</em>
+  </div>
+  <div class="hcbox" id="hcBox">
+    <div class="hch"><b>🩺 보건증</b><span>1년마다 갱신 · 발급일만 넣으면 만료일과 남은 날이 자동으로 계산됩니다 · 고정 항목이라 날이 바뀌어도 지워지지 않습니다</span></div>
+    <div class="hcrows" id="hcRows"></div>
   </div>
   <div class="whobar">
     <span class="wblab">누가 체크하나요?</span>
@@ -5808,6 +5827,49 @@ input,select,textarea{border-radius:var(--r3)!important}
     document.addEventListener("click", function (e) {
       if (e.target.closest && e.target.closest(".box, .mk, .chip, .mtgck, input[type=checkbox]")) bump();
     }, true);
+  })();
+
+  // 보건증 — 발급일 넣으면 만료일(1년)과 남은 날 계산. 기기에 고정 저장 (cafesui.health)
+  (function () {
+    var box = document.getElementById("hcRows");
+    if (!box) return;
+    var NAMES = ["정항아", "박혜빈", "이해선", "사장님"];
+    var COL = { "정항아": "wp1", "박혜빈": "wp2", "이해선": "wp3", "사장님": "wp4" };
+    var KEY = "cafesui.health";
+    function load() { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { return {}; } }
+    function save(o) { try { localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) {} }
+    function pad(n) { return String(n).padStart(2, "0"); }
+    function ymd(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
+    function expOf(issued) {
+      var d = new Date(issued + "T00:00:00"); if (isNaN(d)) return null;
+      d.setFullYear(d.getFullYear() + 1); d.setDate(d.getDate() - 1); return d;
+    }
+    function render() {
+      var st = load(), today = new Date(); today.setHours(0, 0, 0, 0);
+      box.innerHTML = "";
+      NAMES.forEach(function (n) {
+        var row = document.createElement("div"); row.className = "hcrow";
+        var issued = st[n] || "";
+        var exp = issued ? expOf(issued) : null;
+        var dd = "", cls = "";
+        if (exp) {
+          var left = Math.round((exp - today) / 86400000);
+          if (left < 0) { dd = "만료 " + (-left) + "일 지남"; cls = "bad"; }
+          else if (left <= 30) { dd = "D-" + left + " · 갱신하세요"; cls = "warn"; }
+          else { dd = "D-" + left; cls = "ok"; }
+          dd += "<small>만료 " + ymd(exp) + "</small>";
+        } else { dd = '<span style="color:var(--muted);font-weight:400">발급일을 넣어주세요</span>'; }
+        if (cls) row.classList.add(cls);
+        row.innerHTML = '<span class="nm ' + COL[n] + '">' + n + "</span>" +
+          '<input type="date" class="dinp" value="' + issued + '" aria-label="' + n + ' 보건증 발급일">' +
+          '<span class="dd ' + cls + '">' + dd + "</span>";
+        row.querySelector("input").addEventListener("change", function (e) {
+          var o = load(); if (e.target.value) o[n] = e.target.value; else delete o[n]; save(o); render();
+        });
+        box.appendChild(row);
+      });
+    }
+    render();
   })();
 </script>
 </body></html>
