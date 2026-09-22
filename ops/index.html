@@ -1642,7 +1642,8 @@ input,select,textarea{border-radius:var(--r3)!important}
 </div>
 
 <div class="savebar" id="saveBar">
-  <span class="sv">💾 적는 즉시 이 기기에 저장 <i id="saveState">저장됨</i></span>
+  <button type="button" class="saveall" id="saveAll">💾 저장</button>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i></span>
   <span class="sep"></span>
   <span class="svlab">백업</span>
   <span id="saveBtns"></span>
@@ -2099,6 +2100,7 @@ input,select,textarea{border-radius:var(--r3)!important}
     var LOCK_MS = 10 * 60 * 1000;
     try { if (!sessionStorage.getItem("cafesui.unlocked")) localStorage.removeItem("cafesui.me"); } catch (e) {}
     function lock() {
+      try { if (window.__CS_FLUSH) window.__CS_FLUSH(); } catch (e) {}   // 잠그기 전에 안 저장된 것 저장
       try { localStorage.removeItem("cafesui.me"); sessionStorage.removeItem("cafesui.unlocked"); } catch (e) {}
       location.reload();
     }
@@ -3136,6 +3138,7 @@ input,select,textarea{border-radius:var(--r3)!important}
         if (msg) msg.textContent = "저장했습니다 · 달력에 반영됐습니다";
       }
       wrap.__csCommit = commit;
+      (window.__CS_SAVERS = window.__CS_SAVERS || []).push(function () { if (dirty) commit(); });
       slots.forEach(function (el) {
         el.addEventListener("change", function () {
           paint(el); mark(true); check(panel, wrap);
@@ -5048,6 +5051,11 @@ input,select,textarea{border-radius:var(--r3)!important}
 .savebar{position:sticky;top:0;z-index:30;display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;
   background:var(--raise);border:1px solid var(--rule2);border-radius:3px;padding:8px 12px;margin-bottom:12px;
   box-shadow:0 4px 14px -10px rgba(42,37,31,.45)}
+.saveall{font:inherit;font-family:var(--serif);font-size:15px;font-weight:700;padding:8px 22px;cursor:pointer;
+  background:var(--mid);color:#FFFCF6;border:1px solid var(--mid);border-radius:3px;letter-spacing:.04em}
+.saveall:hover{filter:brightness(1.08)}
+.saveall.hit{background:var(--open);border-color:var(--open)}
+.saveall.dirty{background:var(--off);border-color:var(--off)}
 .savebar .sv{font-size:12px;font-weight:700;color:var(--ink2)}
 .savebar .sv i{font-style:normal;font-family:var(--mono);font-size:11.5px;color:var(--mid);margin-left:4px}
 .savebar .sv i.busy{color:var(--open)}
@@ -5257,6 +5265,7 @@ input,select,textarea{border-radius:var(--r3)!important}
       renderList(); renderWeek();
     }
     function queueSave() { statusEl.textContent = "입력 중…"; renderReport(); clearTimeout(saveT); saveT = setTimeout(saveNow, 900); }
+    (window.__CS_SAVERS = window.__CS_SAVERS || []).push(function () { if (saveT) { clearTimeout(saveT); saveT = null; saveNow(); } });
 
     // 날짜 열기 — 없으면 가장 최근 날의 재고 숫자를 깔고, 주문 안 된 발주 줄을 넘겨받는다
     function open(d) {
@@ -5472,6 +5481,23 @@ input,select,textarea{border-radius:var(--r3)!important}
     if (paste) row.appendChild(paste);
     // 저장 표시 — 어디든 적으면 잠깐 "저장 중" 뒤에 "저장됨 시각"
     var st = document.getElementById("saveState"), t = null;
+    var saveAll = document.getElementById("saveAll");
+    function flushAll() {
+      (window.__CS_SAVERS || []).forEach(function (f) { try { f(); } catch (e) {} });
+      // 포커스가 있는 칸의 입력도 확정
+      try { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); } catch (e) {}
+    }
+    window.__CS_FLUSH = flushAll;
+    if (saveAll) saveAll.addEventListener("click", function () {
+      flushAll();
+      clearTimeout(t);
+      if (st) { st.textContent = "저장됨 " + hm(); st.classList.remove("busy"); }
+      saveAll.classList.add("hit"); saveAll.classList.remove("dirty"); saveAll.textContent = "✓ 저장했습니다";
+      setTimeout(function () { saveAll.classList.remove("hit"); saveAll.textContent = "💾 저장"; }, 1800);
+    });
+    document.addEventListener("change", function (e) {
+      if (saveAll && e.target && e.target.classList && e.target.classList.contains("pslot")) saveAll.classList.add("dirty");
+    }, true);
     function hm() { var d = new Date(); return String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0"); }
     function bump() {
       if (!st) return;
