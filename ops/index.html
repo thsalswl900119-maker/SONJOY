@@ -1829,9 +1829,9 @@ input,select,textarea{border-radius:var(--r3)!important}
     </div>
     <div class="skgrid">
       <div class="skcol skrpcol"><div class="skrp" id="skReport"></div>
-        <div class="skbox skuse"><div class="skh">📅 사용량 달력 <span class="n" id="skUseLabel"></span></div><div class="skb">
+        <div class="skbox skuse"><div class="skh">📊 주별 사용량 <span class="n" id="skUseLabel"></span></div><div class="skb">
           <div class="skusecal" id="skUseCal"></div>
-          <p class="tip" style="margin:6px 0 0">칸 위 = 과일 알/병 · 칸 아래 = 생크림 통 · 오른쪽 = 그 주 합계 · 토요일 마감 전에 주 합계로 발주</p>
+          <p class="tip" style="margin:6px 0 0">주마다 과일(알·병)과 생크림(통) 사용 합계 · 이번 주는 주황 · 토요일 마감 전에 이 숫자로 주 단위 발주</p>
         </div></div></div>
       <div class="skcol">
         <div class="skbox hot"><div class="skh">🛒 발주 넣을 것 <span class="n" id="skOrdN"></span></div><div class="skb">
@@ -5459,21 +5459,14 @@ input,select,textarea{border-radius:var(--r3)!important}
 .skrpcol{top:60px}
 @media (max-width:620px){.savebar .sep{display:none}.savebar .svlab{display:none}}
 .skuse{margin-top:10px}
-.skusecal{display:grid;grid-template-columns:repeat(7,1fr) 1.7fr;gap:2px;font-size:10px}
-.skusecal .h{text-align:center;font-weight:700;color:var(--muted);padding:2px 0}
-.skusecal .h.s{color:var(--close)} .skusecal .h.tot{color:var(--ink)}
-.skusecal .c{background:var(--bg);border:1px solid var(--rule);border-radius:2px;padding:2px 3px;min-height:34px;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer}
-.skusecal .c:hover{border-color:var(--open)}
-.skusecal .c.pad{background:transparent;border-color:transparent;cursor:default}
-.skusecal .c.sun{background:var(--raise);color:var(--muted)}
-.skusecal .c.on{border-color:var(--open);background:var(--openbg)}
-.skusecal .c.today .d{color:var(--open)}
-.skusecal .d{font-family:var(--mono);font-size:9.5px;font-weight:700;color:var(--muted)}
-.skusecal .f{font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--mid);line-height:1.2}
-.skusecal .cr{font-family:var(--mono);font-size:10px;color:var(--close);line-height:1.2}
-.skusecal .t{background:var(--raise);border:1px solid var(--rule2);border-radius:2px;padding:2px 4px;min-height:34px;display:flex;flex-direction:column;justify-content:center}
-.skusecal .t b{font-family:var(--mono);font-size:10px;color:var(--ink);display:block;line-height:1.3;white-space:nowrap}
-.skusecal .t small{font-size:9px;color:var(--muted)}
+.skwk{display:grid;grid-template-columns:auto 1fr 1fr auto;gap:8px;align-items:center;padding:6px 8px;border:1px solid var(--rule);border-radius:2px;background:var(--bg);margin-bottom:4px}
+.skwk.on{border-color:var(--open);background:var(--openbg)}
+.skwk .wl{font-weight:700;font-size:12px;white-space:nowrap}
+.skwk .wl small{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);font-weight:400}
+.skwk .wv b{font-family:var(--mono);font-size:12.5px;display:block;line-height:1.2}
+.skwk .wv small{font-size:10px;color:var(--muted)}
+.skwk .wd{font-size:10.5px;color:var(--muted);white-space:nowrap}
+.skwk .wd i{font-style:normal;color:var(--rule2)}
 .sksearch{font:inherit;font-size:13px;padding:6px 9px;width:100%;max-width:300px;background:var(--bg);color:var(--ink);
   border:1px solid var(--rule2);border-radius:2px;margin-bottom:10px}
 </style>
@@ -5716,32 +5709,29 @@ input,select,textarea{border-radius:var(--r3)!important}
       }).join("") : '<p class="tip">이 달 체크가 없습니다.</p>';
       $$("[data-d]", box).forEach(function (b) { b.addEventListener("click", function () { open(b.dataset.d); }); });
     }
-    // 사용량 달력 — 한 달치 과일(알/병) · 생크림(통)을 날짜별로, 오른쪽에 주 합계
+    // 사용량 — 한 달을 주 단위로 합산해서 보여준다 (과일 알/병 · 생크림 통)
     function renderUseCal() {
       var box = $("#skUseCal"); if (!box || !cur) return;
       var ym = cur.slice(0, 7), y = +ym.slice(0, 4), m = +ym.slice(5, 7);
       $("#skUseLabel").textContent = y + "년 " + m + "월";
-      var first = new Date(y, m - 1, 1), lead = (first.getDay() + 6) % 7, nd = new Date(y, m, 0).getDate();
-      var t = today(), curDoc = read();
-      var h = ["월", "화", "수", "목", "금", "토", "일"].map(function (w, k) { return '<div class="h' + (k >= 5 ? " s" : "") + '">' + w + "</div>"; }).join("") + '<div class="h tot">주 합계</div>';
-      var wk = { a: 0, b: 0, c: 0 }, col = 0;
-      var flush = function () { h += '<div class="t"><b>' + wk.a + "알·" + wk.b + "병</b><b>" + wk.c + "통</b></div>"; wk = { a: 0, b: 0, c: 0 }; };
-      for (var i = 0; i < lead; i++) { h += '<div class="c pad"></div>'; col++; }
+      var nd = new Date(y, m, 0).getDate(), curDoc = read(), curMon = weekMon(cur);
+      var weeks = [], wk = null;
       for (var d = 1; d <= nd; d++) {
         var date = ym + "-" + pad(d), wd = (new Date(y, m - 1, d).getDay() + 6) % 7;
+        if (!wk || wd === 0) { wk = { from: date, to: date, a: 0, b: 0, c: 0, days: 0, mon: weekMon(date) }; weeks.push(wk); }
+        wk.to = date;
         var o = (date === cur) ? curDoc : (load(date) || {});
         var a = Number(o.fruitUseA) || 0, b = Number(o.fruitUseB) || 0, c = Number(o.creamUse) || 0;
+        if (o.fruitUseA || o.fruitUseB || o.creamUse) wk.days += 1;
         wk.a += a; wk.b += b; wk.c += c;
-        var has = (o.fruitUseA || o.fruitUseB || o.creamUse);
-        h += '<div class="c' + (wd === 6 ? " sun" : "") + (date === t ? " today" : "") + (date === cur ? " on" : "") + '" data-d="' + date + '">' +
-          '<span class="d">' + d + "</span>" +
-          (has ? '<span class="f">' + (a || 0) + "/" + (b || 0) + '</span><span class="cr">' + (c || "·") + "</span>" : '<span class="f" style="color:var(--rule2)">·</span>') + "</div>";
-        col++;
-        if (col % 7 === 0) flush();
       }
-      if (col % 7 !== 0) { while (col % 7 !== 0) { h += '<div class="c pad"></div>'; col++; } flush(); }
-      box.innerHTML = h;
-      $$(".c[data-d]", box).forEach(function (el) { el.addEventListener("click", function () { $("#skMonth").value = el.dataset.d.slice(0, 7); open(el.dataset.d); }); });
+      box.innerHTML = weeks.map(function (w, i) {
+        var on = w.mon === curMon;
+        return '<div class="skwk' + (on ? " on" : "") + '"><span class="wl">' + (i + 1) + "주<small>" + w.from.slice(5).replace("-", "/") + "~" + w.to.slice(5).replace("-", "/") + "</small></span>" +
+          '<span class="wv"><b>' + w.a + "알 · " + w.b + "병</b><small>과일</small></span>" +
+          '<span class="wv"><b>' + w.c + "통</b><small>생크림</small></span>" +
+          '<span class="wd">' + (w.days ? w.days + "일 기록" : '<i>기록 없음</i>') + "</span></div>";
+      }).join("");
     }
     function renderWeek() {
       renderUseCal();
