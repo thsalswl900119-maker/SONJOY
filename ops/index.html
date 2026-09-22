@@ -668,6 +668,27 @@ input.wp1,input.wp2,input.wp3,input.wp4{font-weight:500}
 }
 
 /* 매니저 월말 성과 체크 */
+.rvgrade{display:grid;grid-template-columns:150px minmax(0,1fr);gap:0;border:2px solid var(--open);border-radius:var(--r);
+  background:var(--surface);overflow:hidden;margin-bottom:12px}
+.rvgl{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:14px 10px;
+  background:var(--openbg);border-right:1px solid var(--rule2);text-align:center}
+.rvgletter{font-family:var(--serif);font-size:54px;line-height:1;font-weight:700;color:var(--open)}
+.rvgletter.gS{color:var(--p4)}.rvgletter.gA{color:var(--open)}.rvgletter.gB{color:var(--p1)}.rvgletter.gC{color:var(--off)}.rvgletter.gD{color:var(--muted)}
+.rvgpct{font-size:11.5px;color:var(--ink2);line-height:1.4;word-break:keep-all}
+.rvgr{padding:10px 14px 12px;min-width:0}
+.rvgrow{display:flex;gap:10px;align-items:baseline;font-size:13px;padding:3px 0}
+.rvgrow b{flex:0 0 108px;font-size:12px;color:var(--muted);font-weight:700}
+.rvgrow span{font-family:var(--serif);font-weight:700;font-size:15px}
+.rvgbase{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--muted);margin:4px 0 8px}
+.rvgbase input{width:130px;text-align:right;font-family:var(--mono)}
+.rvgbars{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:5px 12px;margin:2px 0 8px}
+.rvgbar{font-size:11px;color:var(--ink2);display:grid;grid-template-columns:minmax(0,1fr) 34px;gap:6px;align-items:center}
+.rvgbar i{display:block;height:5px;border-radius:3px;background:var(--rule);overflow:hidden;grid-column:1/3}
+.rvgbar i b{display:block;height:100%;background:var(--open)}
+.rvgbar em{font-style:normal;font-family:var(--mono);text-align:right;color:var(--muted)}
+.rvgtable{font-size:11px;color:var(--muted);line-height:1.6;border-top:1px dashed var(--rule2);padding-top:7px}
+.rvgtable em{display:block;font-style:normal}
+@media (max-width:600px){.rvgrade{grid-template-columns:1fr}.rvgl{border-right:0;border-bottom:1px solid var(--rule2)}}
 .rvnotice{border:1px solid var(--off);border-radius:3px;background:var(--offbg);
   color:var(--off);font-weight:700;font-size:12.5px;text-align:center;
   padding:8px 12px;margin-bottom:10px}
@@ -2143,6 +2164,17 @@ input,select,textarea{border-radius:var(--r3)!important}
       <input type="month" id="rvMonth" class="dinp"></label>
     <span class="lgtot">체크갯수 <b id="rvCount">0 / 47</b></span>
     <span class="lgmsg" id="rvMsg"></span>
+  </div>
+  <div class="rvgrade" id="rvGrade">
+    <div class="rvgl"><div class="rvgletter" id="rvGLetter">–</div><div class="rvgpct" id="rvGPct">아래를 체크하면<br>등급이 매겨집니다</div></div>
+    <div class="rvgr">
+      <div class="rvgrow"><b>성과급 지급 비율</b><span id="rvGRate">–</span></div>
+      <div class="rvgrow"><b>예상 성과급</b><span id="rvGPay">기본급을 넣으면 계산됩니다</span></div>
+      <label class="rvgbase">기본급(월) <input type="text" inputmode="numeric" id="rvBase" class="dinp" placeholder="예) 2,700,000"> 원 · 세전</label>
+      <div class="rvgbars" id="rvGBars"></div>
+      <div class="rvgtable">등급은 항목별 체크 비율의 평균으로 매깁니다 — <b>S</b> 90% 이상 · 기본급의 20% / <b>A</b> 80% 이상 · 15% / <b>B</b> 70% 이상 · 10% / <b>C</b> 60% 이상 · 5% / <b>D</b> 60% 미만 · 없음
+        <em>재직 6개월 이상 & 기준 충족 시 지급 · 여기 등급은 자동 계산이고, 최종 등급과 지급은 월말 면담에서 사장님이 확정합니다</em></div>
+    </div>
   </div>
   <div class="rpwrap">
     <div class="rpmain">
@@ -4950,6 +4982,44 @@ input,select,textarea{border-radius:var(--r3)!important}
     var cks = box ? Array.prototype.slice.call(box.querySelectorAll(".rck")) : [];
     var cntEl = countId ? document.getElementById(countId) : null;
     var rankEl = rankId ? document.getElementById(rankId) : null;
+    // 성과급 등급 (월말 평가만) — 항목별 체크 비율의 평균 → S/A/B/C/D
+    var gradeBox = (checkId === "rvChecks") ? document.getElementById("rvGrade") : null;
+    var baseEl = gradeBox ? document.getElementById("rvBase") : null;
+    var GRADES = [["S", 90, 20], ["A", 80, 15], ["B", 70, 10], ["C", 60, 5], ["D", 0, 0]];
+    function gradeInfo() {
+      if (!box) return null;
+      var secs = [], total = 0, on = 0;
+      box.querySelectorAll(".rvsec").forEach(function (sec) {
+        var all = Array.prototype.slice.call(sec.querySelectorAll(".rck"));
+        if (!all.length) return;
+        var hit = all.filter(function (c) { return c.checked; }).length;
+        var ttl = sec.querySelector(".rvsh").textContent.replace(/^\s*\d+\s*/, "").replace(/\s*\d+ \/ \d+\s*$/, "").trim();
+        secs.push({ t: ttl, hit: hit, all: all.length, pct: Math.round(hit / all.length * 100) });
+        total += all.length; on += hit;
+      });
+      if (!on) return { on: 0, total: total, pct: 0, letter: null, rate: 0, secs: secs };
+      var avg = secs.reduce(function (a, x) { return a + x.hit / x.all; }, 0) / secs.length;
+      var pct = Math.round(avg * 100), g = GRADES[GRADES.length - 1];
+      for (var i = 0; i < GRADES.length; i++) if (pct >= GRADES[i][1]) { g = GRADES[i]; break; }
+      var base = baseEl ? parseInt(String(baseEl.value).replace(/[^0-9]/g, ""), 10) : NaN;
+      return { on: on, total: total, pct: pct, letter: g[0], rate: g[2], secs: secs,
+               base: isNaN(base) ? 0 : base, pay: isNaN(base) ? 0 : Math.round(base * g[2] / 100) };
+    }
+    function won(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+    function paintGrade() {
+      if (!gradeBox) return;
+      var g = gradeInfo(); if (!g) return;
+      var L = document.getElementById("rvGLetter"), P = document.getElementById("rvGPct");
+      var R = document.getElementById("rvGRate"), Y = document.getElementById("rvGPay"), B = document.getElementById("rvGBars");
+      L.className = "rvgletter" + (g.letter ? " g" + g.letter : "");
+      L.textContent = g.letter || "–";
+      P.innerHTML = g.letter ? "체크 비율 평균 <b>" + g.pct + "%</b><br>" + g.on + " / " + g.total + " 체크" : "아래를 체크하면<br>등급이 매겨집니다";
+      R.textContent = g.letter ? (g.rate ? "기본급의 " + g.rate + "%" : "없음 (D등급)") : "–";
+      Y.textContent = !g.letter ? "기본급을 넣으면 계산됩니다" : !g.base ? "기본급을 넣으면 계산됩니다" : g.rate ? "약 " + won(g.pay) + "원" : "0원";
+      B.innerHTML = g.secs.map(function (x) {
+        return '<div class="rvgbar"><span>' + esc(x.t) + "</span><em>" + x.pct + "%</em><i><b style=\"width:" + x.pct + '%"></b></i></div>';
+      }).join("");
+    }
 
     function thisMonth() {
       var d = new Date();
@@ -4974,6 +5044,7 @@ input,select,textarea{border-radius:var(--r3)!important}
         el.closest("tr").classList.toggle("done", el.checked);
       });
       if (rankEl) rankEl.value = data._rank || "";
+      if (baseEl) baseEl.value = data._base ? won(data._base) : "";
       count();
     }
     function count() {
@@ -4989,6 +5060,7 @@ input,select,textarea{border-radius:var(--r3)!important}
         e.textContent = hit + " / " + all.length;
         e.classList.toggle("full", hit === all.length);
       });
+      paintGrade();
     }
     function save() {
       var o = {}, prev = {};
@@ -5004,6 +5076,7 @@ input,select,textarea{border-radius:var(--r3)!important}
       cks.forEach(function (el) { if (el.checked) o[el.dataset.k] = 1; });
       o._by = by;
       if (rankEl && rankEl.value.trim()) o._rank = rankEl.value.trim();
+      if (baseEl) { var bv = parseInt(String(baseEl.value).replace(/[^0-9]/g, ""), 10); if (bv) o._base = bv; }
       try { localStorage.setItem(key(), JSON.stringify(o)); } catch (e) {}
       count();
     }
@@ -5092,6 +5165,14 @@ input,select,textarea{border-radius:var(--r3)!important}
           if (miss.length) {
             text.push("못 지킨 것: " + miss.join(" / "));
           }
+          var g = gradeBox ? gradeInfo() : null;
+          if (g && g.letter) {
+            var gl = g.letter + "등급 (체크 비율 평균 " + g.pct + "%) → 성과급 " + (g.rate ? "기본급의 " + g.rate + "%" : "없음") +
+                     (g.base && g.rate ? " · 약 " + won(g.pay) + "원" : "");
+            html += '<div class="rpsec"><h4>성과급 등급</h4><div class="rpitem"><b>' + esc(gl) + "</b>" +
+                    "<span>자동 계산 · 최종 등급은 월말 면담에서 사장님이 확정</span></div></div>";
+            text.push("[성과급 등급] " + gl + " (자동 계산 · 면담에서 확정)");
+          }
         }
       }
 
@@ -5145,6 +5226,10 @@ input,select,textarea{border-radius:var(--r3)!important}
       });
     });
     if (rankEl) rankEl.addEventListener("input", function () { save(); report(); });
+    if (baseEl) {
+      baseEl.addEventListener("input", function () { save(); report(); });
+      baseEl.addEventListener("blur", function () { var v = parseInt(String(baseEl.value).replace(/[^0-9]/g, ""), 10); baseEl.value = v ? won(v) : ""; });
+    }
     document.getElementById(clearId).addEventListener("click", function () {
       ins.forEach(function (el) { el.value = ""; el.classList.remove("filled"); });
       cks.forEach(function (el) {
