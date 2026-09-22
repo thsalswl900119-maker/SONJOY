@@ -1863,6 +1863,7 @@ input,select,textarea{border-radius:var(--r3)!important}
   <div class="rulebox" id="orderRule">
     <div class="rhd">📦 발주 규칙 · 꼭 지키기</div>
     <div class="rb">빨간날이 있는 주간에는 <b>3~4일 전에 무조건 재고·발주 체크</b> 다 하기.<br><b>인쇄물 · 포장재료 · 주재료 전부</b> 빠짐없이.</div>
+    <div class="rs">예) 추석 연휴가 9/24~9/26이라면 <b>9/18~9/21까지는 꼭 발주+재고 체크</b>를 해야 합니다.</div>
     <div class="rs" id="orderRuleSoon" hidden></div>
   </div>
   <nav class="sktabs" role="tablist" aria-label="재고 화면"><button type="button" class="sktab" data-c="sk0" aria-selected="true">📦 발주·재고 체크</button><button type="button" class="sktab" data-c="sk1" aria-selected="false">📒 발주 기준표</button><button type="button" class="sktab" data-c="sk2" aria-selected="false">🍓 과일 시즌</button></nav>
@@ -2523,17 +2524,12 @@ input,select,textarea{border-radius:var(--r3)!important}
     var end = new Date(start);
     while (true) { var nx = new Date(end); nx.setDate(end.getDate() + 1); if (!HOL[ymd(nx)]) break; end = nx; }
     var name = HOL[ymd(start)].replace(/ 연휴$/, "");
-    var span = (end > start) ? md(start) + wd(start) + "~" + md(end) + wd(end) + " " + name + " 연휴"
-                             : md(start) + wd(start) + " " + name;
-    var d4 = new Date(start); d4.setDate(start.getDate() - 4);
+    var d6 = new Date(start); d6.setDate(start.getDate() - 6);
     var d3 = new Date(start); d3.setDate(start.getDate() - 3);
     var left = Math.round((d3 - now) / 86400000);
-    var when;
-    if (left > 1) when = "3~4일 전인 <b>" + md(d4) + wd(d4) + "~" + md(d3) + wd(d3) + "까지 체크 완료</b> (" + left + "일 남음)";
-    else if (left === 1) when = "<b>내일 " + md(d3) + wd(d3) + "까지 체크 완료</b>";
-    else if (left === 0) when = "<b>오늘 " + md(d3) + wd(d3) + "까지 체크 완료</b>";
-    else when = "3~4일 전 체크 기한(" + md(d4) + "~" + md(d3) + ")이 지났습니다 · <b>아직이면 지금 바로</b>";
-    el.innerHTML = "🎌 " + span + " → " + when;
+    var tail = left > 1 ? " (" + left + "일 남음)" : left === 1 ? " (내일까지)" : left === 0 ? " (오늘까지)" : " — <b>기한이 지났습니다 · 아직이면 지금 바로</b>";
+    var when = "<b>" + md(d6) + wd(d6) + "~" + md(d3) + wd(d3) + "까지는 꼭 발주+재고 체크</b>를 해야 합니다" + tail;
+    el.innerHTML = "🎌 지금: " + name + (end > start ? " 연휴가 " : "이 ") + (end > start ? md(start) + wd(start) + "~" + md(end) + wd(end) : md(start) + wd(start)) + "이라면 " + when;
     el.hidden = false;
     if (left <= 0) el.style.color = "var(--r1)";
   })();
