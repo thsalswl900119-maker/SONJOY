@@ -1208,6 +1208,45 @@ table.zt th.c6{width:56px;text-align:center}
 .lg.c-ev i{border-color:var(--open)}
 .lg.c-gift i{border-color:var(--alert)}
 .lg.c-ord i{border-color:var(--rule2)}
+.lg.c-memo i{border-color:var(--full);background:var(--fullbg)}
+.ycev.c-memo{border-left-color:var(--full);color:var(--ink);background:var(--fullbg)}
+.yychip.c-memo{border-left-color:var(--full)}
+.item.c-memo .itag{color:var(--full)}
+/* 일지 — 이달 메모 달력 */
+.mcbox{border:1px solid var(--rule2);border-left:4px solid var(--full);border-radius:var(--r);background:var(--surface);padding:11px 14px 12px;margin-bottom:14px}
+.mch{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:9px}
+.mch>b{font-family:var(--serif);font-size:15px}
+.mch>span:not(.mcnav){font-size:11.5px;color:var(--muted);line-height:1.5;flex:1 1 300px}
+.mcnav{display:inline-flex;align-items:center;gap:6px;margin-left:auto}
+.mcnav .dinp{width:auto;min-width:130px}
+.mcal{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule2);border-radius:3px;overflow:hidden}
+.mcw{background:var(--raise);text-align:center;font-size:11px;font-weight:700;color:var(--muted);padding:5px 0}
+.mcw.s{color:var(--close)}
+.mcpad{background:var(--bg)}
+.mccell{background:var(--surface);min-height:66px;padding:4px 5px 6px;display:flex;flex-direction:column;gap:2px;cursor:pointer}
+.mccell:hover{outline:1px solid var(--full);outline-offset:-1px}
+.mccell.today{background:var(--openbg)}
+.mccell.on{outline:2px solid var(--full);outline-offset:-2px}
+.mccell.sun .mcd{color:var(--off)} .mccell.sat .mcd{color:var(--close)}
+.mcd{font-family:var(--mono);font-size:11.5px;font-weight:700;color:var(--ink2)}
+.mcn{font-size:10.5px;line-height:1.3;padding:1px 4px;border-left:3px solid var(--rule2);background:var(--bg);border-radius:2px;word-break:keep-all;font-weight:700}
+.mcn.p1{border-left-color:var(--p1)} .mcn.p2{border-left-color:var(--p2)} .mcn.p3{border-left-color:var(--p3)} .mcn.p4{border-left-color:var(--p4)}
+.mcmore{font-size:10px;color:var(--muted)}
+.mcplus{margin-top:auto;font-size:10px;color:var(--rule2)}
+.mccell:hover .mcplus{color:var(--full)}
+.mcedit{margin-top:9px;border:1px solid var(--full);border-radius:3px;background:var(--surface);padding:10px 12px 12px}
+.mceh{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px}
+.mceh b{font-family:var(--serif);font-size:14px}
+.mcitem{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;padding:5px 0;border-bottom:1px solid var(--rule);font-size:13px}
+.mcitem .t{font-weight:500}
+.mcitem .t.p1{color:var(--p1)} .mcitem .t.p2{color:var(--p2)} .mcitem .t.p3{color:var(--p3)} .mcitem .t.p4{color:var(--p4)}
+.mcitem small{font-size:10.5px;color:var(--muted);font-family:var(--mono);white-space:nowrap}
+.mcitem .x{font:inherit;font-size:12px;color:var(--muted);background:none;border:1px solid var(--rule2);border-radius:2px;padding:1px 7px;cursor:pointer}
+.mcitem .x:hover{color:var(--off);border-color:var(--off)}
+.mcnone{font-size:12px;color:var(--muted);padding:6px 0}
+.mcadd{display:flex;gap:6px;margin-top:8px}
+.mcadd .dinp{flex:1;font-family:var(--sans);font-size:13px}
+@media (max-width:700px){.mccell{min-height:50px;padding:3px}.mcn{font-size:9px}}
 .item{display:grid;grid-template-columns:56px 1fr;gap:2px 12px;
   padding:10px 12px;border-left:3px solid var(--rule2);background:var(--surface);
   border-bottom:1px solid var(--rule)}
@@ -1829,6 +1868,18 @@ input,select,textarea{border-radius:var(--r3)!important}
 <div class="panel" id="tp4" role="tabpanel" hidden><section>
   <div class="shead"><h2>마감 일지</h2><span class="en">daily log</span>
     <span class="sub">퇴근 전에 채우고 복사해서 텔레그램으로 보고하세요</span></div>
+  <div class="mcbox" id="mcBox">
+    <div class="mch"><b>📅 이달 메모 달력</b>
+      <span>예약 · 공지 · 챙길 것을 날짜에 적어 두세요. 적은 건 <b>연간 행사</b> 달력에도 같이 보입니다 (보라 띠).</span>
+      <span class="mcnav"><button type="button" class="daynav" id="mcPrev">‹</button> <input type="month" id="mcMonth" class="dinp"> <button type="button" class="daynav" id="mcNext">›</button></span></div>
+    <div class="mcal" id="mcCal"></div>
+    <div class="mcedit" id="mcEdit" hidden>
+      <div class="mceh"><b id="mcTitle"></b><button type="button" class="daynav" id="mcClose">닫기</button></div>
+      <div id="mcList"></div>
+      <div class="mcadd"><input type="text" id="mcText" class="dinp" placeholder="예) 15시 한판 케이크 예약 · 김OO 010-1234 / 오늘 배달 3건 예정"><button type="button" class="skbtn prim" id="mcAdd">추가</button></div>
+      <p class="tnote" style="margin:6px 0 0">Enter로도 추가됩니다 · 적은 사람 색으로 표시됩니다</p>
+    </div>
+  </div>
   <div class="lgbar">
     <label class="lgdate">날짜
       <button type="button" class="daynav" id="lgPrev" aria-label="전날">◀</button>
@@ -1957,6 +2008,7 @@ input,select,textarea{border-radius:var(--r3)!important}
     <span class="lg c-ev"><i></i>기념일</span>
     <span class="lg c-gift"><i></i>선물세트</span>
     <span class="lg c-ord"><i></i>발주·관리</span>
+    <span class="lg c-memo"><i></i>메모·예약 (일지 달력)</span>
   </div>
 </section><section>
   <div class="shead"><h2>미리 챙기기</h2><span class="en">preparation</span>
@@ -4093,7 +4145,7 @@ input,select,textarea{border-radius:var(--r3)!important}
     var WEA = {"1":["한파","가장 추운 달. 매장 방문이 줄고 배달·택배 비중이 올라간다. 딸기·감귤류가 주력."],"2":["늦추위","아직 춥다. 설날·발렌타인으로 예약이 몰리는 달."],"3":["풀리기 시작","★ 딸기가 마무리로 가고 빙수 개발을 시작하는 기점. 제빙기 점검도 지금."],"4":["따뜻해짐","손님이 늘기 시작. 빙수 테스트·메뉴판·사진 작업하기 좋은 시기."],"5":["더워지기 시작","★ 빙수를 여는 기점. 영업시간을 11:00–18:30 으로 바꾼다."],"6":["장마","★ 비 오는 날은 빙수가 뚝 떨어진다. 날씨 보고 망고·재료 발주량을 줄일 것."],"7":["본격 더위","빙수 성수기. 매일 6~10개씩 나간다. 재료가 끊기지 않게."],"8":["폭염","★ 더위에 체리가 물러 못 쓴다. 8/10 전후로 체리를 내린다. 샤인머스캣·무화과 시작."],"9":["한풀 꺾임","★ 낮엔 아직 덥지만 빙수가 떨어진다. 추석 지나면 급감 — 재료 소진 맞춰 마무리."],"10":["선선함","케이크 판매가 회복된다. 밤 라인으로 넘어가되 샤인머스캣은 계속."],"11":["쌀쌀해짐","★ 첫딸기가 10~20일 사이에 들어온다. 수능·크리스마스 예약이 겹치니 수량을 미리 확보."],"12":["추위","★ 1년 중 가장 바쁜 달. 12/22~25 크리스마스 피크, 12/26~31 망년회·신년회. 배달이 늘고 매장은 예약 위주로 돌아간다."]};
     var SEA = {"1":"겨울","2":"겨울","3":"봄","4":"봄","5":"봄","6":"여름","7":"여름","8":"여름","9":"가을","10":"가을","11":"겨울","12":"겨울"};
     var HOL = {"1":"설날","2":"설날","9":"추석","10":"추석"};
-    var CATS = {"bingsu":["c-bing","빙수"],"fruit":["c-fruit","과일"],"holiday":["c-hol","명절"],"giftset":["c-gift","선물세트"],"event":["c-ev","기념일"],"order":["c-ord","발주·관리"],"menu":["c-menu","메뉴"]};
+    var CATS = {"bingsu":["c-bing","빙수"],"fruit":["c-fruit","과일"],"holiday":["c-hol","명절"],"giftset":["c-gift","선물세트"],"event":["c-ev","기념일"],"order":["c-ord","발주·관리"],"menu":["c-menu","메뉴"],"memo":["c-memo","메모·예약"]};
     var ORDER = ["bingsu", "fruit", "menu", "event", "giftset", "order", "holiday"];
     var WDN = ["월", "화", "수", "목", "금", "토", "일"];
     var KEY = "cafesui.annual";
@@ -4137,8 +4189,22 @@ input,select,textarea{border-radius:var(--r3)!important}
       out.sort(function (x, y) { return x.m - y.m || x.d - y.d; });
       return out;
     }
+    // 일지 탭 「이달 메모 달력」에 적은 것도 같이 보여준다 (그 해 그 달만)
+    function noteItems(m) {
+      var out = [], yr = yearOf(m), all = {};
+      try { all = JSON.parse(localStorage.getItem("cafesui.daynotes") || "{}"); } catch (e) {}
+      Object.keys(all).forEach(function (date) {
+        if (date.slice(0, 4) != yr || +date.slice(5, 7) !== m) return;
+        (all[date] || []).forEach(function (n, i) {
+          out.push({ id: "n:" + date + ":" + i, m: m, d: +date.slice(8, 10), t: n.t,
+                     a: "일지 메모 달력 · " + (n.by || "") + (n.at ? " " + n.at : ""), c: "memo", note: true });
+        });
+      });
+      return out;
+    }
     function ofMonth(m) {
-      return list().filter(function (e) { return e.m === m; });
+      return list().concat(noteItems(m)).filter(function (e) { return e.m === m; })
+        .sort(function (x, y) { return x.d - y.d; });
     }
     function cls(c) { return (CATS[c] || CATS.event)[0]; }
     function kname(c) { return (CATS[c] || CATS.event)[1]; }
@@ -4237,11 +4303,16 @@ input,select,textarea{border-radius:var(--r3)!important}
 
       wrap.querySelectorAll(".ycev").forEach(function (el) {
         el.addEventListener("click", function (ev) {
-          ev.stopPropagation(); openEdit(el.dataset.id, null);
+          ev.stopPropagation();
+          if (String(el.dataset.id).indexOf("n:") === 0) { eMsg.textContent = ""; alert("일지 탭의 「이달 메모 달력」에서 고치거나 지웁니다"); return; }
+          openEdit(el.dataset.id, null);
         });
       });
       wrap.querySelectorAll(".item[data-id]").forEach(function (el) {
-        el.addEventListener("click", function () { openEdit(el.dataset.id, null); });
+        el.addEventListener("click", function () {
+          if (String(el.dataset.id).indexOf("n:") === 0) { alert("일지 탭의 「이달 메모 달력」에서 고치거나 지웁니다"); return; }
+          openEdit(el.dataset.id, null);
+        });
       });
       wrap.querySelectorAll(".yccell").forEach(function (c) {
         c.addEventListener("click", function () { openEdit(null, +c.dataset.d); });
@@ -4322,6 +4393,7 @@ input,select,textarea{border-radius:var(--r3)!important}
     });
 
     drawYear(); drawTabs(); drawMonth();
+    window.__CS_ANNUAL_REFRESH = function () { drawYear(); drawTabs(); drawMonth(); };
   })();
 
   // 숫자는 천 단위로 끊어서 보여준다 (1000 -> 1,000)
@@ -5869,6 +5941,78 @@ input,select,textarea{border-radius:var(--r3)!important}
         box.appendChild(row);
       });
     }
+    render();
+  })();
+
+  // 일지 — 이달 메모 달력. 예약·공지를 날짜에 적는다 (cafesui.daynotes). 연간 행사에도 같이 보인다.
+  (function () {
+    var cal = document.getElementById("mcCal"); if (!cal) return;
+    var monEl = document.getElementById("mcMonth"), edit = document.getElementById("mcEdit");
+    var titleEl = document.getElementById("mcTitle"), listEl = document.getElementById("mcList");
+    var textEl = document.getElementById("mcText");
+    var KEY = "cafesui.daynotes";
+    var COL = { "정항아": "p1", "박혜빈": "p2", "이해선": "p3", "사장님": "p4" };
+    var WD = ["월", "화", "수", "목", "금", "토", "일"];
+    var sel = null;
+    function me() { try { return localStorage.getItem("cafesui.me") || ""; } catch (e) { return ""; } }
+    function load() { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { return {}; } }
+    function save(o) { try { localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) {} if (window.__CS_ANNUAL_REFRESH) window.__CS_ANNUAL_REFRESH(); }
+    function pad(n) { return String(n).padStart(2, "0"); }
+    function today() { var d = new Date(); return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
+    function esc(v) { return String(v == null ? "" : v).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+    function ym() { return monEl.value || today().slice(0, 7); }
+    function render() {
+      var y = +ym().slice(0, 4), m = +ym().slice(5, 7), all = load(), t = today();
+      var first = new Date(y, m - 1, 1), lead = (first.getDay() + 6) % 7, nd = new Date(y, m, 0).getDate();
+      var h = WD.map(function (w, k) { return '<div class="mcw' + (k >= 5 ? " s" : "") + '">' + w + "</div>"; }).join("");
+      for (var i = 0; i < lead; i++) h += '<div class="mcpad"></div>';
+      for (var d = 1; d <= nd; d++) {
+        var date = ym() + "-" + pad(d), wd = (new Date(y, m - 1, d).getDay() + 6) % 7;
+        var notes = all[date] || [];
+        h += '<div class="mccell' + (wd === 6 ? " sun" : wd === 5 ? " sat" : "") + (date === t ? " today" : "") + (date === sel ? " on" : "") +
+          '" data-d="' + date + '"><span class="mcd">' + d + "</span>" +
+          notes.slice(0, 3).map(function (n) { return '<span class="mcn ' + (COL[n.by] || "") + '">' + esc(n.t) + "</span>"; }).join("") +
+          (notes.length > 3 ? '<span class="mcmore">+' + (notes.length - 3) + "개 더</span>" : "") +
+          (notes.length ? "" : '<span class="mcplus">+</span>') + "</div>";
+      }
+      cal.innerHTML = h;
+      cal.querySelectorAll(".mccell").forEach(function (c) { c.addEventListener("click", function () { open(c.dataset.d); }); });
+    }
+    function open(date) {
+      sel = date;
+      var p = date.split("-"), wd = WD[(new Date(+p[0], +p[1] - 1, +p[2]).getDay() + 6) % 7];
+      titleEl.textContent = (+p[1]) + "월 " + (+p[2]) + "일 (" + wd + ") 메모";
+      var notes = (load()[date] || []);
+      listEl.innerHTML = notes.length ? notes.map(function (n, i) {
+        return '<div class="mcitem"><span class="t ' + (COL[n.by] || "") + '">' + esc(n.t) + "</span><small>" + esc(n.by || "") + (n.at ? " · " + esc(n.at) : "") +
+          '</small><button type="button" class="x" data-i="' + i + '">지우기</button></div>';
+      }).join("") : '<div class="mcnone">아직 적은 게 없습니다</div>';
+      listEl.querySelectorAll(".x").forEach(function (b) {
+        b.addEventListener("click", function () {
+          var all = load(); (all[date] || []).splice(+b.dataset.i, 1);
+          if (!all[date] || !all[date].length) delete all[date];
+          save(all); render(); open(date);
+        });
+      });
+      edit.hidden = false; render();
+      textEl.focus();
+    }
+    function add() {
+      var t = (textEl.value || "").trim(); if (!t || !sel) return;
+      var all = load(); (all[sel] || (all[sel] = [])).push({ t: t, by: me(), at: today().slice(5) });
+      save(all); textEl.value = ""; render(); open(sel);
+    }
+    document.getElementById("mcAdd").addEventListener("click", add);
+    textEl.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); add(); } });
+    document.getElementById("mcClose").addEventListener("click", function () { edit.hidden = true; sel = null; render(); });
+    monEl.value = today().slice(0, 7);
+    monEl.addEventListener("change", function () { sel = null; edit.hidden = true; render(); });
+    document.getElementById("mcPrev").addEventListener("click", function () {
+      var y = +monEl.value.slice(0, 4), m = +monEl.value.slice(5, 7) - 1; if (m < 1) { m = 12; y--; }
+      monEl.value = y + "-" + pad(m); sel = null; edit.hidden = true; render(); });
+    document.getElementById("mcNext").addEventListener("click", function () {
+      var y = +monEl.value.slice(0, 4), m = +monEl.value.slice(5, 7) + 1; if (m > 12) { m = 1; y++; }
+      monEl.value = y + "-" + pad(m); sel = null; edit.hidden = true; render(); });
     render();
   })();
 </script>
