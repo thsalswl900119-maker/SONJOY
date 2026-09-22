@@ -679,8 +679,24 @@ input.wp1,input.wp2,input.wp3,input.wp4{font-weight:500}
 .rvgrow{display:flex;gap:10px;align-items:baseline;font-size:13px;padding:3px 0}
 .rvgrow b{flex:0 0 108px;font-size:12px;color:var(--muted);font-weight:700}
 .rvgrow span{font-family:var(--serif);font-weight:700;font-size:15px}
-.rvgbase{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--muted);margin:4px 0 8px}
-.rvgbase input{width:130px;text-align:right;font-family:var(--mono)}
+.rvbonus{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.rvbcard{border:1px solid var(--rule2);border-radius:var(--r);background:var(--surface);padding:10px 13px 11px}
+.rvbcard.now{border-color:var(--open);box-shadow:0 0 0 1px var(--openbg) inset}
+.rvbcard h5{margin:0 0 3px;font-family:var(--serif);font-size:14.5px;display:flex;gap:8px;align-items:baseline}
+.rvbcard h5 small{font-weight:400;font-size:11px;color:var(--muted);margin-left:auto}
+.rvbcard .rvbsub{font-size:11px;color:var(--muted);margin-bottom:7px}
+.rvbcard table{width:100%;border-collapse:collapse;font-size:12px}
+.rvbcard td{padding:3px 4px;border-top:1px dashed var(--rule)}
+.rvbcard td.g{font-family:var(--serif);font-weight:700;text-align:center;width:36px}
+.rvbcard td.r{text-align:right;color:var(--ink2);font-family:var(--mono);font-size:11.5px}
+.rvbcard td.none{color:var(--muted)}
+.rvbcard tr.cur td{background:var(--openbg)}
+.rvbsum{margin-top:8px;padding-top:7px;border-top:2px solid var(--rule2);display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.rvbsum b{font-family:var(--serif);font-size:22px;line-height:1}
+.rvbsum b.gS{color:var(--p4)}.rvbsum b.gA{color:var(--open)}.rvbsum b.gB{color:var(--p1)}.rvbsum b.gC{color:var(--off)}.rvbsum b.gD{color:var(--muted)}
+.rvbsum span{font-size:12.5px;font-weight:700}
+.rvbsum em{font-style:normal;font-size:11px;color:var(--muted);flex-basis:100%}
+@media (max-width:700px){.rvbonus{grid-template-columns:1fr}}
 .rvgbars{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:5px 12px;margin:2px 0 8px}
 .rvgbar{font-size:11px;color:var(--ink2);display:grid;grid-template-columns:minmax(0,1fr) 34px;gap:6px;align-items:center}
 .rvgbar i{display:block;height:5px;border-radius:3px;background:var(--rule);overflow:hidden;grid-column:1/3}
@@ -2165,21 +2181,20 @@ input,select,textarea{border-radius:var(--r3)!important}
     <span class="lgtot">체크갯수 <b id="rvCount">0 / 47</b></span>
     <span class="lgmsg" id="rvMsg"></span>
   </div>
-  <div class="rvgrade" id="rvGrade">
-    <div class="rvgl"><div class="rvgletter" id="rvGLetter">–</div><div class="rvgpct" id="rvGPct">아래를 체크하면<br>등급이 매겨집니다</div></div>
-    <div class="rvgr">
-      <div class="rvgrow"><b>성과급 지급 비율</b><span id="rvGRate">–</span></div>
-      <div class="rvgrow"><b>예상 성과급</b><span id="rvGPay">기본급을 넣으면 계산됩니다</span></div>
-      <label class="rvgbase">기본급(월) <input type="text" inputmode="numeric" id="rvBase" class="dinp" placeholder="예) 2,700,000"> 원 · 세전</label>
-      <div class="rvgbars" id="rvGBars"></div>
-      <div class="rvgtable">등급은 항목별 체크 비율의 평균으로 매깁니다 — <b>S</b> 90% 이상 · 기본급의 20% / <b>A</b> 80% 이상 · 15% / <b>B</b> 70% 이상 · 10% / <b>C</b> 60% 이상 · 5% / <b>D</b> 60% 미만 · 없음
-        <em>재직 6개월 이상 & 기준 충족 시 지급 · 여기 등급은 자동 계산이고, 최종 등급과 지급은 월말 면담에서 사장님이 확정합니다</em></div>
-    </div>
-  </div>
   <div class="rpwrap">
     <div class="rpmain">
       <div id="rvChecks"><div class="rvsec"><div class="rvsh"><span class="rvno">1</span>주도성 (스스로 움직였는가)<em class="rvcnt" data-s="1">0 / 5</em></div><table class="rvtable"><thead><tr><th>질문</th><th>체크</th></tr></thead><tbody><tr><td class="rq">지시를 받기 전에 먼저 움직인 일이 있었나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k1" data-s="1" aria-label="지시를 받기 전에 먼저 움직인 일이 있었나요?"></td></tr><tr><td class="rq">매장이 바쁠 때 내가 먼저 해야 할 일을 판단했나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k2" data-s="1" aria-label="매장이 바쁠 때 내가 먼저 해야 할 일을 판단했나요?"></td></tr><tr><td class="rq">문제를 발견했을 때 그냥 넘기지 않고 공유했나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k3" data-s="1" aria-label="문제를 발견했을 때 그냥 넘기지 않고 공유했나요?"></td></tr><tr><td class="rq">“이건 내가 해볼게요”라고 말한 적이 있나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k4" data-s="1" aria-label="“이건 내가 해볼게요”라고 말한 적이 있나요?"></td></tr><tr><td class="rq">책임지고 끝까지 마무리한 일이 있나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k5" data-s="1" aria-label="책임지고 끝까지 마무리한 일이 있나요?"></td></tr></tbody></table></div><div class="rvsec"><div class="rvsh"><span class="rvno">2</span>고객 리뷰 &amp; 고객 응대<em class="rvcnt" data-s="2">0 / 6</em></div><table class="rvtable"><thead><tr><th>질문</th><th>체크</th></tr></thead><tbody><tr><td class="rq">손님이 편안함을 느끼도록 응대했나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k10" data-s="2" aria-label="손님이 편안함을 느끼도록 응대했나요?"></td></tr><tr><td class="rq">불편한 상황에서도 감정적으로 대응하지 않았나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k11" data-s="2" aria-label="불편한 상황에서도 감정적으로 대응하지 않았나요?"></td></tr><tr><td class="rq">바쁜시간대에도 표정관리를 잘하며 근무를 했나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k12" data-s="2" aria-label="바쁜시간대에도 표정관리를 잘하며 근무를 했나요?"></td></tr><tr><td class="rq">리뷰에 남을 만한 말이나 행동을 의식했나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k13" data-s="2" aria-label="리뷰에 남을 만한 말이나 행동을 의식했나요?"></td></tr><tr><td class="rq">컴플레인이 생겼을 때 피하지 않고 적극적 대응했나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k14" data-s="2" aria-label="컴플레인이 생겼을 때 피하지 않고 적극적 대응했나요?"></td></tr><tr><td class="rq">“다시 오고 싶다”는 말을 들은 적이 있나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k15" data-s="2" aria-label="“다시 오고 싶다”는 말을 들은 적이 있나요?"></td></tr></tbody></table></div><div class="rvsec"><div class="rvsh"><span class="rvno">3</span>QSC (품질 · 서비스 · 청결)<em class="rvcnt" data-s="3">0 / 6</em></div><table class="rvtable"><thead><tr><th>질문</th><th>체크</th></tr></thead><tbody><tr><td class="rq">음료·디저트를 항상 같은 기준으로 만들었나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k20" data-s="3" aria-label="음료·디저트를 항상 같은 기준으로 만들었나요?"></td></tr><tr><td class="rq">바쁜 시간에도 청결 기준을 지켰나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k21" data-s="3" aria-label="바쁜 시간에도 청결 기준을 지켰나요?"></td></tr><tr><td class="rq">마감 시 정리 상태를 스스로 점검했나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k22" data-s="3" aria-label="마감 시 정리 상태를 스스로 점검했나요?"></td></tr><tr><td class="rq">청소나 마감 정도를 한번더 체크하고 둘러보고 퇴근했나요? (최소 2-3번 체크)</td><td class="rc"><input type="checkbox" class="rck" data-k="k23" data-s="3" aria-label="청소나 마감 정도를 한번더 체크하고 둘러보고 퇴근했나요? (최소 2-3번 체크)"></td></tr><tr><td class="rq">“이 정도면 괜찮겠지”라고 타협하지 않았나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k24" data-s="3" aria-label="“이 정도면 괜찮겠지”라고 타협하지 않았나요?"></td></tr><tr><td class="rq">내 손을 거친 제품에 책임감을 느꼈나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k25" data-s="3" aria-label="내 손을 거친 제품에 책임감을 느꼈나요?"></td></tr></tbody></table></div><div class="rvsec"><div class="rvsh"><span class="rvno">4</span>협업 태도 &amp; 팀워크<em class="rvcnt" data-s="4">0 / 10</em></div><table class="rvtable"><thead><tr><th>질문</th><th>체크</th></tr></thead><tbody><tr><td class="rq">동료의 상황을 먼저 살피고 도왔나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k30" data-s="4" aria-label="동료의 상황을 먼저 살피고 도왔나요?"></td></tr><tr><td class="rq">바쁠 때 매장분위기를 해치는 말을 하지는 않았나요? (힘들어죽겠다, 일이 많아죽겠다, 바빠죽겠다)</td><td class="rc"><input type="checkbox" class="rck" data-k="k31" data-s="4" aria-label="바쁠 때 매장분위기를 해치는 말을 하지는 않았나요? (힘들어죽겠다, 일이 많아죽겠다, 바빠죽겠다)"></td></tr><tr><td class="rq">바쁠때 동료직원이나 사장님께 짜증을 내지 않았나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k32" data-s="4" aria-label="바쁠때 동료직원이나 사장님께 짜증을 내지 않았나요?"></td></tr><tr><td class="rq">바쁜 상황에서 팀 전체분위기를 다독이면서 이끌어 갔나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k33" data-s="4" aria-label="바쁜 상황에서 팀 전체분위기를 다독이면서 이끌어 갔나요?"></td></tr><tr><td class="rq">알바에게 업무 지시를 제대로 이행했나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k34" data-s="4" aria-label="알바에게 업무 지시를 제대로 이행했나요?"></td></tr><tr><td class="rq">동료나 사장님의 피드백에 적극적으로 순응 했나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k35" data-s="4" aria-label="동료나 사장님의 피드백에 적극적으로 순응 했나요?"></td></tr><tr><td class="rq">추가적인 업무지시에 긍정적으로 대답하고 이행했나요? (카톡으로 지시를 받을때, 쓸대없는 말은 하지 않았는지)</td><td class="rc"><input type="checkbox" class="rck" data-k="k36" data-s="4" aria-label="추가적인 업무지시에 긍정적으로 대답하고 이행했나요? (카톡으로 지시를 받을때, 쓸대없는 말은 하지 않았는지)"></td></tr><tr><td class="rq">피드백을 받을때 즉각 순응 했나요? (핑계 대지 않았나요?)</td><td class="rc"><input type="checkbox" class="rck" data-k="k37" data-s="4" aria-label="피드백을 받을때 즉각 순응 했나요? (핑계 대지 않았나요?)"></td></tr><tr><td class="rq">피드백 상황에서 자신의 감정을 잘 컨트롤하고 이해했나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k38" data-s="4" aria-label="피드백 상황에서 자신의 감정을 잘 컨트롤하고 이해했나요?"></td></tr><tr><td class="rq">근무 시간안에 일을 다 끝내고 퇴근했나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k39" data-s="4" aria-label="근무 시간안에 일을 다 끝내고 퇴근했나요?"></td></tr></tbody></table></div><div class="rvsec"><div class="rvsh"><span class="rvno">5</span>절약 기여도 &amp; 매장 관리 인식<em class="rvcnt" data-s="5">0 / 6</em></div><table class="rvtable"><thead><tr><th>질문</th><th>체크</th></tr></thead><tbody><tr><td class="rq">재료를 아끼며 사용하려 노력했나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k40" data-s="5" aria-label="재료를 아끼며 사용하려 노력했나요?"></td></tr><tr><td class="rq">불필요한 낭비를 발견해 공유했나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k41" data-s="5" aria-label="불필요한 낭비를 발견해 공유했나요?"></td></tr><tr><td class="rq">내 가게라는 마음으로 물건을 사용했나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k42" data-s="5" aria-label="내 가게라는 마음으로 물건을 사용했나요?"></td></tr><tr><td class="rq">고장·이상 사항을 바로 보고했나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k43" data-s="5" aria-label="고장·이상 사항을 바로 보고했나요?"></td></tr><tr><td class="rq">비용이 든다는 인식을 가지고 행동했나요? (비용이 추가적으로 드는 행동을 하지 않았나요?)</td><td class="rc"><input type="checkbox" class="rck" data-k="k44" data-s="5" aria-label="비용이 든다는 인식을 가지고 행동했나요? (비용이 추가적으로 드는 행동을 하지 않았나요?)"></td></tr><tr><td class="rq">로스가 나지 않게 작업을 잘 마무리 했나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k45" data-s="5" aria-label="로스가 나지 않게 작업을 잘 마무리 했나요?"></td></tr></tbody></table></div><div class="rvsec"><div class="rvsh"><span class="rvno">6</span>매출 기여도 &amp; 판매 인식<em class="rvcnt" data-s="6">0 / 8</em></div><table class="rvtable"><thead><tr><th>질문</th><th>체크</th></tr></thead><tbody><tr><td class="rq">추천 멘트를 의식적으로 사용했나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k50" data-s="6" aria-label="추천 멘트를 의식적으로 사용했나요?"></td></tr><tr><td class="rq">오늘 매출 목표를 알고 근무했나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k51" data-s="6" aria-label="오늘 매출 목표를 알고 근무했나요?"></td></tr><tr><td class="rq">손님 상황에 맞는 메뉴를 제안했나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k52" data-s="6" aria-label="손님 상황에 맞는 메뉴를 제안했나요?"></td></tr><tr><td class="rq">추가 주문을 자연스럽게 유도했나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k53" data-s="6" aria-label="추가 주문을 자연스럽게 유도했나요?"></td></tr><tr><td class="rq">매출이 매장의 생존과 연결돼 있음을 인식했나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k54" data-s="6" aria-label="매출이 매장의 생존과 연결돼 있음을 인식했나요?"></td></tr><tr><td class="rq">월 디저트 판매 목표량을 알고 근무 했나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k55" data-s="6" aria-label="월 디저트 판매 목표량을 알고 근무 했나요?"></td></tr><tr><td class="rq">생산 재고 관리는 잘했나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k56" data-s="6" aria-label="생산 재고 관리는 잘했나요?"></td></tr><tr><td class="rq">재료 재고관리는 빠지는거 없이 체크 잘해서 발주했나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k57" data-s="6" aria-label="재료 재고관리는 빠지는거 없이 체크 잘해서 발주했나요?"></td></tr></tbody></table></div><div class="rvsec"><div class="rvsh"><span class="rvno">7</span>성장 태도 &amp; 브랜드 이해<em class="rvcnt" data-s="7">0 / 6</em></div><table class="rvtable"><thead><tr><th>질문</th><th>체크</th></tr></thead><tbody><tr><td class="rq">카페스이의 기준과 방향을 이해하고 있나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k60" data-s="7" aria-label="카페스이의 기준과 방향을 이해하고 있나요?"></td></tr><tr><td class="rq">피드백을 변명부터 늘어놓지는 않았나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k61" data-s="7" aria-label="피드백을 변명부터 늘어놓지는 않았나요?"></td></tr><tr><td class="rq">지난달보다 나아진 점이 있다고 느끼나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k62" data-s="7" aria-label="지난달보다 나아진 점이 있다고 느끼나요?"></td></tr><tr><td class="rq">내가 성장하면 매장도 성장한다고 느끼나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k63" data-s="7" aria-label="내가 성장하면 매장도 성장한다고 느끼나요?"></td></tr><tr><td class="rq">이 매장에서 더 잘하고 싶다는 마음이 있나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k64" data-s="7" aria-label="이 매장에서 더 잘하고 싶다는 마음이 있나요?"></td></tr><tr><td class="rq">북스터디나 월말회의에 적극적으로 참여했나요?</td><td class="rc"><input type="checkbox" class="rck" data-k="k65" data-s="7" aria-label="북스터디나 월말회의에 적극적으로 참여했나요?"></td></tr></tbody></table></div></div>
       <div class="fform" id="rvForm"><div class="fsec"><div class="fsh">월말 자기 정리 (서술형)</div><div class="frows"><div class="frow"><label class="flab"><span>이번 달 내가 가장 잘한 행동 1가지</span></label><textarea class="fin" data-k="rv300" rows="2" aria-label="이번 달 내가 가장 잘한 행동 1가지"></textarea></div><div class="frow"><label class="flab"><span>이번 달 가장 아쉬웠던 행동 1가지</span></label><textarea class="fin" data-k="rv301" rows="2" aria-label="이번 달 가장 아쉬웠던 행동 1가지"></textarea></div><div class="frow"><label class="flab"><span>다음 달 스스로에게 기대하는 모습</span></label><textarea class="fin" data-k="rv302" rows="2" aria-label="다음 달 스스로에게 기대하는 모습"></textarea></div><div class="frow"><label class="flab"><span>매장/사장님에게 바라는 지원</span></label><textarea class="fin" data-k="rv303" rows="2" aria-label="매장/사장님에게 바라는 지원"></textarea></div></div></div><div class="fsec"><div class="fsh">월말 사장님의 피드백</div><div class="frows"><div class="frow"><label class="flab"><span>잘했던것</span></label><textarea class="fin" data-k="rv310" rows="2" aria-label="잘했던것"></textarea></div><div class="frow"><label class="flab"><span>아쉬웠던거</span></label><textarea class="fin" data-k="rv311" rows="2" aria-label="아쉬웠던거"></textarea></div><div class="frow"><label class="flab"><span>개선하면 좋은거</span></label><textarea class="fin" data-k="rv312" rows="2" aria-label="개선하면 좋은거"></textarea></div></div></div></div>
+      <div class="rvgrade" id="rvGrade" style="margin-top:14px">
+        <div class="rvgl"><div class="rvgletter" id="rvGLetter">–</div><div class="rvgpct" id="rvGPct">아래를 체크하면<br>등급이 매겨집니다</div></div>
+        <div class="rvgr">
+          <div class="rvgrow"><b>이달 지급 비율</b><span id="rvGRate">–</span></div>
+          <div class="rvgbars" id="rvGBars"></div>
+          <div class="rvgtable">등급은 항목별 체크 비율의 평균으로 매깁니다 — <b>S</b> 90% 이상 · 기본급의 20% / <b>A</b> 80% 이상 · 15% / <b>B</b> 70% 이상 · 10% / <b>C</b> 60% 이상 · 5% / <b>D</b> 60% 미만 · 없음
+            <em>재직 6개월 이상 & 기준 충족 시 지급 · 여기 등급은 자동 계산이고, 최종 등급과 지급은 월말 면담에서 사장님이 확정합니다</em></div>
+        </div>
+      </div>
+      <div class="rvbonus" id="rvPeriods"></div>
       <div class="lgact fact">
         <button type="button" id="rvCopy">평가 복사</button>
         <button type="button" id="rvClear">지우기</button>
@@ -4984,8 +4999,71 @@ input,select,textarea{border-radius:var(--r3)!important}
     var rankEl = rankId ? document.getElementById(rankId) : null;
     // 성과급 등급 (월말 평가만) — 항목별 체크 비율의 평균 → S/A/B/C/D
     var gradeBox = (checkId === "rvChecks") ? document.getElementById("rvGrade") : null;
-    var baseEl = gradeBox ? document.getElementById("rvBase") : null;
+    var baseEl = null;
     var GRADES = [["S", 90, 20], ["A", 80, 15], ["B", 70, 10], ["C", 60, 5], ["D", 0, 0]];
+    function letterOf(pct) { var g = GRADES[GRADES.length - 1]; for (var i = 0; i < GRADES.length; i++) if (pct >= GRADES[i][1]) { g = GRADES[i]; break; } return g; }
+    // 저장된 어느 달이든 등급을 계산한다 (항목별 체크 비율 평균)
+    var SECMAP = null;
+    function secMap() {
+      if (SECMAP || !box) return SECMAP;
+      SECMAP = [];
+      box.querySelectorAll(".rvsec").forEach(function (sec) {
+        var ks = Array.prototype.map.call(sec.querySelectorAll(".rck"), function (c) { return c.dataset.k; });
+        if (ks.length) SECMAP.push(ks);
+      });
+      return SECMAP;
+    }
+    function gradeOfData(data) {
+      var m = secMap(); if (!m || !data) return null;
+      var on = 0, sum = 0;
+      m.forEach(function (ks) { var hit = ks.filter(function (k) { return data[k]; }).length; on += hit; sum += hit / ks.length; });
+      if (!on) return null;
+      var pct = Math.round(sum / m.length * 100), g = letterOf(pct);
+      return { pct: pct, letter: g[0], rate: g[2] };
+    }
+    function loadMonth(ym) {
+      try { var raw = localStorage.getItem(keyBase + "." + ym + (whoEl && whoEl.value ? "." + whoEl.value : "")); return raw ? JSON.parse(raw) : null; } catch (e) { return null; }
+    }
+    // 설날·추석 상여 — 3~8월 평가는 추석에, 9~2월 평가는 설날에 모아서
+    function periodOf(ym) {
+      var y = +ym.slice(0, 4), m = +ym.slice(5, 7);
+      if (m >= 3 && m <= 8) return { name: "추석", year: y, months: [[y, 3], [y, 4], [y, 5], [y, 6], [y, 7], [y, 8]] };
+      var sy = m >= 9 ? y : y - 1;
+      return { name: "설날", year: sy + 1, months: [[sy, 9], [sy, 10], [sy, 11], [sy, 12], [sy + 1, 1], [sy + 1, 2]] };
+    }
+    function prevPeriod(pd) {
+      var f = pd.months[0]; var d = new Date(f[0], f[1] - 2, 1);
+      return periodOf(d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0"));
+    }
+    function periodCard(pd, curYm, isNow) {
+      var rows = "", pcts = [], done = 0;
+      pd.months.forEach(function (ym) {
+        var key = ym[0] + "-" + String(ym[1]).padStart(2, "0");
+        var g = gradeOfData(loadMonth(key));
+        if (g) { pcts.push(g.pct); done++; }
+        rows += '<tr' + (key === curYm ? ' class="cur"' : "") + "><td>" + ym[1] + "월</td>" +
+          (g ? '<td class="g g' + g.letter + '">' + g.letter + '</td><td class="r">' + g.pct + "% · " + (g.rate ? g.rate + "%" : "없음") + "</td>"
+             : '<td class="g none">–</td><td class="r none">' + (key < curYm ? "평가 없음" : "아직") + "</td>") + "</tr>";
+      });
+      var f = pd.months[0], l = pd.months[5];
+      var span = f[0] + "년 " + f[1] + "월 ~ " + (l[0] !== f[0] ? l[0] + "년 " : "") + l[1] + "월 평가";
+      var sumHtml;
+      if (pcts.length) {
+        var avg = Math.round(pcts.reduce(function (a, b) { return a + b; }, 0) / pcts.length), g2 = letterOf(avg);
+        sumHtml = '<div class="rvbsum"><b class="g' + g2[0] + '">' + g2[0] + "</b><span>" + pd.name + " 상여 " + (g2[2] ? "기본급의 " + g2[2] + "%" : "없음") + "</span>" +
+                  "<em>" + done + "개월 평균 " + avg + "% · 달마다 비율이 다르면 달별 비율로 정산해도 됩니다 · 최종은 사장님 확정</em></div>";
+      } else sumHtml = '<div class="rvbsum"><b class="gD">–</b><span>아직 평가한 달이 없습니다</span></div>';
+      return '<div class="rvbcard' + (isNow ? " now" : "") + '"><h5>' + (pd.name === "설날" ? "🧧" : "🌕") + " " + pd.name + " " + pd.year + " 지급분" +
+             (isNow ? "<small>지금 모으는 중</small>" : "<small>지난 기간</small>") + "</h5>" +
+             '<div class="rvbsub">' + span + "</div><table>" + rows + "</table>" + sumHtml + "</div>";
+    }
+    function paintPeriods() {
+      var el = document.getElementById("rvPeriods"); if (!el || !gradeBox) return;
+      if (!whoEl || !whoEl.value) { el.innerHTML = '<div class="rvbcard"><div class="rvbsub">이름을 고르면 설날·추석 상여 등급이 달별로 모여 보입니다</div></div>'; return; }
+      var cur = mEl.value || thisMonth();
+      var now = periodOf(cur), prev = prevPeriod(now);
+      el.innerHTML = periodCard(prev, cur, false) + periodCard(now, cur, true);
+    }
     function gradeInfo() {
       if (!box) return null;
       var secs = [], total = 0, on = 0;
@@ -4999,23 +5077,20 @@ input,select,textarea{border-radius:var(--r3)!important}
       });
       if (!on) return { on: 0, total: total, pct: 0, letter: null, rate: 0, secs: secs };
       var avg = secs.reduce(function (a, x) { return a + x.hit / x.all; }, 0) / secs.length;
-      var pct = Math.round(avg * 100), g = GRADES[GRADES.length - 1];
-      for (var i = 0; i < GRADES.length; i++) if (pct >= GRADES[i][1]) { g = GRADES[i]; break; }
-      var base = baseEl ? parseInt(String(baseEl.value).replace(/[^0-9]/g, ""), 10) : NaN;
-      return { on: on, total: total, pct: pct, letter: g[0], rate: g[2], secs: secs,
-               base: isNaN(base) ? 0 : base, pay: isNaN(base) ? 0 : Math.round(base * g[2] / 100) };
+      var pct = Math.round(avg * 100), g = letterOf(pct);
+      return { on: on, total: total, pct: pct, letter: g[0], rate: g[2], secs: secs };
     }
     function won(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
     function paintGrade() {
       if (!gradeBox) return;
       var g = gradeInfo(); if (!g) return;
       var L = document.getElementById("rvGLetter"), P = document.getElementById("rvGPct");
-      var R = document.getElementById("rvGRate"), Y = document.getElementById("rvGPay"), B = document.getElementById("rvGBars");
+      var R = document.getElementById("rvGRate"), B = document.getElementById("rvGBars");
       L.className = "rvgletter" + (g.letter ? " g" + g.letter : "");
       L.textContent = g.letter || "–";
       P.innerHTML = g.letter ? "체크 비율 평균 <b>" + g.pct + "%</b><br>" + g.on + " / " + g.total + " 체크" : "아래를 체크하면<br>등급이 매겨집니다";
       R.textContent = g.letter ? (g.rate ? "기본급의 " + g.rate + "%" : "없음 (D등급)") : "–";
-      Y.textContent = !g.letter ? "기본급을 넣으면 계산됩니다" : !g.base ? "기본급을 넣으면 계산됩니다" : g.rate ? "약 " + won(g.pay) + "원" : "0원";
+      paintPeriods();
       B.innerHTML = g.secs.map(function (x) {
         return '<div class="rvgbar"><span>' + esc(x.t) + "</span><em>" + x.pct + "%</em><i><b style=\"width:" + x.pct + '%"></b></i></div>';
       }).join("");
@@ -5044,7 +5119,6 @@ input,select,textarea{border-radius:var(--r3)!important}
         el.closest("tr").classList.toggle("done", el.checked);
       });
       if (rankEl) rankEl.value = data._rank || "";
-      if (baseEl) baseEl.value = data._base ? won(data._base) : "";
       count();
     }
     function count() {
@@ -5076,7 +5150,6 @@ input,select,textarea{border-radius:var(--r3)!important}
       cks.forEach(function (el) { if (el.checked) o[el.dataset.k] = 1; });
       o._by = by;
       if (rankEl && rankEl.value.trim()) o._rank = rankEl.value.trim();
-      if (baseEl) { var bv = parseInt(String(baseEl.value).replace(/[^0-9]/g, ""), 10); if (bv) o._base = bv; }
       try { localStorage.setItem(key(), JSON.stringify(o)); } catch (e) {}
       count();
     }
@@ -5167,8 +5240,8 @@ input,select,textarea{border-radius:var(--r3)!important}
           }
           var g = gradeBox ? gradeInfo() : null;
           if (g && g.letter) {
-            var gl = g.letter + "등급 (체크 비율 평균 " + g.pct + "%) → 성과급 " + (g.rate ? "기본급의 " + g.rate + "%" : "없음") +
-                     (g.base && g.rate ? " · 약 " + won(g.pay) + "원" : "");
+            var gl = g.letter + "등급 (체크 비율 평균 " + g.pct + "%) → 성과급 " + (g.rate ? "기본급의 " + g.rate + "%" : "없음");
+            var pdn = periodOf(when); gl += " · " + pdn.name + " " + pdn.year + " 지급분에 포함";
             html += '<div class="rpsec"><h4>성과급 등급</h4><div class="rpitem"><b>' + esc(gl) + "</b>" +
                     "<span>자동 계산 · 최종 등급은 월말 면담에서 사장님이 확정</span></div></div>";
             text.push("[성과급 등급] " + gl + " (자동 계산 · 면담에서 확정)");
@@ -5226,10 +5299,7 @@ input,select,textarea{border-radius:var(--r3)!important}
       });
     });
     if (rankEl) rankEl.addEventListener("input", function () { save(); report(); });
-    if (baseEl) {
-      baseEl.addEventListener("input", function () { save(); report(); });
-      baseEl.addEventListener("blur", function () { var v = parseInt(String(baseEl.value).replace(/[^0-9]/g, ""), 10); baseEl.value = v ? won(v) : ""; });
-    }
+
     document.getElementById(clearId).addEventListener("click", function () {
       ins.forEach(function (el) { el.value = ""; el.classList.remove("filled"); });
       cks.forEach(function (el) {
