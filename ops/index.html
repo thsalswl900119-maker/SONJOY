@@ -1842,9 +1842,9 @@ input,select,textarea{border-radius:var(--r3)!important}
         </div></div>
         <div class="skbox"><div class="skh">🍰 오늘 숫자</div><div class="skb"><div class="skf">
           <label class="w">오늘 조각케이크 생산<input type="text" id="sk_prod" class="skin" placeholder="망2 무피2 초체1 복1 멜1"></label>
-          <label>과일 사용 (알)<input type="number" step="0.5" inputmode="decimal" id="sk_fruitUseA" class="skin num"></label>
-          <label>과일 사용 (병)<input type="number" step="0.5" inputmode="decimal" id="sk_fruitUseB" class="skin num"></label>
-          <label>생크림 사용 (통)<input type="number" step="1" inputmode="numeric" id="sk_creamUse" class="skin num"></label>
+          <label>과일 사용 (알)<input type="text" inputmode="decimal" id="sk_fruitUseA" class="skin num"></label>
+          <label>과일 사용 (병)<input type="text" inputmode="decimal" id="sk_fruitUseB" class="skin num"></label>
+          <label>생크림 사용 (통)<input type="text" inputmode="decimal" id="sk_creamUse" class="skin num"></label>
           <label class="w">과일 주문·입고 예정<input type="text" id="sk_fruitOrder" class="skin" placeholder="월요일 망고 2박스"></label>
           <label class="w">생크림 주문 계획<input type="text" id="sk_creamPlan" class="skin" placeholder="목요일 12통"></label>
           <label class="w">총괄 보고할 특이사항<textarea id="sk_report" class="skta" style="min-height:52px" placeholder="냉장고 고장, 키위 3일 전 미리 말하기 등"></textarea></label>
@@ -5552,7 +5552,9 @@ input,select,textarea{border-radius:var(--r3)!important}
     function needs() {
       return allItems().filter(function (it) {
         var v = stock[it[1]];
-        return it[3] != null && v !== "" && v != null && Number(v) <= it[3];
+        if (it[3] == null || v === "" || v == null) return false;
+        var n = parseFloat(String(v).replace(/[^0-9.]/g, ""));
+        return !isNaN(n) && n <= it[3];
       }).map(function (it) { return it[1]; });
     }
 
@@ -5575,12 +5577,13 @@ input,select,textarea{border-radius:var(--r3)!important}
           row.innerHTML = '<span class="nm">' + esc(name) +
             (re != null ? "<small>" + re + unit + " 이하면 발주" + (memo ? " · " + esc(memo) : "") + "</small>"
                         : (memo ? "<small>" + esc(memo) + "</small>" : "")) + "</span>" +
-            '<input type="number" step="0.5" inputmode="decimal" class="skin" value="' + esc(val) + '">' +
+            '<input type="text" inputmode="decimal" class="skin" value="' + esc(val) + '" placeholder="수량">' +
             '<span class="u">' + esc(unit) + "</span>" +
             (custom && isMgr() ? '<button type="button" class="x" title="항목 삭제">×</button>' : "<span></span>");
           var inp = row.querySelector("input");
           var paint = function () {
-            var need = re != null && inp.value !== "" && Number(inp.value) <= re;
+            var v = parseFloat(String(inp.value).replace(/[^0-9.]/g, ""));
+            var need = re != null && inp.value !== "" && !isNaN(v) && v <= re;
             row.classList.toggle("need", need);
           };
           paint();
