@@ -3221,6 +3221,13 @@ input,select,textarea{border-radius:var(--r3)!important}
     function render() {
       var d = dateEl.value || todayStr();
       var plan = SCHED[d];
+      // 퇴근 칸은 직원만 — 사장님은 빼고, 이해선은 근무표에 없는 날도 넣는다
+      if (plan) {
+        plan = plan.filter(function (x) { return x.w !== "사장님"; });
+        if (!plan.some(function (x) { return x.w === "이해선"; })) {
+          plan = plan.concat([{ w: "이해선", r: "미들", c: "mid", s: null, e: null }]);
+        }
+      }
       var rec = load(d);
       listEl.innerHTML = "";
       if (!plan) {
