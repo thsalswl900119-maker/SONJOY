@@ -736,6 +736,13 @@ input.wp1,input.wp2,input.wp3,input.wp4{font-weight:500}
 .pn{font-size:11px;font-weight:700}
 .pn.p1{color:var(--p1)}.pn.p2{color:var(--p2)}
 .pn.p3{color:var(--p3)}.pn.p4{color:var(--p4)}
+.pnoterow{margin-top:5px;padding-top:4px;border-top:1px dashed var(--rule)}
+.pn.all{color:var(--off)}
+.pnote{font:inherit;font-size:11px;padding:2px 3px;width:100%;background:var(--bg);color:var(--muted);border:1px dashed var(--rule2);border-radius:2px}
+.pnote.set{color:var(--off);font-weight:700;background:var(--offbg);border-style:solid;border-color:var(--off)}
+.pnote:focus-visible{outline:2px solid var(--open);outline-offset:1px}
+.allnote{font-size:11px;font-weight:700;color:var(--off);background:var(--offbg);border:1px solid var(--off);border-radius:2px;padding:1px 6px;margin:2px 0 4px;display:inline-block}
+.mynote{color:var(--off)}
 .pslot{font:inherit;font-size:11.5px;padding:2px 3px;width:100%;
   background:var(--bg);color:var(--ink);border:1px solid var(--rule2);border-radius:2px}
 .pslot:focus-visible{outline:2px solid var(--open);outline-offset:1px}
@@ -2268,6 +2275,7 @@ input,select,textarea{border-radius:var(--r3)!important}
   var RORD = { open:0, dough:1, middle:2, full:2, allday:3, close:4 };
   var ROLEOPTS = ["휴무", "오픈", "미들", "마감", "전일", "반죽", "출장"];   // 직원 칸 (종일은 사장님만)
   var BOSSOPTS = ["휴무", "종일", "반죽", "오픈", "마감", "공부", "출강", "서울출장"];   // 사장님 칸
+  var NOTEOPTS = ["월말회의", "워크샵회의", "개인면담", "회식", "교육", "단축영업", "행사"];   // 그날 전체 공지
   var WDK = ["월","화","수","목","금","토","일"];
   var HOLI = { "1-1":"신정", "3-1":"삼일절", "5-5":"어린이날", "6-6":"현충일",
                "8-15":"광복절", "10-3":"개천절", "10-9":"한글날", "12-25":"크리스마스" };
@@ -2358,11 +2366,12 @@ input,select,textarea{border-radius:var(--r3)!important}
         Object.keys(data).forEach(function (md) {
           var day = md.split("-")[1];
           var date = ym + "-" + String(day).padStart(2, "0");
+          if (data[md]["공지"]) (window.__CS_NOTES = window.__CS_NOTES || {})[date] = data[md]["공지"];
           if (date < "2026-10-01") return;
           var list = [];
           Object.keys(data[md]).forEach(function (w) {
             var r = data[md][w];
-            if (!r || AWAY[r]) return;
+            if (w === "공지" || !r || AWAY[r]) return;
             var t = (T[w] || {})[r] || [null, null];
             list.push({ w: w, r: r, c: CL[r] || "own", s: t[0], e: t[1] });
           });
@@ -2404,6 +2413,8 @@ input,select,textarea{border-radius:var(--r3)!important}
       ROLEOPTS.map(function (r) { return "<option>" + r + "</option>"; }).join("");
     var bossOpts = '<option value=""></option>' +
       BOSSOPTS.map(function (r) { return "<option>" + r + "</option>"; }).join("");
+    var noteOpts = '<option value="">공지 없음</option>' +
+      NOTEOPTS.map(function (r) { return "<option>" + r + "</option>"; }).join("");
     var out = "";
     for (var i = 0; i < m.firstWd; i++) out += '<div class="pad"></div>';
     m.days.forEach(function (c) {
@@ -2421,7 +2432,11 @@ input,select,textarea{border-radius:var(--r3)!important}
             '<select class="pslot" data-d="' + m.month + "-" + c.day +
             '" data-n="' + n + '" aria-label="' + n + " " + m.month + "월 " + c.day +
             '일">' + (n === "사장님" ? bossOpts : opts) + "</select></div>";
-        }).join("") + '<div class="pwarn"></div></div>';
+        }).join("") +
+        '<div class="prow pnoterow"><span class="pn all">📣 공지</span>' +
+        '<select class="pnote" data-d="' + m.month + "-" + c.day + '" aria-label="' + m.month + "월 " + c.day + '일 전체 공지">' +
+        noteOpts + "</select></div>" +
+        '<div class="pwarn"></div></div>';
     });
     return out;
   }
@@ -3122,6 +3137,8 @@ input,select,textarea{border-radius:var(--r3)!important}
       }
       msg = head;
     }
+    var note0 = (window.__CS_NOTES || {})[t];
+    if (note0) msg += ' · <b class="mynote">📣 오늘 ' + note0 + "</b>";
     document.getElementById("myToday").innerHTML = msg;
     bar.hidden = false;
 
@@ -3214,6 +3231,7 @@ input,select,textarea{border-radius:var(--r3)!important}
         var hol = c.querySelector(".hol");
         var html = '<div class="dnum">' + c.querySelector(".dnum").textContent + "</div>" +
           (hol ? hol.outerHTML : "") +
+          (day["공지"] ? '<div class="allnote">📣 ' + esc(day["공지"]) + "</div>" : "") +
           offs.map(function (n) {
             return '<div class="offrow"><span class="offmark">휴무</span>' +
               '<span class="offwho">' + esc(n) + "</span></div>";
@@ -3272,6 +3290,7 @@ input,select,textarea{border-radius:var(--r3)!important}
     // 달 하나를 붙인다
     function bind(ym, wrap, panel) {
       var slots = Array.prototype.slice.call(wrap.querySelectorAll(".pslot"));
+      var notes = Array.prototype.slice.call(wrap.querySelectorAll(".pnote"));
       if (!slots.length) return;
       var msg = wrap.querySelector(".pmsg");
 
@@ -3285,6 +3304,10 @@ input,select,textarea{border-radius:var(--r3)!important}
           if (!el.value) return;
           (o[el.dataset.d] || (o[el.dataset.d] = {}))[el.dataset.n] = el.value;
         });
+        notes.forEach(function (el) {
+          if (!el.value) return;
+          (o[el.dataset.d] || (o[el.dataset.d] = {}))["공지"] = el.value;
+        });
         store(ym, o);
         repaint(ym);
       }
@@ -3293,6 +3316,11 @@ input,select,textarea{border-radius:var(--r3)!important}
           var d = data[el.dataset.d];
           el.value = (d && d[el.dataset.n]) || "";
           paint(el);
+        });
+        notes.forEach(function (el) {
+          var d = data[el.dataset.d];
+          el.value = (d && d["공지"]) || "";
+          el.classList.toggle("set", !!el.value);
         });
         check(panel, wrap);
       }
@@ -3323,13 +3351,21 @@ input,select,textarea{border-radius:var(--r3)!important}
           paint(el); mark(true); check(panel, wrap);
         });
       });
+      notes.forEach(function (el) {
+        el.addEventListener("change", function () {
+          el.classList.toggle("set", !!el.value); mark(true);
+        });
+      });
       if (saveBtn) saveBtn.addEventListener("click", commit);
       // 로테이션대로 채우기 — 다시 누를 때마다 다른 안(1~5안)으로 바뀐다
       var variant = -1;
       var fill = wrap.querySelector(".pfill");
       if (fill) fill.addEventListener("click", function () {
         variant = (variant + 1) % 5;
-        apply(window.__CS_DRAFT ? window.__CS_DRAFT(ym, variant) : {}); mark(true);
+        var keep = {}; notes.forEach(function (el) { if (el.value) keep[el.dataset.d] = el.value; });
+        var dr = window.__CS_DRAFT ? window.__CS_DRAFT(ym, variant) : {};
+        Object.keys(keep).forEach(function (d) { (dr[d] || (dr[d] = {}))["공지"] = keep[d]; });
+        apply(dr); mark(true);
         fill.textContent = "로테이션 " + (variant + 1) + "안 · 다시 누르면 다른 안";
         if (msg) msg.textContent = "로테이션 " + (variant + 1) + "안으로 채웠습니다 (5가지 중) · 휴무 신청 보고 고친 뒤 저장을 누르세요";
       });
@@ -3349,6 +3385,8 @@ input,select,textarea{border-radius:var(--r3)!important}
           cell.querySelectorAll(".pslot").forEach(function (el) {
             if (el.value) parts.push(el.dataset.n + " " + el.value);
           });
+          var nt = cell.querySelector(".pnote");
+          if (nt && nt.value) parts.push("📣 " + nt.value);
           if (parts.length) lines.push(day + "일(" + wd + ") " + parts.join(" · "));
         });
         if (lines.length === 1) { if (msg) msg.textContent = "아직 짠 내용이 없습니다"; return; }
