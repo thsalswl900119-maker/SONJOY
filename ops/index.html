@@ -683,7 +683,7 @@ input.wp1,input.wp2,input.wp3,input.wp4{font-weight:500}
 .onlh{padding:13px 16px;background:var(--r1);color:#FFFCF6;display:flex;flex-direction:column;gap:3px}
 .onlh b{font-family:var(--serif);font-size:20px;color:#FFFCF6;letter-spacing:.01em}
 .onlh span{font-size:12.5px;color:rgba(255,252,246,.9);line-height:1.5;font-weight:700}
-.onlcols{display:grid;grid-template-columns:1fr 1fr;background:rgba(168,64,47,.05)}
+.onlcols{display:grid;grid-template-columns:1fr 1fr 1fr;background:rgba(168,64,47,.05)}
 .onlcol+.onlcol{border-left:2px solid var(--r1)}
 .onlt{font-family:var(--serif);font-size:15px;font-weight:700;color:var(--r1);padding:10px 14px 4px;display:flex;align-items:center;gap:8px}
 .onlt::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--r1);display:inline-block}
@@ -691,7 +691,7 @@ input.wp1,input.wp2,input.wp3,input.wp4{font-weight:500}
 .onlbox .ttitle{font-size:15px;font-weight:700}
 .onlbox .tnote{font-size:12px}
 .onlbox .box{width:26px;height:26px}
-@media (max-width:700px){.onlcols{grid-template-columns:1fr}.onlcol+.onlcol{border-left:0;border-top:1px solid var(--rule)}}
+@media (max-width:1000px){.onlcols{grid-template-columns:1fr}.onlcol+.onlcol{border-left:0;border-top:2px solid var(--r1)}}
 .rvlvnote{margin:-4px 0 10px}
 .rvlast{border:2px dashed var(--p1);border-radius:var(--r);background:rgba(180,102,27,.06);padding:11px 14px;margin-bottom:12px}
 .rvlast h4{margin:0 0 6px;font-family:var(--serif);font-size:15px;color:var(--p1)}
@@ -1931,10 +1931,11 @@ input,select,textarea{border-radius:var(--r3)!important}
   </div>
 
   <div class="onlbox" id="onlBox">
-    <div class="onlh"><b>🛒 온라인 주문 채널 (네이버 · 배민 · 쿠팡) · 매일 꼭 체크</b><span>오픈 때 전부 숨김 해제 → 팔리면서 품절 · 숨김 처리 → 미들 타임에 다시 점검 · 배달앱은 「품절」 말고 「숨김」</span></div>
+    <div class="onlh"><b>🛒 온라인 주문 채널 (네이버 · 배민 · 쿠팡) · 매일 꼭 체크</b><span>오픈 때 전부 숨김 해제 → 팔리면서 품절 · 숨김 처리 → 미들 타임에 점검 → 마감 때 마지막 확인 · 배달앱은 「품절」 말고 「숨김」</span></div>
     <div class="onlcols">
       <div class="onlcol"><div class="onlt">오픈 때</div><div class="titems"><label class="titem"><button type="button" class="box" data-k="t300" aria-label="네이버 주문 — 오늘 품절로 해 둔 메뉴 · 미노출 항목 체크하기" aria-pressed="false"></button><span class="tbody"><span class="ttop"><span class="ttitle">네이버 주문 — 오늘 품절로 해 둔 메뉴 · 미노출 항목 체크하기</span></span><span class="tnote">어제 품절 · 미노출로 남은 게 없는지</span></span></label><label class="titem"><button type="button" class="box" data-k="t301" aria-label="전체 메뉴 숨김 해제 처리 확인하기" aria-pressed="false"></button><span class="tbody"><span class="ttop"><span class="ttitle">전체 메뉴 숨김 해제 처리 확인하기</span></span></span></label><label class="titem"><button type="button" class="box" data-k="t302" aria-label="배민 & 쿠팡 옵션 숨김 해제 처리 확인하기" aria-pressed="false"></button><span class="tbody"><span class="ttop"><span class="ttitle">배민 & 쿠팡 옵션 숨김 해제 처리 확인하기</span></span></span></label></div></div>
       <div class="onlcol"><div class="onlt">미들 타임</div><div class="titems"><label class="titem"><button type="button" class="box" data-k="t303" aria-label="메뉴 나가는 거 → 네이버 주문은 「오늘 품절」 처리" aria-pressed="false"></button><span class="tbody"><span class="ttop"><span class="ttitle">메뉴 나가는 거 → 네이버 주문은 「오늘 품절」 처리</span></span></span></label><label class="titem"><button type="button" class="box" data-k="t304" aria-label="배민 & 쿠팡 → 숨김 처리 하기" aria-pressed="false"></button><span class="tbody"><span class="ttop"><span class="ttitle">배민 & 쿠팡 → 숨김 처리 하기</span></span><span class="tnote">품절로 하지 말고 꼭 숨김으로</span></span></label></div></div>
+      <div class="onlcol"><div class="onlt">마감 때</div><div class="titems"><label class="titem"><button type="button" class="box" data-k="t305" aria-label="다 팔린 메뉴 마지막 확인 → 네이버 「오늘 품절」 · 배민 & 쿠팡 「숨김」" aria-pressed="false"></button><span class="tbody"><span class="ttop"><span class="ttitle">다 팔린 메뉴 마지막 확인 → 네이버 「오늘 품절」 · 배민 & 쿠팡 「숨김」</span></span><span class="tnote">품절 표시로 남은 게 없는지 한 번 더</span></span></label><label class="titem"><button type="button" class="box" data-k="t306" aria-label="내일 판매분에서 당겨 팔 수 있는 케이크는 당겨서 노출" aria-pressed="false"></button><span class="tbody"><span class="ttop"><span class="ttitle">내일 판매분에서 당겨 팔 수 있는 케이크는 당겨서 노출</span></span><span class="tnote">배달앱 알고리즘 관리 · 판매 촉진</span></span></label><label class="titem"><button type="button" class="box" data-k="t307" aria-label="내일 예약 · 픽업 · 배달 건 네이버 주문에서 확인하고 일지에 적기" aria-pressed="false"></button><span class="tbody"><span class="ttop"><span class="ttitle">내일 예약 · 픽업 · 배달 건 네이버 주문에서 확인하고 일지에 적기</span></span></span></label></div></div>
     </div>
   </div>
   <nav class="stabs" role="tablist" aria-label="조 선택"><button type="button" class="stab" data-s="td0" aria-controls="td0" aria-selected="true">오픈</button><button type="button" class="stab" data-s="td1" aria-controls="td1" aria-selected="false">미들</button><button type="button" class="stab" data-s="td2" aria-controls="td2" aria-selected="false">마감</button></nav>
