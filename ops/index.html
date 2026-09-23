@@ -678,13 +678,19 @@ input.wp1,input.wp2,input.wp3,input.wp4{font-weight:500}
 .bksnap{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0 6px;padding:9px 11px;border:1px dashed var(--rule2);border-radius:var(--r);background:var(--bg);font-size:12px}
 .bksnap b{font-size:12.5px}
 .bksnap em{flex-basis:100%;font-style:normal;color:var(--muted);font-size:11px}
-.onlbox{border:2px solid var(--p2);border-radius:var(--r);background:var(--surface);margin-bottom:12px;overflow:hidden}
-.onlh{padding:10px 14px;background:rgba(53,89,107,.10);display:flex;flex-direction:column;gap:2px}
-.onlh b{font-family:var(--serif);font-size:15.5px;color:var(--p2)}
-.onlh span{font-size:11.5px;color:var(--ink2);line-height:1.5}
-.onlcols{display:grid;grid-template-columns:1fr 1fr}
-.onlcol+.onlcol{border-left:1px solid var(--rule)}
-.onlt{font-size:12px;font-weight:700;color:var(--muted);padding:8px 14px 2px}
+.onlbox{border:3px solid var(--r1);border-radius:var(--r);background:var(--surface);margin-bottom:14px;overflow:hidden;
+  box-shadow:0 0 0 4px rgba(168,64,47,.12),0 6px 18px rgba(0,0,0,.08)}
+.onlh{padding:13px 16px;background:var(--r1);color:#FFFCF6;display:flex;flex-direction:column;gap:3px}
+.onlh b{font-family:var(--serif);font-size:20px;color:#FFFCF6;letter-spacing:.01em}
+.onlh span{font-size:12.5px;color:rgba(255,252,246,.9);line-height:1.5;font-weight:700}
+.onlcols{display:grid;grid-template-columns:1fr 1fr;background:rgba(168,64,47,.05)}
+.onlcol+.onlcol{border-left:2px solid var(--r1)}
+.onlt{font-family:var(--serif);font-size:15px;font-weight:700;color:var(--r1);padding:10px 14px 4px;display:flex;align-items:center;gap:8px}
+.onlt::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--r1);display:inline-block}
+.onlbox .titem{padding:12px 14px}
+.onlbox .ttitle{font-size:15px;font-weight:700}
+.onlbox .tnote{font-size:12px}
+.onlbox .box{width:26px;height:26px}
 @media (max-width:700px){.onlcols{grid-template-columns:1fr}.onlcol+.onlcol{border-left:0;border-top:1px solid var(--rule)}}
 .rvlvnote{margin:-4px 0 10px}
 .rvlast{border:2px dashed var(--p1);border-radius:var(--r);background:rgba(180,102,27,.06);padding:11px 14px;margin-bottom:12px}
@@ -1925,7 +1931,7 @@ input,select,textarea{border-radius:var(--r3)!important}
   </div>
 
   <div class="onlbox" id="onlBox">
-    <div class="onlh"><b>🛒 온라인 주문 채널 (네이버 · 배민 · 쿠팡) · 매일 체크</b><span>오픈 때 전부 숨김 해제 → 팔리면서 품절 · 숨김 처리 → 미들 타임에 다시 점검 · 배달앱은 「품절」 말고 「숨김」</span></div>
+    <div class="onlh"><b>🛒 온라인 주문 채널 (네이버 · 배민 · 쿠팡) · 매일 꼭 체크</b><span>오픈 때 전부 숨김 해제 → 팔리면서 품절 · 숨김 처리 → 미들 타임에 다시 점검 · 배달앱은 「품절」 말고 「숨김」</span></div>
     <div class="onlcols">
       <div class="onlcol"><div class="onlt">오픈 때</div><div class="titems"><label class="titem"><button type="button" class="box" data-k="t300" aria-label="네이버 주문 — 오늘 품절로 해 둔 메뉴 · 미노출 항목 체크하기" aria-pressed="false"></button><span class="tbody"><span class="ttop"><span class="ttitle">네이버 주문 — 오늘 품절로 해 둔 메뉴 · 미노출 항목 체크하기</span></span><span class="tnote">어제 품절 · 미노출로 남은 게 없는지</span></span></label><label class="titem"><button type="button" class="box" data-k="t301" aria-label="전체 메뉴 숨김 해제 처리 확인하기" aria-pressed="false"></button><span class="tbody"><span class="ttop"><span class="ttitle">전체 메뉴 숨김 해제 처리 확인하기</span></span></span></label><label class="titem"><button type="button" class="box" data-k="t302" aria-label="배민 & 쿠팡 옵션 숨김 해제 처리 확인하기" aria-pressed="false"></button><span class="tbody"><span class="ttop"><span class="ttitle">배민 & 쿠팡 옵션 숨김 해제 처리 확인하기</span></span></span></label></div></div>
       <div class="onlcol"><div class="onlt">미들 타임</div><div class="titems"><label class="titem"><button type="button" class="box" data-k="t303" aria-label="메뉴 나가는 거 → 네이버 주문은 「오늘 품절」 처리" aria-pressed="false"></button><span class="tbody"><span class="ttop"><span class="ttitle">메뉴 나가는 거 → 네이버 주문은 「오늘 품절」 처리</span></span></span></label><label class="titem"><button type="button" class="box" data-k="t304" aria-label="배민 & 쿠팡 → 숨김 처리 하기" aria-pressed="false"></button><span class="tbody"><span class="ttop"><span class="ttitle">배민 & 쿠팡 → 숨김 처리 하기</span></span><span class="tnote">품절로 하지 말고 꼭 숨김으로</span></span></label></div></div>
