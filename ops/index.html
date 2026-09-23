@@ -4705,6 +4705,8 @@ input,select,textarea{border-radius:var(--r3)!important}
         var memo = cells[2].value.trim();
         if (!plan && !memo) return;
         var key = pad2(t);
+        // 「12:30」 다음 줄에 「2:00」처럼 적으면 오후 2시로 본다 (표 순서가 곧 하루 순서)
+        if (key && last && key < last) { var hh = +key.slice(0, 2); if (hh < 12) key = String(hh + 12).padStart(2, "0") + key.slice(2); }
         if (key) last = key;
         rows.push({ raw: t, key: key || last || "99:99", i: i++, plan: plan, memo: memo,
                     shown: !!key });
