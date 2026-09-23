@@ -2512,7 +2512,7 @@ input,select,textarea{border-radius:var(--r3)!important}
       if (!el) return;
       el.className = "syncst " + s;
       el.textContent = s === "on" ? "☁ 컴퓨터끼리 공유 중" : s === "wait" ? "☁ 연결 중…" : s === "err" ? "☁ 공유 안 됨 · " + (msg || "") : "☁ 이 기기에만 저장 (공유 꺼짐)";
-      el.title = msg || "";
+      el.title = (msg ? msg + " · " : "") + "이 기기 번호 " + (window.__CS_DEV || "");
     }
     document.addEventListener("DOMContentLoaded", function () { setStatus(state.s, state.msg); });
     var cfg = window.FIREBASE_CONFIG;
@@ -2535,6 +2535,7 @@ input,select,textarea{border-radius:var(--r3)!important}
     var dev = null;
     try { dev = localStorage.getItem("cafesui.device"); } catch (e) {}
     if (!dev) { dev = "d" + Math.random().toString(36).slice(2, 8); try { origSet.call(localStorage, "cafesui.device", dev); } catch (e) {} }
+    window.__CS_DEV = dev;
 
     var app, db, col;
     try {
@@ -5047,6 +5048,10 @@ input,select,textarea{border-radius:var(--r3)!important}
     var cks = box ? Array.prototype.slice.call(box.querySelectorAll(".rck")) : [];
     var cntEl = countId ? document.getElementById(countId) : null;
     var rankEl = rankId ? document.getElementById(rankId) : null;
+    // 이번에 사람이 직접 만진 칸만 기억한다 — 안 만진 칸은 저장할 때 절대 비우지 않는다 (예전 화면이 새 글을 덮는 사고 방지)
+    var touched = {};
+    ins.forEach(function (el) { el.addEventListener("input", function () { touched[el.dataset.k] = true; }); });
+    cks.forEach(function (el) { el.addEventListener("change", function () { touched[el.dataset.k] = true; }); });
     // 성과급 등급 (월말 평가만) — 항목별 체크 비율의 평균 → S/A/B/C/D
     var gradeBox = (checkId === "rvChecks") ? document.getElementById("rvGrade") : null;
     var baseEl = null;
@@ -5215,7 +5220,7 @@ input,select,textarea{border-radius:var(--r3)!important}
       else if (rankEl) rankEl.value = data._rank || "";
       count();
     }
-    function load() { applyData(readKey(key())); if (gradeBox) paintRecover(); }
+    function load() { touched = {}; applyData(readKey(key())); if (gradeBox) paintRecover(); }
     // 이 컴퓨터에 이전 저장본을 남긴다 (공유 안 함) — 다른 컴퓨터가 덮어써도 되살릴 수 있게
     var HIST_KEY = "cafesui.ui.hist." + keyBase;
     function histAll() { try { return JSON.parse(localStorage.getItem(HIST_KEY) || "{}") || {}; } catch (e) { return {}; } }
@@ -5299,7 +5304,7 @@ input,select,textarea{border-radius:var(--r3)!important}
       if (keys.indexOf(key()) < 0) return;
       var a = document.activeElement, keep = (a && ins.indexOf(a) >= 0) ? [a, a.value] : null;
       load();
-      if (keep) { keep[0].value = keep[1]; keep[0].classList.toggle("filled", !!keep[1].trim()); }
+      if (keep) { keep[0].value = keep[1]; keep[0].classList.toggle("filled", !!keep[1].trim()); touched[keep[0].dataset.k] = true; }
       report();
     });
     function count() {
@@ -5319,17 +5324,24 @@ input,select,textarea{border-radius:var(--r3)!important}
       paintGrade();
     }
     function save() {
-      var o = {}, prev = {};
-      try { prev = (JSON.parse(localStorage.getItem(key()) || "{}")._by) || {}; }
-      catch (e) {}
+      var o = {}, stored = readKey(key()), prev = stored._by || {};
       var by = {}, me2 = meNow();
       ins.forEach(function (el) {
+        var k = el.dataset.k;
+        // 화면이 비어 있어도 직접 지운 게 아니면 저장돼 있던 글은 그대로 둔다
+        if (!el.value.trim() && !touched[k] && stored[k] && String(stored[k]).trim()) {
+          el.value = String(stored[k]); el.classList.add("filled");
+        }
         if (!el.value.trim()) return;
-        o[el.dataset.k] = el.value;
-        by[el.dataset.k] = prev[el.dataset.k] || me2 || "";
-        paintBy(el, by[el.dataset.k]);
+        o[k] = el.value;
+        by[k] = prev[k] || me2 || "";
+        paintBy(el, by[k]);
       });
-      cks.forEach(function (el) { if (el.checked) o[el.dataset.k] = 1; });
+      cks.forEach(function (el) {
+        var k = el.dataset.k;
+        if (!el.checked && !touched[k] && stored[k]) { el.checked = true; el.closest("tr").classList.add("done"); }
+        if (el.checked) o[k] = 1;
+      });
       o._by = by;
       if (rankEl && rankEl.value.trim()) o._rank = rankEl.value.trim();
       if (levelBox) o._level = level;
@@ -5488,9 +5500,10 @@ input,select,textarea{border-radius:var(--r3)!important}
     if (levelBox) rankEl.addEventListener("change", function () { level = rankEl.value === "점장" ? "점장" : "매니저"; applyLevel(); save(); report(); });
 
     document.getElementById(clearId).addEventListener("click", function () {
-      ins.forEach(function (el) { el.value = ""; el.classList.remove("filled"); });
+      if (!window.confirm("이 평가지의 체크와 글을 전부 지웁니다. 정말 지울까요?")) return;
+      ins.forEach(function (el) { el.value = ""; el.classList.remove("filled"); touched[el.dataset.k] = true; });
       cks.forEach(function (el) {
-        el.checked = false; el.closest("tr").classList.remove("done");
+        el.checked = false; el.closest("tr").classList.remove("done"); touched[el.dataset.k] = true;
       });
       save();
       report();
