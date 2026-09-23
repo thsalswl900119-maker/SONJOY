@@ -370,7 +370,14 @@ input.wp1,input.wp2,input.wp3,input.wp4{font-weight:500}
 .wsday.locked .wsin{background:transparent;border-color:transparent;pointer-events:none;box-shadow:none}
 .wsday.locked .wsin::placeholder{color:transparent}
 .wsday.locked .wsaddbar,.wsday.locked .wsdel{display:none}
-.wsdel{width:34px;text-align:center}
+.wsdel{width:132px;text-align:right;white-space:nowrap}
+.wsdel .wsx{margin-left:3px}
+.wsx.mv{padding:5px 6px}
+.wsdrag{display:inline-block;cursor:grab;padding:4px 7px;color:var(--muted);font-size:14px;user-select:none;border:1px dashed transparent;border-radius:4px}
+.wsdrag:hover{color:var(--ink);border-color:var(--rule2)}
+tr.dragging td{opacity:.45}
+tr.over td{box-shadow:inset 0 3px 0 var(--open)}
+tr.moved td{background:var(--openbg);transition:background .6s}
 .wsx{font:inherit;font-size:12px;line-height:1;padding:5px 7px;border:1px solid var(--rule2);border-radius:4px;
   background:var(--surface);color:var(--muted);cursor:pointer}
 .wsx:hover{color:var(--r1);border-color:var(--r1)}
@@ -2467,7 +2474,7 @@ input,select,textarea{border-radius:var(--r3)!important}
       <p>매년 11월, 다 같이 떠나서 배워 옵니다. 그 해 준비를 여기서 합니다.</p>
       <ul><li>위에 <b>지난 워크샵 카드</b>(도쿄 · 후쿠오카)가 있습니다. 누르면 그 해 기록이 열립니다</li>
       <li>올해 칸: 정하고 갈 것 · 역할 나누기 · 미리 준비할 것 · 일차별 <b>타임테이블</b> · 경비표(자동 합계) · 회의 기록 · 다녀와서 피드백</li>
-      <li>일자별 일정표는 잘못 눌러 바뀌지 않게 <b>잠겨</b> 있습니다. 고칠 땐 「✎ 일정 수정하기」를 누르고, 줄 끝 ✕로 그 줄을 지우고, 다 고쳤으면 「✓ 다 고쳤어요」로 닫으세요</li>
+      <li>일자별 일정표는 잘못 눌러 바뀌지 않게 <b>잠겨</b> 있습니다. 고칠 땐 「✎ 일정 수정하기」를 누르고, 줄 끝 ☰를 끌거나 ▲▼로 순서를 옮기고, ✕로 그 줄을 지우고, 다 고쳤으면 「✓ 다 고쳤어요」로 닫으세요</li>
       <li>「워크샵 백업」으로 그 해 것만 따로 복사해 둘 수 있습니다</li></ul></div></div>
     <div class="tstep alt"><div class="tno alt">·</div><div class="tbody"><h4>고객 응대</h4>
       <ul><li>손님 앞에서 쓰는 말을 상황별로 모아 두었습니다. 마음가짐 · 매장 응대 · 맛 · 이물질 · 서비스 · 전화</li>
@@ -4323,12 +4330,43 @@ input,select,textarea{border-radius:var(--r3)!important}
     // 일정 수정하기 — 일자별 일정표는 평소엔 잠가 두고, 버튼을 눌러야 고칠 수 있다 (줄 지우기도 그때만)
     var editBtn = document.getElementById("wsEdit");
     var editHint = document.getElementById("wsEditHint");
+    // 줄 옮기기 — ▲▼ 버튼이나 ☰ 손잡이를 끌어서. 값만 자리를 바꾼다 (저장 키는 그대로)
+    function rowVals(tr) { return Array.prototype.map.call(tr.querySelectorAll("input"), function (i) { return i.value; }); }
+    function setVals(tr, vals) { tr.querySelectorAll("input").forEach(function (i, c) { i.value = vals[c] || ""; }); }
+    function flash(tr) { tr.classList.add("moved"); setTimeout(function () { tr.classList.remove("moved"); }, 700); }
+    function moveRow(tr, delta) {
+      var body = tr.parentElement, rows = Array.prototype.slice.call(body.querySelectorAll("tr"));
+      var i = rows.indexOf(tr), j = i + delta;
+      if (i < 0 || j < 0 || j >= rows.length) return;
+      var a = rowVals(rows[i]), b = rowVals(rows[j]);
+      setVals(rows[i], b); setVals(rows[j], a);
+      save(); total(); paintMtg(); timetable(); flash(rows[j]);
+    }
+    function moveRowTo(tr, target) {
+      var body = tr.parentElement, rows = Array.prototype.slice.call(body.querySelectorAll("tr"));
+      var i = rows.indexOf(tr), j = rows.indexOf(target);
+      if (i < 0 || j < 0 || i === j || target.parentElement !== body) return;
+      var vals = rows.map(rowVals); var moved = vals.splice(i, 1)[0]; vals.splice(j, 0, moved);
+      rows.forEach(function (r, idx) { setVals(r, vals[idx]); });
+      save(); total(); paintMtg(); timetable(); flash(rows[j]);
+    }
+    var dragTr = null;
     function ensureDel(tr) {
       if (tr.querySelector(".wsdel")) return;
       var td = document.createElement("td");
       td.className = "wsdel";
-      td.innerHTML = '<button type="button" class="wsx" title="이 줄 지우기" aria-label="이 줄 지우기">✕</button>';
-      td.querySelector(".wsx").addEventListener("click", function () { delRow(tr); });
+      td.innerHTML = '<span class="wsdrag" draggable="true" title="끌어서 옮기기" aria-label="끌어서 옮기기">☰</span>' +
+        '<button type="button" class="wsx mv" data-mv="-1" title="위로" aria-label="위로">▲</button>' +
+        '<button type="button" class="wsx mv" data-mv="1" title="아래로" aria-label="아래로">▼</button>' +
+        '<button type="button" class="wsx del" title="이 줄 지우기" aria-label="이 줄 지우기">✕</button>';
+      td.querySelector(".del").addEventListener("click", function () { delRow(tr); });
+      td.querySelectorAll(".mv").forEach(function (b) { b.addEventListener("click", function () { moveRow(tr, +b.dataset.mv); }); });
+      var h = td.querySelector(".wsdrag");
+      h.addEventListener("dragstart", function (e) { dragTr = tr; tr.classList.add("dragging"); try { e.dataTransfer.setData("text/plain", "row"); e.dataTransfer.effectAllowed = "move"; } catch (x) {} });
+      h.addEventListener("dragend", function () { tr.classList.remove("dragging"); dragTr = null; document.querySelectorAll("tr.over").forEach(function (r) { r.classList.remove("over"); }); });
+      tr.addEventListener("dragover", function (e) { if (!dragTr || dragTr === tr) return; e.preventDefault(); tr.classList.add("over"); });
+      tr.addEventListener("dragleave", function () { tr.classList.remove("over"); });
+      tr.addEventListener("drop", function (e) { if (!dragTr) return; e.preventDefault(); tr.classList.remove("over"); moveRowTo(dragTr, tr); });
       tr.appendChild(td);
     }
     function delRow(tr) {
@@ -4359,7 +4397,7 @@ input,select,textarea{border-radius:var(--r3)!important}
         editBtn.classList.toggle("on", on);
         editBtn.setAttribute("aria-pressed", String(on));
       }
-      if (editHint) editHint.textContent = on ? "적는 즉시 저장됩니다 · 줄 끝 ✕로 그 줄을 지웁니다 · 다 고쳤으면 닫아 주세요"
+      if (editHint) editHint.textContent = on ? "적는 즉시 저장됩니다 · ☰ 끌기나 ▲▼로 줄을 옮기고, ✕로 지웁니다 · 다 고쳤으면 닫아 주세요"
                                             : "잘못 눌러 바뀌는 걸 막으려고 잠겨 있어요 · 고칠 땐 「일정 수정하기」";
       if (on) {
         var day0 = document.querySelector(".wsday:not([hidden]) tbody input");
