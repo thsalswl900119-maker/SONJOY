@@ -2055,7 +2055,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-5</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-6</i></span>
   <span class="sep"></span>
   <span class="svlab">백업</span>
   <span id="saveBtns"></span>
@@ -3161,9 +3161,9 @@ input,select,textarea{border-radius:var(--r3)!important}
     function hoursFor(d) {
       if (!d) return "";
       var wd = new Date(d + "T00:00:00").getDay(), hol = (window.__CS_HOL || {})[d];
-      if (wd === 0) return "정기휴무 (일요일)";
-      if (wd === 6) return "10:30–17:00 (토요일)";
-      if (hol) return "9:30–17:00 (" + hol + " · 오픈 담당 필요)";
+      if (wd === 0) return "정기휴무";
+      if (wd === 6) return "10:30–17:00";
+      if (hol) return "9:30–17:00";
       return "9:30–18:30";
     }
     function fillHours() {
