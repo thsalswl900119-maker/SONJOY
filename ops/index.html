@@ -1068,8 +1068,11 @@ tr.moved td{background:var(--openbg);transition:background .6s}
   border-bottom:1px solid var(--rule)}
 .rpitem{margin-bottom:4px;display:grid;grid-template-columns:96px 1fr;gap:2px 8px;align-items:start;padding:3px 0;border-bottom:1px dotted var(--rule)}
 .rpitem:last-child{border-bottom:0}
-.rpitem b{display:block;font-size:12.5px;font-weight:700;color:var(--ink2);line-height:1.5;word-break:keep-all}
-.rpitem span{display:block;white-space:pre-wrap;word-break:break-word;line-height:1.5}
+.rpitem b{display:block;font-size:13px;font-weight:900;color:var(--ink);line-height:1.5;word-break:keep-all}
+.rpitem span{display:block;white-space:pre-wrap;word-break:break-word;line-height:1.55;font-weight:700;font-size:13.5px;color:var(--ink)}
+.rpnums th{font-weight:900!important;color:var(--ink)!important}
+.rpnums td{font-weight:700!important;font-size:13.5px!important}
+.rpsec h4{font-weight:900!important}
 .rpempty{color:var(--muted);text-align:center;padding:24px 6px;font-size:12px}
 @media (max-width:900px){
   .rpwrap{grid-template-columns:1fr}
@@ -1810,7 +1813,7 @@ footer{margin-top:56px;padding-top:16px;border-top:1px solid var(--rule2);
 .tab:hover{background:var(--raise);color:var(--ink2)}
 .tab[aria-selected="true"]{background:var(--raise);color:var(--ink);
   border-top-color:var(--ink)}
-.tab.daily{background:var(--mid)!important;border:2px solid var(--mid)!important;color:#FFFCF6!important;font-weight:900!important;font-family:var(--sans)!important;letter-spacing:.02em;box-shadow:0 2px 0 rgba(0,0,0,.12)}
+.tab.daily{background:var(--mid)!important;border:2px solid var(--mid)!important;color:#FFFCF6!important;font-weight:900!important;font-family:var(--sans)!important;font-size:15px!important;letter-spacing:.02em;box-shadow:0 2px 0 rgba(0,0,0,.12);text-shadow:0 0 1px #fff}
 .tab.daily:hover{filter:brightness(1.08)}
 .tab.daily[aria-selected="true"]{background:#3F4A2E!important;color:#fff!important;border-color:#3F4A2E!important}
 .tab:focus-visible{outline:2px solid var(--open);outline-offset:-2px}
@@ -2112,7 +2115,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-53</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-54</i></span>
   <span class="sep"></span>
   <span class="svlab">복사본 보관</span>
   <span id="saveBtns"></span>
