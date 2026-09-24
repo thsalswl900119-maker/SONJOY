@@ -2052,7 +2052,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-2</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-3</i></span>
   <span class="sep"></span>
   <span class="svlab">백업</span>
   <span id="saveBtns"></span>
@@ -2263,15 +2263,19 @@ input,select,textarea{border-radius:var(--r3)!important}
       </div>
       <div class="bkbox">
         <div class="bkh">자료 보관 <span id="bkSize"></span></div>
-        <p class="bknote">적어둔 것은 <b>이 기기 안에만</b> 있습니다.
-          컴퓨터를 바꾸거나 브라우저 기록을 지우면 사라집니다.
-          한 달에 한 번 백업을 복사해서 텔레그램이나 메모장에 넣어두세요.
+        <p class="bknote">적어둔 것은 이 기기와 <b>카페스이 서버(Firebase)</b>에 같이 있고, 컴퓨터끼리 공유됩니다.
+          백업은 그 내용을 <b>따로 한 벌 더 복사해 두는 것</b>이라, 백업을 만들어도 여기 있는 내용은 하나도 지워지지 않습니다.
+          「전체 백업 복사」는 글로 복사돼서 텔레그램·메모장에 붙여 넣고, 「파일로 내려받기」는 다운로드 폴더에 파일로 저장됩니다(구글 드라이브·USB로 옮겨 두면 됩니다).
+          한 달에 한 번은 파일로 내려받아 두세요.
           <br>백업에는 <b>적어둔 내용 전부</b>가 들어갑니다 — 일지 · 퇴근 기록 ·
           월말회의 · 월말 평가 · 근무표 수정 · 휴무 신청 · 청소 체크 · 워크샵 ·
           연간 일정 · 비밀번호까지.</p>
         <div class="bkbtns">
           <button type="button" id="bkCopy" class="bkbig prim"><svg viewBox="0 0 24 24" class="bki" aria-hidden="true"><path d="M5 3h11l3 3v15H5z"/><path d="M8 3v6h7V3"/><path d="M8 13h8v8H8z"/></svg><span>백업 복사하기</span><em>눌러서 톡에 붙여넣기</em></button>
+          <button type="button" id="bkFile" class="bkbig"><svg viewBox="0 0 24 24" class="bki" aria-hidden="true"><path d="M12 3v12"/><path d="M8 11l4 4 4-4"/><path d="M4 21h16"/></svg><span>파일로 내려받기</span><em>다운로드 폴더에 저장</em></button>
           <button type="button" id="bkOpen" class="bkbig"><svg viewBox="0 0 24 24" class="bki" aria-hidden="true"><path d="M12 3v11"/><path d="M8 11l4 4 4-4"/><path d="M4 18v3h16v-3"/></svg><span>백업으로 되살리기</span><em>새 컴퓨터에서</em></button>
+          <button type="button" id="bkFileIn" class="bkbig"><svg viewBox="0 0 24 24" class="bki" aria-hidden="true"><path d="M12 15V4"/><path d="M8 8l4-4 4 4"/><path d="M4 21h16"/></svg><span>파일에서 되살리기</span><em>내려받은 파일 고르기</em></button>
+          <input type="file" id="bkFileInp" accept=".txt,.json,text/plain,application/json" hidden>
           <button type="button" id="bkOld" class="bkbig"><svg viewBox="0 0 24 24" class="bki" aria-hidden="true"><path d="M4 6h16"/><path d="M9 6V4h6v2"/><path d="M6 6l1 15h10l1-15"/></svg><span>1년 지난 일지 정리</span><em>안 눌러도 됩니다</em></button>
         </div>
         <div class="bkact"><span class="lgmsg" id="bkMsg"></span></div>
@@ -3927,21 +3931,52 @@ input,select,textarea{border-radius:var(--r3)!important}
       paste.hidden = !paste.hidden;
       msg.textContent = paste.hidden ? "" : "백업해둔 글을 붙여넣고 되살리기를 누르세요";
     });
-    document.getElementById("bkRestore").addEventListener("click", function () {
+    function backupText() {
+      var o = {};
+      keys().forEach(function (k) { try { o[k] = localStorage.getItem(k); } catch (e) {} });
+      return "CAFESUI-BACKUP " + new Date().toISOString().slice(0, 10) + " " + JSON.stringify(o);
+    }
+    // 파일로 내려받기 — 컴퓨터·휴대폰의 다운로드 폴더에 저장된다. 이 화면의 내용은 그대로 남는다 (복사본만 만든다)
+    var bkFileBtn = document.getElementById("bkFile");
+    if (bkFileBtn) bkFileBtn.addEventListener("click", function () {
+      try { if (window.__CS_FLUSH) window.__CS_FLUSH(); } catch (e) {}
+      var d = new Date(), name = "cafesui-backup-" + d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0") + ".txt";
+      var blob = new Blob([backupText()], { type: "text/plain;charset=utf-8" });
+      var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function () { URL.revokeObjectURL(a.href); }, 5000);
+      msg.textContent = "「" + name + "」로 내려받았습니다 · 다운로드 폴더에 있습니다";
+    });
+    // 파일에서 되살리기
+    var bkFileInBtn = document.getElementById("bkFileIn"), bkFileInp = document.getElementById("bkFileInp");
+    if (bkFileInBtn && bkFileInp) {
+      bkFileInBtn.addEventListener("click", function () { bkFileInp.value = ""; bkFileInp.click(); });
+      bkFileInp.addEventListener("change", function () {
+        var f = bkFileInp.files && bkFileInp.files[0]; if (!f) return;
+        var r = new FileReader();
+        r.onload = function () { document.getElementById("bkText").value = String(r.result || ""); restoreFromText(); };
+        r.readAsText(f, "utf-8");
+      });
+    }
+    function restoreFromText() {
       var v = (document.getElementById("bkText").value || "").trim();
       var i = v.indexOf("{");
       if (i < 0) { msg.textContent = "백업 내용이 아닙니다"; return; }
       var o;
       try { o = JSON.parse(v.slice(i)); }
       catch (e) { msg.textContent = "백업 내용이 깨졌습니다"; return; }
+      var cnt = Object.keys(o).filter(function (k) { return k.indexOf("cafesui.") === 0; }).length;
+      var stamp = (v.match(/CAFESUI-BACKUP\s+(\d{4}-\d{2}-\d{2})/) || [])[1] || "";
+      if (!window.confirm("백업" + (stamp ? " (" + stamp + ")" : "") + " " + cnt + "개 항목을 되살릴까요?\n\n백업에 들어 있는 항목은 백업 내용으로 바뀝니다 (같은 날짜 일지 · 같은 달 근무표 등).\n백업에 없는 항목은 그대로 남습니다.")) return;
       var n = 0;
       Object.keys(o).forEach(function (k) {
         if (k.indexOf("cafesui.") !== 0 || /^cafesui\.(me|unlocked|device|syncstate|ui\..*)$/.test(k)) return;   // 기기 번호는 컴퓨터마다 달라야 한다
         try { localStorage.setItem(k, o[k]); n += 1; } catch (e) {}
       });
       msg.textContent = n + "개를 되살렸습니다 · 화면을 새로 엽니다";
-      setTimeout(function () { location.reload(); }, 900);
-    });
+      setTimeout(function () { if (window.__CS_RELOAD) window.__CS_RELOAD(); else location.reload(); }, 900);
+    }
+    document.getElementById("bkRestore").addEventListener("click", restoreFromText);
 
     document.getElementById("bkOld").addEventListener("click", function () {
       var cut = new Date();
@@ -6959,6 +6994,9 @@ input,select,textarea{border-radius:var(--r3)!important}
 .syncst.wait{background:var(--openbg);color:var(--open)!important}
 .syncst.err{background:var(--offbg);color:var(--off)!important}
 .savebar .sep{flex:1}
+#saveBtns{order:-1;flex:0 0 100%;display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding-bottom:6px;border-bottom:1px dashed var(--rule2);margin-bottom:2px}
+#saveBtns::before{content:"백업";font-size:12.5px;font-weight:700;color:var(--muted);letter-spacing:.06em;margin-right:4px}
+.savebar .svlab{display:none}
 .savebar .svlab{font-size:12.5px;font-weight:700;color:var(--muted);letter-spacing:.06em}
 .savebar #saveBtns{display:inline-flex;flex-wrap:wrap;gap:5px}
 .savebar .bkmini.prim{background:var(--open);color:#FFFCF6;border-color:var(--open)}
@@ -7476,9 +7514,12 @@ input,select,textarea{border-radius:var(--r3)!important}
     }
     var copy = document.getElementById("bkCopy"), open = document.getElementById("bkOpen");
     if (copy) { var sp = copy.querySelector("span"); if (sp) sp.textContent = "전체 백업 복사"; btns.appendChild(slim(copy, "prim")); }
+    var bf = document.getElementById("bkFile"), bfi = document.getElementById("bkFileIn");
+    if (bf) { var sp3 = bf.querySelector("span"); if (sp3) sp3.textContent = "파일로 내려받기"; btns.appendChild(slim(bf)); }
     if (open) { var sp2 = open.querySelector("span"); if (sp2) sp2.textContent = "백업 되살리기"; btns.appendChild(slim(open)); }
+    if (bfi) { var sp4 = bfi.querySelector("span"); if (sp4) sp4.textContent = "파일에서 되살리기"; btns.appendChild(slim(bfi)); }
     document.querySelectorAll(".bkmini").forEach(function (b) {
-      if (b === copy || b === open) return;
+      if (b === copy || b === open || b === bf || b === bfi) return;
       var wrap = b.closest(".bkbar");
       btns.appendChild(b);
       if (wrap && !wrap.querySelector("button")) wrap.hidden = true;
