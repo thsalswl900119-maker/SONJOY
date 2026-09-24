@@ -2095,9 +2095,9 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-29</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-30</i></span>
   <span class="sep"></span>
-  <span class="svlab">백업</span>
+  <span class="svlab">복사본 보관</span>
   <span id="saveBtns"></span>
   <div class="bkrow" id="saveRow"></div>
   <button type="button" class="newver" id="newVer" hidden>🔄 새 버전이 올라왔어요 — 눌러서 새로고침 (적은 내용은 그대로 남습니다)</button>
@@ -2308,34 +2308,34 @@ input,select,textarea{border-radius:var(--r3)!important}
       <div class="bkbox">
         <div class="bkh">자료 보관 <span id="bkSize"></span></div>
         <p class="bknote">적어둔 것은 이 기기와 <b>카페스이 서버(Firebase)</b>에 같이 있고, 컴퓨터끼리 공유됩니다.
-          백업은 그 내용을 <b>따로 한 벌 더 복사해 두는 것</b>이라, 백업을 만들어도 여기 있는 내용은 하나도 지워지지 않습니다.
-          「전체 백업 복사」는 글로 복사돼서 텔레그램·메모장에 붙여 넣고, 「파일로 내려받기」는 다운로드 폴더에 파일로 저장됩니다(구글 드라이브·USB로 옮겨 두면 됩니다).
-          한 달에 한 번은 파일로 내려받아 두세요.
-          <br>백업에는 <b>적어둔 내용 전부</b>가 들어갑니다 — 일지 · 퇴근 기록 ·
+          <b>「복사본 보관」은 그 내용을 따로 한 벌 더 복사해 두는 것</b>입니다. 서버가 잘못되거나 실수로 지웠을 때를 대비하는 보험이고, 복사본을 만들어도 여기 있는 내용은 하나도 지워지지 않습니다.
+          「전체 내용 글로 복사」는 긴 글이 복사되니 텔레그램·메모장에 붙여 넣으면 되고, 「전체 내용 파일로 저장」은 <b>.txt 글자 파일</b>(예: cafesui-copy-2026-09-24.txt)이 다운로드 폴더에 생깁니다. 메모장으로 열리는 보통 글자 파일이고, 구글 드라이브·USB로 옮겨 두면 됩니다.
+          한 달에 한 번 파일로 저장해 두면 충분합니다.
+          <br>복사본에는 <b>적어둔 내용 전부</b>가 들어갑니다 — 일지 · 퇴근 기록 ·
           월말회의 · 월말 평가 · 근무표 수정 · 휴무 신청 · 청소 체크 · 워크샵 ·
           연간 일정 · 비밀번호까지.</p>
         <div class="bkbtns">
-          <button type="button" id="bkCopy" class="bkbig prim"><svg viewBox="0 0 24 24" class="bki" aria-hidden="true"><path d="M5 3h11l3 3v15H5z"/><path d="M8 3v6h7V3"/><path d="M8 13h8v8H8z"/></svg><span>백업 복사하기</span><em>눌러서 톡에 붙여넣기</em></button>
-          <button type="button" id="bkFile" class="bkbig"><svg viewBox="0 0 24 24" class="bki" aria-hidden="true"><path d="M12 3v12"/><path d="M8 11l4 4 4-4"/><path d="M4 21h16"/></svg><span>파일로 내려받기</span><em>다운로드 폴더에 저장</em></button>
-          <button type="button" id="bkOpen" class="bkbig"><svg viewBox="0 0 24 24" class="bki" aria-hidden="true"><path d="M12 3v11"/><path d="M8 11l4 4 4-4"/><path d="M4 18v3h16v-3"/></svg><span>백업으로 되살리기</span><em>새 컴퓨터에서</em></button>
-          <button type="button" id="bkFileIn" class="bkbig"><svg viewBox="0 0 24 24" class="bki" aria-hidden="true"><path d="M12 15V4"/><path d="M8 8l4-4 4 4"/><path d="M4 21h16"/></svg><span>파일에서 되살리기</span><em>내려받은 파일 고르기</em></button>
+          <button type="button" id="bkCopy" class="bkbig prim"><svg viewBox="0 0 24 24" class="bki" aria-hidden="true"><path d="M5 3h11l3 3v15H5z"/><path d="M8 3v6h7V3"/><path d="M8 13h8v8H8z"/></svg><span>전체 내용 글로 복사</span><em>눌러서 톡에 붙여넣기</em></button>
+          <button type="button" id="bkFile" class="bkbig"><svg viewBox="0 0 24 24" class="bki" aria-hidden="true"><path d="M12 3v12"/><path d="M8 11l4 4 4-4"/><path d="M4 21h16"/></svg><span>전체 내용 파일로 저장</span><em>.txt 글자 파일 · 다운로드 폴더</em></button>
+          <button type="button" id="bkOpen" class="bkbig"><svg viewBox="0 0 24 24" class="bki" aria-hidden="true"><path d="M12 3v11"/><path d="M8 11l4 4 4-4"/><path d="M4 18v3h16v-3"/></svg><span>복사한 글 붙여넣어 불러오기</span><em>새 컴퓨터에서</em></button>
+          <button type="button" id="bkFileIn" class="bkbig"><svg viewBox="0 0 24 24" class="bki" aria-hidden="true"><path d="M12 15V4"/><path d="M8 8l4-4 4 4"/><path d="M4 21h16"/></svg><span>저장한 파일 불러오기</span><em>저장해 둔 .txt 파일 고르기</em></button>
           <input type="file" id="bkFileInp" accept=".txt,.json,text/plain,application/json" hidden>
           <button type="button" id="bkOld" class="bkbig"><svg viewBox="0 0 24 24" class="bki" aria-hidden="true"><path d="M4 6h16"/><path d="M9 6V4h6v2"/><path d="M6 6l1 15h10l1-15"/></svg><span>1년 지난 일지 정리</span><em>안 눌러도 됩니다</em></button>
         </div>
         <div class="bkact"><span class="lgmsg" id="bkMsg"></span></div>
         <div class="period" id="bkPeriod"></div>
         <div class="bksnap">
-          <b>🗓 자동 백업 (이 컴퓨터 · 하루 한 번 · 최근 7일)</b>
+          <b>🗓 자동 복사본 (이 컴퓨터가 하루 한 번 스스로 남김 · 최근 7일)</b>
           <select id="bkSnapSel" class="dinp"></select>
-          <button type="button" class="wsmini" id="bkSnapFill">이 백업으로 사라진 것만 채워 넣기</button>
-          <button type="button" class="wsmini" id="bkSnapCopy">이 백업 복사</button>
+          <button type="button" class="wsmini" id="bkSnapFill">이 복사본으로 빈 칸만 채우기</button>
+          <button type="button" class="wsmini" id="bkSnapCopy">이 복사본 글로 복사</button>
           <span class="lgmsg" id="bkSnapMsg"></span>
           <em>채워 넣기는 지금 비어 있는 칸만 채우고, 지금 있는 내용은 절대 지우지 않습니다.</em>
         </div>
         <div id="bkPaste" hidden>
           <textarea id="bkText" rows="3" class="wsin"
-            placeholder="백업해둔 내용을 여기에 붙여넣으세요"></textarea>
-          <div class="bkact"><button type="button" id="bkRestore">되살리기</button></div>
+            placeholder="복사해 둔 글을 여기에 붙여넣으세요"></textarea>
+          <div class="bkact"><button type="button" id="bkRestore">불러오기</button></div>
         </div>
       </div>
     </div>
@@ -2664,13 +2664,13 @@ input,select,textarea{border-radius:var(--r3)!important}
       <ul><li>쉬는 날이면 「오늘은 쉬는 날이에요 · 다음 근무는 …」</li>
       <li><b>내 이름이 아니면</b> 오른쪽 「내가 아니에요」를 누르고 다시 고르세요. 남의 이름으로 체크하면 그 사람 색으로 남습니다</li>
       <li>다 쓰고 자리를 뜰 때도 「내가 아니에요」. 다음 사람이 자기 이름으로 들어옵니다</li></ul></div></div>
-    <div class="tstep"><div class="tno">3</div><div class="tbody"><h4>상단 「저장 · 백업」 줄</h4>
+    <div class="tstep"><div class="tno">3</div><div class="tbody"><h4>상단 「저장 · 복사본 보관」 줄</h4>
       <p>어느 탭에 있어도 항상 위에 붙어 있는 줄입니다.</p>
       <ul><li><b>💾 저장</b>: 적는 건 즉시 저장되지만, 짜던 근무표처럼 아직 안 들어간 것까지 한 번에 저장합니다. 나가기 전에 한 번 누르세요. 근무표를 건드리면 버튼이 빨개집니다</li>
       <li><b>☁ 표시</b>: 「컴퓨터끼리 공유 중」이면 여기서 적은 게 다른 컴퓨터에도 들어갑니다. 「공유 안 됨」이면 이 컴퓨터에만 남으니 사장님께 말씀하세요</li>
-      <li><b>전체 백업 복사</b>: 이 기기에 적힌 것 전부를 글로 복사합니다. 톡방이나 메모장에 붙여 두세요 (주 1회 권장)</li>
-      <li><b>백업 되살리기</b>: 새 컴퓨터에서 그 글을 붙여넣으면 그대로 돌아옵니다</li>
-      <li><b>근무표 · 일지 · 월말회의 · 평가 · 워크샵 백업</b>: 그 묶음만 따로 복사합니다</li></ul></div></div>
+      <li><b>전체 내용 글로 복사</b>: 적힌 것 전부를 글로 복사합니다. 톡방이나 메모장에 붙여 두세요. <b>전체 내용 파일로 저장</b>은 .txt 글자 파일로 내려받습니다 (월 1회 권장)</li>
+      <li><b>불러오기</b>: 복사해 둔 글을 붙여넣거나 저장한 파일을 고르면 그 내용으로 돌아옵니다</li>
+      <li><b>근무표 · 일지 · 월말회의 · 평가 · 워크샵만 글로 복사</b>: 그 묶음만 따로 복사합니다</li></ul></div></div>
   </div>
 
   <h3 class="subhead">날마다 하는 것</h3>
@@ -2756,18 +2756,18 @@ input,select,textarea{border-radius:var(--r3)!important}
       <li><b>독서나눔</b> 탭: 사장님이 필독서와 요약을 올리면, 직원은 자기 칸에 느낀 점 3줄 이상 · 카페에 적용해볼 것 3가지 이상 · 추천 도서를 적습니다. 자기 칸만 고칠 수 있고, 지난 책은 아래에 접혀 있습니다</li>
       <li><b>제과제빵</b> 탭: 레시피 · 제조 기준을 카드로 모읍니다. 「＋ 항목 추가」 → 분류 · 제목 · 내용을 적으면 바로 저장되고 컴퓨터끼리 공유됩니다. 「크게」로 넓게 보고, 위 찾기 칸으로 검색합니다</li>
       <li>일자별 일정표는 잘못 눌러 바뀌지 않게 <b>잠겨</b> 있습니다. 고칠 땐 「✎ 일정 수정하기」를 누르고, 줄 끝 ☰를 끌거나 ▲▼로 순서를 옮기고, ✕로 그 줄을 지우고, 다 고쳤으면 「✓ 다 고쳤어요」로 닫으세요</li>
-      <li>「워크샵 백업」으로 그 해 것만 따로 복사해 둘 수 있습니다</li></ul></div></div>
+      <li>「워크샵만 글로 복사」로 그 해 것만 따로 복사해 둘 수 있습니다</li></ul></div></div>
     <div class="tstep alt"><div class="tno alt">·</div><div class="tbody"><h4>고객 응대</h4>
       <ul><li>손님 앞에서 쓰는 말을 상황별로 모아 두었습니다. 마음가짐 · 매장 응대 · 맛 · 이물질 · 서비스 · 전화</li>
       <li><b>잘못을 알았으면 즉각 사과가 먼저.</b> 해결은 매니저 · 사장님이 합니다. 이물질이나 큰 컴플레인은 바로 전화</li></ul></div></div>
   </div>
 
-  <h3 class="subhead">색 · 저장 · 백업 — 꼭 알아둘 것</h3>
+  <h3 class="subhead">색 · 저장 · 복사본 보관 — 꼭 알아둘 것</h3>
   <div class="tfaqs">
     <div class="tfaq"><b>누가 했는지는 색으로 봅니다</b><span>정항아 주황 · 박혜빈 남색 · 이해선 빨강 · 사장님 초록. 체크 칸, 적은 글자, 청소 담당 칩, 근무표 이름이 전부 같은 색입니다. 그래서 자리에 앉으면 위 띠의 이름부터 확인하세요.</span></div>
     <div class="tfaq"><b>적은 것은 컴퓨터끼리 같이 보입니다</b><span>위 「☁ 컴퓨터끼리 공유 중」이 켜져 있으면 아이맥에서 적은 게 다른 컴퓨터에도 몇 초 안에 들어갑니다. 다른 컴퓨터에서 바뀐 게 있으면 자동으로 새로 읽고, 적는 중이면 위에 「🔄 새로 읽기」 버튼이 뜹니다. 같은 칸을 두 컴퓨터가 동시에 고치면 나중에 저장한 쪽이 남습니다. 「☁ 공유 안 됨」이면 이 기기에만 남으니 백업 복사 → 되살리기로 옮깁니다.</span></div>
     <div class="tfaq"><b>저장은 자동, 확인은 버튼</b><span>글자를 치면 바로 저장됩니다. 근무표 짜기만 「저장」을 눌러야 합니다. 습관처럼 나가기 전에 위 초록 「저장」을 한 번 누르면 어느 쪽이든 안전합니다. 30분 잠금이 걸릴 때도 잠그기 전에 한 번 저장합니다.</span></div>
-    <div class="tfaq"><b>백업은 주 1회</b><span>브라우저 기록을 지우거나 컴퓨터를 바꾸면 사라집니다. 「전체 백업 복사」를 눌러 톡방 「백업」 채팅에 붙여 두세요. 「자료 보관」(일지 탭 아래)에 지금 얼마나 쓰고 있는지 나옵니다.</span></div>
+    <div class="tfaq"><b>복사본은 월 1회</b><span>내용은 서버에도 있지만, 만약을 위해 「전체 내용 파일로 저장」을 한 달에 한 번 눌러 파일을 구글 드라이브나 USB에 두세요. 「자료 보관」(일지 탭 아래)에 지금 얼마나 쓰고 있는지 나옵니다.</span></div>
   </div>
 
   <h3 class="subhead">이럴 땐 이렇게</h3>
@@ -2779,7 +2779,7 @@ input,select,textarea{border-radius:var(--r3)!important}
     <div class="tfaq"><b>어제 발주가 오늘도 보여요</b><span>주문 안 된 줄이라서 넘어온 것입니다. 사장님 · 매니저가 「주문함」을 체크하면 다음 날부터 사라집니다.</span></div>
     <div class="tfaq"><b>근무표가 실제와 달라요</b><span>매니저가 「근무표 고치기」로 바꾸고 「다 고쳤어요」를 누르면 이 기기 화면에 반영됩니다. 매니저에게 말씀하세요.</span></div>
     <div class="tfaq"><b>월말 평가 탭이 안 보여요</b><span>매니저 이상만 있는 메뉴입니다. 다른 분 화면에는 아예 안 나옵니다.</span></div>
-    <div class="tfaq"><b>잘못 눌렀어요</b><span>다시 누르면 취소됩니다. 전부 지우려면 각 화면의 「지우기」. 지워도 백업이 있으면 되살릴 수 있습니다.</span></div>
+    <div class="tfaq"><b>잘못 눌렀어요</b><span>다시 누르면 취소됩니다. 전부 지우려면 각 화면의 「지우기」. 지워도 복사본이 있으면 불러올 수 있습니다.</span></div>
   </div>
 
   <div class="tend">
@@ -3078,7 +3078,7 @@ input,select,textarea{border-radius:var(--r3)!important}
     var fb = document.getElementById("bkSnapFill"), cb = document.getElementById("bkSnapCopy");
     if (fb) fb.addEventListener("click", function () {
       var d = sel && sel.value; if (!d) return;
-      if (!window.confirm(d + " 백업으로, 지금 비어 있는 것만 채워 넣을까요? (있는 내용은 그대로 둡니다)")) return;
+      if (!window.confirm(d + " 복사본으로, 지금 비어 있는 칸만 채울까요? (있는 내용은 그대로 둡니다)")) return;
       var n = fillFrom(d);
       if (msgEl) msgEl.textContent = n ? n + "곳을 채웠습니다 · 화면을 새로 읽습니다" : "채울 것이 없습니다 (지금 내용이 더 많거나 같습니다)";
       if (n) setTimeout(function () { location.reload(); }, 900);
@@ -3917,7 +3917,7 @@ input,select,textarea{border-radius:var(--r3)!important}
           }
         } catch (e) {}
         var lab = b.querySelector("span");
-        var back = b.dataset.label + " 백업";
+        var back = b.dataset.label + "만 글로 복사";
         var timer = null;
         function say(t) {
           if (!lab) return;
@@ -3976,7 +3976,7 @@ input,select,textarea{border-radius:var(--r3)!important}
               : (n / 1048576).toFixed(2) + "MB";
       sizeEl.textContent = txt + " 사용 중";
       if (n > 4 * 1048576) {
-        sizeEl.textContent = txt + " — 곧 가득 찹니다. 백업하고 정리하세요";
+        sizeEl.textContent = txt + " — 곧 가득 찹니다. 파일로 저장해 두고 정리하세요";
         sizeEl.style.color = "var(--off)";
       }
     }
@@ -3998,10 +3998,10 @@ input,select,textarea{border-radius:var(--r3)!important}
       } else if (left > 0) {
         el.className = "period warn";
         el.innerHTML = "<b>3년이 다 되어갑니다 — 남은 기간 " + left + "개월.</b> " +
-          "백업을 받아두고, 이어서 쓸지 새로 만들지 정하실 때입니다.";
+          "전체 내용을 파일로 저장해 두고, 이어서 쓸지 새로 만들지 정하실 때입니다.";
       } else {
         el.className = "period warn";
-        el.innerHTML = "<b>쓰기로 한 3년이 지났습니다.</b> 백업을 받아두세요. " +
+        el.innerHTML = "<b>쓰기로 한 3년이 지났습니다.</b> 전체 내용을 파일로 저장해 두세요. " +
           "이어서 쓰셔도 기록은 그대로 쌓입니다.";
       }
     })();
@@ -4032,7 +4032,7 @@ input,select,textarea{border-radius:var(--r3)!important}
     var paste = document.getElementById("bkPaste");
     document.getElementById("bkOpen").addEventListener("click", function () {
       paste.hidden = !paste.hidden;
-      msg.textContent = paste.hidden ? "" : "백업해둔 글을 붙여넣고 되살리기를 누르세요";
+      msg.textContent = paste.hidden ? "" : "복사해 둔 글을 붙여넣고 「불러오기」를 누르세요";
     });
     function backupText() {
       var o = {};
@@ -4043,7 +4043,7 @@ input,select,textarea{border-radius:var(--r3)!important}
     var bkFileBtn = document.getElementById("bkFile");
     if (bkFileBtn) bkFileBtn.addEventListener("click", function () {
       try { if (window.__CS_FLUSH) window.__CS_FLUSH(); } catch (e) {}
-      var d = new Date(), name = "cafesui-backup-" + d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0") + ".txt";
+      var d = new Date(), name = "cafesui-copy-" + d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0") + ".txt";
       var blob = new Blob([backupText()], { type: "text/plain;charset=utf-8" });
       var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name;
       document.body.appendChild(a); a.click(); a.remove();
@@ -4064,19 +4064,19 @@ input,select,textarea{border-radius:var(--r3)!important}
     function restoreFromText() {
       var v = (document.getElementById("bkText").value || "").trim();
       var i = v.indexOf("{");
-      if (i < 0) { msg.textContent = "백업 내용이 아닙니다"; return; }
+      if (i < 0) { msg.textContent = "복사본 글이 아닙니다"; return; }
       var o;
       try { o = JSON.parse(v.slice(i)); }
-      catch (e) { msg.textContent = "백업 내용이 깨졌습니다"; return; }
+      catch (e) { msg.textContent = "복사본 글이 깨졌습니다"; return; }
       var cnt = Object.keys(o).filter(function (k) { return k.indexOf("cafesui.") === 0; }).length;
       var stamp = (v.match(/CAFESUI-BACKUP\s+(\d{4}-\d{2}-\d{2})/) || [])[1] || "";
-      if (!window.confirm("백업" + (stamp ? " (" + stamp + ")" : "") + " " + cnt + "개 항목을 되살릴까요?\n\n백업에 들어 있는 항목은 백업 내용으로 바뀝니다 (같은 날짜 일지 · 같은 달 근무표 등).\n백업에 없는 항목은 그대로 남습니다.")) return;
+      if (!window.confirm("복사본" + (stamp ? " (" + stamp + " 것)" : "") + " " + cnt + "개 항목을 불러올까요?\n\n복사본에 들어 있는 항목은 복사본 내용으로 바뀝니다 (같은 날짜 일지 · 같은 달 근무표 등).\n복사본에 없는 항목은 그대로 남습니다.")) return;
       var n = 0;
       Object.keys(o).forEach(function (k) {
         if (k.indexOf("cafesui.") !== 0 || /^cafesui\.(me|unlocked|device|syncstate|ui\..*)$/.test(k)) return;   // 기기 번호는 컴퓨터마다 달라야 한다
         try { localStorage.setItem(k, o[k]); n += 1; } catch (e) {}
       });
-      msg.textContent = n + "개를 되살렸습니다 · 화면을 새로 엽니다";
+      msg.textContent = n + "개를 불러왔습니다 · 화면을 새로 엽니다";
       setTimeout(function () { if (window.__CS_RELOAD) window.__CS_RELOAD(); else location.reload(); }, 900);
     }
     document.getElementById("bkRestore").addEventListener("click", restoreFromText);
@@ -7121,7 +7121,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 .syncst.err{background:var(--offbg);color:var(--off)!important}
 .savebar .sep{flex:1}
 #saveBtns{order:-1;flex:0 0 100%;display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding-bottom:6px;border-bottom:1px dashed var(--rule2);margin-bottom:2px}
-#saveBtns::before{content:"백업";font-size:12.5px;font-weight:700;color:var(--muted);letter-spacing:.06em;margin-right:4px}
+#saveBtns::before{content:"복사본 보관";font-size:12.5px;font-weight:700;color:var(--muted);letter-spacing:.06em;margin-right:4px}
 .savebar .svlab{display:none}
 .savebar .svlab{font-size:12.5px;font-weight:700;color:var(--muted);letter-spacing:.06em}
 .savebar #saveBtns{display:inline-flex;flex-wrap:wrap;gap:5px}
@@ -7639,11 +7639,11 @@ input,select,textarea{border-radius:var(--r3)!important}
       return b;
     }
     var copy = document.getElementById("bkCopy"), open = document.getElementById("bkOpen");
-    if (copy) { var sp = copy.querySelector("span"); if (sp) sp.textContent = "전체 백업 복사"; btns.appendChild(slim(copy, "prim")); }
+    if (copy) { var sp = copy.querySelector("span"); if (sp) sp.textContent = "전체 내용 글로 복사"; btns.appendChild(slim(copy, "prim")); }
     var bf = document.getElementById("bkFile"), bfi = document.getElementById("bkFileIn");
-    if (bf) { var sp3 = bf.querySelector("span"); if (sp3) sp3.textContent = "파일로 내려받기"; btns.appendChild(slim(bf)); }
-    if (open) { var sp2 = open.querySelector("span"); if (sp2) sp2.textContent = "백업 되살리기"; btns.appendChild(slim(open)); }
-    if (bfi) { var sp4 = bfi.querySelector("span"); if (sp4) sp4.textContent = "파일에서 되살리기"; btns.appendChild(slim(bfi)); }
+    if (bf) { var sp3 = bf.querySelector("span"); if (sp3) sp3.textContent = "전체 내용 파일로 저장 (.txt)"; btns.appendChild(slim(bf)); }
+    if (open) { var sp2 = open.querySelector("span"); if (sp2) sp2.textContent = "복사한 글 붙여넣어 불러오기"; btns.appendChild(slim(open)); }
+    if (bfi) { var sp4 = bfi.querySelector("span"); if (sp4) sp4.textContent = "저장한 파일 불러오기"; btns.appendChild(slim(bfi)); }
     document.querySelectorAll(".bkmini").forEach(function (b) {
       if (b === copy || b === open || b === bf || b === bfi) return;
       var wrap = b.closest(".bkbar");
