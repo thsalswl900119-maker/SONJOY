@@ -3864,7 +3864,7 @@ input,select,textarea{border-radius:var(--r3)!important}
     setTimeout(function () {
       document.querySelectorAll(".atcard").forEach(function (c) {
         var w = c.querySelector(".atwho");
-        c.classList.toggle("mine", !!w && w.textContent === me);
+        c.classList.toggle("mine", !!w && w.textContent.replace(/님$/, "") === String(me).replace(/님$/, ""));
       });
       var lw = document.getElementById("lgWho");
       if (lw && !lw.value) {
@@ -7245,6 +7245,33 @@ input,select,textarea{border-radius:var(--r3)!important}
       var y = +monEl.value.slice(0, 4), m = +monEl.value.slice(5, 7) + 1; if (m > 12) { m = 1; y++; }
       monEl.value = y + "-" + pad(m); sel = null; edit.hidden = true; render(); });
     render();
+  })();
+</script>
+<script>
+  // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
+  (function () {
+    var RE = /(정항아|박혜빈|이해선)(?!님)/g;
+    var SKIP = { SCRIPT: 1, STYLE: 1, TEXTAREA: 1, INPUT: 1, TITLE: 1 };
+    function fixText(t) {
+      var v = t.nodeValue; if (!v || v.indexOf("정항아") < 0 && v.indexOf("박혜빈") < 0 && v.indexOf("이해선") < 0) return;
+      var p = t.parentNode; if (!p || p.nodeType !== 1) return;
+      if (SKIP[p.nodeName] || (p.closest && p.closest("textarea,script,style,[contenteditable=true]"))) return;
+      if (p.nodeName === "OPTION" && !p.hasAttribute("value")) p.setAttribute("value", v);
+      var nv = v.replace(RE, "$1님"); if (nv !== v) t.nodeValue = nv;
+    }
+    function walk(root) {
+      if (root.nodeType === 3) { fixText(root); return; }
+      if (root.nodeType !== 1 || SKIP[root.nodeName]) return;
+      var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT), n;
+      while ((n = w.nextNode())) fixText(n);
+    }
+    walk(document.body);
+    new MutationObserver(function (ms) {
+      ms.forEach(function (m) {
+        if (m.type === "characterData") fixText(m.target);
+        else for (var i = 0; i < m.addedNodes.length; i++) walk(m.addedNodes[i]);
+      });
+    }).observe(document.body, { childList: true, subtree: true, characterData: true });
   })();
 </script>
 </body></html>
