@@ -2052,7 +2052,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off">☁</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-2</i></span>
   <span class="sep"></span>
   <span class="svlab">백업</span>
   <span id="saveBtns"></span>
@@ -2873,6 +2873,8 @@ input,select,textarea{border-radius:var(--r3)!important}
         setTimeout(wait, 150);
       })();
     }
+    window.__CS_RELOAD = reloadSafely;
+    document.addEventListener("DOMContentLoaded", function () { var el = document.getElementById("syncState"); if (el) el.addEventListener("click", reloadSafely); });
     var noticeT = null;
     function notifyChange() {
       // 다른 컴퓨터에서 바뀐 게 있다 — 쓰는 중이 아니면 바로 새로 읽고, 쓰는 중이면 위에 버튼만 띄운다
@@ -3259,13 +3261,23 @@ input,select,textarea{border-radius:var(--r3)!important}
         if (!tag) return;
         if (first) { tag0 = tag; return; }
         if (tag0 && tag !== tag0) {
+          var go = function () { try { if (window.__CS_FLUSH) window.__CS_FLUSH(); } catch (e) {} if (window.__CS_RELOAD) window.__CS_RELOAD(); else location.reload(); };
           var b = document.getElementById("newVer");
-          if (b) { b.hidden = false; b.onclick = function () { try { if (window.__CS_FLUSH) window.__CS_FLUSH(); } catch (e) {} location.reload(); }; }
+          if (b) { b.hidden = false; b.onclick = go; }
+          // 쓰는 중이 아니면 바로 새 버전으로 (적던 것은 먼저 저장·전송)
+          (function tick() {
+            var a = document.activeElement, typing = a && (a.tagName === "INPUT" || a.tagName === "TEXTAREA") && a.type !== "checkbox";
+            if (!typing && Date.now() - lastIn > 4000) { go(); return; }
+            setTimeout(tick, 3000);
+          })();
         }
       }).catch(function () {});
     }
-    window.addEventListener("load", function () { check(true); setInterval(function () { check(false); }, 5 * 60 * 1000); });
+    var lastIn = 0;
+    ["input", "keydown", "pointerdown"].forEach(function (ev) { document.addEventListener(ev, function () { lastIn = Date.now(); }, true); });
+    window.addEventListener("load", function () { check(true); setInterval(function () { check(false); }, 60 * 1000); });
     document.addEventListener("visibilitychange", function () { if (!document.hidden) check(false); });
+    window.addEventListener("focus", function () { check(false); });
   })();
 </script>
 <script>
@@ -6941,6 +6953,8 @@ input,select,textarea{border-radius:var(--r3)!important}
 .savebar .sv i.busy{color:var(--open)}
 .syncst{margin-left:10px!important;font-family:var(--sans)!important;font-size:12.5px!important;padding:1px 7px;border-radius:999px;background:var(--raise);color:var(--muted)!important}
 .syncst.dirty{color:var(--alert);font-weight:700}
+.syncst{cursor:pointer}
+.vertag{font-family:var(--mono)!important;font-size:11px!important;color:var(--muted)!important;margin-left:4px;font-style:normal}
 .syncst.on{background:var(--midbg);color:var(--mid)!important}
 .syncst.wait{background:var(--openbg);color:var(--open)!important}
 .syncst.err{background:var(--offbg);color:var(--off)!important}
