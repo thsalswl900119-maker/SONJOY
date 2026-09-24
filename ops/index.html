@@ -1252,7 +1252,8 @@ tr.moved td{background:var(--openbg);transition:background .6s}
 .mlab span{font-size:13px;font-weight:700;line-height:1.3;word-break:keep-all}
 .mlab em{display:none}
 .lgin.mi{font-size:13.5px;padding:6px 8px;line-height:1.5}
-textarea.lgin.mi{min-height:33px;height:33px;overflow:hidden;resize:none}
+textarea.lgin.mi{min-height:58px;height:58px;overflow:hidden;resize:none}
+.msec.wide textarea.lgin.mi{min-height:84px}
 .lgin.mi.filled{background:var(--surface)}
 .msec.wide{grid-column:1/-1}
 .msec.wide .mrows{display:grid;grid-template-columns:1fr 1fr;gap:0 14px;padding:0 4px}
@@ -2068,7 +2069,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-9</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-10</i></span>
   <span class="sep"></span>
   <span class="svlab">백업</span>
   <span id="saveBtns"></span>
@@ -3163,7 +3164,7 @@ input,select,textarea{border-radius:var(--r3)!important}
   // 일지 — 메모칸은 쓰는 만큼 늘어나고, 묶음 제목에 몇 칸 적었는지 보인다
   (function () {
     var grid = document.querySelector("#tp4 .memogrid"); if (!grid) return;
-    function grow(t) { if (t.tagName !== "TEXTAREA") return; t.style.height = "33px"; t.style.height = Math.max(33, t.scrollHeight + 2) + "px"; }
+    function grow(t) { if (t.tagName !== "TEXTAREA") return; var mh = parseFloat(getComputedStyle(t).minHeight) || 33; t.style.height = mh + "px"; t.style.height = Math.max(mh, t.scrollHeight + 2) + "px"; }
     function count() {
       grid.querySelectorAll(".msec").forEach(function (sec) {
         var req = sec.querySelectorAll(".mrow2:not(.opt) .lgin"), opt = sec.querySelectorAll(".mrow2.opt .lgin"), n = 0, m = 0;
