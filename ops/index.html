@@ -1241,6 +1241,14 @@ tr.moved td{background:var(--openbg);transition:background .6s}
   color:var(--ink2);margin-bottom:2px}
 .sun .dnum,.sat .dnum{color:var(--alert)}
 .hol{font-size:11px;color:var(--alert);font-weight:700;margin-bottom:2px}
+.bizt{font-family:var(--mono);font-size:10px;color:var(--muted);margin:-1px 0 4px;letter-spacing:-.01em}
+.bizt.hol{color:var(--r1);font-weight:700}
+.bizbox{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:0 0 10px;padding:9px 14px;border:1px solid var(--rule2);border-radius:var(--r);background:var(--surface);font-size:13px}
+.bizbox b{font-family:var(--serif);font-size:14.5px}
+.bizbox span{font-family:var(--mono);font-size:13px;font-weight:700}
+.bizbox span i{font-style:normal;font-family:inherit;font-weight:700;color:var(--muted);margin-right:5px}
+.bizbox span.hol{color:var(--r1)}
+.bizbox span.hol i{color:var(--r1)}
 .restday{font-size:12px;color:var(--muted);margin:auto;text-align:center}
 
 /* 휴무 — 맨 위, 눈에 띄게 */
@@ -1958,6 +1966,13 @@ input,select,textarea{border-radius:var(--r3)!important}
 </section></div><div class="panel" id="tp1" role="tabpanel" hidden><section>
   <div class="shead"><h2>근무표</h2><span class="en">work schedule</span>
     <span class="sub">일요일 정기휴무 · 오픈/마감은 정항아 ↔ 박혜빈 주간 교대 · 달을 눌러 바꾸세요</span></div>
+  <div class="bizbox">
+    <b>🕘 영업시간</b>
+    <span><i>평일</i> 9:30 – 18:30</span>
+    <span><i>토요일</i> 10:30 – 17:00</span>
+    <span class="hol"><i>평일 빨간날</i> 9:30 – 17:00 · 오픈 담당 있어야 함</span>
+    <span><i>일요일</i> 정기휴무</span>
+  </div>
   <div class="lgbar bkbar"><button type="button" class="bkmini" data-pre="sched,off" data-label="근무표"><svg viewBox="0 0 24 24" class="bkmi" aria-hidden="true"><path d="M5 3h11l3 3v15H5z"/><path d="M8 3v6h7V3"/><path d="M8 13h8v8H8z"/></svg><span>근무표 백업</span></button>
     <span class="bknote2">고친 근무표와 휴무 신청이 담깁니다</span></div>
   <div id="schedWrap"></div>
@@ -3045,9 +3060,12 @@ input,select,textarea{border-radius:var(--r3)!important}
                '</div><div class="restday">정기휴무</div></div>';
         return;
       }
+      var biz = c.wd === 5 ? '<div class="bizt">영업 10:30–17:00</div>'
+              : c.hol ? '<div class="bizt hol">영업 9:30–17:00 · 오픈 담당 필요</div>'
+              : '<div class="bizt">영업 9:30–18:30</div>';
       out += '<div class="' + cls + '" data-d="' + m.month + "/" + c.day +
         '" data-wd="' + WDK[c.wd] + '"><div class="dnum">' + c.day + "</div>" +
-        (c.hol ? '<div class="hol">' + esc0(c.hol) + "</div>" : "") +
+        (c.hol ? '<div class="hol">' + esc0(c.hol) + "</div>" : "") + biz +
         c.off.map(function (n) {
           return '<div class="offrow"><span class="offmark">휴무</span>' +
                  '<span class="offwho">' + esc0(n) + "</span></div>";
@@ -3862,8 +3880,8 @@ input,select,textarea{border-radius:var(--r3)!important}
         if (!day) {
           // 짜는 달은 저장한 날만 보여준다 (로테이션 예상은 안 보여줌)
           if (isPlanPanel) {
-            var h0 = c.querySelector(".hol");
-            c.innerHTML = '<div class="dnum">' + c.querySelector(".dnum").textContent + "</div>" + (h0 ? h0.outerHTML : "") +
+            var h0 = c.querySelector(".hol"), b0 = c.querySelector(".bizt");
+            c.innerHTML = '<div class="dnum">' + c.querySelector(".dnum").textContent + "</div>" + (h0 ? h0.outerHTML : "") + (b0 ? b0.outerHTML : "") +
                           '<div class="offrow"><span class="offwho" style="color:var(--rule2)">아직 안 짬</span></div>';
           }
           return;
@@ -3879,9 +3897,9 @@ input,select,textarea{border-radius:var(--r3)!important}
         rows.sort(function (x, y) {
           return (RORDER[x.r] || 9) - (RORDER[y.r] || 9);
         });
-        var hol = c.querySelector(".hol");
+        var hol = c.querySelector(".hol"), bz = c.querySelector(".bizt");
         var html = '<div class="dnum">' + c.querySelector(".dnum").textContent + "</div>" +
-          (hol ? hol.outerHTML : "") +
+          (hol ? hol.outerHTML : "") + (bz ? bz.outerHTML : "") +
           (day["공지"] ? '<div class="allnote">📣 ' + esc(day["공지"]) + "</div>" : "") +
           offs.map(function (o) {
             return '<div class="offrow"><span class="offmark">' + esc(o.r) + "</span>" +
