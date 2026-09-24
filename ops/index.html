@@ -1507,6 +1507,30 @@ table.zt th.c6{width:56px;text-align:center}
 .mcn{font-size:13px;line-height:1.35;padding:3px 6px;border-left:4px solid var(--rule2);background:var(--bg);border-radius:3px;word-break:normal;overflow-wrap:anywhere;font-weight:700;color:var(--ink)}
 .mcn.p1{border-left-color:var(--p1)} .mcn.p2{border-left-color:var(--p2)} .mcn.p3{border-left-color:var(--p3)} .mcn.p4{border-left-color:var(--p4)}
 .mcmore{font-size:11.5px;color:var(--muted)}
+.mcn.vac{background:var(--surface);border:1px solid var(--rule2);border-left-width:4px;font-size:12px;padding:2px 6px}
+.mcn.vac.p1{border-color:var(--p1)} .mcn.vac.p2{border-color:var(--p2)} .mcn.vac.p3{border-color:var(--p3)} .mcn.vac.p4{border-color:var(--p4)}
+.mcvac{margin-top:10px;border:1px solid var(--rule2);border-radius:3px;background:var(--surface);padding:10px 12px 11px}
+.mcvh{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.mcvh b{font-family:var(--serif);font-size:15px}
+.mcvh span{font-size:12.5px;color:var(--muted)}
+.mcvadd{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.mcvadd .dinp{width:auto}
+.mcvadd #vcMemo{flex:1 1 180px}
+.mcvadd .tilde{color:var(--muted)}
+.mcvlist{margin-top:8px;display:flex;flex-direction:column}
+.mcvrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:7px 0;border-top:1px solid var(--rule);font-size:13.5px}
+.mcvrow .w{font-weight:700;padding-left:8px;border-left:4px solid var(--rule2)}
+.mcvrow .w.p1{border-color:var(--p1);color:var(--p1)} .mcvrow .w.p2{border-color:var(--p2);color:var(--p2)} .mcvrow .w.p3{border-color:var(--p3);color:var(--p3)} .mcvrow .w.p4{border-color:var(--p4);color:var(--p4)}
+.mcvrow .d{font-family:var(--mono);font-size:13px}
+.mcvrow .d i{font-style:normal;color:var(--muted);margin-left:6px;font-size:12px}
+.mcvrow .m{color:var(--ink2)}
+.mcvrow .bt{margin-left:auto;display:inline-flex;gap:4px}
+.mcvrow .bt button{font:inherit;font-size:12px;color:var(--ink2);background:none;border:1px solid var(--rule2);border-radius:2px;padding:1px 8px;cursor:pointer}
+.mcvrow .bt button.x:hover{color:var(--off);border-color:var(--off)}
+.mcvrow .bt button.e:hover,.mcvrow .bt button.s{color:var(--mid);border-color:var(--mid)}
+.mcvrow .ed{display:inline-flex;gap:5px;align-items:center;flex-wrap:wrap}
+.mcvrow .ed .dinp{width:auto}
+.mcvnone{font-size:12.5px;color:var(--muted);padding:6px 0 0}
 .mcplus{margin-top:auto;font-size:11.5px;color:var(--rule2)}
 .mccell:hover .mcplus{color:var(--full)}
 .mcedit{margin-top:9px;border:1px solid var(--full);border-radius:3px;background:var(--surface);padding:10px 12px 12px}
@@ -2169,6 +2193,16 @@ input,select,textarea{border-radius:var(--r3)!important}
       <span>예약 · 공지 · 챙길 것을 날짜에 적어 두세요. 적은 건 <b>연간 행사</b> 달력에도 같이 보입니다 (보라 띠).</span>
       <span class="mcnav"><button type="button" class="daynav" id="mcPrev">‹</button> <input type="month" id="mcMonth" class="dinp"> <button type="button" class="daynav" id="mcNext">›</button></span></div>
     <div class="mcal" id="mcCal"></div>
+    <div class="mcvac">
+      <div class="mcvh"><b>🏖 직원 휴가</b><span>이름과 기간을 고르고 「휴가 추가」 · 달력에 띠로 표시되고, 아래 목록에서 날짜를 다시 고치거나 지울 수 있습니다</span></div>
+      <div class="mcvadd">
+        <select id="vcWho" class="dinp"><option value="">누구</option><option>정항아</option><option>박혜빈</option><option>이해선</option><option>사장님</option></select>
+        <input type="date" id="vcFrom" class="dinp"><span class="tilde">~</span><input type="date" id="vcTo" class="dinp">
+        <input type="text" id="vcMemo" class="dinp" placeholder="메모 (예: 가족 여행 · 반차)">
+        <button type="button" class="skbtn prim" id="vcAdd">휴가 추가</button>
+      </div>
+      <div id="vcList" class="mcvlist"></div>
+    </div>
     <div class="mcedit" id="mcEdit" hidden>
       <div class="mceh"><b id="mcTitle"></b><button type="button" class="daynav" id="mcClose">닫기</button></div>
       <div id="mcList"></div>
@@ -7369,8 +7403,13 @@ input,select,textarea{border-radius:var(--r3)!important}
     var monEl = document.getElementById("mcMonth"), edit = document.getElementById("mcEdit");
     var titleEl = document.getElementById("mcTitle"), listEl = document.getElementById("mcList");
     var textEl = document.getElementById("mcText");
-    var KEY = "cafesui.daynotes";
+    var KEY = "cafesui.daynotes", VKEY = "cafesui.vacations";   // 휴가: [{id, who, from, to, memo, by, t}]
     var COL = { "정항아": "p1", "박혜빈": "p2", "이해선": "p3", "사장님": "p4" };
+    function vload() { try { var a = JSON.parse(localStorage.getItem(VKEY) || "[]"); return Array.isArray(a) ? a : []; } catch (e) { return []; } }
+    function vsave(a) { try { localStorage.setItem(VKEY, JSON.stringify(a)); } catch (e) {} }
+    function vfor(date) { return vload().filter(function (v) { return v.from && v.to && v.from <= date && date <= v.to; }); }
+    function vdays(v) { var a = new Date(v.from + "T00:00:00"), b = new Date(v.to + "T00:00:00"); return Math.round((b - a) / 86400000) + 1; }
+    function vfmt(d) { var p = d.split("-"); return (+p[1]) + "/" + (+p[2]); }
     var WD = ["월", "화", "수", "목", "금", "토", "일"];
     var sel = null;
     function me() { try { return localStorage.getItem("cafesui.me") || ""; } catch (e) { return ""; } }
@@ -7391,13 +7430,75 @@ input,select,textarea{border-radius:var(--r3)!important}
         var hol = (window.__CS_HOL || {})[date];
         h += '<div class="mccell' + (wd === 6 ? " sun" : wd === 5 ? " sat" : "") + (date === t ? " today" : "") + (date === sel ? " on" : "") + (hol ? " hol" : "") +
           '" data-d="' + date + '"><span class="mcd">' + d + (hol ? '<i class="mchol">' + esc(hol) + "</i>" : "") + "</span>" +
+          vfor(date).map(function (v) { return '<span class="mcn vac ' + (COL[v.who] || "") + '" title="' + esc(v.memo || "") + '">🏖 ' + esc(v.who) + " 휴가</span>"; }).join("") +
           notes.slice(0, 4).map(function (n) { return '<span class="mcn ' + (COL[n.by] || "") + '">' + esc(n.t) + "</span>"; }).join("") +
           (notes.length > 4 ? '<span class="mcmore">+' + (notes.length - 4) + "개 더 · 눌러서 보기</span>" : "") +
           (notes.length ? "" : '<span class="mcplus">+</span>') + "</div>";
       }
       cal.innerHTML = h;
       cal.querySelectorAll(".mccell").forEach(function (c) { c.addEventListener("click", function () { open(c.dataset.d); }); });
+      renderVac();
     }
+    // 휴가 목록 (이 달에 걸친 것만) — 고치기 · 지우기
+    var vEdit = null;
+    function renderVac() {
+      var box = document.getElementById("vcList"); if (!box) return;
+      var y = ym(), first = y + "-01", last = y + "-31";
+      var all = vload(), list = all.filter(function (v) { return v.from <= last && v.to >= first; })
+        .sort(function (a, b) { return a.from < b.from ? -1 : a.from > b.from ? 1 : 0; });
+      if (!list.length) { box.innerHTML = '<div class="mcvnone">이 달에 잡힌 휴가가 없습니다</div>'; return; }
+      box.innerHTML = list.map(function (v) {
+        var c = COL[v.who] || "";
+        if (vEdit === v.id) {
+          return '<div class="mcvrow" data-id="' + v.id + '"><span class="w ' + c + '">' + esc(v.who) + '</span><span class="ed">' +
+            '<input type="date" class="dinp ef" value="' + esc(v.from) + '"><span class="tilde">~</span><input type="date" class="dinp et" value="' + esc(v.to) + '">' +
+            '<input type="text" class="dinp em" value="' + esc(v.memo || "") + '" placeholder="메모"></span>' +
+            '<span class="bt"><button type="button" class="s">저장</button><button type="button" class="c">취소</button></span></div>';
+        }
+        return '<div class="mcvrow" data-id="' + v.id + '"><span class="w ' + c + '">' + esc(v.who) + "</span>" +
+          '<span class="d">' + vfmt(v.from) + " ~ " + vfmt(v.to) + "<i>" + vdays(v) + "일</i></span>" +
+          (v.memo ? '<span class="m">' + esc(v.memo) + "</span>" : "") +
+          '<span class="bt"><button type="button" class="e">날짜 고치기</button><button type="button" class="x">지우기</button></span></div>';
+      }).join("");
+      box.querySelectorAll(".mcvrow").forEach(function (row) {
+        var id = row.dataset.id;
+        var find = function () { var a = vload(); return { all: a, v: a.filter(function (x) { return x.id === id; })[0] }; };
+        var e = row.querySelector(".e"), x = row.querySelector(".x"), sv = row.querySelector(".s"), cc = row.querySelector(".c");
+        if (e) e.addEventListener("click", function () { vEdit = id; renderVac(); });
+        if (cc) cc.addEventListener("click", function () { vEdit = null; renderVac(); });
+        if (sv) sv.addEventListener("click", function () {
+          var f = row.querySelector(".ef").value, t = row.querySelector(".et").value, m = row.querySelector(".em").value.trim();
+          if (!f || !t) { alert("시작일과 끝일을 골라 주세요"); return; }
+          if (t < f) { var tmp = f; f = t; t = tmp; }
+          var r = find(); if (!r.v) return; r.v.from = f; r.v.to = t; r.v.memo = m; r.v.edit = me() + " " + today().slice(5);
+          vsave(r.all); vEdit = null; render();
+        });
+        if (x) x.addEventListener("click", function () {
+          var r = find(); if (!r.v) return;
+          if (!confirm(r.v.who + " 휴가 (" + vfmt(r.v.from) + " ~ " + vfmt(r.v.to) + ")를 지울까요?")) return;
+          vsave(r.all.filter(function (v) { return v.id !== id; })); render();
+        });
+      });
+    }
+    (function () {
+      var who = document.getElementById("vcWho"), f = document.getElementById("vcFrom"), t = document.getElementById("vcTo"), m = document.getElementById("vcMemo"), b = document.getElementById("vcAdd");
+      if (!b) return;
+      f.addEventListener("change", function () { if (!t.value || t.value < f.value) t.value = f.value; });
+      b.addEventListener("click", function () {
+        var w = who.value, a = f.value, z = t.value || f.value;
+        if (!w) { alert("누구 휴가인지 골라 주세요"); who.focus(); return; }
+        if (!a) { alert("시작일을 골라 주세요"); f.focus(); return; }
+        if (z < a) { var tmp = a; a = z; z = tmp; }
+        var all = vload();
+        all.push({ id: "v" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), who: w, from: a, to: z, memo: m.value.trim(), by: me(), t: Date.now() });
+        vsave(all); m.value = ""; monEl.value = a.slice(0, 7); render();
+      });
+      window.addEventListener("cs:remote", function (e) {
+        if (!e.detail || (e.detail.keys || []).indexOf(VKEY) < 0) return;
+        var ae = document.activeElement; if (ae && ae.closest && ae.closest(".mcvac")) return;
+        render();
+      });
+    })();
     function open(date) {
       sel = date;
       var p = date.split("-"), wd = WD[(new Date(+p[0], +p[1] - 1, +p[2]).getDay() + 6) % 7];
