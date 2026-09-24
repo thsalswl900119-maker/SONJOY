@@ -1284,7 +1284,10 @@ textarea.lgin.mi{min-height:58px;height:58px;overflow:hidden;resize:none}
 .mrow2.blue .lgin{color:#2E5E8C;font-weight:700;border-color:#2E5E8C}
 .rpitem.blue b,.rpitem.blue span{color:#2E5E8C;font-weight:700}
 @media (max-width:600px){.mrow2{grid-template-columns:96px 1fr}.lgtext{grid-template-columns:96px 1fr}}
-.lgact.top{margin:0 0 12px}
+.lgact.top{margin:0 0 12px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.lgact.top button{font-size:15px;font-weight:700;padding:11px 22px;min-height:44px}
+.lgact.top #lgSave{font-family:var(--serif);font-size:17px;padding:12px 30px}
+.lgact.top .bkmini{font-size:14px;padding:10px 16px}
 
 /* 휴무 신청 */
 .reqwhys{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
@@ -2075,7 +2078,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-13</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-14</i></span>
   <span class="sep"></span>
   <span class="svlab">백업</span>
   <span id="saveBtns"></span>
