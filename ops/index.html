@@ -734,6 +734,45 @@ tr.moved td{background:var(--openbg);transition:background .6s}
 .bkgcard.open .bkgbody textarea{min-height:320px}
 .bkgmeta{font-size:12.5px;color:var(--muted);margin-top:5px;display:flex;justify-content:space-between;gap:8px}
 .bkgempty{color:var(--muted);text-align:center;padding:30px 10px;border:1px dashed var(--rule2);border-radius:var(--r);grid-column:1/-1}
+.rdrule{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;border:2px solid var(--open);background:var(--openbg);border-radius:var(--r);padding:11px 15px;margin-bottom:12px;font-size:13.5px}
+.rdrule b{font-family:var(--serif);font-size:15px;margin-right:4px}
+.rdrule span{display:inline-flex;align-items:center;gap:7px;font-weight:700;color:var(--ink)}
+.rdrule span i{font-style:normal;width:22px;height:22px;border-radius:50%;background:var(--open);color:#fff;font-family:var(--mono);font-size:11px;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.rdrule span em{font-style:normal;color:var(--open)}
+.rdlist{display:flex;flex-direction:column;gap:14px}
+.rdbook{border:2px solid var(--rule2);border-radius:var(--r);background:var(--surface);overflow:hidden}
+.rdbook.cur{border-color:var(--open)}
+.rdbook>summary{list-style:none;cursor:pointer;display:flex;gap:10px;align-items:center;padding:10px 14px;background:var(--raise);font-family:var(--serif);font-weight:700;font-size:15px}
+.rdbook>summary::-webkit-details-marker{display:none}
+.rdbook>summary::before{content:"▸";color:var(--muted);font-size:12px}
+.rdbook[open]>summary::before{content:"▾"}
+.rdbook>summary .tag{font-family:var(--mono);font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--open);color:#fff}
+.rdbook>summary .dt{margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--muted);font-weight:400}
+.rdhead{display:grid;grid-template-columns:1fr 200px auto;gap:8px;padding:12px 14px 0;align-items:center}
+.rdhead input{font-family:var(--serif);font-weight:700;font-size:17px}
+.rdhead input.au{font-family:var(--sans);font-weight:500;font-size:13.5px}
+.rdsum{padding:8px 14px 12px}
+.rdsum h4,.rdp h4{margin:0 0 5px;font-size:13px;color:var(--muted);font-weight:700;display:flex;align-items:center;gap:8px}
+.rdsum h4 b,.rdp h4 b{color:var(--ink);font-size:14px}
+.rdsum textarea{width:100%;min-height:150px;font:inherit;font-size:14px;line-height:1.7;padding:9px 11px;background:var(--bg);color:var(--ink);border:1px solid var(--rule2);border-radius:var(--r);resize:vertical;box-sizing:border-box}
+.rdro{white-space:pre-wrap;font-size:14px;line-height:1.7;padding:9px 11px;background:var(--bg);border:1px dashed var(--rule2);border-radius:var(--r);min-height:44px;word-break:keep-all;overflow-wrap:anywhere;color:var(--ink)}
+.rdro.empty{color:var(--muted);font-style:italic}
+.rdpeople{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:10px;padding:0 14px 14px}
+.rdp{border:1px solid var(--rule2);border-radius:var(--r);background:var(--surface);padding:10px 12px 12px}
+.rdp.mine{border-width:2px}
+.rdp.p1{border-color:var(--p1)} .rdp.p2{border-color:var(--p2)} .rdp.p3{border-color:var(--p3)} .rdp.p4{border-color:var(--p4)}
+.rdp .who{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-family:var(--serif);font-weight:700;font-size:15.5px}
+.rdp .who .st{font-family:var(--mono);font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;border:1px solid var(--rule2);color:var(--muted)}
+.rdp .who .st.ok{background:var(--full);color:#fff;border-color:var(--full)}
+.rdp .who .st.me{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.rdp textarea,.rdp input{width:100%;font:inherit;font-size:13.5px;line-height:1.65;padding:7px 9px;background:var(--bg);color:var(--ink);border:1px solid var(--rule2);border-radius:var(--r);box-sizing:border-box}
+.rdp textarea{min-height:96px;resize:vertical}
+.rdp .cnt{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--muted);font-weight:700}
+.rdp .cnt.ok{color:var(--full)}
+.rdp .cnt.no{color:var(--alert)}
+.rdp .fld{margin-bottom:9px}
+.rdfoot{display:flex;justify-content:space-between;gap:8px;padding:0 14px 12px;font-size:12.5px;color:var(--muted);align-items:center}
+@media (max-width:700px){.rdhead{grid-template-columns:1fr}.rdrule{font-size:13px}}
 .thdoc{margin-top:22px;border:1px solid var(--rule2);border-radius:var(--r);background:var(--surface);padding:16px 18px 18px}
 .thh{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}
 .thh b{font-family:var(--serif);font-size:20px}
@@ -1971,7 +2010,7 @@ input,select,textarea{border-radius:var(--r3)!important}
   <div class="bkrow" id="saveRow"></div>
   <button type="button" class="newver" id="newVer" hidden>🔄 새 버전이 올라왔어요 — 눌러서 새로고침 (적은 내용은 그대로 남습니다)</button>
 </div>
-<nav class="tabs" role="tablist" aria-label="화면 선택"><button type="button" class="tab" role="tab" data-p="tp0" aria-controls="tp0" aria-selected="true">출퇴근</button><button type="button" class="tab" role="tab" data-p="tp1" aria-controls="tp1" aria-selected="false">근무표</button><button type="button" class="tab" role="tab" data-p="tp2" aria-controls="tp2" aria-selected="false">오늘 할 일</button><button type="button" class="tab" role="tab" data-p="tp3" aria-controls="tp3" aria-selected="false">청소·정비</button><button type="button" class="tab" role="tab" data-p="tp12" aria-controls="tp12" aria-selected="false">재고·발주</button><button type="button" class="tab" role="tab" data-p="tp4" aria-controls="tp4" aria-selected="false">일지</button><button type="button" class="tab" role="tab" data-p="tp5" aria-controls="tp5" aria-selected="false">월말회의</button><button type="button" class="tab" role="tab" data-p="tp6" aria-controls="tp6" aria-selected="false">연간 행사</button><button type="button" class="tab" role="tab" data-p="tp7" aria-controls="tp7" aria-selected="false">과일</button><button type="button" class="tab" role="tab" data-p="tp8" aria-controls="tp8" aria-selected="false">월말 평가</button><button type="button" class="tab" role="tab" data-p="tp9" aria-controls="tp9" aria-selected="false">워크샵</button><button type="button" class="tab" role="tab" data-p="tp10" aria-controls="tp10" aria-selected="false">고객 응대</button><button type="button" class="tab" role="tab" data-p="tp13" aria-controls="tp13" aria-selected="false">제과제빵</button><button type="button" class="tab" role="tab" data-p="tp11" aria-controls="tp11" aria-selected="false">사용법</button></nav><div class="panel" id="tp0" role="tabpanel"><section>
+<nav class="tabs" role="tablist" aria-label="화면 선택"><button type="button" class="tab" role="tab" data-p="tp0" aria-controls="tp0" aria-selected="true">출퇴근</button><button type="button" class="tab" role="tab" data-p="tp1" aria-controls="tp1" aria-selected="false">근무표</button><button type="button" class="tab" role="tab" data-p="tp2" aria-controls="tp2" aria-selected="false">오늘 할 일</button><button type="button" class="tab" role="tab" data-p="tp3" aria-controls="tp3" aria-selected="false">청소·정비</button><button type="button" class="tab" role="tab" data-p="tp12" aria-controls="tp12" aria-selected="false">재고·발주</button><button type="button" class="tab" role="tab" data-p="tp4" aria-controls="tp4" aria-selected="false">일지</button><button type="button" class="tab" role="tab" data-p="tp5" aria-controls="tp5" aria-selected="false">월말회의</button><button type="button" class="tab" role="tab" data-p="tp6" aria-controls="tp6" aria-selected="false">연간 행사</button><button type="button" class="tab" role="tab" data-p="tp7" aria-controls="tp7" aria-selected="false">과일</button><button type="button" class="tab" role="tab" data-p="tp8" aria-controls="tp8" aria-selected="false">월말 평가</button><button type="button" class="tab" role="tab" data-p="tp9" aria-controls="tp9" aria-selected="false">워크샵</button><button type="button" class="tab" role="tab" data-p="tp10" aria-controls="tp10" aria-selected="false">고객 응대</button><button type="button" class="tab" role="tab" data-p="tp13" aria-controls="tp13" aria-selected="false">제과제빵</button><button type="button" class="tab" role="tab" data-p="tp14" aria-controls="tp14" aria-selected="false">독서나눔</button><button type="button" class="tab" role="tab" data-p="tp11" aria-controls="tp11" aria-selected="false">사용법</button></nav><div class="panel" id="tp0" role="tabpanel"><section>
   <div class="shead"><h2>출퇴근</h2><span class="en">clock out</span>
     <span class="sub">갈 때 본인 칸의 퇴근만 누르세요 · 출근은 10분 일찍, 서로 챙깁니다</span></div>
   <div class="lgbar">
@@ -2489,6 +2528,22 @@ input,select,textarea{border-radius:var(--r3)!important}
 버터 + 설탕 + 달걀 + 아몬드가루          →  크렘 다망드
 흰자 + 뜨거운 설탕시럽                   →  이탈리안 머랭
 노른자 + 뜨거운 설탕시럽                 →  파트 아 봄브</pre><ul><li><b>파티시에르가 너무 묵직하다?</b> → 휘핑크림을 넣어 가볍게 → <b>디플로마트</b></li><li><b>파티시에르에 버터의 풍미와 구조를 더하고 싶다?</b> → 버터 → <b>무슬린</b></li><li><b>아몬드 크림을 좀 더 부드럽고 촉촉하게?</b> → 파티시에르와 결합 → <b>프랑지판</b></li></ul></div></details></div></details></div>
+</section></div><div class="panel" id="tp14" role="tabpanel" hidden><section>
+  <div class="shead"><h2>독서나눔</h2><span class="en">book club</span>
+    <span class="sub">매달 필독서 한 권 · 요약은 사장님이 · 직원은 느낀 점 · 적용할 것 · 추천 도서를 적습니다 · 적는 즉시 저장 · 컴퓨터끼리 공유</span></div>
+  <div class="rdrule">
+    <b>📖 이렇게 합니다</b>
+    <span><i>1</i>사장님이 필독서를 정하고 요약본을 올립니다</span>
+    <span><i>2</i>직원은 읽고 <em>느낀 점 3줄 이상</em></span>
+    <span><i>3</i><em>카페에 적용해볼 것 3가지 이상</em></span>
+    <span><i>4</i><em>추천하는 도서 1권</em> · 월말회의 전날까지</span>
+  </div>
+  <div class="bkgbar">
+    <button type="button" class="skbtn prim" id="rdAdd">＋ 새 필독서 올리기</button>
+    <span class="lgmsg" id="rdMsg"></span>
+    <span class="bywho">글자 색이 쓴 사람입니다 <i class="p1">정항아</i><i class="p2">박혜빈</i><i class="p3">이해선</i><i class="p4">사장님</i></span>
+  </div>
+  <div class="rdlist" id="rdList"></div>
 </section></div><div class="panel" id="tp11" role="tabpanel" hidden><section>
   <div class="shead"><h2>사용법</h2>
     <span class="sub">처음 쓰는 분은 위에서부터 한 번만 읽어 보세요 · 다섯 번만 해보면 손에 익습니다</span></div>
@@ -2600,6 +2655,7 @@ input,select,textarea{border-radius:var(--r3)!important}
       <p>매년 11월, 다 같이 떠나서 배워 옵니다. 그 해 준비를 여기서 합니다.</p>
       <ul><li>위에 <b>지난 워크샵 카드</b>(도쿄 · 후쿠오카)가 있습니다. 누르면 그 해 기록이 열립니다</li>
       <li>올해 칸: 정하고 갈 것 · 역할 나누기 · 미리 준비할 것 · 일차별 <b>타임테이블</b> · 경비표(자동 합계) · 회의 기록 · 다녀와서 피드백</li>
+      <li><b>독서나눔</b> 탭: 사장님이 필독서와 요약을 올리면, 직원은 자기 칸에 느낀 점 3줄 이상 · 카페에 적용해볼 것 3가지 이상 · 추천 도서를 적습니다. 자기 칸만 고칠 수 있고, 지난 책은 아래에 접혀 있습니다</li>
       <li><b>제과제빵</b> 탭: 레시피 · 제조 기준을 카드로 모읍니다. 「＋ 항목 추가」 → 분류 · 제목 · 내용을 적으면 바로 저장되고 컴퓨터끼리 공유됩니다. 「크게」로 넓게 보고, 위 찾기 칸으로 검색합니다</li>
       <li>일자별 일정표는 잘못 눌러 바뀌지 않게 <b>잠겨</b> 있습니다. 고칠 땐 「✎ 일정 수정하기」를 누르고, 줄 끝 ☰를 끌거나 ▲▼로 순서를 옮기고, ✕로 그 줄을 지우고, 다 고쳤으면 「✓ 다 고쳤어요」로 닫으세요</li>
       <li>「워크샵 백업」으로 그 해 것만 따로 복사해 둘 수 있습니다</li></ul></div></div>
@@ -2853,6 +2909,101 @@ input,select,textarea{border-radius:var(--r3)!important}
       else window.prompt("복사해서 보관하세요", txt);
     });
     window.__CS_SNAP = take;
+  })();
+  // 독서나눔 — cafesui.books = { items: [{id, title, author, summary, by, t, resp: {이름: {feel, apply, rec, t}}}] } (최신이 앞)
+  (function () {
+    var KEY = "cafesui.books";
+    var listEl = document.getElementById("rdList"); if (!listEl) return;
+    var addBtn = document.getElementById("rdAdd"), msgEl = document.getElementById("rdMsg");
+    var STAFF = ["정항아", "박혜빈", "이해선"];
+    var WHOC = { "정항아": "p1", "박혜빈": "p2", "이해선": "p3", "사장님": "p4" };
+    var MGR = ["사장님", "정항아"];   // 필독서 · 요약을 올리고 고칠 수 있는 사람
+    function me() { try { return localStorage.getItem("cafesui.me") || ""; } catch (e) { return ""; } }
+    function isMgr() { return MGR.indexOf(me()) >= 0; }
+    function load() { try { var o = JSON.parse(localStorage.getItem(KEY) || "{}"); return (o && o.items) ? o : { items: [] }; } catch (e) { return { items: [] }; } }
+    var data = load(), saveT = null;
+    function flush() { try { localStorage.setItem(KEY, JSON.stringify(data)); } catch (e) {} if (msgEl) msgEl.textContent = "저장됨"; }
+    function save() { clearTimeout(saveT); saveT = setTimeout(function () { saveT = null; flush(); }, 400); }
+    (window.__CS_SAVERS = window.__CS_SAVERS || []).push(function () { if (saveT) { clearTimeout(saveT); saveT = null; flush(); } });
+    function esc(v) { return String(v == null ? "" : v).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+    function when(t) { if (!t) return ""; var d = new Date(t); return d.getFullYear() + "." + (d.getMonth() + 1) + "." + d.getDate(); }
+    function lines(v) { return String(v || "").split(/\n/).map(function (x) { return x.trim(); }).filter(Boolean).length; }
+    function cnt(n, need) { return '<span class="cnt ' + (n >= need ? "ok" : n ? "no" : "") + '">' + n + " / " + need + "</span>"; }
+    function done(r) { return r && lines(r.feel) >= 3 && lines(r.apply) >= 3 && String(r.rec || "").trim(); }
+    function ro(v, ph) { return v && String(v).trim() ? '<div class="rdro">' + esc(v) + "</div>" : '<div class="rdro empty">' + esc(ph) + "</div>"; }
+    function render() {
+      var items = data.items.slice().sort(function (a, b) { return (b.t0 || b.t || 0) - (a.t0 || a.t || 0); });
+      if (!items.length) { listEl.innerHTML = '<div class="bkgempty">아직 올린 책이 없습니다 · ' + (isMgr() ? "「＋ 새 필독서 올리기」로 첫 책을 올려 보세요" : "사장님이 필독서를 올리면 여기에 보입니다") + "</div>"; return; }
+      var my = me();
+      listEl.innerHTML = items.map(function (it, idx) {
+        var cur = idx === 0, mgr = isMgr();
+        var head = mgr
+          ? '<div class="rdhead"><input type="text" class="dinp" data-f="title" value="' + esc(it.title) + '" placeholder="책 제목">' +
+            '<input type="text" class="dinp au" data-f="author" value="' + esc(it.author) + '" placeholder="지은이 · 출판사">' +
+            '<button type="button" class="wsmini rddel">이 책 지우기</button></div>'
+          : '<div class="rdhead"><div style="font-family:var(--serif);font-weight:700;font-size:17px">' + (esc(it.title) || "제목 없음") + '</div><div style="font-size:13.5px;color:var(--muted)">' + esc(it.author) + "</div><span></span></div>";
+        var sum = '<div class="rdsum"><h4><b>📌 요약본</b>' + (it.by ? esc(it.by) + " 작성" : "사장님 작성") + (it.t ? " · " + when(it.t) : "") + "</h4>" +
+          (mgr ? '<textarea data-f="summary" class="' + (WHOC[it.by] || "") + '" placeholder="이 책의 핵심을 요약해 주세요 — 왜 이 책인지 · 꼭 봐야 할 장 · 우리 카페와 연결되는 부분">' + esc(it.summary) + "</textarea>"
+               : ro(it.summary, "아직 요약본이 없습니다"));
+        sum += "</div>";
+        var people = '<div class="rdpeople">' + STAFF.map(function (nm) {
+          var r = (it.resp || {})[nm] || {}, mine = my === nm, can = mine || my === "사장님";
+          var st = done(r) ? '<span class="st ok">작성 완료</span>' : '<span class="st">' + (r.feel || r.apply || r.rec ? "작성 중" : "아직") + "</span>";
+          var h = '<div class="rdp ' + (WHOC[nm] || "") + (mine ? " mine" : "") + '" data-n="' + nm + '"><div class="who">' + esc(nm) + st + (mine ? '<span class="st me">내 칸</span>' : "") + "</div>";
+          h += '<div class="fld"><h4><b>느낀 점</b>3줄 이상' + cnt(lines(r.feel), 3) + "</h4>" +
+            (can ? '<textarea data-f="feel" placeholder="한 줄에 하나씩 · 인상 깊었던 문장 · 나와 다른 생각 · 반성한 점">' + esc(r.feel) + "</textarea>" : ro(r.feel, "아직 안 적음")) + "</div>";
+          h += '<div class="fld"><h4><b>카페에 적용해볼 것</b>3가지 이상' + cnt(lines(r.apply), 3) + "</h4>" +
+            (can ? '<textarea data-f="apply" placeholder="한 줄에 하나씩 · 언제 · 무엇을 · 어떻게 (예: 손님 나갈 때 눈 맞추고 인사 — 이번 주부터)">' + esc(r.apply) + "</textarea>" : ro(r.apply, "아직 안 적음")) + "</div>";
+          h += '<div class="fld"><h4><b>추천하는 도서</b>1권' + cnt(String(r.rec || "").trim() ? 1 : 0, 1) + "</h4>" +
+            (can ? '<input type="text" data-f="rec" value="' + esc(r.rec) + '" placeholder="책 제목 · 왜 추천하는지 한 줄">' : ro(r.rec, "아직 안 적음")) + "</div>";
+          if (r.t) h += '<div style="font-size:11.5px;color:var(--muted);font-family:var(--mono)">마지막 수정 ' + when(r.t) + "</div>";
+          return h + "</div>";
+        }).join("") + "</div>";
+        var doneN = STAFF.filter(function (nm) { return done((it.resp || {})[nm]); }).length;
+        var foot = '<div class="rdfoot"><span>작성 완료 ' + doneN + " / " + STAFF.length + "명</span><span>" + (cur ? "지금 읽는 책" : "지난 책") + "</span></div>";
+        return '<details class="rdbook' + (cur ? " cur" : "") + '"' + (cur ? " open" : "") + ' data-id="' + it.id + '"><summary>' +
+          (cur ? '<span class="tag">이달의 필독서</span>' : "") + "<span>" + (esc(it.title) || "제목 없음") + "</span><span class=\"dt\">" + when(it.t0 || it.t) + " · 완료 " + doneN + "/" + STAFF.length + "</span></summary>" +
+          head + sum + people + foot + "</details>";
+      }).join("");
+    }
+    listEl.addEventListener("input", function (e) {
+      var book = e.target.closest(".rdbook"); if (!book) return;
+      var it = data.items.find(function (x) { return x.id === book.dataset.id; }); if (!it) return;
+      var f = e.target.dataset.f; if (!f) return;
+      var p = e.target.closest(".rdp");
+      if (p) {
+        var nm = p.dataset.n; it.resp = it.resp || {}; var r = it.resp[nm] = it.resp[nm] || {};
+        r[f] = e.target.value; r.t = Date.now();
+        var h4 = e.target.closest(".fld").querySelector(".cnt");
+        if (h4) { var n = f === "rec" ? (e.target.value.trim() ? 1 : 0) : lines(e.target.value), need = f === "rec" ? 1 : 3; h4.textContent = n + " / " + need; h4.className = "cnt " + (n >= need ? "ok" : n ? "no" : ""); }
+      } else {
+        it[f] = e.target.value; it.t = Date.now(); if (!it.by) it.by = me();
+      }
+      save();
+    });
+    listEl.addEventListener("focusout", function (e) {
+      // 칸을 벗어나면 「작성 완료」 표시와 요약 등을 다시 그린다 (쓰는 중에는 안 건드림)
+      setTimeout(function () { var a = document.activeElement; if (a && listEl.contains(a) && a.dataset && a.dataset.f) return; if (saveT) { clearTimeout(saveT); saveT = null; flush(); } render(); }, 50);
+    });
+    listEl.addEventListener("click", function (e) {
+      if (!e.target.classList.contains("rddel")) return;
+      var book = e.target.closest(".rdbook"); var it = data.items.find(function (x) { return x.id === book.dataset.id; }); if (!it) return;
+      if (!window.confirm("「" + (it.title || "제목 없음") + "」 책과 직원들이 적은 내용을 전부 지울까요? 지우면 되돌릴 수 없습니다.")) return;
+      data.items = data.items.filter(function (x) { return x !== it; }); flush(); render();
+    });
+    if (addBtn) addBtn.addEventListener("click", function () {
+      if (!isMgr()) { alert("필독서는 사장님(또는 정항아 매니저)이 올립니다. 위에서 이름을 바꿔 주세요."); return; }
+      var it = { id: "r" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), title: "", author: "", summary: "", by: me(), t: Date.now(), t0: Date.now(), resp: {} };
+      data.items.unshift(it); flush(); render();
+      var f = listEl.querySelector('.rdbook[data-id="' + it.id + '"] input[data-f="title"]'); if (f) f.focus();
+    });
+    window.addEventListener("cs:remote", function (e) {
+      if (!e.detail || (e.detail.keys || []).indexOf(KEY) < 0) return;
+      var a = document.activeElement; if (a && listEl.contains(a)) return;
+      data = load(); render();
+    });
+    window.addEventListener("cs:me", render);
+    render();
   })();
   // 제과제빵 — 레시피 · 제조 기준 카드. cafesui.baking = { items: [{id, cat, title, body, by, t}] }
   (function () {
