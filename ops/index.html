@@ -1284,6 +1284,11 @@ textarea.lgin.mi{min-height:58px;height:58px;overflow:hidden;resize:none}
 .msec.wide .mrow2.boss .mlab span{font-size:16px}
 .msec.wide .mrow2.boss textarea{min-height:120px;line-height:1.75;padding:10px 12px}
 @media (max-width:760px){.msec.wide .mrows{grid-template-columns:1fr}}
+.lgpastebox{border:2px dashed var(--mid);background:var(--midbg);border-radius:var(--r);padding:10px 13px 12px;margin-bottom:10px;display:flex;flex-direction:column;gap:6px}
+.lgpastebox b{font-family:var(--serif);font-size:14.5px}
+.lgpastebox span{font-size:12.5px;color:var(--ink2)}
+.lgpastebox textarea{width:100%;font:inherit;font-size:13px;padding:8px 10px;border:1px solid var(--rule2);background:var(--surface);color:var(--ink);box-sizing:border-box}
+.lgpastebox .lgact{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .lgrule{border:2px solid var(--open);background:var(--openbg);border-radius:var(--r);padding:9px 13px;margin-bottom:10px;font-size:13.5px;line-height:1.7;color:var(--ink);word-break:keep-all}
 .optt{font-family:var(--mono);font-size:8.5px;font-weight:400;color:var(--muted);border:1px solid var(--rule2);border-radius:999px;padding:0 4px;vertical-align:2px;white-space:nowrap;opacity:.8}
 .mrow2.opt .mlab span{font-weight:500;color:var(--ink2)}
@@ -2107,7 +2112,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-51</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-52</i></span>
   <span class="sep"></span>
   <span class="svlab">복사본 보관</span>
   <span id="saveBtns"></span>
@@ -2305,10 +2310,16 @@ input,select,textarea{border-radius:var(--r3)!important}
   </div>
   <div class="rpwrap">
     <div class="rpmain">
+      <div class="lgpastebox" id="lgPasteBox" hidden>
+        <b>📋 복사해 둔 일지 글 붙여넣기</b><span>텔레그램에 보냈던 「복사하기」 글을 붙여 넣으면 그 내용이 칸에 다시 채워집니다 · 빈 칸만 채우고, 이미 적힌 칸은 물어보고 덮어씁니다</span>
+        <textarea id="lgPasteText" rows="5" placeholder="[카페스이 마감 일지] … 로 시작하는 글을 여기에 붙여 넣으세요"></textarea>
+        <div class="lgact"><button type="button" class="prim" id="lgPasteGo">칸에 채워 넣기</button><button type="button" id="lgPasteClose">닫기</button><span class="lgmsg" id="lgPasteMsg"></span></div>
+      </div>
       <div class="lgrule">✍️ 일지는 <b>모든 칸을 다 채웁니다</b>. 「<b>있을 때만</b>」 표시가 붙은 칸(알바생 출근 · 서비스 나간 것 · 컴플레인 · 손님·직원 이슈 · 관공서·사장님 찾는 방문 · 그 외 메모)은 해당 사항이 있을 때만 적고, 없으면 비워 둡니다. 내일 예약은 다음 날 일지에 직접 적습니다.</div>
       <div class="lgact top">
         <button type="button" id="lgSave" class="prim">일지 저장</button>
         <button type="button" id="lgCopy">복사하기</button>
+        <button type="button" id="lgPaste">붙여넣기</button>
         <button type="button" id="lgClear">전부 지우기</button>
         <button type="button" class="bkmini" data-pre="log" data-label="일지"><svg viewBox="0 0 24 24" class="bkmi" aria-hidden="true"><path d="M5 3h11l3 3v15H5z"/><path d="M8 3v6h7V3"/><path d="M8 13h8v8H8z"/></svg><span>일지 백업</span></button>
       </div>
@@ -6807,6 +6818,70 @@ input,select,textarea{border-radius:var(--r3)!important}
     whoEl.addEventListener("change", report);
     inputs.forEach(function (el) { el.addEventListener("input", report); });
 
+    // 붙여넣기 — 「복사하기」로 보낸 글을 다시 칸에 채운다 (빈 칸만 · 이미 적힌 칸은 물어보고)
+    (function () {
+      var btn = document.getElementById("lgPaste"), box = document.getElementById("lgPasteBox"), ta = document.getElementById("lgPasteText");
+      var go = document.getElementById("lgPasteGo"), close = document.getElementById("lgPasteClose"), pm = document.getElementById("lgPasteMsg");
+      if (!btn || !box) return;
+      function labelOf(el) {
+        var t = el.getAttribute("aria-label"); if (t) return t.trim();
+        var lb = el.closest(".mrow2, .lgnum, .lgtext"); var sp = lb && lb.querySelector("span");
+        if (sp) { var c = sp.cloneNode(true); c.querySelectorAll("small,em").forEach(function (x) { x.remove(); }); return c.textContent.trim(); }
+        return "";
+      }
+      function norm(t) { return String(t || "").replace(/[^\w가-힣]+/g, "").toLowerCase(); }
+      function fill(text) {
+        var byLabel = {};
+        document.querySelectorAll("#tp4 .lgin[data-k]").forEach(function (el) { var lb = norm(labelOf(el)); if (lb && !byLabel[lb]) byLabel[lb] = el; });
+        var filled = 0, conflicts = [], cur = null;
+        function setVal(el, v) {
+          v = String(v || "").trim(); if (!v) return;
+          var now = (el.value || "").trim();
+          if (now && now !== v) { conflicts.push([el, v]); return; }
+          if (!now) { el.value = v; el.classList.add("filled"); el.dispatchEvent(new Event("input", { bubbles: true })); filled++; }
+        }
+        text.split(/\r?\n/).forEach(function (ln) {
+          ln = ln.trim(); if (!ln) { cur = null; return; }
+          var m;
+          if (/^\[.*\]/.test(ln)) { cur = null; return; }
+          if ((m = ln.match(/^■\s*(.+?):\s*(.*)$/))) {
+            cur = null;
+            var g = norm(m[1]), rest = m[2];
+            if (byLabel[g]) { setVal(byLabel[g], rest); return; }
+            rest.split(" / ").forEach(function (part) { var mm = part.trim().match(/^(.+?)\s+(\S+)$/); if (mm && byLabel[norm(mm[1])]) setVal(byLabel[norm(mm[1])], mm[2]); });
+            return;
+          }
+          if ((m = ln.match(/^[·•]\s*(.+?):\s*(.*)$/))) {
+            var el = byLabel[norm(m[1])];
+            if (el) { cur = el; setVal(el, m[2].split(" / ").join("\n")); } else cur = null;
+            return;
+          }
+          if (cur && cur.tagName === "TEXTAREA") { cur.value = (cur.value ? cur.value + "\n" : "") + ln; cur.dispatchEvent(new Event("input", { bubbles: true })); }
+        });
+        if (conflicts.length && window.confirm(conflicts.length + "개 칸에 이미 다른 내용이 있습니다. 붙여 넣은 내용으로 덮어쓸까요?\n(아니오를 누르면 빈 칸만 채웁니다)")) {
+          conflicts.forEach(function (c) { c[0].value = c[1]; c[0].dispatchEvent(new Event("input", { bubbles: true })); filled++; });
+          conflicts = [];
+        }
+        return { filled: filled, skipped: conflicts.length };
+      }
+      btn.addEventListener("click", function () {
+        box.hidden = !box.hidden; pm.textContent = "";
+        if (!box.hidden) {
+          ta.value = "";
+          if (navigator.clipboard && navigator.clipboard.readText) navigator.clipboard.readText().then(function (t) { if (t && t.indexOf("마감 일지") >= 0) { ta.value = t; pm.textContent = "복사해 둔 글을 가져왔습니다 · 「칸에 채워 넣기」를 누르세요"; } }, function () {});
+          ta.focus();
+        }
+      });
+      close.addEventListener("click", function () { box.hidden = true; });
+      go.addEventListener("click", function () {
+        var t = (ta.value || "").trim(); if (!t) { pm.textContent = "붙여 넣을 글이 없습니다"; return; }
+        var m = t.match(/(\d{4})년\s*(\d{1,2})월\s*(\d{1,2})일/);
+        if (m) { var d = m[1] + "-" + String(m[2]).padStart(2, "0") + "-" + String(m[3]).padStart(2, "0"); if (dateEl.value !== d && window.confirm("이 글은 " + d + " 일지입니다. 날짜를 그날로 바꿔서 채울까요?")) { dateEl.value = d; dateEl.dispatchEvent(new Event("change", { bubbles: true })); } }
+        var r = fill(t);
+        report();
+        pm.textContent = r.filled + "칸을 채웠습니다" + (r.skipped ? " · " + r.skipped + "칸은 이미 적혀 있어 그대로 두었습니다" : "") + " · 확인 후 「일지 저장」을 눌러 주세요";
+      });
+    })();
     copyEl.addEventListener("click", function () {
       var text = report();
       if (!text) { msgEl.textContent = "아직 쓴 내용이 없습니다"; return; }
