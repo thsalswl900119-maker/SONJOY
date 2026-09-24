@@ -1388,11 +1388,11 @@ textarea.lgin.mi{min-height:58px;height:58px;overflow:hidden;resize:none}
   background:var(--off);padding:1px 5px;border-radius:2px;line-height:1.5}
 .offwho{font-size:12.5px;font-weight:700;color:var(--off)}
 
-.sh{display:grid;grid-template-columns:auto auto 1fr;align-items:center;gap:5px;
-  padding:3px 6px;font-size:13px;border-left:3px solid}
+.sh{display:flex;flex-wrap:wrap;align-items:center;column-gap:5px;row-gap:1px;
+  padding:3px 6px;font-size:12.5px;border-left:3px solid;min-width:0}
 .sh .who{font-weight:700;white-space:nowrap}
 .sh .rl{font-size:11.5px;opacity:.85;white-space:nowrap}
-.sh .tm{font-family:var(--mono);font-size:12px;text-align:right;
+.sh .tm{font-family:var(--mono);font-size:11.5px;text-align:right;margin-left:auto;
   font-variant-numeric:tabular-nums;white-space:nowrap}
 .sh .dash{opacity:.5;padding:0 1px}
 .sh.open{background:var(--openbg);border-color:var(--open);color:var(--open)}
@@ -2096,7 +2096,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-32</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-33</i></span>
   <span class="sep"></span>
   <span class="svlab">복사본 보관</span>
   <span id="saveBtns"></span>
@@ -2127,7 +2127,7 @@ input,select,textarea{border-radius:var(--r3)!important}
     <b>🕘 영업시간</b>
     <span><i>평일</i> 9:30 – 18:30</span>
     <span><i>토요일</i> 10:30 – 17:00</span>
-    <span class="hol"><i>평일 빨간날</i> 9:30 – 17:00 · 오픈 담당 있어야 함</span>
+    <span class="hol"><i>평일 빨간날</i> 9:30 – 17:00</span>
     <span><i>일요일</i> 정기휴무</span>
   </div>
   <div class="lgbar bkbar"><button type="button" class="bkmini" data-pre="sched,off" data-label="근무표"><svg viewBox="0 0 24 24" class="bkmi" aria-hidden="true"><path d="M5 3h11l3 3v15H5z"/><path d="M8 3v6h7V3"/><path d="M8 13h8v8H8z"/></svg><span>근무표 백업</span></button>
@@ -3522,7 +3522,7 @@ input,select,textarea{border-radius:var(--r3)!important}
         return;
       }
       var biz = c.wd === 5 ? '<div class="bizt">영업 10:30–17:00</div>'
-              : c.hol ? '<div class="bizt hol">영업 9:30–17:00 · 오픈 담당 필요</div>'
+              : c.hol ? '<div class="bizt hol">영업 9:30–17:00</div>'
               : '<div class="bizt">영업 9:30–18:30</div>';
       out += '<div class="' + cls + '" data-d="' + m.month + "/" + c.day +
         '" data-wd="' + WDK[c.wd] + '"><div class="dnum">' + c.day + "</div>" +
