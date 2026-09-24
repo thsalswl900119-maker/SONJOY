@@ -1031,7 +1031,7 @@ tr.moved td{background:var(--openbg);transition:background .6s}
 .lgrow.on{background:var(--openbg)}
 .lgd{font-family:var(--mono);font-size:12.5px;font-weight:700;
   font-variant-numeric:tabular-nums}
-.lgw{font-size:13px;color:var(--ink2)}
+.lgw{font-size:11.5px;color:var(--ink2);font-weight:600}
 .lgn{font-size:12.5px;color:var(--muted)}
 .lgtag{font-size:12px;font-weight:700;padding:1px 6px;border-radius:2px;
   background:var(--midbg);color:var(--mid)}
@@ -1645,7 +1645,7 @@ table.zt th.c6{width:56px;text-align:center}
 .mcw{background:var(--raise);text-align:center;font-size:12.5px;font-weight:700;color:var(--muted);padding:5px 0}
 .mcw.s{color:var(--close)}
 .mcpad{background:var(--bg)}
-.mccell{background:var(--surface);min-height:92px;padding:6px 7px 8px;display:flex;flex-direction:column;gap:4px;cursor:pointer}
+.mccell{background:var(--surface);min-height:70px;padding:5px 6px 6px;display:flex;flex-direction:column;gap:4px;cursor:pointer}
 .mccell:hover{outline:1px solid var(--full);outline-offset:-1px}
 .mccell.today{background:var(--openbg)}
 .mccell.on{outline:2px solid var(--full);outline-offset:-2px}
@@ -1930,6 +1930,18 @@ h1{letter-spacing:-.01em}
 .tab:hover{background:var(--raise)}
 .tab[aria-selected="true"]{background:var(--open);color:#FFFCF6;
   border-color:var(--open);box-shadow:0 2px 0 rgba(180,102,27,.22)}
+/* 매일 쓰는 화면 묶음 — 크게 */
+.tabs{align-items:center}
+.tabgrp{display:flex;flex-wrap:wrap;gap:7px;align-items:center;position:relative;margin:12px 8px 4px 0;padding:12px 12px 10px;
+  border:2px solid var(--open);border-radius:18px;background:var(--openbg)}
+.tabgrp::before{content:"매일 쓰는 화면";position:absolute;top:-11px;left:12px;font-size:12.5px;font-weight:900;letter-spacing:.02em;
+  color:#FFFCF6;background:var(--open);padding:2px 10px;border-radius:9px}
+.tabgrp .tab{font-size:18px;font-weight:800;padding:12px 22px;border:2px solid var(--open);color:var(--ink);background:var(--surface)}
+.tabgrp .tab[aria-selected="true"]{background:var(--open);color:#FFFCF6}
+.tabgrp .tab.daily{font-size:18px!important;padding:12px 22px!important}
+.tabgrp{flex:0 0 auto;flex-wrap:nowrap}
+@media(max-width:640px){.tabs{flex-wrap:wrap}.tabgrp{flex:1 1 100%;display:grid;grid-template-columns:1fr 1fr;padding:14px 8px 8px;gap:6px;margin-right:0}
+  .tabgrp .tab{font-size:16px;padding:12px 8px;text-align:center}.tabgrp .tab.daily{font-size:16px!important;padding:12px 8px!important}}
 
 /* 섹션 제목 */
 section{margin-top:38px}
@@ -2180,14 +2192,14 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-68</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-72</i></span>
   <span class="sep"></span>
   <span class="svlab">복사본 보관</span>
   <span id="saveBtns"></span>
   <div class="bkrow" id="saveRow"></div>
   <button type="button" class="newver" id="newVer" hidden>🔄 새 버전이 올라왔어요 — 눌러서 새로고침 (적은 내용은 그대로 남습니다)</button>
 </div>
-<nav class="tabs" role="tablist" aria-label="화면 선택"><button type="button" class="tab" role="tab" data-p="tp0" aria-controls="tp0" aria-selected="true">출퇴근</button><button type="button" class="tab" role="tab" data-p="tp1" aria-controls="tp1" aria-selected="false">근무표</button><button type="button" class="tab" role="tab" data-p="tp2" aria-controls="tp2" aria-selected="false">오늘 할 일</button><button type="button" class="tab" role="tab" data-p="tp3" aria-controls="tp3" aria-selected="false">청소·정비</button><button type="button" class="tab" role="tab" data-p="tp12" aria-controls="tp12" aria-selected="false">재고·발주</button><button type="button" class="tab daily" role="tab" data-p="tp4" aria-controls="tp4" aria-selected="false">✍ 일지</button><button type="button" class="tab" role="tab" data-p="tp5" aria-controls="tp5" aria-selected="false">월말회의</button><button type="button" class="tab" role="tab" data-p="tp6" aria-controls="tp6" aria-selected="false">연간 행사</button><button type="button" class="tab" role="tab" data-p="tp7" aria-controls="tp7" aria-selected="false">과일</button><button type="button" class="tab" role="tab" data-p="tp8" aria-controls="tp8" aria-selected="false">월말 평가</button><button type="button" class="tab" role="tab" data-p="tp9" aria-controls="tp9" aria-selected="false">워크샵</button><button type="button" class="tab" role="tab" data-p="tp10" aria-controls="tp10" aria-selected="false">고객 응대</button><button type="button" class="tab" role="tab" data-p="tp13" aria-controls="tp13" aria-selected="false">제과제빵</button><button type="button" class="tab" role="tab" data-p="tp14" aria-controls="tp14" aria-selected="false">독서나눔</button><button type="button" class="tab" role="tab" data-p="tp11" aria-controls="tp11" aria-selected="false">사용법</button></nav><div class="panel" id="tp0" role="tabpanel"><section>
+<nav class="tabs" role="tablist" aria-label="화면 선택"><span class="tabgrp"><button type="button" class="tab" role="tab" data-p="tp0" aria-controls="tp0" aria-selected="true">출퇴근</button><button type="button" class="tab" role="tab" data-p="tp2" aria-controls="tp2" aria-selected="false">오늘 할 일</button><button type="button" class="tab" role="tab" data-p="tp12" aria-controls="tp12" aria-selected="false">재고·발주</button><button type="button" class="tab daily" role="tab" data-p="tp4" aria-controls="tp4" aria-selected="false">✍ 일지</button></span><button type="button" class="tab" role="tab" data-p="tp1" aria-controls="tp1" aria-selected="false">근무표</button><button type="button" class="tab" role="tab" data-p="tp3" aria-controls="tp3" aria-selected="false">청소·정비</button><button type="button" class="tab" role="tab" data-p="tp5" aria-controls="tp5" aria-selected="false">월말회의</button><button type="button" class="tab" role="tab" data-p="tp6" aria-controls="tp6" aria-selected="false">연간 행사</button><button type="button" class="tab" role="tab" data-p="tp7" aria-controls="tp7" aria-selected="false">과일</button><button type="button" class="tab" role="tab" data-p="tp8" aria-controls="tp8" aria-selected="false">월말 평가</button><button type="button" class="tab" role="tab" data-p="tp9" aria-controls="tp9" aria-selected="false">워크샵</button><button type="button" class="tab" role="tab" data-p="tp10" aria-controls="tp10" aria-selected="false">고객 응대</button><button type="button" class="tab" role="tab" data-p="tp13" aria-controls="tp13" aria-selected="false">제과제빵</button><button type="button" class="tab" role="tab" data-p="tp14" aria-controls="tp14" aria-selected="false">독서나눔</button><button type="button" class="tab" role="tab" data-p="tp11" aria-controls="tp11" aria-selected="false">사용법</button></nav><div class="panel" id="tp0" role="tabpanel"><section>
   <div class="shead"><h2>출퇴근</h2><span class="en">clock out</span>
     <span class="sub">갈 때 본인 칸의 퇴근만 누르세요 · 출근은 10분 일찍, 서로 챙깁니다</span></div>
   <div class="lgbar">
@@ -2252,10 +2264,10 @@ input,select,textarea{border-radius:var(--r3)!important}
   <div class="ztable-wrap">
     <table class="zt">
       <thead><tr><th>구역</th><th class="c3">담당</th><th class="c5">확인</th></tr></thead>
-      <tbody><tr class="keyzone"><td class="zn"><span class="keymark">중요</span>제빙기 청소<span class="zd"><b>매달 2주차</b> · 내부 세척 + 필터 · 빙수철에는 월 2회</span></td><td class="zpick"><button type="button" class="chip" data-k="z1" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z1" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z1" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z1" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z1" aria-label="제빙기 청소 완료" aria-pressed="false"></button></td></tr><tr class="keyzone"><td class="zn"><span class="keymark">중요</span>그라인더 청소<span class="zd"><b>매달 4주차</b> · 자동 · 수동 둘 다 · 원두 기름때</span></td><td class="zpick"><button type="button" class="chip" data-k="z4" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z4" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z4" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z4" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z4" aria-label="그라인더 청소 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">유리창 닦기<span class="zd"><b>매달 마지막 주</b> · 앞 · 뒤 · 옆 + 단체석 거울도</span></td><td class="zpick"><button type="button" class="chip" data-k="z9" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z9" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z9" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z9" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z9" aria-label="유리창 닦기 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">쓰레기 종량제 버리기 + 쓰레기통 세척<span class="zd"><b>수 · 토 (11~12월은 금요일도)</b> · 화장실 · 바쪽 · 클래스 · 주방</span></td><td class="zpick"><button type="button" class="chip" data-k="z20" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z20" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z20" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z20" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z20" aria-label="쓰레기 종량제 버리기 + 쓰레기통 세척 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">싱크대 마감<span class="zd"><b>매주 토 마감 시</b> · 락스로 꼼꼼히 닦아서 10분 방치 후 세척하기</span></td><td class="zpick"><button type="button" class="chip" data-k="z21" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z21" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z21" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z21" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z21" aria-label="싱크대 마감 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">싱크대 세미 마감<span class="zd"><b>매일 마감 시</b> · 싱크대 밑판에 물 없는지 확인하고 판은 싱크대에 뒤집어 놓고 가기</span></td><td class="zpick"><button type="button" class="chip" data-k="z22" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z22" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z22" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z22" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z22" aria-label="싱크대 세미 마감 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">쇼케이스 바닥 닦기 + 냉장고 얼룩 제거 (매장 전체 냉장고)<span class="zd"><b>매일 마감 시</b> · 케이크 진열 다 정리할 때 꼭 소독제 뿌려가면서 위아래 닦기 · 냉장고 외벽 · 손잡이 얼룩 제거</span></td><td class="zpick"><button type="button" class="chip" data-k="z7" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z7" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z7" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z7" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z7" aria-label="쇼케이스 바닥 닦기 + 냉장고 얼룩 제거 (매장 전체 냉장고) 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">과일 냉장고 바닥 닦기 (바쪽 · 클래스쪽)<span class="zd"><b>과일 정리 시 · 케이크 적재 시</b> · 틈나는 대로 행주로 바닥에 떨어진 먼지 · 쓰레기 정리하기</span></td><td class="zpick"><button type="button" class="chip" data-k="z23" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z23" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z23" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z23" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z23" aria-label="과일 냉장고 바닥 닦기 (바쪽 · 클래스쪽) 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">얼음 제거 (냉동실 · 주방쪽 업소용)<span class="zd"><b>매달 3주차</b> · 성에 긁어내고 오래된 반죽 · 필링 확인</span></td><td class="zpick"><button type="button" class="chip" data-k="z6" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z6" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z6" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z6" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z6" aria-label="얼음 제거 (냉동실 · 주방쪽 업소용) 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">얼음 제거 (냉장실 · 주방쪽 업소용 + 바쪽)<span class="zd"><b>매주 수요일</b> · 물기 제거하고 얼음 얼어 있는 데 깨서 없애기</span></td><td class="zpick"><button type="button" class="chip" data-k="z2" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z2" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z2" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z2" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z2" aria-label="얼음 제거 (냉장실 · 주방쪽 업소용 + 바쪽) 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">오븐 청소 (케이크쪽)<span class="zd"><b>3 · 6 · 9 · 11월</b> · 에그타르트 굽는 오븐 · 기름때 · 탄 자국 제거</span></td><td class="zpick"><button type="button" class="chip" data-k="z3" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z3" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z3" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z3" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z3" aria-label="오븐 청소 (케이크쪽) 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">오븐 청소 (클래스쪽)<span class="zd"><b>3 · 6 · 9 · 11월</b></span></td><td class="zpick"><button type="button" class="chip" data-k="z24" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z24" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z24" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z24" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z24" aria-label="오븐 청소 (클래스쪽) 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">포크 열탕<span class="zd">매장 포크 열탕 소독</span></td><td class="zpick"><button type="button" class="chip" data-k="z25" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z25" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z25" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z25" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z25" aria-label="포크 열탕 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">커트러리 열탕소독<span class="zd">숟가락 · 포크 · 나이프 닦기</span></td><td class="zpick"><button type="button" class="chip" data-k="z19" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z19" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z19" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z19" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z19" aria-label="커트러리 열탕소독 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">클래스쪽 청소기 분해 청소<span class="zd">먼지통 · 필터까지</span></td><td class="zpick"><button type="button" class="chip" data-k="z26" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z26" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z26" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z26" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z26" aria-label="클래스쪽 청소기 분해 청소 완료" aria-pressed="false"></button></td></tr></tbody>
+      <tbody><tr class="keyzone"><td class="zn"><span class="keymark">중요</span>제빙기 청소<span class="zd"><b>매달 2주차</b> · 내부 세척 + 필터 · 빙수철에는 월 2회</span></td><td class="zpick"><button type="button" class="chip" data-k="z1" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z1" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z1" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z1" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z1" aria-label="제빙기 청소 완료" aria-pressed="false"></button></td></tr><tr class="keyzone"><td class="zn"><span class="keymark">중요</span>그라인더 청소<span class="zd"><b>매달 4주차</b> · 자동 · 수동 둘 다 · 원두 기름때</span></td><td class="zpick"><button type="button" class="chip" data-k="z4" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z4" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z4" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z4" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z4" aria-label="그라인더 청소 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">유리창 닦기<span class="zd"><b>매달 마지막 주</b> · 앞 · 뒤 · 옆 + 단체석 거울도</span></td><td class="zpick"><button type="button" class="chip" data-k="z9" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z9" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z9" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z9" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z9" aria-label="유리창 닦기 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">쓰레기 종량제 버리기 + 쓰레기통 세척<span class="zd"><b>수 · 토 (11~12월은 금요일도)</b> · 화장실 · 바쪽 · 클래스 · 주방</span></td><td class="zpick"><button type="button" class="chip" data-k="z20" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z20" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z20" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z20" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z20" aria-label="쓰레기 종량제 버리기 + 쓰레기통 세척 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">싱크대 마감<span class="zd"><b>매주 토 마감 시</b> · 락스로 꼼꼼히 닦아서 10분 방치 후 세척하기</span></td><td class="zpick"><button type="button" class="chip" data-k="z21" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z21" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z21" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z21" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z21" aria-label="싱크대 마감 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">싱크대 세미 마감<span class="zd"><b>매일 마감 시</b> · 싱크대 밑판에 물 없는지 확인하고 판은 싱크대에 뒤집어 놓고 가기</span></td><td class="zpick"><button type="button" class="chip" data-k="z22" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z22" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z22" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z22" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z22" aria-label="싱크대 세미 마감 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">쇼케이스 바닥 닦기 + 냉장고 얼룩 제거 (매장 전체 냉장고)<span class="zd"><b>매일 마감 시</b> · 케이크 진열 다 정리할 때 꼭 소독제 뿌려가면서 위아래 닦기 · 냉장고 외벽 · 손잡이 얼룩 제거</span></td><td class="zpick"><button type="button" class="chip" data-k="z7" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z7" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z7" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z7" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z7" aria-label="쇼케이스 바닥 닦기 + 냉장고 얼룩 제거 (매장 전체 냉장고) 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">과일 냉장고 바닥 닦기 (바쪽 · 클래스쪽)<span class="zd"><b>과일 정리 시 · 케이크 적재 시</b> · 틈나는 대로 행주로 바닥에 떨어진 먼지 · 쓰레기 정리하기</span></td><td class="zpick"><button type="button" class="chip" data-k="z23" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z23" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z23" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z23" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z23" aria-label="과일 냉장고 바닥 닦기 (바쪽 · 클래스쪽) 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">얼음 제거 (냉동실 · 주방쪽 업소용)<span class="zd"><b>매달 3주차</b> · 성에 긁어내고 오래된 반죽 · 필링 확인</span></td><td class="zpick"><button type="button" class="chip" data-k="z6" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z6" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z6" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z6" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z6" aria-label="얼음 제거 (냉동실 · 주방쪽 업소용) 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">얼음 제거 (냉장실 · 주방쪽 업소용 + 바쪽)<span class="zd"><b>매주 수요일</b> · 물기 제거하고 얼음 얼어 있는 데 깨서 없애기</span></td><td class="zpick"><button type="button" class="chip" data-k="z2" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z2" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z2" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z2" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z2" aria-label="얼음 제거 (냉장실 · 주방쪽 업소용 + 바쪽) 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">오븐 청소 (케이크쪽)<span class="zd"><b>3 · 6 · 9 · 11월</b> · 에그타르트 굽는 오븐 · 기름때 · 탄 자국 제거</span></td><td class="zpick"><button type="button" class="chip" data-k="z3" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z3" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z3" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z3" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z3" aria-label="오븐 청소 (케이크쪽) 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">오븐 청소 (클래스쪽)<span class="zd"><b>3 · 6 · 9 · 11월</b></span></td><td class="zpick"><button type="button" class="chip" data-k="z24" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z24" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z24" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z24" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z24" aria-label="오븐 청소 (클래스쪽) 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">커트러리 열탕소독 (포크 열탕 포함)<span class="zd">숟가락 · 포크 · 나이프 열탕 소독 후 닦기 · 매장 포크까지</span></td><td class="zpick"><button type="button" class="chip" data-k="z19" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z19" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z19" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z19" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z19" aria-label="커트러리 열탕소독 완료" aria-pressed="false"></button></td></tr><tr><td class="zn">클래스쪽 청소기 분해 청소<span class="zd">먼지통 · 필터까지</span></td><td class="zpick"><button type="button" class="chip" data-k="z26" data-v="정항아">정항아</button><button type="button" class="chip" data-k="z26" data-v="박혜빈">박혜빈</button><button type="button" class="chip" data-k="z26" data-v="이해선">이해선</button><button type="button" class="chip" data-k="z26" data-v="사장님">사장님</button></td><td class="zchk"><button type="button" class="box" data-k="z26" aria-label="클래스쪽 청소기 분해 청소 완료" aria-pressed="false"></button></td></tr></tbody>
     </table>
     <div class="zfoot">
-      <span>청소 구역 <b>15구역</b> · 매달 담당자가 바뀝니다</span>
+      <span>청소 구역 <b>14구역</b> · 매달 담당자가 바뀝니다</span>
       <span class="lock">배정은 정항아 매니저가 합니다 · 이해선님 완료 체크는 사장님이 대신 눌러주세요</span>
     </div>
   </div>
@@ -2290,11 +2302,14 @@ input,select,textarea{border-radius:var(--r3)!important}
   <nav class="sktabs" role="tablist" aria-label="재고 화면"><button type="button" class="sktab" data-c="sk0" aria-selected="true">📦 발주·재고 체크</button><button type="button" class="sktab" data-c="sk1" aria-selected="false">📒 발주 기준표</button><button type="button" class="sktab" data-c="sk2" aria-selected="false">🍓 과일 시즌</button></nav>
   <div id="sk0">
     <div class="skbar">
+      <button type="button" class="skbtn" id="skPrev" aria-label="전날">◀ 전날</button>
       <label>날짜 <input type="date" id="skDate" class="dinp"></label>
+      <button type="button" class="skbtn" id="skNext" aria-label="다음 날">다음 날 ▶</button>
       <button type="button" class="skbtn" id="skToday">오늘</button>
       <span class="who" id="skBy"></span>
       <span class="st" id="skStatus"></span>
       <button type="button" class="skbtn prim" id="skSend" title="오늘 발주·재고 내용을 텔레그램에 붙여 넣을 글로 복사합니다">📤 보내기 (텔레그램용 복사)</button>
+      <button type="button" class="skbtn prim" id="skShot" title="발주·재고 보고를 그림 파일로 저장합니다 (텔레그램에 바로 올리기)">📷 이미지로 저장</button>
       <button type="button" class="skbtn danger" id="skDel" hidden>삭제</button>
     </div>
     <div class="skgrid">
@@ -6859,7 +6874,12 @@ input,select,textarea{border-radius:var(--r3)!important}
           var v = JSON.parse(localStorage.getItem(k) || "{}");
           var n = v.f ? Object.keys(v.f).length : 0;
           if (!n && !v.who) continue;
-          out.push({ d: k.slice(PRE.length), who: v.who || "", n: n,
+          var d0 = k.slice(PRE.length), names = [];
+          if (d0 >= "2026-09-25") {
+            Object.keys(v.by || {}).forEach(function (fk) { var nm = v.by[fk]; if (nm && names.indexOf(nm) < 0) names.push(nm); });
+            if (!names.length && v.who) names.push(v.who);
+          }
+          out.push({ d: d0, who: names.map(function (nm) { return nm === "사장님" ? nm : nm + "님"; }).join(" · "), n: n,
                      saved: v.savedAt || "" });
         }
       } catch (e) {}
@@ -7969,7 +7989,7 @@ input,select,textarea{border-radius:var(--r3)!important}
             var o = load(d) || {};
             var ord = (o.orders || "").split(NL).filter(Boolean).join(", ");
             return '<button type="button" class="' + (d === cur ? "on" : "") + '" data-d="' + d + '"><b>' + d.slice(5) + " (" + dow(d) + ")</b>" +
-              (o.by ? "<span>" + esc(o.by) + "</span>" : "") + "<small>" + (esc(ord).slice(0, 40) || "발주 없음") + "</small></button>";
+              (o.by && o.by !== "노션 이관" && d >= "2026-09-25" ? "<span>" + esc(o.by) + "</span>" : "") + "<small>" + (esc(ord).slice(0, 40) || "발주 없음") + "</small></button>";
           }).join("") + "</div></details>";
       }).join("");
       $$("[data-d]", box).forEach(function (b) { b.addEventListener("click", function () { open(b.dataset.d); }); });
@@ -8062,8 +8082,7 @@ input,select,textarea{border-radius:var(--r3)!important}
       renderUseCal();
     }
     // 보내기 — 텔레그램방에 붙여 넣는 글
-    function sendText() {
-      saveNow();
+    function buildText() {
       var o = read(), n = needs();
       var grp = function (g) {
         return allItems().filter(function (it) { return it[0] === g && stock[it[1]] !== "" && stock[it[1]] != null; })
@@ -8083,9 +8102,66 @@ input,select,textarea{border-radius:var(--r3)!important}
         "■ 부재료: " + grp("sub"),
         stock["포장 메모"] ? "■ 포장 메모: " + String(stock["포장 메모"]).replace(/\n+/g, " / ") : "",
         stock[DESIGN_KEY] ? "■ 디자인 재료: " + String(stock[DESIGN_KEY]).replace(/\n+/g, " / ") : ""].filter(function (x) { return x !== ""; }).join(NL);
+      return t;
+    }
+    function sendText() {
+      saveNow();
+      var t = buildText();
       var done = function () { statusEl.textContent = "복사됐습니다 · 텔레그램방에 붙여 넣으세요"; };
       if (navigator.share) { navigator.share({ text: t }).then(done, function () { copy(t, done); }); return; }
       copy(t, done);
+    }
+    // 보고를 그림 파일로 — 글자를 캔버스에 직접 그려서 어떤 기기에서도 똑같이 나온다
+    function reportImage() {
+      saveNow();
+      var lines = buildText().split(NL);
+      var W = 1080, PAD = 56, LH = 46, FONT = "'Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',sans-serif";
+      var cv = document.createElement("canvas"), cx = cv.getContext("2d");
+      function wrap(s, font, max) {
+        cx.font = font; var out = [], cur = "";
+        s.split(" ").forEach(function (w) {
+          var test = cur ? cur + " " + w : w;
+          if (cx.measureText(test).width <= max) { cur = test; return; }
+          if (cur) out.push(cur);
+          cur = "";
+          for (var i = 0; i < w.length; i++) { var t2 = cur + w[i]; if (cx.measureText(t2).width > max && cur) { out.push(cur); cur = w[i]; } else cur = t2; }
+        });
+        if (cur) out.push(cur); return out.length ? out : [""];
+      }
+      var rows = [];
+      lines.forEach(function (l, i) {
+        var head = i === 0, sec = /^■/.test(l), sub = /^\s+주문:/.test(l);
+        var font = head ? "900 40px " + FONT : sec ? "800 30px " + FONT : "500 27px " + FONT;
+        var max = W - PAD * 2 - (sec || head ? 0 : 28);
+        if (sec && rows.length) rows.push({ gap: 18 });
+        wrap(l.trim(), font, max).forEach(function (s) { rows.push({ s: s, font: font, head: head, sec: sec, indent: (sec || head) ? 0 : 28, sub: sub }); });
+        if (head) rows.push({ gap: 12 });
+      });
+      var H = PAD * 2 + rows.reduce(function (a, r) { return a + (r.gap || LH); }, 0) + 40;
+      var S = 2; cv.width = W * S; cv.height = H * S; cx.scale(S, S);
+      cx.fillStyle = "#FFFCF6"; cx.fillRect(0, 0, W, H);
+      cx.strokeStyle = "#B4661B"; cx.lineWidth = 6; cx.strokeRect(3, 3, W - 6, H - 6);
+      var y = PAD + 30;
+      rows.forEach(function (r) {
+        if (r.gap) { y += r.gap; return; }
+        cx.font = r.font; cx.textBaseline = "alphabetic";
+        cx.fillStyle = r.head ? "#8A4A00" : r.sec ? "#B4661B" : (/^(⚠|\(발주점)/.test(r.s) ? "#B3261E" : "#2A2522");
+        cx.fillText(r.s, PAD + r.indent, y);
+        if (r.head) { cx.fillStyle = "#B4661B"; cx.fillRect(PAD, y + 14, W - PAD * 2, 3); }
+        y += LH;
+      });
+      cx.font = "600 22px " + FONT; cx.fillStyle = "#8C7B6B"; cx.textAlign = "right";
+      cx.fillText("카페스이 · 재고발주 " + new Date().toLocaleString("ko-KR", { hour12: false }), W - PAD, H - 26);
+      var name = "발주재고_" + (cur || today()) + ".png";
+      statusEl.textContent = "이미지 만드는 중…";
+      cv.toBlob(function (blob) {
+        if (!blob) { statusEl.textContent = "이미지를 만들지 못했습니다"; return; }
+        var file = null; try { file = new File([blob], name, { type: "image/png" }); } catch (e) {}
+        var done = function () { statusEl.textContent = "이미지로 저장했습니다 · 텔레그램에 올리세요"; };
+        var dl = function () { var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); setTimeout(function () { a.remove(); }, 2000); done(); };
+        if (file && navigator.canShare && navigator.canShare({ files: [file] })) navigator.share({ files: [file], title: name }).then(done, dl);
+        else dl();
+      }, "image/png");
     }
     function copy(t, done) {
       if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(t).then(done, function () { fb(t, done); }); }
@@ -8127,8 +8203,11 @@ input,select,textarea{border-radius:var(--r3)!important}
     FIELDS.forEach(function (k) { $("#sk_" + k).addEventListener("input", queueSave); });
     dateEl.addEventListener("change", function () { if (dateEl.value) { $("#skMonth").value = dateEl.value.slice(0, 7); open(dateEl.value); } });
     $("#skToday").addEventListener("click", function () { $("#skMonth").value = today().slice(0, 7); open(today()); });
+    $("#skPrev").addEventListener("click", function () { var d = addDays(cur || today(), -1); $("#skMonth").value = d.slice(0, 7); open(d); });
+    $("#skNext").addEventListener("click", function () { var d = addDays(cur || today(), 1); $("#skMonth").value = d.slice(0, 7); open(d); });
     $("#skMonth").addEventListener("change", renderList);
     $("#skSend").addEventListener("click", sendText);
+    $("#skShot").addEventListener("click", reportImage);
     $("#skDel").addEventListener("click", function () {
       if (!cur || !confirm(cur + " 체크를 지울까요?")) return;
       remove(cur); open(cur);
