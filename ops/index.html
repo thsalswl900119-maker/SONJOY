@@ -1192,8 +1192,8 @@ tr.moved td{background:var(--openbg);transition:background .6s}
   color:var(--ink);border:1px solid var(--rule2);border-radius:2px}
 .atmemo:focus-visible{outline:2px solid var(--open);outline-offset:1px}
 .atw{font-size:13px;font-weight:700}
-.atw.p1{color:var(--p1)}.atw.p2{color:var(--p2)}
-.atw.p3{color:var(--p3)}.atw.p4{color:var(--p4)}
+.atw.p1,.atn.p1{color:var(--p1)}.atw.p2,.atn.p2{color:var(--p2)}
+.atw.p3,.atn.p3{color:var(--p3)}.atw.p4,.atn.p4{color:var(--p4)}
 .atnone{padding:16px;text-align:center;color:var(--muted);font-size:13px;
   border:1px dashed var(--rule2);border-radius:3px;grid-column:1/-1}
 .attable{width:100%;border-collapse:collapse;min-width:560px}
@@ -1215,11 +1215,8 @@ tr.moved td{background:var(--openbg);transition:background .6s}
 .atmon th,.atmon td{text-align:left!important;font-family:var(--sans)!important}
 .atmon td.dcol{font-family:var(--mono)!important;white-space:nowrap;font-weight:700;width:96px}
 .atmon td.dcol span{font-weight:400;color:var(--muted);margin-left:4px}
-.atmon tbody tr{cursor:pointer}
-.atmon tbody tr:hover td{background:var(--raise)}
-.atmon tr.sun td{background:var(--offbg);color:var(--off);font-size:12px}
-.atmon tr.today td{background:var(--openbg)}
-.atmon tr.today td.dcol{color:var(--open)}
+.atmon td.atc{cursor:pointer}
+.atmon td.atc:hover{background:var(--raise)}
 .atmon td b{font-family:var(--mono);font-size:13px}
 .atmon td small{color:var(--muted);font-size:12.5px;margin-left:4px}
 .late{color:var(--mid);font-weight:700;font-size:12.5px;margin-left:5px;font-style:normal}
@@ -1227,6 +1224,24 @@ tr.moved td{background:var(--openbg);transition:background .6s}
 .atmon td .dash{color:var(--rule2)}
 .atmon tfoot td{background:var(--raise);font-weight:700;font-size:12.5px}
 .atmon tfoot td small{display:block;margin:0;font-weight:400}
+/* 한 달 퇴근 현황 — 달력 모양 */
+.atmon{table-layout:fixed;min-width:640px}
+.atmon th{text-align:center!important;font-family:var(--serif)!important;font-size:13px;padding:8px 4px;background:var(--raise)}
+.atmon th.sun{color:var(--off)}
+.atmon td.atc{vertical-align:top;padding:6px 7px 7px!important;min-height:78px;height:78px;border:1px solid var(--rule);background:var(--surface)}
+.atmon td.atc.blank{background:var(--bg)}
+.atmon td.atc.sun{background:var(--offbg)}
+.atmon td.atc.today{background:var(--openbg);box-shadow:inset 0 0 0 2px var(--open)}
+.atmon .atd{font-family:var(--mono);font-weight:700;font-size:14px;margin-bottom:3px}
+.atmon td.atc.sun .atd,.atmon .atd em{color:var(--off)}
+.atmon .atd em{font-style:normal;font-size:11px;margin-left:4px;font-weight:700}
+.atmon .atoff{font-size:12px;color:var(--off);font-weight:700}
+.atmon .atp{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;font-size:12.5px;line-height:1.35;margin-top:2px}
+.atmon .atn{font-weight:800;font-size:12px}
+.atmon .atp b{font-family:var(--mono);font-size:13px}
+.atmon .atp small{color:var(--muted);font-size:11.5px;margin:0}
+.atmon .atsum{font-size:13px;line-height:1.8;padding:8px 12px!important}
+.atmon .atsum .sep{color:var(--rule2);margin:0 4px}
 /* 비교표 */
 .cmpwrap{margin-bottom:14px}
 .cmph{background:var(--raise);padding:9px 14px;font-family:var(--serif);font-weight:700;
@@ -1288,7 +1303,7 @@ tr.moved td{background:var(--openbg);transition:background .6s}
 .lgdatebig{gap:5px}
 .lgdatebig .lgcap{font-size:12.5px;color:var(--muted);font-weight:700}
 .lgdatebig .lgrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.lgdatebig #lgDate{font-family:var(--mono);font-size:18px;font-weight:700;padding:7px 12px;min-width:190px;color:var(--ink);border:2px solid var(--ink)}
+.lgdatebig #lgDate,.lgdatebig #skDate{font-family:var(--mono);font-size:18px;font-weight:700;padding:7px 12px;min-width:190px;color:var(--ink);border:2px solid var(--ink);min-height:40px}
 .lgdatebig .daynav{font-size:14px;font-weight:700;padding:9px 14px;min-height:40px}
 .lgdatebig .daynav.today{background:var(--mid);color:#fff;border-color:var(--mid)}
 .lgdatebig #lgWho{font-size:16px;font-weight:700;padding:8px 12px;min-width:150px;min-height:40px}
@@ -2193,14 +2208,14 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-75</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-79</i></span>
   <span class="sep"></span>
-  <span class="svlab">복사본 보관</span>
+  <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
   <div class="bkrow" id="saveRow"></div>
   <button type="button" class="newver" id="newVer" hidden>🔄 새 버전이 올라왔어요 — 눌러서 새로고침 (적은 내용은 그대로 남습니다)</button>
 </div>
-<nav class="tabs" role="tablist" aria-label="화면 선택"><span class="tabgrp"><button type="button" class="tab" role="tab" data-p="tp0" aria-controls="tp0" aria-selected="true">출퇴근</button><button type="button" class="tab" role="tab" data-p="tp2" aria-controls="tp2" aria-selected="false">오늘 할 일</button><button type="button" class="tab" role="tab" data-p="tp12" aria-controls="tp12" aria-selected="false">재고·발주</button><button type="button" class="tab daily" role="tab" data-p="tp4" aria-controls="tp4" aria-selected="false">일지</button></span><button type="button" class="tab" role="tab" data-p="tp1" aria-controls="tp1" aria-selected="false">근무표</button><button type="button" class="tab" role="tab" data-p="tp3" aria-controls="tp3" aria-selected="false">청소·정비</button><button type="button" class="tab" role="tab" data-p="tp5" aria-controls="tp5" aria-selected="false">월말회의</button><button type="button" class="tab" role="tab" data-p="tp6" aria-controls="tp6" aria-selected="false">연간 행사</button><button type="button" class="tab" role="tab" data-p="tp7" aria-controls="tp7" aria-selected="false">과일</button><button type="button" class="tab" role="tab" data-p="tp8" aria-controls="tp8" aria-selected="false">월말 평가</button><button type="button" class="tab" role="tab" data-p="tp9" aria-controls="tp9" aria-selected="false">워크샵</button><button type="button" class="tab" role="tab" data-p="tp10" aria-controls="tp10" aria-selected="false">고객 응대</button><button type="button" class="tab" role="tab" data-p="tp13" aria-controls="tp13" aria-selected="false">제과제빵</button><button type="button" class="tab" role="tab" data-p="tp14" aria-controls="tp14" aria-selected="false">독서나눔</button><button type="button" class="tab" role="tab" data-p="tp11" aria-controls="tp11" aria-selected="false">사용법</button></nav><div class="panel" id="tp0" role="tabpanel"><section>
+<nav class="tabs" role="tablist" aria-label="화면 선택"><span class="tabgrp"><button type="button" class="tab" role="tab" data-p="tp0" aria-controls="tp0" aria-selected="true">출퇴근</button><button type="button" class="tab" role="tab" data-p="tp1" aria-controls="tp1" aria-selected="false">근무표</button><button type="button" class="tab" role="tab" data-p="tp2" aria-controls="tp2" aria-selected="false">오늘 할 일</button><button type="button" class="tab" role="tab" data-p="tp12" aria-controls="tp12" aria-selected="false">재고·발주</button><button type="button" class="tab daily" role="tab" data-p="tp4" aria-controls="tp4" aria-selected="false">일지</button></span><button type="button" class="tab" role="tab" data-p="tp3" aria-controls="tp3" aria-selected="false">청소·정비</button><button type="button" class="tab" role="tab" data-p="tp5" aria-controls="tp5" aria-selected="false">월말회의</button><button type="button" class="tab" role="tab" data-p="tp6" aria-controls="tp6" aria-selected="false">연간 행사</button><button type="button" class="tab" role="tab" data-p="tp7" aria-controls="tp7" aria-selected="false">과일</button><button type="button" class="tab" role="tab" data-p="tp8" aria-controls="tp8" aria-selected="false">월말 평가</button><button type="button" class="tab" role="tab" data-p="tp9" aria-controls="tp9" aria-selected="false">워크샵</button><button type="button" class="tab" role="tab" data-p="tp10" aria-controls="tp10" aria-selected="false">고객 응대</button><button type="button" class="tab" role="tab" data-p="tp13" aria-controls="tp13" aria-selected="false">제과제빵</button><button type="button" class="tab" role="tab" data-p="tp14" aria-controls="tp14" aria-selected="false">독서나눔</button><button type="button" class="tab" role="tab" data-p="tp11" aria-controls="tp11" aria-selected="false">사용법</button></nav><div class="panel" id="tp0" role="tabpanel"><section>
   <div class="shead"><h2>출퇴근</h2><span class="en">clock out</span>
     <span class="sub">갈 때 본인 칸의 퇴근만 누르세요 · 출근은 10분 일찍, 서로 챙깁니다</span></div>
   <div class="lgbar">
@@ -2241,11 +2256,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 </section></div><div class="panel" id="tp2" role="tabpanel" hidden><section>
   <div class="shead"><h2>오늘의 할 일</h2><span class="en">today's tasks</span>
     <span class="sub">매일 하는 업무 · 본인 조를 누르고 하나씩 체크하세요</span></div>
-  <div class="rulebox" id="askRule">
-    <div class="rhd">🙋 일하는 기본 · 꼭 지키기</div>
-    <div class="rb">궁금하거나 헷갈리면 <b>무조건 물어보고</b> 일하기.<br>케이크 디자인 · 과일 높이는 <b>매일 같은 모양</b>으로.<br>근무 시 직원 간의 <b>배려는 기본</b>입니다. 서로를 배려하고 협업해 주세요.</div>
-    <div class="rs">혼자 판단해서 진행하지 않기 · 매니저나 사장님께 먼저 확인 · 물어보는 건 잘못이 아닙니다.<br>만들기 전에 기준 사진과 한 번 견주고, 과일은 정해진 높이까지. 다르게 나간 날은 마감 일지에 적어주세요.<br>바쁜 쪽을 먼저 돕고, 힘든 일은 나눠서. 말 한마디도 서로 편하게.</div>
-  </div>
+  <div class="tnotice" id="askRule"><div class="tnhead">★ 일하는 기본 · 꼭 지키기</div><ul><li><b>궁금하거나 헷갈리면 <mark>무조건 물어보고</mark> 일하기</b><span>혼자 판단해서 진행하지 않기 · 매니저나 사장님께 먼저 확인 · 물어보는 건 잘못이 아닙니다</span></li><li><b>케이크 디자인 · 과일 높이는 <mark>매일 같은 모양</mark>으로</b><span>만들기 전에 기준 사진과 한 번 견주고, 과일은 정해진 높이까지 · 다르게 나간 날은 마감 일지에 적기</span></li><li><b>근무 시 직원 간의 <mark>배려는 기본</mark></b><span>바쁜 쪽을 먼저 돕고, 힘든 일은 나눠서 · 말 한마디도 서로 편하게</span></li></ul></div>
   <div class="hcbox" id="hcBox">
     <div class="hch"><b>🩺 보건증</b><span>1년마다 갱신 · 발급일만 넣으면 만료일과 남은 날이 자동으로 계산됩니다 · 고정 항목이라 날이 바뀌어도 지워지지 않습니다</span></div>
     <div class="hcrows" id="hcRows"></div>
@@ -2295,23 +2306,22 @@ input,select,textarea{border-radius:var(--r3)!important}
 </section></div><div class="panel" id="tp12" role="tabpanel" hidden><section>
   <div class="shead"><h2>재고 · 발주</h2>
     <span class="sub">어제 숫자가 들어 있어요 · 바뀐 것만 고치면 자동 저장 · 주황색은 발주 넣을 때</span></div>
-  <div class="rulebox" id="orderRule">
-    <div class="rhd">📦 발주 규칙 · 꼭 지키기</div>
-    <div class="rb">빨간날이 있는 주간에는 <b>4~5일 전에 무조건 재고·발주 체크</b> 다 하기.<br><b>인쇄물 · 포장재료 · 주재료 전부</b> 빠짐없이.</div>
-    <div class="rs">예) 추석 연휴가 9/24~9/26이라면 <b>9/18~9/21까지는 꼭 발주+재고 체크</b>를 해야 합니다.</div>
-  </div>
+  <div class="tnotice" id="orderRule"><div class="tnhead">📦 발주 규칙 · 꼭 지키기</div><ul><li><b>빨간날이 있는 주간에는 <mark>4~5일 전에 무조건 재고 · 발주 체크</mark> 다 하기</b><span>예) 추석 연휴가 9/24~9/26이라면 9/18~9/21까지는 꼭 발주 + 재고 체크</span></li><li><b><mark>인쇄물 · 포장재료 · 주재료 전부</mark> 빠짐없이</b><span>자주 안 시키는 것까지 목록을 보면서 하나씩 확인</span></li></ul></div>
   <nav class="sktabs" role="tablist" aria-label="재고 화면"><button type="button" class="sktab" data-c="sk0" aria-selected="true">📦 발주·재고 체크</button><button type="button" class="sktab" data-c="sk1" aria-selected="false">📒 발주 기준표</button><button type="button" class="sktab" data-c="sk2" aria-selected="false">🍓 과일 시즌</button></nav>
   <div id="sk0">
-    <div class="skbar">
-      <button type="button" class="skbtn" id="skPrev" aria-label="전날">◀ 전날</button>
-      <label>날짜 <input type="date" id="skDate" class="dinp"></label>
-      <button type="button" class="skbtn" id="skNext" aria-label="다음 날">다음 날 ▶</button>
-      <button type="button" class="skbtn" id="skToday">오늘</button>
+    <div class="skbar lgdate lgdatebig">
+      <span class="lgcap">날짜</span>
+      <span class="lgrow">
+      <button type="button" class="daynav" id="skPrev" aria-label="전날">◀ 전날</button>
+      <input type="date" id="skDate" class="dinp" aria-label="날짜">
+      <button type="button" class="daynav" id="skNext" aria-label="다음 날">다음 날 ▶</button>
+      <button type="button" class="daynav today" id="skToday">오늘</button>
+      <span class="lghol" id="skHol" hidden></span>
       <span class="who" id="skBy"></span>
       <span class="st" id="skStatus"></span>
-      <button type="button" class="skbtn prim" id="skSend" title="오늘 발주·재고 내용을 텔레그램에 붙여 넣을 글로 복사합니다">📤 보내기 (텔레그램용 복사)</button>
       <button type="button" class="skbtn prim" id="skShot" title="발주·재고 보고를 그림 파일로 저장합니다 (텔레그램에 바로 올리기)">📷 이미지로 저장</button>
       <button type="button" class="skbtn danger" id="skDel" hidden>삭제</button>
+      </span>
     </div>
     <div class="skgrid">
       <div class="skcol skrpcol"><div class="skrp" id="skReport"></div>
@@ -2354,11 +2364,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 <div class="panel" id="tp4" role="tabpanel" hidden><section>
   <div class="shead"><h2>마감 일지</h2><span class="en">daily log</span>
     <span class="sub">퇴근 전에 채우고 복사해서 텔레그램으로 보고하세요</span></div>
-  <div class="rulebox" id="prodRule">
-    <div class="rhd">🎂 생산량 규칙 · 꼭 지키기</div>
-    <div class="rb">빨간날(연휴)이 뒷날이면 <b>무조건 주말 생산량</b>으로 잡기.<br>한꺼번에 당겨서 작업하고, 뒷날부터 조절하기.</div>
-    <div class="rs">혹 케이크 양이 처지면 <b>꼭 보고하고 생산량 조절하기</b> · 마음대로 정하지 않기.<br>생산량이 헷갈리면 <b>보고하고 작업하기</b> · 딸기 철에는 <b>미니케이크 상시 판매</b> (조각케이크처럼 매일 준비).</div>
-  </div>
+  <div class="tnotice" id="prodRule"><div class="tnhead">🎂 생산량 규칙 · 꼭 지키기</div><ul><li><b>빨간날(연휴)이 뒷날이면 <mark>무조건 주말 생산량</mark>으로 잡기</b><span>한꺼번에 당겨서 작업하고, 뒷날부터 조절하기</span></li><li><b>케이크 양이 처지면 <mark>꼭 보고하고 생산량 조절하기</mark></b><span>마음대로 정하지 않기</span></li><li><b>생산량이 헷갈리면 <mark>보고하고 작업하기</mark></b><span>딸기 철에는 미니케이크 상시 판매 (조각케이크처럼 매일 준비)</span></li></ul></div>
   <div class="mcbox" id="mcBox">
     <div class="mch"><b>📅 이달 메모 달력</b>
       <span>예약 · 공지 · 챙길 것을 날짜에 적어 두세요. 적은 건 <b>연간 행사</b> 달력에도 같이 보입니다 (보라 띠).</span>
@@ -2425,9 +2431,9 @@ input,select,textarea{border-radius:var(--r3)!important}
         <div class="bkh">자료 보관 <span id="bkSize"></span></div>
         <p class="bknote">적어둔 것은 이 기기와 <b>카페스이 서버(Firebase)</b>에 같이 있고, 컴퓨터끼리 공유됩니다.
           <b>「복사본 보관」은 그 내용을 따로 한 벌 더 복사해 두는 것</b>입니다. 서버가 잘못되거나 실수로 지웠을 때를 대비하는 보험이고, 복사본을 만들어도 여기 있는 내용은 하나도 지워지지 않습니다.
-          <b>「읽기용 문서로 저장」</b>은 사람이 읽는 문서(.html)입니다. 더블클릭하면 브라우저에서 날짜별 일지 · 근무표 · 재고 등이 표로 열리고, 인쇄나 PDF 저장도 됩니다. 단, 이 문서로는 되돌리기가 안 됩니다.<br>「전체 내용 글로 복사」는 긴 글이 복사되니 텔레그램·메모장에 붙여 넣으면 되고, 「전체 내용 파일로 저장」은 <b>.txt 글자 파일</b>(예: cafesui-copy-2026-09-24.txt)이 다운로드 폴더에 생깁니다. 메모장으로 열리는 보통 글자 파일이고, 구글 드라이브·USB로 옮겨 두면 됩니다.
+          <b>「읽기용 문서로 저장」</b>은 사람이 읽는 문서(.html)입니다. 더블클릭하면 브라우저에서 날짜별 일지 · 근무표 · 재고 등이 표로 열리고, 인쇄나 PDF 저장도 됩니다. 단, 이 문서로는 되돌리기가 안 됩니다.<br>「전체 내용 파일로 내 컴퓨터에 저장」은 <b>.txt 글자 파일</b>(예: cafesui-copy-2026-09-24.txt)이 다운로드 폴더에 생깁니다. 메모장으로 열리는 보통 글자 파일이고, 구글 드라이브·USB로 옮겨 두면 됩니다.
           한 달에 한 번 파일로 저장해 두면 충분합니다.
-          <br>복사본에는 <b>적어둔 내용 전부</b>가 들어갑니다 — 일지 · 퇴근 기록 ·
+          <br>이 파일에는 <b>적어둔 내용 전부</b>가 들어갑니다 — 일지 · 퇴근 기록 ·
           월말회의 · 월말 평가 · 근무표 수정 · 휴무 신청 · 청소 체크 · 워크샵 ·
           연간 일정 · 비밀번호까지.</p>
         <div class="bkbtns">
@@ -2442,10 +2448,10 @@ input,select,textarea{border-radius:var(--r3)!important}
         <div class="bkact"><span class="lgmsg" id="bkMsg"></span></div>
         <div class="period" id="bkPeriod"></div>
         <div class="bksnap">
-          <b>🗓 자동 복사본 (이 컴퓨터가 하루 한 번 스스로 남김 · 최근 7일)</b>
+          <b>🗓 자동 저장본 (이 컴퓨터가 하루 한 번 스스로 남김 · 최근 7일)</b>
           <select id="bkSnapSel" class="dinp"></select>
-          <button type="button" class="wsmini" id="bkSnapFill">이 복사본으로 빈 칸만 채우기</button>
-          <button type="button" class="wsmini" id="bkSnapCopy">이 복사본 글로 복사</button>
+          <button type="button" class="wsmini" id="bkSnapFill">이 저장본으로 빈 칸만 채우기</button>
+          <button type="button" class="wsmini" id="bkSnapCopy">이 저장본 글로 복사</button>
           <span class="lgmsg" id="bkSnapMsg"></span>
           <em>채워 넣기는 지금 비어 있는 칸만 채우고, 지금 있는 내용은 절대 지우지 않습니다.</em>
         </div>
@@ -2581,11 +2587,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 </section></div><div class="panel" id="tp8" role="tabpanel" hidden><section>
   <div class="shead"><h2>매니저 월말 평가</h2><span class="en">monthly review</span>
     <span class="sub">매니저 이상만 · 본인과 사장님만 볼 수 있습니다</span></div>
-  <div class="rulebox" id="rvPurpose">
-    <div class="rhd">🎯 관리직급별 월말 평가의 목적</div>
-    <div class="rb">점수를 매기려는 게 아닙니다. <b>스스로를 돌아보고, 다음 달에 행동과 생각이 달라지게</b> 하려는 것입니다.</div>
-    <div class="rs">① 한 달을 솔직하게 되돌아보기 (잘한 것도, 못 지킨 것도) · ② 못 지킨 것 중 하나를 골라 다음 달 목표로 · ③ 면담에서 사장님과 같이 보고 방향 맞추기<br>평가는 매니저 이상만 하고, 본인과 사장님만 볼 수 있습니다. 자가 평가는 객관적인 시각으로, 솔직하게.</div>
-  </div>
+  <div class="tnotice" id="rvPurpose"><div class="tnhead">🎯 관리직급별 월말 평가의 목적</div><ul><li><b>점수를 매기려는 게 아닙니다 — <mark>스스로를 돌아보고, 다음 달에 행동과 생각이 달라지게</mark> 하려는 것</b><span>평가는 매니저 이상만 하고, 본인과 사장님만 볼 수 있습니다 · 자가 평가는 객관적인 시각으로, 솔직하게</span></li><li><b>한 달을 <mark>솔직하게 되돌아보기</mark></b><span>잘한 것도, 못 지킨 것도</span></li><li><b>못 지킨 것 중 하나를 골라 <mark>다음 달 목표</mark>로</b></li><li><b>면담에서 사장님과 같이 보고 <mark>방향 맞추기</mark></b></li></ul></div>
   <div class="rvsteps">
     <div class="rvstep"><b>1</b><span><strong>평가 전날까지 · 본인</strong>이름·평가월 고르고 → 아래 체크를 솔직하게 → 초록 「본인이 적는 칸」 채우기</span></div>
     <div class="rvstep"><b>2</b><span><strong>월말 면담 · 사장님과 함께</strong>등급과 항목별 비율을 같이 보고 → 주황 「사장님 피드백」 적기 → 등급 확정</span></div>
@@ -2781,7 +2783,7 @@ input,select,textarea{border-radius:var(--r3)!important}
       <ul><li>쉬는 날이면 「오늘은 쉬는 날이에요 · 다음 근무는 …」</li>
       <li><b>내 이름이 아니면</b> 오른쪽 「내가 아니에요」를 누르고 다시 고르세요. 남의 이름으로 체크하면 그 사람 색으로 남습니다</li>
       <li>다 쓰고 자리를 뜰 때도 「내가 아니에요」. 다음 사람이 자기 이름으로 들어옵니다</li></ul></div></div>
-    <div class="tstep"><div class="tno">3</div><div class="tbody"><h4>상단 「저장 · 복사본 보관」 줄</h4>
+    <div class="tstep"><div class="tno">3</div><div class="tbody"><h4>상단 「저장 · 내 컴퓨터에 따로 저장」 줄</h4>
       <p>어느 탭에 있어도 항상 위에 붙어 있는 줄입니다.</p>
       <ul><li><b>💾 저장</b>: 적는 건 즉시 저장되지만, 짜던 근무표처럼 아직 안 들어간 것까지 한 번에 저장합니다. 나가기 전에 한 번 누르세요. 근무표를 건드리면 버튼이 빨개집니다</li>
       <li><b>☁ 표시</b>: 「컴퓨터끼리 공유 중」이면 여기서 적은 게 다른 컴퓨터에도 들어갑니다. 「공유 안 됨」이면 이 컴퓨터에만 남으니 사장님께 말씀하세요</li>
@@ -2879,12 +2881,12 @@ input,select,textarea{border-radius:var(--r3)!important}
       <li><b>잘못을 알았으면 즉각 사과가 먼저.</b> 해결은 매니저 · 사장님이 합니다. 이물질이나 큰 컴플레인은 바로 전화</li></ul></div></div>
   </div>
 
-  <h3 class="subhead">색 · 저장 · 복사본 보관 — 꼭 알아둘 것</h3>
+  <h3 class="subhead">색 · 저장 · 따로 저장 — 꼭 알아둘 것</h3>
   <div class="tfaqs">
     <div class="tfaq"><b>누가 했는지는 색으로 봅니다</b><span>정항아 주황 · 박혜빈 남색 · 이해선 빨강 · 사장님 초록. 체크 칸, 적은 글자, 청소 담당 칩, 근무표 이름이 전부 같은 색입니다. 그래서 자리에 앉으면 위 띠의 이름부터 확인하세요.</span></div>
     <div class="tfaq"><b>적은 것은 컴퓨터끼리 같이 보입니다</b><span>위 「☁ 컴퓨터끼리 공유 중」이 켜져 있으면 아이맥에서 적은 게 다른 컴퓨터에도 몇 초 안에 들어갑니다. 다른 컴퓨터에서 바뀐 게 있으면 자동으로 새로 읽고, 적는 중이면 위에 「🔄 새로 읽기」 버튼이 뜹니다. 같은 칸을 두 컴퓨터가 동시에 고치면 나중에 저장한 쪽이 남습니다. 「☁ 공유 안 됨」이면 이 기기에만 남으니 백업 복사 → 되살리기로 옮깁니다.</span></div>
     <div class="tfaq"><b>저장은 자동, 확인은 버튼</b><span>글자를 치면 바로 저장됩니다. 근무표 짜기만 「저장」을 눌러야 합니다. 습관처럼 나가기 전에 위 초록 「저장」을 한 번 누르면 어느 쪽이든 안전합니다. 30분 잠금이 걸릴 때도 잠그기 전에 한 번 저장합니다.</span></div>
-    <div class="tfaq"><b>복사본은 월 1회</b><span>내용은 서버에도 있지만, 만약을 위해 「전체 내용 파일로 저장」을 한 달에 한 번 눌러 파일을 구글 드라이브나 USB에 두세요. 「자료 보관」(일지 탭 아래)에 지금 얼마나 쓰고 있는지 나옵니다.</span></div>
+    <div class="tfaq"><b>따로 저장은 월 1회</b><span>내용은 서버에도 있지만, 만약을 위해 「전체 내용 파일로 내 컴퓨터에 저장」을 한 달에 한 번 눌러 파일을 구글 드라이브나 USB에 두세요. 「자료 보관」(일지 탭 아래)에 지금 얼마나 쓰고 있는지 나옵니다.</span></div>
   </div>
 
   <h3 class="subhead">이럴 땐 이렇게</h3>
@@ -5226,45 +5228,49 @@ input,select,textarea{border-radius:var(--r3)!important}
           if (k.indexOf(PRE) === 0) { var dk = k.slice(PRE.length); if (!firstRec || dk < firstRec) firstRec = dk; }
         }
       } catch (e) {}
-      var body = "";
+      // 근무표처럼 달력 모양 (월~일) — 칸마다 직원별 퇴근 시각
+      var cells = [], firstWd = (new Date(y, m - 1, 1).getDay() + 6) % 7;
+      for (var b0 = 0; b0 < firstWd; b0++) cells.push('<td class="atc blank"></td>');
       for (var dd = 1; dd <= last; dd++) {
         var d = ym + "-" + String(dd).padStart(2, "0");
         var wd = new Date(y, m - 1, dd).getDay();
         var plan = SCHED[d] || [], rec = load(d);
-        var cls = (wd === 0 ? "sun" : "") + (d === today ? " today" : "");
-        var cells = "";
+        var cls = "atc" + (wd === 0 ? " sun" : "") + (d === today ? " today" : "") + (wd === 6 ? " sat" : "");
+        var hol = (window.__CS_HOL || {})[d];
+        var inner = '<div class="atd">' + dd + (hol ? '<em>' + hol + '</em>' : "") + "</div>";
         if (wd === 0 && !plan.length && !Object.keys(rec).length) {
-          cells = '<td colspan="' + STAFF.length + '">정기휴무</td>';
+          inner += '<div class="atoff">정기휴무</div>';
         } else {
           STAFF.forEach(function (w) {
             var sh = null; plan.forEach(function (x) { if (x.w === w) sh = x; });
             var r = rec[w] || {};
+            var nm = '<span class="atn ' + (COL[w] || "") + '">' + w.slice(0, 3) + "</span>";
             if (r.out) {
               tot[w].work += 1; tot[w].out += 1;
               var late = "";
               var pe = sh ? mins(sh.e) : null, po = mins(r.out);
               if (pe != null && po != null && po - pe >= 20) { late = '<i class="late">+' + (po - pe) + "분</i>"; tot[w].late += (po - pe); }
-              cells += "<td><b>" + r.out + "</b><small>" + (r.role || (sh ? sh.r : "")) + "</small>" + late +
-                       (r.memo ? '<small>· ' + esc(r.memo) + "</small>" : "") + "</td>";
+              inner += '<div class="atp">' + nm + "<b>" + r.out + "</b>" + late + (r.memo ? '<small>' + esc(r.memo) + "</small>" : "") + "</div>";
             } else if (sh) {
               var counted = d <= today && firstRec && d >= firstRec;
               if (counted) tot[w].work += 1;
-              cells += "<td>" + (d < today ? (counted ? '<span class="miss">미기록</span><small>' + sh.r + "</small>" : '<small class="dash">' + sh.r + "</small>")
-                                            : '<small>' + sh.r + (sh.e ? " · 예정 " + sh.e : "") + "</small>") + "</td>";
-            } else {
-              cells += '<td><span class="dash">—</span></td>';
+              inner += '<div class="atp">' + nm + (d < today ? (counted ? '<span class="miss">미기록</span>' : '<small class="dash">' + sh.r + "</small>")
+                                                          : '<small>' + sh.r + (sh.e ? " " + sh.e : "") + "</small>") + "</div>";
             }
           });
         }
-        body += '<tr class="' + cls + '" data-d="' + d + '"><td class="dcol">' + m + "/" + dd + "<span>" + WD2[wd] + "</span></td>" + cells + "</tr>";
+        cells.push('<td class="' + cls + '" data-d="' + d + '">' + inner + "</td>");
       }
-      var foot = '<tr><td class="dcol">합계</td>' + STAFF.map(function (w) {
-        var t = tot[w];
-        return "<td>퇴근 " + t.out + " / 근무 " + t.work + "일" + (t.late ? '<small>늦게 남음 합계 <i class="late">+' + t.late + "분</i></small>" : "") +
-               (t.work - t.out > 0 && ym <= today.slice(0, 7) ? '<small class="miss">미기록 ' + (t.work - t.out) + "일</small>" : "") + "</td>";
-      }).join("") + "</tr>";
-      tblEl.innerHTML = "<thead><tr><th>날짜</th>" + STAFF.map(function (w) {
-        return '<th><span class="atw ' + (COL[w] || "") + '">' + w + "</span></th>"; }).join("") + "</tr></thead>" +
+      while (cells.length % 7) cells.push('<td class="atc blank"></td>');
+      var body = "";
+      for (var r0 = 0; r0 < cells.length; r0 += 7) body += "<tr>" + cells.slice(r0, r0 + 7).join("") + "</tr>";
+      var foot = '<tr><td colspan="7" class="atsum">' + STAFF.map(function (w) {
+        var tt = tot[w];
+        return '<span class="atn ' + (COL[w] || "") + '">' + w + "</span> 퇴근 " + tt.out + " / 근무 " + tt.work + "일" +
+               (tt.late ? ' <i class="late">늦게 남음 +' + tt.late + "분</i>" : "") +
+               (tt.work - tt.out > 0 && ym <= today.slice(0, 7) ? ' <span class="miss">미기록 ' + (tt.work - tt.out) + "일</span>" : "");
+      }).join(' <span class="sep">·</span> ') + "</td></tr>";
+      tblEl.innerHTML = "<thead><tr>" + ["월", "화", "수", "목", "금", "토", "일"].map(function (w, i) { return "<th" + (i === 6 ? ' class="sun"' : "") + ">" + w + "</th>"; }).join("") + "</tr></thead>" +
         "<tbody>" + body + "</tbody><tfoot>" + foot + "</tfoot>";
     }
     function esc(v) { return String(v == null ? "" : v).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
@@ -5277,7 +5283,7 @@ input,select,textarea{border-radius:var(--r3)!important}
         var y = +monEl.value.slice(0, 4), m = +monEl.value.slice(5, 7) + 1; if (m > 12) { m = 1; y += 1; }
         monEl.value = y + "-" + String(m).padStart(2, "0"); drawMonth(); });
       tblEl.addEventListener("click", function (e) {
-        var row = e.target.closest("tr[data-d]"); if (!row) return;
+        var row = e.target.closest("[data-d]"); if (!row) return;
         dateEl.value = row.dataset.d; render();
         listEl.scrollIntoView({ behavior: "smooth", block: "start" });
       });
@@ -7515,9 +7521,9 @@ input,select,textarea{border-radius:var(--r3)!important}
 .sktab[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .skbar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;border:1px solid var(--open);
   border-radius:4px;background:var(--openbg);padding:9px 13px;margin-bottom:12px}
-.skbar label{font-size:15px;font-weight:800;color:var(--ink2);display:flex;align-items:center;gap:8px}
-.skbar .dinp{width:auto;min-width:170px;font-size:17px;font-weight:700;padding:9px 12px;min-height:44px}
-.skbar .who{font-family:var(--serif);font-weight:800;font-size:18px;color:var(--open)}
+.skbar .lgrow{width:100%}
+.skbar .dinp{width:auto}
+.skbar .who{font-family:var(--serif);font-weight:800;font-size:16px;color:var(--open);margin-left:4px}
 .skbar .st{font-size:14px;font-weight:700;color:var(--muted);margin-left:auto}
 .skbtn{font:inherit;font-size:15px;font-weight:800;padding:10px 18px;min-height:44px;cursor:pointer;
   background:var(--surface);color:var(--ink);border:1px solid var(--rule2);border-radius:2px}
@@ -7662,7 +7668,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 .syncst.err{background:var(--offbg);color:var(--off)!important}
 .savebar .sep{flex:1}
 #saveBtns{order:-1;flex:0 0 100%;display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding-bottom:6px;border-bottom:1px dashed var(--rule2);margin-bottom:2px}
-#saveBtns::before{content:"복사본 보관";font-size:12.5px;font-weight:700;color:var(--muted);letter-spacing:.06em;margin-right:4px}
+#saveBtns::before{content:"내 컴퓨터에 따로 저장";font-size:12.5px;font-weight:700;color:var(--muted);letter-spacing:.06em;margin-right:4px}
 .savebar .svlab{display:none}
 .savebar .svlab{font-size:12.5px;font-weight:700;color:var(--muted);letter-spacing:.06em}
 .savebar #saveBtns{display:inline-flex;flex-wrap:wrap;gap:5px}
@@ -7940,7 +7946,9 @@ input,select,textarea{border-radius:var(--r3)!important}
     (window.__CS_SAVERS = window.__CS_SAVERS || []).push(function () { if (saveT) { clearTimeout(saveT); saveT = null; saveNow(); } });
 
     // 날짜 열기 — 없으면 가장 최근 날의 재고 숫자를 깔고, 주문 안 된 발주 줄을 넘겨받는다
+    function paintHol(d) { var hb = $("#skHol"); if (!hb) return; var hv = (window.__CS_HOL || {})[d]; hb.textContent = hv ? "🇰🇷 " + hv : ""; hb.hidden = !hv; }
     function open(d) {
+      paintHol(d);
       clearTimeout(saveT);
       cur = d; dateEl.value = d;
       var o = load(d);
@@ -8207,7 +8215,7 @@ input,select,textarea{border-radius:var(--r3)!important}
     $("#skPrev").addEventListener("click", function () { var d = addDays(cur || today(), -1); $("#skMonth").value = d.slice(0, 7); open(d); });
     $("#skNext").addEventListener("click", function () { var d = addDays(cur || today(), 1); $("#skMonth").value = d.slice(0, 7); open(d); });
     $("#skMonth").addEventListener("change", renderList);
-    $("#skSend").addEventListener("click", sendText);
+    if ($("#skSend")) $("#skSend").addEventListener("click", sendText);
     $("#skShot").addEventListener("click", reportImage);
     $("#skDel").addEventListener("click", function () {
       if (!cur || !confirm(cur + " 체크를 지울까요?")) return;
@@ -8238,18 +8246,19 @@ input,select,textarea{border-radius:var(--r3)!important}
       b.className = "bkmini" + (cls ? " " + cls : "");
       return b;
     }
+    // 꼭 필요한 세 개만 — 읽기 쉬운 문서 · 전체 내용 파일(되돌릴 때) · 파일로 되돌리기. 파일은 전부 내 컴퓨터(휴대폰)의 다운로드 폴더로 내려받는다.
     var copy = document.getElementById("bkCopy"), open = document.getElementById("bkOpen");
-    if (copy) { var sp = copy.querySelector("span"); if (sp) sp.textContent = "전체 내용 글로 복사"; btns.appendChild(slim(copy, "prim")); }
     var bf = document.getElementById("bkFile"), bfi = document.getElementById("bkFileIn"), br = document.getElementById("bkRead");
-    if (br) { var sp5 = br.querySelector("span"); if (sp5) sp5.textContent = "읽기용 문서로 저장"; btns.appendChild(slim(br, "prim")); }
-    if (bf) { var sp3 = bf.querySelector("span"); if (sp3) sp3.textContent = "되돌리기용 파일 (.txt)"; btns.appendChild(slim(bf)); }
-    if (open) { var sp2 = open.querySelector("span"); if (sp2) sp2.textContent = "복사한 글 붙여넣어 불러오기"; btns.appendChild(slim(open)); }
-    if (bfi) { var sp4 = bfi.querySelector("span"); if (sp4) sp4.textContent = "저장한 파일 불러오기"; btns.appendChild(slim(bfi)); }
+    if (br) { var sp5 = br.querySelector("span"); if (sp5) sp5.textContent = "읽기 쉬운 문서로 내 컴퓨터에 저장"; btns.appendChild(slim(br, "prim")); }
+    if (bf) { var sp3 = bf.querySelector("span"); if (sp3) sp3.textContent = "전체 내용 파일로 내 컴퓨터에 저장 (되돌릴 때 씀)"; btns.appendChild(slim(bf)); }
+    if (bfi) { var sp4 = bfi.querySelector("span"); if (sp4) sp4.textContent = "저장한 파일로 되돌리기"; btns.appendChild(slim(bfi)); }
+    if (copy) copy.hidden = true;
+    if (open) open.hidden = true;
     document.querySelectorAll(".bkmini").forEach(function (b) {
-      if (b === copy || b === open || b === bf || b === bfi || b === br) return;
+      if (b === bf || b === bfi || b === br) return;
       var wrap = b.closest(".bkbar");
-      btns.appendChild(b);
-      if (wrap && !wrap.querySelector("button")) wrap.hidden = true;
+      b.hidden = true;
+      if (wrap && !wrap.querySelector("button:not([hidden])")) wrap.hidden = true;
     });
     var msg = document.getElementById("bkMsg"), paste = document.getElementById("bkPaste");
     if (msg) row.appendChild(msg);
