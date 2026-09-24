@@ -1317,6 +1317,7 @@ textarea.lgin.mi{min-height:58px;height:58px;overflow:hidden;resize:none}
 .reqhead{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:9px}
 .reqhead b{font-family:var(--serif);font-size:15px}
 .reqhead span{font-size:12px;color:var(--muted)}
+.reqmust{flex:0 0 100%;font-style:normal;font-size:14px;font-weight:900;color:var(--alert);background:var(--offbg);border:2px solid var(--alert);border-radius:var(--r);padding:7px 12px;margin-top:4px}
 .reqwho{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:9px}
 .rname{font:inherit;font-size:13px;cursor:pointer;padding:6px 13px;border-radius:2px;
   border:1.5px solid var(--rule2);background:var(--bg);color:var(--ink2)}
@@ -2095,7 +2096,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-31</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-32</i></span>
   <span class="sep"></span>
   <span class="svlab">복사본 보관</span>
   <span id="saveBtns"></span>
@@ -3593,7 +3594,7 @@ input,select,textarea{border-radius:var(--r3)!important}
              : ' · <span class="guessed">로테이션대로 본 예상</span>';
     var reqbar = '<div class="reqbar" data-m="' + key + '">' +
       '<div class="reqhead"><b>휴무 신청</b><span>이름을 고르고 쉬고 싶은 날을 누른 뒤, ' +
-      '사유를 적으세요</span></div><div class="reqwho">' +
+      '사유를 적으세요</span><em class="reqmust">📣 휴무 신청은 매니저에게 꼭 말해 주세요</em></div><div class="reqwho">' +
       STAFF4.map(function (n) {
         return '<button type="button" class="rname" data-n="' + n +
                '" aria-pressed="false">' + n + "</button>";
