@@ -411,6 +411,15 @@ tr.moved td{background:var(--openbg);transition:background .6s}
   border-radius:2px}
 .wsdtab[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .wsdays{font-family:var(--mono);font-size:11.5px;font-weight:700;color:var(--open);border:1px solid var(--open);border-radius:999px;padding:2px 9px;margin-left:2px}
+.wscosts{display:flex;flex-direction:column;gap:14px}
+.wscost{border:1px solid var(--rule2);border-radius:var(--r);background:var(--surface);padding:0 0 6px;overflow:hidden}
+.wscosth{display:flex;align-items:baseline;gap:10px;padding:8px 13px;background:var(--raise);border-bottom:1px solid var(--rule);font-family:var(--serif);font-size:14.5px}
+.wscosth .wsdayd{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.wscost .wsaddbar{padding:6px 13px 4px}
+.wscost .wstable .wsdel{display:table-cell}
+.wsgrand{display:flex;align-items:baseline;gap:12px;margin-top:12px;padding:10px 14px;border:2px solid var(--open);border-radius:var(--r);background:var(--openbg);font-size:14px}
+.wsgrand b{font-family:var(--mono);font-size:18px;color:var(--open)}
+.wsgrand small{color:var(--muted);font-size:12px;margin-left:auto}
 .wstable{width:100%;border-collapse:collapse;min-width:560px}
 .wstable th{background:var(--bg);font-size:13px;font-weight:700;color:var(--muted);
   text-align:left;padding:6px 10px;border-bottom:1px solid var(--rule2)}
@@ -2524,18 +2533,9 @@ input,select,textarea{border-radius:var(--r3)!important}
   </div>
 
   <h3 class="subhead">비용</h3>
-  <div class="ztable-wrap">
-    <table class="wstable cost">
-      <thead><tr><th class="c2">날짜</th><th>지출 목록</th>
-        <th class="c3">금액</th><th>메모</th></tr></thead>
-      <tbody><tr><td><input type="text" class="wsin tin" data-k="c1d" placeholder="날짜"></td><td><input type="text" class="wsin" data-k="c1n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c1a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c1m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c2d" placeholder="날짜"></td><td><input type="text" class="wsin" data-k="c2n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c2a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c2m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c3d" placeholder="날짜"></td><td><input type="text" class="wsin" data-k="c3n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c3a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c3m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c4d" placeholder="날짜"></td><td><input type="text" class="wsin" data-k="c4n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c4a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c4m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c5d" placeholder="날짜"></td><td><input type="text" class="wsin" data-k="c5n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c5a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c5m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c6d" placeholder="날짜"></td><td><input type="text" class="wsin" data-k="c6n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c6a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c6m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c7d" placeholder="날짜"></td><td><input type="text" class="wsin" data-k="c7n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c7a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c7m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c8d" placeholder="날짜"></td><td><input type="text" class="wsin" data-k="c8n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c8a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c8m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c9d" placeholder="날짜"></td><td><input type="text" class="wsin" data-k="c9n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c9a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c9m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c10d" placeholder="날짜"></td><td><input type="text" class="wsin" data-k="c10n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c10a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c10m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c11d" placeholder="날짜"></td><td><input type="text" class="wsin" data-k="c11n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c11a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c11m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c12d" placeholder="날짜"></td><td><input type="text" class="wsin" data-k="c12n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c12a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c12m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c13d" placeholder="날짜"></td><td><input type="text" class="wsin" data-k="c13n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c13a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c13m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c14d" placeholder="날짜"></td><td><input type="text" class="wsin" data-k="c14n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c14a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c14m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c15d" placeholder="날짜"></td><td><input type="text" class="wsin" data-k="c15n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c15a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c15m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c16d" placeholder="날짜"></td><td><input type="text" class="wsin" data-k="c16n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c16a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c16m" placeholder="메모"></td></tr></tbody>
-      <tfoot><tr><th colspan="2">합계</th>
-        <td class="wstotal" id="wsTotal">—</td><td></td></tr></tfoot>
-    </table>
-    <div class="wsaddbar"><button type="button" class="wsadd" data-cost="1">＋ 줄 추가</button>
-      <span class="wsaddnote">지출이 더 있으면 눌러서 늘리세요</span></div>
-    <div class="zfoot"><span class="lock">금액만 적으면 합계는 자동으로 더해집니다</span></div>
+  <div class="wscosts"><div class="wscost" data-cd="1"><div class="wscosth"><b>1일차 지출</b><span class="wsdayd" data-cd="1"></span></div><div class="ztable-wrap"><table class="wstable cost" data-cd="1"><thead><tr><th class="c2">시간</th><th>지출 목록</th><th class="c3">금액</th><th>메모</th><th class="wsdel"></th></tr></thead><tbody><tr><td><input type="text" class="wsin tin" data-k="c1d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c1n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c1a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c1m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c2d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c2n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c2a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c2m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c3d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c3n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c3a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c3m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c4d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c4n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c4a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c4m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c5d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c5n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c5a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c5m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c6d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c6n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c6a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c6m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c7d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c7n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c7a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c7m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c8d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c8n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c8a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c8m" placeholder="메모"></td></tr></tbody><tfoot><tr><th colspan="2">1일차 합계</th><td class="wstotal" data-cd="1">—</td><td></td><td></td></tr></tfoot></table></div><div class="wsaddbar"><button type="button" class="wsadd" data-cost="1">＋ 줄 추가</button><span class="wsaddnote">지출이 더 있으면 눌러서 늘리세요 · ☰ ▲▼로 줄을 옮기고 ✕로 지웁니다</span></div></div><div class="wscost" data-cd="2"><div class="wscosth"><b>2일차 지출</b><span class="wsdayd" data-cd="2"></span></div><div class="ztable-wrap"><table class="wstable cost" data-cd="2"><thead><tr><th class="c2">시간</th><th>지출 목록</th><th class="c3">금액</th><th>메모</th><th class="wsdel"></th></tr></thead><tbody><tr><td><input type="text" class="wsin tin" data-k="c2_1d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c2_1n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c2_1a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c2_1m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c2_2d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c2_2n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c2_2a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c2_2m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c2_3d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c2_3n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c2_3a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c2_3m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c2_4d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c2_4n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c2_4a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c2_4m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c2_5d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c2_5n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c2_5a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c2_5m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c2_6d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c2_6n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c2_6a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c2_6m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c2_7d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c2_7n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c2_7a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c2_7m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c2_8d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c2_8n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c2_8a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c2_8m" placeholder="메모"></td></tr></tbody><tfoot><tr><th colspan="2">2일차 합계</th><td class="wstotal" data-cd="2">—</td><td></td><td></td></tr></tfoot></table></div><div class="wsaddbar"><button type="button" class="wsadd" data-cost="2">＋ 줄 추가</button><span class="wsaddnote">지출이 더 있으면 눌러서 늘리세요 · ☰ ▲▼로 줄을 옮기고 ✕로 지웁니다</span></div></div><div class="wscost" data-cd="3"><div class="wscosth"><b>3일차 지출</b><span class="wsdayd" data-cd="3"></span></div><div class="ztable-wrap"><table class="wstable cost" data-cd="3"><thead><tr><th class="c2">시간</th><th>지출 목록</th><th class="c3">금액</th><th>메모</th><th class="wsdel"></th></tr></thead><tbody><tr><td><input type="text" class="wsin tin" data-k="c3_1d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c3_1n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c3_1a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c3_1m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c3_2d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c3_2n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c3_2a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c3_2m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c3_3d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c3_3n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c3_3a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c3_3m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c3_4d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c3_4n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c3_4a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c3_4m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c3_5d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c3_5n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c3_5a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c3_5m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c3_6d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c3_6n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c3_6a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c3_6m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c3_7d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c3_7n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c3_7a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c3_7m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c3_8d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c3_8n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c3_8a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c3_8m" placeholder="메모"></td></tr></tbody><tfoot><tr><th colspan="2">3일차 합계</th><td class="wstotal" data-cd="3">—</td><td></td><td></td></tr></tfoot></table></div><div class="wsaddbar"><button type="button" class="wsadd" data-cost="3">＋ 줄 추가</button><span class="wsaddnote">지출이 더 있으면 눌러서 늘리세요 · ☰ ▲▼로 줄을 옮기고 ✕로 지웁니다</span></div></div>
   </div>
+  <div class="wsgrand"><span>2박 3일 합계</span><b id="wsTotal">—</b><small>금액만 적으면 합계는 자동으로 더해집니다</small></div>
 </section></div><div class="panel" id="tp10" role="tabpanel" hidden><section>
   <div class="shead"><h2>고객 응대</h2>
     <span class="sub">누가 읽어도 그대로 따라 할 수 있게 · 순서 → 말하기 → 하지 말기 → 보고</span></div>
@@ -2764,15 +2764,31 @@ input,select,textarea{border-radius:var(--r3)!important}
   (function () {
     var LOCAL_ONLY = /^cafesui\.(me|unlocked|device|syncstate|ui\..*)$/;
     var origSet = Storage.prototype.setItem, origRem = Storage.prototype.removeItem;
-    var pending = {}, timers = {}, remote = {}, applying = false, ready = false, first = true, changed = false, changedKeys = [];
+    var pending = {}, timers = {}, remote = {}, sent = {}, applying = false, ready = false, first = true, changed = false, changedKeys = [];
+    var inflight = 0, retryT = {};
+    var boot = {};   // 화면 열 때 이 기기에 있던 값 — 이것과 같은 저장은 「내가 고친 것」이 아니다
+    try { for (var bi = 0; bi < localStorage.length; bi++) { var bk = localStorage.key(bi); if (bk.indexOf("cafesui.") === 0 && !LOCAL_ONLY.test(bk)) boot[bk] = localStorage.getItem(bk); } } catch (e) {}
+    var dirtyBoot = {};   // 지난번에 못 보낸 저장 — 이건 서버보다 이 기기가 맞다
+    try { dirtyBoot = JSON.parse(localStorage.getItem("cafesui.ui.dirty") || "{}") || {}; } catch (e) {}
     var state = { s: "off", msg: "" };
     window.__CS_SYNC = state;
+    // 아직 서버로 못 보낸 저장 — 이 기기에 표시해 두고, 다음에 열 때 서버 값 대신 이 기기 값을 올린다 (저장한 건 무조건 남긴다)
+    var DIRTYK = "cafesui.ui.dirty";
+    function dirtyGet() { try { return JSON.parse(localStorage.getItem(DIRTYK) || "{}") || {}; } catch (e) { return {}; } }
+    function dirtySet(o) { try { origSet.call(localStorage, DIRTYK, JSON.stringify(o)); } catch (e) {} }
+    function markDirty(k) { var o = dirtyGet(); o[k] = Date.now(); dirtySet(o); }
+    function clearDirty(k) { var o = dirtyGet(); if (k in o) { delete o[k]; dirtySet(o); } }
+    function dirtyCount() { return Object.keys(dirtyGet()).length; }
     function setStatus(s, msg) {
       state.s = s; state.msg = msg || "";
       var el = document.getElementById("syncState");
       if (!el) return;
-      el.className = "syncst " + s;
-      el.textContent = s === "on" ? "☁ 컴퓨터끼리 공유 중" : s === "wait" ? "☁ 연결 중…" : s === "err" ? "☁ 공유 안 됨 · " + (msg || "") : "☁ 이 기기에만 저장 (공유 꺼짐)";
+      var n = dirtyCount();
+      el.className = "syncst " + s + (n ? " dirty" : "");
+      el.textContent = s === "on" ? (n ? "☁ 보내는 중 · " + n + "건 남음" : "☁ 컴퓨터끼리 공유 중")
+                     : s === "wait" ? "☁ 연결 중…"
+                     : s === "err" ? "☁ 공유 안 됨 · " + (msg || "") + (n ? " · 안 보낸 저장 " + n + "건 (다시 시도 중)" : "")
+                     : "☁ 이 기기에만 저장 (공유 꺼짐)";
       el.title = (msg ? msg + " · " : "") + "이 기기 번호 " + (window.__CS_DEV || "");
     }
     document.addEventListener("DOMContentLoaded", function () { setStatus(state.s, state.msg); });
@@ -2782,38 +2798,63 @@ input,select,textarea{border-radius:var(--r3)!important}
     // 이 기기의 저장을 가로채서 서버에도 보낸다
     Storage.prototype.setItem = function (k, v) {
       origSet.call(this, k, v);
-      if (this === localStorage && !applying && k.indexOf("cafesui.") === 0 && !LOCAL_ONLY.test(k)) queue(k, String(v));
+      if (this !== localStorage || applying || k.indexOf("cafesui.") !== 0 || LOCAL_ONLY.test(k)) return;
+      if (!ready && boot[k] === String(v)) return;   // 아직 서버 값을 못 받았는데 열 때 값 그대로 다시 저장한 것 — 서버 값을 기다린다
+      markDirty(k); queue(k, String(v));
     };
     Storage.prototype.removeItem = function (k) {
       origRem.call(this, k);
-      if (this === localStorage && !applying && k.indexOf("cafesui.") === 0 && !LOCAL_ONLY.test(k)) queue(k, null);
+      if (this === localStorage && !applying && k.indexOf("cafesui.") === 0 && !LOCAL_ONLY.test(k)) { markDirty(k); queue(k, null); }
     };
     function queue(k, v) {
       pending[k] = v;
       clearTimeout(timers[k]);
-      timers[k] = setTimeout(function () { flush(k); }, 700);
+      timers[k] = setTimeout(function () { flush(k); }, 400);
     }
+    // 기기 번호 — 브라우저마다 다르게. 백업 되살리기로 같은 번호가 복사됐을 수 있어 한 번은 새로 만든다
     var dev = null;
-    try { dev = localStorage.getItem("cafesui.device"); } catch (e) {}
-    if (!dev) { dev = "d" + Math.random().toString(36).slice(2, 8); try { origSet.call(localStorage, "cafesui.device", dev); } catch (e) {} }
+    try { dev = localStorage.getItem("cafesui.device"); if (!localStorage.getItem("cafesui.ui.dev2")) dev = null; } catch (e) {}
+    if (!dev) { dev = "d" + Math.random().toString(36).slice(2, 8); try { origSet.call(localStorage, "cafesui.device", dev); origSet.call(localStorage, "cafesui.ui.dev2", "1"); } catch (e) {} }
     window.__CS_DEV = dev;
 
     var app, db, col;
     try {
       app = firebase.apps && firebase.apps.length ? firebase.app() : firebase.initializeApp(cfg);
       db = firebase.firestore(); col = db.collection("ops");
+      // 오프라인 큐 — 창을 닫거나 인터넷이 끊겨도 보내려던 저장을 브라우저가 기억했다가 다음에 보낸다
+      try { var pp = db.enablePersistence && db.enablePersistence({ synchronizeTabs: true }); if (pp && pp.catch) pp.catch(function () {}); } catch (e) {}
     } catch (e) { setStatus("err", e.message); return; }
 
     function flush(k) {
       if (!ready) return;                       // 연결되면 한꺼번에 보낸다
       if (!(k in pending)) return;
       var v = pending[k]; delete pending[k];
-      if (remote[k] === v) return;              // 서버와 같으면 안 보냄
-      remote[k] = v;
+      clearTimeout(retryT[k]);
+      if (remote[k] === v) { clearDirty(k); setStatus(state.s === "err" ? "on" : state.s); return; }   // 서버와 같으면 안 보냄
+      remote[k] = v; sent[k] = v;
+      inflight++;
       var p = (v === null) ? col.doc(k).delete()
                            : col.doc(k).set({ v: v, by: dev, t: firebase.firestore.FieldValue.serverTimestamp() });
-      p.then(function () { setStatus("on"); }).catch(function (e) { setStatus("err", e.message); });
+      p.then(function () {
+        inflight--;
+        if (!(k in pending)) clearDirty(k);     // 그 사이 또 고쳤으면 그건 다음 전송에서 지운다
+        setStatus("on");
+      }).catch(function (e) {
+        inflight--;
+        if (!(k in pending)) pending[k] = v;    // 실패 — 다시 보낸다
+        if (remote[k] === v) remote[k] = undefined;
+        setStatus("err", e.message);
+        clearTimeout(retryT[k]); retryT[k] = setTimeout(function () { flush(k); }, 8000);
+      });
     }
+    function flushNow() {   // 기다리지 않고 지금 다 보낸다 (창 닫기 · 새로고침 직전)
+      Object.keys(timers).forEach(function (k) { clearTimeout(timers[k]); });
+      Object.keys(pending).forEach(flush);
+    }
+    window.__CS_SYNC_FLUSH = flushNow;
+    window.addEventListener("pagehide", function () { try { if (window.__CS_FLUSH) window.__CS_FLUSH(); } catch (e) {} flushNow(); });
+    window.addEventListener("beforeunload", function () { try { if (window.__CS_FLUSH) window.__CS_FLUSH(); } catch (e) {} flushNow(); });
+    document.addEventListener("visibilitychange", function () { if (document.visibilityState === "hidden") { try { if (window.__CS_FLUSH) window.__CS_FLUSH(); } catch (e) {} flushNow(); } });
     function idle() {
       var a = document.activeElement;
       var typing = a && (a.tagName === "INPUT" || a.tagName === "TEXTAREA" || a.tagName === "SELECT") && a.type !== "checkbox" && a.type !== "date";
@@ -2822,50 +2863,80 @@ input,select,textarea{border-radius:var(--r3)!important}
     }
     var lastInput = 0;
     ["input", "change", "keydown", "pointerdown"].forEach(function (ev) { document.addEventListener(ev, function () { lastInput = Date.now(); }, true); });
+    function reloadSafely() {
+      // 새로 읽기 전에 이 기기에서 적은 것을 전부 보내고, 서버가 받았다고 할 때까지(최대 6초) 기다린다
+      try { if (window.__CS_FLUSH) window.__CS_FLUSH(); } catch (e) {}
+      flushNow();
+      var t0 = Date.now();
+      (function wait() {
+        if ((inflight === 0 && !Object.keys(pending).length) || Date.now() - t0 > 6000) { location.reload(); return; }
+        setTimeout(wait, 150);
+      })();
+    }
     var noticeT = null;
     function notifyChange() {
       // 다른 컴퓨터에서 바뀐 게 있다 — 쓰는 중이 아니면 바로 새로 읽고, 쓰는 중이면 위에 버튼만 띄운다
       clearTimeout(noticeT);
       noticeT = setTimeout(function tick() {
-        if (idle()) { try { if (window.__CS_FLUSH) window.__CS_FLUSH(); } catch (e) {} location.reload(); return; }
+        if (idle()) { reloadSafely(); return; }
         var b = document.getElementById("newVer");
         if (b) { b.hidden = false; b.textContent = "🔄 다른 컴퓨터에서 바뀐 내용이 있어요 — 손을 떼면 자동으로 새로 읽습니다 (적던 것은 저장됩니다)";
-          b.onclick = function () { try { if (window.__CS_FLUSH) window.__CS_FLUSH(); } catch (e) {} location.reload(); }; }
+          b.onclick = reloadSafely; }
         noticeT = setTimeout(tick, 5000);   // 쓰는 중이면 5초마다 다시 본다
       }, 1200);
     }
 
     setStatus("wait");
     firebase.auth().signInAnonymously().then(function () {
-      col.onSnapshot(function (snap) {
+      col.onSnapshot({ includeMetadataChanges: false }, function (snap) {
+        var fromCache = !!(snap.metadata && snap.metadata.fromCache);
+        var dirty = first ? dirtyGet() : null;
         applying = true;
         snap.docChanges().forEach(function (ch) {
           var k = ch.doc.id, d = ch.doc.data() || {};
           if (k.indexOf("cafesui.") !== 0 || LOCAL_ONLY.test(k)) return;
+          var local = null; try { local = localStorage.getItem(k); } catch (e) {}
           if (ch.type === "removed") {
             remote[k] = null;
-            if (!(k in pending) && localStorage.getItem(k) !== null) { origRem.call(localStorage, k); changed = true; changedKeys.push(k); }
+            if (k in pending) return;
+            if (first && dirtyBoot[k]) { if (local !== null) pending[k] = local; return; }   // 이 기기에서 적은 게 서버로 못 갔다 — 살린다
+            if (local !== null) { origRem.call(localStorage, k); changed = true; changedKeys.push(k); }
             return;
           }
           remote[k] = d.v;
-          if (k in pending) return;                       // 지금 이 기기가 고치는 중
-          if (!first && d.by === dev) return;             // 내가 보낸 게 돌아온 것
-          if (localStorage.getItem(k) !== d.v) { origSet.call(localStorage, k, d.v); changed = true; changedKeys.push(k); }
+          if (first && !dirtyBoot[k] && (k in pending) && d.v !== boot[k]) {
+            // 서버 값을 받기 전에 이 화면이 저장한 게 있는데, 서버는 그 사이 다른 컴퓨터가 고쳐 둔 상태 — 서버가 맞다.
+            // 화면에는 cs:remote로 알려서 다시 그리고, 적던 칸은 각 화면이 합쳐서 다시 저장한다.
+            delete pending[k]; clearTimeout(timers[k]); clearDirty(k);
+          }
+          if (k in pending) return;                                   // 지금 이 기기가 고치는 중
+          if (first && dirtyBoot[k] && local !== d.v) { pending[k] = local; return; }   // 지난번에 못 보낸 저장 — 서버 값 대신 이 기기 값을 올린다
+          if (!first && d.by === dev && (k in sent) && d.v !== sent[k]) return;   // 내가 전에 보낸 게 늦게 돌아온 것 (지금 값이 더 새것)
+          if (local !== d.v) { origSet.call(localStorage, k, d.v); changed = true; changedKeys.push(k); }
         });
         applying = false;
         if (first) {
           first = false; ready = true;
-          // 서버에 없는 이 기기 내용은 올린다
-          try {
-            for (var i = 0; i < localStorage.length; i++) {
-              var k2 = localStorage.key(i);
-              if (k2.indexOf("cafesui.") !== 0 || LOCAL_ONLY.test(k2) || (k2 in remote)) continue;
-              pending[k2] = localStorage.getItem(k2);
-            }
-          } catch (e) {}
+          // 서버에 없는 이 기기 내용은 올린다 (캐시가 아니라 서버에서 온 첫 응답일 때만)
+          if (!fromCache) {
+            try {
+              for (var i = 0; i < localStorage.length; i++) {
+                var k2 = localStorage.key(i);
+                if (k2.indexOf("cafesui.") !== 0 || LOCAL_ONLY.test(k2) || (k2 in remote)) continue;
+                pending[k2] = localStorage.getItem(k2);
+              }
+            } catch (e) {}
+          }
+          // 지난번에 못 보낸 저장도 다시 올린다
+          Object.keys(dirty || {}).forEach(function (k3) {
+            if (LOCAL_ONLY.test(k3) || (k3 in pending)) return;
+            var lv = null; try { lv = localStorage.getItem(k3); } catch (e) {}
+            if (lv === null && !(k3 in remote)) { clearDirty(k3); return; }
+            if (lv !== remote[k3]) pending[k3] = lv; else clearDirty(k3);
+          });
           Object.keys(pending).forEach(flush);
         }
-        setStatus("on");
+        setStatus(state.s === "err" ? "err" : "on", state.msg);
         if (changed) {
           changed = false;
           // 열려 있는 화면에 알려서, 쓰는 중인 칸만 빼고 새 내용으로 바꿔 끼운다 (예전 내용으로 덮어쓰는 사고 방지)
@@ -2874,6 +2945,17 @@ input,select,textarea{border-radius:var(--r3)!important}
           notifyChange();
         }
       }, function (e) { setStatus("err", e.code === "permission-denied" ? "규칙(ops) 게시 필요" : e.message); });
+      // 못 보낸 게 남아 있으면 30초마다 다시 시도한다
+      setInterval(function () {
+        if (!ready) return;
+        var o = dirtyGet();
+        Object.keys(o).forEach(function (k) {
+          if (k in pending) return;
+          var lv = null; try { lv = localStorage.getItem(k); } catch (e) {}
+          if (lv !== remote[k]) pending[k] = lv;
+        });
+        if (Object.keys(pending).length) flushNow(); else setStatus(state.s, state.msg);
+      }, 30000);
     }).catch(function (e) {
       setStatus("err", e.code === "auth/operation-not-allowed" ? "Firebase에서 익명 로그인 켜기 필요" : (e.code === "auth/network-request-failed" ? "인터넷 연결 없음" : e.message));
     });
@@ -3756,7 +3838,7 @@ input,select,textarea{border-radius:var(--r3)!important}
       try {
         for (var i = 0; i < localStorage.length; i++) {
           var k = localStorage.key(i);
-          if (k.indexOf("cafesui.") === 0) out.push(k);   // 전부 담는다
+          if (k.indexOf("cafesui.") === 0 && !/^cafesui\.(me|unlocked|device|syncstate|ui\..*)$/.test(k)) out.push(k);   // 기기 번호 · 로그인 상태는 빼고 전부
         }
       } catch (e) {}
       return out.sort();
@@ -3842,7 +3924,7 @@ input,select,textarea{border-radius:var(--r3)!important}
       catch (e) { msg.textContent = "백업 내용이 깨졌습니다"; return; }
       var n = 0;
       Object.keys(o).forEach(function (k) {
-        if (k.indexOf("cafesui.") !== 0) return;
+        if (k.indexOf("cafesui.") !== 0 || /^cafesui\.(me|unlocked|device|syncstate|ui\..*)$/.test(k)) return;   // 기기 번호는 컴퓨터마다 달라야 한다
         try { localStorage.setItem(k, o[k]); n += 1; } catch (e) {}
       });
       msg.textContent = n + "개를 되살렸습니다 · 화면을 새로 엽니다";
@@ -4711,14 +4793,14 @@ input,select,textarea{border-radius:var(--r3)!important}
         tr.classList.toggle("done", !!(c && c.checked));
       });
     }
-    function costRow(r) {
+    function costRow(r, day) {
+      var pre = (day && day !== 1) ? "c" + day + "_" : "c";
       var tr = document.createElement("tr");
       tr.innerHTML =
-        '<td><input type="text" class="wsin tin" data-k="c' + r + 'd" placeholder="날짜"></td>' +
-        '<td><input type="text" class="wsin" data-k="c' + r + 'n" placeholder="지출 목록"></td>' +
-        '<td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c' +
-          r + 'a" placeholder="금액"></td>' +
-        '<td><input type="text" class="wsin" data-k="c' + r + 'm" placeholder="메모"></td>';
+        '<td><input type="text" class="wsin tin" data-k="' + pre + r + 'd" placeholder="시간"></td>' +
+        '<td><input type="text" class="wsin" data-k="' + pre + r + 'n" placeholder="지출 목록"></td>' +
+        '<td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="' + pre + r + 'a" placeholder="금액"></td>' +
+        '<td><input type="text" class="wsin" data-k="' + pre + r + 'm" placeholder="메모"></td>';
       return tr;
     }
     function addDayRow(d) {
@@ -4729,17 +4811,19 @@ input,select,textarea{border-radius:var(--r3)!important}
       tr.querySelectorAll(".wsin").forEach(wire);
       return tr;
     }
-    function addCostRow() {
-      var body = document.querySelector(".wstable.cost tbody");
+    function addCostRow(day) {
+      day = +day || 1;
+      var body = document.querySelector('.wstable.cost[data-cd="' + day + '"] tbody');
       var r = body.querySelectorAll("tr").length + 1;
-      var tr = costRow(r);
+      var tr = costRow(r, day);
       body.appendChild(tr);
       tr.querySelectorAll(".wsin").forEach(wire);
+      ensureDel(tr);
       return tr;
     }
     document.querySelectorAll(".wsadd").forEach(function (b) {
       b.addEventListener("click", function () {
-        var tr = b.dataset.cost ? addCostRow()
+        var tr = b.dataset.cost ? addCostRow(b.dataset.cost)
                : b.dataset.mtg ? addMtgRow()
                : b.dataset.wish ? addWishRow()
                : addDayRow(b.dataset.day);
@@ -4918,13 +5002,12 @@ input,select,textarea{border-radius:var(--r3)!important}
         var body = document.querySelector("#wsd" + d + " tbody");
         while (body.querySelectorAll("tr").length < max) addDayRow(d);
       }
-      var cmax = 0;
-      Object.keys(data).forEach(function (k) {
-        var m = k.match(/^c(\d+)[dnam]$/);
-        if (m) cmax = Math.max(cmax, +m[1]);
+      [1, 2, 3].forEach(function (cd) {
+        var cmax = 0, re = cd === 1 ? /^c(\d+)[dnam]$/ : new RegExp("^c" + cd + "_(\\d+)[dnam]$");
+        Object.keys(data).forEach(function (k) { var m = k.match(re); if (m) cmax = Math.max(cmax, +m[1]); });
+        var cbody = document.querySelector('.wstable.cost[data-cd="' + cd + '"] tbody');
+        while (cbody && cbody.querySelectorAll("tr").length < cmax) addCostRow(cd);
       });
-      var cbody = document.querySelector(".wstable.cost tbody");
-      while (cbody.querySelectorAll("tr").length < cmax) addCostRow();
       var gmax = 0;
       Object.keys(data).forEach(function (k) {
         if (k.indexOf("mg") !== 0) return;
@@ -4999,6 +5082,8 @@ input,select,textarea{border-radius:var(--r3)!important}
       if (ref) ref.innerHTML = REF[y] || "<p class='tnote'>이 해에는 옮겨 온 자료가 없습니다.</p>";
     }
     function key() { return "cafesui.ws." + (yearEl.value || "2026"); }
+    var base = {};   // 마지막으로 읽어온 값 — 저장할 때 이것과 다른 칸만 「내가 고친 것」으로 본다
+    function snapBase() { ins.forEach(function (el) { base[el.dataset.k] = el.type === "checkbox" ? (el.checked ? 1 : "") : (el.value || ""); }); }
     function load() {
       var data = {};
       try {
@@ -5019,28 +5104,48 @@ input,select,textarea{border-radius:var(--r3)!important}
       count(); total(); paintMtg();
       if (typeof timetable === "function") timetable();
       renderMeet();
+      snapBase();
     }
     function save() {
-      var o = {}, prev = {};
-      try { prev = (JSON.parse(localStorage.getItem(key()) || "{}")._by) || {}; }
-      catch (e) {}
-      var by = {}, me2 = meNow();
+      var o = {}, stored = {}, prev = {};
+      try { stored = JSON.parse(localStorage.getItem(key()) || "{}") || {}; } catch (e) {}
+      prev = stored._by || {};
+      var by = {}, me2 = meNow(), changedAny = false;
       var seed0 = SEED[yearEl.value] || {};
+      // 저장돼 있는 것(다른 컴퓨터가 고쳤을 수 있음)을 바탕으로, 이 화면에서 건드린 칸만 바꿔 넣는다
+      Object.keys(stored).forEach(function (k) { if (k !== "_by") o[k] = stored[k]; });
+      Object.keys(prev).forEach(function (k) { by[k] = prev[k]; });
       ins.forEach(function (el) {
-        if (el.type === "checkbox") { if (el.checked) o[el.dataset.k] = 1; return; }
-        if (!el.value.trim()) {
+        var k = el.dataset.k;
+        var cur = el.type === "checkbox" ? (el.checked ? 1 : "") : (el.value || "");
+        var touched = !(k in base) || base[k] !== cur;
+        if (!touched) { if (el.type !== "checkbox") paintBy(el, by[k]); return; }
+        changedAny = true; base[k] = cur;
+        if (el.type === "checkbox") { if (el.checked) o[k] = 1; else delete o[k]; delete by[k]; return; }
+        if (!String(cur).trim()) {
           // 원래 있던 내용을 지웠으면 「비움」으로 남긴다
-          if (seed0[el.dataset.k] !== undefined) o[el.dataset.k] = "";
-          return;
+          if (seed0[k] !== undefined) o[k] = ""; else delete o[k];
+          delete by[k]; return;
         }
-        o[el.dataset.k] = el.value;
-        by[el.dataset.k] = prev[el.dataset.k] || me2 || "";
-        paintBy(el, by[el.dataset.k]);
+        o[k] = cur;
+        by[k] = prev[k] || me2 || "";
+        paintBy(el, by[k]);
       });
       o._by = by;
-      try { localStorage.setItem(key(), JSON.stringify(o)); } catch (e) {}
+      if (changedAny) { try { localStorage.setItem(key(), JSON.stringify(o)); } catch (e) {} }
       count();
     }
+    // 다른 컴퓨터에서 바뀐 것 — 지금 적고 있는 칸만 빼고 화면에 바로 반영한다
+    window.addEventListener("cs:remote", function (e) {
+      var keys = (e.detail && e.detail.keys) || [];
+      if (keys.indexOf(key()) < 0) return;
+      var a = document.activeElement, keep = (a && ins.indexOf(a) >= 0) ? [a, a.value, base[a.dataset.k]] : null;
+      var wasEdit = !!(document.getElementById("wsEdit") && document.getElementById("wsEdit").classList.contains("on"));
+      load();
+      if (keep) { keep[0].value = keep[1]; base[keep[0].dataset.k] = keep[2]; save(); }
+      setEdit(wasEdit);
+      groupWish();
+    });
     function count() {
       var n = ins.filter(function (el) {
         return el.type === "checkbox" ? el.checked : el.value.trim(); }).length;
@@ -5048,16 +5153,26 @@ input,select,textarea{border-radius:var(--r3)!important}
     }
     function total() {
       var sum = 0, any = false;
-      document.querySelectorAll(".wsin.cost").forEach(function (el) {
-        var v = parseFloat(String(el.value).replace(/,/g, ""));
-        if (!isNaN(v)) { sum += v; any = true; }
+      document.querySelectorAll(".wstable.cost").forEach(function (t) {
+        var s2 = 0, a2 = false;
+        t.querySelectorAll(".wsin.cost").forEach(function (el) {
+          var v = parseFloat(String(el.value).replace(/,/g, ""));
+          if (!isNaN(v)) { s2 += v; a2 = true; sum += v; any = true; }
+        });
+        var c = t.querySelector(".wstotal"); if (c) c.textContent = a2 ? s2.toLocaleString("ko-KR") : "—";
       });
       totEl.textContent = any ? sum.toLocaleString("ko-KR") : "—";
+      // 일차별 날짜를 제목 옆에
+      [1, 2, 3].forEach(function (d) {
+        var di = document.querySelector('.wsdin[data-k="d' + d + 'date"]'), h = document.querySelector('.wsdayd[data-cd="' + d + '"]');
+        if (h) h.textContent = di && di.value ? di.value.slice(5).replace("-", "/") : "";
+      });
     }
 
     var now = new Date();
     yearEl.value = now.getFullYear();
     load();
+    document.querySelectorAll(".wstable.cost tbody tr").forEach(ensureDel);
     setEdit(false);   // 일자별 일정표는 잠근 채로 시작
     groupWish();
     fillNov();
@@ -5069,15 +5184,17 @@ input,select,textarea{border-radius:var(--r3)!important}
       var d = new Date(y, 10, 1);                       // 11월 1일
       d.setDate(1 + ((8 - d.getDay()) % 7) + 7);        // 둘째 주 월요일
       var dates = Array.prototype.slice.call(document.querySelectorAll(".wsdin"));
+      var filled = false;
       dates.forEach(function (el, i) {
         if (el.value) return;
         var x = new Date(d.getFullYear(), d.getMonth(), d.getDate() + i);
         el.value = x.getFullYear() + "-" +
           String(x.getMonth() + 1).padStart(2, "0") + "-" +
           String(x.getDate()).padStart(2, "0");
+        filled = true;
       });
-      save();
-      timetable();
+      if (filled) save();   // 열 때마다 통째로 다시 저장하지 않는다 (다른 컴퓨터가 고친 걸 덮어쓰는 사고 방지)
+      timetable(); total();
     }
     // 1일차 날짜를 바꾸면 나머지 날도 따라 움직인다
     var firstDate = document.querySelector('.wsdin[data-k="d1date"]');
@@ -6823,6 +6940,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 .savebar .sv i{font-style:normal;font-family:var(--mono);font-size:13px;color:var(--mid);margin-left:4px}
 .savebar .sv i.busy{color:var(--open)}
 .syncst{margin-left:10px!important;font-family:var(--sans)!important;font-size:12.5px!important;padding:1px 7px;border-radius:999px;background:var(--raise);color:var(--muted)!important}
+.syncst.dirty{color:var(--alert);font-weight:700}
 .syncst.on{background:var(--midbg);color:var(--mid)!important}
 .syncst.wait{background:var(--openbg);color:var(--open)!important}
 .syncst.err{background:var(--offbg);color:var(--off)!important}
