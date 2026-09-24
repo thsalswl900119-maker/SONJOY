@@ -1465,7 +1465,7 @@ table.zt th.c6{width:56px;text-align:center}
 .mchol{font-style:normal;font-family:var(--sans);font-size:12px;font-weight:700;color:var(--off);margin-left:4px}
 .mccell.hol .mcd{color:var(--off)}
 .lghol{display:inline-block;margin-left:8px;font-size:12px;font-weight:700;color:var(--off);background:var(--offbg);border:1px solid var(--off);border-radius:2px;padding:1px 8px}
-.mcn{font-size:13px;line-height:1.4;padding:3px 7px;border-left:4px solid var(--rule2);background:var(--bg);border-radius:3px;word-break:keep-all;overflow-wrap:anywhere;font-weight:700;color:var(--ink)}
+.mcn{font-size:13px;line-height:1.35;padding:3px 6px;border-left:4px solid var(--rule2);background:var(--bg);border-radius:3px;word-break:normal;overflow-wrap:anywhere;font-weight:700;color:var(--ink)}
 .mcn.p1{border-left-color:var(--p1)} .mcn.p2{border-left-color:var(--p2)} .mcn.p3{border-left-color:var(--p3)} .mcn.p4{border-left-color:var(--p4)}
 .mcmore{font-size:11.5px;color:var(--muted)}
 .mcplus{margin-top:auto;font-size:11.5px;color:var(--rule2)}
@@ -6463,7 +6463,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 .skbar label{font-size:12px;font-weight:700;color:var(--ink2);display:flex;align-items:center;gap:6px}
 .skbar .dinp{width:auto;min-width:140px}
 .skbar .who{font-family:var(--serif);font-weight:700;font-size:14px;color:var(--open)}
-.skbar .st{font-size:11.5px;color:var(--muted);margin-left:auto}
+.skbar .st{font-size:13px;color:var(--muted);margin-left:auto}
 .skbtn{font:inherit;font-size:12.5px;font-weight:700;padding:6px 13px;cursor:pointer;
   background:var(--surface);color:var(--ink);border:1px solid var(--rule2);border-radius:2px}
 .skbtn:hover{background:var(--raise)}
@@ -6477,15 +6477,15 @@ input,select,textarea{border-radius:var(--r3)!important}
 .skh{display:flex;align-items:center;gap:8px;padding:8px 13px;background:var(--raise);
   border-bottom:1px solid var(--rule);font-family:var(--serif);font-weight:700;font-size:14px}
 .skbox.hot .skh{background:var(--openbg);color:var(--open)}
-.skh .n{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--muted);font-weight:400}
+.skh .n{margin-left:auto;font-family:var(--mono);font-size:12.5px;color:var(--muted);font-weight:400}
 .skb{padding:10px 13px 12px}
-.skb p.tip{font-size:11.5px;color:var(--muted);margin:0 0 7px;line-height:1.55}
+.skb p.tip{font-size:13px;color:var(--muted);margin:0 0 7px;line-height:1.55}
 .skneed{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;min-height:20px}
-.sktag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:2px;background:var(--midbg);color:var(--mid)}
+.sktag{font-size:12.5px;font-weight:700;padding:2px 8px;border-radius:2px;background:var(--midbg);color:var(--mid)}
 .sktag.red{background:var(--offbg);color:var(--off)}
 .sktag.blue{background:var(--closebg);color:var(--close)}
 .sktag.grey{background:var(--raise);color:var(--muted)}
-.skadd{font:inherit;font-size:11.5px;font-weight:700;padding:2px 9px;cursor:pointer;
+.skadd{font:inherit;font-size:13px;font-weight:700;padding:2px 9px;cursor:pointer;
   background:var(--surface);color:var(--off);border:1px dashed var(--off);border-radius:999px}
 .skadd:hover{background:var(--offbg)}
 .skta{font:inherit;font-size:13.5px;width:100%;min-height:74px;padding:7px 9px;background:var(--bg);
@@ -6497,8 +6497,8 @@ input,select,textarea{border-radius:var(--r3)!important}
 .skoc li.dn{opacity:.6}
 .skoc li.dn .t{text-decoration:line-through}
 .skoc .t{flex:1;min-width:120px}
-.skoc small{display:block;font-size:10.5px;color:var(--muted)}
-.skoc label{display:flex;align-items:center;gap:4px;font-size:11.5px;font-weight:700;color:var(--ink2);cursor:pointer}
+.skoc small{display:block;font-size:12px;color:var(--muted)}
+.skoc label{display:flex;align-items:center;gap:4px;font-size:13px;font-weight:700;color:var(--ink2);cursor:pointer}
 .skoc input{width:15px;height:15px;accent-color:var(--open)}
 .skitems{display:flex;flex-direction:column}
 .skit{display:grid;grid-template-columns:1fr 78px 34px auto;align-items:center;gap:6px;padding:5px 13px;
@@ -6506,31 +6506,40 @@ input,select,textarea{border-radius:var(--r3)!important}
 .skit:first-child{border-top:0}
 .skit.need{background:var(--openbg)}
 .skit .nm{font-size:13px;font-weight:500;min-width:0}
-.skit .nm small{display:block;font-size:10.5px;color:var(--muted);line-height:1.4}
+.skit .nm small{display:block;font-size:12px;color:var(--muted);line-height:1.4}
 .skit.need .nm{color:var(--open);font-weight:700}
 .skin{font:inherit;font-family:var(--mono);font-size:13px;padding:4px 6px;width:100%;text-align:right;
   background:var(--bg);color:var(--ink);border:1px solid var(--rule2);border-radius:2px}
-.skit .u{font-size:11.5px;color:var(--muted)}
+.skit .u{font-size:13px;color:var(--muted)}
 .skit .x{font:inherit;font-size:12px;color:var(--muted);background:none;border:0;cursor:pointer;padding:0 4px}
 .skit .x:hover{color:var(--off)}
+.skit .nm em{font-style:normal;font-size:12px;color:var(--muted);font-weight:700;margin-left:2px;white-space:nowrap}
+.skit.pair{grid-template-columns:1fr auto 34px auto}
+.skit.pair .pr{display:inline-flex;gap:8px}
+.skit.pair .pr label{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:var(--muted)}
+.skit.pair .pr .skin{width:58px}
+.skdesign{padding:9px 13px 12px}
+.skdesign p{margin:0 0 7px;font-size:12.5px;color:var(--muted);line-height:1.55;word-break:keep-all}
+.skdesign textarea{width:100%;font:inherit;font-size:14px;line-height:1.6;resize:vertical;box-sizing:border-box}
+@media (max-width:600px){.skit.pair{grid-template-columns:1fr auto}.skit.pair .u,.skit.pair>span:last-child{display:none}.skit.pair .pr .skin{width:56px}}
 .skgrp{border:1px solid var(--rule2);border-radius:3px;background:var(--surface);overflow:hidden}
 .skgrp>summary{font-family:var(--serif);font-weight:700;font-size:13.5px;padding:8px 13px;cursor:pointer;
   list-style:none;background:var(--raise);display:flex;align-items:center;gap:7px}
 .skgrp>summary::-webkit-details-marker{display:none}
 .skgrp>summary::before{content:"▸";font-size:11px;color:var(--muted)}
 .skgrp[open]>summary::before{content:"▾"}
-.skgrp>summary .n{margin-left:auto;font-family:var(--mono);font-size:10.5px;font-weight:400;color:var(--muted)}
+.skgrp>summary .n{margin-left:auto;font-family:var(--mono);font-size:12px;font-weight:400;color:var(--muted)}
 .skgrp>summary .n.hot{color:var(--off);font-weight:700}
-.skgrp .tipq{font-size:11.5px;color:var(--ink2);background:var(--openbg);padding:7px 13px;line-height:1.55;
+.skgrp .tipq{font-size:13px;color:var(--ink2);background:var(--openbg);padding:7px 13px;line-height:1.55;
   border-top:1px solid var(--rule)}
 .skf{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
-.skf label{display:flex;flex-direction:column;gap:3px;font-size:11.5px;font-weight:700;color:var(--ink2)}
+.skf label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:700;color:var(--ink2)}
 .skf label.w{grid-column:1/-1}
 .skf .skin{text-align:left;font-family:var(--sans)}
 .skf .skin.num{text-align:right;font-family:var(--mono)}
 .skweek{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:6px}
 .skweek div{text-align:center;background:var(--bg);border:1px solid var(--rule);border-radius:2px;padding:4px 2px}
-.skweek span{display:block;font-size:10.5px;color:var(--muted)}
+.skweek span{display:block;font-size:12px;color:var(--muted)}
 .skweek b{font-family:var(--mono);font-size:12.5px}
 .skweek .tot{background:var(--raise);border-color:var(--rule2)}
 .sklist{display:flex;flex-direction:column;gap:3px;max-height:260px;overflow:auto}
@@ -6538,9 +6547,9 @@ input,select,textarea{border-radius:var(--r3)!important}
   color:var(--ink);border:1px solid var(--rule);border-radius:2px;display:flex;gap:8px;align-items:baseline}
 .sklist button.on{background:var(--openbg);border-color:var(--open)}
 .sklist button b{font-family:var(--mono);font-size:12px;white-space:nowrap}
-.sklist button small{color:var(--muted);font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sklist button small{color:var(--muted);font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .skref{width:100%;border-collapse:collapse;min-width:720px;font-size:12.5px}
-.skref th{background:var(--bg);font-size:11.5px;font-weight:700;color:var(--muted);text-align:left;padding:6px 9px;
+.skref th{background:var(--bg);font-size:13px;font-weight:700;color:var(--muted);text-align:left;padding:6px 9px;
   border-bottom:1px solid var(--rule2)}
 .skref td{padding:6px 9px;border-bottom:1px solid var(--rule);vertical-align:top}
 .skref td.now{background:var(--openbg);font-weight:700}
@@ -6554,24 +6563,24 @@ input,select,textarea{border-radius:var(--r3)!important}
 .skrp{background:var(--surface);border:1px solid var(--rule2);box-shadow:0 1px 0 var(--rule),0 6px 18px -12px rgba(42,37,31,.35);
   padding:18px 18px 20px;font-size:12.5px;line-height:1.6;color:var(--ink);max-height:calc(100vh - 30px);overflow:auto}
 .skrp .rt{font-family:var(--serif);font-weight:700;font-size:16px;letter-spacing:.02em}
-.skrp .rm{font-family:var(--mono);font-size:11px;color:var(--muted);padding-bottom:9px;margin-bottom:10px;border-bottom:1px dashed var(--rule2);
+.skrp .rm{font-family:var(--mono);font-size:12.5px;color:var(--muted);padding-bottom:9px;margin-bottom:10px;border-bottom:1px dashed var(--rule2);
   display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
 .skrp .rm b{color:var(--open);font-weight:700}
-.skrp h4{font-family:var(--sans);font-size:10.5px;font-weight:700;letter-spacing:.06em;color:var(--open);margin:11px 0 4px;padding-bottom:2px;
+.skrp h4{font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--open);margin:11px 0 4px;padding-bottom:2px;
   border-bottom:1px solid var(--rule)}
 .skrp h4:first-of-type{margin-top:0}
 .skrp ul{list-style:none;margin:0;padding:0}
 .skrp li{display:flex;gap:6px;align-items:baseline;padding:1px 0}
 .skrp li .ic{flex:none;font-size:12px;width:16px}
 .skrp li.dn{color:var(--muted);text-decoration:line-through}
-.skrp li small{font-size:10.5px;color:var(--muted);margin-left:auto;white-space:nowrap}
+.skrp li small{font-size:12px;color:var(--muted);margin-left:auto;white-space:nowrap}
 .skrp .kv{display:grid;grid-template-columns:auto 1fr;gap:1px 10px}
-.skrp .kv span{color:var(--ink2);font-size:11.5px;white-space:nowrap}
+.skrp .kv span{color:var(--ink2);font-size:13px;white-space:nowrap}
 .skrp .kv b{font-weight:500;word-break:keep-all}
 .skrp .kv b.num{font-family:var(--mono)}
 .skrp .empty{color:var(--rule2);font-style:italic}
-.skrp .warn{background:var(--openbg);color:var(--open);border-radius:2px;padding:1px 6px;font-weight:700;font-size:11.5px;display:inline-block;margin-top:3px}
-.skrp .rf{margin-top:12px;padding-top:8px;border-top:1px dashed var(--rule2);font-size:10.5px;color:var(--muted);display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.skrp .warn{background:var(--openbg);color:var(--open);border-radius:2px;padding:1px 6px;font-weight:700;font-size:13px;display:inline-block;margin-top:3px}
+.skrp .rf{margin-top:12px;padding-top:8px;border-top:1px dashed var(--rule2);font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
 .skrp .rf i{font-style:normal;font-family:var(--mono)}
 
 /* 상단 저장 · 백업 줄 */
@@ -6585,14 +6594,14 @@ input,select,textarea{border-radius:var(--r3)!important}
 .saveall.dirty{background:var(--off);border-color:var(--off)}
 .newver{flex-basis:100%;font:inherit;font-size:13px;font-weight:700;padding:8px 12px;cursor:pointer;background:var(--off);color:#FFFCF6;border:0;border-radius:3px;text-align:left}
 .savebar .sv{font-size:12px;font-weight:700;color:var(--ink2)}
-.savebar .sv i{font-style:normal;font-family:var(--mono);font-size:11.5px;color:var(--mid);margin-left:4px}
+.savebar .sv i{font-style:normal;font-family:var(--mono);font-size:13px;color:var(--mid);margin-left:4px}
 .savebar .sv i.busy{color:var(--open)}
-.syncst{margin-left:10px!important;font-family:var(--sans)!important;font-size:11px!important;padding:1px 7px;border-radius:999px;background:var(--raise);color:var(--muted)!important}
+.syncst{margin-left:10px!important;font-family:var(--sans)!important;font-size:12.5px!important;padding:1px 7px;border-radius:999px;background:var(--raise);color:var(--muted)!important}
 .syncst.on{background:var(--midbg);color:var(--mid)!important}
 .syncst.wait{background:var(--openbg);color:var(--open)!important}
 .syncst.err{background:var(--offbg);color:var(--off)!important}
 .savebar .sep{flex:1}
-.savebar .svlab{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em}
+.savebar .svlab{font-size:12.5px;font-weight:700;color:var(--muted);letter-spacing:.06em}
 .savebar #saveBtns{display:inline-flex;flex-wrap:wrap;gap:5px}
 .savebar .bkmini.prim{background:var(--open);color:#FFFCF6;border-color:var(--open)}
 .savebar .bkmini.prim:hover{filter:brightness(1.08)}
@@ -6606,24 +6615,24 @@ input,select,textarea{border-radius:var(--r3)!important}
 .skwk{display:grid;grid-template-columns:auto 1fr 1fr auto;gap:8px;align-items:center;padding:6px 8px;border:1px solid var(--rule);border-radius:2px;background:var(--bg);margin-bottom:4px}
 .skwk.on{border-color:var(--open);background:var(--openbg)}
 .skwk .wl{font-weight:700;font-size:12px;white-space:nowrap}
-.skwk .wl small{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);font-weight:400}
+.skwk .wl small{display:block;font-family:var(--mono);font-size:11.5px;color:var(--muted);font-weight:400}
 .skwk .wv b{font-family:var(--mono);font-size:12.5px;display:block;line-height:1.2}
-.skwk .wv small{font-size:10px;color:var(--muted)}
-.skwk .wd{font-size:10.5px;color:var(--muted);white-space:nowrap}
+.skwk .wv small{font-size:11.5px;color:var(--muted)}
+.skwk .wd{font-size:12px;color:var(--muted);white-space:nowrap}
 .skwk .wd i{font-style:normal;color:var(--rule2)}
 .skmon{border:1px solid var(--rule2);border-radius:3px;background:var(--surface);margin-bottom:6px;overflow:hidden}
 .skmon>summary{font-family:var(--serif);font-weight:700;font-size:13.5px;padding:7px 12px;cursor:pointer;list-style:none;background:var(--raise);display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
 .skmon>summary::-webkit-details-marker{display:none}
 .skmon>summary::before{content:"▸";font-size:11px;color:var(--muted)}
 .skmon[open]>summary::before{content:"▾"}
-.skmon>summary .n{font-family:var(--sans);font-size:10.5px;font-weight:400;color:var(--muted);margin-left:auto}
+.skmon>summary .n{font-family:var(--sans);font-size:12px;font-weight:400;color:var(--muted);margin-left:auto}
 .skmon .sklist{padding:6px 8px;max-height:220px}
 .lgmon{border:1px solid var(--rule2);border-radius:3px;background:var(--surface);margin:6px 8px;overflow:hidden}
 .lgmon>summary{font-family:var(--serif);font-weight:700;font-size:13.5px;padding:7px 12px;cursor:pointer;list-style:none;background:var(--raise);display:flex;align-items:baseline;gap:8px}
 .lgmon>summary::-webkit-details-marker{display:none}
 .lgmon>summary::before{content:"▸";font-size:11px;color:var(--muted)}
 .lgmon[open]>summary::before{content:"▾"}
-.lgmon>summary span{font-family:var(--sans);font-size:10.5px;font-weight:400;color:var(--muted);margin-left:auto}
+.lgmon>summary span{font-family:var(--sans);font-size:12px;font-weight:400;color:var(--muted);margin-left:auto}
 .sksearch{font:inherit;font-size:13px;padding:6px 9px;width:100%;max-width:300px;background:var(--bg);color:var(--ink);
   border:1px solid var(--rule2);border-radius:2px;margin-bottom:10px}
 </style>
@@ -6633,8 +6642,8 @@ input,select,textarea{border-radius:var(--r3)!important}
   (function () {
     var root = document.getElementById("tp12");
     if (!root) return;
-  var GROUPS={"sheet":"🍞 시트","fruit":"🥭 과일","cream":"🥛 생크림","bar":"☕ 우유·원두·휘핑","sub":"🥚 매일 쓰는 부재료","pack":"📦 포장 재료","etc":"🍧 빙수·기타"};
-  var ITEMS=[["sheet","기본 시트","개",2,"문자 주문 · 6개 단위 · 목요일 도착"],["sheet","초코 시트","개",1,""],["sheet","말차 시트","개",1,""],["fruit","망고 (안 익은 것)","알",null,"망고사장님 · 1박스 남으면 2박스 · 후숙 정도 요청"],["fruit","망고 (익은 것)","알",null,""],["fruit","애플망고","알",null,"6월~"],["fruit","멜론","통",1,"망고사장님 · 1박스 · 당도 체크"],["fruit","복숭아 조림","병",12,"미스터돌 · 24병 1박스 · 반박스 남으면 문자"],["fruit","체리","박스",0.5,"망고사장님 · 반박스 남으면 · 알 큰 것"],["fruit","무화과","박스",2,"쿠팡/망고사장님 · 4박스 · 2박스 남으면"],["fruit","샤인머스켓","박스",null,"망고사장님 · 당도 체크"],["fruit","골드키위","알",4,"3일 전에 미리 말하기"],["fruit","바나나","손",1,""],["fruit","딸기","통",2,"11~4월 · 망고사장님 · 매일~2일 간격"],["cream","생크림 500ml","통",4,"녹산대리점 010-4173-3859 · 20개 · 2일 전 문자 · 월정산"],["bar","우유 밀크마스터","통",3,"녹산대리점 · 전날 12시 전 문자"],["bar","우유 나100","통",3,""],["bar","원두 RR2 1kg","개",2,"러프로스터리 앱 · 4kg · 즉시결제"],["bar","원두 디카페인","개",1,""],["bar","휘핑크림 케이크용 (매일 1L)","통",2,"네이버페이 · 10개 · 2통 남으면"],["bar","휘핑크림 에타용 (앵커/라르사)","통",4,"베이킹맘 · 12~17통 · 3~4병 남으면"],["sub","난황 1L","통",4,"아이엠에그 1544-6519 · 10개 · 3~4병 남으면"],["sub","마스카포네 500g","개",2,"베이킹맘 · 5통 · 2통 남으면"],["sub","설탕 15kg","포",1,"통에 한통 가득일 때 · 2~4포"],["sub","크림치즈 1kg","통",1,"베이킹맘 · 5통 · 1통 남으면"],["sub","계란 30구","판",2,"아재유통 010-4901-4949 · 5판 · 전화"],["sub","판버터 1kg","판",5,"네이버페이 · 10판 · 반쯤 남으면"],["sub","밀가루 (박력/강력)","포",0.5,"굿푸드몰 · 20kg · 반 남으면"],["pack","조각 상자 1개용 (케상)","개",20,"j-팩토리 · 400개"],["pack","조각 상자 2개용","개",20,"패키지팩토리 · 3~5묶음"],["pack","케이크 상자 미니","개",20,"패키지팩토리 070-8265-5664"],["pack","케이크 하판 미니","개",20,""],["pack","케이크 상자 1호","개",20,""],["pack","케이크 하판 1호","개",20,""],["pack","케이크 상자 2호","개",20,""],["pack","케이크 하판 2호","개",20,""],["pack","케이크 상자 3호","개",20,""],["pack","케이크 하판 3호","개",20,""],["pack","케이크 상자 4호","개",5,""],["pack","케이크 하판 4호","개",5,""],["pack","케이크 칼","개",20,"이룸팩 · 5세트"],["pack","케이크 초","통",1,"베이킹스타 · 5묶음"],["pack","에타 각대봉투 1개용","묶음",2,"쿠팡 · 5개"],["pack","에타 각대봉투 2개용","묶음",2,""],["pack","에타 4구 박스","개",50,"패키지팩토리 카톡 · 1000개"],["pack","에타 6구 박스","개",50,"패키지팩토리 카톡 · 1000개"],["pack","종이가방","개",50,"패키지팩토리 · 1000개"],["etc","빙수 통단팥 3kg","통",1,"네이버페이 · 3통"],["etc","홀토마토 (토마토소스)","통",3,"푸드올마켓 · 5통 · 만든 소스 3통 남으면"],["etc","연유 5kg","통",1,"브론스코리아 · 2개 세트"],["etc","코코넛밀크 1L","병",1,"노브랜드 · 3~5병"],["etc","인절미 다이스 1kg","봉",2,"네이버페이 · 5~8봉"],["etc","인절미 가루 1kg","봉",1,"베이킹맘 · 3봉"],["etc","잉어 모나카 100개","봉",0.5,"일본 EMS · 10일 전 주문"],["etc","다크블라썸 1kg","박스",1,"네이버페이 · 2박스"],["etc","말차 빙수가루 1kg","봉",1,"쿠팡 · 2봉"],["etc","냉동망고 1kg","봉",1,"네이버페이 · 5봉"],["etc","레몬즙 1L","병",1,"베이킹맘 · 3병 · 반통 남으면"],["etc","토마토청 (만든 것)","통",0.5,"반통 남으면 담그기 · 대추토마토 대과 4~5kg · 숙성 3~4일"],["etc","빙수 백 1인용","개",20,""],["etc","빙수 백 2인용","개",20,""],["etc","패션후르츠 퓨레 1kg","봉",1,"유니오션 · 6~10봉"],["etc","더치커피","병",1,""],["etc","말차가루 (선인) 1kg","봉",0.3,"베이킹맘 · 1/3 남으면"]];
+  var GROUPS={"sheet":"🍞 시트","fruit":"🥭 과일","cream":"🥛 생크림","bar":"☕ 우유·원두·휘핑","sub":"🥚 매일 쓰는 부재료","pack":"📦 포장 재료","design":"🎨 디자인 재료","etc":"🍧 빙수·기타 (4월 중순 ~ 9월 말)"};
+  var ITEMS=[["sheet","기본 시트","개",2,"문자 주문 · 6개 단위 · 목요일 도착"],["sheet","초코 시트","개",1,""],["sheet","말차 시트","개",1,""],["fruit","망고 (안 익은 것)","알",null,"망고사장님 · 1박스 남으면 2박스 · 후숙 정도 요청"],["fruit","망고 (익은 것)","알",null,""],["fruit","애플망고","알",null,"6월~"],["fruit","멜론","통",1,"망고사장님 · 1박스 · 당도 체크"],["fruit","복숭아 조림","병",12,"미스터돌 · 24병 1박스 · 반박스 남으면 문자"],["fruit","체리","박스",0.5,"망고사장님 · 반박스 남으면 · 알 큰 것"],["fruit","무화과","박스",2,"쿠팡/망고사장님 · 4박스 · 2박스 남으면"],["fruit","샤인머스켓","박스",null,"망고사장님 · 당도 체크"],["fruit","골드키위","알",4,"3일 전에 미리 말하기"],["fruit","바나나","손",1,""],["fruit","딸기","통",2,"11~4월 · 망고사장님 · 매일~2일 간격"],["cream","생크림 500ml","통",4,"녹산대리점 010-4173-3859 · 20개 · 2일 전 문자 · 월정산"],["bar","우유 밀크마스터","통",3,"녹산대리점 · 전날 12시 전 문자"],["bar","우유 나100","통",3,""],["bar","원두 RR2 1kg","개",2,"러프로스터리 앱 · 4kg · 즉시결제"],["bar","원두 디카페인","개",1,""],["bar","휘핑크림 케이크용 (매일 1L)","통",2,"네이버페이 · 10개 · 2통 남으면"],["bar","휘핑크림 에타용 (앵커/라르사)","통",4,"베이킹맘 · 12~17통 · 3~4병 남으면"],["sub","난황 1L","통",4,"아이엠에그 1544-6519 · 10개 · 3~4병 남으면"],["sub","마스카포네 500g","개",2,"베이킹맘 · 5통 · 2통 남으면"],["sub","설탕 15kg","포",1,"통에 한통 가득일 때 · 2~4포"],["sub","크림치즈 1kg","통",1,"베이킹맘 · 5통 · 1통 남으면"],["sub","판버터 1kg","판",5,"네이버페이 · 10판 · 반쯤 남으면"],["sub","밀가루 (박력/강력)","포",0.5,"굿푸드몰 · 20kg · 반 남으면"],["pack","조각 상자 1개용 (케상)","개",20,"j-팩토리 · 400개"],["pack","조각 상자 2개용","개",20,"패키지팩토리 · 3~5묶음"],["pack","케이크 상자 미니","개",20,"패키지팩토리 070-8265-5664"],["pack","케이크 하판 미니","개",20,""],["pack","케이크 상자 1호","개",20,""],["pack","케이크 하판 1호","개",20,""],["pack","케이크 상자 2호","개",20,""],["pack","케이크 하판 2호","개",20,""],["pack","케이크 상자 3호","개",20,""],["pack","케이크 하판 3호","개",20,""],["pack","케이크 상자 4호","개",5,""],["pack","케이크 하판 4호","개",5,""],["pack","케이크 칼","개",20,"이룸팩 · 5세트"],["pack","케이크 초","통",1,"베이킹스타 · 5묶음"],["pack","에타 각대봉투 1개용","묶음",2,"쿠팡 · 5개"],["pack","에타 각대봉투 2개용","묶음",2,""],["pack","에타 4구 박스","개",50,"패키지팩토리 카톡 · 1000개"],["pack","에타 6구 박스","개",50,"패키지팩토리 카톡 · 1000개"],["pack","종이가방","개",50,"패키지팩토리 · 1000개"],["etc","빙수 통단팥 3kg","통",1,"네이버페이 · 3통"],["etc","홀토마토 (토마토소스)","통",3,"푸드올마켓 · 5통 · 만든 소스 3통 남으면"],["etc","연유 5kg","통",1,"브론스코리아 · 2개 세트"],["etc","코코넛밀크 1L","병",1,"노브랜드 · 3~5병"],["etc","인절미 다이스 1kg","봉",2,"네이버페이 · 5~8봉"],["etc","인절미 가루 1kg","봉",1,"베이킹맘 · 3봉"],["etc","잉어 모나카 100개","봉",0.5,"일본 EMS · 10일 전 주문"],["etc","다크블라썸 1kg","박스",1,"네이버페이 · 2박스"],["etc","말차 빙수가루 1kg","봉",1,"쿠팡 · 2봉"],["etc","냉동망고 1kg","봉",1,"네이버페이 · 5봉"],["etc","레몬즙 1L","병",1,"베이킹맘 · 3병 · 반통 남으면"],["etc","토마토청 (만든 것)","통",0.5,"반통 남으면 담그기 · 대추토마토 대과 4~5kg · 숙성 3~4일"],["etc","빙수 백 1인용","개",20,""],["etc","빙수 백 2인용","개",20,""],["etc","패션후르츠 퓨레 1kg","봉",1,"유니오션 · 6~10봉"],["etc","더치커피","병",1,""],["etc","말차가루 (선인) 1kg","봉",0.3,"베이킹맘 · 1/3 남으면"]];
   var REF={"커피 재료":[["원두","1kg (RR2)","4kg (월 12-16kg)","원두두 어플로 주문","러프 로스터리","010-7475-1158","즉시 결제"],["우유","밀크마스터 1L","64L (월 130~175L)","전날까지 문자, 오후 12시 전","서울우유 녹산대리점","010-4173-3859","매월 1일 정산"],["테이크아웃 컵/뚜껑","아이스 16oz / 핫 10oz","1000개/박스","2~3줄 남으면 (네이버검색)","칼라컵","1644-2421","인터넷"],["빨대","버블티용 / 일반용","버블티 3200개, 일반 2500개","1봉지 남으면","칼라컵 / 네이버","1644-2421","인터넷"],["냅킨","갈색 무지","8000장/박스","2봉지 남으면","쿠팡","냅킨공장","인터넷"],["물티슈","무지 일회용","2000개/박스","2봉지 남으면","쿠팡","그린위생산업","인터넷"],["일회용 포크","플라스틱 (화이트)","2000개/박스","2팩 남으면","네이버페이","해피팩 1644-3702","인터넷"]],"디저트":[["박력분&강력분","20kg (곰표 강력 / 맥선 박력1등)","1포대","반쯤 남았을 때","네이버페이/쿠팡","굿푸드몰","인터넷"],["판버터 (앵커+칸디아)","1kg","10판","반쯤 남았을 때","네이버페이/진보람","빵수니베이킹","인터넷"],["노른자","1L","10개","3~4병 남았을 때","아이엠에그","1544-6519","인터넷 (연휴 전 미리)"],["휘핑크림 (에그타르트)","1L (앵커/라르사, 유지방 35%)","12~17통","3~4병 남았을 때","네이버페이/베이킹맘 (싼 것)","빨리 오는 곳","인터넷 (연휴 전 미리)"],["설탕","15kg (큐원/백설)","2~4포대","설탕통에 한통 가득 담겨 있을 때","네이버페이/베이킹맘/쿠팡","","인터넷 (연휴 전 미리)"],["계란","특란 30개 1판","5판","냉장고에 1~2판 남았을 때 (전화)","아재유통/식자재마트","010-4901-4949","받고 바로 송금"],["생크림","500ml","20개","2일 전 주문. 케이크 주문량 보고 3~4병 남을 때 (문자). 주 단위 주문","서울녹산대리점","010-4173-3859","월정산"],["럼/밤술/아몬드술/깔루아","1.8L 디종 화이트 럼 / 1L","3통 / 1~2병","반통 남았을 때","베이킹 트리","010-7697-0808","배송요청에 \"매번 시키는 카페스이입니다\" 쓰기"],["휘핑크림 (케이크)","1L 매일 휘핑크림 35%, 파란 뚜껑","10개","2통 남았을 때","네이버페이 (싼 것)","카페세상","인터넷"],["딸기","1kg (진주/하동)","5~10통","매일~2일 간격","망고배달사장님","010-3748-9994","전날 or 주 단위"],["망고","10~14수","2박스씩","1박스 남았을 때 (전화 후 픽업)","망고배달사장님","010-3748-9994","후숙 이슈로 꼭 주 단위 · 후숙 정도 요청 · 1박스 58,000원 넘으면 안 됨"],["무화과","500g (영암)","4박스씩","2박스 남았을 때","쿠팡/망고사장님","쿠팡 전라도청년","전날 or 주 단위"],["메론","1개","1박스씩","","망고배달사장님","010-3748-9994","주 단위 · 당도 체크 필수"],["복숭아조림 (미스터돌)","분홍백도 병조림 24병","1박스","전날 주문 (문자) · 반박스 남을 때","미스터돌","","6~8월"],["체리","1박스","제일 알 큰 것","반박스 남으면","망고배달사장님","010-3748-9994",""],["샤인머스켓","3수","1박스","들어오면 주문 (복합주문)","망고배달사장님","010-3748-9994","주 단위 · 당도 체크"],["인절미떡","1kg 인절미 다이스","5~8봉지","1~2봉지 남았을 때","네이버페이","비즈캔/엠제이커피로스터리","인터넷"],["인절미가루","1kg 대두식품 콩고물","3봉지","1봉지 남았을 때","베이킹맘","070-7101-8349","인터넷"],["팥앙금 (앙버터용)","5kg 태산 통팥","1봉지","1/3 남으면","베이킹맘","070-7101-8349","인터넷"],["가염버터","200g 페이장브레통 빨강","10개","1통 남으면","베이킹맘","070-7101-8349","인터넷"],["데코화이트","1kg 선인","1~2봉지","1/3 남으면","베이킹맘/네이버페이","070-7101-8349","인터넷"],["초코파우더","1.36kg 기라델리 스위트 그라운드","1통","1/3 남으면","베이킹맘/네이버페이","070-7101-8349","인터넷"],["다크초콜릿","2.5kg 칼리바우트 다크 커버춰","1봉지","1/3 남으면","베이킹맘/네이버페이","070-7101-8349","인터넷"],["화이트초콜릿","2.5kg 칼리바우트","1봉지","1/3 남으면","베이킹맘/네이버페이","070-7101-8349","인터넷"],["패션후르츠","1kg 냉동 퓨레 (씨 있고 다 까진 것)","6~10봉지","청병 한통 쓰고 있을 때","네이버페이","유니오션 031-527-3036","인터넷"],["냉동딸기","1kg 딜라잇가든 칠레산","5~10봉지 (5kg 묶음)","청병 한통 쓰고 있을 때","네이버페이","딜라잇가든 1577-8437","인터넷"],["피스타치오 분태","1kg 굽지 않은 것","1봉지","1/3 남으면","네이버페이","디에이푸드마켓/다반사","인터넷"],["피스타치오 가루","1kg 파피루","2~3봉지","1/3 남으면","네이버페이","엘리네찻집/커피창고","인터넷"],["파마산가루","1kg 아담스팜코리아","2봉지","1/3 남으면","베이킹맘","070-7101-8349","인터넷"],["파슬리가루","1kg 이슬나라 후레이크","1통","1/3 남으면","베이킹맘/식자재마트","070-7101-8349","인터넷"],["알옥수수","1kg 냉동 삶은 옥수수알","10봉지","2봉지 남으면","네이버페이","아지매장터 010-3059-5803","인터넷"],["크림치즈","1kg 앵커","5통","1통 남으면","베이킹맘","070-7101-8349","인터넷"],["마스카포네","500g 밀라","5통","2통 남으면","베이킹맘","070-7101-8349","인터넷"],["샤워크림","970g 덴마크","1통","1/2통 남으면","쿠팡/트레이더스","로켓배송","현장+인터넷"],["냉동감자 / 냉동대파","1kg 마당발","3봉지","싼 것으로","네이버페이","검색","인터넷"],["베이컨찹","567g 코스트코","2봉지","싼 것으로","네이버페이","검색","인터넷"],["말차가루","1kg 선인 우지말차믹스","1봉지","1/3 남으면","베이킹맘","070-7101-8349","인터넷"]],"빙수":[["연유","5kg 서강 크리밀","2개 세트","1/3 남으면","네이버페이","브론스코리아 02-1566-2975","인터넷"],["토마토소스","2.55kg 골든투스카니 필드 토마토","5통","만든 소스 3통 남으면","네이버페이","푸드올마켓 031-797-6468","인터넷"],["대추 방울토마토","2kg 1/2번과","4~5kg","토마토청 반통 남으면","망고배달사장님","010-3748-9994","제일 큰 대과로 요청"],["레몬즙","1L 선인 농축액","3통","반통 남으면","베이킹맘","070-7101-8349","인터넷"],["통옥수수","2.5kg 베트남산 냉동","5봉지","1봉지 남으면","쿠팡/네이버페이","로켓프레시","인터넷"],["빙수팥","3kg 동서 리치스","3통","1개 남으면","메가커피/네이버페이","검색","인터넷"],["잉어모나카","100개 모나카 깍지","1봉지","반봉지 남으면 (일본 EMS, 10일 전)","네이버페이","카와이라라","인터넷"],["말차빙수가루","1kg","2봉지","","쿠팡","로켓프레시","인터넷"],["다크블로썸","1kg","2박스","싼 것으로","네이버페이","검색","인터넷"],["코코넛밀크","1L 노브랜드","3~5병","싼 것으로","네이버페이","검색","인터넷"],["냉동망고","1kg","5봉지","싼 것으로","네이버페이","검색","인터넷"],["타임허브","50g 레몬타임 생잎 + 로즈마리","1봉지","1/3 남으면","네이버페이","천향허브 010-9656-8894","인터넷"]],"포장 재료":[["케이크 띠지 (조각)","8cm","1000장 (5세트)","1세트 남았을 때","네이버페이","로티","인터넷"],["케이크 띠지 (홀)","8×51cm","100장 (6세트)","1세트 남았을 때","네이버페이","구디패키지","인터넷"],["떡싸개지","1000장 22×22","5묶음","1~3묶음 남았을 때","네이버페이","착한포장 02-2279-6682","인터넷"],["에그타르트 밑지","1000장 12×12 재단 요청","3묶음","1~2묶음 남았을 때","네이버페이","올페이퍼 031-592-7250","배송요청에 재단 요청 필수"],["에그타르트 포장 봉투","100매 good given 종이봉투 소 화이트","5개","1~2묶음 남았을 때","쿠팡","로켓와우","인터넷"],["에그타르트 4구/6구 박스","1000개 (+칸막이, 깔개)","1번","30~50개 남았을 때 (카톡)","패키지팩토리","070-8265-5664","플러스친구"],["종이가방","1000개 (+종이끈)","1번","30~50개 남았을 때 (카톡)","패키지팩토리","070-8265-5664","플러스친구"],["비닐봉투 소/중/대","50장 투명 무지 24호/33호/39호","10묶음","2~3묶음 남았을 때","베이킹맘/네이버검색","070-7101-8349","인터넷"],["케이크박스 미니/1호/2호","아이보리 누드 투명 + 화이트 사각 받침","30~100개","10~20개 남았을 때","패키지팩토리","070-8265-5664","인터넷"],["조각케이크 박스 (소)","JP-3001W 12.5×7.5×8","400개씩","10~20개 남았을 때","j-팩토리","","네이버"],["조각케이크 박스 (중)","앞열림 3호 옐로우 20×13×14","3~5묶음","10~20개 남았을 때","패키지팩토리","070-8265-5664","플러스친구"],["리본끈","15mm×45m 갈색","5묶음","커팅해둔 것 한묶음 남을 때","네이버페이","리본리에 010-4451-2045","인터넷"],["생일초","100개","5묶음","1박스 남았을 때","네이버페이","베이킹스타 010-8075-3985","인터넷"],["디저트 스티커 (인쇄물 전부)","1000장","2묶음","100개 남았을 때. 인쇄 오래 걸려 마지막 통 쓸 때 주문","도도디자인","","카톡"],["케이크 칼","20개 일회용 케이크서버 투명 소","5세트","10~20개 남았을 때","네이버페이","이룸팩 1577-1851","인터넷"],["클립","500개 블루마토 128mm","4묶음","1통 남았을 때","쿠팡","로켓와우","인터넷"],["스카치 테이프","12롤 12mm 리필","1세트","1~2개 남았을 때","쿠팡","로켓와우","인터넷"]]};
   var SEASON=[["11~3월말 4월초","딸기","560g",[11,12,1,2,3,4]],["사계절","망고 & 애플망고","12수짜리 3.5개",[1,2,3,4,5,6,7,8,9,10,11,12]],["6~8월","체리","22알",[6,7,8]],["5~10월","메론","1.5kg 반통",[5,6,7,8,9,10]],["6~8월","복숭아 졸임","1병 반",[6,7,8]],["7~10월","샤인머스켓","1손 (알 약간 큰 것)",[7,8,9,10]],["8~11월","무화과 (영암)","500g",[8,9,10,11]],["6~8월","초당옥수수","반개~1개",[6,7,8]],["9~2월","고구마 (거의 안 함)","500~600g",[9,10,11,12,1,2]],["9~11월","밤 (통조림 보늬밤)","500~600g",[9,10,11]],["항상","티라미수","",[1,2,3,4,5,6,7,8,9,10,11,12]],["6~8월","말차 티라미수","",[6,7,8]],["5~6월","바나나","긴 것 3.5개",[5,6]]];
 
@@ -6646,7 +6655,11 @@ input,select,textarea{border-radius:var(--r3)!important}
       fruit: "사장님 꿀팁 — 망고 1박스 최대 58,000원. 후숙 과일은 1~1.5박스 여유. 조림 복숭아 반박스 남으면 미리 주문. 주마다 과일 단가 체크. 파손 시 바로 A/S.",
       etc: "빙수 재료 메모 — 시즈너리 빙수는 종류에 따라 달라지니 그때그때 체크. 코코넛밀크(노브랜드) · 패션후르츠 퓨레는 웬만하면 넣기."
     };
-    var OPEN = { sheet: 1, fruit: 1, cream: 1, bar: 1, sub: 1 };
+    var OPEN = { sheet: 1, fruit: 1, cream: 1, bar: 1, sub: 1, design: 1 };
+    var DESIGN_KEY = "디자인 재료";   // 자유 메모 — 없으면 발주 넣는 디자인 재료 (데코 · 픽 · 초 · 리본 · 프린트 등)
+    // 케이크 상자 · 하판은 한 줄에 같이 입력 (저장 이름은 그대로)
+    var PAIR = { "케이크 상자 미니": "케이크 하판 미니", "케이크 상자 1호": "케이크 하판 1호", "케이크 상자 2호": "케이크 하판 2호", "케이크 상자 3호": "케이크 하판 3호", "케이크 상자 4호": "케이크 하판 4호" };
+    var PAIRED = {}; Object.keys(PAIR).forEach(function (k) { PAIRED[PAIR[k]] = k; });
 
     function me() { try { return localStorage.getItem("cafesui.me") || ""; } catch (e) { return ""; } }
     function isMgr() { return MGR.indexOf(me()) >= 0; }
@@ -6705,10 +6718,39 @@ input,select,textarea{border-radius:var(--r3)!important}
         d.innerHTML = '<summary>' + esc(GROUPS[g]) + '<span class="n"></span></summary>' +
           (TIP[g] ? '<div class="tipq">' + esc(TIP[g]) + "</div>" : "") + '<div class="skitems"></div>';
         var wrap = d.querySelector(".skitems");
+        if (g === "design") {
+          var dv = document.createElement("div"); dv.className = "skdesign";
+          dv.innerHTML = '<p>없으면 발주 넣어야 하는 디자인 재료를 자유롭게 적어 두세요. 예) 생일 픽 · 리본 · 케이크 토퍼 · 식용 꽃 · 초 · 스프링클 · 프린트 시트. 적은 건 다음 날에도 그대로 넘어가고 보고에도 같이 나갑니다.</p>' +
+            '<textarea class="dinp" rows="4" placeholder="예) 생일 픽 10개 남음 · 리본 골드 없음 → 발주 · 토퍼 HAPPY BIRTHDAY 3개"></textarea>';
+          var ta = dv.querySelector("textarea"); ta.value = stock[DESIGN_KEY] == null ? "" : stock[DESIGN_KEY];
+          ta.addEventListener("input", function () { stock[DESIGN_KEY] = ta.value; queueSave(); });
+          wrap.appendChild(dv); box.appendChild(d); return;
+        }
         list.forEach(function (it) {
           var name = it[1], unit = it[2], re = it[3], memo = it[4], custom = it[5];
+          if (PAIRED[name]) return;   // 하판은 상자 줄에서 같이
           var val = stock[name] == null ? "" : stock[name];
           var row = document.createElement("div");
+          if (PAIR[name]) {
+            var name2 = PAIR[name], val2 = stock[name2] == null ? "" : stock[name2];
+            var it2 = list.filter(function (x) { return x[1] === name2; })[0], re2 = it2 ? it2[3] : re;
+            row.className = "skit pair";
+            row.innerHTML = '<span class="nm">' + esc(name.replace("케이크 상자 ", "케이크 ")) + ' <em>상자 · 하판</em>' +
+              (re != null ? "<small>" + re + unit + " 이하면 발주" + (memo ? " · " + esc(memo) : "") + "</small>" : (memo ? "<small>" + esc(memo) + "</small>" : "")) + "</span>" +
+              '<span class="pr"><label>상자<input type="text" inputmode="decimal" class="skin" value="' + esc(val) + '" placeholder="수량"></label>' +
+              '<label>하판<input type="text" inputmode="decimal" class="skin" value="' + esc(val2) + '" placeholder="수량"></label></span>' +
+              '<span class="u">' + esc(unit) + "</span><span></span>";
+            var ins = row.querySelectorAll("input");
+            var paint2 = function () {
+              var a = parseFloat(String(ins[0].value).replace(/[^0-9.]/g, "")), b = parseFloat(String(ins[1].value).replace(/[^0-9.]/g, ""));
+              var need = (re != null && ins[0].value !== "" && !isNaN(a) && a <= re) || (re2 != null && ins[1].value !== "" && !isNaN(b) && b <= re2);
+              row.classList.toggle("need", need);
+            };
+            paint2();
+            ins[0].addEventListener("input", function () { stock[name] = ins[0].value; paint2(); renderNeed(); queueSave(); });
+            ins[1].addEventListener("input", function () { stock[name2] = ins[1].value; paint2(); renderNeed(); queueSave(); });
+            wrap.appendChild(row); return;
+          }
           row.className = "skit";
           row.innerHTML = '<span class="nm">' + esc(name) +
             (re != null ? "<small>" + re + unit + " 이하면 발주" + (memo ? " · " + esc(memo) : "") + "</small>"
@@ -6739,6 +6781,7 @@ input,select,textarea{border-radius:var(--r3)!important}
         add.type = "button"; add.className = "skbtn"; add.textContent = "+ 재고 항목 추가";
         add.addEventListener("click", function () {
           var g = prompt("묶음: sheet(시트) fruit(과일) cream(생크림) bar(우유·원두·휘핑) sub(부재료) pack(포장) etc(빙수·기타)", "etc");
+          if (g === "design") return;
           if (!g || !GROUPS[g]) return;
           var name = prompt("품목명"); if (!name) return;
           var unit = prompt("단위", "개") || "개";
@@ -6957,7 +7000,7 @@ input,select,textarea{border-radius:var(--r3)!important}
         row("생크림 계획", esc(v("creamPlan"))) + "</div>";
       html += "<h4>재고</h4><div class=\"kv\">" +
         row("시트", grp("sheet")) + row("과일", grp("fruit")) + row("생크림", grp("cream")) +
-        row("우유·원두·휘핑", grp("bar")) + row("부재료", grp("sub")) + row("포장", grp("pack")) + row("빙수·기타", grp("etc")) + "</div>";
+        row("우유·원두·휘핑", grp("bar")) + row("부재료", grp("sub")) + row("포장", grp("pack")) + row("디자인 재료", esc(stock[DESIGN_KEY] || "").replace(/\n/g, "<br>")) + row("빙수·기타", grp("etc")) + "</div>";
       var mon = weekMon(cur), tA = 0, tB = 0, tC = 0;
       [0, 1, 2, 3, 4, 5].forEach(function (i) {
         var d = addDays(mon, i); var w = (d === cur) ? o : (load(d) || {});
@@ -6986,7 +7029,8 @@ input,select,textarea{border-radius:var(--r3)!important}
         "  주문: " + (o.fruitOrder || "-"),
         "■ 생크림 사용 " + (o.creamUse || 0) + "통 · 재고 " + grp("cream") + " · " + (o.creamPlan || ""),
         "■ 우유·원두·휘핑: " + grp("bar"),
-        "■ 부재료: " + grp("sub")].filter(function (x) { return x !== ""; }).join(NL);
+        "■ 부재료: " + grp("sub"),
+        stock[DESIGN_KEY] ? "■ 디자인 재료: " + String(stock[DESIGN_KEY]).replace(/\n+/g, " / ") : ""].filter(function (x) { return x !== ""; }).join(NL);
       var done = function () { statusEl.textContent = "복사됐습니다 · 텔레그램방에 붙여 넣으세요"; };
       if (navigator.share) { navigator.share({ text: t }).then(done, function () { copy(t, done); }); return; }
       copy(t, done);
