@@ -6670,6 +6670,8 @@ input,select,textarea{border-radius:var(--r3)!important}
 .skit.pair .pr label{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:var(--muted)}
 .skit.pair .pr .skin{width:58px}
 .skdesign{padding:9px 13px 12px}
+.skgmemo{border-top:1px dashed var(--rule2);background:var(--bg)}
+.skgmemo p b{color:var(--ink)}
 .skdesign p{margin:0 0 7px;font-size:12.5px;color:var(--muted);line-height:1.55;word-break:keep-all}
 .skdesign textarea{width:100%;font:inherit;font-size:14px;line-height:1.6;resize:vertical;box-sizing:border-box}
 @media (max-width:600px){.skit.pair{grid-template-columns:1fr auto}.skit.pair .u,.skit.pair>span:last-child{display:none}.skit.pair .pr .skin{width:56px}}
@@ -6807,6 +6809,7 @@ input,select,textarea{border-radius:var(--r3)!important}
       etc: "빙수 재료 메모 — 시즈너리 빙수는 종류에 따라 달라지니 그때그때 체크. 코코넛밀크(노브랜드) · 패션후르츠 퓨레는 웬만하면 넣기."
     };
     var OPEN = { sheet: 1, fruit: 1, cream: 1, bar: 1, sub: 1, design: 1 };
+    var GROUP_MEMO = { pack: "포장 메모" };   // 묶음 아래 자유 메모 (자주 안 시키는 것)
     var DESIGN_KEY = "디자인 재료";   // 자유 메모 — 없으면 발주 넣는 디자인 재료 (데코 · 픽 · 초 · 리본 · 프린트 등)
     // 케이크 상자 · 하판은 한 줄에 같이 입력 (저장 이름은 그대로)
     var PAIR = { "케이크 상자 미니": "케이크 하판 미니", "케이크 상자 1호": "케이크 하판 1호", "케이크 상자 2호": "케이크 하판 2호", "케이크 상자 3호": "케이크 하판 3호", "케이크 상자 4호": "케이크 하판 4호" };
@@ -6871,8 +6874,8 @@ input,select,textarea{border-radius:var(--r3)!important}
         var wrap = d.querySelector(".skitems");
         if (g === "design") {
           var dv = document.createElement("div"); dv.className = "skdesign";
-          dv.innerHTML = '<p>없으면 발주 넣어야 하는 디자인 재료를 자유롭게 적어 두세요. 예) 생일 픽 · 리본 · 케이크 토퍼 · 식용 꽃 · 초 · 스프링클 · 프린트 시트. 적은 건 다음 날에도 그대로 넘어가고 보고에도 같이 나갑니다.</p>' +
-            '<textarea class="dinp" rows="4" placeholder="예) 생일 픽 10개 남음 · 리본 골드 없음 → 발주 · 토퍼 HAPPY BIRTHDAY 3개"></textarea>';
+          dv.innerHTML = '<p>없으면 발주 넣어야 하는 디자인 재료를 자유롭게 적어 두세요. 예) 인쇄물(스티커 · 명함 · 브로셔 · 안내 카드) · 리본끈 · 생일 픽 · 케이크 토퍼 · 식용 꽃 · 초 · 스프링클 · 프린트 시트. 적은 건 다음 날에도 그대로 넘어가고 보고에도 같이 나갑니다.</p>' +
+            '<textarea class="dinp" rows="4" placeholder="예) 스티커 인쇄물 반 남음 → 발주 · 리본끈 골드 없음 · 생일 픽 10개 · 토퍼 HAPPY BIRTHDAY 3개"></textarea>';
           var ta = dv.querySelector("textarea"); ta.value = stock[DESIGN_KEY] == null ? "" : stock[DESIGN_KEY];
           ta.addEventListener("input", function () { stock[DESIGN_KEY] = ta.value; queueSave(); });
           wrap.appendChild(dv); box.appendChild(d); return;
@@ -6925,6 +6928,14 @@ input,select,textarea{border-radius:var(--r3)!important}
           });
           wrap.appendChild(row);
         });
+        if (GROUP_MEMO[g]) {
+          var mk = GROUP_MEMO[g], mv = document.createElement("div"); mv.className = "skdesign skgmemo";
+          mv.innerHTML = '<p><b>📝 ' + esc(GROUPS[g].replace(/^\S+\s/, "")) + ' 메모</b> — 자주 안 시키는 것 · 위 목록에 없는 것을 적어 두세요. 예) 리본 스티커 · 보냉백 · 아이스팩 · 드라이아이스 · 케이크 픽업 가방. 다음 날에도 넘어가고 보고에도 나갑니다.</p>' +
+            '<textarea class="dinp" rows="3" placeholder="예) 보냉백 5개 남음 → 다음 주 발주 · 아이스팩 넉넉 · 드라이아이스 업체 전화"></textarea>';
+          var mt = mv.querySelector("textarea"); mt.value = stock[mk] == null ? "" : stock[mk];
+          mt.addEventListener("input", function () { stock[mk] = mt.value; queueSave(); });
+          wrap.appendChild(mv);
+        }
         box.appendChild(d);
       });
       if (isMgr()) {
@@ -7151,7 +7162,7 @@ input,select,textarea{border-radius:var(--r3)!important}
         row("생크림 계획", esc(v("creamPlan"))) + "</div>";
       html += "<h4>재고</h4><div class=\"kv\">" +
         row("시트", grp("sheet")) + row("과일", grp("fruit")) + row("생크림", grp("cream")) +
-        row("우유·원두·휘핑", grp("bar")) + row("부재료", grp("sub")) + row("포장", grp("pack")) + row("디자인 재료", esc(stock[DESIGN_KEY] || "").replace(/\n/g, "<br>")) + row("빙수·기타", grp("etc")) + "</div>";
+        row("우유·원두·휘핑", grp("bar")) + row("부재료", grp("sub")) + row("포장", grp("pack") + (stock["포장 메모"] ? (grp("pack") ? " · " : "") + "<i>메모: " + esc(stock["포장 메모"]).replace(/\n/g, " / ") + "</i>" : "")) + row("디자인 재료", esc(stock[DESIGN_KEY] || "").replace(/\n/g, "<br>")) + row("빙수·기타", grp("etc")) + "</div>";
       var mon = weekMon(cur), tA = 0, tB = 0, tC = 0;
       [0, 1, 2, 3, 4, 5].forEach(function (i) {
         var d = addDays(mon, i); var w = (d === cur) ? o : (load(d) || {});
@@ -7181,6 +7192,7 @@ input,select,textarea{border-radius:var(--r3)!important}
         "■ 생크림 사용 " + (o.creamUse || 0) + "통 · 재고 " + grp("cream") + " · " + (o.creamPlan || ""),
         "■ 우유·원두·휘핑: " + grp("bar"),
         "■ 부재료: " + grp("sub"),
+        stock["포장 메모"] ? "■ 포장 메모: " + String(stock["포장 메모"]).replace(/\n+/g, " / ") : "",
         stock[DESIGN_KEY] ? "■ 디자인 재료: " + String(stock[DESIGN_KEY]).replace(/\n+/g, " / ") : ""].filter(function (x) { return x !== ""; }).join(NL);
       var done = function () { statusEl.textContent = "복사됐습니다 · 텔레그램방에 붙여 넣으세요"; };
       if (navigator.share) { navigator.share({ text: t }).then(done, function () { copy(t, done); }); return; }
