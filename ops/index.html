@@ -1388,12 +1388,12 @@ textarea.lgin.mi{min-height:58px;height:58px;overflow:hidden;resize:none}
   background:var(--off);padding:1px 5px;border-radius:2px;line-height:1.5}
 .offwho{font-size:12.5px;font-weight:700;color:var(--off)}
 
-.sh{display:flex;flex-wrap:wrap;align-items:center;column-gap:5px;row-gap:1px;
-  padding:3px 6px;font-size:12.5px;border-left:3px solid;min-width:0}
-.sh .who{font-weight:700;white-space:nowrap}
-.sh .rl{font-size:11.5px;opacity:.85;white-space:nowrap}
-.sh .tm{font-family:var(--mono);font-size:11.5px;text-align:right;margin-left:auto;
-  font-variant-numeric:tabular-nums;white-space:nowrap}
+.sh{display:flex;flex-wrap:wrap;align-items:center;column-gap:6px;row-gap:2px;
+  padding:4px 7px 5px;font-size:13px;border-left:4px solid;min-width:0}
+.sh .who{font-weight:900;white-space:nowrap;font-size:13.5px}
+.sh .rl{font-size:12px;font-weight:700;opacity:.9;white-space:nowrap}
+.sh .tm{flex:0 0 100%;font-family:var(--mono);font-size:13px;font-weight:700;text-align:left;margin-left:0;
+  font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:.01em}
 .sh .dash{opacity:.5;padding:0 1px}
 .sh.open{background:var(--openbg);border-color:var(--open);color:var(--open)}
 .sh.close{background:var(--closebg);border-color:var(--close);color:var(--close)}
@@ -2096,7 +2096,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-33</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-35</i></span>
   <span class="sep"></span>
   <span class="svlab">복사본 보관</span>
   <span id="saveBtns"></span>
@@ -2310,13 +2310,14 @@ input,select,textarea{border-radius:var(--r3)!important}
         <div class="bkh">자료 보관 <span id="bkSize"></span></div>
         <p class="bknote">적어둔 것은 이 기기와 <b>카페스이 서버(Firebase)</b>에 같이 있고, 컴퓨터끼리 공유됩니다.
           <b>「복사본 보관」은 그 내용을 따로 한 벌 더 복사해 두는 것</b>입니다. 서버가 잘못되거나 실수로 지웠을 때를 대비하는 보험이고, 복사본을 만들어도 여기 있는 내용은 하나도 지워지지 않습니다.
-          「전체 내용 글로 복사」는 긴 글이 복사되니 텔레그램·메모장에 붙여 넣으면 되고, 「전체 내용 파일로 저장」은 <b>.txt 글자 파일</b>(예: cafesui-copy-2026-09-24.txt)이 다운로드 폴더에 생깁니다. 메모장으로 열리는 보통 글자 파일이고, 구글 드라이브·USB로 옮겨 두면 됩니다.
+          <b>「읽기용 문서로 저장」</b>은 사람이 읽는 문서(.html)입니다. 더블클릭하면 브라우저에서 날짜별 일지 · 근무표 · 재고 등이 표로 열리고, 인쇄나 PDF 저장도 됩니다. 단, 이 문서로는 되돌리기가 안 됩니다.<br>「전체 내용 글로 복사」는 긴 글이 복사되니 텔레그램·메모장에 붙여 넣으면 되고, 「전체 내용 파일로 저장」은 <b>.txt 글자 파일</b>(예: cafesui-copy-2026-09-24.txt)이 다운로드 폴더에 생깁니다. 메모장으로 열리는 보통 글자 파일이고, 구글 드라이브·USB로 옮겨 두면 됩니다.
           한 달에 한 번 파일로 저장해 두면 충분합니다.
           <br>복사본에는 <b>적어둔 내용 전부</b>가 들어갑니다 — 일지 · 퇴근 기록 ·
           월말회의 · 월말 평가 · 근무표 수정 · 휴무 신청 · 청소 체크 · 워크샵 ·
           연간 일정 · 비밀번호까지.</p>
         <div class="bkbtns">
           <button type="button" id="bkCopy" class="bkbig prim"><svg viewBox="0 0 24 24" class="bki" aria-hidden="true"><path d="M5 3h11l3 3v15H5z"/><path d="M8 3v6h7V3"/><path d="M8 13h8v8H8z"/></svg><span>전체 내용 글로 복사</span><em>눌러서 톡에 붙여넣기</em></button>
+          <button type="button" id="bkRead" class="bkbig prim"><svg viewBox="0 0 24 24" class="bki" aria-hidden="true"><path d="M4 4h16v16H4z"/><path d="M8 9h8"/><path d="M8 13h8"/><path d="M8 17h5"/></svg><span>읽기용 문서로 저장</span><em>더블클릭하면 바로 읽힘 · 인쇄 가능</em></button>
           <button type="button" id="bkFile" class="bkbig"><svg viewBox="0 0 24 24" class="bki" aria-hidden="true"><path d="M12 3v12"/><path d="M8 11l4 4 4-4"/><path d="M4 21h16"/></svg><span>전체 내용 파일로 저장</span><em>.txt 글자 파일 · 다운로드 폴더</em></button>
           <button type="button" id="bkOpen" class="bkbig"><svg viewBox="0 0 24 24" class="bki" aria-hidden="true"><path d="M12 3v11"/><path d="M8 11l4 4 4-4"/><path d="M4 18v3h16v-3"/></svg><span>복사한 글 붙여넣어 불러오기</span><em>새 컴퓨터에서</em></button>
           <button type="button" id="bkFileIn" class="bkbig"><svg viewBox="0 0 24 24" class="bki" aria-hidden="true"><path d="M12 15V4"/><path d="M8 8l4-4 4 4"/><path d="M4 21h16"/></svg><span>저장한 파일 불러오기</span><em>저장해 둔 .txt 파일 고르기</em></button>
@@ -4034,6 +4035,164 @@ input,select,textarea{border-radius:var(--r3)!important}
     document.getElementById("bkOpen").addEventListener("click", function () {
       paste.hidden = !paste.hidden;
       msg.textContent = paste.hidden ? "" : "복사해 둔 글을 붙여넣고 「불러오기」를 누르세요";
+    });
+    // ── 읽기용 문서 — 사람이 읽는 HTML 한 장. 날짜별 일지 · 출퇴근 · 근무표 · 재고 · 메모 · 휴가 · 독서 · 워크샵 · 평가 · 회의
+    function readableHTML() {
+      var E = function (v) { return String(v == null ? "" : v).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); };
+      var NLr = /\r?\n/g;
+      var P = function (v) { return E(v).replace(NLr, "<br>"); };
+      var J = function (k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } };
+      var all = keys().sort();
+      var by = function (pre) { return all.filter(function (k) { return k.indexOf(pre) === 0; }); };
+      var WDN = ["일", "월", "화", "수", "목", "금", "토"];
+      var dlab = function (d) { var t = new Date(d + "T00:00:00"); return isNaN(t) ? d : d + " (" + WDN[t.getDay()] + ")"; };
+      // 화면에서 칸 이름을 모은다 (저장 키 → 사람이 읽는 이름)
+      var LBL = {};
+      document.querySelectorAll("[data-k]").forEach(function (el) {
+        var k = el.dataset.k; if (LBL[k]) return;
+        var t = el.getAttribute("aria-label");
+        if (!t) { var lb = el.closest(".mrow2, .frow, .lgnum, .lgtext, label"); var sp = lb && lb.querySelector("span"); if (sp) { var c = sp.cloneNode(true); c.querySelectorAll("small,em").forEach(function (x) { x.remove(); }); t = c.textContent.trim(); } }
+        if (!t) { var tr = el.closest("tr"); var th = tr && tr.querySelector("th, .rq"); if (th) t = th.textContent.trim(); }
+        LBL[k] = t || k;
+      });
+      var STATIC = { lf151: "손님 흐름 · 만석 · 웨이팅", lf164: "내일 예약 건", lf182: "사장님께 보고할 것" };
+      var L = function (k) { return LBL[k] || STATIC[k] || k; };
+      var rows = function (obj, skip) {
+        var h = "";
+        Object.keys(obj || {}).forEach(function (k) {
+          if (skip && skip.test(k)) return;
+          var v = obj[k]; if (v == null || v === "" || (typeof v === "object")) return;
+          h += "<tr><th>" + E(L(k)) + "</th><td>" + P(v) + "</td></tr>";
+        });
+        return h ? '<table class="kv">' + h + "</table>" : "";
+      };
+      var out = [];
+      var sec = function (t, body) { if (body) out.push('<section><h2>' + E(t) + "</h2>" + body + "</section>"); };
+      // 일지
+      var lg = by("cafesui.log.").sort().reverse(), h = "";
+      lg.forEach(function (k) {
+        var o = J(k) || {}, f = o.f || {}, d = k.slice(12);
+        var ORDER = ["lf143", "lf140", "lf141", "lf142", "lf101", "lf102", "lf103", "lf104", "lf105", "lf106", "lf120", "lf121", "lf122", "lf110", "lf185", "lf180", "lf181", "lf190", "lf183", "lf184", "lf154", "lf150", "lf151", "lf152", "lf153", "lf160", "lf161", "lf162", "lf163", "lf164", "lf170", "lf171", "lf172", "lf182"];
+        var seen = {}, b = "";
+        ORDER.concat(Object.keys(f)).forEach(function (fk) {
+          if (seen[fk]) return; seen[fk] = 1;
+          var v = f[fk]; if (v == null || String(v).trim() === "") return;
+          var cls = fk === "lf185" ? ' class="boss"' : (fk === "lf183" || fk === "lf184") ? ' class="red"' : "";
+          b += "<tr" + cls + "><th>" + E(L(fk)) + "</th><td>" + P(v) + "</td></tr>";
+        });
+        if (!b) return;
+        h += "<h3>" + dlab(d) + (o.who ? " · 작성 " + E(o.who) : "") + (o.savedAt ? " · 저장 " + E(o.savedAt) : " · 작성 중") + '</h3><table class="kv">' + b + "</table>";
+      });
+      sec("마감 일지", h);
+      // 출퇴근
+      h = "";
+      by("cafesui.att.").sort().reverse().forEach(function (k) {
+        var o = J(k) || {}, d = k.slice(12), b = "";
+        Object.keys(o).forEach(function (nm) { var r = o[nm] || {}; if (!r.role && !r.out) return; b += "<tr><th>" + E(nm) + "</th><td>" + E(r.role || "") + "</td><td>" + E(r.out ? "퇴근 " + r.out : "") + "</td></tr>"; });
+        if (b) h += "<h3>" + dlab(d) + '</h3><table class="kv">' + b + "</table>";
+      });
+      sec("출퇴근", h);
+      // 근무표 + 휴무 신청
+      h = "";
+      by("cafesui.sched.").sort().forEach(function (k) {
+        var o = J(k) || {}, ym = k.slice(14), names = {}, days = [];
+        Object.keys(o).forEach(function (dk) { var m = dk.match(/^(\d+)-(\d+)$/); if (!m) return; days.push(dk); Object.keys(o[dk] || {}).forEach(function (nm) { names[nm] = 1; }); });
+        if (!days.length) return;
+        days.sort(function (a, b2) { return +a.split("-")[1] - +b2.split("-")[1]; });
+        var nl = Object.keys(names).filter(function (n) { return n !== "공지"; });
+        var b = "<tr><th>날짜</th>" + nl.map(function (n) { return "<th>" + E(n) + "</th>"; }).join("") + "<th>공지</th></tr>";
+        days.forEach(function (dk) { var r = o[dk] || {}; var dd = ym.slice(0, 4) + "-" + String(dk.split("-")[0]).padStart(2, "0") + "-" + String(dk.split("-")[1]).padStart(2, "0"); b += "<tr><th>" + dlab(dd).slice(5) + "</th>" + nl.map(function (n) { return "<td>" + E(r[n] || "") + "</td>"; }).join("") + "<td>" + E(r["공지"] || "") + "</td></tr>"; });
+        h += "<h3>" + ym.replace("-", "년 ") + '월 근무표</h3><table class="grid">' + b + "</table>";
+        var off = J("cafesui.off." + ym);
+        if (off && off.days && off.days.length) h += "<p><b>휴무 신청</b> · " + E(off.who || "") + " — " + off.days.map(function (d) { return E(d) + (off.why && off.why[d] ? " (" + E(off.why[d]) + ")" : ""); }).join(", ") + "</p>";
+      });
+      sec("근무표", h);
+      // 재고 · 발주
+      h = "";
+      by("cafesui.stock.").sort().reverse().forEach(function (k) {
+        var o = J(k) || {}, d = k.slice(14), b = "";
+        [["orders", "발주 넣을 것"], ["report", "총괄 보고 · 특이사항"], ["prod", "조각케이크 생산"], ["fruitUseA", "과일 사용 (알)"], ["fruitUseB", "과일 사용 (병)"], ["creamUse", "생크림 사용 (통)"], ["fruitOrder", "과일 주문 · 입고"], ["creamPlan", "생크림 주문 계획"]].forEach(function (f) { if (o[f[0]] && String(o[f[0]]).trim()) b += "<tr><th>" + f[1] + "</th><td>" + P(o[f[0]]) + "</td></tr>"; });
+        var st = o.stock || {}, sb = "";
+        Object.keys(st).forEach(function (nm) { if (st[nm] != null && String(st[nm]).trim() !== "") sb += "<tr><th>" + E(nm) + "</th><td>" + P(st[nm]) + "</td></tr>"; });
+        if (!b && !sb) return;
+        h += "<h3>" + dlab(d) + (o.by ? " · " + E(o.by) : "") + "</h3>" + (b ? '<table class="kv">' + b + "</table>" : "") + (sb ? '<p class="sub">재고</p><table class="kv two">' + sb + "</table>" : "");
+      });
+      sec("재고 · 발주", h);
+      // 메모 달력 · 휴가
+      h = "";
+      var dn = J("cafesui.daynotes") || {};
+      Object.keys(dn).sort().forEach(function (d) { var a = dn[d] || []; if (!a.length) return; h += "<p><b>" + dlab(d) + "</b> — " + a.map(function (n) { return E(n.t) + (n.by ? " <i>(" + E(n.by) + ")</i>" : ""); }).join(" · ") + "</p>"; });
+      var vc = J("cafesui.vacations") || [];
+      if (vc.length) h += "<h3>직원 휴가</h3>" + vc.map(function (v) { return "<p>" + E(v.who) + " · " + E(v.from) + " ~ " + E(v.to) + (v.memo ? " · " + E(v.memo) : "") + "</p>"; }).join("");
+      sec("메모 달력 · 휴가", h);
+      // 독서나눔
+      h = "";
+      var bk = J("cafesui.books"); (bk && bk.items || []).forEach(function (it) {
+        h += "<h3>" + E(it.title || "제목 없음") + (it.author ? " · " + E(it.author) : "") + "</h3>" + (it.summary ? '<p class="box">' + P(it.summary) + "</p>" : "");
+        Object.keys(it.resp || {}).forEach(function (nm) { var r = it.resp[nm] || {}; if (!r.feel && !r.apply && !r.rec) return; h += "<h4>" + E(nm) + '</h4><table class="kv">' + (r.feel ? "<tr><th>느낀 점</th><td>" + P(r.feel) + "</td></tr>" : "") + (r.apply ? "<tr><th>카페에 적용해볼 것</th><td>" + P(r.apply) + "</td></tr>" : "") + (r.rec ? "<tr><th>추천 도서</th><td>" + P(r.rec) + "</td></tr>" : "") + "</table>"; });
+      });
+      sec("독서나눔", h);
+      // 워크샵
+      h = "";
+      by("cafesui.ws.").sort().reverse().forEach(function (k) {
+        var o = J(k) || {}, y = k.slice(11), b = "";
+        ["w1", "w2", "w3", "w4", "w5", "w6"].forEach(function (f) { if (o[f]) b += "<tr><th>" + E(L(f)) + "</th><td>" + P(o[f]) + "</td></tr>"; });
+        if (b) b = '<table class="kv">' + b + "</table>";
+        for (var d = 1; d <= 4; d++) {
+          var tb = "";
+          for (var r = 1; r <= 60; r++) { var t = o["d" + d + "t" + r], pl = o["d" + d + "p" + r], m = o["d" + d + "m" + r]; if (!t && !pl && !m) continue; tb += "<tr><td>" + E(t || "") + "</td><td>" + E(pl || "") + "</td><td>" + P(m || "") + "</td></tr>"; }
+          if (tb) b += "<h4>" + d + "일차" + (o["d" + d + "date"] ? " · " + E(o["d" + d + "date"]) : "") + '</h4><table class="grid"><tr><th>시간</th><th>일정</th><th>메모</th></tr>' + tb + "</table>";
+        }
+        [1, 2, 3].forEach(function (cd) {
+          var pre = cd === 1 ? "c" : "c" + cd + "_", tb = "", sum = 0;
+          for (var r = 1; r <= 60; r++) { var dd = o[pre + r + "d"], n = o[pre + r + "n"], a = o[pre + r + "a"], m = o[pre + r + "m"]; if (!dd && !n && !a && !m) continue; var num = parseFloat(String(a || "").replace(/,/g, "")); if (!isNaN(num)) sum += num; tb += "<tr><td>" + E(dd || "") + "</td><td>" + E(n || "") + "</td><td>" + E(a || "") + "</td><td>" + E(m || "") + "</td></tr>"; }
+          if (tb) b += "<h4>" + cd + "일차 지출 · 합계 " + sum.toLocaleString("ko-KR") + '</h4><table class="grid"><tr><th>시간</th><th>지출</th><th>금액</th><th>메모</th></tr>' + tb + "</table>";
+        });
+        var rest = rows(o, /^(w\d|d\d(date|[tpm]\d+)|c\d*_?\d+[dnam]|_by)$/);
+        if (rest) b += "<h4>회의 · 가고 싶은 곳 · 그 외</h4>" + rest;
+        if (b) h += "<h3>" + E(y) + "년 워크샵</h3>" + b;
+      });
+      sec("워크샵", h);
+      // 월말 평가
+      h = "";
+      by("cafesui.review.").sort().reverse().forEach(function (k) {
+        var o = J(k) || {}, parts = k.slice(15).split("."), ym = parts[0], who = parts[1] || "";
+        var checks = Object.keys(o).filter(function (x) { return /^k\d+$/.test(x) && o[x]; });
+        var b = rows(o, /^(k\d+|_by|_rank|_level)$/);
+        if (!checks.length && !b) return;
+        h += "<h3>" + ym.replace("-", "년 ") + "월" + (who ? " · " + E(who) : "") + (o._level ? " · " + E(o._level) : "") + "</h3>" + b;
+        if (checks.length) h += "<p><b>체크한 항목 " + checks.length + "개</b></p><ul>" + checks.map(function (x) { return "<li>" + E(L(x)) + "</li>"; }).join("") + "</ul>";
+      });
+      sec("월말 평가", h);
+      // 월말회의
+      h = "";
+      by("cafesui.meeting.").sort().reverse().forEach(function (k) { var o = J(k) || {}, b = rows(o, /^_/); if (b) h += "<h3>" + k.slice(16).replace("-", "년 ") + "월 회의</h3>" + b; });
+      var mt = J("cafesui.mtable"); if (mt) { var mb = rows(mt); if (mb) h += "<h3>채널별 · 품목별 비교표</h3>" + mb; }
+      sec("월말회의", h);
+      // 제과제빵
+      h = "";
+      var bg = J("cafesui.baking"); (bg && bg.items || []).forEach(function (it) { if (!it.title && !it.body) return; h += "<h3>" + E(it.cat ? "[" + it.cat + "] " : "") + E(it.title || "제목 없음") + (it.by ? " · " + E(it.by) : "") + '</h3><p class="box">' + P(it.body || "") + "</p>"; });
+      sec("제과제빵", h);
+      // 보건증
+      var hc = J("cafesui.health"); if (hc) { var hb = ""; Object.keys(hc).forEach(function (n) { if (hc[n]) hb += "<tr><th>" + E(n) + "</th><td>발급일 " + E(hc[n]) + "</td></tr>"; }); if (hb) sec("보건증", '<table class="kv">' + hb + "</table>"); }
+      var now = new Date(), stamp = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0") + "-" + String(now.getDate()).padStart(2, "0") + " " + String(now.getHours()).padStart(2, "0") + ":" + String(now.getMinutes()).padStart(2, "0");
+      var css = "body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;max-width:900px;margin:24px auto;padding:0 18px;color:#2b2620;line-height:1.6;background:#fffdf8}h1{font-size:22px;border-bottom:3px solid #8a6b3a;padding-bottom:8px}h1 small{font-size:13px;color:#8a7f6e;font-weight:400;margin-left:10px}nav{font-size:13px;margin:10px 0 24px}nav a{margin-right:12px;color:#8a6b3a}section{margin:26px 0;page-break-inside:avoid}h2{font-size:18px;color:#8a6b3a;border-left:5px solid #8a6b3a;padding-left:10px;margin:30px 0 10px}h3{font-size:15px;margin:18px 0 6px;background:#f3ede0;padding:6px 10px;border-radius:6px}h4{font-size:13.5px;margin:12px 0 4px;color:#5f5546}table{border-collapse:collapse;width:100%;font-size:13.5px;margin:4px 0 10px}table.kv th{width:160px;text-align:left;background:#f8f4ea;font-weight:700;vertical-align:top}table.kv.two th{width:220px}th,td{border:1px solid #e3dccb;padding:5px 8px;vertical-align:top}table.grid th{background:#f8f4ea}tr.boss th,tr.boss td{background:#f3eedf;font-weight:900}tr.red th,tr.red td{color:#a8402f;font-weight:700}p.box{background:#f8f4ea;padding:10px 12px;border-radius:6px;white-space:normal}p.sub{margin:8px 0 2px;font-size:12.5px;color:#8a7f6e;font-weight:700}i{color:#8a7f6e}@media print{body{margin:0}h2{page-break-after:avoid}}";
+      var toc = out.map(function (x) { var m = x.match(/<h2>(.*?)<\/h2>/); return m ? m[1] : ""; }).filter(Boolean);
+      return "<!doctype html><html lang=\"ko\"><head><meta charset=\"utf-8\"><title>카페스이 기록 " + E(stamp) + "</title><style>" + css + "</style></head><body>" +
+        "<h1>카페스이 기록 모음<small>" + E(stamp) + " 저장 · 읽기 전용</small></h1>" +
+        "<nav>" + toc.map(function (t, i) { return '<a href="#s' + i + '">' + t + "</a>"; }).join("") + "</nav>" +
+        out.map(function (x, i) { return x.replace("<section>", '<section id="s' + i + '">'); }).join("") +
+        (out.length ? "" : "<p>아직 적은 내용이 없습니다.</p>") + "</body></html>";
+    }
+    var bkReadBtn = document.getElementById("bkRead");
+    if (bkReadBtn) bkReadBtn.addEventListener("click", function () {
+      try { if (window.__CS_FLUSH) window.__CS_FLUSH(); } catch (e) {}
+      var d = new Date(), name = "cafesui-read-" + d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0") + ".html";
+      var blob = new Blob(["\ufeff" + readableHTML()], { type: "text/html;charset=utf-8" });
+      var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function () { URL.revokeObjectURL(a.href); }, 5000);
+      msg.textContent = "「" + name + "」로 저장했습니다 · 더블클릭하면 브라우저에서 읽힙니다";
     });
     function backupText() {
       var o = {};
@@ -7641,12 +7800,13 @@ input,select,textarea{border-radius:var(--r3)!important}
     }
     var copy = document.getElementById("bkCopy"), open = document.getElementById("bkOpen");
     if (copy) { var sp = copy.querySelector("span"); if (sp) sp.textContent = "전체 내용 글로 복사"; btns.appendChild(slim(copy, "prim")); }
-    var bf = document.getElementById("bkFile"), bfi = document.getElementById("bkFileIn");
-    if (bf) { var sp3 = bf.querySelector("span"); if (sp3) sp3.textContent = "전체 내용 파일로 저장 (.txt)"; btns.appendChild(slim(bf)); }
+    var bf = document.getElementById("bkFile"), bfi = document.getElementById("bkFileIn"), br = document.getElementById("bkRead");
+    if (br) { var sp5 = br.querySelector("span"); if (sp5) sp5.textContent = "읽기용 문서로 저장"; btns.appendChild(slim(br, "prim")); }
+    if (bf) { var sp3 = bf.querySelector("span"); if (sp3) sp3.textContent = "되돌리기용 파일 (.txt)"; btns.appendChild(slim(bf)); }
     if (open) { var sp2 = open.querySelector("span"); if (sp2) sp2.textContent = "복사한 글 붙여넣어 불러오기"; btns.appendChild(slim(open)); }
     if (bfi) { var sp4 = bfi.querySelector("span"); if (sp4) sp4.textContent = "저장한 파일 불러오기"; btns.appendChild(slim(bfi)); }
     document.querySelectorAll(".bkmini").forEach(function (b) {
-      if (b === copy || b === open || b === bf || b === bfi) return;
+      if (b === copy || b === open || b === bf || b === bfi || b === br) return;
       var wrap = b.closest(".bkbar");
       btns.appendChild(b);
       if (wrap && !wrap.querySelector("button")) wrap.hidden = true;
