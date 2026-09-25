@@ -138,19 +138,30 @@ section{margin-top:44px}
 .tdreph b{font-size:16px;font-weight:900}
 .tdreph span{font-size:12.5px;opacity:.9;flex:1 1 200px}
 .tdreph .skbtn{background:#FFFCF6;color:var(--open);border-color:#FFFCF6;min-height:34px;padding:6px 14px;font-size:13.5px}
-.tdrepb{padding:10px 14px 12px;display:grid;gap:10px}
-.tdrs{border:1px solid var(--rule2);border-radius:4px;overflow:hidden}
-.tdrsh{display:flex;align-items:center;gap:10px;padding:7px 12px;background:var(--raise)}
-.tdrsh b{font-size:15px;font-weight:900}
-.tdrsh .pct{font-family:var(--mono);font-weight:800;font-size:14px;padding:2px 10px;border-radius:12px}
-.tdrsh .pct.ok{background:#D9EBD5;color:#1F5A2B}.tdrsh .pct.mid{background:#FFE3BF;color:#8A4A00}.tdrsh .pct.low{background:#F5CFC6;color:#A11A12}
-.tdrl{padding:8px 12px;font-size:13.5px;line-height:1.5;border-top:1px solid var(--rule)}
-.tdrl b{display:block;margin-bottom:3px;font-size:12.5px}
-.tdrl i{display:inline-block;font-style:normal;margin:2px 6px 2px 0;padding:2px 8px;border-radius:3px;background:var(--bg);border:1px solid var(--rule2)}
-.tdrl.no{background:#FBEDE9}.tdrl.no b{color:#A11A12}.tdrl.no i{background:#fff;border-color:#E8B4A8;color:#A11A12;font-weight:800}
-.tdrl.yes i{color:var(--ink2)}.tdrl.yes i em{font-style:normal;font-weight:800;margin-left:4px}
-.tdrl.yes i.p1 em{color:var(--p1)}.tdrl.yes i.p2 em{color:var(--p2)}.tdrl.yes i.p3 em{color:var(--p3)}.tdrl.yes i.p4 em{color:var(--p4)}
-.tdrl.all{color:#1F5A2B;font-weight:800}
+.tdrepb{padding:12px;display:grid;gap:12px;grid-template-columns:repeat(3,minmax(0,1fr));align-items:start}
+@media(max-width:900px){.tdrepb{grid-template-columns:1fr}}
+.tdrs{border:2px solid var(--rule2);border-radius:6px;overflow:hidden;background:var(--surface)}
+.tdrs.ok{border-color:#2F7A3E}.tdrs.mid{border-color:#D9770A}.tdrs.low{border-color:#B3261E}
+.tdrsh{display:grid;grid-template-columns:auto auto 1fr auto;align-items:center;gap:8px;padding:9px 12px;background:var(--raise)}
+.tdrsh b{font-size:18px;font-weight:900}
+.tdrsh .pct{font-family:var(--mono);font-weight:800;font-size:13px;color:var(--ink2)}
+.tdrsh .bar{display:block;height:10px;border-radius:5px;background:#E6DED2;overflow:hidden}
+.tdrsh .bar u{display:block;height:100%;background:#B3261E;text-decoration:none}
+.tdrs.mid .bar u{background:#D9770A}.tdrs.ok .bar u{background:#2F7A3E}
+.tdrsh em{font-style:normal;font-family:var(--mono);font-weight:900;font-size:16px}
+.tdrs.low .tdrsh em{color:#A11A12}.tdrs.mid .tdrsh em{color:#8A4A00}.tdrs.ok .tdrsh em{color:#1F5A2B}
+.tdun{padding:6px 0 4px}
+.tdunh{padding:4px 12px 2px;font-weight:900;color:#A11A12;font-size:14px}
+.tdg{padding:8px 12px 2px;font-family:var(--mono);font-size:11.5px;color:var(--muted);letter-spacing:.02em}
+.tdl{padding:5px 12px 5px 26px;font-size:13.5px;line-height:1.4;position:relative;border-top:1px solid var(--rule)}
+.tdl::before{position:absolute;left:11px;top:5px;font-weight:900}
+.tdl.no{color:#A11A12;font-weight:700;background:#FBEDE9}.tdl.no::before{content:"✗"}
+.tdl.yes{color:var(--ink2)}.tdl.yes::before{content:"✔";color:#2F7A3E}
+.tdl.yes em{font-style:normal;font-weight:800;margin-left:4px}
+.tdl.yes.p1 em{color:var(--p1)}.tdl.yes.p2 em{color:var(--p2)}.tdl.yes.p3 em{color:var(--p3)}.tdl.yes.p4 em{color:var(--p4)}
+.tdall{padding:12px;color:#1F5A2B;font-weight:900;font-size:15px}
+.tddn{border-top:1px solid var(--rule)}
+.tddn summary{cursor:pointer;padding:8px 12px;font-weight:800;color:#1F5A2B;font-size:13.5px;background:#EEF5EC}
 .tblock.spot{border:3px solid #6B3FA6;box-shadow:0 3px 0 rgba(107,63,166,.25)}
 .tblock.spot .tbhead{background:#6B3FA6;color:#fff;font-family:var(--sans);font-size:16px;font-weight:900}
 .tblock.spot .tbhead .tbcnt{color:rgba(255,255,255,.85)}
@@ -2237,7 +2248,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-85</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-86</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -4178,25 +4189,35 @@ input,select,textarea{border-radius:var(--r3)!important}
       var html = "", text = ["[오늘 할 일 결과] " + dayKey() + " (" + WDK[now().getDay()] + ")"];
       SH.forEach(function (s) {
         var panel = document.getElementById(s[0]); if (!panel) return;
-        var items = Array.prototype.slice.call(panel.querySelectorAll(".titem .box"));
-        var done = [], undone = [];
-        items.forEach(function (b) {
-          var lab = b.closest(".titem"); if (!lab || lab.hidden) return;
-          var title = (lab.querySelector(".ttitle") || {}).textContent || "";
-          var v = state.done[b.dataset.k];
-          if (v) done.push({ t: title, w: typeof v === "string" ? v : "" }); else undone.push(title);
+        // 묶음(시간대)별로 나눠서 한 줄에 하나씩
+        var groups = [], doneAll = [], tot = 0, doneN = 0;
+        Array.prototype.forEach.call(panel.querySelectorAll(".tblock, .onlbox"), function (blk) {
+          var head = blk.querySelector(".tbhead, .onlh b"); var gname = head ? (head.childNodes[0] ? head.childNodes[0].textContent : head.textContent).trim() : "";
+          var un = [];
+          Array.prototype.forEach.call(blk.querySelectorAll(".titem .box"), function (b) {
+            var lab = b.closest(".titem"); if (!lab || lab.hidden) return;
+            var title = (lab.querySelector(".ttitle") || {}).textContent || "";
+            var v = state.done[b.dataset.k]; tot += 1;
+            if (v) { doneN += 1; doneAll.push({ t: title, w: typeof v === "string" ? v : "" }); } else un.push(title);
+          });
+          if (un.length) groups.push({ g: gname, un: un });
         });
-        var tot = done.length + undone.length; if (!tot) return;
-        var pct = Math.round(done.length / tot * 100);
-        html += '<div class="tdrs"><div class="tdrsh"><b>' + s[1] + "</b><span class=\"pct " + (pct === 100 ? "ok" : pct >= 70 ? "mid" : "low") + '">' + done.length + " / " + tot + " (" + pct + "%)</span></div>";
-        if (undone.length) html += '<div class="tdrl no"><b>안 한 것 ' + undone.length + "</b>" + undone.map(function (x) { return "<i>" + esc(x) + "</i>"; }).join("") + "</div>";
-        else html += '<div class="tdrl all">전부 완료 ✔</div>';
-        if (done.length) html += '<div class="tdrl yes"><b>한 것 ' + done.length + "</b>" + done.map(function (x) { return '<i class="' + (WHOC[x.w] ? WHOC[x.w] : "") + '">' + esc(x.t) + (x.w ? " <em>" + esc(nim(x.w)) + "</em>" : "") + "</i>"; }).join("") + "</div>";
-        text.push("", "■ " + s[1] + " " + done.length + "/" + tot + " (" + pct + "%)");
-        if (undone.length) text.push("✗ 안 한 것: " + undone.join(" / "));
-        if (done.length) text.push("✔ 한 것: " + done.map(function (x) { return x.t + (x.w ? "(" + x.w + ")" : ""); }).join(" / "));
+        if (!tot) return;
+        var pct = Math.round(doneN / tot * 100), lv = pct === 100 ? "ok" : pct >= 70 ? "mid" : "low";
+        html += '<div class="tdrs ' + lv + '"><div class="tdrsh"><b>' + s[1] + '</b><span class="pct">' + doneN + " / " + tot + '</span><i class="bar"><u style="width:' + pct + '%"></u></i><em>' + pct + "%</em></div>";
+        if (!groups.length) html += '<div class="tdall">✔ 전부 완료</div>';
+        else {
+          html += '<div class="tdun"><div class="tdunh">✗ 안 한 것 ' + (tot - doneN) + "</div>";
+          groups.forEach(function (g) { html += '<div class="tdg">' + esc(g.g) + "</div>" + g.un.map(function (x) { return '<div class="tdl no">' + esc(x) + "</div>"; }).join(""); });
+          html += "</div>";
+        }
+        if (doneAll.length) html += '<details class="tddn"><summary>✔ 한 것 ' + doneAll.length + "개 보기</summary>" + doneAll.map(function (x) { return '<div class="tdl yes ' + (WHOC[x.w] ? WHOC[x.w] : "") + '">' + esc(x.t) + (x.w ? " <em>" + esc(nim(x.w)) + "</em>" : "") + "</div>"; }).join("") + "</details>";
+        html += "</div>";
+        text.push("", "■ " + s[1] + " " + doneN + "/" + tot + " (" + pct + "%)");
+        groups.forEach(function (g) { text.push("[" + g.g + "] 안 한 것: " + g.un.join(" / ")); });
+        if (doneAll.length) text.push("✔ 한 것: " + doneAll.map(function (x) { return x.t + (x.w ? "(" + x.w + ")" : ""); }).join(" / "));
       });
-      body.innerHTML = html || '<div class="tdrl">오늘 체크한 항목이 아직 없습니다</div>';
+      body.innerHTML = html || '<div class="tdl">오늘 체크한 항목이 아직 없습니다</div>';
       lastText = text.join(String.fromCharCode(10));
     }
     window.__CS_TODO_REPORT = draw;
