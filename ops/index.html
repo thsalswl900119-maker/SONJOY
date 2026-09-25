@@ -1394,6 +1394,9 @@ textarea.lgin.mi{min-height:58px;height:58px;overflow:hidden;resize:none}
 .rpitem.boss > b{font-size:13px;color:var(--muted);letter-spacing:.04em;margin-bottom:4px}
 .rpitem span b.imp,.rpitem b.imp{color:var(--alert);font-weight:900;display:inline}
 .rpitem span u{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
+.rpitem span .wl{display:block}
+.lgby{display:block;font-style:normal;font-size:11.5px;color:var(--muted);margin-top:3px;grid-column:1/-1}
+.lgby b{font-weight:800}
 .rpitem b.imp.vimp{display:inline-block;background:#FFF3B0;padding:1px 6px;border-radius:4px;font-size:15px;margin:2px 0}
 .rpitem.red b,.rpitem.red span{color:var(--alert);font-weight:700}
 .mrow2.blue .mlab span{color:#2E5E8C;font-size:13.5px}
@@ -2213,7 +2216,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-83</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-84</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -6844,30 +6847,50 @@ input,select,textarea{border-radius:var(--r3)!important}
       var hb = document.getElementById("lgHol");
       if (hb) { var hv = (window.__CS_HOL || {})[dateEl.value || today()]; hb.textContent = hv ? "🇰🇷 " + hv : ""; hb.hidden = !hv; }
       whoEl.value = data.who || "";
-      var by = data.by || {};
+      var by = data.by || {}, bl0 = data.bl || {};
       inputs.forEach(function (el) {
         el.value = (data.f && data.f[el.dataset.k]) || "";
         el.classList.toggle("filled", !!el.value.trim());
         paintBy(el, by[el.dataset.k]);
+        tagAuthors(el, bl0[el.dataset.k]);
       });
       var n = inputs.filter(function (el) { return el.value.trim(); }).length;
       msgEl.textContent = n ? n + "개 항목 작성됨" : "";
     }
+    // 한 칸을 여러 사람이 이어 쓰면 칸 아래에 "쓴 사람: …" 을 각자 색으로 보여준다
+    function tagAuthors(el, lineBy) {
+      var row = el.closest(".mrow2"); if (!row) return;
+      var names = []; (lineBy || []).forEach(function (n) { if (n && names.indexOf(n) < 0) names.push(n); });
+      var tag = row.querySelector(".lgby");
+      if (names.length < 2) { if (tag) tag.remove(); return; }
+      if (!tag) { tag = document.createElement("i"); tag.className = "lgby"; row.appendChild(tag); }
+      tag.innerHTML = "쓴 사람: " + names.map(function (n) { return '<b class="' + (WCLR[n] ? "w" + WCLR[n] : "") + '">' + esc(n === "사장님" ? n : n + "님") + "</b>"; }).join(" · ");
+    }
     function save() {
-      var f = {}, prev = {};
+      var NL = String.fromCharCode(10);
+      var f = {}, prev = {}, old = {};
       try {
-        var old = JSON.parse(localStorage.getItem(keyFor()) || "{}");
+        old = JSON.parse(localStorage.getItem(keyFor()) || "{}") || {};
         prev = old.by || {};
         if (old.savedAt) prev.__savedAt = old.savedAt;
       } catch (e) {}
-      var by = {}, me2 = meNow();
+      var by = {}, me2 = meNow(), bl = {}, oldF = (old && old.f) || {}, oldBl = (old && old.bl) || {};
       inputs.forEach(function (el) {
         if (!el.value.trim()) return;
-        f[el.dataset.k] = el.value;
-        by[el.dataset.k] = prev[el.dataset.k] || me2 || "";
-        paintBy(el, by[el.dataset.k]);
+        var k = el.dataset.k;
+        f[k] = el.value;
+        by[k] = prev[k] || me2 || "";
+        // 줄 단위 작성자: 전에 있던 줄은 그 줄을 쓴 사람 그대로, 새로 적거나 고친 줄은 지금 사람
+        var pl = String(oldF[k] || "").split(NL), pb = oldBl[k] || [], usedI = {};
+        bl[k] = el.value.split(NL).map(function (ln) {
+          if (!ln.trim()) return "";
+          for (var i = 0; i < pl.length; i++) { if (!usedI[i] && pl[i] === ln) { usedI[i] = 1; return pb[i] || prev[k] || me2 || ""; } }
+          return me2 || prev[k] || "";
+        });
+        paintBy(el, by[k]);
+        tagAuthors(el, bl[k]);
       });
-      var out = { who: whoEl.value, f: f, by: by };
+      var out = { who: whoEl.value, f: f, by: by, bl: bl };
       if (prev.__savedAt) out.savedAt = prev.__savedAt;
       try { localStorage.setItem(keyFor(), JSON.stringify(out)); }
       catch (e) {}
@@ -7087,7 +7110,8 @@ input,select,textarea{border-radius:var(--r3)!important}
       }
 
       // 묶음별로 만들어 두고, 정한 순서로 붙인다
-      var secH = {}, secT = {};
+      var secH = {}, secT = {}, rpBl = {};
+      try { rpBl = (JSON.parse(localStorage.getItem(keyFor()) || "{}") || {}).bl || {}; } catch (e) {}
       document.querySelectorAll(".msec").forEach(function (sec) {
         var items = "", lines = [];
         sec.querySelectorAll(".mrow2").forEach(function (row) {
@@ -7106,6 +7130,14 @@ input,select,textarea{border-radius:var(--r3)!important}
               return star ? '<b class="imp vimp">⭐ ' + t + "</b>" : imp ? '<b class="imp">❗ ' + t + "</b>" : t;
             }).join("<br>");
             plain = v.split(NL).map(function (ln) { return ln.replace(/^\s*[★⭐]\s*/, "⭐ ").replace(/^\s*[!！]\s*/, "❗ ").replace(/\*\*(.+?)\*\*/g, "【$1】").replace(/__(.+?)__/g, "$1"); }).join(NL);
+          }
+          // 여러 사람이 이어 쓴 칸: 줄마다 쓴 사람 색으로, 복사 글에는 이름을 붙인다
+          var lb = (rpBl || {})[el.dataset.k] || [], distinct = [];
+          lb.forEach(function (nn) { if (nn && distinct.indexOf(nn) < 0) distinct.push(nn); });
+          if (distinct.length > 1) {
+            var shLines = shown.split("<br>"), plLines = plain.split(NL), srcLines = v.split(NL);
+            if (shLines.length === srcLines.length) shown = shLines.map(function (h, i) { var nn = lb[i] || ""; return '<span class="wl ' + (WCLR[nn] ? "w" + WCLR[nn] : "") + '">' + h + "</span>"; }).join("");
+            plain = plLines.map(function (x, i) { var nn = lb[i] || ""; return x.trim() ? x + (nn ? " (" + nn + ")" : "") : x; }).join(NL);
           }
           items += '<div class="rpitem' + cls + '"><b>' + esc(name) + "</b><span>" + shown + "</span></div>";
           lines.push("· " + name + ": " +
