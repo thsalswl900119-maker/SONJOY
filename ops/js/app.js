@@ -2541,10 +2541,10 @@
         per.value = (t !== null && d)
           ? Math.round(t / d).toLocaleString("ko-KR") : "";
         per.readOnly = true;
-        // 직원당 매출 = 총합계 ÷ 직원 수
+        // 직원당 일 매출 = 일 매출(총합계 ÷ 영업일수) ÷ 직원 수
         var c = col === "prev" ? "y" : "n";
         var staff = document.querySelector('.cin[data-k="c' + c + '8"]'), pst = document.querySelector('.cin[data-k="c' + c + '9"]');
-        if (pst) { var sn = staff ? num(staff.value) : null; pst.value = (t !== null && sn) ? Math.round(t / sn).toLocaleString("ko-KR") : ""; pst.readOnly = true; }
+        if (pst) { var sn = staff ? num(staff.value) : null; pst.value = (t !== null && d && sn) ? Math.round(t / d / sn).toLocaleString("ko-KR") : ""; pst.readOnly = true; }
       });
       // 차이
       document.querySelectorAll(".cdiff").forEach(function (td) {
