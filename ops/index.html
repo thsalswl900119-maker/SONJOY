@@ -68,7 +68,7 @@ section{margin-top:44px}
 .shead .sub{font-size:13px;color:var(--muted)}
 
 /* 누가 체크하나 */
-:root { --p1:#B4661B; --p2:#35596B; --p3:#B4473A; --p4:#4F7A4A; }
+:root { --p1:#C45A00; --p2:#1B5FC1; --p3:#8E3BB0; --p4:#2E7D32; }
 .whobar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px;
   padding:10px 14px;background:var(--raise);border:1px solid var(--rule)}
 .wblab{font-size:12.5px;font-weight:700;color:var(--ink2)}
@@ -315,7 +315,7 @@ body.tedit .titem .box{opacity:.4;pointer-events:none}
 .wp3{color:var(--p3)!important}
 .wp4{color:var(--p4)!important}
 textarea.wp1,textarea.wp2,textarea.wp3,textarea.wp4,
-input.wp1,input.wp2,input.wp3,input.wp4{font-weight:500}
+input.wp1,input.wp2,input.wp3,input.wp4{font-weight:600}
 .bywho{font-size:13px;color:var(--muted)}
 .bywho i{font-style:normal;font-weight:700;margin-left:7px}
 .bywho i.p1{color:var(--p1)} .bywho i.p2{color:var(--p2)}
@@ -1448,10 +1448,12 @@ textarea.lgin.mi{min-height:58px;height:58px;overflow:hidden;resize:none}
 .rpitem span .wl{display:block}
 .lgby{display:block;font-style:normal;font-size:11.5px;color:var(--muted);margin-top:3px;grid-column:1/-1}
 .mrow2{position:relative}
-.lgin.ovon{color:transparent!important;-webkit-text-fill-color:transparent;caret-color:var(--ink)}
+.lgin.ovon{color:transparent!important;-webkit-text-fill-color:transparent;caret-color:var(--ink);font-weight:600}
 .lgov{position:absolute;pointer-events:none;box-sizing:border-box;border-style:solid;border-color:transparent;white-space:pre-wrap;overflow-wrap:break-word;word-break:break-word;overflow:hidden;margin:0;color:var(--ink);background:transparent;z-index:1}
 .lgov span.wp1,.lgov span.wp2,.lgov span.wp3,.lgov span.wp4{font-weight:600}
 .lgby b{font-weight:800}
+.rpsec.rptop{border:2px solid var(--alert);border-radius:8px;padding:8px 10px;background:#FFFBF2}
+.rpsec.rptop h4{color:var(--alert)}
 .wrbox .wronly{font-style:normal;font-size:12px;font-weight:700;color:var(--muted)}
 .lgown{grid-column:1/-1;margin-top:6px;padding:8px 12px;border:2px solid #E0B400;border-left-width:6px;border-radius:8px;background:#FFF6C9}
 .lgown b{display:block;font-size:13px;font-weight:900;color:#8A5A00;margin-bottom:2px}
@@ -1460,6 +1462,11 @@ textarea.lgin.mi{min-height:58px;height:58px;overflow:hidden;resize:none}
 .rpitem .rpown,.rpitem .rpownl{background:#FFF0A0;color:#B3261E!important;font-weight:800;font-size:1.08em;border-radius:3px;padding:0 3px}
 .rpitem .rpownl{display:block;margin:2px 0}
 .bossbar.mini .lnbtn{border-style:solid}
+.bossbar.secbar{margin:0;padding:8px 12px;border-bottom:1px dashed var(--rule2);background:var(--surface);gap:6px;align-items:center}
+.bossbar.secbar .wsmini{font-size:12.5px;padding:4px 10px}
+.bossbar.secbar .mkto{font-size:12px;color:var(--muted);margin-left:auto}
+.bossbar.secbar .mkto b{color:var(--ink);font-weight:800}
+.mrow2.mktarget .lgin{box-shadow:0 0 0 2px #E0B40066}
 .pgnote{display:block;font-weight:800;color:#A11A12;font-size:12px;margin-top:2px}
 .rpitem b.imp.vimp{display:inline-block;background:#FFF3B0;padding:1px 6px;border-radius:4px;font-size:15px;margin:2px 0}
 .rpitem.red b,.rpitem.red span{color:var(--alert);font-weight:700}
@@ -2310,7 +2317,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-94</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-96</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -2839,10 +2846,10 @@ input,select,textarea{border-radius:var(--r3)!important}
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/sync.js?v=v0924-94"></script>
-<script src="js/holidays.js?v=v0924-94"></script>
-<script src="js/sched.js?v=v0924-94"></script>
-<script src="js/app.js?v=v0924-94"></script>
+<script src="js/sync.js?v=v0924-96"></script>
+<script src="js/holidays.js?v=v0924-96"></script>
+<script src="js/sched.js?v=v0924-96"></script>
+<script src="js/app.js?v=v0924-96"></script>
 
 <style>
 /* 재고 · 발주 */
@@ -3037,7 +3044,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 .sksearch{font:inherit;font-size:13px;padding:6px 9px;width:100%;max-width:300px;background:var(--bg);color:var(--ink);
   border:1px solid var(--rule2);border-radius:2px;margin-bottom:10px}
 </style>
-<script src="js/stock.js?v=v0924-94"></script>
+<script src="js/stock.js?v=v0924-96"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -3066,6 +3073,6 @@ input,select,textarea{border-radius:var(--r3)!important}
   })();
 </script>
 
-<script src="js/presence.js?v=v0924-94"></script>
-<script src="js/weekrep.js?v=v0924-94"></script>
+<script src="js/presence.js?v=v0924-96"></script>
+<script src="js/weekrep.js?v=v0924-96"></script>
 </body></html>

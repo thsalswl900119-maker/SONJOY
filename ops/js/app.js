@@ -403,7 +403,7 @@
     row.hidden = open;
   });
 
-  // 글자 색으로 누가 썼는지 — 정항아 주황 · 박혜빈 남색 · 이해선 빨강 · 사장님 초록
+  // 글자 색으로 누가 썼는지 — 정항아 주황 · 박혜빈 파랑 · 이해선 보라 · 사장님 초록
   var WCLR = { "정항아": "p1", "박혜빈": "p2", "이해선": "p3", "사장님": "p4" };
   function meNow() {
     try { return localStorage.getItem("cafesui.me") || ""; } catch (e) { return ""; }
@@ -3080,6 +3080,9 @@
     function keyFor() { return "cafesui.log." + (dateEl.value || today()); }
     window.__CS_OPEN_LOG = function (d) { dateEl.value = d; load(); report(); drawList(); };
 
+    // base: 이 화면이 마지막으로 읽거나 저장한 값. 저장할 때 이 화면에서 바꾼 칸만 쓰고,
+    // 안 건드린 칸은 서버(다른 기기)의 최신 내용을 그대로 둔다 — 옛 화면으로 남의 글을 덮어쓰는 사고 방지
+    var base = {};
     function load() {
       var data = {};
       try {
@@ -3090,8 +3093,10 @@
       if (hb) { var hv = (window.__CS_HOL || {})[dateEl.value || today()]; hb.textContent = hv ? "🇰🇷 " + hv : ""; hb.hidden = !hv; }
       whoEl.value = data.who || "";
       var by = data.by || {}, bl0 = data.bl || {}, ow0 = data.ow || {};
+      base = {};
       inputs.forEach(function (el) {
         el.value = (data.f && data.f[el.dataset.k]) || "";
+        base[el.dataset.k] = el.value;
         el.classList.toggle("filled", !!el.value.trim());
         paintLines(el, bl0[el.dataset.k], by[el.dataset.k], ow0[el.dataset.k]);
         tagAuthors(el, bl0[el.dataset.k], ow0[el.dataset.k]);
@@ -3240,9 +3245,20 @@
         if (old.savedAt) prev.__savedAt = old.savedAt;
       } catch (e) {}
       var by = {}, me2 = meNow(), bl = {}, ow = {}, oldF = (old && old.f) || {}, oldBl = (old && old.bl) || {}, oldOw = (old && old.ow) || {};
+      var oldBy = (old && old.by) || {};
       inputs.forEach(function (el) {
-        if (!el.value.trim()) return;
         var k = el.dataset.k;
+        if (el.value === (base[k] || "") && (oldF[k] || "") !== el.value) {
+          // 이 화면에서는 안 건드렸는데 다른 기기에서 바뀐 칸 — 서버 내용 그대로 두고 화면만 새로 채운다
+          if (oldF[k]) { f[k] = oldF[k]; by[k] = oldBy[k] || ""; if (oldBl[k]) bl[k] = oldBl[k]; if (oldOw[k]) ow[k] = oldOw[k]; }
+          if (document.activeElement !== el) {
+            el.value = oldF[k] || ""; base[k] = el.value; el.classList.toggle("filled", !!el.value.trim());
+            paintLines(el, oldBl[k], oldBy[k], oldOw[k]); tagAuthors(el, oldBl[k], oldOw[k]);
+          }
+          return;
+        }
+        base[k] = el.value;
+        if (!el.value.trim()) return;
         f[k] = el.value;
         by[k] = prev[k] || me2 || "";
         // 줄 단위 작성자: 전에 있던 줄은 그 줄을 쓴 사람 그대로, 새로 적거나 고친 줄은 지금 사람
@@ -3399,6 +3415,20 @@
       msgEl.textContent = row.dataset.d + " 일지를 열었습니다";
       dateEl.scrollIntoView({ behavior: "smooth", block: "start" });
     });
+    // 다른 기기에서 이 날 일지가 바뀌면: 쓰는 중이 아닌 칸만 새 내용으로 바꿔 끼운다
+    window.addEventListener("cs:remote", function (e) {
+      var ks = (e.detail && e.detail.keys) || []; if (ks.indexOf(keyFor()) < 0) return;
+      var data = {}; try { data = JSON.parse(localStorage.getItem(keyFor()) || "{}") || {}; } catch (er) {}
+      var f0 = data.f || {}, by0 = data.by || {}, bl0 = data.bl || {}, ow0 = data.ow || {}, ch = false;
+      inputs.forEach(function (el) {
+        var k = el.dataset.k, nv = f0[k] || "";
+        if (document.activeElement === el || el.value !== (base[k] || "")) return;
+        if (el.value !== nv) { el.value = nv; base[k] = nv; el.classList.toggle("filled", !!nv.trim()); ch = true; }
+        paintLines(el, bl0[k], by0[k], ow0[k]); tagAuthors(el, bl0[k], ow0[k]);
+      });
+      if (ch) document.dispatchEvent(new Event("cs:log-loaded"));
+      report();
+    });
     saveBtn.addEventListener("click", function () {
       var n = inputs.filter(function (el) { return el.value.trim(); }).length;
       if (!n) { msgEl.textContent = "아직 쓴 내용이 없습니다"; return; }
@@ -3509,6 +3539,8 @@
       var secH = {}, secT = {}, rpBl = {}, rpOw = {};
       try { var rpO = JSON.parse(localStorage.getItem(keyFor()) || "{}") || {}; rpBl = rpO.bl || {}; rpOw = rpO.ow || {}; } catch (e) {}
       var S1 = String.fromCharCode(1), S2 = String.fromCharCode(2);
+      // 맨 위에 먼저 볼 것: 사장님 지시사항 → 인계사항 → 직원들에게 알릴 것 → 폐기 → 매출 → 매장 흐름
+      var TOPK = ["lf185", "lf180", "lf181", "lf162", "lf183", "lf184", "lf154"], topH = {}, topT = {};
       document.querySelectorAll(".msec").forEach(function (sec) {
         var items = "", lines = [];
         sec.querySelectorAll(".mrow2").forEach(function (row) {
@@ -3541,10 +3573,10 @@
           }
           shown = shown.split(S1).join('<span class="rpown">👑 ').split(S2).join("</span>");
           plain = plain.split(S1).join("〔사장님: ").split(S2).join("〕");
-          items += '<div class="rpitem' + cls + '"><b>' + esc(name) + "</b><span>" + shown + "</span></div>";
-          lines.push("· " + name + ": " +
-            plain.split(NL).map(function (x) { return x.trim(); })
-             .filter(Boolean).join(" / "));
+          var ih = '<div class="rpitem' + cls + '"><b>' + esc(name) + "</b><span>" + shown + "</span></div>";
+          var it = "· " + name + ": " + plain.split(NL).map(function (x) { return x.trim(); }).filter(Boolean).join(" / ");
+          if (TOPK.indexOf(el.dataset.k) >= 0) { topH[el.dataset.k] = ih; topT[el.dataset.k] = it; any = true; return; }
+          items += ih; lines.push(it);
         });
         if (!items) return;
         any = true;
@@ -3552,6 +3584,11 @@
         secH[title] = '<div class="rpsec"><h4>' + esc(title) + "</h4>" + items + "</div>";
         secT[title] = ["", "[" + title + "]", lines.join(NL)];
       });
+      var topHtml = TOPK.map(function (k) { return topH[k] || ""; }).join("");
+      if (topHtml) {
+        html += '<div class="rpsec rptop"><h4>📌 먼저 볼 것</h4>' + topHtml + "</div>";
+        text = text.concat(["", "[먼저 볼 것]", TOPK.filter(function (k) { return topT[k]; }).map(function (k) { return topT[k]; }).join(NL)]);
+      }
       var ORDER = ["근무", "__num__", "전달", "매장", "생산 · 재고", "이슈"];
       var used = {};
       ORDER.forEach(function (t) {

@@ -205,23 +205,40 @@
     }
     function all() { grid.querySelectorAll("textarea.lgin").forEach(grow); fillHours(); count(); }
     // 표시 버튼 — 사장님 지시사항 · 인계사항 · 직원들에게 알릴 것 · 그 외 메모: ⭐ 매우 중요(줄 앞 ★) · 🔴 중요(**글**) · 밑줄(__글__)
-    function markBar(ta, compact) {
-      var bar = document.createElement("div"); bar.className = "bossbar" + (compact ? " mini" : "");
+    function markBar(ta0, compact, sec) {
+      var ta = ta0;
+      var bar = document.createElement("div"); bar.className = "bossbar" + (compact ? " mini" : "") + (sec ? " secbar" : "");
       bar.innerHTML = '<button type="button" class="wsmini" data-act="star">⭐ 매우 중요</button><button type="button" class="wsmini" data-act="imp">🔴 중요</button><button type="button" class="wsmini" data-act="und"><u>밑줄</u></button>' +
         (compact ? '<button type="button" class="wsmini lnbtn" data-act="time" title="맨 아래에 지금 시각으로 새 줄을 엽니다">🕐 새 줄</button><button type="button" class="wsmini lnbtn" data-act="split" title="「/」로 이어 쓴 글을 한 줄씩 나눕니다">✂ / 줄 나누기</button>' : "") +
         (compact ? "" : '<span>⭐는 지금 줄 앞에 <b>★</b> (노란 바탕 빨간 글씨) · 글을 드래그해 고르고 누르면 <b>**이렇게**</b>는 빨간 글씨, <u>__이렇게__</u>는 밑줄</span>');
-      // 좁은 칸(항목 이름 | 입력칸)은 버튼을 항목 이름 아래에 둔다
-      if (compact) { var lab = ta.closest(".mrow2").querySelector(".mlab"); lab.appendChild(bar); ta.closest(".mrow2").classList.add("mk"); }
+      // 매장 · 이슈는 묶음마다 버튼 한 줄 — 마지막으로 누른 칸에 적용된다
+      if (sec) {
+        var tas = Array.prototype.slice.call(sec.querySelectorAll(".mrow2:not(.boss):not(.para) textarea.lgin"));
+        tas.forEach(function (t) { t.closest(".mrow2").classList.add("mk"); });
+        bar.insertAdjacentHTML("beforeend", '<span class="mkto">적용 칸: <b></b></span>');
+        var toEl = bar.querySelector(".mkto b");
+        var pick = function (t) {
+          sec.__last = t;
+          tas.forEach(function (x) { x.closest(".mrow2").classList.toggle("mktarget", x === t); });
+          var sp = t.closest(".mrow2").querySelector(".mlab span").cloneNode(true); sp.querySelectorAll("small").forEach(function (x) { x.remove(); });
+          toEl.textContent = sp.textContent.trim();
+        };
+        tas.forEach(function (t) { t.addEventListener("focus", function () { pick(t); }); });
+        if (tas[0]) pick(tas[0]);
+        sec.querySelector(".msh").insertAdjacentElement("afterend", bar);
+        bar.addEventListener("mousedown", function (e) { if (e.target.closest("[data-act]")) e.preventDefault(); });
+      } else if (compact) { var lab = ta.closest(".mrow2").querySelector(".mlab"); lab.appendChild(bar); ta.closest(".mrow2").classList.add("mk"); }
       else ta.parentNode.insertBefore(bar, ta);
       bar.addEventListener("click", function (e) {
         var btn = e.target.closest("[data-act]"); if (!btn) return;
+        if (sec) ta = btn.dataset.undo && btn.__ta ? btn.__ta : (sec.__last || ta);
         var act = btn.dataset.act, a = ta.selectionStart, b = ta.selectionEnd, v = ta.value;
         if (act === "split") {
           if (!window.__CS_LOG_SPLIT) return;
           if (btn.dataset.undo) { window.__CS_LOG_SPLIT(ta, true); delete btn.dataset.undo; btn.textContent = "✂ / 줄 나누기"; return; }
           if (!v.trim()) { alert("나눌 글이 아직 없습니다"); return; }
           if (!window.__CS_LOG_SPLIT(ta)) { alert("나눌 「/」가 없습니다 · 이미 한 줄씩 나뉘어 있어요"); return; }
-          btn.dataset.undo = "1"; btn.textContent = "↩ 나누기 취소";
+          btn.dataset.undo = "1"; btn.__ta = ta; btn.textContent = "↩ 나누기 취소";
           ta.addEventListener("input", function once() { ta.removeEventListener("input", once); delete btn.dataset.undo; btn.textContent = "✂ / 줄 나누기"; });
           return;
         }
@@ -257,8 +274,8 @@
       });
     }
     grid.querySelectorAll(".mrow2.boss textarea, .mrow2.para textarea").forEach(function (ta) { markBar(ta); });
-    // 매장 · 이슈 · 생산·재고의 여러 줄 칸에도 중요 표시
-    grid.querySelectorAll(".mrow2:not(.boss):not(.para) textarea.lgin").forEach(function (ta) { markBar(ta, true); });
+    // 매장 · 이슈의 여러 줄 칸에도 중요 표시 (생산·재고 · 근무 칸에는 안 붙인다)
+    grid.querySelectorAll(".m-shop, .m-issue").forEach(function (sec) { if (sec.querySelector(".mrow2:not(.boss):not(.para) textarea.lgin")) markBar(null, true, sec); });
     var cntT = null; grid.addEventListener("input", function (e) { grow(e.target); clearTimeout(cntT); cntT = setTimeout(count, 300); });
     document.addEventListener("cs:log-loaded", all);
     var dateEl = document.getElementById("lgDate");
