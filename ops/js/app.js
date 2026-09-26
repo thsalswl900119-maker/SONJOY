@@ -656,7 +656,8 @@
       // 매니저 주간 보고
       h = "";
       var WRL = { sum: "이번 주 매출 · 흐름 요약", good: "잘된 점", bad: "문제점 · 개선할 점", stock: "재고 · 발주 이슈", staff: "직원 · 근무 이슈", next: "다음 주 계획 · 준비할 것", ask: "사장님께 요청 · 건의" };
-      by("cafesui.weekrep.").sort().reverse().forEach(function (k) {
+      var meR = ""; try { meR = localStorage.getItem("cafesui.me") || ""; } catch (e) {}
+      if (meR === "사장님" || meR === "정항아") by("cafesui.weekrep.").sort().reverse().forEach(function (k) {
         var o = J(k) || {}, f = o.f || {}, b = "";
         Object.keys(WRL).forEach(function (fk) { if (f[fk] && String(f[fk]).trim()) b += "<tr><th>" + WRL[fk] + "</th><td>" + P(f[fk]) + "</td></tr>"; });
         if (b) h += "<h3>" + E(k.slice(16)) + " 주" + (o.who ? " · " + E(o.who) : "") + '</h3><table class="kv">' + b + "</table>";
@@ -3069,7 +3070,7 @@
     var copyEl = document.getElementById("lgCopy");
     var clearEl = document.getElementById("lgClear");
     if (!dateEl) return;
-    var inputs = Array.prototype.slice.call(document.querySelectorAll(".lgin"));
+    var inputs = Array.prototype.slice.call(document.querySelectorAll(".lgin[data-k]"));
 
     function today() {
       var d = new Date();
@@ -3088,23 +3089,26 @@
       var hb = document.getElementById("lgHol");
       if (hb) { var hv = (window.__CS_HOL || {})[dateEl.value || today()]; hb.textContent = hv ? "🇰🇷 " + hv : ""; hb.hidden = !hv; }
       whoEl.value = data.who || "";
-      var by = data.by || {}, bl0 = data.bl || {};
+      var by = data.by || {}, bl0 = data.bl || {}, ow0 = data.ow || {};
       inputs.forEach(function (el) {
         el.value = (data.f && data.f[el.dataset.k]) || "";
         el.classList.toggle("filled", !!el.value.trim());
-        paintLines(el, bl0[el.dataset.k], by[el.dataset.k]);
-        tagAuthors(el, bl0[el.dataset.k]);
+        paintLines(el, bl0[el.dataset.k], by[el.dataset.k], ow0[el.dataset.k]);
+        tagAuthors(el, bl0[el.dataset.k], ow0[el.dataset.k]);
       });
       var n = inputs.filter(function (el) { return el.value.trim(); }).length;
       msgEl.textContent = n ? n + "개 항목 작성됨" : "";
     }
     // 한 칸을 여러 사람이 이어 쓰면 칸 아래에 "쓴 사람: …" 을 각자 색으로 보여준다
     // 칸 안 글자색 — 줄마다 쓴 사람 색. 여러 사람이 쓴 긴 칸은 같은 글자를 색 입혀 위에 겹쳐 보여준다(입력은 그대로 칸에서).
-    function paintLines(el, lineBy, first) {
+    function paintLines(el, lineBy, first, own) {
       lineBy = lineBy || [];
       var names = []; lineBy.forEach(function (n) { if (n && names.indexOf(n) < 0) names.push(n); });
       var ov = el.nextElementSibling && el.nextElementSibling.classList.contains("lgov") ? el.nextElementSibling : null;
-      if (el.tagName !== "TEXTAREA" || names.length < 2) {
+      var lines = el.value.split(String.fromCharCode(10));
+      var marks = lines.map(function (ln) { return ownMask(ln, own); });
+      var anyOwn = marks.some(function (m) { return m.indexOf(true) >= 0; });
+      if (el.tagName !== "TEXTAREA" || (names.length < 2 && !anyOwn)) {
         if (ov) ov.remove();
         el.classList.remove("ovon");
         // 한 줄 칸 · 한 사람만 쓴 칸: 마지막으로 쓴 줄의 사람 색 (없으면 처음 쓴 사람)
@@ -3115,10 +3119,40 @@
       paintBy(el, "");
       if (!ov) { ov = document.createElement("div"); ov.className = "lgov"; ov.setAttribute("aria-hidden", "true"); el.parentNode.insertBefore(ov, el.nextSibling); }
       el.classList.add("ovon");
-      var lines = el.value.split(String.fromCharCode(10));
-      ov.innerHTML = lines.map(function (ln, i) { var n = lineBy[i] || first || ""; return '<span class="' + (WCLR[n] ? "w" + WCLR[n] : "") + '">' + (esc(ln) || " ") + "</span>"; }).join(String.fromCharCode(10)) + " ";
+      // 사장님이 덧붙인 곳은 노란 형광 + 빨간 글씨 (다른 사람이 쓴 칸 안에서만)
+      ov.innerHTML = lines.map(function (ln, i) {
+        var n = lineBy[i] || first || "", whole = n === "사장님" && names.length > 1 && ln.trim();
+        var body = whole ? '<span class="own">' + esc(ln) + "</span>" : ownHtml(ln, marks[i], esc);
+        return '<span class="' + (WCLR[n] ? "w" + WCLR[n] : "") + '">' + (body || " ") + "</span>";
+      }).join(String.fromCharCode(10)) + " ";
       placeOv(el, ov);
     }
+    // 사장님 덧붙임 — 다른 사람 줄 안에 끼워 쓴 글은 그 글만 따로 기억한다 (ow: { 칸: [글, …] })
+    function ownMask(ln, own) {
+      var m = []; for (var i = 0; i < ln.length; i++) m.push(false);
+      (own || []).forEach(function (t) { if (!t) return; var j = ln.indexOf(t); while (j >= 0) { for (var x = j; x < j + t.length; x++) m[x] = true; j = ln.indexOf(t, j + t.length); } });
+      return m;
+    }
+    function ownRuns(ln, m) {
+      var out = [], st = -1;
+      for (var i = 0; i <= ln.length; i++) {
+        if (i < ln.length && m[i]) { if (st < 0) st = i; }
+        else if (st >= 0) { var t = ln.slice(st, i).replace(/^[\s\/]+|[\s\/]+$/g, ""); if (t.length >= 2) out.push(t); st = -1; }
+      }
+      return out;
+    }
+    function ownHtml(ln, m, fmt) {
+      var out = "", st = 0;
+      for (var i = 0; i <= ln.length; i++) {
+        if (i === ln.length || (i > 0 && !!m[i] !== !!m[i - 1])) {
+          var part = ln.slice(st, i);
+          if (part) out += m[st] ? '<span class="own">' + fmt(part) + "</span>" : fmt(part);
+          st = i;
+        }
+      }
+      return out;
+    }
+    window.__CS_OWN = { mask: ownMask, html: ownHtml };
     function placeOv(el, ov) {
       requestAnimationFrame(function () {
         if (!ov.isConnected) return;
@@ -3130,14 +3164,73 @@
       });
     }
     window.addEventListener("resize", function () { document.querySelectorAll(".lgov").forEach(function (ov) { var el = ov.previousElementSibling; if (el) placeOv(el, ov); }); });
-    function tagAuthors(el, lineBy) {
+    function tagAuthors(el, lineBy, own) {
       var row = el.closest(".mrow2"); if (!row) return;
       var names = []; (lineBy || []).forEach(function (n) { if (n && names.indexOf(n) < 0) names.push(n); });
       var tag = row.querySelector(".lgby");
-      if (names.length < 2) { if (tag) tag.remove(); return; }
-      if (!tag) { tag = document.createElement("i"); tag.className = "lgby"; row.appendChild(tag); }
-      tag.innerHTML = "쓴 사람: " + names.map(function (n) { return '<b class="' + (WCLR[n] ? "w" + WCLR[n] : "") + '">' + esc(n === "사장님" ? n : n + "님") + "</b>"; }).join(" · ");
+      if (names.length < 2) { if (tag) tag.remove(); }
+      else {
+        if (!tag) { tag = document.createElement("i"); tag.className = "lgby"; row.appendChild(tag); }
+        tag.innerHTML = "쓴 사람: " + names.map(function (n) { return '<b class="' + (WCLR[n] ? "w" + WCLR[n] : "") + '">' + esc(n === "사장님" ? n : n + "님") + "</b>"; }).join(" · ");
+      }
+      // 칸 아래 「👑 사장님 덧붙임」 — 직원이 쓴 칸에 사장님이 더 쓴 글을 크게 모아 보여준다
+      var adds = [];
+      el.value.split(String.fromCharCode(10)).forEach(function (ln, i) {
+        if (!ln.trim()) return;
+        if (names.length > 1 && (lineBy || [])[i] === "사장님") { adds.push(ln.trim()); return; }
+        ownRuns(ln, ownMask(ln, own)).forEach(function (t) { adds.push(t); });
+      });
+      var box = row.querySelector(".lgown");
+      if (!adds.length || el.tagName !== "TEXTAREA") { if (box) box.remove(); return; }
+      if (!box) { box = document.createElement("div"); box.className = "lgown"; row.appendChild(box); }
+      box.innerHTML = "<b>👑 사장님 덧붙임</b>" + adds.map(function (t) { return "<p>" + esc(t.replace(/^\s*[★⭐!！]\s*/, "").replace(/\*\*|__/g, "")) + "</p>"; }).join("");
     }
+    function sameEnds(a, b) {
+      var p = 0; while (p < a.length && p < b.length && a[p] === b[p]) p++;
+      var q = 0; while (q < a.length - p && q < b.length - p && a[a.length - 1 - q] === b[b.length - 1 - q]) q++;
+      return p + q;
+    }
+    // 「/」 로 이어 쓴 긴 글을 한 줄씩 나눈다 (쓴 사람 · 사장님 덧붙임 그대로). 9/26 같은 날짜 숫자, **…** · __…__ 안은 안 나눈다
+    function splitSlash(ln) {
+      var out = [], cur = "", inB = false, inU = false;
+      for (var i = 0; i < ln.length; i++) {
+        var two = ln.substr(i, 2);
+        if (two === "**") { inB = !inB; cur += two; i++; continue; }
+        if (two === "__") { inU = !inU; cur += two; i++; continue; }
+        if (ln[i] === "/" && !inB && !inU && !(/[0-9]/.test(ln[i - 1] || "") && /[0-9]/.test(ln[i + 1] || ""))) { out.push(cur); cur = ""; continue; }
+        cur += ln[i];
+      }
+      out.push(cur);
+      return out.map(function (x) { return x.trim(); }).filter(Boolean);
+    }
+    var splitUndo = {};
+    window.__CS_LOG_SPLIT = function (el, undo) {
+      var NL = String.fromCharCode(10), k = el.dataset.k;
+      if (undo) {
+        var u = splitUndo[k]; delete splitUndo[k]; if (!u) return false;
+        var o2 = {}; try { o2 = JSON.parse(localStorage.getItem(keyFor()) || "{}") || {}; } catch (e) {}
+        if (!o2.f || o2.f[k] !== u.after) return false;
+        o2.f[k] = u.f; o2.bl = o2.bl || {}; o2.bl[k] = u.bl; o2.ow = o2.ow || {}; if (u.ow) o2.ow[k] = u.ow; else delete o2.ow[k];
+        try { localStorage.setItem(keyFor(), JSON.stringify(o2)); } catch (e) {}
+        load(); report(); document.dispatchEvent(new Event("cs:log-loaded")); return true;
+      }
+      save();
+      var o = {}; try { o = JSON.parse(localStorage.getItem(keyFor()) || "{}") || {}; } catch (e) {}
+      if (!o.f || !o.f[k]) return false;
+      var lines = o.f[k].split(NL), obl = (o.bl || {})[k] || [], first = (o.by || {})[k] || "", nv = [], nb = [];
+      lines.forEach(function (ln, i) {
+        if (!ln.trim()) { nv.push(ln); nb.push(""); return; }
+        splitSlash(ln).forEach(function (p) { nv.push(p); nb.push(obl[i] || first); });
+      });
+      if (nv.length === lines.length) return false;
+      var oow = (o.ow || {})[k], now2 = [];
+      (oow || []).forEach(function (t) { splitSlash(t).forEach(function (p) { if (p.length >= 2 && now2.indexOf(p) < 0) now2.push(p); }); });
+      splitUndo[k] = { f: o.f[k], bl: obl, ow: oow, after: nv.join(NL) };
+      o.f[k] = nv.join(NL); o.bl = o.bl || {}; o.bl[k] = nb;
+      if (now2.length) { o.ow = o.ow || {}; o.ow[k] = now2; }
+      try { localStorage.setItem(keyFor(), JSON.stringify(o)); } catch (e) {}
+      load(); report(); document.dispatchEvent(new Event("cs:log-loaded")); return true;
+    };
     function save() {
       var NL = String.fromCharCode(10);
       var f = {}, prev = {}, old = {};
@@ -3146,23 +3239,54 @@
         prev = old.by || {};
         if (old.savedAt) prev.__savedAt = old.savedAt;
       } catch (e) {}
-      var by = {}, me2 = meNow(), bl = {}, oldF = (old && old.f) || {}, oldBl = (old && old.bl) || {};
+      var by = {}, me2 = meNow(), bl = {}, ow = {}, oldF = (old && old.f) || {}, oldBl = (old && old.bl) || {}, oldOw = (old && old.ow) || {};
       inputs.forEach(function (el) {
         if (!el.value.trim()) return;
         var k = el.dataset.k;
         f[k] = el.value;
         by[k] = prev[k] || me2 || "";
         // 줄 단위 작성자: 전에 있던 줄은 그 줄을 쓴 사람 그대로, 새로 적거나 고친 줄은 지금 사람
-        var pl = String(oldF[k] || "").split(NL), pb = oldBl[k] || [], usedI = {};
-        bl[k] = el.value.split(NL).map(function (ln) {
-          if (!ln.trim()) return "";
-          for (var i = 0; i < pl.length; i++) { if (!usedI[i] && pl[i] === ln) { usedI[i] = 1; return pb[i] || prev[k] || me2 || ""; } }
-          return me2 || prev[k] || "";
+        // 단, 사장님이 직원 줄 중간에 끼워 쓰면 줄은 직원 것 그대로 두고, 끼워 쓴 글만 사장님 덧붙임으로 기억한다
+        var pl = String(oldF[k] || "").split(NL), pb = oldBl[k] || [], po = oldOw[k] || [], usedI = {};
+        var nl = el.value.split(NL), lb = [], pair = [], boss = me2 === "사장님";
+        nl.forEach(function (ln, i) {
+          if (!ln.trim()) { lb[i] = ""; return; }
+          for (var j = 0; j < pl.length; j++) { if (!usedI[j] && pl[j] === ln) { usedI[j] = 1; pair[i] = j; lb[i] = pb[j] || prev[k] || me2 || ""; return; } }
         });
-        paintLines(el, bl[k], by[k]);
-        tagAuthors(el, bl[k]);
+        nl.forEach(function (ln, i) {
+          if (lb[i] !== undefined) return;
+          var best = -1, bs = 0;
+          for (var j = 0; j < pl.length; j++) { if (usedI[j] || !pl[j].trim()) continue; var c = sameEnds(pl[j], ln); if (c > bs) { bs = c; best = j; } }
+          if (best >= 0 && bs >= Math.min(6, Math.ceil(pl[best].length / 2))) {
+            usedI[best] = 1; pair[i] = best;
+            var oa = pb[best] || prev[k] || "";
+            lb[i] = boss && oa && oa !== "사장님" ? oa : (me2 || oa);
+          } else lb[i] = me2 || prev[k] || "";
+        });
+        var owk = [];
+        nl.forEach(function (ln, i) {
+          if (!ln.trim()) return;
+          var m;
+          if (pair[i] === undefined) m = ownMask(ln, po);
+          else {
+            var o = pl[pair[i]], om = ownMask(o, po);
+            if (o === ln) m = om;
+            else {
+              var a = 0; while (a < o.length && a < ln.length && o[a] === ln[a]) a++;
+              var b = 0; while (b < o.length - a && b < ln.length - a && o[o.length - 1 - b] === ln[ln.length - 1 - b]) b++;
+              var mid = []; for (var x = a; x < ln.length - b; x++) mid.push(boss && lb[i] !== "사장님");
+              m = om.slice(0, a).concat(mid, om.slice(o.length - b));
+            }
+          }
+          ownRuns(ln, m).forEach(function (t) { if (owk.indexOf(t) < 0) owk.push(t); });
+        });
+        bl[k] = lb;
+        if (owk.length) ow[k] = owk;
+        paintLines(el, bl[k], by[k], ow[k]);
+        tagAuthors(el, bl[k], ow[k]);
       });
       var out = { who: whoEl.value, f: f, by: by, bl: bl };
+      if (Object.keys(ow).length) out.ow = ow;
       if (prev.__savedAt) out.savedAt = prev.__savedAt;
       try { localStorage.setItem(keyFor(), JSON.stringify(out)); }
       catch (e) {}
@@ -3382,8 +3506,9 @@
       }
 
       // 묶음별로 만들어 두고, 정한 순서로 붙인다
-      var secH = {}, secT = {}, rpBl = {};
-      try { rpBl = (JSON.parse(localStorage.getItem(keyFor()) || "{}") || {}).bl || {}; } catch (e) {}
+      var secH = {}, secT = {}, rpBl = {}, rpOw = {};
+      try { var rpO = JSON.parse(localStorage.getItem(keyFor()) || "{}") || {}; rpBl = rpO.bl || {}; rpOw = rpO.ow || {}; } catch (e) {}
+      var S1 = String.fromCharCode(1), S2 = String.fromCharCode(2);
       document.querySelectorAll(".msec").forEach(function (sec) {
         var items = "", lines = [];
         sec.querySelectorAll(".mrow2").forEach(function (row) {
@@ -3392,6 +3517,9 @@
           if (!v) return;
           var name = (function (sp) { var c = sp.cloneNode(true); c.querySelectorAll("small").forEach(function (x) { x.remove(); }); return c.textContent.trim(); })(row.querySelector(".mlab span"));
           var cls = row.classList.contains("boss") ? " boss" : row.classList.contains("red") ? " red" : row.classList.contains("blue") ? " blue" : "";
+          // 사장님 덧붙임 자리에 표시를 끼워 두었다가 아래에서 노란 형광 · 큰 글씨로 바꾼다
+          var owk = rpOw[el.dataset.k];
+          if (owk && owk.length && window.__CS_OWN) v = v.split(NL).map(function (ln) { return window.__CS_OWN.html(ln, window.__CS_OWN.mask(ln, owk), function (x) { return x; }).split('<span class="own">').join(S1).split("</span>").join(S2); }).join(NL);
           var shown = esc(v), plain = v;
           if (cls === " boss" || row.classList.contains("para") || row.classList.contains("mk")) {
             // **중요** 또는 줄 앞 ! → 빨간 굵은 글씨
@@ -3408,9 +3536,11 @@
           lb.forEach(function (nn) { if (nn && distinct.indexOf(nn) < 0) distinct.push(nn); });
           if (distinct.length > 1) {
             var shLines = shown.split("<br>"), plLines = plain.split(NL), srcLines = v.split(NL);
-            if (shLines.length === srcLines.length) shown = shLines.map(function (h, i) { var nn = lb[i] || ""; return '<span class="wl ' + (WCLR[nn] ? "w" + WCLR[nn] : "") + '">' + h + "</span>"; }).join("");
+            if (shLines.length === srcLines.length) shown = shLines.map(function (h, i) { var nn = lb[i] || ""; return '<span class="wl ' + (WCLR[nn] ? "w" + WCLR[nn] : "") + (nn === "사장님" && srcLines[i].trim() ? " rpownl" : "") + '">' + (nn === "사장님" && srcLines[i].trim() ? "👑 " : "") + h + "</span>"; }).join("");
             plain = plLines.map(function (x, i) { var nn = lb[i] || ""; return x.trim() ? x + (nn ? " (" + nn + ")" : "") : x; }).join(NL);
           }
+          shown = shown.split(S1).join('<span class="rpown">👑 ').split(S2).join("</span>");
+          plain = plain.split(S1).join("〔사장님: ").split(S2).join("〕");
           items += '<div class="rpitem' + cls + '"><b>' + esc(name) + "</b><span>" + shown + "</span></div>";
           lines.push("· " + name + ": " +
             plain.split(NL).map(function (x) { return x.trim(); })
@@ -3455,6 +3585,7 @@
       function fill(text) {
         var byLabel = {};
         document.querySelectorAll("#tp4 .lgin[data-k]").forEach(function (el) { var lb = norm(labelOf(el)); if (lb && !byLabel[lb]) byLabel[lb] = el; });
+        var o152 = document.querySelector('#tp4 [data-k="lf152"]'); if (o152) byLabel[norm("먼저 팔린 메뉴")] = o152;   // 예전 이름으로 복사해 둔 글도 채워지게
         var filled = 0, conflicts = [], cur = null;
         function setVal(el, v) {
           v = String(v || "").trim(); if (!v) return;

@@ -1,4 +1,4 @@
-// 매니저 주간 보고 — 주마다 한 장 (월~토). 토요일에 꼭 쓴다. cafesui.weekrep.<그 주 월요일> = { f:{sum,good,...}, by:{...}, savedAt, who }
+// 매니저 주간 보고 — 주마다 한 장 (월~토). 토요일 근무 마치고 쓴다. 매니저 · 사장님만 본다. cafesui.weekrep.<그 주 월요일> = { f:{sum,good,...}, by:{...}, savedAt, who }
 (function () {
   var box = document.getElementById("wrBox"); if (!box) return;
   var PRE = "cafesui.weekrep.";
@@ -69,7 +69,16 @@
   });
   window.addEventListener("cs:remote", function (e) { var ks = (e.detail && e.detail.keys) || []; if (ks.some(function (k) { return k.indexOf(PRE) === 0 || k.indexOf("cafesui.log.") === 0; })) render(); });
   box.addEventListener("toggle", function () { if (box.open) render(); });
-  // 토요일에는 펼쳐 두고, 다른 날은 접어 둔다 (이번 주 안 썼으면 빨간 글씨로 표시)
-  if (new Date().getDay() === 6) box.open = true;
-  render();
+  // 매니저 · 사장님만 보인다. 토요일에는 펼쳐 두고, 다른 날은 접어 둔다 (이번 주 안 썼으면 빨간 글씨로 표시)
+  var SEE = ["정항아", "사장님"], opened = false;
+  function gate() {
+    var ok = SEE.indexOf(me()) >= 0;
+    box.hidden = !ok;
+    if (!ok) { box.open = false; return; }
+    if (!opened && new Date().getDay() === 6) { opened = true; box.open = true; }
+    render();
+  }
+  window.addEventListener("cs:me", gate);
+  window.addEventListener("storage", function (e) { if (e.key === "cafesui.me") gate(); });
+  gate();
 })();

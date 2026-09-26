@@ -208,6 +208,7 @@
     function markBar(ta, compact) {
       var bar = document.createElement("div"); bar.className = "bossbar" + (compact ? " mini" : "");
       bar.innerHTML = '<button type="button" class="wsmini" data-act="star">⭐ 매우 중요</button><button type="button" class="wsmini" data-act="imp">🔴 중요</button><button type="button" class="wsmini" data-act="und"><u>밑줄</u></button>' +
+        (compact ? '<button type="button" class="wsmini lnbtn" data-act="time" title="맨 아래에 지금 시각으로 새 줄을 엽니다">🕐 새 줄</button><button type="button" class="wsmini lnbtn" data-act="split" title="「/」로 이어 쓴 글을 한 줄씩 나눕니다">✂ / 줄 나누기</button>' : "") +
         (compact ? "" : '<span>⭐는 지금 줄 앞에 <b>★</b> (노란 바탕 빨간 글씨) · 글을 드래그해 고르고 누르면 <b>**이렇게**</b>는 빨간 글씨, <u>__이렇게__</u>는 밑줄</span>');
       // 좁은 칸(항목 이름 | 입력칸)은 버튼을 항목 이름 아래에 둔다
       if (compact) { var lab = ta.closest(".mrow2").querySelector(".mlab"); lab.appendChild(bar); ta.closest(".mrow2").classList.add("mk"); }
@@ -215,6 +216,23 @@
       bar.addEventListener("click", function (e) {
         var btn = e.target.closest("[data-act]"); if (!btn) return;
         var act = btn.dataset.act, a = ta.selectionStart, b = ta.selectionEnd, v = ta.value;
+        if (act === "split") {
+          if (!window.__CS_LOG_SPLIT) return;
+          if (btn.dataset.undo) { window.__CS_LOG_SPLIT(ta, true); delete btn.dataset.undo; btn.textContent = "✂ / 줄 나누기"; return; }
+          if (!v.trim()) { alert("나눌 글이 아직 없습니다"); return; }
+          if (!window.__CS_LOG_SPLIT(ta)) { alert("나눌 「/」가 없습니다 · 이미 한 줄씩 나뉘어 있어요"); return; }
+          btn.dataset.undo = "1"; btn.textContent = "↩ 나누기 취소";
+          ta.addEventListener("input", function once() { ta.removeEventListener("input", once); delete btn.dataset.undo; btn.textContent = "✂ / 줄 나누기"; });
+          return;
+        }
+        if (act === "time") {
+          var d = new Date(), hm = d.getHours() + ":" + String(d.getMinutes()).padStart(2, "0") + " ";
+          var nv = v.replace(/\s+$/, ""); nv = (nv ? nv + "\n" : "") + hm;
+          ta.value = nv; ta.setSelectionRange(nv.length, nv.length);
+          ta.focus(); ta.dispatchEvent(new Event("input", { bubbles: true }));
+          ta.scrollTop = ta.scrollHeight;
+          return;
+        }
         if (act === "star") {
           var ls = v.lastIndexOf("\n", a - 1) + 1, le = v.indexOf("\n", ls); if (le < 0) le = v.length;
           var line = v.slice(ls, le);
