@@ -2554,7 +2554,8 @@
         if (a === null || b === null) { td.textContent = "—"; td.className = "cdiff"; return; }
         var d = b - a;
         td.textContent = d === 0 ? "0" : fmt(d);
-        td.className = "cdiff" + (d > 0 ? " up" : d < 0 ? " down" : "");
+        var good = td.dataset.inv ? d < 0 : d > 0;   // 순위처럼 작을수록 좋은 줄은 색을 반대로
+        td.className = "cdiff" + (d === 0 ? "" : good ? " up" : " down");
       });
     }
     function save() {
