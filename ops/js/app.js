@@ -3425,6 +3425,17 @@
       msgEl.textContent = row.dataset.d + " 일지를 열었습니다";
       dateEl.scrollIntoView({ behavior: "smooth", block: "start" });
     });
+    // 숫자 칸(생산 · 판매 · 입고) 중 빈 칸만 0으로
+    var zeroBtn = document.getElementById("lgZero");
+    if (zeroBtn) zeroBtn.addEventListener("click", function () {
+      var n = 0;
+      document.querySelectorAll(".lgngrid .lgnum input.lgin").forEach(function (el) {
+        if (el.value.trim()) return;
+        el.value = "0"; el.classList.add("filled"); n++;
+      });
+      if (n) { save(); report(); }
+      msgEl.textContent = n ? "빈 칸 " + n + "개에 0을 채웠습니다" : "빈 숫자 칸이 없습니다";
+    });
     // 다른 기기에서 이 날 일지가 바뀌면: 쓰는 중이 아닌 칸만 새 내용으로 바꿔 끼운다
     window.addEventListener("cs:remote", function (e) {
       var ks = (e.detail && e.detail.keys) || []; if (ks.indexOf(keyFor()) < 0) return;
