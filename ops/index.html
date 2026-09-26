@@ -1713,6 +1713,25 @@ table.zt th.c6{width:56px;text-align:center}
 .rulebox .rs{font-size:15px;line-height:1.55;margin-top:8px;font-weight:700;word-break:keep-all}
 .rulebox .rs b{color:var(--r1)}
 @media (max-width:600px){.rulebox .rb{font-size:18px}.rulebox .rs{font-size:14px}}
+.bossbar.mini{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.bossbar.mini .wsmini{font-size:11.5px;padding:3px 7px}
+.wrbox{border:2px solid var(--open);border-radius:var(--r);background:var(--surface);margin-bottom:14px}
+.wrbox>summary{cursor:pointer;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 14px;background:var(--openbg);list-style:none}
+.wrbox>summary::-webkit-details-marker{display:none}
+.wrbox>summary b{font-size:16px;font-weight:900}
+.wrsat{font-size:13px;font-weight:900;color:#A11A12;background:#FBEDE9;border:1px solid #E8B4A8;border-radius:12px;padding:2px 10px}
+.wrbox>summary i{font-style:normal;font-size:12.5px;font-weight:800;margin-left:auto}
+.wrbox>summary i.done{color:#1F5A2B}.wrbox>summary i.todo{color:#A11A12}
+.wrbox.satday>summary{background:#FBEDE9}
+.wrbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 14px;border-bottom:1px solid var(--rule)}
+.wrbar b{font-family:var(--mono);font-size:15px;font-weight:900}
+.wrauto{flex:1 1 200px;font-size:12.5px;color:var(--muted);font-weight:700}
+.wrgrid{display:grid;gap:0}
+.wrrow{display:grid;grid-template-columns:190px minmax(0,1fr);gap:10px;align-items:start;padding:7px 14px;border-bottom:1px solid var(--rule)}
+.wrrow span{font-weight:800;font-size:14px;padding-top:7px}
+.wrrow textarea{min-height:44px;resize:vertical}
+@media(max-width:640px){.wrrow{grid-template-columns:1fr;gap:4px}.wrrow span{padding-top:0}}
+.wrfoot{padding:8px 14px 10px;font-size:12px;color:var(--muted)}
 .mcbox{border:1px solid var(--rule2);border-left:4px solid var(--full);border-radius:var(--r);background:var(--surface);padding:11px 14px 12px;margin-bottom:14px}
 .mch{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:9px}
 .mch>b{font-family:var(--serif);font-size:15px}
@@ -2282,7 +2301,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-92</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-93</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -2466,6 +2485,13 @@ input,select,textarea{border-radius:var(--r3)!important}
       <p class="tnote" style="margin:6px 0 0">Enter로도 추가됩니다 · 적은 사람 색으로 표시됩니다</p>
     </div>
   </div>
+  <details class="wrbox" id="wrBox"><summary><b>📋 매니저 주간 보고</b><span class="wrsat">토요일만 꼭 작성해 주세요</span><i id="wrState"></i></summary>
+    <div class="wrbar"><button type="button" class="daynav" id="wrPrev">◀ 지난주</button><b id="wrLabel"></b><button type="button" class="daynav" id="wrNext">다음 주 ▶</button><button type="button" class="daynav today" id="wrThis">이번 주</button>
+      <span class="wrauto" id="wrAuto"></span><button type="button" class="skbtn prim" id="wrCopy">복사하기</button></div>
+    <div class="wrgrid"><label class="wrrow"><span>이번 주 매출 · 흐름 요약</span><textarea class="lgin wrin" data-f="sum" rows="2" placeholder="예) 주말 매출 좋음 · 평일 오후 한산 · 추석 연휴 영향"></textarea></label><label class="wrrow"><span>잘된 점</span><textarea class="lgin wrin" data-f="good" rows="2" placeholder="예) 리뷰 이벤트 참여 늘어남 · 케이크 품절 없이 마감"></textarea></label><label class="wrrow"><span>문제점 · 개선할 점</span><textarea class="lgin wrin" data-f="bad" rows="2" placeholder="예) 마감 청소 누락 2번 · 숨김 해제 늦음"></textarea></label><label class="wrrow"><span>재고 · 발주 이슈</span><textarea class="lgin wrin" data-f="stock" rows="2" placeholder="예) 생크림 입고 늦음 · 망고 단가 올라감"></textarea></label><label class="wrrow"><span>직원 · 근무 이슈</span><textarea class="lgin wrin" data-f="staff" rows="2" placeholder="예) 알바생 교육 필요 · 근무 교대 요청"></textarea></label><label class="wrrow"><span>다음 주 계획 · 준비할 것</span><textarea class="lgin wrin" data-f="next" rows="2" placeholder="예) 샤인머스캣 케이크 시작 · 할로윈 준비"></textarea></label><label class="wrrow"><span>사장님께 요청 · 건의</span><textarea class="lgin wrin" data-f="ask" rows="2" placeholder="예) 포장 상자 새로 주문 · 휴무 조정"></textarea></label></div>
+    <div class="wrfoot" id="wrFoot"></div>
+  </details>
+  
   <div class="lgbar">
     <div class="lgdate lgdatebig"><span class="lgcap">날짜</span>
       <span class="lgrow">
@@ -2804,10 +2830,10 @@ input,select,textarea{border-radius:var(--r3)!important}
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/sync.js?v=v0924-92"></script>
-<script src="js/holidays.js?v=v0924-92"></script>
-<script src="js/sched.js?v=v0924-92"></script>
-<script src="js/app.js?v=v0924-92"></script>
+<script src="js/sync.js?v=v0924-93"></script>
+<script src="js/holidays.js?v=v0924-93"></script>
+<script src="js/sched.js?v=v0924-93"></script>
+<script src="js/app.js?v=v0924-93"></script>
 
 <style>
 /* 재고 · 발주 */
@@ -3002,7 +3028,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 .sksearch{font:inherit;font-size:13px;padding:6px 9px;width:100%;max-width:300px;background:var(--bg);color:var(--ink);
   border:1px solid var(--rule2);border-radius:2px;margin-bottom:10px}
 </style>
-<script src="js/stock.js?v=v0924-92"></script>
+<script src="js/stock.js?v=v0924-93"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -3031,5 +3057,6 @@ input,select,textarea{border-radius:var(--r3)!important}
   })();
 </script>
 
-<script src="js/presence.js?v=v0924-92"></script>
+<script src="js/presence.js?v=v0924-93"></script>
+<script src="js/weekrep.js?v=v0924-93"></script>
 </body></html>

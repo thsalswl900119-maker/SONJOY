@@ -205,11 +205,13 @@
     }
     function all() { grid.querySelectorAll("textarea.lgin").forEach(grow); fillHours(); count(); }
     // 표시 버튼 — 사장님 지시사항 · 인계사항 · 직원들에게 알릴 것 · 그 외 메모: ⭐ 매우 중요(줄 앞 ★) · 🔴 중요(**글**) · 밑줄(__글__)
-    function markBar(ta) {
-      var bar = document.createElement("div"); bar.className = "bossbar";
-      bar.innerHTML = '<button type="button" class="wsmini" data-act="star">⭐ 매우 중요</button><button type="button" class="wsmini" data-act="imp">🔴 중요 표시</button><button type="button" class="wsmini" data-act="und"><u>밑줄</u></button>' +
-        '<span>⭐는 지금 줄 앞에 <b>★</b> (노란 바탕 빨간 글씨) · 글을 드래그해 고르고 누르면 <b>**이렇게**</b>는 빨간 글씨, <u>__이렇게__</u>는 밑줄</span>';
-      ta.parentNode.insertBefore(bar, ta);
+    function markBar(ta, compact) {
+      var bar = document.createElement("div"); bar.className = "bossbar" + (compact ? " mini" : "");
+      bar.innerHTML = '<button type="button" class="wsmini" data-act="star">⭐ 매우 중요</button><button type="button" class="wsmini" data-act="imp">🔴 중요</button><button type="button" class="wsmini" data-act="und"><u>밑줄</u></button>' +
+        (compact ? "" : '<span>⭐는 지금 줄 앞에 <b>★</b> (노란 바탕 빨간 글씨) · 글을 드래그해 고르고 누르면 <b>**이렇게**</b>는 빨간 글씨, <u>__이렇게__</u>는 밑줄</span>');
+      // 좁은 칸(항목 이름 | 입력칸)은 버튼을 항목 이름 아래에 둔다
+      if (compact) { var lab = ta.closest(".mrow2").querySelector(".mlab"); lab.appendChild(bar); ta.closest(".mrow2").classList.add("mk"); }
+      else ta.parentNode.insertBefore(bar, ta);
       bar.addEventListener("click", function (e) {
         var btn = e.target.closest("[data-act]"); if (!btn) return;
         var act = btn.dataset.act, a = ta.selectionStart, b = ta.selectionEnd, v = ta.value;
@@ -236,7 +238,9 @@
         ta.focus(); ta.dispatchEvent(new Event("input", { bubbles: true }));
       });
     }
-    grid.querySelectorAll(".mrow2.boss textarea, .mrow2.para textarea").forEach(markBar);
+    grid.querySelectorAll(".mrow2.boss textarea, .mrow2.para textarea").forEach(function (ta) { markBar(ta); });
+    // 매장 · 이슈 · 생산·재고의 여러 줄 칸에도 중요 표시
+    grid.querySelectorAll(".mrow2:not(.boss):not(.para) textarea.lgin").forEach(function (ta) { markBar(ta, true); });
     var cntT = null; grid.addEventListener("input", function (e) { grow(e.target); clearTimeout(cntT); cntT = setTimeout(count, 300); });
     document.addEventListener("cs:log-loaded", all);
     var dateEl = document.getElementById("lgDate");

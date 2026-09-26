@@ -653,6 +653,15 @@
       var vc = J("cafesui.vacations") || [];
       if (vc.length) h += "<h3>일정 · 직원 휴가</h3>" + vc.map(function (v) { var sc = v.kind === "sched"; return "<p>" + (sc ? "[일정] " + E(v.title || "") + (v.who ? " · " + E(v.who) : "") : "[휴가] " + E(v.who)) + " · " + E(v.from) + " ~ " + E(v.to) + (v.memo ? " · " + E(v.memo) : "") + "</p>"; }).join("");
       sec("메모 달력 · 일정 · 휴가", h);
+      // 매니저 주간 보고
+      h = "";
+      var WRL = { sum: "이번 주 매출 · 흐름 요약", good: "잘된 점", bad: "문제점 · 개선할 점", stock: "재고 · 발주 이슈", staff: "직원 · 근무 이슈", next: "다음 주 계획 · 준비할 것", ask: "사장님께 요청 · 건의" };
+      by("cafesui.weekrep.").sort().reverse().forEach(function (k) {
+        var o = J(k) || {}, f = o.f || {}, b = "";
+        Object.keys(WRL).forEach(function (fk) { if (f[fk] && String(f[fk]).trim()) b += "<tr><th>" + WRL[fk] + "</th><td>" + P(f[fk]) + "</td></tr>"; });
+        if (b) h += "<h3>" + E(k.slice(16)) + " 주" + (o.who ? " · " + E(o.who) : "") + '</h3><table class="kv">' + b + "</table>";
+      });
+      sec("매니저 주간 보고", h);
       // 독서나눔
       h = "";
       var bk = J("cafesui.books"); (bk && bk.items || []).forEach(function (it) {
@@ -3384,7 +3393,7 @@
           var name = (function (sp) { var c = sp.cloneNode(true); c.querySelectorAll("small").forEach(function (x) { x.remove(); }); return c.textContent.trim(); })(row.querySelector(".mlab span"));
           var cls = row.classList.contains("boss") ? " boss" : row.classList.contains("red") ? " red" : row.classList.contains("blue") ? " blue" : "";
           var shown = esc(v), plain = v;
-          if (cls === " boss" || row.classList.contains("para")) {
+          if (cls === " boss" || row.classList.contains("para") || row.classList.contains("mk")) {
             // **중요** 또는 줄 앞 ! → 빨간 굵은 글씨
             shown = v.split(NL).map(function (ln) {
               var t = esc(ln); var star = /^\s*[★⭐]/.test(ln), imp = !star && /^\s*[!！]/.test(ln);
