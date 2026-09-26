@@ -3562,8 +3562,8 @@
       var secH = {}, secT = {}, rpBl = {}, rpOw = {};
       try { var rpO = JSON.parse(localStorage.getItem(keyFor()) || "{}") || {}; rpBl = rpO.bl || {}; rpOw = rpO.ow || {}; } catch (e) {}
       var S1 = String.fromCharCode(1), S2 = String.fromCharCode(2);
-      // 맨 위에 먼저 볼 것: 사장님 지시사항 → 인계사항 → 직원들에게 알릴 것 → 폐기 → 매출 → 매장 흐름
-      var TOPK = ["lf185", "lf180", "lf181", "lf162", "lf163", "lf183", "lf184", "lf154"], topH = {}, topT = {};
+      // 맨 위에 먼저 볼 것: 사장님 지시사항 → 인계사항 → 직원들에게 알릴 것 → 폐기 · 파손 → 매출 → 매장 흐름
+      var TOPK = ["lf185", "lf180", "lf181", "lf162", "lf163", "lf166", "lf183", "lf184", "lf154"], topH = {}, topT = {};
       document.querySelectorAll(".msec").forEach(function (sec) {
         var items = "", lines = [];
         sec.querySelectorAll(".mrow2").forEach(function (row) {

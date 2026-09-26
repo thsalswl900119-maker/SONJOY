@@ -12,7 +12,7 @@
       if (!t) { var sp = el.closest("label, .mrow2"); sp = sp && sp.querySelector("span"); t = sp ? sp.firstChild.textContent.trim() : k; }
       out.push([k, t]);
     });
-    var FIRST = ["lf183", "lf184", "lf162", "lf163"];
+    var FIRST = ["lf183", "lf184", "lf162", "lf163", "lf166"];
     return FIRST.map(function (k) { return out.filter(function (x) { return x[0] === k; })[0]; }).filter(Boolean)
       .concat(out.filter(function (x) { return FIRST.indexOf(x[0]) < 0; }));
   }
