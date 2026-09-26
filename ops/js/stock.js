@@ -354,7 +354,9 @@
       var okN = ls.filter(function (l) { var c = checks[l] || {}; return c.ok && !c.ordered; }).length;
       var html = '<div class="rt">발주 · 재고 보고</div>' +
         '<div class="rm"><span>' + cur + " (" + dow(cur) + ")</span><b>" + esc(byEl.textContent) + "</b></div>";
-      html += "<h4>발주 넣을 것 " + (ls.length ? "· " + ls.length + "줄" : "") + "</h4>";
+      // 발주 넣을 것 — 사장님이 바로 보고 주문하도록 맨 위에 빨간 상자 · 큰 글씨
+      var waitN = ls.length - okN - ordN;
+      html += '<div class="rorder' + (ls.length && waitN + okN ? " on" : "") + '"><h4>🛒 발주 넣을 것 ' + (ls.length ? "· " + ls.length + "줄" + (waitN + okN ? ' <em>주문 필요 ' + (waitN + okN) + "</em>" : " <em class=\"ok\">전부 주문 완료</em>") : "") + "</h4>";
       html += ls.length ? "<ul>" + ls.map(function (l) {
         var c = checks[l] || {};
         return '<li class="' + (c.ordered ? "dn" : "") + '"><span class="ic">' + (c.ordered ? "✅" : c.ok ? "☑" : "⬜") + "</span><span>" + esc(l) + "</span>" +
@@ -363,6 +365,7 @@
         (ls.length ? '<div class="kv" style="margin-top:3px"><span>진행</span><b>대기 ' + (ls.length - okN - ordN) + " · 확인 " + okN + " · 주문 완료 " + ordN + "</b></div>" : "")
         : em;
       if (n.length) html += '<div class="warn">발주점 이하 ' + n.length + ": " + esc(n.join(", ")) + "</div>";
+      html += "</div>";
       html += "<h4>총괄 보고 · 특이사항</h4>" + (v("report") ? esc(v("report")).replace(/\n/g, "<br>") : em);
       html += "<h4>오늘 생산 · 사용</h4><div class=\"kv\">" +
         row("조각케이크", esc(v("prod"))) +
@@ -431,11 +434,11 @@
       }
       var rows = [];
       lines.forEach(function (l, i) {
-        var head = i === 0, sec = /^■/.test(l), sub = /^\s+주문:/.test(l);
-        var font = head ? "900 40px " + FONT : sec ? "800 30px " + FONT : "500 27px " + FONT;
+        var head = i === 0, sec = /^■/.test(l), sub = /^\s+주문:/.test(l), ordL = /^[⬜☑✅]/.test(l);
+        var font = head ? "900 40px " + FONT : sec ? "800 30px " + FONT : ordL && !/^✅/.test(l) ? "800 32px " + FONT : "500 27px " + FONT;
         var max = W - PAD * 2 - (sec || head ? 0 : 28);
         if (sec && rows.length) rows.push({ gap: 18 });
-        wrap(l.trim(), font, max).forEach(function (s) { rows.push({ s: s, font: font, head: head, sec: sec, indent: (sec || head) ? 0 : 28, sub: sub }); });
+        wrap(l.trim(), font, max).forEach(function (s) { rows.push({ s: s, font: font, head: head, sec: sec, indent: (sec || head) ? 0 : 28, sub: sub, ord: ordL ? l.charAt(0) : "" }); });
         if (head) rows.push({ gap: 12 });
       });
       var H = PAD * 2 + rows.reduce(function (a, r) { return a + (r.gap || LH); }, 0) + 40;
@@ -446,7 +449,8 @@
       rows.forEach(function (r) {
         if (r.gap) { y += r.gap; return; }
         cx.font = r.font; cx.textBaseline = "alphabetic";
-        cx.fillStyle = r.head ? "#8A4A00" : r.sec ? "#B4661B" : (/^(⚠|\(발주점)/.test(r.s) ? "#B3261E" : "#2A2522");
+        if (r.ord && r.ord !== "✅") { cx.fillStyle = "#FDECEA"; cx.fillRect(PAD, y - 34, W - PAD * 2, LH); }
+        cx.fillStyle = r.head ? "#8A4A00" : (r.sec && /발주 넣을 것/.test(r.s)) ? "#B3261E" : r.sec ? "#B4661B" : r.ord === "✅" ? "#8C7B6B" : r.ord ? "#B3261E" : (/^(⚠|\(발주점)/.test(r.s) ? "#B3261E" : "#2A2522");
         cx.fillText(r.s, PAD + r.indent, y);
         if (r.head) { cx.fillStyle = "#B4661B"; cx.fillRect(PAD, y + 14, W - PAD * 2, 3); }
         y += LH;
@@ -514,16 +518,6 @@
       remove(cur); open(cur);
     });
     $("#skRefQ").addEventListener("input", renderRef);
-    // 숫자 칸(재고 수량 · 사용량)만 — 비어 있으면 0
-    var zb = document.getElementById("skZero");
-    if (zb) zb.addEventListener("click", function () {
-      var n = 0;
-      document.querySelectorAll('#tp12 input.skin[inputmode="decimal"]').forEach(function (el) {
-        if (el.value.trim() || el.disabled || el.readOnly) return;
-        el.value = "0"; el.dispatchEvent(new Event("input", { bubbles: true })); n++;
-      });
-      statusEl.textContent = n ? "빈 칸 " + n + "개에 0을 채웠습니다" : "빈 숫자 칸이 없습니다";
-    });
     var tabs = $$(".sktab", document.getElementById("tp12"));
     tabs.forEach(function (t) {
       t.addEventListener("click", function () {
