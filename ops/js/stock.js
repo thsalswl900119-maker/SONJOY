@@ -518,6 +518,16 @@
       remove(cur); open(cur);
     });
     $("#skRefQ").addEventListener("input", renderRef);
+    // 숫자 칸(재고 수량 · 사용량)만 — 비어 있으면 0
+    var zb = document.getElementById("skZero");
+    if (zb) zb.addEventListener("click", function () {
+      var n = 0;
+      document.querySelectorAll('#tp12 input.skin[inputmode="decimal"]').forEach(function (el) {
+        if (el.value.trim() || el.disabled || el.readOnly) return;
+        el.value = "0"; el.dispatchEvent(new Event("input", { bubbles: true })); n++;
+      });
+      statusEl.textContent = n ? "빈 칸 " + n + "개에 0을 채웠습니다" : "빈 숫자 칸이 없습니다";
+    });
     var tabs = $$(".sktab", document.getElementById("tp12"));
     tabs.forEach(function (t) {
       t.addEventListener("click", function () {
