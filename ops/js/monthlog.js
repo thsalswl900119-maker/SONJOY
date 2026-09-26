@@ -1,7 +1,5 @@
 // 일지 한 달치 모으기 — 월말회의 탭에서 그 달 일지를 한 글로 모아 복사한다 (Claude에게 붙여 넣으면 월말회의 칸을 채워 준다)
 (function () {
-  var btn = document.getElementById("mtCollect"); if (!btn) return;
-  var mEl = document.getElementById("mtMonth"), msg = document.getElementById("mtCollectMsg"), box = document.getElementById("mtCollectBox");
   var NL = String.fromCharCode(10), WD = ["일", "월", "화", "수", "목", "금", "토"];
   function J(k) { try { return JSON.parse(localStorage.getItem(k) || "null"); } catch (e) { return null; } }
   function num(v) { var n = parseInt(String(v || "").split("(")[0].replace(/[^0-9]/g, ""), 10); return isNaN(n) ? null : n; }
@@ -47,14 +45,21 @@
     ];
     return head.join(NL) + NL + NL + days.join(NL + NL);
   }
-  btn.addEventListener("click", function () {
-    var ym = (mEl && mEl.value) || (function () { var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0"); })();
-    var t = build(ym);
-    if (!t) { msg.textContent = ym + " 일지가 없습니다"; box.hidden = true; return; }
-    box.value = t; box.hidden = false;
-    var n = (t.match(/^===== /gm) || []).length;
-    var ok = function () { msg.textContent = ym.slice(5) + "월 일지 " + n + "일치를 복사했습니다 · Claude에게 붙여 넣으세요"; };
-    var fb = function () { box.focus(); box.select(); try { document.execCommand("copy"); ok(); } catch (e) { msg.textContent = "아래 글을 길게 눌러 전체 선택 → 복사하세요"; } };
-    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(ok, fb); else fb();
-  });
+  // 월말회의 탭(해당 월)과 일지 탭(지금 보는 날짜의 달) 두 곳에서 쓴다
+  function bind(btnId, msgId, boxId, monthOf) {
+    var btn = document.getElementById(btnId), msg = document.getElementById(msgId), box = document.getElementById(boxId);
+    if (!btn) return;
+    btn.addEventListener("click", function () {
+      var ym = monthOf() || (function () { var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0"); })();
+      var t = build(ym);
+      if (!t) { msg.textContent = ym + " 일지가 없습니다"; box.hidden = true; return; }
+      box.value = t; box.hidden = false;
+      var n = (t.match(/^===== /gm) || []).length;
+      var ok = function () { msg.textContent = (+ym.slice(5)) + "월 일지 " + n + "일치를 복사했습니다 · Claude에게 붙여 넣으세요"; };
+      var fb = function () { box.focus(); box.select(); try { document.execCommand("copy"); ok(); } catch (e) { msg.textContent = "아래 글을 길게 눌러 전체 선택 → 복사하세요"; } };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(ok, fb); else fb();
+    });
+  }
+  bind("mtCollect", "mtCollectMsg", "mtCollectBox", function () { var e = document.getElementById("mtMonth"); return e && e.value; });
+  bind("lgCollect", "lgCollectMsg", "lgCollectBox", function () { var e = document.getElementById("lgDate"); return e && e.value ? e.value.slice(0, 7) : ""; });
 })();
