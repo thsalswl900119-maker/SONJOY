@@ -26,7 +26,7 @@
         var k = localStorage.key(i); if (!k || k.indexOf("cafesui.presence.") !== 0) continue;
         if (k === "cafesui.presence." + dev()) continue;
         var o = null; try { o = JSON.parse(localStorage.getItem(k) || "null"); } catch (e) {}
-        if (!o || !o.who || !o.on || now - (o.t || 0) > STALE) continue;
+        if (!o || !o.who || now - (o.t || 0) > STALE) continue;   // 자리 비움도 목록에는 보인다 (충돌 경고는 o.on 인 사람만)
         out.push(o);
       }
     } catch (e) {}
@@ -46,10 +46,17 @@
     var list = others(), w = where();
     var top = document.getElementById("whoOn");
     if (top) {
-      var on = list.filter(function (o) { return o.on; });
-      var tt = on.length ? "👀 지금 쓰는 중: " + on.map(function (o) { return nim(o.who) + " " + (o.label || ""); }).join(" · ") : "";
-      if (top.textContent !== tt) top.textContent = tt;
-      if (top.hidden !== !on.length) top.hidden = !on.length;
+      // 나 + 다른 사람 전부 — 이름은 각자 색, 어느 화면인지, 1분 30초 넘게 안 만지면 「자리 비움」
+      var CL = { "정항아": "p1", "박혜빈": "p2", "이해선": "p3", "사장님": "p4" };
+      var rows = [{ who: me(), label: w.label, on: true, mine: true }].concat(list.filter(function (o) { return o.who !== me(); }));
+      var seen = {}, html = '<b class="pol">접속 중</b>';
+      rows.forEach(function (o) {
+        if (!o.who || seen[o.who + o.label]) return; seen[o.who + o.label] = 1;
+        var same = !o.mine && o.on && o.key && o.key === w.key;
+        html += '<span class="pchip ' + (CL[o.who] || "") + (o.on ? "" : " away") + (same ? " same" : "") + '"><i></i>' + nim(o.who) + (o.mine ? "(나)" : "") + "<em>" + (o.on ? (o.label || "") : "자리 비움") + "</em></span>";
+      });
+      if (top.innerHTML !== html) top.innerHTML = html;
+      if (top.hidden) top.hidden = false;
     }
     var bar = document.getElementById("presWarn");
     if (bar) {

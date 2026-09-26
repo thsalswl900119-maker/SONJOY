@@ -651,8 +651,8 @@
       var dn = J("cafesui.daynotes") || {};
       Object.keys(dn).sort().forEach(function (d) { var a = dn[d] || []; if (!a.length) return; h += "<p><b>" + dlab(d) + "</b> — " + a.map(function (n) { return E(n.t) + (n.by ? " <i>(" + E(n.by) + ")</i>" : ""); }).join(" · ") + "</p>"; });
       var vc = J("cafesui.vacations") || [];
-      if (vc.length) h += "<h3>직원 휴가</h3>" + vc.map(function (v) { return "<p>" + E(v.who) + " · " + E(v.from) + " ~ " + E(v.to) + (v.memo ? " · " + E(v.memo) : "") + "</p>"; }).join("");
-      sec("메모 달력 · 휴가", h);
+      if (vc.length) h += "<h3>일정 · 직원 휴가</h3>" + vc.map(function (v) { var sc = v.kind === "sched"; return "<p>" + (sc ? "[일정] " + E(v.title || "") + (v.who ? " · " + E(v.who) : "") : "[휴가] " + E(v.who)) + " · " + E(v.from) + " ~ " + E(v.to) + (v.memo ? " · " + E(v.memo) : "") + "</p>"; }).join("");
+      sec("메모 달력 · 일정 · 휴가", h);
       // 독서나눔
       h = "";
       var bk = J("cafesui.books"); (bk && bk.items || []).forEach(function (it) {
@@ -3083,13 +3083,44 @@
       inputs.forEach(function (el) {
         el.value = (data.f && data.f[el.dataset.k]) || "";
         el.classList.toggle("filled", !!el.value.trim());
-        paintBy(el, by[el.dataset.k]);
+        paintLines(el, bl0[el.dataset.k], by[el.dataset.k]);
         tagAuthors(el, bl0[el.dataset.k]);
       });
       var n = inputs.filter(function (el) { return el.value.trim(); }).length;
       msgEl.textContent = n ? n + "개 항목 작성됨" : "";
     }
     // 한 칸을 여러 사람이 이어 쓰면 칸 아래에 "쓴 사람: …" 을 각자 색으로 보여준다
+    // 칸 안 글자색 — 줄마다 쓴 사람 색. 여러 사람이 쓴 긴 칸은 같은 글자를 색 입혀 위에 겹쳐 보여준다(입력은 그대로 칸에서).
+    function paintLines(el, lineBy, first) {
+      lineBy = lineBy || [];
+      var names = []; lineBy.forEach(function (n) { if (n && names.indexOf(n) < 0) names.push(n); });
+      var ov = el.nextElementSibling && el.nextElementSibling.classList.contains("lgov") ? el.nextElementSibling : null;
+      if (el.tagName !== "TEXTAREA" || names.length < 2) {
+        if (ov) ov.remove();
+        el.classList.remove("ovon");
+        // 한 줄 칸 · 한 사람만 쓴 칸: 마지막으로 쓴 줄의 사람 색 (없으면 처음 쓴 사람)
+        var last = ""; for (var i = lineBy.length - 1; i >= 0; i--) { if (lineBy[i]) { last = lineBy[i]; break; } }
+        paintBy(el, last || first);
+        return;
+      }
+      paintBy(el, "");
+      if (!ov) { ov = document.createElement("div"); ov.className = "lgov"; ov.setAttribute("aria-hidden", "true"); el.parentNode.insertBefore(ov, el.nextSibling); }
+      el.classList.add("ovon");
+      var lines = el.value.split(String.fromCharCode(10));
+      ov.innerHTML = lines.map(function (ln, i) { var n = lineBy[i] || first || ""; return '<span class="' + (WCLR[n] ? "w" + WCLR[n] : "") + '">' + (esc(ln) || " ") + "</span>"; }).join(String.fromCharCode(10)) + " ";
+      placeOv(el, ov);
+    }
+    function placeOv(el, ov) {
+      requestAnimationFrame(function () {
+        if (!ov.isConnected) return;
+        var cs = getComputedStyle(el);
+        ["fontFamily", "fontSize", "fontWeight", "lineHeight", "letterSpacing", "paddingTop", "paddingRight", "paddingBottom", "paddingLeft", "borderTopWidth", "borderRightWidth", "borderBottomWidth", "borderLeftWidth", "textIndent", "wordSpacing"].forEach(function (p) { ov.style[p] = cs[p]; });
+        ov.style.top = el.offsetTop + "px"; ov.style.left = el.offsetLeft + "px";
+        ov.style.width = el.offsetWidth + "px"; ov.style.height = el.offsetHeight + "px";
+        ov.scrollTop = el.scrollTop;
+      });
+    }
+    window.addEventListener("resize", function () { document.querySelectorAll(".lgov").forEach(function (ov) { var el = ov.previousElementSibling; if (el) placeOv(el, ov); }); });
     function tagAuthors(el, lineBy) {
       var row = el.closest(".mrow2"); if (!row) return;
       var names = []; (lineBy || []).forEach(function (n) { if (n && names.indexOf(n) < 0) names.push(n); });
@@ -3119,7 +3150,7 @@
           for (var i = 0; i < pl.length; i++) { if (!usedI[i] && pl[i] === ln) { usedI[i] = 1; return pb[i] || prev[k] || me2 || ""; } }
           return me2 || prev[k] || "";
         });
-        paintBy(el, by[k]);
+        paintLines(el, bl[k], by[k]);
         tagAuthors(el, bl[k]);
       });
       var out = { who: whoEl.value, f: f, by: by, bl: bl };

@@ -647,8 +647,14 @@
     var COL = { "정항아": "p1", "박혜빈": "p2", "이해선": "p3", "사장님": "p4" };
     function vload() { try { var a = JSON.parse(localStorage.getItem(VKEY) || "[]"); return Array.isArray(a) ? a : []; } catch (e) { return []; } }
     function vsave(a) { try { localStorage.setItem(VKEY, JSON.stringify(a)); } catch (e) {} }
-    function vfor(date) { return vload().filter(function (v) { return v.from && v.to && v.from <= date && date <= v.to; }); }
-    function vdays(v) { var a = new Date(v.from + "T00:00:00"), b = new Date(v.to + "T00:00:00"); return Math.round((b - a) / 86400000) + 1; }
+    // 일정·휴가 공통: {id, kind:"vac"|"sched", who, title, from, to, days:[0..6], memo} — kind 없으면 예전 휴가
+    function vkind(v) { return v.kind === "sched" ? "sched" : "vac"; }
+    function vdayok(v, date) { if (!v.days || !v.days.length) return true; var p = date.split("-"); return v.days.indexOf(new Date(+p[0], +p[1] - 1, +p[2]).getDay()) >= 0; }
+    function vfor(date) { return vload().filter(function (v) { return v.from && v.to && v.from <= date && date <= v.to && vdayok(v, date); }); }
+    function vlabel(v) { return vkind(v) === "sched" ? (v.title || "일정") + (v.who && v.who !== "전체" && (v.title || "").indexOf(v.who) < 0 ? " · " + v.who : "") : v.who + " 휴가"; }
+    var WDS = ["일", "월", "화", "수", "목", "금", "토"];
+    function vdaysTxt(v) { return v.days && v.days.length ? v.days.slice().sort(function (a, b) { return ((a + 6) % 7) - ((b + 6) % 7); }).map(function (d) { return WDS[d]; }).join("·") + "만" : ""; }
+    function vdays(v) { var a = new Date(v.from + "T00:00:00"), b = new Date(v.to + "T00:00:00"), n = 0; for (var d = new Date(a); d <= b; d.setDate(d.getDate() + 1)) { if (!v.days || !v.days.length || v.days.indexOf(d.getDay()) >= 0) n++; } return n; }
     function vfmt(d) { var p = d.split("-"); return (+p[1]) + "/" + (+p[2]); }
     var WD = ["월", "화", "수", "목", "금", "토", "일"];
     var sel = null;
@@ -670,7 +676,7 @@
         var hol = (window.__CS_HOL || {})[date];
         h += '<div class="mccell' + (wd === 6 ? " sun" : wd === 5 ? " sat" : "") + (date === t ? " today" : "") + (date === sel ? " on" : "") + (hol ? " hol" : "") +
           '" data-d="' + date + '"><span class="mcd">' + d + (hol ? '<i class="mchol">' + esc(hol) + "</i>" : "") + "</span>" +
-          vfor(date).map(function (v) { return '<span class="mcn vac ' + (COL[v.who] || "") + '" title="' + esc(v.memo || "") + '">🏖 ' + esc(v.who) + " 휴가</span>"; }).join("") +
+          vfor(date).map(function (v) { var sc = vkind(v) === "sched"; return '<span class="mcn ' + (sc ? "sch " : "vac ") + (COL[v.who] || "") + '" title="' + esc(v.memo || "") + '">' + (sc ? "📅 " : "🏖 ") + esc(vlabel(v)) + "</span>"; }).join("") +
           notes.slice(0, 4).map(function (n) { return '<span class="mcn ' + (COL[n.by] || "") + '">' + esc(n.t) + "</span>"; }).join("") +
           (notes.length > 4 ? '<span class="mcmore">+' + (notes.length - 4) + "개 더 · 눌러서 보기</span>" : "") +
           (notes.length ? "" : '<span class="mcplus">+</span>') + "</div>";
@@ -686,17 +692,17 @@
       var y = ym(), first = y + "-01", last = y + "-31";
       var all = vload(), list = all.filter(function (v) { return v.from <= last && v.to >= first; })
         .sort(function (a, b) { return a.from < b.from ? -1 : a.from > b.from ? 1 : 0; });
-      if (!list.length) { box.innerHTML = '<div class="mcvnone">이 달에 잡힌 휴가가 없습니다</div>'; return; }
+      if (!list.length) { box.innerHTML = '<div class="mcvnone">이 달에 잡힌 일정 · 휴가가 없습니다</div>'; return; }
       box.innerHTML = list.map(function (v) {
         var c = COL[v.who] || "";
         if (vEdit === v.id) {
-          return '<div class="mcvrow" data-id="' + v.id + '"><span class="w ' + c + '">' + esc(v.who) + '</span><span class="ed">' +
+          return '<div class="mcvrow" data-id="' + v.id + '"><span class="k ' + (vkind(v) === "sched" ? "sch" : "vac") + '">' + (vkind(v) === "sched" ? "일정" : "휴가") + '</span><span class="w ' + c + '">' + esc(vlabel(v)) + '</span><span class="ed">' +
             '<input type="date" class="dinp ef" value="' + esc(v.from) + '"><span class="tilde">~</span><input type="date" class="dinp et" value="' + esc(v.to) + '">' +
             '<input type="text" class="dinp em" value="' + esc(v.memo || "") + '" placeholder="메모"></span>' +
             '<span class="bt"><button type="button" class="s">저장</button><button type="button" class="c">취소</button></span></div>';
         }
-        return '<div class="mcvrow" data-id="' + v.id + '"><span class="w ' + c + '">' + esc(v.who) + "</span>" +
-          '<span class="d">' + vfmt(v.from) + " ~ " + vfmt(v.to) + "<i>" + vdays(v) + "일</i></span>" +
+        return '<div class="mcvrow" data-id="' + v.id + '"><span class="k ' + (vkind(v) === "sched" ? "sch" : "vac") + '">' + (vkind(v) === "sched" ? "일정" : "휴가") + '</span><span class="w ' + c + '">' + esc(vlabel(v)) + "</span>" +
+          '<span class="d">' + vfmt(v.from) + " ~ " + vfmt(v.to) + (vdaysTxt(v) ? " · " + vdaysTxt(v) : "") + "<i>" + vdays(v) + "일</i></span>" +
           (v.memo ? '<span class="m">' + esc(v.memo) + "</span>" : "") +
           '<span class="bt"><button type="button" class="e">날짜 고치기</button><button type="button" class="x">지우기</button></span></div>';
       }).join("");
@@ -715,23 +721,30 @@
         });
         if (x) x.addEventListener("click", function () {
           var r = find(); if (!r.v) return;
-          if (!confirm(r.v.who + " 휴가 (" + vfmt(r.v.from) + " ~ " + vfmt(r.v.to) + ")를 지울까요?")) return;
+          if (!confirm(vlabel(r.v) + " (" + vfmt(r.v.from) + " ~ " + vfmt(r.v.to) + ")를 지울까요?")) return;
           vsave(r.all.filter(function (v) { return v.id !== id; })); render();
         });
       });
     }
     (function () {
       var who = document.getElementById("vcWho"), f = document.getElementById("vcFrom"), t = document.getElementById("vcTo"), m = document.getElementById("vcMemo"), b = document.getElementById("vcAdd");
+      var kindEl = document.getElementById("vcKind"), titleEl2 = document.getElementById("vcTitle"), daysEl = document.getElementById("vcDays");
       if (!b) return;
+      function syncKind() { var sc = !kindEl || kindEl.value === "sched"; if (titleEl2) titleEl2.hidden = !sc; if (daysEl) daysEl.parentNode.querySelector("em").textContent = sc ? "안 고르면 기간 안의 매일" : "안 고르면 기간 전체"; }
+      if (kindEl) { kindEl.addEventListener("change", syncKind); syncKind(); }
+      if (daysEl) daysEl.addEventListener("change", function (e) { var l = e.target.closest("label"); if (l) l.classList.toggle("on", e.target.checked); });
       f.addEventListener("change", function () { if (!t.value || t.value < f.value) t.value = f.value; });
       b.addEventListener("click", function () {
-        var w = who.value, a = f.value, z = t.value || f.value;
-        if (!w) { alert("누구 휴가인지 골라 주세요"); who.focus(); return; }
+        var w = who.value, a = f.value, z = t.value || f.value, kind = kindEl ? kindEl.value : "vac", ttl = titleEl2 ? titleEl2.value.trim() : "";
+        var days = daysEl ? Array.prototype.filter.call(daysEl.querySelectorAll("input"), function (c) { return c.checked; }).map(function (c) { return +c.value; }) : [];
+        if (kind === "vac" && (!w || w === "전체")) { alert("누구 휴가인지 골라 주세요"); who.focus(); return; }
+        if (kind === "sched" && !ttl) { alert("무슨 일정인지 적어 주세요 (예: 사장님 출강 1~6시)"); titleEl2.focus(); return; }
         if (!a) { alert("시작일을 골라 주세요"); f.focus(); return; }
         if (z < a) { var tmp = a; a = z; z = tmp; }
         var all = vload();
-        all.push({ id: "v" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), who: w, from: a, to: z, memo: m.value.trim(), by: me(), t: Date.now() });
-        vsave(all); m.value = ""; monEl.value = a.slice(0, 7); render();
+        all.push({ id: "v" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), kind: kind, who: w, title: kind === "sched" ? ttl : "", days: days, from: a, to: z, memo: m.value.trim(), by: me(), t: Date.now() });
+        vsave(all); m.value = ""; if (titleEl2) titleEl2.value = ""; if (daysEl) daysEl.querySelectorAll("input").forEach(function (c) { c.checked = false; c.closest("label").classList.remove("on"); });
+        monEl.value = a.slice(0, 7); render();
       });
       window.addEventListener("cs:remote", function (e) {
         if (!e.detail || (e.detail.keys || []).indexOf(VKEY) < 0) return;
