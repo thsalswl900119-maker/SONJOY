@@ -60,12 +60,60 @@
   document.getElementById("wrPrev").addEventListener("click", function () { cur = add(cur, -7); render(); });
   document.getElementById("wrNext").addEventListener("click", function () { cur = add(cur, 7); render(); });
   document.getElementById("wrThis").addEventListener("click", function () { cur = ymd(monOf(new Date())); render(); });
+  // 보고서를 그림(PNG)으로 만들어 텔레그램으로 보낸다 — 휴대폰은 공유 창(텔레그램 선택), 컴퓨터는 그림 복사(붙여넣기) · 안 되면 파일 저장
   document.getElementById("wrCopy").addEventListener("click", function () {
-    save(); var o = load(cur), f = o.f || {}, NL = String.fromCharCode(10);
-    var txt = ["[매니저 주간 보고] " + labelEl.textContent + (o.who ? " · " + nim(o.who) : ""), autoEl.textContent];
-    box.querySelectorAll(".wrrow").forEach(function (r) { var el = r.querySelector(".wrin"), v = (f[el.dataset.f] || "").trim(); if (v) txt.push("", "■ " + r.querySelector("span").textContent, v); });
-    var s = txt.join(NL), btn = this, ok = function () { btn.textContent = "복사됐습니다"; setTimeout(function () { btn.textContent = "복사하기"; }, 1500); };
-    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(s).then(ok, function () { alert(s); }); else alert(s);
+    save(); var o = load(cur), f = o.f || {}, btn = this, NL = String.fromCharCode(10);
+    var W = 1080, PAD = 56, LH = 44, FONT = "'Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',sans-serif";
+    var cv = document.createElement("canvas"), cx = cv.getContext("2d");
+    function wrap(s, font, max) {
+      cx.font = font; var out = [], c = "";
+      s.split(" ").forEach(function (w) {
+        var t2 = c ? c + " " + w : w;
+        if (cx.measureText(t2).width <= max) { c = t2; return; }
+        if (c) out.push(c); c = "";
+        for (var i = 0; i < w.length; i++) { var t3 = c + w[i]; if (cx.measureText(t3).width > max && c) { out.push(c); c = w[i]; } else c = t3; }
+      });
+      if (c) out.push(c); return out.length ? out : [""];
+    }
+    var rows = [], F_H = "900 40px " + FONT, F_S = "800 30px " + FONT, F_B = "500 28px " + FONT, F_A = "600 24px " + FONT;
+    rows.push({ s: "📋 매니저 주간 보고", font: F_H, c: "#8A4A00", line: true });
+    rows.push({ gap: 16 });
+    wrap(labelEl.textContent + (o.who ? " · " + nim(o.who) : ""), F_S, W - PAD * 2).forEach(function (x) { rows.push({ s: x, font: F_S, c: "#2A2522" }); });
+    wrap(autoEl.textContent, F_A, W - PAD * 2).forEach(function (x) { rows.push({ s: x, font: F_A, c: "#8C7B6B" }); });
+    var n = 0;
+    box.querySelectorAll(".wrrow").forEach(function (r) {
+      var el = r.querySelector(".wrin"), v = (f[el.dataset.f] || "").trim(); if (!v) return; n++;
+      rows.push({ gap: 22 });
+      rows.push({ s: "■ " + r.querySelector("span").textContent, font: F_S, c: "#B4661B" });
+      v.split(NL).forEach(function (ln) { wrap(ln.trim(), F_B, W - PAD * 2 - 24).forEach(function (x) { rows.push({ s: x, font: F_B, c: "#2A2522", ind: 24 }); }); });
+    });
+    if (!n) { alert("아직 쓴 내용이 없습니다"); return; }
+    var H = PAD * 2 + rows.reduce(function (a, r) { return a + (r.gap || LH); }, 0) + 50;
+    var S = 2; cv.width = W * S; cv.height = H * S; cx.scale(S, S);
+    cx.fillStyle = "#FFFCF6"; cx.fillRect(0, 0, W, H);
+    cx.strokeStyle = "#B4661B"; cx.lineWidth = 6; cx.strokeRect(3, 3, W - 6, H - 6);
+    var y = PAD + 30;
+    rows.forEach(function (r) {
+      if (r.gap) { y += r.gap; return; }
+      cx.font = r.font; cx.fillStyle = r.c; cx.fillText(r.s, PAD + (r.ind || 0), y);
+      if (r.line) { cx.fillStyle = "#B4661B"; cx.fillRect(PAD, y + 14, W - PAD * 2, 3); }
+      y += LH;
+    });
+    cx.font = "600 22px " + FONT; cx.fillStyle = "#8C7B6B"; cx.textAlign = "right";
+    cx.fillText("카페스이 · 매니저 주간 보고 " + new Date().toLocaleString("ko-KR", { hour12: false }), W - PAD, H - 26);
+    var name = "주간보고_" + cur + ".png", LBL = btn.textContent;
+    var msg = function (t) { btn.textContent = t; setTimeout(function () { btn.textContent = LBL; }, 2500); };
+    cv.toBlob(function (blob) {
+      if (!blob) { msg("그림을 못 만들었습니다"); return; }
+      var file = null; try { file = new File([blob], name, { type: "image/png" }); } catch (e) {}
+      var dl = function () { var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); setTimeout(function () { a.remove(); }, 2000); msg("그림 파일로 저장됨 · 텔레그램에 올리세요"); };
+      var touch = window.matchMedia && window.matchMedia("(pointer:coarse)").matches;
+      if (touch && file && navigator.canShare && navigator.canShare({ files: [file] })) { navigator.share({ files: [file], title: "매니저 주간 보고" }).then(function () { msg("보냈습니다"); }, function () {}); return; }
+      if (navigator.clipboard && window.ClipboardItem) {
+        var fin = false, to = setTimeout(function () { if (!fin) { fin = true; dl(); } }, 3000);   // 복사가 막히면 파일로
+        navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]).then(function () { if (fin) return; fin = true; clearTimeout(to); msg("그림 복사됨 · 텔레그램에서 붙여넣기 (Ctrl+V)"); }, function () { if (fin) return; fin = true; clearTimeout(to); dl(); });
+      } else dl();
+    }, "image/png");
   });
   window.addEventListener("cs:remote", function (e) { var ks = (e.detail && e.detail.keys) || []; if (ks.some(function (k) { return k.indexOf(PRE) === 0 || k.indexOf("cafesui.log.") === 0; })) render(); });
   box.addEventListener("toggle", function () { if (box.open) render(); });

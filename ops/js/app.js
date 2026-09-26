@@ -3087,6 +3087,11 @@
     // base: 이 화면이 마지막으로 읽거나 저장한 값. 저장할 때 이 화면에서 바꾼 칸만 쓰고,
     // 안 건드린 칸은 서버(다른 기기)의 최신 내용을 그대로 둔다 — 옛 화면으로 남의 글을 덮어쓰는 사고 방지
     var base = {};
+    // 「서비스 나간 것」은 폐기 칸으로 합쳤다 — 예전에 적어 둔 날만 그 칸을 보여준다 (기록은 그대로)
+    function legacy163() {
+      var el = document.querySelector('.lgin[data-k="lf163"]'); if (!el) return;
+      var row = el.closest(".mrow2"); if (row) row.style.display = el.value.trim() ? "" : "none";
+    }
     function load() {
       var data = {};
       try {
@@ -3105,6 +3110,7 @@
         paintLines(el, bl0[el.dataset.k], by[el.dataset.k], ow0[el.dataset.k]);
         tagAuthors(el, bl0[el.dataset.k], ow0[el.dataset.k]);
       });
+      legacy163();
       var n = inputs.filter(function (el) { return el.value.trim(); }).length;
       msgEl.textContent = n ? n + "개 항목 작성됨" : "";
     }
@@ -3431,6 +3437,7 @@
         paintLines(el, bl0[k], by0[k], ow0[k]); tagAuthors(el, bl0[k], ow0[k]);
       });
       if (ch) document.dispatchEvent(new Event("cs:log-loaded"));
+      legacy163();
       report();
     });
     saveBtn.addEventListener("click", function () {
@@ -3544,7 +3551,7 @@
       try { var rpO = JSON.parse(localStorage.getItem(keyFor()) || "{}") || {}; rpBl = rpO.bl || {}; rpOw = rpO.ow || {}; } catch (e) {}
       var S1 = String.fromCharCode(1), S2 = String.fromCharCode(2);
       // 맨 위에 먼저 볼 것: 사장님 지시사항 → 인계사항 → 직원들에게 알릴 것 → 폐기 → 매출 → 매장 흐름
-      var TOPK = ["lf185", "lf180", "lf181", "lf162", "lf183", "lf184", "lf154"], topH = {}, topT = {};
+      var TOPK = ["lf185", "lf180", "lf181", "lf162", "lf163", "lf183", "lf184", "lf154"], topH = {}, topT = {};
       document.querySelectorAll(".msec").forEach(function (sec) {
         var items = "", lines = [];
         sec.querySelectorAll(".mrow2").forEach(function (row) {
