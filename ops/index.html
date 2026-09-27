@@ -118,6 +118,8 @@ section{margin-top:44px}
 .tnotice li::before{content:counter(tn);counter-increment:tn;display:inline-grid;place-items:center;width:22px;height:22px;
   border-radius:50%;background:#B3261E;color:#fff;font-weight:900;font-size:13px;font-family:var(--mono)}
 .tnotice ul{counter-reset:tn}
+.tnotice.mcrule{margin:8px 0 10px}
+#seasonRule span{color:#A11A12;font-weight:800;font-size:13px}
 .tnotice b{display:block;font-weight:900;color:#1E1A17;font-size:14.5px;letter-spacing:-.01em}
 .tnotice b mark{background:#FFE86B;color:#A11A12;padding:0 4px;border-radius:2px}
 .tnotice span{color:#4C423B;font-weight:600;font-size:12.5px;display:block;margin-top:1px;grid-column:2}
@@ -2346,7 +2348,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-112</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-113</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -2509,6 +2511,7 @@ input,select,textarea{border-radius:var(--r3)!important}
     <div class="mch"><b>📅 이달 메모 달력</b>
       <span>예약 · 공지 · 챙길 것을 날짜에 적어 두세요. 적은 건 <b>연간 행사</b> 달력에도 같이 보입니다 (보라 띠).</span>
       <span class="mcnav"><button type="button" class="daynav" id="mcPrev">‹</button> <input type="month" id="mcMonth" class="dinp"> <button type="button" class="daynav" id="mcNext">›</button></span></div>
+    <div class="tnotice mcrule" id="seasonRule"><div class="tnhead">★ 시즌 · 행사 끝나는 날</div><ul><li><b>★ 시즌이 끝나거나 행사가 끝나면 그날 <mark>전직원들이 [브로셔, 배너, pop정리]</mark>를 해서 원상 복귀를 해주세요</b><span>(이건 모든 직원들이 다해주세요)</span></li></ul></div>
     <div class="mcal" id="mcCal"></div>
     <div class="mcvac">
       <div class="mcvh"><b>📅 일정 · 휴가 (여러 날)</b><span>며칠 동안 이어지는 일(출강 · 행사 · 공사 등)과 직원 휴가를 한 번에 잡습니다 · 요일을 고르면 그 요일만 · 달력에 띠로 보이고 아래 목록에서 고치거나 지울 수 있습니다</span></div>
@@ -2881,10 +2884,10 @@ input,select,textarea{border-radius:var(--r3)!important}
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/sync.js?v=v0924-112"></script>
-<script src="js/holidays.js?v=v0924-112"></script>
-<script src="js/sched.js?v=v0924-112"></script>
-<script src="js/app.js?v=v0924-112"></script>
+<script src="js/sync.js?v=v0924-113"></script>
+<script src="js/holidays.js?v=v0924-113"></script>
+<script src="js/sched.js?v=v0924-113"></script>
+<script src="js/app.js?v=v0924-113"></script>
 
 <style>
 /* 재고 · 발주 */
@@ -3086,7 +3089,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 .sksearch{font:inherit;font-size:13px;padding:6px 9px;width:100%;max-width:300px;background:var(--bg);color:var(--ink);
   border:1px solid var(--rule2);border-radius:2px;margin-bottom:10px}
 </style>
-<script src="js/stock.js?v=v0924-112"></script>
+<script src="js/stock.js?v=v0924-113"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -3115,7 +3118,7 @@ input,select,textarea{border-radius:var(--r3)!important}
   })();
 </script>
 
-<script src="js/presence.js?v=v0924-112"></script>
-<script src="js/weekrep.js?v=v0924-112"></script>
-<script src="js/monthlog.js?v=v0924-112"></script>
+<script src="js/presence.js?v=v0924-113"></script>
+<script src="js/weekrep.js?v=v0924-113"></script>
+<script src="js/monthlog.js?v=v0924-113"></script>
 </body></html>
