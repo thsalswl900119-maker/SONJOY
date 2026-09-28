@@ -1677,7 +1677,7 @@ window.FIREBASE_CONFIG = {
       function(e){if(t)clearTimeout(t);throw e;});}
   function fsGet(id){return fsFetch(FS_BASE+encodeURIComponent(id)+'?key='+FBC.apiKey).then(function(j){return j&&j.fields?fsDec({mapValue:{fields:j.fields}}):null;},function(e){if(e.status===404)return null;throw e;});}
   function fsSet(id,obj){return fsFetch(FS_BASE+encodeURIComponent(id)+'?key='+FBC.apiKey,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({fields:fsEnc(obj).mapValue.fields})});}
-  function fsRoster(id,now,remove){var q='?key='+FBC.apiKey+['name','code','day','updatedAt'].map(function(f){return '&updateMask.fieldPaths='+f;}).join('')+'&updateMask.fieldPaths='+encodeURIComponent('a.`'+id.replace(/[`\]/g,'\$&')+'`');
+  function fsRoster(id,now,remove){var q='?key='+FBC.apiKey+['name','code','day','updatedAt'].map(function(f){return '&updateMask.fieldPaths='+f;}).join('')+'&updateMask.fieldPaths='+encodeURIComponent('a.`'+id.replace(/[`\\]/g,'\\$&')+'`');
     var doc={name:'명단',code:'0000',day:0,updatedAt:now,a:{}};if(!remove)doc.a[id]=now;
     return fsFetch(FS_BASE+encodeURIComponent(ROSTER)+q,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({fields:fsEnc(doc).mapValue.fields})});}
   function sendRemote(){
