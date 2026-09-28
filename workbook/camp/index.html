@@ -661,7 +661,7 @@ function aiFile(){
 // 강사는 6자리 숫자로 들어와 명단에 있는 문서를 하나씩 읽어 목록을 봅니다(로그인 계정 불필요).
 
 const SUBKEY = 'brand2open_subs_v1';
-const PIN_HASH = '14c56371515cfc9fdebc973e9de68b7fa41fd75f5402d4302ec62f029a4c366e';   // 강사 6자리 숫자의 지문(원문은 코드에 없음)
+const PIN_HASH = 'cd4e0723c70b9257c04db53aeb8572150d7da184c0842755fde972d297e2bcbd';   // 강사 6자리 숫자의 지문(원문은 코드에 없음)
 const ROSTER = '명단_0000';                  // 제출한 사람 목록 문서 (workbook/명단_0000)
 let FB = null;
 try {
@@ -701,11 +701,11 @@ function gate(){
     <div class="gnote">같은 이름이 여럿일 때 구분하려고 받습니다. <b>전체 번호는 적지 마세요.</b>
       적은 내용은 이 브라우저에 저장되고, <b>「강사님께 보내기」를 누를 때만</b> 강사님 화면으로 전달됩니다.
       다음에 올 때도 <b>같은 이름·같은 4자리</b>로 들어오세요.</div>
-    <label class="gchk"><input type="checkbox" id="gTeach"> 나는 <b>강사</b>입니다 (수강생 제출을 확인합니다)</label>
+    <label class="gchk"><input type="checkbox" id="gTeach"> 나는 <b>강사</b>입니다 (숫자 6자리만 넣으면 됩니다)</label>
     <div id="gPwWrap" hidden>
       <label for="gPw">강사 6자리 숫자</label>
       <input id="gPw" type="password" placeholder="숫자 6자리" inputmode="numeric" autocomplete="off" maxlength="6">
-      <div class="gnote" id="gPwNote">강사만 아는 6자리 숫자입니다. 맞으면 「제출 확인」 버튼이 생깁니다.</div>
+      <div class="gnote" id="gPwNote">강사만 아는 6자리 숫자입니다. 이름·번호는 안 적어도 됩니다. 맞으면 「제출 확인」 버튼이 생깁니다.</div>
     </div>
     <button class="gbtn" id="gGo">시작하기</button>
     <button class="gskip" id="gSkip">이름 없이 둘러보기</button>
@@ -720,14 +720,14 @@ function gate(){
     const nt = o.querySelector('#gPwNote'); if (nt && why) nt.innerHTML = `<b style="color:#B4473A">${why}</b>`;
     setTimeout(() => el.classList.remove('bad'), 1400) };
   const go = async () => {
-    const nm = n.value.trim();
-    if (!nm) { bad(n); return }
+    let nm = n.value.trim();
     const teach = tc.checked;
     if (teach) {
       const pw = o.querySelector('#gPw').value.trim();
       if (!/^\d{6}$/.test(pw)) { bad(o.querySelector('#gPw'), '숫자 6자리를 적어 주세요.'); return }
       if (await pwHash(pw) !== PIN_HASH) { bad(o.querySelector('#gPw'), '강사 숫자가 맞지 않습니다.'); return }
-    }
+      if (!nm) nm = '강사';
+    } else if (!nm) { bad(n); return }
     st.me = { name: nm, tail: t.value.trim(), teacher: teach, at: today() };
     save(); o.remove(); render();
   };
@@ -735,13 +735,13 @@ function gate(){
   o.querySelector('#gSkip').onclick = () => {
     st.me = { name: '', tail: '', teacher: false, skip: 1 }; save(); o.remove(); render();
   };
-  [n, t].forEach(e => e.onkeydown = ev => { if (ev.key === 'Enter') go() });
+  [n, t, o.querySelector('#gPw')].forEach(e => e.onkeydown = ev => { if (ev.key === 'Enter') go() });
   setTimeout(() => n.focus(), 50);
 }
 
 function whoHTML(){
   if (!st.me) return '';
-  if (st.me.teacher) return `<span class="who t">🧑‍🏫 ${esc(st.me.name)} 강사님</span>`;
+  if (st.me.teacher) return `<span class="who t">🧑‍🏫 ${st.me.name && st.me.name !== '강사' ? esc(st.me.name) + ' ' : ''}강사님</span>`;
   if (meOK()) return `<span class="who">${esc(st.me.name)}${st.me.tail ? ' · ' + esc(st.me.tail) : ''}</span>`;
   return `<span class="who off">이름 없이 보는 중</span>`;
 }
