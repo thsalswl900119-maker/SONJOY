@@ -1034,9 +1034,9 @@
     var NL = String.fromCharCode(10);
     var RCLS = { "오픈": "open", "마감": "close", "미들": "mid",
                  "전일": "full", "토요일": "full", "전일(케이크+사무실근무)": "own", "반죽": "own",
-                 "공부": "away", "출강": "away", "서울출장": "away", "출장": "away", "사무실 근무": "away" };
+                 "공부": "away", "출강": "away", "서울출장": "away", "출장": "away", "사무실 근무": "away", "해외출장": "away", "워크샵": "away" };
     var RORDER = { "오픈": 0, "반죽": 1, "미들": 2, "전일": 2, "토요일": 2, "전일(케이크+사무실근무)": 3, "마감": 4,
-                   "공부": 5, "출강": 5, "서울출장": 5, "출장": 5, "사무실 근무": 5 };
+                   "공부": 5, "출강": 5, "서울출장": 5, "출장": 5, "사무실 근무": 5, "해외출장": 5, "워크샵": 5 };
 
     function keyOf(ym) { return "cafesui.sched." + ym; }
     function draftOf(ym) {
@@ -1127,6 +1127,7 @@
         if (!filled) { blank += 1; if (w) w.textContent = ""; return; }
         var hasOpen = roles["오픈"] || roles["전일"] || roles["전일(케이크+사무실근무)"];
         var hasClose = roles["마감"] || roles["전일"] || roles["전일(케이크+사무실근무)"];
+        if (roles["워크샵"] && !hasOpen && !hasClose) { if (w) w.textContent = "워크샵"; return; }   // 다 같이 워크샵 가는 날은 오픈 · 마감 경고 안 함
         if (!hasOpen) { noOpen += 1; warn.push("오픈 없음"); }
         if (!hasClose) { noClose += 1; warn.push("마감 없음"); }
         ["오픈", "마감", "미들"].forEach(function (r) {
