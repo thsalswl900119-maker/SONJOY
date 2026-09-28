@@ -3634,13 +3634,22 @@
           var shown = esc(v), plain = v;
           if (cls === " boss" || row.classList.contains("para") || row.classList.contains("mk")) {
             // **중요** 또는 줄 앞 ! → 빨간 굵은 글씨
+            // 밑줄(__) · 중요(**)는 여러 줄에 걸쳐도 이어지게 — 짝이 안 맞는 마지막 하나는 글자 그대로
+            var uLeft = (v.match(/__/g) || []).length, bLeft = (v.match(/\*\*/g) || []).length;
+            uLeft -= uLeft % 2; bLeft -= bLeft % 2;
+            var uOpen = false, bOpen = false;
             shown = v.split(NL).map(function (ln) {
               var t = esc(ln); var star = /^\s*[★⭐]/.test(ln), imp = !star && /^\s*[!！]/.test(ln);
               if (star) t = t.replace(/^\s*[★⭐]\s*/, ""); else if (imp) t = t.replace(/^\s*[!！]\s*/, "");
-              t = t.replace(/\*\*(.+?)\*\*/g, '<b class="imp">$1</b>').replace(/__(.+?)__/g, "<u>$1</u>");
+              var pre = (bOpen ? '<b class="imp">' : "") + (uOpen ? "<u>" : "");
+              t = t.replace(/\*\*|__/g, function (m) {
+                if (m === "**") { if (!bLeft) return m; bLeft--; bOpen = !bOpen; return bOpen ? '<b class="imp">' : "</b>"; }
+                if (!uLeft) return m; uLeft--; uOpen = !uOpen; return uOpen ? "<u>" : "</u>";
+              });
+              t = pre + t + (uOpen ? "</u>" : "") + (bOpen ? "</b>" : "");
               return star ? '<b class="imp vimp">⭐ ' + t + "</b>" : imp ? '<b class="imp">❗ ' + t + "</b>" : t;
             }).join("<br>");
-            plain = v.split(NL).map(function (ln) { return ln.replace(/^\s*[★⭐]\s*/, "⭐ ").replace(/^\s*[!！]\s*/, "❗ ").replace(/\*\*(.+?)\*\*/g, "【$1】").replace(/__(.+?)__/g, "$1"); }).join(NL);
+            plain = v.replace(/\*\*([\s\S]+?)\*\*/g, "【$1】").replace(/__([\s\S]+?)__/g, "$1").split(NL).map(function (ln) { return ln.replace(/^\s*[★⭐]\s*/, "⭐ ").replace(/^\s*[!！]\s*/, "❗ "); }).join(NL);
           }
           // 여러 사람이 이어 쓴 칸: 줄마다 쓴 사람 색으로, 복사 글에는 이름을 붙인다
           var lb = (rpBl || {})[el.dataset.k] || [], distinct = [];
