@@ -1067,8 +1067,6 @@ input,textarea,select{color-scheme:light}
   <div class="row"><button class="btn" id="mMain" type="button"></button><button class="btn ghost" id="mClose" type="button" style="flex:0 0 auto;padding-left:18px;padding-right:18px">닫기</button></div>
 </div></div>
 
-<script src="https://cdn.jsdelivr.net/npm/firebase@10.12.5/firebase-app-compat.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/firebase@10.12.5/firebase-firestore-compat.js"></script>
 <script>
 /* Firebase 설정 — 카페스이 (cafesui) */
 window.FIREBASE_CONFIG = {
@@ -1665,28 +1663,37 @@ window.FIREBASE_CONFIG = {
   function b64(o){return btoa(unescape(encodeURIComponent(JSON.stringify(o))));}
   function unb64(t){return JSON.parse(decodeURIComponent(escape(atob(t))));}
 
-  /* ───── 서버 전송 · 카페스이 Firestore (workbook/이름_뒤4자리 + 명단_0000) ───── */
-  var FB=null;
-  try{if(window.firebase&&window.FIREBASE_CONFIG&&window.FIREBASE_CONFIG.apiKey){if(!firebase.apps.length)firebase.initializeApp(window.FIREBASE_CONFIG);FB=firebase.firestore();}}catch(e){FB=null;}
+  /* ───── 서버 전송 · 카페스이 Firestore REST (workbook/이름_뒤4자리 + 명단_0000) ───── */
+  var FBC=window.FIREBASE_CONFIG||{}, FB=!!(FBC.apiKey&&FBC.projectId&&window.fetch);
+  var FS_BASE='https://firestore.googleapis.com/v1/projects/'+FBC.projectId+'/databases/(default)/documents/workbook/';
   var ROSTER='명단_0000';
   function sid(n,c){return String(n).replace(/[\/\s]+/g,'')+'_'+c;}
+  function fsEnc(v){if(v===null||v===undefined)return {nullValue:null};if(typeof v==='number')return (v%1===0)?{integerValue:String(v)}:{doubleValue:v};if(typeof v==='boolean')return {booleanValue:v};
+    if(Array.isArray(v))return {arrayValue:{values:v.map(fsEnc)}};if(typeof v==='object'){var f={};Object.keys(v).forEach(function(k){f[k]=fsEnc(v[k]);});return {mapValue:{fields:f}};}return {stringValue:String(v)};}
+  function fsDec(v){if(!v)return null;if('stringValue' in v)return v.stringValue;if('integerValue' in v)return +v.integerValue;if('doubleValue' in v)return v.doubleValue;if('booleanValue' in v)return v.booleanValue;
+    if('mapValue' in v){var o={},f=v.mapValue.fields||{};Object.keys(f).forEach(function(k){o[k]=fsDec(f[k]);});return o;}if('arrayValue' in v)return (v.arrayValue.values||[]).map(fsDec);return null;}
+  function fsFetch(url,opt){opt=opt||{};var c=(window.AbortController?new AbortController():null);var t=null;if(c){opt.signal=c.signal;t=setTimeout(function(){c.abort();},15000);}
+    return fetch(url,opt).then(function(r){if(t)clearTimeout(t);return r.text().then(function(txt){var j={};try{j=txt?JSON.parse(txt):{};}catch(e){}if(!r.ok){var er=new Error((j.error&&j.error.message)||('http '+r.status));er.status=r.status;throw er;}return j;});},
+      function(e){if(t)clearTimeout(t);throw e;});}
+  function fsGet(id){return fsFetch(FS_BASE+encodeURIComponent(id)+'?key='+FBC.apiKey).then(function(j){return j&&j.fields?fsDec({mapValue:{fields:j.fields}}):null;},function(e){if(e.status===404)return null;throw e;});}
+  function fsSet(id,obj){return fsFetch(FS_BASE+encodeURIComponent(id)+'?key='+FBC.apiKey,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({fields:fsEnc(obj).mapValue.fields})});}
+  function fsRoster(id,now,remove){var q='?key='+FBC.apiKey+['name','code','day','updatedAt'].map(function(f){return '&updateMask.fieldPaths='+f;}).join('')+'&updateMask.fieldPaths='+encodeURIComponent('a.`'+id.replace(/[`\]/g,'\$&')+'`');
+    var doc={name:'명단',code:'0000',day:0,updatedAt:now,a:{}};if(!remove)doc.a[id]=now;
+    return fsFetch(FS_BASE+encodeURIComponent(ROSTER)+q,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({fields:fsEnc(doc).mapValue.fields})});}
   function sendRemote(){
     if(!FB)return Promise.reject(new Error('offline'));
     var name=String(state.name||'').trim().slice(0,30),code=String(state.code||'').trim();
     if(!name||!/^\d{4}$/.test(code))return Promise.reject(new Error('noid'));
     var now=Date.now(),id=sid(name,code),a=JSON.parse(JSON.stringify(state.a||{}));
-    return FB.collection('workbook').doc(id).set({name:name,code:code,day:+state.day||1,a:a,updatedAt:now}).then(function(){
-      var r={name:'명단',code:'0000',day:0,a:{},updatedAt:now};r.a[id]=now;
-      return FB.collection('workbook').doc(ROSTER).set(r,{merge:true});});
+    return fsSet(id,{name:name,code:code,day:+state.day||1,a:a,updatedAt:now}).then(function(){return fsRoster(id,now,false);});
   }
   function fetchRemote(){
     if(!FB)return Promise.resolve(null);
-    return FB.collection('workbook').doc(ROSTER).get().then(function(r){var ids=r.exists?Object.keys(r.data().a||{}):[];
-      return Promise.all(ids.map(function(id){return FB.collection('workbook').doc(id).get();}));})
-      .then(function(docs){var out={};docs.forEach(function(d){if(!d.exists)return;var x=d.data();if(!x||!x.a||typeof x.a!=='object'||x.a.kind==='camp')return;
+    return fsGet(ROSTER).then(function(r){var ids=r&&r.a?Object.keys(r.a):[];return Promise.all(ids.map(function(id){return fsGet(id).then(null,function(){return null;});}));})
+      .then(function(docs){var out={};docs.forEach(function(x){if(!x||!x.a||typeof x.a!=='object'||x.a.kind==='camp')return;
         out[String(x.name).replace(/\s+/g,'')+'|'+x.code]={n:x.name,c:x.code,a:x.a,t:x.updatedAt||0,r:1};});return out;});
   }
-  function dropRemote(n,c){var p={a:{}};p.a[sid(n,c)]=firebase.firestore.FieldValue.delete();return FB.collection('workbook').doc(ROSTER).set(p,{merge:true});}
+  function dropRemote(n,c){return fsRoster(sid(n,c),Date.now(),true);}
 
 
   /* ───── 강사 화면 ───── */
