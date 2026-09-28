@@ -1,0 +1,2027 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>브랜드에서 오픈까지</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Nanum+Gothic:wght@400;700&display=swap">
+<style>
+:root{--coral:#C67F68;--corald:#A85A45;--corall:#EBD2C6;--cream:#F8F0E7;--panel:#FDF8F1;--card:#FFF;--ink:#4A403B;--grey:#8E7F74;--line:#E6D6C4;--sage:#7F9163;--sagel:#E4EAD9;--sagem:#EFF3E8;--mustard:#C9A24A;--warn:#B8862B;--warnl:#F6ECD3;
+ --head:"Do Hyeon",sans-serif;--body:"Nanum Gothic","Apple SD Gothic Neo",sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--cream:#26201D;--panel:#2F2824;--card:#362E29;--ink:#EFE5DA;--grey:#B3A395;--line:#4D423B;--corall:#6E4E42;--sagel:#3C4632;--sagem:#333A2C;--warnl:#4A3D22}}
+:root[data-theme="dark"]{--cream:#26201D;--panel:#2F2824;--card:#362E29;--ink:#EFE5DA;--grey:#B3A395;--line:#4D423B;--corall:#6E4E42;--sagel:#3C4632;--sagem:#333A2C;--warnl:#4A3D22}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55;word-break:keep-all}
+.wrap{max-width:1120px;margin:0 auto;padding:18px 16px 60px}
+h1,h2,h3,h4{font-family:var(--head);font-weight:400;letter-spacing:-.01em;margin:0;text-wrap:balance}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+h1{font-size:26px;color:var(--corald)}
+.sub{font-size:13px;color:var(--grey);margin-top:2px}
+.saved{font-size:12px;color:var(--grey);display:flex;align-items:center;gap:6px;justify-content:flex-end}
+.saved i{width:8px;height:8px;border-radius:50%;background:var(--sage)}
+.tools{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;margin-top:6px}
+.tools button{border:1px solid var(--line);background:var(--panel);color:var(--grey);border-radius:8px;padding:5px 10px;font:700 12px var(--body);cursor:pointer}
+.tools button:hover{color:var(--corald);border-color:var(--coral)}
+.tools button.go{background:var(--coral);color:#fff;border-color:var(--coral)}
+.journey{margin-bottom:14px}
+.jl{display:flex;justify-content:space-between;font-size:11px;color:var(--grey);margin-bottom:5px}
+.jbar{display:flex;gap:3px;height:12px}
+.jseg{flex:1;background:var(--line);border-radius:3px;overflow:hidden}
+.jseg i{display:block;height:100%;background:var(--coral);transition:width .3s}
+.jseg.p i{background:var(--sage)}
+.cols{display:grid;grid-template-columns:355px 1fr;gap:18px;align-items:start}
+@media (max-width:900px){.cols{grid-template-columns:1fr}}
+.side{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:0;position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto}
+@media (max-width:900px){.side{position:static;order:2;max-height:none}}
+.sh{padding:16px 14px 14px;border-bottom:2px solid var(--line);position:sticky;top:0;background:var(--panel);z-index:2}
+.sh h2{font-size:19px;color:var(--sage)}
+.sbar{height:9px;background:var(--line);border-radius:5px;overflow:hidden;margin:9px 0 5px}
+.sfi{height:100%;background:var(--sage);transition:width .3s}
+.snum{font-size:12.5px;color:var(--grey);font-variant-numeric:tabular-nums}
+.snum b{font-size:16px;color:var(--sage);font-family:var(--head)}
+.sh .cap{font-size:12px;color:var(--grey);margin:9px 0 0;line-height:1.6}
+.next{margin-top:10px;background:var(--warnl);border-radius:9px;padding:8px 10px}
+.next span{display:block;font-size:10.5px;color:var(--warn);font-weight:700;letter-spacing:.04em}
+.next b{display:block;font-size:13px;color:var(--ink);margin-top:2px;line-height:1.4}
+.keytag{display:inline-block;background:var(--warn);color:#fff;font-size:9.5px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:5px;vertical-align:2px}
+.grp{border-bottom:1px solid var(--line)}
+.grp.open{background:var(--card)}
+.gh{display:grid;grid-template-columns:26px 1fr auto 14px;gap:9px;align-items:center;width:100%;background:transparent;border:0;padding:12px 14px;cursor:pointer;text-align:left}
+.gh:hover{background:var(--sagem)}
+.gh:focus-visible{outline:2px solid var(--sage);outline-offset:-2px}
+.gn{width:26px;height:26px;border-radius:7px;background:var(--sagel);color:var(--sage);font:700 13px var(--body);display:grid;place-items:center}
+.grp.open .gn{background:var(--sage);color:#fff}
+.gt{font:700 14px var(--body);color:var(--ink);min-width:0}
+.gp{display:block;height:4px;background:var(--line);border-radius:3px;margin-top:5px;overflow:hidden}
+.gp span{display:block;height:100%;background:var(--sage)}
+.gh .c{font:700 12px var(--body);color:var(--grey);font-variant-numeric:tabular-nums}
+.ar{color:var(--grey);font-size:11px}
+.gwhy{font-size:12px;color:var(--grey);line-height:1.6;margin:0 14px 8px;padding:8px 10px;background:var(--sagem);border-radius:8px}
+.ck{display:grid;grid-template-columns:22px 1fr;gap:10px;padding:11px 14px;align-items:start;border-top:1px solid var(--line)}
+.ck.key{background:var(--warnl)}
+.ck.done{background:var(--sagem)}
+.mk{width:21px;height:21px;border-radius:6px;border:2px solid var(--line);background:var(--card);display:grid;place-items:center;font-size:12px;color:transparent;cursor:pointer;flex:none}
+.mk.on{background:var(--sage);border-color:var(--sage);color:#fff}
+.mk:focus-visible{outline:2px solid var(--sage);outline-offset:2px}
+.cbody{min-width:0}
+.ctitle{font:700 14px var(--body);color:var(--ink);line-height:1.45}
+.ck.done .ctitle{color:var(--sage)}
+.at{font-size:10.5px;color:var(--sage);font-weight:400;margin-left:6px}
+.cwhat{font-size:12.5px;color:var(--grey);line-height:1.6;margin-top:4px}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.chip{display:inline-flex;align-items:center;gap:5px;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:3px 9px;font-size:11.5px;color:var(--ink);line-height:1.4}
+.ck.key .chip{background:#fff}
+.chip i{font-style:normal;font-size:9.5px;font-weight:700;color:var(--sage);letter-spacing:.03em}
+.carry{margin-top:7px;font-size:12px;color:var(--sage);background:var(--sagel);border-radius:8px;padding:6px 9px;line-height:1.5}
+.ck input{width:100%;margin-top:7px;border:1px solid var(--line);border-radius:8px;padding:6px 9px;font:12.5px var(--body);background:var(--card);color:var(--ink)}
+.ck input:focus{outline:2px solid var(--sage);outline-offset:-1px}
+.main{min-width:0}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.tab{border:1.5px solid var(--line);border-radius:12px;padding:10px 8px;background:var(--panel);text-align:center;font-family:var(--head);color:var(--grey);font-size:15px;line-height:1.25;cursor:pointer}
+.tab span{display:block;font-family:var(--body);font-size:11px;margin-top:3px;color:var(--grey)}
+.tab .cnt{font-weight:700;font-variant-numeric:tabular-nums}
+.tab.on{background:var(--coral);border-color:var(--coral);color:#fff}
+.tab.on span{color:#FBF3E6}
+.tab.d2.on{background:var(--sage);border-color:var(--sage)}
+.tab.d3.on{background:var(--mustard);border-color:var(--mustard)}
+.tab:focus-visible{outline:2px solid var(--corald);outline-offset:2px}
+.dh{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px}
+.dh h3{font-size:21px;color:var(--corald)}
+.dh p{margin:4px 0 0;font-size:13px;color:var(--grey)}
+.dp{display:flex;align-items:center;gap:9px;margin-top:10px;font-size:12px;color:var(--grey)}
+.dp .tr{flex:1;height:8px;border-radius:99px;background:var(--panel);border:1px solid var(--line);overflow:hidden}
+.dp .fi{height:100%;background:var(--coral);transition:width .3s}
+.rp-btn{margin-top:11px;width:100%;border:1.5px solid var(--coral);background:var(--coral);color:#fff;border-radius:10px;padding:9px;font:700 14px var(--body);cursor:pointer}
+.rp-btn:hover{background:var(--corald);border-color:var(--corald)}
+.rp-hint{font-size:11.5px;color:var(--grey);margin-top:5px;text-align:center}
+.rp-hint.ok{color:var(--sage);font-weight:700}
+.num{transition:background .2s}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px}
+.ph{display:grid;grid-template-columns:34px 1fr;gap:11px;align-items:start}
+.num{width:32px;height:32px;border-radius:50%;background:var(--coral);color:#fff;font-family:var(--head);display:grid;place-items:center;font-size:15px}
+.d2 .num{background:var(--sage)}.d3 .num{background:var(--mustard)}
+.ph h4{font-size:18px;color:var(--corald)}
+.topic{font-size:12.5px;color:var(--grey);margin-top:3px}
+.result{margin-top:9px;font-size:12.5px;color:var(--corald);background:var(--corall);border-radius:8px;padding:6px 10px;display:inline-block}
+.fbox{margin-top:12px;border-top:1px solid var(--line);padding-top:11px}
+.fbox label{display:block;font:700 13.5px var(--body);color:var(--ink);margin-bottom:3px}
+.fhelp{font-size:12px;color:var(--grey);margin-bottom:6px;line-height:1.5}
+.fbox textarea{width:100%;border:1.5px solid var(--corall);border-radius:9px;padding:8px 10px;font:14px var(--body);background:var(--card);color:var(--ink);resize:vertical;min-height:62px}
+.fbox textarea:focus{outline:2px solid var(--coral);outline-offset:-1px}
+.exbtn{border:0;background:transparent;color:var(--corald);font:700 12px var(--body);cursor:pointer;padding:4px 0}
+.ex{background:var(--panel);border:1px dashed var(--corall);border-radius:9px;padding:9px 11px;margin-top:5px;font-size:12.5px;white-space:pre-wrap;line-height:1.6}
+.ex .lbl{font:700 11px var(--body);color:var(--corald);display:block;margin-bottom:4px}
+.ex button{margin-top:7px;border:1px solid var(--coral);background:var(--card);color:var(--corald);border-radius:7px;padding:4px 10px;font:700 11.5px var(--body);cursor:pointer}
+.pr{margin-top:12px;background:var(--warnl);border:1px solid var(--corall);border-radius:11px;padding:11px 12px}
+.pr .h{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+.pr .h b{flex:1 1 auto;min-width:140px}
+.pr .h b{font:400 14px var(--head);color:var(--corald)}
+.pr .cp{border:1.5px solid var(--coral);background:var(--card);color:var(--corald);border-radius:8px;padding:5px 12px;font:700 12.5px var(--body);cursor:pointer;white-space:nowrap}
+.pr .cp.done{background:var(--sage);border-color:var(--sage);color:#fff}
+.pr pre{margin:0;white-space:pre-wrap;word-break:keep-all;font:12.5px/1.6 var(--body);background:var(--card);border:1px dashed var(--corall);border-radius:8px;padding:9px 11px;max-height:190px;overflow:auto;color:var(--ink)}
+.pr .how{font-size:11.5px;color:var(--grey);margin-top:6px}
+.links{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
+.links a{font-size:12px;color:#fff;background:var(--coral);border-radius:999px;padding:5px 11px;text-decoration:none}
+.links a:hover{background:var(--corald)}
+.files{display:grid;gap:7px;margin-top:10px}
+.files .dl{display:block;text-decoration:none;background:var(--sagel);border:1px solid var(--sage);border-radius:10px;padding:9px 12px}
+.files .dl:hover{background:var(--sagem)}
+.files .dl b{display:block;font:700 13.5px var(--body);color:var(--sage)}
+.files .dl span{display:block;font-size:11.5px;color:var(--grey);margin-top:2px;line-height:1.45}
+.files .dl.off{opacity:.75;cursor:default}
+.files .dl.off b{color:var(--grey)}
+.files .dl .no{color:var(--warn);font-weight:700;margin-top:4px}
+.seam{margin-top:10px;padding:11px 13px;background:var(--sagel);border-radius:11px;font-size:13px;color:var(--sage);line-height:1.55}
+.tools button.armed,.ex button.armed{background:var(--warnl);color:var(--warn);border-color:var(--warn)}
+.ck .ctitle{cursor:pointer}
+.howto{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--coral);border-radius:12px;padding:11px 14px;margin-bottom:14px}
+.howto summary{font:400 16px var(--head);color:var(--corald);cursor:pointer;list-style:none}
+.howto summary::-webkit-details-marker{display:none}
+.howto summary::before{content:"▾ ";font-size:12px}
+.howto:not([open]) summary::before{content:"▸ "}
+.howto p{margin:8px 0 0;font-size:13px;line-height:1.65;color:var(--grey)}
+.howto p b{color:var(--ink)}
+@media print{.howto{display:none}}
+.sw{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:11px 12px}
+.swh{font:700 12px var(--body);color:var(--corald);margin-bottom:8px}
+.swl{display:flex;flex-wrap:wrap;gap:8px}
+.swc{flex:1 1 150px;min-width:150px}
+.swb{border-radius:9px;padding:14px 10px;text-align:center;font:700 15px var(--body);border:1px solid rgba(0,0,0,.12)}
+.swm{margin-top:5px;display:flex;flex-direction:column;gap:1px}
+.swm b{font:700 12px ui-monospace,Menlo,monospace;color:var(--ink)}
+.swm span{font-size:11.5px;color:var(--grey)}
+.swt{font-size:10.5px!important;font-weight:700}
+.swt.ok{color:var(--sage)!important}
+.swt.warn{color:var(--warn)!important}
+.swt.bad{color:#B4473A!important}
+.swp{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.pv{flex:1 1 130px;min-width:130px;border-radius:9px;padding:12px 10px;text-align:center}
+.pv b{display:block;font:700 10.5px var(--body);opacity:.75;letter-spacing:.03em}
+.pv span{display:block;font:700 13px var(--body);margin-top:3px}
+.swn{margin-top:9px;font-size:11.5px;line-height:1.6;color:var(--grey)}
+/* 프롬프트 상태 · 예시 보기 */
+.pst{margin:0 0 7px;display:flex;flex-direction:column;gap:3px}
+.ps{font:700 11.5px var(--body);align-self:flex-start;border-radius:999px;padding:2px 9px}
+.ps.ok{color:var(--sage);background:var(--sagem);border:1px solid var(--sagel)}
+.ps.no{color:var(--warn);background:var(--warnl);border:1px solid var(--warn)}
+.ps.ex{color:var(--corald);background:var(--corall);border:1px solid var(--coral)}
+.pn{font-size:11.5px;line-height:1.55;color:var(--grey)}
+.pmx{border:1px solid var(--line);background:var(--card);color:var(--grey);border-radius:7px;padding:4px 10px;font:700 11.5px var(--body);cursor:pointer;white-space:nowrap}
+.pmx:hover{color:var(--corald);border-color:var(--coral)}
+.pr.exmode{border-color:var(--coral);background:var(--corall)}
+.pr.exmode .pmx{background:var(--coral);color:#fff;border-color:var(--coral)}
+.pr.exmode pre{border-style:dashed}
+/* 처음 화면 · 제출 · 강사 확인 */
+.who-line{display:flex;align-items:center;gap:6px;justify-content:flex-end;margin-bottom:3px}
+.who{font:700 12.5px var(--body);color:var(--corald);background:var(--corall);border-radius:999px;padding:2px 10px}
+.who.t{color:#fff;background:var(--sage)}
+.who.off{color:var(--grey);background:var(--panel);font-weight:400}
+.whobtn{border:1px solid var(--line);background:var(--panel);color:var(--grey);border-radius:7px;padding:2px 8px;font:700 11px var(--body);cursor:pointer}
+.gate{position:fixed;inset:0;background:var(--cream);z-index:120;display:flex;align-items:center;justify-content:center;padding:24px 16px;overflow:auto}
+.gcard{background:var(--card);border:1px solid var(--line);border-radius:18px;max-width:420px;width:100%;padding:26px 24px 22px}
+.gcard h2{font-size:25px;color:var(--corald)}
+.gp{font-size:13px;color:var(--grey);line-height:1.65;margin:8px 0 18px}
+.gcard label{display:block;font:700 12px var(--body);color:var(--ink);margin:12px 0 5px}
+.gcard input[type=text],.gcard input:not([type]){width:100%}
+.gcard input#gName,.gcard input#gTail{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:11px 13px;font:15px var(--body);background:var(--panel);color:var(--ink)}
+.gcard input:focus{outline:2px solid var(--coral);outline-offset:-1px;background:var(--card)}
+.gcard input.bad{border-color:#B4473A;background:#FDF0EE}
+.gnote{font-size:11.5px;color:var(--grey);line-height:1.6;margin-top:10px;background:var(--panel);border-radius:9px;padding:9px 11px}
+.gchk{display:flex!important;align-items:center;gap:8px;margin:14px 0 0!important;font-weight:400!important;font-size:12.5px!important;color:var(--grey)!important;cursor:pointer}
+.gchk input{width:16px;height:16px;accent-color:var(--sage)}
+.gbtn{width:100%;margin-top:16px;border:0;background:var(--coral);color:#fff;border-radius:11px;padding:13px;font:700 15px var(--body);cursor:pointer}
+.gbtn:hover{background:var(--corald)}
+.gskip{width:100%;margin-top:7px;border:0;background:transparent;color:var(--grey);font:12.5px var(--body);cursor:pointer;text-decoration:underline}
+#sbPre{white-space:pre-wrap;word-break:break-all;background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:13px;font:12px/1.6 ui-monospace,Menlo,monospace;color:var(--ink);max-height:300px;overflow:auto;margin:0}
+#tbIn{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;font:12px/1.5 ui-monospace,Menlo,monospace;background:var(--panel);color:var(--ink)}
+#tbClr{border:1px solid var(--line);background:var(--panel);color:var(--grey);border-radius:9px;padding:9px 14px;font:700 13px var(--body);cursor:pointer}
+#tbClr.armed{background:var(--warnl);color:var(--warn);border-color:var(--warn)}
+.tbh{font:700 12px var(--body);color:var(--sage);margin:14px 0 6px}
+.tbnone{font-size:13px;color:var(--grey);padding:18px 0;text-align:center}
+.tbr{display:flex;gap:6px;align-items:stretch;margin-bottom:6px}
+.tbmain{flex:1;text-align:left;border:1px solid var(--line);background:var(--panel);border-radius:11px;padding:10px 12px;cursor:pointer;display:grid;grid-template-columns:1fr auto;gap:2px 10px}
+.tbmain:hover{border-color:var(--coral);background:var(--card)}
+.tbn{font:700 14px var(--body);color:var(--ink)}
+.tbn i{font-style:normal;font-size:11.5px;color:var(--grey);font-weight:400}
+.tbc{font-size:12px;color:var(--corald);grid-column:1}
+.tbg{font-size:11.5px;color:var(--grey);grid-column:2;grid-row:1;text-align:right;white-space:nowrap}
+.tbg b{color:var(--sage)}
+.tbd{font-size:11px;color:var(--grey);grid-column:2;grid-row:2;text-align:right;white-space:nowrap}
+.tbdel{border:1px solid var(--line);background:var(--panel);color:var(--grey);border-radius:9px;padding:0 11px;font-size:13px;cursor:pointer}
+.tbdel:hover{color:#B4473A;border-color:#B4473A}
+.ssd{margin-top:16px}
+.ssd h4{font:400 16px var(--head);color:var(--corald);border-bottom:2px solid var(--corall);padding-bottom:4px}
+.ssd h4 span{font:700 11.5px var(--body);color:var(--grey);float:right}
+.ssd dl{margin:8px 0 0;display:grid;grid-template-columns:135px 1fr;gap:5px 12px;font-size:13px}
+.ssd dt{font-weight:700;color:var(--grey);font-size:12px}
+.ssd dd{margin:0;white-space:pre-wrap;color:var(--ink)}
+.ssd .em{color:var(--grey);font-style:italic}
+.sscl{margin:8px 0 0;padding-left:18px;font-size:12.5px;line-height:1.8;color:var(--ink)}
+.sscl i{font-style:normal;color:var(--sage);font-size:11px}
+.aifpre{white-space:pre-wrap;word-break:break-word;font:11px/1.55 ui-monospace,Menlo,monospace;background:#F7F3EE;border:1px solid #DDD2C4;border-radius:8px;padding:11px;color:#231C18}
+@media print{.gate,.who-line{display:none!important}.aif{page-break-before:always}}
+.tools button.undo{background:var(--sagem);color:var(--sage);border-color:var(--sage)}
+.dlnote{flex-basis:100%;font-size:11.5px;color:var(--grey);line-height:1.55;margin-top:2px}
+.chain{font-size:10.5px;color:var(--sage);background:var(--sagem);border:1px solid var(--sagel);border-radius:999px;padding:2px 8px;line-height:1.5;white-space:nowrap}
+.chain.new{color:var(--warn);background:var(--warnl);border-color:var(--warn);font-weight:700}
+.tms{margin-top:11px;background:var(--sagem);border:1px solid var(--sagel);border-radius:11px;padding:0}
+.tms>summary{font:700 12px var(--body);color:var(--sage);letter-spacing:.02em;cursor:pointer;list-style:none;padding:9px 12px;display:flex;align-items:center;gap:6px}
+.tms>summary::-webkit-details-marker{display:none}
+.tms>summary::before{content:"▸";font-size:11px}
+.tms[open]>summary::before{content:"▾"}
+.tms>summary i{font-style:normal;font-weight:400;color:var(--grey);font-size:11.5px}
+.tms>summary:hover{background:var(--sagel);border-radius:11px}
+.tms[open]>summary{border-bottom:1px solid var(--sagel);border-radius:11px 11px 0 0}
+.tms .tmbody{padding:4px 12px 10px}
+.tm{padding:6px 0;border-top:1px solid var(--sagel)}
+.tm:first-of-type{border-top:0}
+.tm b{display:block;font:700 13.5px var(--body);color:var(--ink);margin-bottom:1px}
+.tm span{display:block;font-size:12.5px;line-height:1.55;color:var(--grey)}
+.gov{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:90;display:flex;align-items:flex-start;justify-content:center;padding:28px 16px;overflow:auto}
+.gbox.wide{max-width:780px}
+.afbtns{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0 12px}
+.afbtns #afDl{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:9px;padding:9px 14px;font:700 13px var(--body);cursor:pointer}
+.afbtns #afDl:hover{border-color:var(--coral);color:var(--corald)}
+.afno{font-size:11.5px;color:var(--grey)}
+#afPre{white-space:pre-wrap;word-break:break-word;background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:13px 14px;font:12.5px/1.65 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ink);max-height:340px;overflow:auto;margin:0}
+.afh{font:400 17px var(--head);color:var(--corald);margin:20px 0 0;padding-top:16px;border-top:2px solid var(--line)}
+.uses{display:grid;gap:9px}
+.use{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:10px 12px}
+.uh{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px}
+.uh b{font:700 13.5px var(--body);color:var(--ink)}
+.use pre{white-space:pre-wrap;word-break:break-word;margin:0;font:12px/1.6 var(--body);color:var(--grey)}
+.use .cp{border:1px solid var(--line);background:var(--card);color:var(--grey);border-radius:7px;padding:4px 10px;font:700 11.5px var(--body);cursor:pointer;white-space:nowrap}
+.use .cp:hover,.cp.done{color:var(--sage);border-color:var(--sage)}
+.gbox{background:var(--card);border:1px solid var(--line);border-radius:14px;max-width:620px;width:100%;padding:18px 20px 22px}
+.gtop{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.gtop h3{font-size:20px;color:var(--corald)}
+.gtop button{border:1px solid var(--line);background:var(--panel);color:var(--grey);border-radius:8px;padding:5px 12px;font:700 12px var(--body);cursor:pointer}
+.gbox{max-height:none}
+#gFind{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:9px 12px;font:14px var(--body);background:var(--panel);color:var(--ink);margin-bottom:6px}
+#gFind:focus{outline:2px solid var(--sage);outline-offset:-1px;background:var(--card)}
+.gsec{margin-top:14px}
+.gsec h4{font:400 15px var(--head);color:var(--sage);padding-bottom:5px;border-bottom:2px solid var(--sagel)}
+.gnone{font-size:13px;color:var(--grey);padding:18px 2px;text-align:center}
+.gsub{font-size:12.5px;color:var(--grey);margin:4px 0 10px}
+.glist .tm{border-top:1px solid var(--line);padding:9px 0}
+@media print{.gov{display:none!important}}
+.lesson{margin-top:11px;background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:0;font-size:13px;line-height:1.6}
+.lesson>summary{font:400 15px var(--head);color:var(--corald);cursor:pointer;list-style:none;padding:11px 13px;display:flex;align-items:center;gap:7px}
+.lesson>summary::-webkit-details-marker{display:none}
+.lesson>summary::before{content:"▸";font-size:12px;color:var(--grey);transition:transform .15s}
+.lesson[open]>summary::before{content:"▾"}
+.lesson>summary:hover{background:var(--sagem);border-radius:11px}
+.lesson[open]>summary{border-bottom:1px solid var(--line);border-radius:11px 11px 0 0}
+.lesson .lbody{padding:11px 13px 13px}
+.lesson .lbody>p:first-child{margin-top:0}
+.lesson table{width:100%;border-collapse:collapse;font-size:12.5px;margin:6px 0}
+.lesson th{font:700 11.5px var(--body);color:var(--corald);text-align:left;padding:4px 5px;border-bottom:1.5px solid var(--corall)}
+.lesson td{padding:4px 5px;border-bottom:1px solid var(--line)}
+.lesson td.r{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+#report{display:none}
+.rbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--panel);border-bottom:1px solid var(--line);padding:11px 16px;position:sticky;top:0;z-index:5}
+.rbar b{font:400 17px var(--head);color:var(--corald);flex:1 1 auto;min-width:160px}
+.rbar span{font-size:11.5px;color:var(--grey);flex:1 1 100%;order:3}
+.rbar button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:9px;padding:7px 12px;font:700 12.5px var(--body);cursor:pointer;white-space:nowrap}
+.rbar button:hover{border-color:var(--coral);color:var(--corald)}
+.rbar button.armed{background:var(--warnl);color:var(--warn);border-color:var(--warn)}
+@media print{.rbar,.no-print{display:none!important}}
+@media print{
+ :root,:root[data-theme="dark"],:root:not([data-theme="light"]){--cream:#fff;--panel:#fff;--card:#fff;--ink:#231C18;--grey:#5A4F47;--line:#D8CBBB;--corall:#EBD2C6;--sagel:#E4EAD9;--sagem:#F2F5EC;--warnl:#F6ECD3}
+ body{background:#fff;color:#231C18}
+ #report{color:#231C18}
+}
+
+@media print{body{background:#fff}.wrap>*:not(#report){display:none!important}#report{display:block!important}
+ .rp{page-break-after:always}.rp:last-child{page-break-after:auto}}
+.rpwrap{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;margin-top:14px}
+.rpwrap h2{font-size:23px;color:var(--corald);margin-bottom:4px}
+.rp{margin-top:20px;padding-top:16px;border-top:2px solid var(--corall)}
+.rp:first-of-type{border-top:0;padding-top:0;margin-top:12px}
+.rp h3{font-size:19px;color:var(--corald);margin-bottom:8px}
+.rp dl{display:grid;grid-template-columns:150px 1fr;gap:6px 14px;margin:0;font-size:13.5px}
+.rp dt{color:var(--grey);font-size:12.5px;padding-top:2px}
+.rp dd{margin:0;white-space:pre-wrap}
+.rp dd.em{color:var(--grey);font-style:italic}
+.cover{background:var(--coral);color:#fff;border-radius:14px;padding:26px 22px;margin-bottom:6px}
+.cover h2{color:#fff;font-size:28px}
+.cover p{margin:8px 0 0;color:#FBF3E6;font-size:15px}
+.cover .by{margin-top:18px;font-size:12.5px;color:#FBF3E6}
+@media (prefers-reduced-motion:reduce){.jseg i,.dp .fi{transition:none}}
+</style>
+
+<div class="wrap">
+  <div class="top">
+    <div><h1>브랜드에서 오픈까지</h1><div class="sub">AI 파트너와 함께 브랜드를 만들고, 실제 오픈까지 갑니다</div></div>
+    <div>
+      <div class="who-line"><span id="who"></span> <button class="whobtn" id="bWho">바꾸기</button></div>
+      <div class="saved" id="saved"><i></i><span>저장됨</span></div>
+      <div style="font-size:11px;color:var(--grey);text-align:right;margin-top:2px">적는 즉시 이 브라우저에 자동 저장됩니다</div>
+      <div class="tools">
+        <button id="bFill">예시로 채우기</button>
+        <button id="bSubmit">📤 강사님께 보내기</button>
+        <button id="bTeach">🧑‍🏫 제출 확인</button>
+        <button id="bTerms">🔤 용어 사전</button>
+        <button id="bBackup">📋 답 백업</button>
+        <button id="bRestore">📥 불러오기</button>
+        <button id="bClear">비우고 시작</button>
+        <button class="go" id="bAI">🧱 AI 기본 파일</button>
+        <button class="go" id="bReport">보고서 만들기</button>
+      </div>
+    </div>
+  </div>
+  <div class="journey">
+    <div class="jl"><span style="color:var(--corald)"><b>브랜드 정하기</b> DAY 1·2·3</span><span style="color:var(--sage)"><b>창업 준비</b> A~K</span></div>
+    <div class="jbar" id="jbar"></div>
+  </div>
+  <details class="howto" open>
+    <summary>🤝 AI 파트너와 함께 만듭니다 — 먼저 읽어 주세요</summary>
+    <p><b>DAY마다 챗GPT·클로드에 새 대화를 하나만 엽니다.</b> 그 안에서 하루치 프롬프트 5~7개를 이어서 붙여넣습니다. 앞에서 적은 답이 뒤 프롬프트에 자동으로 들어가서, 대화가 쌓일수록 AI가 내 카페를 더 잘 알게 됩니다.</p>
+    <p><b>AI는 답할 때마다 「지금까지의 브랜드 카드」를 갱신해 줍니다</b> — 카페 이름 / 콘셉트 한 줄 / 키워드 3개 / 대표 고객 / 상권 / 굳이 와야 할 이유 / 시그니처 / 비주얼 / 홍보 한 줄. 처음엔 거의 "미정"이지만 3일 뒤 이 카드가 곧 내 브랜드가 됩니다.</p>
+    <p><b>정하는 사람은 나입니다.</b> AI는 후보를 여러 개 내주고 걱정되는 점을 짚어 주는 파트너입니다. 마음에 드는 게 없으면 "다시" 하면 됩니다. <b>대화창을 닫아 버렸어도 괜찮습니다</b> — 다음 DAY 첫 프롬프트가 지금까지 적은 답을 통째로 다시 넣어 주니 거기서 이어집니다.</p>
+  </details>
+  <div class="cols">
+    <aside class="side" id="side"></aside>
+    <div class="main"><div class="tabs" id="tabs"></div><div id="day"></div></div>
+  </div>
+</div>
+<div id="report"></div>
+<script src="https://cdn.jsdelivr.net/npm/firebase@10.12.5/firebase-app-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/firebase@10.12.5/firebase-auth-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/firebase@10.12.5/firebase-firestore-compat.js"></script>
+<script>
+/* Firebase 설정 — 카페스이 (cafesui) */
+window.FIREBASE_CONFIG = {
+  apiKey: "AIzaSyDDwIS0nXg5cDBe5ZO8yWUgUMIK3hizNGI",
+  authDomain: "cafesui.firebaseapp.com",
+  projectId: "cafesui",
+  storageBucket: "cafesui.firebasestorage.app",
+  messagingSenderId: "496994957073",
+  appId: "1:496994957073:web:2ddc6ba5cea5f60a483eb0"
+};
+</script>
+<script>
+// ---- terms.js ----
+// 용어 사전 — 중학생에게 설명하듯 쉽게, 세 줄을 넘지 않게.
+// 교시·체크리스트에서 tm:[...]로 불러 씁니다. 사전 전체는 「🔤 용어 사전」 버튼.
+const TERMS = {
+
+// ── 브랜드 · 콘셉트 ──────────────────────────
+'콘셉트':'이 가게가 어떤 가게인지 한마디로 정한 것.\n"조용한 동네 과일케이크 집"처럼 들으면 그림이 그려져야 합니다.\n메뉴·간판·사진이 전부 이 한마디를 따라갑니다.',
+'브랜딩':'우리 가게를 어떤 가게로 기억하게 만들지 정하고 계속 맞춰 가는 일.\n이름·색·글씨체·말투·사진을 하나로 통일하는 것입니다.\n한 가지로 오래 반복해야 기억에 남습니다.',
+'마케팅':'정해 놓은 우리 가게를 바깥에 알리는 일.\n브랜딩이 "우리가 누구인가"라면 마케팅은 "그걸 어떻게 알릴까"입니다.\n브랜딩이 먼저입니다. 순서가 바뀌면 광고비만 나갑니다.',
+'브랜드 아이덴티티':'우리 가게를 알아보게 하는 겉모습 묶음.\n로고·색·글씨체·포장·간판이 전부 여기 들어갑니다.\n어디서 봐도 "아, 거기다" 싶으면 성공입니다.',
+'톤앤매너':'우리 가게가 말하고 보이는 일관된 분위기.\n인스타 글투, 사진 밝기, 색까지 같은 결로 맞추는 것입니다.\n사람으로 치면 말투와 옷차림입니다.',
+'슬로건 · 한 줄 소개':'우리 가게를 한 문장으로 말한 것.\n"퇴근길에 들르는 작은 케이크집"처럼 짧고 쉬워야 합니다.\n간판·인스타·명함에 똑같이 씁니다.',
+'포지셔닝':'손님 머릿속에서 우리 가게가 어느 자리에 놓이는가.\n"싸고 빠른 집" 옆인지 "비싸도 특별한 집" 옆인지입니다.\n자리를 정해야 가격도 인테리어도 따라 정해집니다.',
+'무드보드':'우리 가게 분위기를 보여 주는 사진을 한 장에 모아 붙인 것.\n색, 가구, 접시, 조명 사진을 모으면 됩니다.\n말로 설명이 안 될 때 이걸 보여 주면 한 번에 통합니다.',
+'로고':'가게 이름을 그림처럼 만든 표시.\n간판·컵·봉투·인스타 프로필에 계속 쓰입니다.\n복잡하면 작게 줄였을 때 안 보이니 단순할수록 좋습니다.',
+'대표 컬러 · 색 코드':'우리 가게를 대표하는 색 2~3가지.\n"베이지"처럼 말로 하면 사람마다 달라서 #F3E9DC 같은 색 코드로 적어 둡니다.\n간판집·인쇄소에 이 코드만 주면 똑같은 색이 나옵니다.',
+'폰트 · 서체':'글씨 모양.\n제목용 하나, 본문용 하나면 충분합니다.\n메뉴판·간판·인스타에 같은 글씨를 써야 한 가게처럼 보입니다.',
+'패키지 · 포장':'손님이 들고 나가는 상자·봉투·컵·스티커.\n집에 가서도 우리 가게가 보이는 유일한 물건입니다.\n원가에 꼭 넣어야 하고, 작은 스티커 하나로도 크게 달라집니다.',
+'차별화 포인트':'옆 가게 말고 굳이 우리 가게에 와야 하는 이유.\n"여기서만 파는 것"이거나 "여기가 제일 편한 것"이어야 합니다.\n손님이 한 문장으로 말할 수 있어야 진짜입니다.',
+
+// ── 손님 · 상권 ──────────────────────────
+'타깃 고객':'내가 제일 오게 하고 싶은 손님 무리.\n"20~30대 여성"처럼 나이·성별·사는 곳으로 크게 묶은 것입니다.\n모두를 노리면 아무도 안 옵니다.',
+'페르소나':'타깃 고객을 실제 한 사람처럼 구체적으로 그린 것.\n"명지 사는 33세 직장인, 금요일 저녁에 케이크를 사 감"처럼 이름·하루 일과까지 정합니다.\n메뉴나 사진을 정할 때 "이 사람이 좋아할까?"로 판단하게 해 줍니다.',
+'객단가':'손님 한 명이 한 번 올 때 쓰는 평균 금액.\n매출을 손님 수로 나누면 나옵니다(50만 원 ÷ 50명 = 1만 원).\n객단가 × 손님 수 = 하루 매출입니다.',
+'상권':'우리 가게로 손님이 걸어올 만한 동네 범위.\n보통 걸어서 10분 안쪽을 봅니다.\n여기에 누가 살고 누가 지나가는지가 매출을 좌우합니다.',
+'유동인구':'그 자리 앞을 하루에 지나다니는 사람 수.\n많다고 무조건 좋은 게 아니라 내 손님이 지나가야 좋습니다.\n요일·시간대별로 나눠 봐야 진짜가 보입니다.',
+'배후수요':'상권 안에 이미 살거나 일하고 있는 사람들.\n아파트 세대 수, 주변 회사·학교 인원이 여기에 들어갑니다.\n지나가는 사람보다 꾸준히 오는 단골이 여기서 나옵니다.',
+'회전율':'같은 자리에 하루 몇 번 손님이 바뀌는가.\n20석에 하루 60명이 왔으면 3회전입니다.\n오래 앉는 카페는 회전율이 낮으니 객단가를 올려야 합니다.',
+'피크타임':'하루 중 손님이 가장 몰리는 시간.\n이 시간에 빵이 떨어지거나 사람이 모자라면 매출을 통째로 놓칩니다.\n준비·인력·재고를 전부 이 시간에 맞춥니다.',
+'재방문 · 단골':'한 번 온 손님이 다시 오는 것.\n새 손님을 부르는 것보다 돈이 훨씬 적게 듭니다.\n이름을 기억하거나 작은 약속 하나만 있어도 크게 달라집니다.',
+'네이버 데이터랩':'어떤 단어를 사람들이 얼마나 검색했는지 보여 주는 무료 사이트.\n지난 1년 그래프가 오르면 뜨는 중, 내려가면 식는 중입니다.\n숫자는 "몇 명"이 아니라 최고치를 100으로 놓은 상대값입니다.',
+'소상공인365':'동네 인구·유동인구·업종별 가게 수와 매출을 무료로 보여 주는 정부 사이트.\n지도에서 반경 500m를 그리고 「분석하기」만 누르면 됩니다.\nPDF로 저장해 두면 사업계획서에 그대로 씁니다.',
+'마피아넷':'어떤 단어를 한 달에 몇 번 검색하는지 실제 숫자를 보여 주는 무료 사이트.\n네이버 검색광고 자료를 쉽게 풀어 준 것입니다.\n메뉴 이름·해시태그를 정할 때 감이 아니라 숫자로 고르게 해 줍니다.',
+'트렌드 키워드':'요즘 사람들이 많이 찾고 많이 말하는 단어.\n"소금빵", "말차"처럼 검색이 늘고 있는 말입니다.\n유행은 식기도 하니 내 것으로 삼기 전에 검색량을 꼭 봅니다.',
+
+// ── 메뉴 · 원가 · 돈 ──────────────────────────
+'시그니처 메뉴':'이 가게 하면 바로 떠오르는 대표 메뉴 한 가지.\n제일 많이 팔리고, 사진이 제일 많이 찍히는 메뉴입니다.\n하나만 확실히 정해야 기억에 남습니다.',
+'원가':'그 메뉴 한 개를 만드는 데 들어간 재료값.\n밀가루·버터·포장지까지 전부 더합니다.\n인건비·월세는 원가가 아니라 따로 셉니다.',
+'원가율':'판매가에서 원가가 차지하는 비율.\n원가 1,750원 ÷ 판매가 5,000원 = 35%입니다.\n카페 디저트는 보통 30~35%를 목표로 잡습니다.',
+'판매가':'손님에게 받는 가격.\n원가만 보고 정하는 게 아니라 주변 시세와 손님이 느끼는 값어치도 같이 봅니다.\n한번 정하면 올리기 어려우니 처음에 낮게 시작하지 않습니다.',
+'매출':'손님에게 받은 돈 전체.\n내 돈이 아닙니다. 여기서 재료비·월세·세금이 전부 빠져나갑니다.\n"매출은 나오는데 돈이 안 남는다"는 말이 여기서 나옵니다.',
+'매출원가':'그달 실제로 판 것에 들어간 재료비 합계.\n사 온 재료 전부가 아니라 "팔린 것"에 들어간 것만 셉니다.\n매출 − 매출원가 = 팔아서 남긴 1차 이익입니다.',
+'고정비':'손님이 한 명도 안 와도 매달 나가는 돈.\n월세, 사람 월급, 보험료, 기본 전기·수도 요금 같은 것입니다.\n이걸 먼저 알아야 "얼마를 팔아야 하는지"가 나옵니다.',
+'변동비':'많이 팔면 같이 늘어나는 돈.\n재료비, 포장재, 배달 수수료, 카드 수수료가 여기 들어갑니다.\n한 개 더 팔 때마다 따라 나가는 돈이라고 보면 됩니다.',
+'영업이익':'매출에서 재료비·월세·인건비 같은 장사 비용을 다 빼고 남은 돈.\n진짜 "장사가 되는지"를 보여 주는 숫자입니다.\n여기서 세금과 대출 이자를 더 빼야 내 손에 들어옵니다.',
+'순이익':'세금·이자까지 전부 빼고 최종으로 남은 돈.\n이게 실제로 내가 가져가는 돈입니다.\n영업이익이 좋아도 이자가 크면 순이익은 없을 수 있습니다.',
+'손익분기점':'번 돈과 나간 돈이 딱 같아지는 지점.\n여기를 넘겨야 비로소 내 돈이 남습니다.\n"하루 몇 개를 팔아야 본전인가"로 계산해 두면 든든합니다.',
+'손익계산서':'한 달 동안 얼마 벌고 얼마 썼는지 한 장에 적은 표.\n매출 − 재료비 − 고정비 − 변동비 = 이익 순서로 내려갑니다.\n매달 같은 칸에 적어야 좋아지는지 나빠지는지 보입니다.',
+'로스 · 폐기율':'팔지 못하고 버리게 된 재료나 제품.\n안 팔린 케이크, 상한 과일이 전부 여기 들어갑니다.\n보통 매출의 3~5%는 미리 손해로 잡아 둡니다.',
+'발주':'거래처에 재료를 주문하는 일.\n요일과 수량을 정해 놓고 하면 로스가 확 줄어듭니다.\n주문한 날과 오는 날 사이가 비니 그만큼은 미리 시켜야 합니다.',
+'거래처':'재료를 대 주는 가게나 회사.\n같은 우유도 마트값과 거래처값이 다릅니다.\n두 곳 이상 뚫어 놔야 한 곳이 끊겨도 장사를 합니다.',
+'최소주문수량':'거래처가 "이만큼은 사야 팔아요" 하고 정한 양.\n혼자 하는 가게는 이게 커서 남아도는 경우가 많습니다.\n주문 전에 꼭 물어보고, 크면 소분해 파는 곳을 찾습니다.',
+'단가':'재료 하나당 값.\n"1kg에 8,000원"을 "1g에 8원"으로 바꿔 놔야 원가 계산이 됩니다.\n원가표는 전부 g·ml 단위로 적습니다.',
+'부가세 별도':'적힌 값에 10% 세금이 아직 안 붙었다는 뜻.\n거래처 가격표에 자주 나옵니다. 10,000원이면 실제로는 11,000원입니다.\n원가를 계산할 때 이걸 놓치면 전부 틀어집니다.',
+'카드 수수료':'카드로 받은 돈에서 카드회사가 떼어 가는 몫.\n보통 매출의 0.5~2% 정도이고 규모가 작을수록 낮습니다.\n작아 보여도 1년이면 큰 돈이라 손익표에 꼭 넣습니다.',
+'배달앱 중개수수료':'배달앱으로 팔릴 때 앱에 내는 몫.\n수수료에 배달비·광고비까지 더하면 매출의 20~30%가 나갑니다.\n배달 가격을 매장과 똑같이 하면 손해가 납니다.',
+'POS · 포스':'주문을 받고 계산하는 계산대 기계와 프로그램.\n매출·인기 메뉴·시간대가 자동으로 쌓입니다.\n이 기록이 나중에 메뉴를 고칠 때 제일 정확한 자료가 됩니다.',
+
+// ── SNS · 홍보 ──────────────────────────
+'프로필 · 소개글':'인스타그램 계정 맨 위에 뜨는 내 가게 소개.\n무엇을 파는지, 어디에 있는지, 언제 여는지가 한눈에 보여야 합니다.\n처음 들어온 사람이 3초 안에 판단하는 자리입니다.',
+'피드':'인스타 프로필에 네모로 쭉 쌓이는 사진들.\n하나하나보다 아홉 칸이 같이 보이는 인상이 중요합니다.\n색과 밝기를 비슷하게 맞추면 훨씬 정돈돼 보입니다.',
+'스토리':'24시간 뒤 사라지는 짧은 글·사진.\n오늘 나온 빵, 남은 수량처럼 가벼운 소식에 씁니다.\n부담이 적어 매일 올리기 좋습니다.',
+'하이라이트':'사라진 스토리 중 남겨 두고 싶은 것을 프로필에 고정한 것.\n메뉴·가격·위치·영업시간을 묶어 두면 문의가 줄어듭니다.\n새 손님이 제일 먼저 누르는 자리입니다.',
+'릴스':'인스타그램의 짧은 세로 영상.\n15~30초 정도로 만드는 것이 보통입니다.\n아직 나를 모르는 사람에게도 퍼져서 신규 손님을 데려옵니다.',
+'해시태그':'글에 붙이는 #으로 시작하는 검색용 단어.\n"#명지카페"처럼 「동네+업종」으로 사람들이 실제로 검색하는 말을 써야 합니다.\n많이 붙이는 것보다 맞는 걸 붙이는 게 낫습니다.',
+'도달 · 노출':'도달은 내 글을 본 사람 수, 노출은 화면에 뜬 횟수입니다.\n한 사람이 세 번 봤으면 도달 1, 노출 3입니다.\n얼마나 멀리 퍼졌는지 볼 때 봅니다.',
+'저장 · 공유':'손님이 내 글을 나중에 보려고 담아 두거나 친구에게 보낸 것.\n팔로워 수보다 이게 많아야 실제로 가게에 옵니다.\n"가고 싶다"는 마음이 숫자로 드러난 것입니다.',
+'스마트플레이스':'네이버 지도에 내 가게를 등록하는 무료 서비스.\n영업시간·메뉴·사진·길 안내가 여기서 나옵니다.\n"명지 카페"로 검색했을 때 뜨려면 반드시 해야 합니다.',
+'영수증 리뷰':'실제로 결제한 영수증을 올려야 쓸 수 있는 네이버 후기.\n가짜가 섞이기 어려워서 검색 순위에 크게 영향을 줍니다.\n계산할 때 한마디 부탁하는 게 가장 잘 먹힙니다.',
+'체험단 · 협찬':'무료로 대접하고 후기를 받는 홍보 방법.\n돈을 받고 쓴 글은 "협찬·광고"라고 반드시 밝혀야 합니다(법).\n팔로워 수보다 그 사람 글에 댓글이 있는지를 봅니다.',
+
+// ── 가게 구하기 · 계약 ──────────────────────────
+'권리금':'앞서 장사하던 사람에게 자리·시설·단골을 넘겨받으며 주는 돈.\n법으로 보장되는 돈이 아니라서 떼일 수도 있습니다.\n계약서에 꼭 적고, 얼마가 적당한지 따져 본 뒤 냅니다.',
+'보증금':'가게를 빌리며 건물주에게 맡겨 두는 돈.\n나갈 때 밀린 월세를 뺀 나머지를 돌려받습니다.\n목돈이라 창업 비용에서 가장 큰 덩어리가 되기 쉽습니다.',
+'월세 · 임대료':'매달 건물주에게 내는 돈.\n매출의 15%를 넘으면 위험 신호로 봅니다.\n관리비·부가세가 따로인지 반드시 확인하고 계약합니다.',
+'관리비':'건물 공동으로 쓰는 것에 매달 내는 돈.\n청소·경비·복도 전기 같은 것입니다.\n월세만 보고 계약했다가 관리비에 놀라는 일이 흔합니다.',
+'임대차계약서':'가게를 빌리는 조건을 적은 약속 문서.\n기간·월세·인상 한도·원상복구 범위가 핵심입니다.\n도장 찍기 전에 사진으로 찍어 한 번 더 읽어 보세요.',
+'등기부등본':'이 건물의 주인과 빚이 적혀 있는 공식 서류.\n인터넷등기소에서 700원이면 누구나 뗄 수 있습니다.\n계약 전에 안 보면 보증금을 못 받을 수 있습니다.',
+'확정일자':'계약서에 "이 날짜에 이 계약이 있었다"고 도장을 받아 두는 것.\n세무서에서 사업자등록할 때 같이 신청합니다.\n건물이 경매로 넘어가도 보증금을 먼저 받을 순서를 지켜 줍니다.',
+'환산보증금':'보증금 + (월세 × 100)으로 계산한 금액.\n이 금액이 기준 아래여야 상가임대차보호법의 보호를 다 받습니다.\n계약 전에 한 번 계산해 보면 내 권리가 어디까지인지 알 수 있습니다.',
+'원상복구':'나갈 때 가게를 처음 상태로 되돌려 놓는 일.\n인테리어를 뜯어내는 비용이 수백만 원 나올 수 있습니다.\n"어디까지 되돌리는가"를 계약서에 글로 적어 두세요.',
+'렌트프리':'인테리어 공사하는 동안 월세를 안 받는 기간.\n보통 1~2개월을 요청해 볼 수 있습니다.\n말로만 하지 말고 계약서에 적어야 합니다.',
+'건축물대장':'이 건물이 무슨 용도로 지어졌는지 적힌 서류.\n여기가 "근린생활시설"이어야 카페를 할 수 있습니다.\n정부24에서 무료로 뗄 수 있습니다.',
+'근린생활시설':'동네 사람들이 쓰는 가게를 지어도 되는 건물 용도.\n카페·음식점은 보통 여기에 들어갑니다.\n창고나 주택으로 돼 있으면 용도변경을 해야 영업신고가 납니다.',
+'용도변경':'건물의 정해진 쓰임새를 다른 쓰임새로 바꾸는 절차.\n돈과 시간이 꽤 들고 안 되는 경우도 있습니다.\n계약 전에 건축물대장을 봐야 하는 이유입니다.',
+'위반건축물':'허가 없이 늘리거나 고친 부분이 있는 건물.\n건축물대장에 노란 딱지처럼 표시돼 있습니다.\n여기서는 영업신고가 안 나올 수 있으니 계약하면 안 됩니다.',
+
+// ── 인허가 · 세금 ──────────────────────────
+'식품위생법':'음식을 만들어 파는 사람이 지켜야 할 법.\n위생교육·영업신고·건강진단이 전부 여기서 나옵니다.\n신고 전에 돈을 받고 팔면 이 법에 걸립니다.',
+'위생교육':'영업신고 전에 먼저 들어야 하는 교육.\n처음 하는 사람은 6시간을 교육장에 가서 듣습니다(온라인 불가).\n수료증이 있어야 영업신고 서류를 낼 수 있고, 다음 해부터는 매년 3시간 온라인으로 받습니다.',
+'영업신고':'음식을 만들어 팔아도 된다고 구청에서 받는 허가.\n위생교육을 먼저 듣고, 가게 시설을 갖춘 뒤에 신청합니다.\n이게 나오기 전에 돈을 받고 팔면 법에 걸립니다.',
+'사업자등록':'세무서에 "저 장사합니다" 하고 등록하는 것.\n영업신고증이 나온 뒤에 신청하고, 보통 며칠이면 나옵니다.\n이게 있어야 세금계산서·카드단말기를 쓸 수 있습니다.',
+'통신판매업 신고':'인터넷으로 물건을 팔 때 따로 하는 신고.\n스마트스토어나 자체 홈페이지로 택배 판매를 하면 필요합니다.\n구청에 신청하고 등록면허세가 매년 조금 나옵니다.',
+'일반과세 · 간이과세':'세금을 매기는 두 가지 방식.\n1년 매출이 적으면 간이과세라 세금이 적고 신고도 1년에 한 번입니다.\n대신 인테리어에 쓴 부가세를 돌려받기 어려워서, 처음 투자가 크면 일반과세가 나을 수 있습니다.',
+'부가가치세':'손님에게 받은 값 안에 들어 있던 세금을 나라에 내는 것.\n일반과세자는 1월·7월, 간이과세자는 1월에 신고합니다.\n내 돈이 아니니 미리 따로 떼어 두는 게 안전합니다.',
+'종합소득세':'1년 동안 내가 번 돈 전체에 매기는 세금.\n매년 5월에 작년 소득으로 신고합니다.\n장부를 잘 써 두면 세금이 줄어듭니다.',
+'홈택스':'세금 관련 일을 인터넷으로 하는 국세청 사이트.\n사업자등록, 부가세·종합소득세 신고, 현금영수증이 전부 여기 있습니다.\n공동인증서나 간편인증으로 로그인합니다.',
+'세금계산서':'사업자끼리 거래했다는 것을 증명하는 영수증.\n재료를 살 때 이걸 받아 두면 낸 부가세를 돌려받습니다.\n안 받고 사면 그만큼 세금을 더 내는 셈입니다.',
+'현금영수증':'현금으로 받았을 때 끊어 주는 영수증.\n카페는 손님이 요구하면 반드시 발급해야 합니다.\n안 끊으면 나중에 가산세가 붙습니다.',
+'적격증빙':'세금 계산에 인정해 주는 영수증.\n세금계산서·현금영수증·사업용 카드전표가 여기 들어갑니다.\n간이영수증만 모으면 비용으로 안 쳐 줘서 세금이 늘어납니다.',
+'간편장부':'작은 가게가 쓰는 쉬운 형태의 장부.\n가계부처럼 날짜·내용·금액만 적으면 됩니다.\n안 쓰면 세금을 추정으로 매겨서 더 나올 수 있습니다.',
+'소방완비 · 다중이용업':'사람이 많이 모이는 가게가 받아야 하는 소방 확인.\n지하이거나 면적이 크면 여기 해당될 수 있습니다.\n해당되면 공사 전에 미리 확인해야 다 뜯는 일이 없습니다.',
+
+// ── 공사 · 시설 ──────────────────────────
+'인테리어 평당가':'공사비를 3.3㎡(1평)당 얼마인지로 말한 것.\n"평당 150"이면 20평에 3,000만 원이라는 뜻입니다.\n어디까지 포함인지(철거·전기·에어컨) 꼭 물어야 합니다.',
+'전기 증설':'가게가 쓸 수 있는 전기 용량을 늘리는 공사.\n오븐·에스프레소머신·에어컨을 같이 켜면 금방 모자랍니다.\n한전 신청과 공사에 돈과 시간이 들어서 미리 확인합니다.',
+'급수 · 배수':'물이 들어오고 나가는 길.\n제빙기·정수기·싱크대 자리를 미리 정해야 바닥을 두 번 안 팝니다.\n도면에 콘센트와 함께 꼭 표시해 둡니다.',
+'후드 · 덕트':'열과 냄새, 연기를 밖으로 빼내는 장치와 통로.\n오븐을 쓰면 거의 필요하고 공사비가 꽤 큽니다.\n건물이 덕트를 못 내주는 곳도 있으니 계약 전에 확인합니다.',
+'그리스트랩':'기름기가 하수구로 바로 흘러가지 않게 걸러 주는 통.\n주방이 있으면 대부분 설치해야 합니다.\n주기적으로 비워 줘야 냄새가 안 납니다.',
+'동선':'사람이 움직이는 길.\n주방에서 몇 걸음에 한 잔이 나오는지가 하루 체력을 좌우합니다.\n장비를 사기 전에 종이에 먼저 그려 보세요.',
+'실측':'줄자로 직접 재는 일.\n장비가 문을 통과하는지, 벽에 들어가는지 숫자로 확인합니다.\n"대충 될 것 같다"로 샀다가 반품 못 하는 일이 많습니다.',
+
+// ── 사람 · 보험 · 돈 빌리기 ──────────────────────────
+'인건비':'사람을 쓰는 데 드는 돈 전체.\n시급만이 아니라 주휴수당·4대보험·퇴직금까지 포함해서 봅니다.\n혼자 한다면 내 월급도 반드시 비용으로 넣어 계산합니다.',
+'근로계약서':'일하는 조건을 적어 서로 나눠 갖는 문서.\n하루만 쓰는 아르바이트도 반드시 써야 합니다(법).\n안 쓰면 과태료가 나옵니다. 양식은 고용노동부에 무료로 있습니다.',
+'주휴수당':'일주일에 15시간 이상 일하고 다 나오면 주는 하루치 임금.\n주 15시간이 기준선이라 근무표를 짤 때 꼭 계산해 봐야 합니다.\n빼먹으면 나중에 한꺼번에 청구될 수 있습니다.',
+'4대보험':'국민연금·건강보험·고용보험·산재보험.\n사람을 쓰면 가게가 절반쯤 같이 냅니다.\n인건비를 계산할 때 시급의 10% 정도를 더 얹어 봐야 맞습니다.',
+'영업배상책임보험':'손님이 우리 가게에서 다치거나 음식 때문에 탈이 났을 때 쓰는 보험.\n1년에 몇만 원대로 들 수 있습니다.\n한 번의 사고로 가게가 문 닫는 일을 막아 줍니다.',
+'화재보험':'불이 났을 때 건물과 물건 피해를 보상해 주는 보험.\n오븐·튀김기를 쓰면 더 중요합니다.\n건물주가 든 보험은 내 물건까지 보상하지 않습니다.',
+'정책자금':'정부·지자체가 소상공인에게 낮은 이자로 빌려주는 돈.\n소상공인시장진흥공단이나 지역 신용보증재단에서 신청합니다.\n사업계획서와 교육 수료증을 요구하는 경우가 많습니다.',
+'신용보증재단':'담보가 없어도 대신 보증을 서 주는 지역 기관.\n이 보증서를 들고 은행에 가면 대출이 나옵니다.\n보증료가 따로 조금 붙습니다.',
+'거치기간':'빌린 돈의 원금은 안 갚고 이자만 내는 기간.\n보통 1~2년입니다. 오픈 초기에 숨 쉴 틈을 만들어 줍니다.\n끝나면 갚는 돈이 확 늘어나니 달력에 표시해 두세요.',
+'예비비':'예상 못 한 일에 쓰려고 미리 빼 두는 돈.\n전체 창업 비용의 10% 정도를 잡습니다.\n공사가 늘어나거나 장비가 고장 나는 일은 거의 항상 생깁니다.',
+'시제품 · 테스트 판매':'정식으로 팔기 전에 만들어 보고 반응을 보는 것.\n영업신고 전에는 돈을 받을 수 없어서 무상 시식으로 합니다.\n"맛있다" 말고 "얼마면 사겠나"를 물어야 쓸모 있습니다.'
+};
+
+// 사전 화면에서 묶어 보여 줄 순서
+const TERM_GROUPS = [
+ ['브랜드 · 콘셉트', ['콘셉트','브랜딩','마케팅','브랜드 아이덴티티','톤앤매너','슬로건 · 한 줄 소개','포지셔닝','무드보드','로고','대표 컬러 · 색 코드','폰트 · 서체','패키지 · 포장','차별화 포인트']],
+ ['손님 · 상권', ['타깃 고객','페르소나','객단가','상권','유동인구','배후수요','회전율','피크타임','재방문 · 단골','네이버 데이터랩','소상공인365','마피아넷','트렌드 키워드']],
+ ['메뉴 · 원가 · 돈', ['시그니처 메뉴','원가','원가율','판매가','매출','매출원가','고정비','변동비','영업이익','순이익','손익분기점','손익계산서','로스 · 폐기율','발주','거래처','최소주문수량','단가','부가세 별도','카드 수수료','배달앱 중개수수료','POS · 포스']],
+ ['SNS · 홍보', ['프로필 · 소개글','피드','스토리','하이라이트','릴스','해시태그','도달 · 노출','저장 · 공유','스마트플레이스','영수증 리뷰','체험단 · 협찬']],
+ ['가게 구하기 · 계약', ['권리금','보증금','월세 · 임대료','관리비','임대차계약서','등기부등본','확정일자','환산보증금','원상복구','렌트프리','건축물대장','근린생활시설','용도변경','위반건축물']],
+ ['인허가 · 세금', ['식품위생법','위생교육','영업신고','사업자등록','통신판매업 신고','일반과세 · 간이과세','부가가치세','종합소득세','홈택스','세금계산서','현금영수증','적격증빙','간편장부','소방완비 · 다중이용업']],
+ ['공사 · 시설', ['인테리어 평당가','전기 증설','급수 · 배수','후드 · 덕트','그리스트랩','동선','실측']],
+ ['사람 · 보험 · 돈 빌리기', ['인건비','근로계약서','주휴수당','4대보험','영업배상책임보험','화재보험','정책자금','신용보증재단','거치기간','예비비','시제품 · 테스트 판매']]
+];
+
+</script>
+<script>
+// ---- aifile.js ----
+// AI 기본 파일 — 새 대화 맨 앞에 한 번만 붙여넣으면 그 AI가 이 가게를 아는 상태로 시작합니다.
+const USES = [
+['인스타그램 캡션', '📸', `위 기본 파일을 기준으로, [여기에 무엇을 올릴지 적으세요 — 예: 이달의 과일 케이크 사진 3장] 인스타그램 게시물 캡션을 써줘.
+구성: 스크롤을 멈추게 하는 첫 문장 1줄 → 본문 4~6줄 → 행동 유도 1줄 → 해시태그 10개(동네+업종 포함).
+우리 가게 톤으로. 과장 광고처럼 들리는 말은 빼고. 3가지 버전으로 줘.`],
+['새 메뉴 기획', '🍰', `위 기본 파일을 기준으로, [여기에 조건을 적으세요 — 예: 겨울 시즌 한정, 3주만 판매] 새 메뉴를 5개 제안해줘.
+각각 — 이름 / 한 줄 설명 / 예상 판매가 / 대략의 원가율 / 왜 우리 대표 고객이 살지 / 만들기 어려운 점.
+지금 파는 메뉴와 겹치지 않게, 기존 재료를 최대한 돌려 쓰는 쪽으로. 숫자는 "추정"이라고 표시해줘.`],
+['리뷰·DM 답글', '💬', `위 기본 파일을 기준으로, 아래 손님 글에 대한 답글을 써줘.
+[여기에 손님이 쓴 리뷰나 DM을 그대로 붙여넣으세요]
+우리 가게 톤으로, 3~5줄. 변명하지 말고, 사실은 사실대로. 나쁜 후기면 사과 → 무엇을 바꿀지 → 다시 와 달라는 한 줄 순서로.
+정중한 버전과 조금 더 다정한 버전 2가지로 줘.`],
+['이벤트·프로모션', '🎁', `위 기본 파일을 기준으로, [여기에 시기나 목적을 적으세요 — 예: 오픈 한 달째, 재방문을 늘리고 싶음] 이벤트를 3개 제안해줘.
+각각 — 무엇을 / 얼마나 들고 / 며칠 하고 / 어떻게 알리고 / 성공인지 아닌지 무엇으로 판단할지.
+할인은 마지막 수단으로. 우리 객단가와 원가율을 깎아먹지 않는 쪽으로. 돈 안 드는 것 하나는 꼭 넣어줘.`],
+['응대 멘트 · 직원 교육', '🧑‍🍳', `위 기본 파일을 기준으로, 우리 가게 응대 스크립트를 만들어줘.
+① 손님이 들어올 때 ② 메뉴를 고민할 때(시그니처 추천 멘트) ③ 포장 손님 ④ 품절일 때 ⑤ 컴플레인이 들어왔을 때.
+각 상황마다 그대로 읽으면 되는 2~3문장, 우리 가게 톤으로. 새로 온 아르바이트생이 첫날 보고 쓸 수 있게 쉬운 말로.`],
+['사업계획서 · 지원사업', '📑', `위 기본 파일을 기준으로, [여기에 어디에 낼지 적으세요 — 예: 소상공인 정책자금 / 청년창업 지원사업] 사업계획서 초안을 써줘.
+항목: 창업 동기 / 아이템 개요 / 시장·상권 분석 / 목표 고객 / 차별화 / 메뉴와 가격 / 매출 추정과 근거 / 자금 소요와 조달 / 앞으로 1년 계획.
+기본 파일에 없는 숫자는 지어내지 말고 "[확인 필요]"로 비워 두고, 내가 무엇을 채워야 하는지 목록으로 알려줘.`]
+];
+
+function aiFileText(){
+  const V=k=>{const v=(st.ans[k]||'').trim(); return v||'(아직 안 정함)'};
+  const nm=(st.ans.name||'').trim()||'(이름 아직 안 정함)';
+  const cc=(st.ans.conceptFinal||st.ans.conceptV2||st.ans.concept||'').trim()||'(아직 안 정함)';
+  const tg=(st.ans.targetFinal||st.ans.target||'').trim()||'(아직 안 정함)';
+  const pd=PREP.reduce((n,_,i)=>n+gCnt(i),0);
+  return `# 내 가게 기본 파일 — ${nm}
+아래는 내 가게에 대한 사실 정보야. 이 대화 내내 이걸 기준으로 답해줘.
+
+## 지켜 줄 규칙
+1. 여기 적힌 것만 사실로 다뤄. 없는 정보는 지어내지 말고 나에게 물어봐.
+2. 새로 계산한 숫자는 반드시 "추정"이라고 표시해.
+3. 답은 아래 6번의 톤에 맞춰. 과장 광고처럼 들리는 말은 쓰지 마.
+4. 좋은 말만 하지 말고 걱정되는 점을 하나씩 솔직히 짚어줘.
+5. "(아직 안 정함)"인 칸은 제안해도 되지만, 이미 정해진 것처럼 말하지 마.
+
+## 1. 정체성
+- 가게 이름: ${nm}
+- 콘셉트 한 줄: ${cc}
+- 콘셉트 키워드 3개: ${V('kw3')}
+- 내가 추구하는 것 / 강점: ${V('me')}
+- 손님이 굳이 여기까지 와야 할 이유: ${V('reason')}
+- 경쟁 가게와 다른 점: ${V('diff')}
+
+## 2. 손님
+- 타깃 고객: ${tg}
+- 대표 고객 한 명(페르소나): ${V('persona')}
+
+## 3. 자리 · 상권
+- 동네 / 상권: ${V('area')}
+- 유동인구 특징: ${V('traffic')}
+- 배후 인구(주요 고객층): ${V('mainCust')}
+- 주변 경쟁 카페: ${V('comp')}
+- 이 자리의 장점: ${V('pros')}
+- 이 자리의 단점 / 위험: ${V('cons')}
+
+## 4. 파는 것
+- 메뉴 구성 방향: ${V('menuFocus')}
+- 시그니처 후보: ${V('sig3')}
+- 대표 메뉴 (이름 / 설명 / 판매가):
+${V('menu3')}
+- 메뉴판 구성: ${V('menuboard')}
+- 메뉴 기획 정리: ${V('menuPlan')}
+
+## 5. 숫자
+- 메뉴별 판매가 / 원가 / 원가율:
+${V('cost3')}
+- 월 손익 구조:
+${V('pl')}
+(※ 이 숫자는 내가 원가계산표로 직접 계산한 것이야. 다시 계산하지 말고 그대로 놓고 써줘.)
+
+## 6. 보이는 것 · 톤
+- 컬러 / 폰트 / 로고 방향: ${V('visual')}
+- 손님이 남에게 옮길 한 문장(입소문): ${V('wom')}
+
+## 7. 알리는 법
+- 인스타그램 계정명 · 소개글: ${V('insta')}
+- 콘텐츠 주제: ${V('topics')}
+- 먼저 찍을 사진: ${V('photos')}
+- 네이버 스마트플레이스: ${V('smartplace')}
+- 홍보 문구: ${V('adcopy')}
+- 릴스 아이디어: ${V('reels')}
+
+## 8. 오픈 전후 · 단골
+- 오픈 전 4주 홍보: ${V('preopen')}
+- 오픈 후 첫 달: ${V('postopen')}
+- 리뷰 · 단골 장치: ${V('repeat')}
+- 다시 오게 하는 경험: ${V('comeback')}
+- 내가 먼저 할 세 가지: ${V('three')}
+
+## 9. 이 가게와 안 맞는 것 (제안하지 마)
+- 위 콘셉트 · 대표 고객 · 톤에 어긋나는 것
+- 영업신고와 사업자등록 전에 돈을 받고 파는 것 (식품위생법 위반이야)
+- 근거 없는 숫자, 출처 없는 통계
+- 객단가와 원가율을 무너뜨리는 큰 할인
+
+## 10. 지금 진행 상황
+- 브랜드 정하기: DAY1 ${dCnt(0)}/5 · DAY2 ${dCnt(1)}/5 · DAY3 ${dCnt(2)}/5 교시 작성
+- 창업 준비 체크리스트: ${PTOT}개 중 ${pd}개 완료 · 다음에 할 것: ${nextPrep()}
+- 이 파일을 만든 날: ${(()=>{const d=new Date();return d.getFullYear()+'년 '+(d.getMonth()+1)+'월 '+d.getDate()+'일'})()}
+(※ 이 뒤로 바뀐 것이 있으면 내가 대화 중에 "[업데이트]"로 알려줄게. 그건 이 파일보다 우선이야.)
+
+---
+여기까지가 기본 파일이야. 이제 내가 시키는 일을 이 정보를 바탕으로 해줘.`;
+}
+
+function aiFile(){
+  document.querySelectorAll('.gov').forEach(e=>e.remove());
+  const txt=aiFileText();
+  const o=document.createElement('div'); o.className='gov';
+  o.innerHTML=`<div class="gbox wide"><div class="gtop"><h3>🧱 AI 기본 파일</h3><button id="afX">닫기</button></div>
+    <p class="gsub"><b>한 번 만들어 두고 계속 씁니다.</b> 이 글을 메모장이나 카톡 「나에게 보내기」에 저장해 두세요.
+    챗GPT·클로드·제미나이 어디든 <b>새 대화를 열 때 맨 앞에 한 번 붙여넣으면</b>, 그때부터 그 AI는 내 가게를 아는 상태로 일합니다. 매번 설명할 필요가 없습니다.</p>
+    <div class="afbtns">
+      <button id="afCopy" class="rp-btn" style="margin:0">📋 기본 파일 복사</button>
+      ${CAN_DL?'<button id="afDl">💾 .txt 파일로 저장</button>':'<span class="afno">클로드 화면에서는 파일 저장이 막혀 있습니다 — 위 「복사」를 쓰세요</span>'}
+    </div>
+    <pre id="afPre">${esc(txt)}</pre>
+    <h4 class="afh">이 파일을 붙여넣은 다음, 이어서 쓰는 프롬프트</h4>
+    <p class="gsub">기본 파일을 먼저 붙여넣고 → 아래 중 하나를 이어서 붙여넣으세요. 대괄호 [ ] 안만 내 상황으로 바꾸면 됩니다.</p>
+    <div class="uses">${USES.map(([n,ic,b],i)=>
+      `<div class="use"><div class="uh"><b>${ic} ${esc(n)}</b><button class="cp" data-u="${i}">복사</button></div>
+       <pre>${esc(b)}</pre></div>`).join('')}</div>
+  </div>`;
+  document.body.appendChild(o);
+  const close=()=>o.remove();
+  o.querySelector('#afX').onclick=close;
+  o.onclick=e=>{if(e.target===o)close()};
+  document.addEventListener('keydown',function k(e){if(e.key==='Escape'){close();document.removeEventListener('keydown',k)}});
+  const cp=async(t,btn,ok)=>{
+    try{await navigator.clipboard.writeText(t)}catch(_){
+      const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();
+      try{document.execCommand('copy')}catch(__){}ta.remove()}
+    const old=btn.textContent; btn.textContent=ok; btn.classList.add('done');
+    setTimeout(()=>{btn.textContent=old;btn.classList.remove('done')},2200);
+  };
+  o.querySelector('#afCopy').onclick=e=>cp(txt,e.currentTarget,'복사됨 ✓ — 새 대화 맨 앞에 붙여넣으세요');
+  const dl=o.querySelector('#afDl');
+  if(dl) dl.onclick=()=>{
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([txt],{type:'text/plain;charset=utf-8'}));
+    a.download=((st.ans.name||'내 가게').trim().replace(/[\/\\:*?"<>|]/g,'')||'내 가게')+' 기본 파일.txt';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href),3000);
+  };
+  o.querySelectorAll('[data-u]').forEach(b=>b.onclick=e=>cp(USES[+b.dataset.u][2],e.currentTarget,'복사됨 ✓'));
+}
+
+</script>
+<script>
+// ---- people.js ----
+// 처음 화면(이름·연락처) · 강사님께 보내기 · 강사 확인 화면
+// 적은 내용은 각자 브라우저에 저장되고, 「강사님께 보내기」를 누르면 카페스이 서버(Firestore)의
+// workbook/이름_뒤4자리 문서로 올라갑니다. 강사는 카페스이 운영노트 계정(사장님·매니저)으로 로그인해 목록을 봅니다.
+
+const SUBKEY = 'brand2open_subs_v1';
+const EMAIL_DOMAIN = '@sonjoy.cafe';
+let FB = null, AUTH = null;
+try {
+  if (window.firebase && window.FIREBASE_CONFIG && window.FIREBASE_CONFIG.apiKey) {
+    if (!firebase.apps.length) firebase.initializeApp(window.FIREBASE_CONFIG);
+    FB = firebase.firestore(); AUTH = firebase.auth();
+  }
+} catch (e) { FB = null; AUTH = null }
+function sid(name, code){ return String(name).replace(/[\/\s]+/g, '') + '_' + code }
+function teacherOn(){ return !!(AUTH && AUTH.currentUser) }
+
+const TAG = 'CBSUB1:';
+
+// 비밀번호는 저장하지 않고 「지문」만 남깁니다. 원문은 어디에도 적히지 않습니다.
+async function pwHash(pw){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('b2o:' + pw));
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+}
+function pwSet(){ try { return !!localStorage.getItem(PWKEY) } catch(e){ return false } }
+async function pwSave(pw){ try { localStorage.setItem(PWKEY, await pwHash(pw)) } catch(e){} }
+async function pwOK(pw){ try { return localStorage.getItem(PWKEY) === await pwHash(pw) } catch(e){ return false } }
+
+function meOK(){ return !!(st.me && (st.me.name || '').trim()) }
+
+// ── 처음 화면 ──────────────────────────────────────
+function gate(){
+  if (document.getElementById('gate')) return;
+  const o = document.createElement('div');
+  o.id = 'gate'; o.className = 'gate';
+  o.innerHTML = `<div class="gcard">
+    <h2>브랜드에서 오픈까지</h2>
+    <p class="gp">AI 파트너와 함께 카페 브랜드를 만들고, 실제 오픈까지 갑니다.<br>시작하기 전에 누구인지만 적어 주세요.</p>
+    <label for="gName">이름</label>
+    <input id="gName" placeholder="예: 홍길동" autocomplete="off" maxlength="20">
+    <label for="gTail">전화번호 끝 4자리</label>
+    <input id="gTail" placeholder="예: 1234" inputmode="numeric" autocomplete="off" maxlength="4">
+    <div class="gnote">같은 이름이 여럿일 때 구분하려고 받습니다. <b>전체 번호는 적지 마세요.</b>
+      적은 내용은 이 브라우저에 저장되고, <b>「강사님께 보내기」를 누를 때만</b> 강사님 화면으로 전달됩니다.
+      다음에 올 때도 <b>같은 이름·같은 4자리</b>로 들어오세요.</div>
+    <label class="gchk"><input type="checkbox" id="gTeach"> 나는 <b>강사</b>입니다 (수강생 제출을 확인합니다)</label>
+    <div id="gPwWrap" hidden>
+      <label for="gId">운영노트 아이디</label>
+      <input id="gId" placeholder="카페스이 운영노트 아이디" autocomplete="username" maxlength="40">
+      <label for="gPw">비밀번호</label>
+      <input id="gPw" type="password" placeholder="운영노트 비밀번호" autocomplete="current-password" maxlength="60">
+      <div class="gnote" id="gPwNote">카페스이 운영노트에 쓰는 아이디·비밀번호로 들어갑니다. <b>사장님·매니저 계정</b>만 수강생 제출을 볼 수 있습니다.</div>
+    </div>
+    <button class="gbtn" id="gGo">시작하기</button>
+    <button class="gskip" id="gSkip">이름 없이 둘러보기</button>
+  </div>`;
+  document.body.appendChild(o);
+  const n = o.querySelector('#gName'), t = o.querySelector('#gTail');
+  n.value = (st.me && st.me.name) || ''; t.value = (st.me && st.me.tail) || '';
+  t.oninput = () => { t.value = t.value.replace(/\D/g, '').slice(0, 4) };
+  const tc = o.querySelector('#gTeach'), pwWrap = o.querySelector('#gPwWrap');
+  tc.onchange = () => { pwWrap.hidden = !tc.checked; if (tc.checked) o.querySelector('#gPw').focus() };
+  const bad = (el, why) => { el.focus(); el.classList.add('bad');
+    const nt = o.querySelector('#gPwNote'); if (nt && why) nt.innerHTML = `<b style="color:#B4473A">${why}</b>`;
+    setTimeout(() => el.classList.remove('bad'), 1400) };
+  const go = async () => {
+    const nm = n.value.trim();
+    if (!nm) { bad(n); return }
+    const teach = tc.checked;
+    if (teach) {
+      if (!FB || !AUTH) { bad(o.querySelector('#gPw'), '서버에 연결되지 않아 강사 로그인을 할 수 없습니다. 인터넷을 확인하고 새로고침해 주세요.'); return }
+      const id = o.querySelector('#gId').value.trim().toLowerCase(), pw = o.querySelector('#gPw').value;
+      if (!id) { bad(o.querySelector('#gId'), '운영노트 아이디를 적어 주세요.'); return }
+      if (!pw) { bad(o.querySelector('#gPw'), '비밀번호를 적어 주세요.'); return }
+      const gb = o.querySelector('#gGo'); gb.disabled = true; gb.textContent = '확인 중…';
+      try {
+        const cred = await AUTH.signInWithEmailAndPassword(id.includes('@') ? id : id + EMAIL_DOMAIN, pw);
+        const prof = await FB.collection('users').doc(cred.user.uid).get();
+        const role = prof.exists ? (prof.data().role || '') : '';
+        if (!['owner', 'head', 'manager'].includes(role)) {
+          await AUTH.signOut(); gb.disabled = false; gb.textContent = '시작하기';
+          bad(o.querySelector('#gId'), '이 계정은 강사(사장님·매니저) 권한이 없습니다.'); return }
+      } catch (e) {
+        gb.disabled = false; gb.textContent = '시작하기';
+        bad(o.querySelector('#gPw'), '아이디 또는 비밀번호가 맞지 않습니다.'); return }
+    } else if (teacherOn()) { try { await AUTH.signOut() } catch (e) {} }
+    st.me = { name: nm, tail: t.value.trim(), teacher: teach, at: today() };
+    save(); o.remove(); render();
+  };
+  o.querySelector('#gGo').onclick = go;
+  o.querySelector('#gSkip').onclick = () => {
+    if (teacherOn()) { try { AUTH.signOut() } catch (e) {} }
+    st.me = { name: '', tail: '', teacher: false, skip: 1 }; save(); o.remove(); render();
+  };
+  [n, t].forEach(e => e.onkeydown = ev => { if (ev.key === 'Enter') go() });
+  setTimeout(() => n.focus(), 50);
+}
+
+function whoHTML(){
+  if (!st.me) return '';
+  if (st.me.teacher) return `<span class="who t">🧑‍🏫 ${esc(st.me.name)} 강사님</span>`;
+  if (meOK()) return `<span class="who">${esc(st.me.name)}${st.me.tail ? ' · ' + esc(st.me.tail) : ''}</span>`;
+  return `<span class="who off">이름 없이 보는 중</span>`;
+}
+
+// ── 제출 코드 만들기 ────────────────────────────────
+function subPayload(){
+  const pd = PREP.reduce((n, _, i) => n + gCnt(i), 0);
+  return {
+    v: 1,
+    name: (st.me && st.me.name) || '',
+    tail: (st.me && st.me.tail) || '',
+    at: new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16).replace('T', ' '),
+    day: [dCnt(0), dCnt(1), dCnt(2)],
+    prep: [pd, PTOT],
+    ans: st.ans, checks: st.checks, atd: st.at, memo: st.memo
+  };
+}
+function encodeSub(p){
+  const json = JSON.stringify(p);
+  const b64 = btoa(String.fromCharCode(...new TextEncoder().encode(json)));
+  return TAG + b64;
+}
+function decodeSub(text){
+  const m = (text || '').match(new RegExp(TAG + '([A-Za-z0-9+/=]+)'));
+  if (!m) return null;
+  try {
+    const bin = atob(m[1]);
+    const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
+    const o = JSON.parse(new TextDecoder().decode(bytes));
+    return (o && o.ans) ? o : null;
+  } catch (e) { return null }
+}
+function subText(){
+  const p = subPayload();
+  return `===== 브랜드에서 오픈까지 · 제출 =====
+이름 : ${p.name || '(이름 없음)'}${p.tail ? ' (' + p.tail + ')' : ''}
+제출 : ${p.at}
+진행 : DAY1 ${p.day[0]}/5 · DAY2 ${p.day[1]}/5 · DAY3 ${p.day[2]}/5 · 창업 준비 ${p.prep[0]}/${p.prep[1]}
+카페 : ${(st.ans.name || '').trim() || '(아직 안 정함)'}
+콘셉트: ${(st.ans.conceptFinal || st.ans.conceptV2 || st.ans.concept || '').trim() || '(아직 안 정함)'}
+
+--- 아래 한 줄은 지우지 마세요 (강사님 화면에서 읽습니다) ---
+${encodeSub(p)}`;
+}
+
+function submitBox(){
+  document.querySelectorAll('.gov').forEach(e => e.remove());
+  const txt = subText();
+  const o = document.createElement('div'); o.className = 'gov';
+  const tailOK = /^\d{4}$/.test(((st.me && st.me.tail) || '').trim());
+  o.innerHTML = `<div class="gbox"><div class="gtop"><h3>📤 강사님께 보내기</h3><button id="sbX">닫기</button></div>
+    <p class="gsub">${meOK() ? '' : '<b style="color:var(--warn)">이름이 없습니다.</b> 오른쪽 위 「바꾸기」를 눌러 먼저 적어 주세요.<br>'}
+      ${meOK() && !tailOK ? '<b style="color:var(--warn)">전화번호 끝 4자리가 없습니다.</b> 오른쪽 위 「바꾸기」에서 적어야 보낼 수 있습니다.<br>' : ''}
+      「강사님께 보내기」를 누르면 지금까지 적은 답 전부가 <b>강사님 화면으로 바로 전달</b>됩니다.
+      보낸 뒤에 더 적었으면 다시 누르세요. 최신 것으로 바뀝니다.${st.sent ? ` <b>마지막 보냄: ${esc(st.sent)}</b>` : ''}</p>
+    <div class="afbtns">
+      <button id="sbSend" class="rp-btn" style="margin:0">📤 강사님께 보내기</button>
+      <button id="sbCopy">📋 제출 코드 복사 (인터넷이 안 될 때)</button>
+      ${CAN_DL ? '<button id="sbDl">💾 .txt로 저장</button>' : ''}
+    </div>
+    <div id="sbMsg" class="gsub"></div>
+    <details style="margin-top:10px"><summary class="gsub" style="cursor:pointer">제출 코드 보기 (예비용)</summary>
+    <pre id="sbPre">${esc(txt)}</pre>
+    <div class="swn">마지막 줄의 긴 글자에 <b>내가 적은 답 전부</b>가 들어 있습니다. 카톡·문자로 보낼 때 지우지 마세요.</div></details>
+  </div>`;
+  document.body.appendChild(o);
+  const close = () => o.remove();
+  o.querySelector('#sbX').onclick = close;
+  o.onclick = e => { if (e.target === o) close() };
+  o.querySelector('#sbSend').onclick = async e => {
+    const b = e.currentTarget, m = o.querySelector('#sbMsg');
+    if (!meOK()) { m.innerHTML = '<b style="color:var(--warn)">이름을 먼저 적어 주세요.</b> (오른쪽 위 「바꾸기」)'; return }
+    const tail = (st.me.tail || '').trim();
+    if (!/^\d{4}$/.test(tail)) { m.innerHTML = '<b style="color:var(--warn)">전화번호 끝 4자리를 적어야 보낼 수 있습니다.</b> 오른쪽 위 「바꾸기」에서 적어 주세요.'; return }
+    if (!FB) { m.innerHTML = '<b style="color:var(--warn)">서버에 연결되지 않았습니다.</b> 인터넷을 확인하고 새로고침하거나, 「제출 코드 복사」로 보내 주세요.'; return }
+    b.disabled = true; b.textContent = '보내는 중…';
+    try {
+      const p = JSON.parse(JSON.stringify(subPayload())); p.kind = 'camp';
+      const name = st.me.name.trim().slice(0, 30);
+      await FB.collection('workbook').doc(sid(name, tail)).set({ name: name, code: tail, day: 0, a: p, updatedAt: Date.now() });
+      st.sent = p.at; save();
+      m.innerHTML = `<b style="color:var(--sage)">보냈습니다 ✓</b> ${esc(p.at)} · 강사님 화면에 바로 보입니다.`;
+      b.textContent = '📤 다시 보내기';
+    } catch (err) {
+      m.innerHTML = '<b style="color:var(--warn)">보내지 못했습니다.</b> 인터넷을 확인하고 다시 누르거나, 「제출 코드 복사」로 보내 주세요.';
+      b.textContent = '📤 강사님께 보내기';
+    }
+    b.disabled = false;
+  };
+  o.querySelector('#sbCopy').onclick = async e => {
+    const b = e.currentTarget;
+    try { await navigator.clipboard.writeText(txt) } catch (_) {
+      const ta = document.createElement('textarea'); ta.value = txt; document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy') } catch (__) {} ta.remove()
+    }
+    b.textContent = '복사됨 ✓ — 강사님께 붙여넣어 보내세요';
+    setTimeout(() => { b.textContent = '📋 제출 코드 복사' }, 2600);
+  };
+  const dl = o.querySelector('#sbDl');
+  if (dl) dl.onclick = () => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([txt], { type: 'text/plain;charset=utf-8' }));
+    a.download = `${(st.me && st.me.name) || '제출'}${st.me && st.me.tail ? '_' + st.me.tail : ''} 브랜드 제출.txt`;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 3000);
+  };
+}
+
+// ── 강사 확인 화면 ──────────────────────────────────
+function loadSubs(){ try { return JSON.parse(localStorage.getItem(SUBKEY) || '[]') } catch (e) { return [] } }
+function saveSubs(a){ try { localStorage.setItem(SUBKEY, JSON.stringify(a)) } catch (e) {} }
+
+function teacherBox(){
+  document.querySelectorAll('.gov').forEach(e => e.remove());
+  const o = document.createElement('div'); o.className = 'gov';
+  o.innerHTML = `<div class="gbox wide"><div class="gtop"><h3>🧑‍🏫 수강생 제출 확인</h3><button id="tbX">닫기</button></div>
+    <p class="gsub">수강생이 「강사님께 보내기」를 누르면 여기에 <b>바로</b> 쌓입니다. 이름을 누르면 답 전체를 볼 수 있습니다.
+      인터넷이 안 돼서 카톡·문자로 받은 <b>제출 코드</b>는 아래 칸에 붙여넣어 불러올 수 있습니다.</p>
+    <div class="afbtns"><button id="tbRefresh" class="rp-btn" style="margin:0">🔄 새로 불러오기</button>
+      <button id="tbCsv">📊 표(CSV)로 내려받기</button></div>
+    <div id="tbMsg" class="gsub"></div>
+    <div id="tbList"><div class="tbnone">서버에서 불러오는 중…</div></div>
+    <details style="margin-top:12px"><summary class="gsub" style="cursor:pointer">카톡·문자로 받은 제출 코드 붙여넣기</summary>
+    <textarea id="tbIn" rows="4" placeholder="받은 제출 코드를 통째로 붙여넣으세요"></textarea>
+    <div class="afbtns"><button id="tbGo">불러오기</button>
+      <button id="tbClr">붙여넣은 목록 비우기</button></div></details>
+  </div>`;
+  document.body.appendChild(o);
+  const close = () => o.remove();
+  o.querySelector('#tbX').onclick = close;
+  o.onclick = e => { if (e.target === o) close() };
+  const msg = t => o.querySelector('#tbMsg').innerHTML = t;
+  let remote = [];
+  const key = x => (x.name || '') + '|' + (x.tail || '');
+  const allSubs = () => {
+    const seen = {}; const out = [];
+    remote.forEach(s => { seen[key(s)] = 1; out.push(s) });
+    loadSubs().forEach((s, i) => { if (!seen[key(s)]) out.push(Object.assign({}, s, { _local: i })) });
+    return out;
+  };
+  const fetchRemote = async () => {
+    if (!FB || !AUTH || !AUTH.currentUser) { msg('<b style="color:var(--warn)">강사 로그인이 풀렸습니다.</b> 오른쪽 위 「바꾸기」에서 다시 들어와 주세요.'); remote = []; return }
+    try {
+      const s = await FB.collection('workbook').orderBy('updatedAt', 'desc').get();
+      remote = s.docs.map(d => d.data()).filter(d => d.a && d.a.kind === 'camp')
+        .map(d => Object.assign({}, d.a, { name: d.name, tail: d.code, at: d.a.at || '', _remote: 1 }));
+      msg(`서버에서 <b>${remote.length}명</b> 불러왔습니다. (${new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })})`);
+    } catch (e) { msg('<b style="color:var(--warn)">서버 목록을 불러오지 못했습니다.</b> ' + esc(e && e.message || '')); remote = [] }
+  };
+
+  const draw = () => {
+    const subs = allSubs();
+    const L = o.querySelector('#tbList');
+    if (!subs.length) { L.innerHTML = '<div class="tbnone">아직 받은 제출이 없습니다.</div>'; return }
+    L.innerHTML = `<div class="tbh">받은 제출 ${subs.length}명</div>` + subs.map((s, i) => {
+      const done = (s.day[0] || 0) + (s.day[1] || 0) + (s.day[2] || 0);
+      return `<div class="tbr">
+        <button class="tbmain" data-open="${i}">
+          <span class="tbn">${esc(s.name || '(이름 없음)')}${s.tail ? ' <i>' + esc(s.tail) + '</i>' : ''}${s._remote ? '' : ' <i>붙여넣기</i>'}</span>
+          <span class="tbc">${esc(((s.ans || {}).name || '').trim() || '카페 이름 미정')}</span>
+          <span class="tbg"><b>${done}/15</b> 교시 · 창업 준비 ${(s.prep || [0, 0])[0]}/${(s.prep || [0, 0])[1]}</span>
+          <span class="tbd">${esc(s.at || '')}</span>
+        </button>
+        <button class="tbdel" data-del="${i}" title="지우기">✕</button>
+      </div>`;
+    }).join('');
+    L.querySelectorAll('[data-open]').forEach(b => b.onclick = () => showSub(allSubs()[+b.dataset.open]));
+    L.querySelectorAll('[data-del]').forEach(b => b.onclick = async () => {
+      const s = allSubs()[+b.dataset.del]; if (!s) return;
+      if (!b.dataset.armed) { b.dataset.armed = '1'; b.textContent = '정말 지움?'; setTimeout(() => { delete b.dataset.armed; b.textContent = '✕' }, 3000); return }
+      if (s._remote) { try { await FB.collection('workbook').doc(sid(s.name, s.tail)).delete(); await fetchRemote() } catch (e) { msg('<b style="color:var(--warn)">지우지 못했습니다.</b>') } }
+      else { const a = loadSubs(); a.splice(s._local, 1); saveSubs(a) }
+      draw();
+    });
+  };
+  o.querySelector('#tbRefresh').onclick = async () => { await fetchRemote(); draw() };
+  o.querySelector('#tbCsv').onclick = () => {
+    const subs = allSubs(); if (!subs.length) { msg('내려받을 제출이 없습니다.'); return }
+    const cols = [['이름', s => s.name], ['뒤4자리', s => s.tail], ['보낸 때', s => s.at],
+      ['DAY1', s => (s.day || [])[0]], ['DAY2', s => (s.day || [])[1]], ['DAY3', s => (s.day || [])[2]], ['창업준비', s => (s.prep || [])[0]]];
+    DAYS.forEach(d => d.p.forEach(pg => pg.f.forEach(f => cols.push([d.n + ' ' + f.p, s => (s.ans || {})[f.k] || '']))));
+    const q = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+    const csv = '\ufeff' + cols.map(c => q(c[0])).join(',') + '\n' + subs.map(s => cols.map(c => q(c[1](s))).join(',')).join('\n');
+    if (!CAN_DL) { navigator.clipboard.writeText(csv).then(() => msg('클로드 화면에서는 파일을 못 받아 <b>표 내용을 복사</b>했습니다. 엑셀·구글시트에 붙여넣으세요.'), () => msg('복사하지 못했습니다.')); return }
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+    a.download = '브랜드에서오픈까지_제출_' + new Date().toISOString().slice(0, 10) + '.csv';
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 3000);
+  };
+  fetchRemote().then(draw);
+  o.querySelector('#tbGo').onclick = () => {
+    const p = decodeSub(o.querySelector('#tbIn').value);
+    if (!p) { msg('<b style="color:var(--warn)">제출 코드를 찾지 못했습니다.</b> 받은 글을 <b>통째로</b> 붙여넣었는지 확인해 주세요 (「CBSUB1:」로 시작하는 줄이 있어야 합니다).'); return }
+    const a = loadSubs();
+    const k = (x) => (x.name || '') + '|' + (x.tail || '');
+    const at = a.findIndex(x => k(x) === k(p));
+    if (at >= 0) { a[at] = p; msg(`<b>${esc(p.name)}</b> 님의 제출을 <b>최신 것으로 바꿨습니다.</b>`) }
+    else { a.push(p); msg(`<b>${esc(p.name || '(이름 없음)')}</b> 님의 제출을 불러왔습니다.`) }
+    saveSubs(a); o.querySelector('#tbIn').value = ''; draw();
+  };
+  o.querySelector('#tbClr').onclick = e => {
+    const b = e.currentTarget;
+    if (b.dataset.armed) { saveSubs([]); delete b.dataset.armed; b.textContent = '붙여넣은 목록 비우기'; b.classList.remove('armed'); msg('붙여넣은 목록을 비웠습니다.'); draw(); return }
+    b.dataset.armed = '1'; b.textContent = '정말 모두 지웁니다 — 한 번 더'; b.classList.add('armed');
+    setTimeout(() => { if (b.dataset.armed) { delete b.dataset.armed; b.textContent = '붙여넣은 목록 비우기'; b.classList.remove('armed') } }, 4000);
+  };
+}
+
+// 한 사람의 제출 내용 전체 보기
+function showSub(p){
+  if (!p) return;
+  const A = k => { const v = ((p.ans || {})[k] || '').trim(); return v ? esc(v) : '<span class="em">아직 작성 전</span>' };
+  let h = `<div class="gbox wide"><div class="gtop"><h3>${esc(p.name || '(이름 없음)')}${p.tail ? ' · ' + esc(p.tail) : ''}</h3>
+    <button id="ssBack">← 목록</button><button id="ssX">닫기</button></div>
+    <p class="gsub">제출 ${esc(p.at || '')} · DAY1 ${p.day[0]}/5 · DAY2 ${p.day[1]}/5 · DAY3 ${p.day[2]}/5 · 창업 준비 ${p.prep[0]}/${p.prep[1]}</p>`;
+  DAYS.forEach((d, i) => {
+    h += `<div class="ssd"><h4>${d.n} · ${esc(d.title)} <span>${(p.day || [])[i] || 0}/5</span></h4><dl>`;
+    d.p.forEach(pg => pg.f.forEach(f => { h += `<dt>${esc(f.p)}</dt><dd>${A(f.k)}</dd>` }));
+    h += `</dl></div>`;
+  });
+  const cks = Object.keys(p.checks || {}).filter(k => p.checks[k]);
+  h += `<div class="ssd"><h4>창업 준비 체크리스트 <span>${p.prep[0]}/${p.prep[1]}</span></h4>`;
+  h += cks.length ? '<ul class="sscl">' + cks.map(k => {
+    const [g, j] = k.split('-').map(Number);
+    const it = PREP[g] && PREP[g].items[j];
+    return it ? `<li>${esc(PREP[g].n)}. ${esc(it.t)}${p.atd && p.atd[k] ? ` <i>${esc(p.atd[k])}</i>` : ''}</li>` : '';
+  }).join('') + '</ul>' : '<p class="gsub">아직 체크한 항목이 없습니다.</p>';
+  h += '</div></div>';
+  document.querySelectorAll('.gov').forEach(e => e.remove());
+  const o = document.createElement('div'); o.className = 'gov'; o.innerHTML = h;
+  document.body.appendChild(o);
+  o.querySelector('#ssX').onclick = () => o.remove();
+  o.querySelector('#ssBack').onclick = () => { o.remove(); teacherBox() };
+  o.onclick = e => { if (e.target === o) o.remove() };
+}
+
+</script>
+<script>
+// ---- prep.js ----
+// 창업 준비 체크리스트 — 실제 순서대로. 항목마다 무엇을·어디서·얼마쯤·얼마나 걸리나·먼저 할 것.
+// 금액·기간은 2026년 기준 어림값이며 지역·규모에 따라 다릅니다.
+const PREP = [
+{n:'A', name:'메뉴 만들고 반응 확인', why:'가게를 얻기 전에 무엇을 팔지 정하고 실제로 만들어 봅니다. ⚠️ 영업신고·사업자등록 전에는 돈을 받고 팔 수 없습니다(식품위생법). 반응은 무상 시식으로 확인합니다.', items:[
+ {t:'메뉴 기획 — 무엇을 팔지 정하기', w:'DAY 2에서 정한 시그니처 3개를 실제로 만들 것으로 좁힙니다. 매일 같은 품질로 만들 수 있는지가 기준', cost:'0원', time:'2~3일'},
+ {t:'레시피 짜기 — 그램 단위로', w:'"적당히"가 아니라 숫자로. 밀가루 200g · 생크림 180g처럼. 나중에 원가 계산과 직원 교육이 여기서 나옵니다', cost:'0원', time:'3~5일', key:1},
+ {t:'만들어 보기 — 같은 맛이 세 번 연속 나오는지', w:'한 번 잘 나온 건 우연입니다. 세 번 같아야 레시피가 선 것', where:'집 주방 (판매 아닌 연습은 가능)', cost:'재료비 5~15만 원', time:'1~2주', key:1},
+ {t:'주변 반응 받기 — 가족·지인 10명 무상 시식', w:'"맛있다" 말고 「얼마면 사겠나」와 「무엇이 아쉬운가」를 물어봅니다. 돈을 받으면 안 됩니다', cost:'재료비', time:'3~5일', key:1},
+ {t:'피드백 정리 — 무엇을 고칠지', w:'나온 말을 그대로 적고, 두 명 이상이 말한 것부터 고칩니다. 한 명 의견에 흔들리지 않기', cost:'0원', time:'1~2일'},
+ {t:'고친 레시피로 다시 만들어 확인', w:'고친 뒤에도 세 번 같은 맛이 나오는지', cost:'재료비', time:'1주'},
+ {t:'(원하면) 정식으로 팔아 볼 수 있는 곳 알아보기', w:'돈을 받고 팔려면 영업신고된 곳이어야 합니다. 영업신고를 마친 공유주방을 빌리거나, 지자체가 여는 행사에 정식 절차로 참가하는 방법이 있습니다. 확실치 않으면 구청 위생과에 전화로 확인하세요', where:'공유주방 업체 · 구청 위생과 · 지자체 행사 공고', cost:'공유주방 시간당 1만~3만 원', time:'문의 1~2일', key:1}]},
+
+{n:'B', name:'돈 계획', why:'총액을 먼저 알아야 자리와 규모가 정해집니다. 대부분 여기서 어긋납니다.', items:[
+ {t:'총 창업비 어림잡기', w:'아래 D~G 항목을 다 더한 값. 10평 기준 5,000만~1억 원', cost:'—', time:'반나절', key:1},
+ {t:'내 돈 얼마인지 정확히 적기', w:'빌린 돈 말고 실제로 내가 가진 돈', cost:'—'},
+ {t:'6개월 운영비 따로 떼어 두기', w:'월세·인건비·재료비 6개월치. 「이걸 안 떼면 3개월 안에 막힙니다」', cost:'1,500만~3,000만 원', key:1},
+ {t:'소상공인 정책자금 알아보기', w:'일반경영안정자금은 업력과 상관없이 신청할 수 있고 한도 7,000만 원, 보통 5년 상환(거치 2년 포함)입니다. 부산은 비수도권이라 금리 0.2%p 우대를 받습니다', where:'소상공인시장진흥공단 (semas.or.kr) · 소상공인정책자금 누리집', cost:'연 2~4%대 (대표 자금 2.96% 안팎, 2026년)', time:'신청~실행 1~2개월', key:1},
+ {t:'청년 창업 지원사업 확인', w:'지자체·중소벤처기업부 공고. 임차료·인테리어 지원이 있는 경우', where:'K-스타트업 · 우리 시·구청 공고', time:'공고 시기가 정해져 있음'},
+ {t:'대출 필요하면 미리 상담', w:'사업자등록 전에도 상담은 됩니다', where:'소진공·신용보증재단·은행', time:'1~2개월'}]},
+
+{n:'C', name:'상권·자리 찾기', why:'DAY 1 상권분석에서 정한 동네를 실제 매물로 좁힙니다.', items:[
+ {t:'동네 후보 3곳으로 좁히기', w:'DAY 1에서 적은 상권 + 임대료가 감당되는 곳', cost:'0원'},
+ {t:'소상공인365 상권분석 돌려 보기', w:'유동인구 · 업소 수 · 매출 추정 · 인기 업종. 첫 화면과 「간단분석」은 로그인 없이 보입니다(직접 확인). 상세분석 등 일부 기능은 로그인을 요구할 수 있습니다', where:'bigdata.sbiz.or.kr (무료)', cost:'0원', time:'1~2시간'},
+ {t:'직접 걷기 — 평일 저녁', w:'지나가는 사람 30분 세기. 어떤 사람인지도', cost:'0원', time:'30분×3회'},
+ {t:'직접 걷기 — 주말 오후', w:'평일과 얼마나 다른지', cost:'0원'},
+ {t:'경쟁 카페 3곳 들어가 보기', w:'가격 · 손님 수 · 머무는 시간 · 잘 나가는 메뉴', cost:'3~5만 원', time:'반나절'},
+ {t:'배후 수요 확인', w:'아파트 세대 수 · 회사 · 학교 · 학원가', where:'네이버 지도 · 아실 · 호갱노노', cost:'0원'},
+ {t:'임대 시세 확인', w:'같은 골목 비슷한 평수 3곳 비교', where:'네이버 부동산 · 상가 전문 부동산', cost:'0원'}]},
+
+{n:'D', name:'점포 계약', why:'계약 전에 확인 안 하면 되돌릴 수 없습니다. 특히 용도·정화조·전기.', items:[
+ {t:'매물 5곳 이상 보기', w:'첫 매물에 계약하지 않습니다', cost:'0원', time:'2~4주'},
+ {t:'건축물대장 떼어 용도 확인', w:'「근린생활시설」이어야 카페 영업신고가 됩니다. 아니면 용도변경(비용·기간 큼)', where:'정부24 (무료)', cost:'0원', time:'즉시', key:1},
+ {t:'등기부등본 확인', w:'주인이 맞는지 · 근저당(빚)이 얼마인지. 빚이 많으면 보증금을 못 받을 수 있습니다', where:'인터넷등기소', cost:'열람 700원 · 발급 1,000원', time:'즉시', key:1},
+ {t:'정화조 용량 확인', w:'좌석 수가 정화조 용량에 묶입니다. 부족하면 증설 공사', where:'건물주 · 구청 환경과', cost:'증설 시 수백만 원', key:1},
+ {t:'전기 용량 확인', w:'오븐·에어컨 쓰면 부족한 경우가 많습니다. 증설은 한전 신청', where:'한국전력 (123)', cost:'증설 100만~500만 원', time:'2~4주', key:1},
+ {t:'가스·수도 확인', w:'도시가스가 들어오는지, 없으면 LPG', cost:'인입 공사 시 수백만 원'},
+ {t:'권리금 내용 확인', w:'무엇에 대한 권리금인지(시설·영업·바닥). 시설 권리금이면 그 시설을 실제로 쓸 수 있는지', cost:'0~수천만 원', key:1},
+ {t:'권리금 계약서 따로 쓰기', w:'임대차계약서와 별개. 안 쓰면 분쟁 시 증거가 없습니다'},
+ {t:'임대차 계약', w:'계약 기간 · 인상률 · 원상복구 범위를 확인', cost:'보증금 + 첫 달 월세 + 중개수수료'},
+ {t:'확정일자 받기', w:'보증금을 지키는 장치입니다. 상가는 관할 세무서에서 받습니다(주택과 다릅니다). 사업자등록을 낼 때 계약서를 들고 가면 같이 처리됩니다', where:'관할 세무서', cost:'600원', time:'계약 즉시', key:1}]},
+
+{n:'E', name:'인허가 — 순서가 정해져 있습니다', why:'위생교육 → 보건증 → (소방) → 영업신고 → 사업자등록. 건너뛰면 다시 옵니다.', items:[
+ {t:'① 위생교육 수료', w:'신규 영업자는 6시간 「집합교육」입니다 — 교육장에 직접 가야 하고 온라인으로는 안 됩니다. 자리가 한정돼 있으니 미리 예약하세요. (온라인 3시간은 영업신고 다음 해부터 매년 받는 보수교육입니다)', where:'한국휴게음식업중앙회 kcraedu.or.kr (카페·휴게음식점)', cost:'3만 원 안팎 — 교육기관에 확인', time:'하루 (예약은 미리)', key:1},
+ {t:'② 건강진단결과서(보건증) 받기', w:'일하는 사람 전원. 흉부 X-ray(결핵)와 장티푸스 검사. 결과가 나오면 e보건소·정부24에서 바로 출력됩니다. 1년마다 갱신', where:'보건소 또는 지정 병원', cost:'보건소 3,000원 · 일반 병원 1만~3만 원', time:'검사 후 3~5일', key:1},
+ {t:'③ 소방시설 완비증명 (해당되면)', w:'지하 · 2층 이상 · 면적 기준에 걸리면 필요', where:'관할 소방서', cost:'공사비 별도', time:'2~4주'},
+ {t:'④ 영업신고 (휴게음식점)', w:'카페는 보통 「휴게음식점」입니다. 빵·케이크를 매장에서 직접 구워 팔면 「제과점영업」으로 신고해야 할 수 있으니, 무엇을 만들지 적어서 구청 위생과에 먼저 물어보세요', where:'구청·시청 위생과', cost:'등록면허세 제4종 27,000원 (부산 등 광역시·인구 50만 이상 시 기준. 연면적 300㎡ 미만이면 제4종)', time:'3~7일', key:1},
+ {t:'⑤ 사업자등록', w:'영업신고증이 있어야 합니다. 간이/일반 선택', where:'홈택스 또는 세무서', cost:'0원', time:'2~3일', key:1},
+ {t:'통신판매업 신고 (온라인 판매하면)', w:'인스타 DM 주문·택배 판매도 해당', where:'정부24', cost:'등록면허세 연 18,000~40,500원(인구 규모별)'},
+ {t:'영업배상책임보험 알아보기', w:'손님 사고·식중독 대비', cost:'연 10만~30만 원'},
+ {t:'화재보험 가입', w:'건물주가 요구하는 경우도 많습니다', cost:'연 10만~40만 원'}]},
+
+{n:'F', name:'공사·인테리어', why:'견적을 3곳 이상 받습니다. 간판은 신고 대상입니다.', items:[
+ {t:'도면·콘셉트 정리', w:'DAY 2에서 정한 컬러·분위기를 그림으로', cost:'0원'},
+ {t:'견적 3곳 이상 받기', w:'같은 도면으로 비교해야 의미가 있습니다', cost:'0원', time:'2주', key:1},
+ {t:'공사 계약', w:'공정표 · 대금 지급 시기 · 하자보수 기간을 문서로', cost:'평당 100만~300만 원', time:'2~6주'},
+ {t:'전기·수도·가스 설비', w:'장비 위치를 먼저 정해야 배선이 맞습니다', cost:'공사비 포함'},
+ {t:'주방 설비 — 후드·덕트·배수', w:'베이킹하면 후드 용량이 중요합니다', cost:'300만~1,000만 원'},
+ {t:'간판 — 옥외광고물 신고', w:'「신고 없이 달면 과태료」. 건물·지역마다 규정이 다릅니다', where:'구청 도시디자인과', cost:'신고 수수료 + 제작 100만~500만 원', key:1},
+ {t:'소방 설비 (해당되면)', w:'소화기·유도등·경보기', cost:'50만~300만 원'},
+ {t:'준공·정리', w:'하자 목록을 사진으로 남기고 보수 요청'}]},
+
+{n:'G', name:'장비·집기 — 동선부터', why:'장비를 사기 전에 동선과 도면을 먼저 그립니다. 순서를 바꾸면 들여놓고 못 쓰거나 다시 사게 됩니다.', items:[
+ {t:'주방 동선 짜기', w:'재료 받기 → 보관 → 다듬기 → 만들기(오븐·반죽) → 식히기 → 담기 → 손님에게. 이 순서대로 걸어 보며 겹치는 곳이 없는지 확인합니다. 동선이 꼬이면 바쁠 때 사람이 부딪힙니다', cost:'0원', time:'2~3일', key:1},
+ {t:'홀 동선 짜기', w:'손님이 들어와서 → 메뉴 보고 → 주문·결제 → 기다리고 → 받고 → 앉는 곳까지. 줄이 서는 자리와 지나가는 길이 겹치지 않게', cost:'0원', key:1},
+ {t:'장비 배치 도면 그리기', w:'평면도에 장비를 실제 크기로 그려 넣습니다. 장비마다 폭·깊이·높이와 문 열리는 방향까지. 종이에 손으로 그려도 됩니다', where:'모눈종이 · 무료 도면 앱', cost:'0원', time:'3~5일', key:1},
+ {t:'도면에 콘센트·배수·급수 표시', w:'장비 위치가 정해져야 전기·배관 공사를 맞출 수 있습니다. 공사 시작 전에 인테리어 업체에 넘깁니다', cost:'0원', key:1},
+ {t:'통로 폭 확인', w:'주방 통로는 사람이 지나갈 최소 폭(보통 90cm 이상), 홀은 휠체어·유모차도 생각합니다', cost:'0원'},
+ {t:'장비 실측 — 문으로 들어오는지', w:'오븐·쇼케이스가 출입문·엘리베이터를 통과하는지. 못 들어가서 반품하는 일이 실제로 있습니다', cost:'0원', key:1},
+ {t:'오븐 (베이킹하면)', w:'컨벡션 오븐. 용량은 하루 생산량 기준', cost:'중고 100만~ / 신품 300만~800만 원', key:1},
+ {t:'발효기 (빵 하면)', cost:'50만~200만 원'},
+ {t:'냉장고·냉동고', w:'테이블 냉장고 + 업소용 냉장고', cost:'150만~400만 원'},
+ {t:'쇼케이스 (케이크·디저트)', w:'디저트 카페의 얼굴입니다', cost:'100만~300만 원'},
+ {t:'에스프레소 머신·그라인더', w:'중고 시장이 큽니다. A/S 되는 곳에서', cost:'중고 150만~ / 신품 400만~1,500만 원'},
+ {t:'제빙기', cost:'80만~200만 원'},
+ {t:'작업대·싱크·선반', cost:'100만~300만 원'},
+ {t:'POS·카드단말기', w:'배달 연동 여부 확인', where:'POS 업체 · 카드사', cost:'월 2만~5만 원 또는 구매'},
+ {t:'식기·집기·소모품', w:'컵·접시·트레이·집게', cost:'50만~150만 원'},
+ {t:'가구 — 의자·테이블', cost:'100만~400만 원'},
+ {t:'정수기·온수기', cost:'월 2만~4만 원'}]},
+
+{n:'H', name:'재료·거래처', why:'같은 재료도 거래처마다 값이 다릅니다. 원가가 여기서 정해집니다.', items:[
+ {t:'주요 재료 거래처 3곳 비교', w:'밀가루·버터·생크림·과일. 최소 주문량과 배송일도', where:'식자재마트 · 온라인 도매 · 지역 도매상', cost:'0원', time:'1~2주', key:1},
+ {t:'포장재 정하기', w:'케이크 상자·컵·캐리어·스티커. 로고 인쇄는 최소 수량이 큽니다', cost:'초도 30만~100만 원'},
+ {t:'원가 다시 계산', w:'실제 매입가로 DAY 2 원가율을 고쳐 적습니다', cost:'0원', key:1},
+ {t:'초도 발주', w:'첫 2주치만. 많이 사면 버립니다', cost:'100만~300만 원'},
+ {t:'세금계산서·현금영수증 받기 습관', w:'매입 증빙이 있어야 세금이 줄어듭니다', key:1}]},
+
+{n:'I', name:'메뉴·가격 확정', why:'DAY 2에서 정한 것을 실제 재료비로 다시 맞춥니다.', items:[
+ {t:'레시피 표준화', w:'그램 단위로 적어 두기. 사람이 바뀌어도 같은 맛', cost:'0원', key:1},
+ {t:'원가율 다시 확인', w:'디저트 30~40% · 음료 20~30%가 통상', cost:'0원'},
+ {t:'판매가 확정', w:'경쟁 카페 가격과 비교하고, 원가율이 넘으면 조정'},
+ {t:'메뉴판 제작', w:'인쇄물 · 벽면 · 태블릿 중 선택', cost:'10만~50만 원'},
+ {t:'알레르기 유발 식품 표시 확인', w:'표시 대상인지 확인', where:'식품안전나라'}]},
+
+{n:'J', name:'홍보 준비 — 오픈 4주 전부터', why:'DAY 3에서 정한 것을 실제로 올립니다.', items:[
+ {t:'인스타 계정 만들고 프로필 채우기', w:'DAY 3 계정명·소개글 그대로', cost:'0원', carry:'insta'},
+ {t:'네이버 스마트플레이스 등록', w:'사업자등록증 필요. 지도에 뜨는 데 며칠 걸립니다', where:'스마트플레이스 (무료)', cost:'0원', time:'3~7일', key:1},
+ {t:'카카오맵 등록', where:'카카오맵 장소 등록', cost:'0원'},
+ {t:'오픈 전 콘텐츠 3~4개 올리기', w:'공사 과정 · 시제품 · 오픈 날짜 예고', cost:'0원'},
+ {t:'이웃·주변 상가에 인사', w:'돈 안 드는 가장 센 홍보입니다', cost:'시식용 재료비'},
+ {t:'배달앱 입점 (할 거면)', w:'수수료 구조를 먼저 계산. 배달 가격을 따로 둘지', cost:'주문당 15~25%'},
+ {t:'단골 장치 준비', w:'DAY 3에서 정한 것. 쿠폰·카드·손글씨', cost:'10만~30만 원', carry:'repeat'}]},
+
+{n:'K', name:'오픈', why:'가오픈으로 한 번 돌려 보고 진짜 오픈합니다.', items:[
+ {t:'가오픈(시뮬레이션) 하루', w:'지인만 불러 실제처럼. 동선·시간·빠뜨린 것 확인', cost:'재료비', key:1},
+ {t:'가오픈에서 나온 문제 고치기', w:'주문~제공 시간 · 자리 배치 · 빠진 집기'},
+ {t:'직원 교육 (있으면)', w:'레시피 · 응대 · 마감. 근로계약서 꼭 씁니다', key:1},
+ {t:'오픈'},
+ {t:'첫 주 — 매일 팔린 것 기록', w:'무엇이 남고 무엇이 모자랐는지', key:1},
+ {t:'2주차 — 리뷰 요청', w:'스마트플레이스·인스타. 카드 한 장이면 됩니다'},
+ {t:'4주차 — 첫 달 손익 계산', w:'매출 − 재료비 − 고정비 − 변동비. 남는 게 있는지', key:1},
+ {t:'세금 일정 알아 두기', w:'부가가치세 — 일반과세자는 1월·7월(연 2회), 간이과세자는 1월(연 1회) / 종합소득세 — 매년 5월(전년도 소득분) / 등록면허세 — 면허를 가진 동안 매년 1월에 다시 나옵니다 / 위생교육 보수교육 — 영업신고 다음 해부터 매년 3시간(온라인). 미리 달력에 표시해 두세요', where:'홈택스', cost:'0원(신고 자체는 무료)', key:1}]}
+];
+
+</script>
+<script>
+// ---- days.js ----
+// DAY 1·2·3 — 강의계획안 15교시 그대로. 교시마다 답 칸 · 예시 답변 · 프롬프트.
+// 프롬프트의 {키}는 내가 적은 답으로 자동으로 바뀝니다(비어 있으면 "(아직 없음)").
+const DAYS = [
+{n:'DAY 1', title:'카페 창업의 시작 — 콘셉트와 상권', goal:'오늘 결과물: 나만의 카페 콘셉트 시트', p:[
+ {no:1, t:'콘셉트 키워드 3개', topic:'카페 창업 트렌드 · 디저트 카페 사례 분석 / 살아남는 카페 vs 사라지는 카페', tm:['콘셉트','트렌드 키워드','네이버 데이터랩'],
+  prompts:[
+   {name:'시작 프롬프트 — 역할 정하기 + 트렌드 키워드', first:1, body:
+`너는 지금부터 3일 동안 나와 함께 카페 브랜드를 만드는 "브랜드 파트너"야. 동네 디저트 카페를 8년 직접 운영해 본 사람처럼 현실적으로 말해줘. 나는 디저트·베이커리 카페 창업을 준비하는 예비창업자야.
+
+대화 규칙
+1. 내가 "[업데이트]"로 새로 정한 것을 보내면 앞 대화 위에 쌓아서 답해. 처음부터 다시 설명하지 마.
+2. 답은 짧게, 초보도 아는 쉬운 말로. 전문 용어는 바로 풀어 써줘.
+3. 모르는 건 모른다고 하고, 숫자는 "예시"라고 표시해.
+4. 좋은 말만 하지 말고 걱정되는 점을 하나씩 솔직히 짚어줘.
+5. 답 마지막에 "지금까지의 브랜드 카드"를 갱신해서 붙여줘 — 카페 이름 / 콘셉트 한 줄 / 키워드 3개 / 대표 고객 / 상권 / 굳이 와야 할 이유 / 시그니처 / 비주얼 / 홍보 한 줄. 아직 없는 칸은 "미정".
+6. 그리고 나에게 다음 질문 1개를 던져줘.
+
+첫 과제: 지금 한국 디저트·베이커리 카페에서 뜨고 있는 트렌드 키워드 10개를 뽑아줘. 메뉴(빵·디저트·음료), 공간·분위기, 운영 방식(예약제·테이크아웃 등)을 골고루 섞어줘. 각 키워드 옆에 왜 뜨는지 한 줄, 그리고 "오래 갈 트렌드 / 금방 식을 트렌드" 중 어느 쪽인지 네 판단을 붙여줘. 확실하지 않은 건 "확인 필요"라고 표시해줘. 나는 네이버 데이터랩에서 검색량으로 직접 확인할 거야.
+마지막 줄에는 키워드 10개만 쉼표로 이어서 한 줄로 다시 써줘.`},
+   {name:'이어서 — 내 키워드 후보 추천받기', body:
+`[업데이트] 1일차 1교시
+AI가 뽑아준 트렌드 키워드: {kws10}
+내가 좋아하는 것·추구하는 것: {me}
+
+[부탁] 위 트렌드와 내가 추구하는 것이 만나는 지점에서 내 카페 콘셉트 키워드 후보 10개를 추천해줘. 한 단어 또는 두 단어로, 손님이 들었을 때 바로 그림이 그려질 것. 트렌드를 따른 것 5개와 살짝 비튼 것 5개로 나누고 각각 왜 추천하는지 한 줄. 검색량이 빠지고 있을 것 같은 키워드는 "확인 필요"라고 표시해줘. 마지막에 "이 중 3개를 고르면 이런 카페가 됩니다" 조합 예시 2개.
+
+마지막에 「지금까지의 브랜드 카드」를 갱신해서 붙여주고, 내가 놓친 게 있으면 다음 질문 1개를 던져줘.`}],
+  f:[{k:'kws10', p:'AI가 뽑아준 트렌드 키워드 10개', help:'위 시작 프롬프트를 챗GPT·클로드 새 대화에 붙여넣고, 마지막 줄에 나온 10개를 그대로 옮겨 적으세요. 네이버 데이터랩에서 1년 검색량도 확인해 보세요',
+     ex:'베이커리카페, 소금빵, 크루키, 말차 디저트, 계절과일 케이크, 예약제 홀케이크, 반려동물 동반, 우드톤 소형 공간, 테이크아웃 전문, 시즌 한정 메뉴'},
+    {k:'me', p:'내가 좋아하는 것 · 추구하는 것', help:'트렌드와 상관없이 나에 대한 것입니다. 잘 만드는 것(없으면 배우고 싶은 것), 좋아하는 카페 분위기, 카페를 열어 이루고 싶은 것. 정답이 없습니다',
+     ex:'계절과일 생크림 케이크를 잘 만듦(베이킹 클래스 2년) / 시끄러운 곳보다 조용한 동네 카페가 좋음 / 손님 이름을 기억하는 가게를 하고 싶음 / 아이 학교 보내고 낮~저녁 9시까지만 일하고 싶음 / 데이터랩에서 베이커리카페가 1년 내내 꾸준하고 소금빵은 작년보다 절반으로 내려간 게 눈에 띔'},
+    {k:'kw3', p:'내 카페 콘셉트 키워드 3개', help:'내 카페를 세 단어로 말한 것입니다. 손님이 듣고 바로 그림이 그려져야 합니다. 나중에 바꿔도 됩니다',
+     ex:'동네 · 계절과일 · 조용함'}]},
+
+ {no:2, t:'누가 내 카페에 올까 — 대표 고객 1명', topic:'타깃 고객 설정 / 경쟁 카페 분석과 차별화 포인트', tm:['타깃 고객','페르소나','객단가'],
+  prompts:[{name:'이어서 — 대표 고객 다듬기', body:
+`[업데이트] 1일차 2교시 · 타깃 고객
+콘셉트 키워드: {kw3}
+타깃 고객 한 줄: {target}
+대표 고객 한 명: {persona}
+
+[부탁] 이 손님의 하루를 아침부터 밤까지 짧게 그려주고, 이 손님이 카페에서 진짜로 원하는 것 3가지와 싫어할 만한 것 3가지를 알려줘. 이 손님이 한 번에 쓰는 돈(객단가)이 현실적인지 말해주고, 이 객단가면 하루에 몇 명이 와야 월세와 인건비가 나오는지 예시 숫자로 감을 잡아줘. 내가 빠뜨린 게 있으면 물어봐 줘.
+
+마지막에 「지금까지의 브랜드 카드」를 갱신해서 붙여주고, 내가 놓친 게 있으면 다음 질문 1개를 던져줘.`}],
+  f:[{k:'target', p:'타깃 고객 한 줄', help:'우리 카페가 제일 반가운 한 종류의 사람입니다. 모두를 위한 카페는 아무도 안 옵니다. 누가·언제·어떤 마음으로 올지 한 줄로',
+     ex:'퇴근길에 혼자 조용히 쉬고 싶은 30대 직장인'},
+    {k:'persona', p:'대표 고객 1명 (페르소나)', help:'타깃 중 한 사람을 이름까지 붙여 상상한 것. 구체적일수록 메뉴·가격·SNS 답이 저절로 나옵니다. 객단가는 한 사람이 한 번에 쓰는 돈(음료+디저트)',
+     ex:'지영 · 30대 초반 · 회사원 · 혼자 삶 · 평일 저녁 7시, 집에 바로 가기 아쉬워 30분만 앉아 있고 싶을 때 · 아메리카노 + 그날의 조각 케이크 · 12,000원 · 주말엔 친구와 홀케이크 예약'}]},
+
+ {no:3, t:'내가 들어갈 상권 체크리스트', topic:'상권분석 기초 / 유동인구·주요 고객층 / 주변 경쟁 카페 조사', tm:['상권','유동인구','배후수요','소상공인365','네이버 데이터랩','마피아넷'],
+  lesson:3,
+  links:[['소상공인365 상권분석','https://bigdata.sbiz.or.kr/'],['네이버 데이터랩','https://datalab.naver.com/keyword/trendSearch.naver'],['마피아넷 키워드 검색량','https://ma-pia.net/']],
+  prompts:[
+   {name:'상권분석 — 내 동네를 조사할 프롬프트', body:
+`[업데이트] 1일차 3교시 · 상권
+들어가려는 동네: {area}
+콘셉트 키워드: {kw3} / 대표 고객: {persona}
+소상공인365·지도에서 확인한 것 — 유동인구: {traffic} / 주요 고객층: {mainCust} / 주변 경쟁 카페: {comp}
+내가 본 장점: {pros}
+내가 본 단점: {cons}
+
+[부탁] 이 상권을 직접 걸어 보며 확인할 체크리스트 10개를 만들어줘 (시간대별 사람 흐름, 경쟁 카페에서 볼 것, 임대료 감 잡는 법 포함). 그리고 내 콘셉트와 대표 고객이 이 상권에 잘 맞는 점 3가지, 위험한 점 3가지를 솔직하게. 마지막에 "이 상권에서 피해야 할 자리" 한 줄.
+
+마지막에 「지금까지의 브랜드 카드」를 갱신해서 붙여주고, 내가 놓친 게 있으면 다음 질문 1개를 던져줘.`},
+   {name:'수요 분석 — 이 동네에 손님이 있나', body:
+`[업데이트] 1일차 3교시 · 수요 확인
+동네: {area} / 주요 고객층: {mainCust} / 유동인구: {traffic}
+내 콘셉트: {kw3} / 대표 고객: {persona} / 객단가는 페르소나에 적힌 금액
+
+[부탁] 이 동네에서 내 콘셉트에 돈을 낼 사람이 실제로 얼마나 있을지 가늠해줘.
+1) 배후 인구 중 내 대표 고객과 비슷한 사람의 비율을 어떻게 추정하면 되는지, 계산식을 숫자를 넣어 보여줘 (숫자는 "예시"라고 표시).
+2) 그 비율이면 하루 몇 명이 올 수 있고, 객단가를 곱하면 월매출이 얼마인지.
+3) 그 월매출로 월세 얼마까지 감당되는지 (월세는 매출의 15% 안).
+4) 이 추정이 틀릴 수 있는 이유 3가지와, 그걸 확인하려면 무엇을 직접 해 봐야 하는지.
+5) 마지막에 "이 동네가 내 콘셉트에 맞는지" 한 줄 결론과, 맞지 않다면 어떤 동네를 찾아야 하는지.
+
+마지막에 「지금까지의 브랜드 카드」를 갱신해서 붙여주고, 내가 놓친 게 있으면 다음 질문 1개를 던져줘.`}],
+  f:[{k:'area', p:'들어가려는 동네 · 상권', help:'아직 못 정했으면 살고 있거나 자주 가는 동네를 적으세요. 시·구까지 적어야 지도 검색이 정확합니다',
+     ex:'부산 강서구 명지동 명지국제신도시 아파트 단지 초입, 초등학교 앞 상가 1층 (※ 예시입니다. 내가 들어갈 진짜 동네를 적으세요)'},
+    {k:'traffic', p:'유동인구 특징', help:'그 길을 지나가는 사람. 언제(아침·점심·저녁·주말) 많고 어떤 사람(직장인·주민·학생)인지. 소상공인365 화면이나 직접 본 것',
+     ex:'평일 저녁 6~8시 퇴근 인파, 오후 3~4시 학부모, 주말 오후 가족 단위. 아침은 한산함'},
+    {k:'mainCust', p:'주요 고객층 (배후 인구)', help:'그 동네에 실제로 살거나 일하는 사람들. 아파트 세대수·회사·학교를 보면 됩니다',
+     ex:'30~40대 직장인과 아파트 주민 약 3,000세대, 초등학교 2곳 학부모'},
+    {k:'comp', p:'주변 경쟁 카페 3곳', help:'반경 500m 안에서 우리 손님이 지금 갈 만한 곳. 프랜차이즈 1곳 + 개인 카페 2곳 정도. 리뷰에 자주 나오는 말도',
+     ex:'대형 프랜차이즈 1곳(도보 3분, 드라이브스루) / 중형 프랜차이즈 1곳(도보 5분) / 동네 개인 카페 2곳(커피 위주, 케이크는 납품 제품) — 리뷰에 「조용하다」와 「자리가 없다」가 자주 보임'},
+    {k:'pros', p:'이 상권의 장점', help:'이 동네라서 우리 카페에 좋은 점',
+     ex:'배후 아파트 세대가 많고 저녁에 사람이 꾸준함. 학원가라 오후에 학부모가 기다리는 수요가 있음'},
+    {k:'cons', p:'이 상권의 단점', help:'걱정되는 점. 주차·임대료·경쟁·배달 가능 여부',
+     ex:'주차가 어렵고 대형 프랜차이즈가 200m 안에 있음. 1층 임대료가 높은 편(월 150만 원 안팎)'}]},
+
+ {no:4, t:'손님이 굳이 우리 가게까지 와야 할 이유', topic:'차별화 포인트 심화 / 내 동네에 실제로 적용해 보기', tm:['차별화 포인트','슬로건 · 한 줄 소개'],
+  prompts:[{name:'이어서 — 굳이 와야 할 이유 만들기', body:
+`[업데이트] 1일차 4교시 · 차별화
+키워드: {kw3} / 타깃: {target} / 상권: {area} / 경쟁 카페: {comp}
+경쟁 카페와 다른 점이라고 생각하는 것: {diff}
+내가 써 본 한 문장: {reason}
+
+[부탁] "손님이 굳이 우리 가게까지 와야 할 이유"를 한 문장으로 만들고 싶어. 먼저 내 강점을 끌어낼 질문 3개를 하고, 그다음 후보 문장 5개를 서로 다른 방향으로 써줘. 멋있는 말보다 손님 입장에서 진짜 이유가 되는 문장으로. 각 문장이 경쟁 카페 중 어느 곳을 이기는 말인지도 한 줄로.
+내가 실제로 할 수 있다고 적은 것만 써줘. 확인 안 된 것을 "유일한", "최초"라고 단정하지 말고, 그렇게 쓰려면 무엇을 확인해야 하는지 알려줘.
+
+마지막에 「지금까지의 브랜드 카드」를 갱신해서 붙여주고, 내가 놓친 게 있으면 다음 질문 1개를 던져줘.`}],
+  f:[{k:'diff', p:'경쟁 카페와 다른 점', help:'경쟁 카페 3곳에는 없고 우리에게는 있는 것. 메뉴·분위기·영업시간·사장·가격 중 하나면 됩니다. 크지 않아도 됩니다',
+     ex:'프랜차이즈 케이크는 공장 제품이고 동네 개인 카페는 커피 위주라 케이크가 약함 → 우리는 매일 매장에서 굽는 생크림 케이크. 반경 1km에 없음'},
+    {k:'reason', p:'"굳이 와야 할 이유" 한 문장', help:'손님이 집 앞 카페를 지나쳐 굳이 우리 가게까지 오는 이유. 20자 안팎, 손님이 바로 이해하는 말',
+     ex:'명지에서 계절과일 케이크를 매일 굽는 유일한 동네 카페'}]},
+
+ {no:5, t:'[실습] 나만의 카페 콘셉트 시트 완성', topic:'내 카페 콘셉트 & 타깃 고객 정하기', result:'1일차 결과물: 나만의 카페 콘셉트 시트',
+  prompts:[{name:'이어서 — 콘셉트 한 줄 다듬기', body:
+`[업데이트] 1일차 5교시 · 콘셉트 시트
+키워드: {kw3} / 내가 추구하는 것: {me} / 상권: {area}
+카페 이름(가칭): {name}
+타깃 고객 최종: {targetFinal}
+굳이 와야 할 이유: {reason}
+내가 써 본 콘셉트 한 줄: {concept}
+
+[부탁] 이 콘셉트 한 줄을 더 쉽고 또렷하게 다듬은 버전 5개 (누구를 위한 카페인지 보이게, 20자 안팎). 카페 이름 후보 5개 (키워드와 연결되게, 부르기 쉽고 검색되게). 그리고 오늘 정한 것 중 아직 빠져 있는 것 하나를 짚어줘. 이름은 후보만 주고 고르는 건 나에게 맡겨줘. 이미 있는 가게 이름과 겹칠 것 같으면 "확인 필요"라고 표시해줘.
+
+마지막에 「지금까지의 브랜드 카드」를 오늘 기준으로 완성해서 붙여주고, 내가 놓친 게 있으면 다음 질문 1개를 던져줘.`}],
+  f:[{k:'name', p:'카페 이름 (가칭)', help:'임시 이름입니다. 부르기 쉽고, 검색되고, 콘셉트가 느껴지면 좋습니다. 한글 2~4글자. 내일 바뀌어도 됩니다', ex:'카페 온기'},
+    {k:'concept', p:'내 카페 콘셉트 한 줄', help:'누구를 위한 + 무엇이 있는 + 어떤 분위기의 카페. 오늘 적은 키워드·고객·이유를 합쳐 한 문장으로',
+     ex:'퇴근길 직장인을 위한, 계절과일 케이크가 있는 조용한 동네 카페'},
+    {k:'targetFinal', p:'타깃 고객 최종 정리', help:'2교시 타깃을 오늘 정리한 상권과 「굳이 와야 할 이유」를 반영해 다시 적습니다',
+     ex:'명지국제신도시에 사는 30~40대 직장인. 혼자 또는 둘이서 조용히 쉬고 싶은 사람. 주말엔 케이크 사러 오는 가족'}]}]},
+
+{n:'DAY 2', title:'팔리는 카페 만들기 — 메뉴 개발과 원가', goal:'오늘 결과물: 메뉴·가격 기획 시트', p:[
+ {no:1, t:'시그니처 메뉴 후보 정하기', topic:'잘 팔리는 메뉴 구성 전략 / 카페스이 대표메뉴 개발 과정과 실패 사례', tm:['시그니처 메뉴','거래처','발주','최소주문수량'],
+  prompts:[{name:'2일차 시작 — 어제 정리 + 시그니처 후보', first:1, body:
+`(어제 대화창이 남아 있으면 이 앞부분은 무시하고 이어서 답해도 돼.)
+너는 나와 함께 카페 브랜드를 만드는 "브랜드 파트너"야. 동네 디저트 카페를 8년 직접 운영해 본 사람처럼 현실적으로 말해줘.
+대화 규칙 — ① 답은 짧게, 초보도 아는 쉬운 말로. 전문 용어는 바로 풀어 써. ② 모르는 건 모른다고 하고, 네가 만든 숫자는 반드시 "예시"라고 표시해. ③ 좋은 말만 하지 말고 걱정되는 점을 하나씩 솔직히 짚어줘. ④ 답 끝에 「지금까지의 브랜드 카드」를 갱신해 붙이고 다음 질문 1개를 던져줘.
+
+1일차에 정한 것
+- 카페 이름: {name} / 콘셉트 한 줄: {concept} / 키워드: {kw3}
+- 타깃 고객: {targetFinal} / 대표 고객: {persona}
+- 상권: {area} / 경쟁 카페: {comp} / 굳이 와야 할 이유: {reason}
+
+[업데이트] 2일차 1교시 · 메뉴 구성
+메뉴 구성 방향: {menuFocus}
+내가 생각한 시그니처 후보: {sig3}
+
+[부탁] 이 카페의 시그니처 메뉴 후보 7개를 제안해줘. 콘셉트가 한눈에 보이고, 사진 찍고 싶고, 매일 같은 품질로 만들 수 있고, 재료 손실이 적은 것. 각 메뉴마다 왜 이 카페에 맞는지 한 줄, 만들기 난이도, 예상 판매가대(예시). 마지막에 "처음 오픈 때 3개만 고른다면"을 골라줘.`}],
+  f:[{k:'menuFocus', p:'메뉴 구성 방향', help:'무엇을 중심으로 팔 것인가. 디저트·베이커리(빵)·음료 중 하나가 중심이고 나머지는 곁들이입니다. 다 잘하려 하면 재료가 남고 돈이 샙니다',
+     ex:'계절과일 케이크가 중심. 음료는 케이크와 어울리는 5가지만 두고, 빵은 하지 않는다. 케이크는 조각과 홀 두 가지'},
+    {k:'sig3', p:'시그니처 메뉴 후보 1~3개', help:'우리 가게 하면 떠오르는 대표 메뉴. 조건 4가지 — 콘셉트가 보인다 · 사진 찍고 싶다 · 매일 같은 품질 · 재료 손실이 적다',
+     ex:'계절과일 생크림 케이크 / 무화과 타르트 / 유자 파운드'}]},
+
+ {no:2, t:'메뉴명 · 한 줄 설명 · 판매가', topic:"고객이 '비싸다'고 느끼지 않게 하는 메뉴 표현법", tm:['판매가','객단가','포지셔닝'],
+  prompts:[{name:'이어서 — 메뉴명·설명·가격 다듬기', body:
+`[업데이트] 2일차 2교시 · 메뉴명과 가격
+카페 이름: {name} / 콘셉트: {concept} / 대표 고객: {persona} / 동네: {area}
+어제 정한 굳이 와야 할 이유: {reason}
+시그니처 3개 (이름 / 설명 / 판매가): {menu3}
+
+[부탁] 각 메뉴마다 메뉴명 후보 3개와 한 줄 설명 후보 2개를 써줘. 위 콘셉트와 대표 고객의 말투에 맞게. 설명은 25자 안팎, 재료와 맛이 그려지고, 손님이 "비싸다"고 느끼지 않게 가치가 보이게 (재료 원산지·만드는 시간·크기). 내가 적은 판매가가 이 동네 기준으로 어떤지 솔직하게. 판매가는 내가 정하니 강요는 하지 말고.
+마지막에 브랜드 카드를 갱신해서 붙여줘.`}],
+  f:[{k:'menu3', p:'시그니처 메뉴 3개 — 이름 / 한 줄 설명 / 판매가', help:'메뉴명은 재료나 장면이 그려지게, 설명은 25자 안팎으로 왜 이 값인지 보이게, 판매가는 숫자로. 가격은 3교시 원가율을 보고 다시 조정합니다',
+     ex:`1. 이달의 과일 케이크 / 그달 가장 맛있는 과일을 올린 생크림 케이크, 매일 아침 굽습니다 / 7,500원
+2. 무화과 타르트 / 부산 무화과를 통째로 올린 버터 타르트, 한 조각 / 6,800원
+3. 유자 파운드 / 남해 유자청을 넣어 하루 숙성한 파운드, 두툼한 한 조각 / 4,500원`}]},
+
+ {no:3, t:'[실습] 내 메뉴 원가 계산', topic:'원가와 판매가 기초 / "매출은 나오는데 돈이 안 남는" 이유', tm:['원가','원가율','판매가','매출','매출원가','고정비','변동비','영업이익','순이익','손익분기점','로스 · 폐기율','부가세 별도','카드 수수료','단가'],
+  lesson:[1,4],
+  files:[['원가계산표 빈 양식','원가계산표_빈양식.xlsx','재료·단가·기준수량·레시피 양을 넣으면 1개 원가와 원가율이 자동으로 나옵니다'],
+         ['손익계산서 (2026년)','손익계산서_2026.xlsx','1월~12월 시트에 날짜·업체·금액을 적으면 「2026년」 시트에 한 해가 모입니다. 배달 매출(배민·요기요·쿠팡)과 날씨·메모까지 하루 단위로 적는 양식입니다. 오픈 뒤 매달 채우세요']],
+  prompts:[{name:'이어서 — 원가율·월 손익 해석', body:
+`[업데이트] 2일차 3교시 · 원가와 월 손익
+카페 이름: {name} / 콘셉트: {concept} / 대표 고객: {persona} / 동네: {area}
+메뉴: {menu3}
+
+아래 숫자는 내가 원가계산표(엑셀)로 직접 계산한 것이야. 다시 계산하거나 네 마음대로 고쳐 쓰지 말고, 이 숫자를 그대로 놓고 해석만 해줘.
+메뉴별 판매가 · 1개 원가 · 원가율: {cost3}
+월 손익 입력: {pl}
+참고할 통상 범위: 디저트 원가율 30~40%(목표 30~35%), 매출 대비 재료비 30~35% · 인건비 20~30% · 월세 10~15% · 공과금 5~8% · 수수료 3~10% · 남는 돈 10~20%
+
+[부탁]
+1) 내 원가율이 통상 범위와 비교해 어떤지 쉽게 말해줘.
+2) 월 손익에서 범위를 벗어난 항목이 있으면 왜 위험한지, 무엇을 먼저 손봐야 하는지 순서대로.
+3) "매출은 나오는데 돈이 안 남는" 상황이 왜 생기는지, 재료비 말고 빠뜨리기 쉬운 비용 5가지.
+4) 원가율을 5%p 낮추려면 레시피·구매·메뉴 구성에서 뭘 바꿀 수 있는지 하나씩.
+숫자는 "예시"라고 표시하고, 카페를 처음 하는 사람에게 말하듯이.
+
+마지막에 「지금까지의 브랜드 카드」를 갱신해서 붙여주고, 내가 놓친 게 있으면 다음 질문 1개를 던져줘.`}],
+  f:[{k:'cost3', p:'메뉴 3개 — 판매가 / 1개 원가 / 원가율', help:'1개 원가는 그 메뉴 하나에 든 재료비와 포장입니다. 정확하지 않아도 됩니다. 재료 3~4가지만 더해도 감이 잡힙니다. 원가율 = 원가 ÷ 판매가',
+     ex:`이달의 과일 케이크: 7,500원 / 2,600원 → 34.7%  (과일 900 + 생크림 700 + 시트 600 + 상자 400)
+무화과 타르트: 6,800원 / 2,400원 → 35.3%
+유자 파운드: 4,500원 / 1,200원 → 26.7%`},
+    {k:'pl', p:'월 손익 — 예상 월매출 / 월세·관리비 / 인건비 / 공과금 등', help:'모르면 어림값으로. 인건비에는 혼자 해도 "내 월급"을 넣어야 진짜 계산이 됩니다',
+     ex:`예상 월매출 9,000,000 / 월세·관리비 1,500,000 / 인건비(내 월급 포함) 2,500,000 / 공과금·통신·보험·소모품 600,000
+→ 재료비 약 2,898,000(32.2%) · 카드수수료 180,000 · 남는 돈 약 1,322,000(14.7%)
+→ 하루 손님 약 29명 필요 (영업일 26일, 객단가 12,000원)`}]},
+
+ {no:4, t:'메뉴판 구성과 브랜드 비주얼', topic:'메뉴판 구성 / 브랜드 비주얼(컬러·폰트·로고) 콘셉트', tm:['무드보드','브랜딩','브랜드 아이덴티티','대표 컬러 · 색 코드','폰트 · 서체','로고','패키지 · 포장'],
+  prompts:[{name:'이어서 — 컬러 추천받기', body:
+`[업데이트] 2일차 4교시 · 브랜드 컬러
+카페: {name} / 콘셉트: {concept} / 키워드: {kw3}
+시그니처: {menu3}
+내가 추구하는 것: {me}
+
+[부탁] 이 카페에 어울리는 브랜드 색 조합을 3가지 제안해줘. 조합마다 메인 색·배경 색·포인트 색 3개를 색 코드(#으로 시작하는 6자리)와 함께, 이 조합이 어떤 느낌을 주는지 한 줄, 간판·메뉴판·인스타 피드에서 어떻게 보일지 한 줄. 동네 디저트 카페에 흔한 조합과 우리만의 조합을 섞어줘. 마지막에 가장 추천하는 조합 하나를 고르고, 맨 마지막 줄에는 그 조합의 색 코드 3개만 쉼표로 이어서 써줘.
+색 코드는 실제로 존재하는 6자리 16진수로만 쓰고, 색 이름과 코드가 서로 맞는지 확인해줘. 화면과 인쇄·간판은 색이 다르게 나올 수 있다는 점도 한 줄로 알려줘.
+
+마지막에 「지금까지의 브랜드 카드」를 갱신해서 붙여주고, 내가 놓친 게 있으면 다음 질문 1개를 던져줘.`},
+   {name:'이어서 — 메뉴판과 로고 방향', body:
+`[업데이트] 2일차 4교시 · 메뉴판과 비주얼
+메뉴판 순서·개수: {menuboard}
+대표 컬러·폰트·로고 방향: {visual}
+
+[부탁]
+1) 이 메뉴판 순서와 개수가 처음 여는 작은 카페에 적당한지, 줄이거나 바꿀 게 있으면 이유와 함께.
+2) 컬러·폰트·로고 방향이 콘셉트({concept})와 맞는지, 안 맞으면 대안.
+3) 로고 시안을 만들 때 디자이너나 AI 이미지 도구에 줄 "로고 설명문"을 한 문단으로. 전문 용어 없이.
+
+마지막에 「지금까지의 브랜드 카드」를 갱신해서 붙여주고, 내가 놓친 게 있으면 다음 질문 1개를 던져줘.`}],
+  f:[{k:'menuboard', p:'메뉴판 카테고리 순서 · 전체 메뉴 개수', help:'손님이 처음 보는 것부터 순서대로. 시그니처가 맨 앞, 음료는 뒤. 처음 오픈은 12개 안팎이 안전합니다',
+     ex:'이달의 케이크 → 타르트·파운드 → 커피 → 차·논커피 / 전체 12개'},
+    {k:'visual', p:'대표 컬러 3개 (색 코드) · 폰트 느낌 · 로고 방향', help:'메인 색(간판·로고), 배경 색(벽·메뉴판), 포인트 색 세 가지. 폰트는 이름을 몰라도 느낌만 적으면 됩니다',
+     ex:`컬러: #C67F68 코럴(간판·로고) · #F8F0E7 크림(벽·메뉴판 배경) · #8A9A6B 세이지(포인트)
+폰트: 제목은 둥글고 손글씨 같은, 본문은 얇고 단정하게
+로고 방향: 잘린 과일 단면, 작은 창문, 손글씨 이름`}]},
+
+ {no:5, t:'[실습] 시그니처 메뉴 & 메뉴판 기획안 완성', topic:'나만의 시그니처 메뉴 & 메뉴판 기획안', result:'2일차 결과물: 메뉴·가격 기획 시트',
+  prompts:[{name:'이어서 — 오늘 정리 점검', body:
+`[업데이트] 2일차 5교시 · 메뉴·가격 기획 시트
+시그니처: {menu3} / 비주얼: {visual}
+기획안 정리: {menuPlan}
+콘셉트를 이렇게 고쳐 봤어: {conceptV2}
+
+[부탁]
+1) 이 기획안을 손님·투자자·같이 일할 직원 세 사람의 눈으로 각각 읽고, 한 사람당 "좋은 점 1개 / 걱정되는 점 1개 / 나에게 던질 질문 1개".
+2) 콘셉트 문장과 메뉴가 서로 맞는지 점검해줘. 어긋나는 게 있으면 「콘셉트를 고칠지, 메뉴를 고칠지」 중 어느 쪽이 나은지 이유와 함께.
+3) 1일차 콘셉트와 오늘 고친 콘셉트를 나란히 놓고 무엇이 좋아졌는지 한 줄.
+4) 내일(3일차) 브랜딩·SNS로 넘어가기 전에 오늘 반드시 정하고 가야 할 것 하나.
+새 메뉴나 새 콘셉트를 네가 지어내지는 마. 내가 적은 것을 점검하는 게 오늘 할 일이야. 쉬운 말로, 5줄 안에 요점만.
+
+마지막에 「지금까지의 브랜드 카드」를 갱신해서 붙여주고, 내가 놓친 게 있으면 다음 질문 1개를 던져줘.`}],
+  f:[{k:'menuPlan', p:'시그니처 메뉴 & 메뉴판 기획안 최종 정리', help:'오늘 정한 메뉴·가격·메뉴판을 손님에게 설명하듯 3~4문장으로. 왜 이 메뉴만 두는지가 들어가면 좋습니다',
+     ex:'케이크 3종을 중심으로 12개 메뉴만 둡니다. 이달의 케이크는 매달 과일이 바뀌고 나머지 두 개는 늘 있습니다. 음료는 케이크와 어울리는 5가지로 줄여 재료 손실을 막고, 케이크 원가율은 35% 안에서 맞춥니다.'},
+    {k:'conceptV2', p:'1일차 콘셉트 한 줄 다듬기', help:'메뉴를 정하고 나니 콘셉트 문장이 바뀌었으면 고쳐 씁니다. 그대로면 비워 두세요',
+     ex:'퇴근길에 들르는, 매달 과일이 바뀌는 조용한 동네 케이크 카페'}]}]},
+
+{n:'DAY 3', title:'알리고 다시 오게 만들기 — 브랜딩과 SNS·AI 마케팅', goal:'오늘 결과물: 나만의 카페 브랜드 기획서 완성', p:[
+ {no:1, t:'인스타그램 프로필 만들기', topic:'인스타그램 카페 브랜딩 전략 / 프로필 구성 / 8년간 리뷰·단골을 만든 방법', tm:['브랜딩','마케팅','톤앤매너','프로필 · 소개글','피드','스토리','하이라이트','해시태그'],
+  lesson:2,
+  prompts:[{name:'3일차 시작 — 지금까지 정리 + 인스타 프로필', first:1, body:
+`(대화창이 남아 있으면 이 앞부분은 무시하고 이어서 답해도 돼.)
+너는 나와 함께 카페 브랜드를 만드는 "브랜드 파트너"야. 동네 디저트 카페를 8년 직접 운영해 본 사람처럼 현실적으로 말해줘.
+대화 규칙 — ① 답은 짧게, 초보도 아는 쉬운 말로. 전문 용어는 바로 풀어 써. ② 모르는 건 모른다고 하고, 네가 만든 숫자는 반드시 "예시"라고 표시해. ③ 좋은 말만 하지 말고 걱정되는 점을 하나씩 솔직히 짚어줘. ④ 답 끝에 「지금까지의 브랜드 카드」를 갱신해 붙이고 다음 질문 1개를 던져줘.
+
+지금까지 정한 것
+- 카페: {name} / 콘셉트: {conceptV2} / 키워드: {kw3}
+- 대표 고객: {persona} / 상권: {area} / 굳이 와야 할 이유: {reason}
+- 시그니처: {menu3} / 비주얼: {visual}
+
+[업데이트] 3일차 1교시 · 브랜딩과 인스타그램
+입소문 문장(손님이 친구에게 할 말): {wom}
+계정명·소개글·하이라이트: {insta}
+리뷰·단골 방법 생각: {repeat}
+
+[부탁]
+0) 먼저 내 브랜드를 여덟 요소(이름·로고와 색·말투·공간·시그니처·사장의 태도·작은 물건·손님 경험)로 점검해서 지금 비어 있는 요소 2개를 짚고, 입소문 문장을 손님 말투로 3개 다듬어줘.
+1) 계정명 후보 5개 (영문 소문자, 기억하기 쉽고 검색되게).
+2) 프로필 소개글 후보 3개 (150자 안, 첫 줄에 어디·누구·무엇, 줄바꿈 포함).
+3) 하이라이트 항목 5개.
+4) 오픈 전부터 리뷰와 단골이 생기게 하는 방법 3가지, 돈 안 드는 것으로.`}],
+  f:[{k:'wom', p:'입소문 문장 — 손님이 친구에게 우리 가게를 뭐라고 소개하면 좋겠나요', help:'브랜딩의 시작은 입소문입니다. 손님이 친구에게 한 문장으로 말한다면, 그 문장이 곧 우리 브랜드입니다. 손님 말투로 쓰세요',
+     ex:'"명지에 과일 케이크 매일 굽는 조용한 카페 있는데, 사장님이 이름을 기억해 줘"'},
+    {k:'insta', p:'계정명 · 프로필 소개글(150자) · 하이라이트', help:'계정명은 영문 소문자로 카페 이름+동네가 들어가면 검색됩니다. 소개글 첫 줄에 동네·무엇, 둘째 줄 특징, 셋째 줄 영업시간, 넷째 줄 예약 방법',
+     ex:`계정명: cafe_ongi_myeongji
+소개글: 명지국제신도시 · 계절과일 케이크 / 매달 과일이 바뀝니다 / 평일 12:00–21:00 · 월요일 쉼 / 케이크 예약은 DM
+하이라이트: 이달의 케이크 / 오시는 길 / 예약 / 손님 사진 / 만드는 아침`},
+    {k:'repeat', p:'리뷰·단골이 생기게 할 방법 1가지', help:'리뷰와 단골은 돈으로 못 삽니다. 손님이 "말하고 싶어지는" 작은 경험 하나. 쿠폰보다 기억',
+     ex:'계산하면서 손님 이름을 물어보고 다음에 오면 이름으로 부른다. 포장 상자에 그날 쓴 과일 이름을 손글씨로 적어 준다'}]},
+
+ {no:2, t:'콘텐츠 주제와 사진, 스마트플레이스', topic:'콘텐츠 주제 선정 / 메뉴·공간 사진 활용법 / 네이버 스마트플레이스 노출 기초', tm:['스마트플레이스','영수증 리뷰','도달 · 노출','저장 · 공유'],
+  links:[['네이버 스마트플레이스','https://smartplace.naver.com/']],
+  prompts:[{name:'이어서 — 콘텐츠 주제와 스마트플레이스', body:
+`[업데이트] 3일차 2교시 · 콘텐츠와 스마트플레이스
+카페: {name} / 콘셉트: {conceptV2} / 대표 고객: {persona} / 시그니처: {menu3} / 위치: {area}
+내가 생각한 콘텐츠 주제: {topics}
+먼저 찍을 사진: {photos}
+스마트플레이스 소개 초안·키워드: {smartplace}
+
+[부탁]
+1) 매주 돌려 쓸 콘텐츠 주제 6개를 메뉴·공간·사람·과정 골고루, 각 주제마다 첫 게시물 아이디어 하나.
+2) 오픈 전에 먼저 찍을 사진 5장 (무엇을, 어느 시간에, 어떤 각도로).
+3) 네이버 스마트플레이스 소개 문구 3~4줄과 손님이 검색할 키워드 8개 ("동네 + 무엇" 형태).
+"최고", "1등", "유일한", "맛집" 같은 과장·단정 표현은 쓰지 마. 검색량은 네가 추측하지 말고, 내가 마피아넷에서 직접 확인할 수 있게 후보만 줘.
+
+마지막에 「지금까지의 브랜드 카드」를 갱신해서 붙여주고, 내가 놓친 게 있으면 다음 질문 1개를 던져줘.`}],
+  f:[{k:'topics', p:'콘텐츠 주제 3가지', help:'인스타에 올릴 이야기의 종류. 메뉴 · 공간 · 사람(사장·손님) · 과정(만드는 모습) 네 갈래에서 3개를 고르면 매주 돌려 쓸 수 있습니다',
+     ex:'이달의 과일이 오는 날 / 저녁 7시 창가 자리 / 케이크 만드는 아침'},
+    {k:'photos', p:'먼저 찍을 사진', help:'오픈 전에 찍어 둘 사진. 무엇을, 어느 시간에(빛이 좋은 때), 어떤 각도로',
+     ex:'이달의 케이크 단면 / 오후 4시 창가 빛 / 위에서 45도'},
+    {k:'smartplace', p:'스마트플레이스 소개 문구 · 검색 키워드', help:'네이버 지도에 우리 가게를 올리는 곳(무료). 소개 문구는 검색한 사람이 처음 읽는 3~4줄. 동네·무엇·누구에게·영업시간이 들어가야 합니다',
+     ex:`소개: 명지국제신도시 아파트 단지 초입의 작은 케이크 카페입니다. 매달 가장 맛있는 과일로 케이크를 굽습니다. 혼자 와도 편한 조용한 자리, 저녁 9시까지 엽니다. 홀케이크는 이틀 전 예약.
+키워드: 명지 케이크, 명지 디저트카페, 명지 조용한 카페, 명지국제신도시 카페, 명지 과일케이크, 명지 홀케이크 예약  ← 「내 동네 + 무엇」 형태로 바꿔 쓰세요`}]},
+
+ {no:3, t:'[실습] AI로 홍보 콘텐츠 만들기', topic:'사진 보정 · 홍보 문구 · 릴스 아이디어', tm:['릴스','체험단 · 협찬'],
+  prompts:[{name:'실습 프롬프트 — 홍보 문구·릴스 만들기', body:
+`[업데이트] 3일차 3교시 · 홍보 콘텐츠 실습
+카페: {name} / 콘셉트: {conceptV2} / 대표 고객: {persona}
+시그니처: {menu3} / 굳이 와야 할 이유: {reason} / 비주얼: {visual}
+인스타 소개글: {insta} / 콘텐츠 주제: {topics}
+내가 써 본 것 — 홍보 문구: {adcopy} / 릴스: {reels}
+
+[부탁]
+1) 인스타그램 피드 홍보 문구 5개 (첫 문장이 스크롤을 멈추게, 30자 안팎, 마지막에 오라는 말 한 줄).
+2) 15초 릴스 아이디어 3개 (첫 3초 장면 / 중간 / 마지막 자막).
+3) 휴대폰으로 찍은 케이크·공간 사진을 이 콘셉트에 맞게 보정하는 법 (밝기·따뜻함·채도).
+과장 광고처럼 들리는 말은 빼줘.
+
+마지막에 「지금까지의 브랜드 카드」를 갱신해서 붙여주고, 내가 놓친 게 있으면 다음 질문 1개를 던져줘.`}],
+  f:[{k:'adcopy', p:'AI로 만든 홍보 문구 1개', help:'첫 문장이 스크롤을 멈추게, 30자 안팎, 끝에 오라는 말 한 줄',
+     ex:'퇴근길, 오늘의 과일은 무화과입니다. 30분만 앉았다 가세요.'},
+    {k:'reels', p:'릴스 아이디어 1개', help:'릴스는 15초짜리 세로 영상입니다. 첫 3초에 뭐가 보이는지가 전부입니다. 장면 3개만 적으면 됩니다',
+     ex:'첫 3초: 케이크 칼이 단면을 가르는 장면 / 중간: 과일 올리는 손과 창가 빛 / 마지막 자막: "이달은 무화과"'},
+    {k:'photofix', p:'사진 보정 방향', help:'휴대폰 사진 앱에서 조절할 것 세 가지 — 밝기, 따뜻함(색온도), 채도(색의 진함)',
+     ex:'따뜻하게, 밝기 조금 올리고, 채도는 낮게'}]},
+
+ {no:4, t:'오픈 전·후 홍보와 단골 설계', topic:'오픈 전/후 홍보 콘텐츠 기획 / 재방문을 만드는 고객 경험', tm:['재방문 · 단골','회전율','피크타임'],
+  prompts:[{name:'이어서 — 오픈 홍보와 단골 설계', body:
+`[업데이트] 3일차 4교시 · 오픈 홍보와 단골
+카페: {name} / 콘셉트: {conceptV2} / 위치: {area} / 대표 고객: {persona}
+시그니처: {menu3} / 인스타: {insta} / 콘텐츠 주제: {topics}
+오픈 전 홍보 생각: {preopen}
+오픈 후: {postopen}
+다시 오게 하는 경험: {comeback}
+
+[부탁]
+1) 오픈 4주 전부터 오픈일까지 주 단위 홍보 계획표 (돈 안 드는 것 위주).
+2) 오픈 후 첫 한 달 주 단위 계획.
+3) 대표 고객이 두 번째로 오게 만드는 작은 장치 5가지 (쿠폰 말고 기억에 남는 경험).
+4) 8년 운영한 카페 사장이 보면 뭐라고 할지, 냉정한 한마디.
+
+마지막에 「지금까지의 브랜드 카드」를 갱신해서 붙여주고, 내가 놓친 게 있으면 다음 질문 1개를 던져줘.`}],
+  f:[{k:'preopen', p:'오픈 전 홍보 계획 (4주)', help:'주마다 무엇을 어디에 올리고 누구에게 알릴지. 돈 안 드는 것부터 — 공사 과정 공개, 이웃 시식 초대, 날짜 공개',
+     ex:'4주 전 인스타 개설과 공사 과정 공개 / 3주 전 이달의 과일 투표 / 2주 전 이웃 20명 시식 초대 / 1주 전 오픈 날짜와 첫 케이크 공개'},
+    {k:'postopen', p:'오픈 후 첫 한 달 계획', help:'손님 사진 리그램, 리뷰 요청 카드, 다음 달 예고처럼 손님이 다시 말하게 만드는 것',
+     ex:'첫 주 손님 사진 리그램 / 2주차 스마트플레이스 리뷰 요청 카드 / 3주차 첫 단골 이야기 / 4주차 다음 달 과일 예고'},
+    {k:'comeback', p:'재방문(단골)을 만드는 경험 1가지', help:'한 번 온 손님이 두 번째 오는 것. 쿠폰 말고 기억에 남는 작은 경험 하나',
+     ex:'계산할 때 다음 달 과일 이름이 적힌 작은 카드를 준다. 그 카드를 가져오면 다음 달 케이크를 먼저 맛보게 한다'}]},
+
+ {no:5, t:'[발표] 나만의 카페 브랜드 기획서 완성', topic:'3일 전체 총복습 / 최종 메시지', result:'최종 결과물: 나만의 카페 브랜드 기획서',
+  prompts:[{name:'이어서 — 발표 3분 대본', body:
+`[업데이트] 3일차 5교시 · 발표 준비
+(1·2·3일차에 정한 것 전체)
+카페: {name} / 콘셉트 최종: {conceptFinal} / 키워드: {kw3} / 대표 고객: {persona}
+상권: {area} / 굳이 와야 할 이유: {reason} / 시그니처: {menu3} / 원가: {cost3}
+비주얼: {visual} / 인스타: {insta} / 오픈 홍보: {preopen}
+내일부터 할 세 가지: {three}
+
+[부탁] 위 내용으로 3분 발표 대본을 써줘. 구조: 어떤 손님의 어떤 순간(15초) → 그래서 이런 카페(30초) → 여기서 이걸 판다(메뉴·상권, 60초) → 이렇게 알린다(45초) → 내일부터 할 세 가지(15초) → 마지막 한 문장(후보 3개). 말하듯이, 숫자와 이름은 내가 준 것만 써줘. 마지막으로 3일 동안 내 브랜드가 어떻게 바뀌었는지 처음 브랜드 카드와 최종 카드를 나란히 보여줘.`}],
+  f:[{k:'conceptFinal', p:'콘셉트 한 줄 최종', help:'기획서 표지에 실릴 최종 문장입니다. 3일 동안 바뀐 것을 반영합니다',
+     ex:'퇴근길 30분, 매달 과일이 바뀌는 케이크 한 조각을 파는 조용한 동네 카페'},
+    {k:'three', p:'내일부터 바로 해볼 수 있는 세 가지', help:'크고 멋진 것 말고 내일 당장 할 수 있는 것 3개. 돈 안 드는 것부터. "언제·어디서·무엇을"이 들어가면 실제로 하게 됩니다',
+     ex:`1. 내일 저녁 7시 명지동 아파트 단지 초입을 걸어 사람 흐름을 30분 세어 본다
+2. 소상공인365에서 명지동 카페 업종 화면을 캡처한다
+3. 인스타그램 계정을 만들고 케이크 사진 한 장을 올린다`}]}]}];
+
+</script>
+<script>
+// ---- app.js ----
+const KEY='cafe-brand-open';
+// 아티팩트 안에서는 파일 내려받기와 바깥 통신이 막혀 있습니다.
+// 아티팩트의 실제 주소는 claude.ai가 아니라 ...frame.claudeusercontent.com 입니다 (직접 확인).
+const IN_ARTIFACT = /claude\.ai$|claudeusercontent\.com$/.test(location.hostname);
+const CAN_DL = !IN_ARTIFACT;
+const FILE_BASE = 'https://thsalswl900119-maker.github.io/cafesui-camp/';   // 엑셀 양식은 깃허브 페이지에서 받습니다
+const EMPTY={day:0,open:{0:1},ans:{},checks:{},memo:{},at:{},ex:{},me:null};
+let st=load(), tmr=null;
+function load(){try{const r=localStorage.getItem(KEY);if(r)return Object.assign({},EMPTY,JSON.parse(r))}catch(e){}return JSON.parse(JSON.stringify(EMPTY))}
+function save(){clearTimeout(tmr);sv('저장 중…');tmr=setTimeout(()=>{try{localStorage.setItem(KEY,JSON.stringify(st));sv('저장됨')}catch(e){sv('저장 실패')}},400)}
+function sv(t){const e=document.querySelector('#saved span');if(e)e.textContent=t}
+const esc=t=>String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+const today=()=>{const d=new Date();return (d.getMonth()+1)+'/'+d.getDate()};
+
+// 교시 완료 = 그 교시 답 칸을 다 적음
+const pDone=(d,i)=>DAYS[d].p[i].f.every(f=>(st.ans[f.k]||'').trim());
+const dCnt=d=>DAYS[d].p.filter((_,i)=>pDone(d,i)).length;
+const gCnt=g=>PREP[g].items.filter((_,j)=>st.checks[g+'-'+j]).length;
+const PTOT=PREP.reduce((n,g)=>n+g.items.length,0);
+
+// 메타 프롬프팅: {키} → 내가 적은 답
+// 답 칸 사전 (키 → 그 칸의 설명·예시)
+const FLD={}; DAYS.forEach(d=>d.p.forEach(p=>p.f.forEach(f=>FLD[f.k]=f)));
+// 프롬프트마다 「내 답 / 예시 답」 중 무엇으로 볼지 (저장하지 않습니다)
+const PM={};
+// 메타 프롬프팅: {키} → 내가 적은 답. 예시 모드면 빈 칸만 예시 답으로 메웁니다.
+function fill(body,useEx){return body.replace(/\{(\w+)\}/g,(m,k)=>{
+  const v=(st.ans[k]||'').trim(); if(v) return v;
+  if(useEx&&FLD[k]&&FLD[k].ex) return FLD[k].ex.trim();
+  return '(아직 없음)';
+})}
+// 그 프롬프트가 쓰는 칸 중 내가 적은 것 / 전체
+function pKeys(body){return [...new Set([...body.matchAll(/\{(\w+)\}/g)].map(x=>x[1]))]}
+// 그 칸을 쓰는 프롬프트는 「내 답」 모드로 되돌립니다 — 지우면 프롬프트에서도 지워지도록
+function offPM(k){for(const id in PB){ if(PM[id] && PB[id].indexOf('{'+k+'}')>=0) PM[id]=false }}
+// 빈 칸이 다 채워지면 예시 모드는 저절로 풀립니다 (내 답이 곧 프롬프트이므로)
+function syncPM(id,body){const q=pStat(body); if(PM[id]&&q.t&&q.n===q.t) PM[id]=false; return q}
+function pStat(body){const ks=pKeys(body); return {n:ks.filter(k=>(st.ans[k]||'').trim()).length, t:ks.length,
+  miss:ks.filter(k=>!(st.ans[k]||'').trim()).map(k=>(FLD[k]&&FLD[k].p)||k)}}
+
+function jbar(){
+  let h='';
+  DAYS.forEach((d,i)=>h+=`<div class="jseg" title="${d.n} ${dCnt(i)}/5"><i style="width:${dCnt(i)/5*100}%"></i></div>`);
+  PREP.forEach((g,i)=>h+=`<div class="jseg p" title="${esc(g.n+'. '+g.name)} ${gCnt(i)}/${g.items.length}"><i style="width:${gCnt(i)/g.items.length*100}%"></i></div>`);
+  document.getElementById('jbar').innerHTML=h;
+}
+function tabs(){
+  document.getElementById('tabs').innerHTML=DAYS.map((d,i)=>
+    `<button class="tab d${i+1}${st.day===i?' on':''}" data-d="${i}">${d.n}<span>${esc(d.title.split('—')[1]||'').trim()}</span><span class="cnt">${dCnt(i)}/5 적음</span></button>`).join('');
+}
+const LESSON={1:`<details class="lesson"><summary>원가와 손익, 쉽게 — 먼저 읽고 시작</summary><div class="lbody">
+<p><b>원가율 = 재료비 ÷ 판매가.</b> 7,500원 케이크의 재료비가 2,600원이면 34.7%입니다. 재료비는 그 메뉴 하나에 들어간 재료와 포장만. 인건비·월세는 따로 봅니다.</p>
+<table><tr><th>메뉴</th><th class="r">통상 원가율</th><th>뜻</th></tr>
+<tr><td>커피·음료</td><td class="r">20~30%</td><td>음료가 돈을 남기는 이유</td></tr>
+<tr><td>디저트·베이커리</td><td class="r">30~40%</td><td>과일·버터·생크림이 비쌈. 35% 넘으면 점검</td></tr>
+<tr><td>케이크 카페 목표</td><td class="r"><b>30~35%</b></td><td>35% 이하 초록 · 45% 이하 노랑 · 그 위 빨강</td></tr></table>
+<p><b>매출 100만 원이 들어오면</b> — 재료비 30~35만 · 인건비 20~30만(혼자 해도 내 월급 포함) · 월세 10~15만(15% 넘으면 위험) · 공과금 5~8만 · 수수료 3~10만 · <b>남는 돈 10~20만</b>.</p>
+<p><b>손익은 네 줄</b> — 매출 − 매출원가(재료·포장) − 고정비(월세·인건비·보험) − 변동비(공과금·수수료·광고) = 영업이익.</p></div></details>`,
+2:`<details class="lesson"><summary>브랜딩 기초 — 먼저 읽고 시작</summary><div class="lbody">
+<p><b>브랜딩</b>은 손님 머릿속에 남는 우리 가게의 인상입니다. 로고 하나가 아니라 여덟 가지가 모여 만들어집니다 — ① 이름 ② 로고와 색 ③ 말투 ④ 공간 ⑤ 시그니처 메뉴 ⑥ 사장의 태도 ⑦ 작은 물건(포장·영수증·카드) ⑧ 손님 경험.</p>
+<p><b>브랜딩과 마케팅은 다릅니다.</b> 브랜딩은 우리가 누구인지 정하고 지키는 것(안), 마케팅은 그것을 알리는 것(밖). <b>브랜딩이 먼저</b>입니다. 브랜딩 없이 마케팅만 하면 광고비는 나가는데 손님이 "그래서 거기가 뭐 하는 데지?"라고 합니다.</p>
+<p><b>마케팅은 이 순서로</b> — ① 첫 손님 10명을 기억에 남게 대접 ② 그 손님이 친구에게 할 한 문장 만들기 ③ 리뷰 부탁(스마트플레이스·인스타) ④ 인스타는 주제 3개로 꾸준히(팔로워보다 저장·DM) ⑤ 광고는 마지막에 소액으로.</p></div></details>`,
+3:`<details class="lesson"><summary>상권을 조사하는 사이트 세 곳 — 쓰는 법</summary><div class="lbody">
+<p>세 곳 다 <b>무료</b>이고, 아래 순서대로 30분이면 이 교시의 칸을 다 채울 수 있습니다. ①은 <b>사람이 어디에 있나</b>, ②는 <b>무엇을 찾고 있나</b>, ③은 <b>그 말을 몇 명이나 검색하나</b>를 봅니다.</p>
+<table><tr><th>사이트</th><th>무엇을 보는 곳</th><th>어느 칸에 옮겨 적나</th></tr>
+<tr><td><b>① 소상공인365</b></td><td>그 동네에 사람이 몇 명 살고 몇 명 지나가나, 카페가 몇 곳인가</td><td>유동인구 · 주요 고객층 · 주변 경쟁 카페</td></tr>
+<tr><td><b>② 네이버 데이터랩</b></td><td>어떤 단어가 뜨는 중인지 1년 흐름</td><td>트렌드 키워드(1교시) · 콘셉트 키워드</td></tr>
+<tr><td><b>③ 마피아넷</b></td><td>그 단어를 한 달에 몇 명이 검색하는지 실제 숫자</td><td>메뉴 이름 · 해시태그 · 스마트플레이스 키워드</td></tr></table>
+<p><b>① 소상공인365</b> (bigdata.sbiz.or.kr) — 위쪽 <b>「상권분석」</b> → 지도에서 들어갈 동네를 찍고 <b>반경 500m</b>로 영역을 그립니다 → <b>「분석하기」</b>.
+보고서에서 딱 네 가지만 적어 오세요. ⑴ <b>유동인구</b>의 요일·시간대 그래프에서 <b>제일 높은 시간 두 개</b> ⑵ <b>주거·직장 인구</b>에서 많은 나이대 ⑶ <b>업종분석 → 커피·음료</b>의 가게 수와 늘고 있는지 줄고 있는지 ⑷ <b>매출분석</b>의 커피·음료 월평균 매출과 잘 팔리는 시간대. 첫 화면과 「간단분석」은 로그인 없이 보입니다(직접 확인했습니다). 상세분석 등 일부는 로그인을 요구할 수 있습니다. PDF로 저장해 두면 나중에 사업계획서에 그대로 씁니다.</p>
+<p><b>② 네이버 데이터랩</b> (datalab.naver.com) — <b>「검색어트렌드」</b>에 내 키워드를 넣고 기간을 <b>1년 이상</b>으로 봅니다. 주제어 칸에 <b>서로 비교할 단어를 2~5개</b> 넣는 게 핵심입니다(예: 소금빵 / 크루키 / 말차). <b>선이 올라가는 것</b>만 내 것으로 삼고, 내려가는 것은 피합니다. 아래 <b>기기별·성별·연령</b>을 켜면 내 대표 고객 나이대가 진짜 그 단어를 찾는지 보입니다. 주의 — 여기 숫자는 <b>최고치를 100으로 놓은 상대값</b>이라 "몇 명"이 아닙니다. 그 숫자는 ③에서 봅니다.</p>
+<p><b>③ 마피아넷</b> (ma-pia.net) — 네이버 검색광고 자료를 쉽게 보여 주는 곳입니다. <b>「키워드 검색량 조회」</b>에 단어를 넣으면 <b>한 달에 PC·모바일에서 몇 번 검색됐는지</b> 실제 숫자가 나옵니다(한 번에 100개까지). <b>「연관 키워드」</b>에는 사람들이 같이 찾는 말이 딸려 나옵니다.
+이렇게 쓰세요 — ⑴ <b>"명지카페", "명지 디저트"처럼 「동네+업종」</b>을 넣어 내 동네를 찾는 사람이 한 달에 몇 명인지 봅니다 ⑵ 연관 키워드에서 <b>검색은 있는데 글이 적은 말</b>을 골라 인스타 해시태그·스마트플레이스 소개글에 씁니다 ⑶ 메뉴 이름 후보를 넣어 <b>사람들이 실제로 쓰는 말</b>로 정합니다(예: "생크림케이크" 대 "프레시크림케이크").</p>
+<p><b>고르는 법 — 숫자 하나만 보지 않습니다.</b> <b>검색량은 「수요」</b>(찾는 사람이 얼마나 되나), <b>블로그 문서수는 「공급」</b>(이미 쓴 글이 얼마나 되나)입니다. 둘을 같이 봐야 실제로 내가 올라갈 수 있는 말이 보입니다.
+<b>검색량이 제일 큰 말은 대개 대형 업체가 차지하고 있습니다.</b> 그래서 동네 가게는 <b>단어를 2~3개로 길게</b> 씁니다 — "카페"(경쟁 셈) → "명지 카페"(좁아짐) → <b>"명지 케이크 카페"</b>(찾는 사람은 적지만 <b>올 사람만 찾는 말</b>). 검색량이 큰 말 하나보다, <b>검색량이 있으면서 글이 적은 말 여러 개</b>가 낫습니다.
+"몇 이상이면 좋다"는 <b>절대 기준은 없습니다.</b> 동네 크기에 따라 다릅니다 — 내 동네 이름을 넣어 본 숫자가 곧 내 기준입니다. 그 숫자를 적어 두고, 3개월 뒤 다시 재서 늘었는지 보세요.</p>
+<p><b>세 곳을 다 보고 나면</b> 이렇게 한 줄이 나옵니다 — "명지동은 저녁 6~8시에 30~40대가 가장 많이 지나가고, 이들이 찾는 말은 「명지카페」(월 1,200회)·「명지 케이크」(월 380회)인데 케이크 전문점은 아직 없다." 이 한 줄이 아래 칸들의 답입니다.</p></div></details>`,
+4:`<details class="lesson"><summary>이 돈은 어디에 적어야 하나 — 계정 항목</summary><div class="lbody">
+<p>손익계산서를 쓸 때 <b>「이 지출을 어느 칸에 넣지?」</b>에서 막힙니다. 아래가 그 답입니다. <b>변동비</b>는 많이 팔면 같이 늘어나는 돈, <b>고정비</b>는 손님이 없어도 나가는 돈입니다.</p>
+<table><tr><th colspan="2">변동비 — 음식 하나 파는 데 직접 관계있는 비용</th></tr>
+<tr><td><b>매출원가</b> 식재료</td><td>가공식품, 육류, 어류, 야채, 농산, 기타 식재료</td></tr>
+<tr><td><b>매출원가</b> 음료·주류</td><td>음료, 와인, 전통주, 맥주, 소주 등</td></tr>
+<tr><td><b>매출원가</b> 부자재</td><td>음식 포장용기</td></tr>
+<tr><td><b>수도광열비</b></td><td>전기요금 · 가스요금 · 수도요금</td></tr>
+<tr><td>소모품·비품비</td><td>주방용품, 청소용품, 사무용품</td></tr>
+<tr><td>수선비</td><td>유형자산 수리비, 세탁비</td></tr>
+<tr><td>카드수수료</td><td>카드가맹점 수수료</td></tr>
+<tr><td>배달관련비</td><td>배달마케팅, 결제정산수수료, 중개이용료</td></tr>
+<tr><td>부가가치세예수금</td><td>부가가치세에 해당하는 부분으로 <b>나중에 납부해야 하는 금액</b></td></tr></table>
+<table><tr><th colspan="2">고정비 — 음식 하나를 파는 것과 직접 관계 없는 비용</th></tr>
+<tr><td><b>인건비</b> 정직원</td><td>임금, 상여금</td></tr>
+<tr><td><b>인건비</b> 일용직</td><td>아르바이트 임금</td></tr>
+<tr><td><b>인건비</b> 퇴직급여</td><td>퇴직금</td></tr>
+<tr><td>임차료</td><td>건물임차료, 창고임차료</td></tr>
+<tr><td>감가상각비</td><td>상표권, 영업권, 특허권, 시설투자비(5년 사용 기준), 대출이자</td></tr>
+<tr><td>지급수수료</td><td>세무기장료, 중개수수료, 배달비용, 택배용역료, 비품관리비, 청소용역료, 벌레퇴치용역비, 보안업체용역비, 조경비</td></tr>
+<tr><td>세금과공과금</td><td>등록면허세, 지방소득세 등</td></tr>
+<tr><td>광고선전비</td><td>전단지, 인스타그램 광고비, 쿠폰, 기타 SNS 광고비, 카카오 친구톡, 옥외광고, 신문, 잡지</td></tr>
+<tr><td>통신비</td><td>포스비, 전화요금, 인터넷사용료, 팩스요금, 우편</td></tr>
+<tr><td>환경처리비</td><td>음식물쓰레기봉투, 정화조요금</td></tr>
+<tr><td>보험</td><td>4대 보험비, 화재보험</td></tr>
+<tr><td>복리후생비</td><td>회식비, 간식비, 식비</td></tr>
+<tr><td>도서인쇄비</td><td>메뉴판, 명함, 시트, 전단지 제작비, 도서구입비, 복사비, 정기구독료, 인쇄 및 제작</td></tr>
+<tr><td>교제비</td><td>접대비, 선물대, 영업활동교제비</td></tr>
+<tr><td>여비교통비</td><td>시내교통비, 국내출장비, 해외출장비, 폐점교통비</td></tr>
+<tr><td>교육훈련비</td><td>직원 자기계발비</td></tr>
+<tr><td>조사연구비</td><td>자료조사비, 자료조사 시 경비, 메뉴개발비(신메뉴 개발에 필요한 식자재 구입)</td></tr></table>
+<p><b>꼭 기억할 것 두 가지.</b> ① <b>부가가치세예수금은 내 돈이 아닙니다.</b> 손님에게 받아 두었다가 나라에 낼 돈이라, 통장에 있어도 쓰면 안 됩니다. ② <b>혼자 해도 「내 월급」을 인건비에 넣으세요.</b> 안 넣으면 남는 것처럼 보이지만 실제로는 내 몸값을 공짜로 넣고 있는 겁니다.</p>
+<p>내려받은 <b>손익계산서 엑셀의 「계정항목」 시트</b>에 이 표가 그대로 들어 있습니다. 매달 적을 때 그 시트를 보면서 넣으면 됩니다.</p></div></details>`};
+
+let PB={};   // 프롬프트 원문 (칸에 적을 때마다 다시 채워 넣습니다)
+
+// ── 색 코드 자동 읽기 ─────────────────────────────
+// 답 칸에 #RRGGBB를 적으면 실제 색·이름·대비를 바로 보여 줍니다.
+function hexes(t){
+  const out=[], seen={};
+  (t||'').replace(/#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})\b/g,(m,h)=>{
+    if(h.length===3) h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
+    h=h.toUpperCase(); if(!seen[h]){seen[h]=1; out.push(h)} return m});
+  return out.slice(0,8);
+}
+function rgb(h){return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]}
+function lum(h){const c=rgb(h).map(v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)});
+  return .2126*c[0]+.7152*c[1]+.0722*c[2]}
+function ratio(a,b){const l1=lum(a),l2=lum(b),h=Math.max(l1,l2),o=Math.min(l1,l2);return (h+.05)/(o+.05)}
+function hsl(h){let [r,g,b]=rgb(h).map(v=>v/255);
+  const mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn; let H=0;
+  if(d){ H = mx===r ? ((g-b)/d+(g<b?6:0)) : mx===g ? ((b-r)/d+2) : ((r-g)/d+4); H*=60 }
+  const L=(mx+mn)/2, S=d===0?0:d/(1-Math.abs(2*L-1));
+  return [H,S,L];
+}
+function colorName(h){
+  const [r,g,b]=rgb(h), mx=Math.max(r,g,b), mn=Math.min(r,g,b), ch=mx-mn;  // ch = 색의 진하기(0~255)
+  const [H,S,L]=hsl(h);
+  const hue = H<8?'빨강':H<20?'주홍':H<45?'주황':H<57?'머스터드 · 황토':H<70?'노랑':H<100?'연두':H<150?'초록':H<178?'청록':H<198?'민트':H<215?'하늘':H<255?'파랑':H<272?'남색':H<292?'남보라':H<320?'보라':H<345?'자주':'분홍';
+  // ① 색기 거의 없음 — 흰·검·회색
+  if(ch<16) return L>.93?'흰색':L>.85?'거의 흰색':L<.10?'검정':L<.20?'거의 검정':L>.60?'밝은 회색':L<.38?'어두운 회색':'회색';
+  // ② 아주 밝은 색 — 크림·파스텔
+  if(L>.86) return (H>=20&&H<70) ? '크림 · 아이보리'
+    : '아주 연한 ' + (H<20?'분홍':H<100?'연두':H<150?'민트':H<215?'하늘':H<292?'라벤더':'분홍');
+  // ③ 아주 어두운 색
+  if(L<.20) return (H>=15&&H<50) ? '아주 어두운 갈색' : '아주 어두운 ' + hue;
+  // ④ 카페에서 자주 쓰는 이름
+  if(H>=15&&H<50&&ch<110) return L<.40?'초콜릿 브라운':L<.62?'브라운 · 갈색':'베이지 · 모래빛';
+  if(H>=8&&H<22&&L>=.45&&L<=.75) return ch<110?'탁한 코럴':'코럴 · 살구빛';
+  if(H>=60&&H<105&&ch<100) return L>.50?'세이지 그린':'올리브 그린';
+  if(H>=105&&H<160&&ch<100) return L>.55?'연한 초록':'짙은 초록';
+  // ⑤ 나머지
+  const light = L>.72?'연한 ':L<.35?'어두운 ':'';
+  const sat = light?'':(ch<70?'탁한 ':ch>200?'쨍한 ':'');
+  return light+sat+hue;
+}
+
+function useWhite(h){ return ratio(h,'FFFFFF') >= ratio(h,'000000') }
+// 메뉴판 미리보기에 쓸 「메뉴명 가격」 — 내가 적은 첫 메뉴에서 뽑습니다
+function menuSample(){
+  const t=(st.ans.menu3||st.ans.sig3||'').trim();
+  if(t){
+    const line=t.split('\n').find(l=>l.trim())||'';
+    const parts=line.replace(/^\s*\d+[.)]\s*/,'').split('/').map(x=>x.trim()).filter(Boolean);
+    const nm=parts[0]||'', pr=parts.find(x=>/[0-9][0-9,]*\s*원/.test(x))||'';
+    if(nm) return (nm.slice(0,14)+(pr?'  '+pr.match(/[0-9][0-9,]*\s*원/)[0]:'')).trim();
+  }
+  return '메뉴 이름  0,000원';
+}
+function swatchHTML(list){
+  if(!list.length) return '';
+  const cards = list.map(h=>{
+    const w=useWhite(h), fg=w?'#fff':'#111', r=ratio(h,w?'FFFFFF':'000000');
+    const ok = r>=4.5?['읽기 좋음','ok']:r>=3?['큰 글씨만','warn']:['글씨 올리지 마세요','bad'];
+    return `<div class="swc"><div class="swb" style="background:#${h};color:${fg}">가나다 Aa</div>
+      <div class="swm"><b>#${h}</b><span>${esc(colorName(h))}</span>
+      <span class="swt ${ok[1]}">${w?'흰 글씨':'검은 글씨'} · ${ok[0]}</span></div></div>`;
+  }).join('');
+  const a=list[0], b=list[1]||list[0], c=list[2]||list[0];
+  const sign = useWhite(a)?'#fff':'#111';
+  return `<div class="sw"><div class="swh">🎨 적어 주신 색 — 실제로 이렇게 보입니다</div>
+    <div class="swl">${cards}</div>
+    <div class="swp">
+      <div class="pv" style="background:#${a};color:${sign}"><b>간판</b><span>${esc((st.ans.name||'내 카페').trim().slice(0,12)||'내 카페')}</span></div>
+      <div class="pv" style="background:#${b};color:${useWhite(b)?'#fff':'#111'}"><b>메뉴판 배경</b><span>${esc(menuSample())}</span></div>
+      <div class="pv" style="background:#${b};color:${useWhite(b)?'#fff':'#111'};border:3px solid #${c}"><b>포인트</b><span>테두리·버튼에</span></div>
+    </div>
+    <div class="swn">대비는 밝기 차이입니다. <b>4.5 이상</b>이어야 작은 글씨도 읽힙니다. 「글씨 올리지 마세요」가 뜨면 그 색은 배경으로만 쓰고 글씨는 다른 색으로 하세요. 화면과 인쇄·간판은 색이 다르게 나오니 <b>실물 샘플을 꼭 확인</b>하세요.</div></div>`;
+}
+
+// 용어 설명 — 어려운 말이 나오는 교시에만 붙습니다
+function termBox(list){
+  const ok=list.filter(t=>TERMS[t]); if(!ok.length) return '';
+  return `<details class="tms"><summary>🔤 이 교시에 나오는 말 <i>${ok.length}개</i></summary><div class="tmbody">${ok.map(t=>
+    `<div class="tm"><b>${esc(t)}</b><span>${esc(TERMS[t]).replace(/\n/g,'<br>')}</span></div>`).join('')}</div></details>`;
+}
+// 프롬프트 위에 붙는 상태 줄 — 몇 칸 채웠는지, 비었으면 무엇이 비었는지
+function pStatHTML(id,body){
+  const st2=pStat(body), ex=!!PM[id];
+  if(!st2.t) return '';
+  if(ex) return `<span class="ps ex">👁 예시 답으로 채운 모습입니다</span>
+    <span class="pn">빈 칸만 예시로 메웠습니다. <b>지금 복사하면 예시가 복사됩니다.</b> 어떻게 쓰는지 보는 용도예요</span>`;
+  if(st2.n===st2.t) return `<span class="ps ok">✓ 필요한 답 ${st2.t}개를 다 적었습니다 — 그대로 복사하세요</span>`;
+  return `<span class="ps no">${st2.t}개 중 ${st2.n}개 적음</span>
+    <span class="pn">아직 빈 칸: <b>${esc(st2.miss.slice(0,3).join(' · '))}</b>${st2.miss.length>3?` 외 ${st2.miss.length-3}개`:''}.
+    비워 두면 「(아직 없음)」으로 들어가서 AI가 제대로 답하지 못합니다 — 위 칸을 먼저 채우거나, <b>「예시 답으로 보기」</b>로 완성된 모습을 보세요</span>`;
+}
+function renderDay(){
+  const d=DAYS[st.day], done=dCnt(st.day); PB={}; let seq=0;
+  let h=`<div class="dh"><h3>${d.n} · ${esc(d.title)}</h3><p>${esc(d.goal)}</p>
+   <div class="dp"><span id="dayCnt">${done}/5 교시 적음</span><div class="tr"><div class="fi" id="dayFill" style="width:${done/5*100}%"></div></div><span id="dayPct">${Math.round(done/5*100)}%</span></div>
+   <button class="rp-btn" id="dayReport">📄 ${d.n} 보고서 만들기</button>
+   <div class="rp-hint" id="dayHint"></div></div>`;
+  d.p.forEach((p,i)=>{
+    h+=`<div class="card d${st.day+1}"><div class="ph"><div class="num" id="mk${st.day}-${i}">${pDone(st.day,i)?'✓':p.no}</div><div>
+      <h4>${esc(p.t)}</h4><div class="topic">${esc(p.topic)}</div>
+      ${p.result?`<div class="result">${esc(p.result)}</div>`:''}</div></div>`;
+    if(p.tm) h+=termBox(p.tm);
+    if(p.lesson) h+=[].concat(p.lesson).map(n=>LESSON[n]||'').join('');
+    if(p.links) h+=`<div class="links">${p.links.map(l=>`<a href="${l[1]}" target="_blank" rel="noopener">${esc(l[0])} ↗</a>`).join('')}</div>`;
+    if(p.files) h+=`<div class="files">${p.files.map(f=>
+      `<a class="dl" href="${FILE_BASE}${encodeURIComponent(f[1])}" target="_blank" rel="noopener"${CAN_DL?' download':''}><b>⬇ ${esc(f[0])}</b><span>${esc(f[2])}</span></a>`).join('')
+      }<div class="dlnote">누르면 새 창에서 바로 내려받아집니다. 안 되면 <b>오른쪽 클릭 → 「다른 이름으로 링크 저장」</b>을 쓰세요. 엑셀·넘버스·구글시트에서 다 열립니다.</div></div>`;
+    p.f.forEach((fl,m)=>{
+      const k=fl.k, open=st.ex[k];
+      h+=`<div class="fbox"><label for="a${k}">${esc(fl.p)}</label>
+        ${fl.help?`<div class="fhelp">${esc(fl.help)}</div>`:''}
+        <textarea id="a${k}" data-a="${k}" rows="3">${esc(st.ans[k]||'')}</textarea>
+        <button class="exbtn" data-ex="${k}">${open?'▾ 예시 접기':'▸ 이렇게 적으면 됩니다 (예시 보기)'}</button>
+        ${open?`<div class="ex"><span class="lbl">예시 — 가상의 카페 "카페 온기"</span>${esc(fl.ex)}<br><button data-put="${k}">이 예시를 칸에 넣기</button></div>`:''}
+        <div class="swwrap" id="sw_${k}">${swatchHTML(hexes(st.ans[k]))}</div>
+      </div>`;
+    });
+    (p.prompts||[]).forEach((pr,m)=>{
+      const id=st.day+'-'+i+'-'+m; PB[id]=pr.body; seq++;
+      const back=pKeys(pr.body).filter(k=>!p.f.some(f=>f.k===k)).length;
+      const chain=pr.first
+        ? `<span class="chain new">새 대화 시작</span>`
+        : `<span class="chain">${d.n} 대화 · ${seq}번째${back?` · 앞에서 적은 답 ${back}개가 들어갑니다`:''}</span>`;
+      syncPM(id,pr.body); const ex=!!PM[id];
+      h+=`<div class="pr${ex?' exmode':''}"><div class="h"><b>💬 ${esc(pr.name)}</b>${chain}
+          ${pKeys(pr.body).length?`<button class="pmx" data-pm="${id}">${ex?'↩ 내 답으로':'👁 예시 답으로 보기'}</button>`:''}
+          <button class="cp" data-cp="${id}">복사</button></div>
+        <div class="pst" id="pst${id}">${pStatHTML(id,pr.body)}</div>
+        <pre id="pre${id}">${esc(fill(pr.body,ex))}</pre>
+        <div class="how">${pr.first?'챗GPT·클로드 <b>새 대화</b>에 붙여넣으세요. 이 대화창 하나를 3일 동안 씁니다.':'같은 대화창에 <b>이어서</b> 붙여넣으세요.'} <b>위에 적은 답이 자동으로 들어가 있습니다.</b></div></div>`;
+    });
+    h+='</div>';
+  });
+  if(st.day===2) h+=`<div class="seam"><b>여기까지 하면 브랜드가 한 권으로 완성됩니다.</b> 위 「내일부터 할 세 가지」를 적고 <b>「보고서 만들기」</b>를 누르면 3일치가 한 권으로 모입니다. 그 세 가지는 왼쪽 「A. 팔리는지 먼저 확인」으로 이어집니다.</div>`;
+  document.getElementById('day').innerHTML=h;
+}
+function renderSide(){
+  const done=PREP.reduce((n,_,i)=>n+gCnt(i),0), pct=Math.round(done/PTOT*100);
+  let h=`<div class="sh"><h2>창업 준비 체크리스트</h2>
+    <div class="sbar"><div class="sfi" style="width:${pct}%"></div></div>
+    <div class="snum"><b>${done}</b> / ${PTOT}개 완료 · ${pct}%</div>
+    <div class="cap">브랜드를 정한 뒤 오픈까지 <b>A부터 K까지 순서대로</b>입니다.<br>
+      <span class="keytag">중요</span> 표시는 빠뜨리면 되돌리기 어려운 것입니다.</div>
+    <div class="next"><span>다음에 할 것</span><b>${esc(nextPrep())}</b></div></div>`;
+  PREP.forEach((g,i)=>{
+    const o=st.open[i], c=gCnt(i), n=g.items.length, p=Math.round(c/n*100);
+    h+=`<div class="grp${o?' open':''}"><button class="gh" data-g="${i}">
+      <span class="gn">${g.n}</span>
+      <span class="gt">${esc(g.name)}<span class="gp"><span style="width:${p}%"></span></span></span>
+      <span class="c">${c}/${n}</span><span class="ar">${o?'▾':'▸'}</span></button>`;
+    if(o){
+      h+=`<div class="gwhy">${esc(g.why)}</div>`;
+      g.items.forEach((it,j)=>{
+        const k=i+'-'+j, dn=!!st.checks[k];
+        const chips=[];
+        if(it.where) chips.push(`<span class="chip"><i>어디서</i>${esc(it.where)}</span>`);
+        if(it.cost)  chips.push(`<span class="chip"><i>얼마쯤</i>${esc(it.cost)}</span>`);
+        if(it.time)  chips.push(`<span class="chip"><i>기간</i>${esc(it.time)}</span>`);
+        h+=`<div class="ck${dn?' done':''}${it.key?' key':''}">
+          <div class="mk${dn?' on':''}" role="checkbox" tabindex="0" aria-checked="${dn}" data-k="${k}">✓</div>
+          <div class="cbody">
+            <div class="ctitle" data-k="${k}">${esc(it.t)}${it.key?'<span class="keytag">중요</span>':''}${dn&&st.at[k]?`<span class="at">${esc(st.at[k])}</span>`:''}</div>
+            ${it.w?`<div class="cwhat">${esc(it.w)}</div>`:''}
+            ${chips.length?`<div class="chips">${chips.join('')}</div>`:''}
+            ${it.carry&&st.ans[it.carry]?`<div class="carry">DAY 3에서 적은 것 → ${esc(st.ans[it.carry])}</div>`:''}
+            <input data-m="${k}" placeholder="메모 (선택)" value="${esc(st.memo[k]||'')}">
+          </div></div>`;
+      });
+    }
+    h+='</div>';
+  });
+  document.getElementById('side').innerHTML=h;
+}
+function render(){jbar();tabs();renderDay();renderSide();bind()}
+
+// 칸에 적는 즉시 — 프롬프트·진행률·완료표시·왼쪽 목록만 갱신 (적던 칸은 건드리지 않음)
+function live(){
+  for(const id in PB){
+    syncPM(id,PB[id]);
+    const e=document.getElementById('pre'+id); if(e) e.textContent=fill(PB[id],!!PM[id]);
+    const bt=document.querySelector(`[data-pm="${id}"]`);
+    if(bt){const lb=PM[id]?'↩ 내 답으로':'👁 예시 답으로 보기'; if(bt.textContent!==lb) bt.textContent=lb;
+      const box=bt.closest('.pr'); if(box) box.classList.toggle('exmode',!!PM[id]);}
+    const q=document.getElementById('pst'+id); if(q){const nh=pStatHTML(id,PB[id]); if(q.innerHTML!==nh) q.innerHTML=nh;}
+  }
+  document.querySelectorAll('[id^="sw_"]').forEach(e=>{
+    const k=e.id.slice(3), h=swatchHTML(hexes(st.ans[k]));
+    if(e.innerHTML!==h) e.innerHTML=h;});
+  const d=dCnt(st.day);
+  DAYS[st.day].p.forEach((p,i)=>{const m=document.getElementById('mk'+st.day+'-'+i); if(m) m.textContent=pDone(st.day,i)?'✓':p.no;});
+  const c=document.getElementById('dayCnt'), f=document.getElementById('dayFill'), pc=document.getElementById('dayPct');
+  if(c) c.textContent=d+'/5 교시 적음';
+  if(f) f.style.width=(d/5*100)+'%';
+  if(pc) pc.textContent=Math.round(d/5*100)+'%';
+  dayHint();
+  jbar(); tabs(); renderSide(); bind(); paintFill();
+}
+function dayHint(){
+  const el=document.getElementById('dayHint'); if(!el) return;
+  const d=dCnt(st.day);
+  const who=((st.me&&st.me.name)||'').trim();
+  el.innerHTML = d===5
+    ? `5교시 다 적었습니다 — <b>${esc((who?who+'_':'')+(st.day+1)+'일차')}.pdf</b> 로 저장됩니다`
+    : `${5-d}교시가 아직 비어 있습니다. 지금 눌러도 적은 것까지 <b>${esc((who?who+'_':'')+(st.day+1)+'일차')}</b> 보고서로 나옵니다`;
+  el.className = 'rp-hint'+(d===5?' ok':'');
+}
+
+
+// 아티팩트 안에서는 confirm 창이 막혀 있어, 되돌리기 어려운 것은 "한 번 더 누르기"로 확인받습니다
+function arm(btn, msg, fn){
+  if(btn.dataset.armed){ delete btn.dataset.armed; btn.textContent=btn.dataset.label; btn.classList.remove('armed'); fn(); return; }
+  btn.dataset.label=btn.textContent; btn.dataset.armed='1';
+  btn.textContent=msg; btn.classList.add('armed');
+  clearTimeout(btn._t); btn._t=setTimeout(()=>{ if(btn.dataset.armed){delete btn.dataset.armed; btn.textContent=btn.dataset.label; btn.classList.remove('armed')} },4000);
+}
+// 용어 사전 전체 보기 — 묶음별 + 찾기
+function glossary(){
+  document.querySelectorAll('.gov').forEach(e=>e.remove());
+  const o=document.createElement('div'); o.className='gov';
+  const groups=TERM_GROUPS.map(([g,ks])=>
+    `<div class="gsec" data-sec><h4>${esc(g)}</h4>${ks.map(t=>
+      `<div class="tm" data-t="${esc(t)}"><b>${esc(t)}</b><span>${esc(TERMS[t]||'').replace(/\n/g,'<br>')}</span></div>`).join('')}</div>`).join('');
+  o.innerHTML=`<div class="gbox"><div class="gtop"><h3>🔤 용어 사전</h3><button id="gClose">닫기</button></div>
+    <p class="gsub">모르는 말이 나오면 여기서 찾으세요. 중학생에게 설명하듯 세 줄 안에 적었습니다. 모두 ${Object.keys(TERMS).length}개.</p>
+    <input id="gFind" placeholder="🔍 찾을 말을 적으세요 (예: 권리금, 원가율)">
+    <div class="glist">${groups}<div class="gnone" hidden>그런 말은 아직 없습니다. 궁금한 말을 알려 주시면 넣겠습니다.</div></div></div>`;
+  document.body.appendChild(o);
+  const close=()=>o.remove();
+  o.querySelector('#gClose').onclick=close;
+  o.onclick=e=>{if(e.target===o)close()};
+  document.addEventListener('keydown',function k(e){if(e.key==='Escape'){close();document.removeEventListener('keydown',k)}});
+  const inp=o.querySelector('#gFind');
+  inp.oninput=()=>{
+    const q=inp.value.trim().toLowerCase(); let hit=0;
+    o.querySelectorAll('.gsec').forEach(sec=>{
+      let n=0;
+      sec.querySelectorAll('.tm').forEach(el=>{
+        const show=!q || el.textContent.toLowerCase().includes(q);
+        el.hidden=!show; if(show)n++;
+      });
+      sec.hidden=!n; hit+=n;
+    });
+    o.querySelector('.gnone').hidden=!!hit;
+  };
+  inp.focus();
+}
+function bind(){
+  document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{st.day=+b.dataset.d;save();render();window.scrollTo(0,0)});
+  const put2=e=>{const k=e.target.dataset.a; st.ans[k]=e.target.value; offPM(k); save(); live()};
+  document.querySelectorAll('[data-a]').forEach(c=>{ c.oninput=put2; c.onchange=put2; });
+  document.querySelectorAll('[data-ex]').forEach(b=>b.onclick=()=>{const k=b.dataset.ex;st.ex[k]=!st.ex[k];save();renderDay();bind()});
+  document.querySelectorAll('[data-put]').forEach(b=>b.onclick=()=>{
+    const k=b.dataset.put, f=DAYS.flatMap(d=>d.p).flatMap(p=>p.f).find(x=>x.k===k);
+    const put=()=>{st.ans[k]=f.ex;st.ex[k]=false;save();render()};
+    if((st.ans[k]||'').trim()) arm(b,'적은 것을 덮어씁니다 — 한 번 더 누르세요',put); else put()});
+  document.querySelectorAll('[data-pm]').forEach(b=>b.onclick=()=>{
+    const id=b.dataset.pm; PM[id]=!PM[id]; renderDay(); bind();
+    const el=document.getElementById('pre'+id); if(el) el.scrollIntoView({block:'nearest'});
+  });
+  document.querySelectorAll('[data-cp]').forEach(b=>b.onclick=async()=>{
+    const t=document.getElementById('pre'+b.dataset.cp).textContent;
+    try{await navigator.clipboard.writeText(t)}catch(e){
+      const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();
+      try{document.execCommand('copy')}catch(_){}ta.remove()}
+    b.textContent='복사됨 ✓';b.classList.add('done');setTimeout(()=>{b.textContent='복사';b.classList.remove('done')},1800)});
+  const tog=k=>{if(st.checks[k]){st.checks[k]=0;delete st.at[k]}else{st.checks[k]=1;st.at[k]=today()}save();render()};
+  document.querySelectorAll('[data-k]').forEach(c=>{c.onclick=()=>tog(c.dataset.k);
+    c.onkeydown=e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();tog(c.dataset.k)}}});
+  document.querySelectorAll('.gh').forEach(b=>b.onclick=()=>{const g=b.dataset.g;st.open[g]=!st.open[g];save();renderSide();bind()});
+  const dr=document.getElementById('dayReport'); if(dr) dr.onclick=()=>report(st.day);
+  dayHint();
+  document.querySelectorAll('[data-m]').forEach(c=>c.onchange=e=>{st.memo[e.target.dataset.m]=e.target.value;save()});
+}
+
+// 보고서 — DAY별 한 장씩 쌓여 3일차엔 한 권
+function report(only){
+  const A=k=>{const v=(st.ans[k]||'').trim();return v?esc(v):'<span class="em">아직 작성 전</span>'};
+  const nm=(st.ans.name||'').trim()||'(카페 이름 미정)';
+  const cc=(st.ans.conceptFinal||st.ans.conceptV2||st.ans.concept||'').trim();
+  let done=DAYS.map((_,i)=>dCnt(i));
+  const S=(n)=>only==null||only===n;   // only: 0=DAY1, 1=DAY2, 2=DAY3, null=전체
+  const ttl = only==null ? '카페 브랜드 기획서' : `${DAYS[only].n} 보고서 — ${DAYS[only].title}`;
+  let h=`<div class="rpwrap">
+    <div class="cover"><h2>${esc(nm)}</h2><p>${cc?esc(cc):'콘셉트 한 줄 — 아직 작성 전'}</p>
+      <div class="by">${esc(ttl)} · ${new Date().getFullYear()}.${String(new Date().getMonth()+1).padStart(2,'0')} · DAY 1 ${done[0]}/5 · DAY 2 ${done[1]}/5 · DAY 3 ${done[2]}/5${(st.me&&st.me.name)?` · 작성 ${esc(st.me.name)}${st.me.tail?'('+esc(st.me.tail)+')':''}`:''}</div></div>`;
+  if(S(0)) h+=`<div class="rp"><h3>1. 콘셉트와 고객 <span style="font:400 12px var(--body);color:var(--grey)">DAY 1</span></h3><dl>
+    <dt>내가 추구하는 것</dt><dd>${A('me')}</dd>
+    <dt>트렌드 키워드</dt><dd>${A('kws10')}</dd>
+    <dt>콘셉트 키워드 3개</dt><dd>${A('kw3')}</dd>
+    <dt>타깃 고객</dt><dd>${A('targetFinal')}</dd>
+    <dt>대표 고객</dt><dd>${A('persona')}</dd>
+    <dt>굳이 와야 할 이유</dt><dd>${A('reason')}</dd>
+    <dt>카페 이름</dt><dd>${A('name')}</dd>
+    <dt>콘셉트 한 줄</dt><dd>${A('concept')}</dd></dl></div>`;
+  if(S(0)) h+=`<div class="rp"><h3>2. 상권 <span style="font:400 12px var(--body);color:var(--grey)">DAY 1 · 3교시</span></h3><dl>
+    <dt>동네·상권</dt><dd>${A('area')}</dd>
+    <dt>유동인구</dt><dd>${A('traffic')}</dd>
+    <dt>주요 고객층</dt><dd>${A('mainCust')}</dd>
+    <dt>경쟁 카페</dt><dd>${A('comp')}</dd>
+    <dt>장점</dt><dd>${A('pros')}</dd>
+    <dt>단점</dt><dd>${A('cons')}</dd>
+    <dt>다른 점</dt><dd>${A('diff')}</dd></dl></div>`;
+  if(S(1)) h+=`<div class="rp"><h3>3. 시그니처 메뉴와 가격 <span style="font:400 12px var(--body);color:var(--grey)">DAY 2</span></h3><dl>
+    <dt>메뉴 구성 방향</dt><dd>${A('menuFocus')}</dd>
+    <dt>시그니처 후보</dt><dd>${A('sig3')}</dd>
+    <dt>메뉴 3개 · 설명 · 가격</dt><dd>${A('menu3')}</dd>
+    <dt>원가율</dt><dd>${A('cost3')}</dd>
+    <dt>월 손익 미리보기</dt><dd>${A('pl')}</dd>
+    <dt>기획안 정리</dt><dd>${A('menuPlan')}</dd></dl></div>`;
+  if(S(1)) h+=`<div class="rp"><h3>4. 메뉴판과 비주얼 <span style="font:400 12px var(--body);color:var(--grey)">DAY 2 · 4교시</span></h3><dl>
+    <dt>메뉴판 순서·개수</dt><dd>${A('menuboard')}</dd>
+    <dt>컬러·폰트·로고</dt><dd>${A('visual')}</dd></dl></div>`;
+  if(S(2)) h+=`<div class="rp"><h3>5. 인스타그램과 스마트플레이스 <span style="font:400 12px var(--body);color:var(--grey)">DAY 3</span></h3><dl>
+    <dt>입소문 문장</dt><dd>${A('wom')}</dd>
+    <dt>계정명·소개글</dt><dd>${A('insta')}</dd>
+    <dt>콘텐츠 주제</dt><dd>${A('topics')}</dd>
+    <dt>먼저 찍을 사진</dt><dd>${A('photos')}</dd>
+    <dt>스마트플레이스</dt><dd>${A('smartplace')}</dd>
+    <dt>홍보 문구</dt><dd>${A('adcopy')}</dd>
+    <dt>릴스 아이디어</dt><dd>${A('reels')}</dd></dl></div>`;
+  if(S(2)) h+=`<div class="rp"><h3>6. 홍보 계획과 단골 설계 <span style="font:400 12px var(--body);color:var(--grey)">DAY 3 · 4교시</span></h3><dl>
+    <dt>오픈 전 4주</dt><dd>${A('preopen')}</dd>
+    <dt>오픈 후 첫 달</dt><dd>${A('postopen')}</dd>
+    <dt>리뷰·단골 방법</dt><dd>${A('repeat')}</dd>
+    <dt>다시 오게 하는 경험</dt><dd>${A('comeback')}</dd></dl></div>`;
+  const pd=PREP.reduce((n,_,i)=>n+gCnt(i),0);
+  if(S(2)) h+=`<div class="rp"><h3>7. 내일부터 할 세 가지</h3><dl>
+    <dt>콘셉트 최종</dt><dd>${A('conceptFinal')}</dd>
+    <dt>세 가지</dt><dd>${A('three')}</dd>
+    <dt>창업 준비 진행</dt><dd>${pd}/${PTOT}개 완료 · 다음: ${esc(nextPrep())}</dd></dl></div>`;
+  if(only==null) h+=`<div class="rp aif"><h3>🧱 AI 기본 파일 <span style="font:400 12px var(--body);color:var(--grey)">아래를 그대로 복사해 새 대화 맨 앞에 붙여넣으세요</span></h3>
+    <pre class="aifpre">${esc(aiFileText())}</pre></div>`;
+  h+=`</div>`;
+  // 인쇄창의 기본 파일 이름 = 문서 제목. 「이름_1일차」로 맞춥니다.
+  const who=((st.me&&st.me.name)||'').trim();
+  const fname=(who?who+'_':'') + (only==null ? '브랜드기획서_전체' : `${only+1}일차`);
+  const bar=`<div class="rbar no-print">
+      <b>${esc(ttl)}</b>
+      <span>인쇄 화면에서 「대상」을 <b>PDF로 저장</b>으로 바꾸면 <b>${esc(fname)}.pdf</b> 로 저장됩니다</span>
+      <button id="rPrint">🖨 인쇄 · PDF로 저장</button>
+      <button id="rCopy">📋 글자만 복사</button>
+      <button id="rClose">닫기</button>
+    </div>`;
+  const R=document.getElementById('report');
+  R.innerHTML=bar+h;
+  R.style.display='block';
+  document.querySelector('.wrap').style.display='none';
+  window.scrollTo(0,0);
+  const close=()=>{R.style.display='none';R.innerHTML='';document.querySelector('.wrap').style.display=''};
+  document.getElementById('rClose').onclick=close;
+  document.getElementById('rPrint').onclick=e=>{
+    const b=e.currentTarget;
+    const keep=document.title; document.title=fname;   // 저장 이름이 이걸로 잡힙니다
+    setTimeout(()=>{document.title=keep},4000);
+    try{ window.print() }catch(_){}
+    setTimeout(()=>{ if(!document.hasFocus()) return;
+      b.textContent='🖨 인쇄창이 안 열리면 — 아래 「글자만 복사」를 쓰세요'; b.classList.add('armed');
+      setTimeout(()=>{b.textContent='🖨 인쇄 · PDF로 저장';b.classList.remove('armed')},6000);
+    },700);
+  };
+  document.getElementById('rCopy').onclick=async e=>{
+    const cb=e.currentTarget;
+    const t=R.innerText.replace(/^[\s\S]*?닫기\n/,'').trim();
+    try{await navigator.clipboard.writeText(t)}catch(_){
+      const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();
+      try{document.execCommand('copy')}catch(__){}ta.remove()}
+    cb.textContent='복사됨 ✓ — 메모장·한글에 붙여넣으세요';
+    setTimeout(()=>{cb.textContent='📋 글자만 복사'},2500);
+  };
+}
+function nextPrep(){for(let i=0;i<PREP.length;i++)for(let j=0;j<PREP[i].items.length;j++)if(!st.checks[i+'-'+j])return PREP[i].n+'. '+PREP[i].items[j].t;return '전부 완료'}
+
+// 지금 칸에 들어 있는 값이 예시 답 그대로인 것들
+function exKeys(){return Object.keys(FLD).filter(k=>{
+  const v=(st.ans[k]||'').trim(); return v && FLD[k].ex && v===FLD[k].ex.trim()})}
+function paintFill(){
+  const b=document.getElementById('bFill'); if(!b||b.dataset.armed)return;
+  const n=exKeys().length;
+  b.textContent = n ? `예시 지우기 (${n}칸)` : '예시로 채우기';
+  b.classList.toggle('undo', !!n);
+}
+document.getElementById('bFill').onclick=e=>{
+  const b=e.currentTarget, ek=exKeys();
+  if(ek.length){   // 예시로 채운 칸만 비웁니다 — 내가 고쳐 쓴 것은 그대로 둡니다
+    ek.forEach(k=>{delete st.ans[k]});
+    for(const id in PM) PM[id]=false;
+    save(); render();
+    return;
+  }
+  arm(b,'모든 칸을 예시로 덮어씁니다 — 한 번 더',()=>{
+    DAYS.flatMap(d=>d.p).flatMap(p=>p.f).forEach(f=>{if(f.ex)st.ans[f.k]=f.ex});
+    st.open={0:1};save();render()});
+};
+document.getElementById('bClear').onclick=e=>arm(e.currentTarget,'정말 모두 지웁니다 — 한 번 더',()=>{
+  st=JSON.parse(JSON.stringify(EMPTY));save();render()});
+document.getElementById('bReport').onclick=()=>report(null);
+document.getElementById('bTerms').onclick=glossary;
+document.getElementById('bAI').onclick=aiFile;
+document.getElementById('bWho').onclick=()=>{const g=document.getElementById('gate'); if(g)g.remove(); gate();};
+document.getElementById('bSubmit').onclick=submitBox;
+document.getElementById('bTeach').onclick=teacherBox;
+document.getElementById('bBackup').onclick=async e=>{
+  const b=e.currentTarget, t=JSON.stringify(st);
+  try{await navigator.clipboard.writeText(t)}catch(_){
+    const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy')}catch(__){}ta.remove()}
+  b.textContent='복사됨 ✓ 메모장에 붙여 보관하세요';
+  setTimeout(()=>{b.textContent='📋 답 백업'},2800);
+};
+document.getElementById('bRestore').onclick=()=>{
+  const w=document.createElement('div'); w.className='gov';
+  w.innerHTML=`<div class="gbox"><div class="gtop"><h3>📥 답 불러오기</h3><button id="rsX">닫기</button></div>
+    <p class="gsub">「답 백업」으로 복사해 둔 글자를 아래에 붙여넣고 「불러오기」를 누르세요. 다른 컴퓨터·다른 브라우저로 옮길 때 씁니다. <b>지금 적은 것은 덮어씁니다.</b></p>
+    <textarea id="rsT" rows="6" style="width:100%;font:12px monospace"></textarea>
+    <button id="rsGo" class="rp-btn" style="margin-top:8px">불러오기</button>
+    <div id="rsMsg" class="gsub"></div></div>`;
+  document.body.appendChild(w);
+  w.querySelector('#rsX').onclick=()=>w.remove();
+  w.onclick=e=>{if(e.target===w)w.remove()};
+  w.querySelector('#rsGo').onclick=()=>{
+    try{
+      const o=JSON.parse(w.querySelector('#rsT').value.trim());
+      if(!o||typeof o!=='object'||!o.ans) throw 0;
+      st=Object.assign(JSON.parse(JSON.stringify(EMPTY)),o);
+      save();render();w.remove();
+    }catch(_){ w.querySelector('#rsMsg').innerHTML='<b style="color:#B8862B">붙여넣은 글자를 읽지 못했습니다.</b> 「답 백업」으로 복사한 것 전체를 빠짐없이 붙여넣었는지 확인해 주세요.' }
+  };
+};
+function paintWho(){
+  const w=document.getElementById('who'); if(w) w.innerHTML=whoHTML();
+  const t=document.getElementById('bTeach'); if(t) t.style.display=(st.me&&st.me.teacher)?'':'none';
+  const b=document.getElementById('bSubmit'); if(b) b.style.display=(st.me&&st.me.teacher)?'none':'';
+}
+const _render=render;
+render=function(){_render(); paintWho(); paintFill();};
+render();
+if(!st.me) gate();
+
+</script>
