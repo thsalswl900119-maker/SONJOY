@@ -386,6 +386,14 @@ html,body{font-size:17px;line-height:1.6}
 .startcard li::before{content:counter(sc);position:absolute;left:0;top:7px;width:27px;height:27px;border-radius:50%;background:var(--coral);color:#fff;font-family:var(--head);font-size:15px;display:flex;align-items:center;justify-content:center}
 .startcard p{margin:10px 0 0;font-size:14.5px;color:#4E6B2E;font-weight:700}
 .startcard .scx{display:block;width:100%;margin-top:12px;border:1.5px solid var(--line);background:var(--panel);color:var(--grey);font-family:var(--head);font-size:15px;padding:10px;border-radius:12px;cursor:pointer}
+html{color-scheme:light}
+input,textarea,select{color-scheme:light}
+#screenTeacher input,#screenTeacher textarea{width:100%;box-sizing:border-box;padding:12px 14px;border:1.5px solid var(--corall);border-radius:10px;background:#fff;color:var(--ink);font-size:17px;margin-top:6px}
+#screenTeacher input::placeholder,#screenTeacher textarea::placeholder{color:#A99B8C}
+#screenTeacher input:focus,#screenTeacher textarea:focus{outline:2px solid var(--coral);outline-offset:1px;border-color:var(--coral)}
+#screenTeacher #tPin{font-size:22px;letter-spacing:.2em;text-align:center}
+#screenTeacher .card h2{margin-bottom:4px}
+#tList .btn{color:#fff}#tList .btn.ghost{color:var(--corald)}
 </style>
 
 
@@ -953,7 +961,7 @@ html,body{font-size:17px;line-height:1.6}
       <div id="tAddMsg" style="font-size:13px;color:var(--corald);margin-top:8px"></div>
     </div>
     <div class="card" style="margin-top:14px">
-      <h2 style="font-size:17px;color:var(--corald)">강사 비밀번호 바꾸기</h2>
+      <h2 style="font-size:17px;color:var(--corald)">강사 숫자 바꾸기</h2>
       <input id="tNewPin" inputmode="numeric" maxlength="6" placeholder="새 숫자 6자리" autocomplete="off">
       <button class="btn ghost" id="tChange" type="button" style="margin-top:10px">바꾸기</button>
       <div id="tPinMsg" style="font-size:13px;color:var(--corald);margin-top:8px"></div>
