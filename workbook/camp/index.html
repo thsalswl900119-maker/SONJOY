@@ -347,7 +347,6 @@ h1{font-size:26px;color:var(--corald)}
 </div>
 <div id="report"></div>
 <script src="https://cdn.jsdelivr.net/npm/firebase@10.12.5/firebase-app-compat.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/firebase@10.12.5/firebase-auth-compat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/firebase@10.12.5/firebase-firestore-compat.js"></script>
 <script>
 /* Firebase 설정 — 카페스이 (cafesui) */
@@ -658,19 +657,21 @@ function aiFile(){
 // ---- people.js ----
 // 처음 화면(이름·연락처) · 강사님께 보내기 · 강사 확인 화면
 // 적은 내용은 각자 브라우저에 저장되고, 「강사님께 보내기」를 누르면 카페스이 서버(Firestore)의
-// workbook/이름_뒤4자리 문서로 올라갑니다. 강사는 카페스이 운영노트 계정(사장님·매니저)으로 로그인해 목록을 봅니다.
+// workbook/이름_뒤4자리 문서로 올라가고, workbook/명단_0000 문서에 그 이름이 추가됩니다.
+// 강사는 6자리 숫자로 들어와 명단에 있는 문서를 하나씩 읽어 목록을 봅니다(로그인 계정 불필요).
 
 const SUBKEY = 'brand2open_subs_v1';
-const EMAIL_DOMAIN = '@sonjoy.cafe';
-let FB = null, AUTH = null;
+const PIN_HASH = '14c56371515cfc9fdebc973e9de68b7fa41fd75f5402d4302ec62f029a4c366e';   // 강사 6자리 숫자의 지문(원문은 코드에 없음)
+const ROSTER = '명단_0000';                  // 제출한 사람 목록 문서 (workbook/명단_0000)
+let FB = null;
 try {
   if (window.firebase && window.FIREBASE_CONFIG && window.FIREBASE_CONFIG.apiKey) {
     if (!firebase.apps.length) firebase.initializeApp(window.FIREBASE_CONFIG);
-    FB = firebase.firestore(); AUTH = firebase.auth();
+    FB = firebase.firestore();
   }
-} catch (e) { FB = null; AUTH = null }
+} catch (e) { FB = null }
 function sid(name, code){ return String(name).replace(/[\/\s]+/g, '') + '_' + code }
-function teacherOn(){ return !!(AUTH && AUTH.currentUser) }
+function teacherOn(){ return !!(st.me && st.me.teacher) }
 
 const TAG = 'CBSUB1:';
 
@@ -702,11 +703,9 @@ function gate(){
       다음에 올 때도 <b>같은 이름·같은 4자리</b>로 들어오세요.</div>
     <label class="gchk"><input type="checkbox" id="gTeach"> 나는 <b>강사</b>입니다 (수강생 제출을 확인합니다)</label>
     <div id="gPwWrap" hidden>
-      <label for="gId">운영노트 아이디</label>
-      <input id="gId" placeholder="카페스이 운영노트 아이디" autocomplete="username" maxlength="40">
-      <label for="gPw">비밀번호</label>
-      <input id="gPw" type="password" placeholder="운영노트 비밀번호" autocomplete="current-password" maxlength="60">
-      <div class="gnote" id="gPwNote">카페스이 운영노트에 쓰는 아이디·비밀번호로 들어갑니다. <b>사장님·매니저 계정</b>만 수강생 제출을 볼 수 있습니다.</div>
+      <label for="gPw">강사 6자리 숫자</label>
+      <input id="gPw" type="password" placeholder="숫자 6자리" inputmode="numeric" autocomplete="off" maxlength="6">
+      <div class="gnote" id="gPwNote">강사만 아는 6자리 숫자입니다. 맞으면 「제출 확인」 버튼이 생깁니다.</div>
     </div>
     <button class="gbtn" id="gGo">시작하기</button>
     <button class="gskip" id="gSkip">이름 없이 둘러보기</button>
@@ -725,28 +724,15 @@ function gate(){
     if (!nm) { bad(n); return }
     const teach = tc.checked;
     if (teach) {
-      if (!FB || !AUTH) { bad(o.querySelector('#gPw'), '서버에 연결되지 않아 강사 로그인을 할 수 없습니다. 인터넷을 확인하고 새로고침해 주세요.'); return }
-      const id = o.querySelector('#gId').value.trim().toLowerCase(), pw = o.querySelector('#gPw').value;
-      if (!id) { bad(o.querySelector('#gId'), '운영노트 아이디를 적어 주세요.'); return }
-      if (!pw) { bad(o.querySelector('#gPw'), '비밀번호를 적어 주세요.'); return }
-      const gb = o.querySelector('#gGo'); gb.disabled = true; gb.textContent = '확인 중…';
-      try {
-        const cred = await AUTH.signInWithEmailAndPassword(id.includes('@') ? id : id + EMAIL_DOMAIN, pw);
-        const prof = await FB.collection('users').doc(cred.user.uid).get();
-        const role = prof.exists ? (prof.data().role || '') : '';
-        if (!['owner', 'head', 'manager'].includes(role)) {
-          await AUTH.signOut(); gb.disabled = false; gb.textContent = '시작하기';
-          bad(o.querySelector('#gId'), '이 계정은 강사(사장님·매니저) 권한이 없습니다.'); return }
-      } catch (e) {
-        gb.disabled = false; gb.textContent = '시작하기';
-        bad(o.querySelector('#gPw'), '아이디 또는 비밀번호가 맞지 않습니다.'); return }
-    } else if (teacherOn()) { try { await AUTH.signOut() } catch (e) {} }
+      const pw = o.querySelector('#gPw').value.trim();
+      if (!/^\d{6}$/.test(pw)) { bad(o.querySelector('#gPw'), '숫자 6자리를 적어 주세요.'); return }
+      if (await pwHash(pw) !== PIN_HASH) { bad(o.querySelector('#gPw'), '강사 숫자가 맞지 않습니다.'); return }
+    }
     st.me = { name: nm, tail: t.value.trim(), teacher: teach, at: today() };
     save(); o.remove(); render();
   };
   o.querySelector('#gGo').onclick = go;
   o.querySelector('#gSkip').onclick = () => {
-    if (teacherOn()) { try { AUTH.signOut() } catch (e) {} }
     st.me = { name: '', tail: '', teacher: false, skip: 1 }; save(); o.remove(); render();
   };
   [n, t].forEach(e => e.onkeydown = ev => { if (ev.key === 'Enter') go() });
@@ -835,7 +821,9 @@ function submitBox(){
     try {
       const p = JSON.parse(JSON.stringify(subPayload())); p.kind = 'camp';
       const name = st.me.name.trim().slice(0, 30);
-      await FB.collection('workbook').doc(sid(name, tail)).set({ name: name, code: tail, day: 0, a: p, updatedAt: Date.now() });
+      const id = sid(name, tail), now = Date.now();
+      await FB.collection('workbook').doc(id).set({ name: name, code: tail, day: 0, a: p, updatedAt: now });
+      await FB.collection('workbook').doc(ROSTER).set({ name: '명단', code: '0000', day: 0, a: { [id]: now }, updatedAt: now }, { merge: true });
       st.sent = p.at; save();
       m.innerHTML = `<b style="color:var(--sage)">보냈습니다 ✓</b> ${esc(p.at)} · 강사님 화면에 바로 보입니다.`;
       b.textContent = '📤 다시 보내기';
@@ -897,10 +885,13 @@ function teacherBox(){
     return out;
   };
   const fetchRemote = async () => {
-    if (!FB || !AUTH || !AUTH.currentUser) { msg('<b style="color:var(--warn)">강사 로그인이 풀렸습니다.</b> 오른쪽 위 「바꾸기」에서 다시 들어와 주세요.'); remote = []; return }
+    if (!FB) { msg('<b style="color:var(--warn)">서버에 연결되지 않았습니다.</b> 인터넷을 확인하고 새로고침해 주세요.'); remote = []; return }
     try {
-      const s = await FB.collection('workbook').orderBy('updatedAt', 'desc').get();
-      remote = s.docs.map(d => d.data()).filter(d => d.a && d.a.kind === 'camp')
+      const r = await FB.collection('workbook').doc(ROSTER).get();
+      const ids = r.exists ? Object.keys(r.data().a || {}) : [];
+      const docs = await Promise.all(ids.map(id => FB.collection('workbook').doc(id).get()));
+      remote = docs.filter(d => d.exists).map(d => d.data()).filter(d => d.a && d.a.kind === 'camp')
+        .sort((x, y) => (y.updatedAt || 0) - (x.updatedAt || 0))
         .map(d => Object.assign({}, d.a, { name: d.name, tail: d.code, at: d.a.at || '', _remote: 1 }));
       msg(`서버에서 <b>${remote.length}명</b> 불러왔습니다. (${new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })})`);
     } catch (e) { msg('<b style="color:var(--warn)">서버 목록을 불러오지 못했습니다.</b> ' + esc(e && e.message || '')); remote = [] }
@@ -926,7 +917,7 @@ function teacherBox(){
     L.querySelectorAll('[data-del]').forEach(b => b.onclick = async () => {
       const s = allSubs()[+b.dataset.del]; if (!s) return;
       if (!b.dataset.armed) { b.dataset.armed = '1'; b.textContent = '정말 지움?'; setTimeout(() => { delete b.dataset.armed; b.textContent = '✕' }, 3000); return }
-      if (s._remote) { try { await FB.collection('workbook').doc(sid(s.name, s.tail)).delete(); await fetchRemote() } catch (e) { msg('<b style="color:var(--warn)">지우지 못했습니다.</b>') } }
+      if (s._remote) { try { await FB.collection('workbook').doc(ROSTER).set({ a: { [sid(s.name, s.tail)]: firebase.firestore.FieldValue.delete() } }, { merge: true }); await fetchRemote() } catch (e) { msg('<b style="color:var(--warn)">목록에서 빼지 못했습니다.</b>') } }
       else { const a = loadSubs(); a.splice(s._local, 1); saveSubs(a) }
       draw();
     });
