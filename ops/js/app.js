@@ -3110,7 +3110,7 @@
         base[el.dataset.k] = el.value;
         el.classList.toggle("filled", !!el.value.trim());
         paintLines(el, bl0[el.dataset.k], by[el.dataset.k], ow0[el.dataset.k]);
-        tagAuthors(el, bl0[el.dataset.k], ow0[el.dataset.k]);
+        tagAuthors(el, bl0[el.dataset.k], ow0[el.dataset.k], by[el.dataset.k]);
       });
       legacy163();
       var n = inputs.filter(function (el) { return el.value.trim(); }).length;
@@ -3125,6 +3125,8 @@
       var lines = el.value.split(String.fromCharCode(10));
       var marks = lines.map(function (ln) { return ownMask(ln, own); });
       var anyOwn = marks.some(function (m) { return m.indexOf(true) >= 0; });
+      // 한 줄 칸(input)은 글자마다 색을 못 칠하니, 사장님이 덧붙인 게 있으면 칸 전체를 노란 형광 테두리로 (아래 「👑 사장님 덧붙임」에 크게)
+      el.classList.toggle("ownin", el.tagName !== "TEXTAREA" && !!el.value.trim() && (anyOwn || (lineBy[0] === "사장님" && first && first !== "사장님")));
       if (el.tagName !== "TEXTAREA" || (names.length < 2 && !anyOwn)) {
         if (ov) ov.remove();
         el.classList.remove("ovon");
@@ -3154,7 +3156,7 @@
       var out = [], st = -1;
       for (var i = 0; i <= ln.length; i++) {
         if (i < ln.length && m[i]) { if (st < 0) st = i; }
-        else if (st >= 0) { var t = ln.slice(st, i).replace(/^[\s\/]+|[\s\/]+$/g, ""); if (t.length >= 2) out.push(t); st = -1; }
+        else if (st >= 0) { var t = ln.slice(st, i).replace(/^[\s\/·,]+|[\s\/·,]+$/g, ""); if (t.length >= 2) out.push(t); st = -1; }
       }
       return out;
     }
@@ -3181,7 +3183,7 @@
       });
     }
     window.addEventListener("resize", function () { document.querySelectorAll(".lgov").forEach(function (ov) { var el = ov.previousElementSibling; if (el) placeOv(el, ov); }); });
-    function tagAuthors(el, lineBy, own) {
+    function tagAuthors(el, lineBy, own, first0) {
       var row = el.closest(".mrow2"); if (!row) return;
       var names = []; (lineBy || []).forEach(function (n) { if (n && names.indexOf(n) < 0) names.push(n); });
       var tag = row.querySelector(".lgby");
@@ -3195,10 +3197,11 @@
       el.value.split(String.fromCharCode(10)).forEach(function (ln, i) {
         if (!ln.trim()) return;
         if (names.length > 1 && (lineBy || [])[i] === "사장님") { adds.push(ln.trim()); return; }
+        if (el.tagName !== "TEXTAREA" && (lineBy || [])[0] === "사장님" && first0 && first0 !== "사장님") { adds.push(ln.trim()); return; }
         ownRuns(ln, ownMask(ln, own)).forEach(function (t) { adds.push(t); });
       });
       var box = row.querySelector(".lgown");
-      if (!adds.length || el.tagName !== "TEXTAREA") { if (box) box.remove(); return; }
+      if (!adds.length) { if (box) box.remove(); return; }
       if (!box) { box = document.createElement("div"); box.className = "lgown"; row.appendChild(box); }
       box.innerHTML = "<b>👑 사장님 덧붙임</b>" + adds.map(function (t) { return "<p>" + esc(t.replace(/^\s*[★⭐!！]\s*/, "").replace(/\*\*|__/g, "")) + "</p>"; }).join("");
     }
@@ -3265,7 +3268,7 @@
           if (oldF[k]) { f[k] = oldF[k]; by[k] = oldBy[k] || ""; if (oldBl[k]) bl[k] = oldBl[k]; if (oldOw[k]) ow[k] = oldOw[k]; }
           if (document.activeElement !== el) {
             el.value = oldF[k] || ""; base[k] = el.value; el.classList.toggle("filled", !!el.value.trim());
-            paintLines(el, oldBl[k], oldBy[k], oldOw[k]); tagAuthors(el, oldBl[k], oldOw[k]);
+            paintLines(el, oldBl[k], oldBy[k], oldOw[k]); tagAuthors(el, oldBl[k], oldOw[k], oldBy[k]);
           }
           return;
         }
@@ -3311,7 +3314,7 @@
         bl[k] = lb;
         if (owk.length) ow[k] = owk;
         paintLines(el, bl[k], by[k], ow[k]);
-        tagAuthors(el, bl[k], ow[k]);
+        tagAuthors(el, bl[k], ow[k], by[k]);
       });
       var out = { who: whoEl.value, f: f, by: by, bl: bl };
       if (Object.keys(ow).length) out.ow = ow;
@@ -3447,7 +3450,7 @@
         var k = el.dataset.k, nv = f0[k] || "";
         if (document.activeElement === el || el.value !== (base[k] || "")) return;
         if (el.value !== nv) { el.value = nv; base[k] = nv; el.classList.toggle("filled", !!nv.trim()); ch = true; }
-        paintLines(el, bl0[k], by0[k], ow0[k]); tagAuthors(el, bl0[k], ow0[k]);
+        paintLines(el, bl0[k], by0[k], ow0[k]); tagAuthors(el, bl0[k], ow0[k], by0[k]);
       });
       if (ch) document.dispatchEvent(new Event("cs:log-loaded"));
       legacy163();
