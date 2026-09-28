@@ -3113,9 +3113,17 @@
         tagAuthors(el, bl0[el.dataset.k], ow0[el.dataset.k], by[el.dataset.k]);
       });
       legacy163();
-      addonShow(); undoBtnPaint();
+      undoBtnPaint(); mePaint();
       var n = inputs.filter(function (el) { return el.value.trim(); }).length;
       msgEl.textContent = n ? n + "개 항목 작성됨" : "";
+    }
+    // 지금 이 이름으로 저장된다는 걸 버튼 옆에 크게 — 공용 컴퓨터에 남은 다른 사람 이름으로 쓰는 사고 방지
+    function mePaint() {
+      var el = document.getElementById("lgMe"); if (!el) return;
+      var n = meNow(); if (!n) { el.hidden = true; return; }
+      el.hidden = false; el.className = "lgme " + (WCLR[n] ? "w" + WCLR[n] : "");
+      el.innerHTML = "✍️ 지금 " + esc(n === "사장님" ? n : n + "님") + " 이름으로 저장 <button type=\"button\">내가 아니에요</button>";
+      el.querySelector("button").onclick = function () { var b = document.getElementById("myOff"); if (b) b.click(); };
     }
     // ↩ 되돌리기 — 저장하기 바로 전 모습을 이 기기에 남겨 두고(글 쓰는 한 묶음마다 1개 · 날짜별 최대 30개), 누르면 한 단계씩 되돌린다
     var UNDO_PRE = "cafesui.ui.undo.", undoLast = {};
@@ -3158,21 +3166,6 @@
         load(); report(); document.dispatchEvent(new Event("cs:log-loaded"));
         msgEl.textContent = names.length + "칸을 되돌렸습니다";
       });
-    })();
-    // 👑 사장님 덧붙여쓰기 — 사장님은 버튼으로 열어서 쓰고, 적힌 날은 모두에게 맨 위에 크게 보인다
-    var addonOpen = false;
-    function addonShow() {
-      var sec = document.getElementById("lgAddonSec"), btn = document.getElementById("lgAddonBtn"), el = document.querySelector('.lgin[data-k="lf186"]');
-      if (!sec || !el) return;
-      var boss = meNow() === "사장님";
-      if (btn) btn.hidden = !boss;
-      sec.hidden = !(el.value.trim() || (boss && addonOpen));
-    }
-    (function () {
-      var btn = document.getElementById("lgAddonBtn"), el = document.querySelector('.lgin[data-k="lf186"]');
-      if (!btn || !el) return;
-      btn.addEventListener("click", function () { addonOpen = true; addonShow(); el.focus(); el.scrollIntoView({ behavior: "smooth", block: "center" }); });
-      el.addEventListener("blur", function () { if (!el.value.trim()) { addonOpen = false; addonShow(); } });
     })();
     // 한 칸을 여러 사람이 이어 쓰면 칸 아래에 "쓴 사람: …" 을 각자 색으로 보여준다
     // 칸 안 글자색 — 줄마다 쓴 사람 색. 여러 사람이 쓴 긴 칸은 같은 글자를 색 입혀 위에 겹쳐 보여준다(입력은 그대로 칸에서).
@@ -3512,7 +3505,7 @@
         paintLines(el, bl0[k], by0[k], ow0[k]); tagAuthors(el, bl0[k], ow0[k], by0[k]);
       });
       if (ch) document.dispatchEvent(new Event("cs:log-loaded"));
-      legacy163(); addonShow();
+      legacy163();
       report();
     });
     saveBtn.addEventListener("click", function () {
@@ -3626,7 +3619,7 @@
       try { var rpO = JSON.parse(localStorage.getItem(keyFor()) || "{}") || {}; rpBl = rpO.bl || {}; rpOw = rpO.ow || {}; } catch (e) {}
       var S1 = String.fromCharCode(1), S2 = String.fromCharCode(2);
       // 맨 위에 먼저 볼 것: 사장님 지시사항 → 인계사항 → 직원들에게 알릴 것 → 폐기 · 파손 → 매출 → 매장 흐름
-      var TOPK = ["lf186", "lf185", "lf180", "lf181", "lf162", "lf163", "lf166", "lf183", "lf184", "lf154"], topH = {}, topT = {};
+      var TOPK = ["lf185", "lf180", "lf181", "lf162", "lf163", "lf166", "lf183", "lf184", "lf154"], topH = {}, topT = {};
       document.querySelectorAll(".msec").forEach(function (sec) {
         var items = "", lines = [];
         sec.querySelectorAll(".mrow2").forEach(function (row) {
@@ -3634,7 +3627,7 @@
           var v = (el.value || "").trim();
           if (!v) return;
           var name = (function (sp) { var c = sp.cloneNode(true); c.querySelectorAll("small").forEach(function (x) { x.remove(); }); return c.textContent.trim(); })(row.querySelector(".mlab span"));
-          var cls = row.classList.contains("boss") ? " boss" : row.classList.contains("addon") ? " addon" : row.classList.contains("red") ? " red" : row.classList.contains("blue") ? " blue" : "";
+          var cls = row.classList.contains("boss") ? " boss" : row.classList.contains("red") ? " red" : row.classList.contains("blue") ? " blue" : "";
           // 사장님 덧붙임 자리에 표시를 끼워 두었다가 아래에서 노란 형광 · 큰 글씨로 바꾼다
           var owk = rpOw[el.dataset.k];
           if (owk && owk.length && window.__CS_OWN) v = v.split(NL).map(function (ln) { return window.__CS_OWN.html(ln, window.__CS_OWN.mask(ln, owk), function (x) { return x; }).split('<span class="own">').join(S1).split("</span>").join(S2); }).join(NL);
