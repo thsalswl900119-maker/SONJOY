@@ -3113,9 +3113,67 @@
         tagAuthors(el, bl0[el.dataset.k], ow0[el.dataset.k], by[el.dataset.k]);
       });
       legacy163();
+      addonShow(); undoBtnPaint();
       var n = inputs.filter(function (el) { return el.value.trim(); }).length;
       msgEl.textContent = n ? n + "개 항목 작성됨" : "";
     }
+    // ↩ 되돌리기 — 저장하기 바로 전 모습을 이 기기에 남겨 두고(글 쓰는 한 묶음마다 1개 · 날짜별 최대 30개), 누르면 한 단계씩 되돌린다
+    var UNDO_PRE = "cafesui.ui.undo.", undoLast = {};
+    function undoList(k) { try { return JSON.parse(localStorage.getItem(UNDO_PRE + k.slice(12)) || "[]") || []; } catch (e) { return []; } }
+    function undoPush(k, old) {
+      var now = Date.now(); if (undoLast[k] && now - undoLast[k] < 6000) { undoLast[k] = now; return; }
+      undoLast[k] = now;
+      var ls = undoList(k), snap = JSON.stringify(old || {});
+      if (ls.length && ls[ls.length - 1] === snap) return;
+      ls.push(snap); if (ls.length > 30) ls.shift();
+      try { localStorage.setItem(UNDO_PRE + k.slice(12), JSON.stringify(ls)); } catch (e) {}
+      undoBtnPaint();
+    }
+    function undoBtnPaint() {
+      var b = document.getElementById("lgUndo"); if (!b) return;
+      var n = undoList(keyFor()).length; b.disabled = !n; b.textContent = n ? "↩ 되돌리기 (" + n + ")" : "↩ 되돌리기";
+    }
+    (function () {
+      var b = document.getElementById("lgUndo"); if (!b) return;
+      b.addEventListener("click", function () {
+        var k = keyFor(), ls = undoList(k); if (!ls.length) return;
+        var prev = JSON.parse(ls[ls.length - 1] || "{}"), cur = {}; try { cur = JSON.parse(localStorage.getItem(k) || "{}") || {}; } catch (e) {}
+        var pf = prev.f || {}, cf = cur.f || {}, names = [];
+        Object.keys(Object.assign({}, pf, cf)).forEach(function (fk) {
+          if ((pf[fk] || "") === (cf[fk] || "")) return;
+          var el = document.querySelector('.lgin[data-k="' + fk + '"]'); names.push(el ? (el.getAttribute("aria-label") || fk).replace(/<[^>]*>.*$/, "").trim() : fk);
+        });
+        if (!names.length) { ls.pop(); try { localStorage.setItem(UNDO_PRE + k.slice(12), JSON.stringify(ls)); } catch (e) {} undoBtnPaint(); msgEl.textContent = "되돌릴 게 없습니다"; return; }
+        if (!confirm("이 칸들을 바로 전 모습으로 되돌릴까요?\n\n· " + names.join("\n· "))) return;
+        ls.pop(); try { localStorage.setItem(UNDO_PRE + k.slice(12), JSON.stringify(ls)); } catch (e) {}
+        // 바뀐 칸만 되돌린다 (다른 칸은 지금 그대로)
+        var out = cur; out.f = out.f || {}; out.by = out.by || {}; out.bl = out.bl || {}; out.ow = out.ow || {};
+        Object.keys(Object.assign({}, pf, cf)).forEach(function (fk) {
+          if ((pf[fk] || "") === (cf[fk] || "")) return;
+          if (pf[fk]) out.f[fk] = pf[fk]; else delete out.f[fk];
+          ["by", "bl", "ow"].forEach(function (x) { var src = prev[x] || {}; if (src[fk] != null) out[x][fk] = src[fk]; else delete out[x][fk]; });
+        });
+        try { localStorage.setItem(k, JSON.stringify(out)); } catch (e) {}
+        undoLast[k] = 0;
+        load(); report(); document.dispatchEvent(new Event("cs:log-loaded"));
+        msgEl.textContent = names.length + "칸을 되돌렸습니다";
+      });
+    })();
+    // 👑 사장님 덧붙여쓰기 — 사장님은 버튼으로 열어서 쓰고, 적힌 날은 모두에게 맨 위에 크게 보인다
+    var addonOpen = false;
+    function addonShow() {
+      var sec = document.getElementById("lgAddonSec"), btn = document.getElementById("lgAddonBtn"), el = document.querySelector('.lgin[data-k="lf186"]');
+      if (!sec || !el) return;
+      var boss = meNow() === "사장님";
+      if (btn) btn.hidden = !boss;
+      sec.hidden = !(el.value.trim() || (boss && addonOpen));
+    }
+    (function () {
+      var btn = document.getElementById("lgAddonBtn"), el = document.querySelector('.lgin[data-k="lf186"]');
+      if (!btn || !el) return;
+      btn.addEventListener("click", function () { addonOpen = true; addonShow(); el.focus(); el.scrollIntoView({ behavior: "smooth", block: "center" }); });
+      el.addEventListener("blur", function () { if (!el.value.trim()) { addonOpen = false; addonShow(); } });
+    })();
     // 한 칸을 여러 사람이 이어 쓰면 칸 아래에 "쓴 사람: …" 을 각자 색으로 보여준다
     // 칸 안 글자색 — 줄마다 쓴 사람 색. 여러 사람이 쓴 긴 칸은 같은 글자를 색 입혀 위에 겹쳐 보여준다(입력은 그대로 칸에서).
     function paintLines(el, lineBy, first, own) {
@@ -3316,6 +3374,7 @@
         paintLines(el, bl[k], by[k], ow[k]);
         tagAuthors(el, bl[k], ow[k], by[k]);
       });
+      undoPush(keyFor(), old);
       var out = { who: whoEl.value, f: f, by: by, bl: bl };
       if (Object.keys(ow).length) out.ow = ow;
       if (prev.__savedAt) out.savedAt = prev.__savedAt;
@@ -3453,7 +3512,7 @@
         paintLines(el, bl0[k], by0[k], ow0[k]); tagAuthors(el, bl0[k], ow0[k], by0[k]);
       });
       if (ch) document.dispatchEvent(new Event("cs:log-loaded"));
-      legacy163();
+      legacy163(); addonShow();
       report();
     });
     saveBtn.addEventListener("click", function () {
@@ -3567,7 +3626,7 @@
       try { var rpO = JSON.parse(localStorage.getItem(keyFor()) || "{}") || {}; rpBl = rpO.bl || {}; rpOw = rpO.ow || {}; } catch (e) {}
       var S1 = String.fromCharCode(1), S2 = String.fromCharCode(2);
       // 맨 위에 먼저 볼 것: 사장님 지시사항 → 인계사항 → 직원들에게 알릴 것 → 폐기 · 파손 → 매출 → 매장 흐름
-      var TOPK = ["lf185", "lf180", "lf181", "lf162", "lf163", "lf166", "lf183", "lf184", "lf154"], topH = {}, topT = {};
+      var TOPK = ["lf186", "lf185", "lf180", "lf181", "lf162", "lf163", "lf166", "lf183", "lf184", "lf154"], topH = {}, topT = {};
       document.querySelectorAll(".msec").forEach(function (sec) {
         var items = "", lines = [];
         sec.querySelectorAll(".mrow2").forEach(function (row) {
@@ -3575,7 +3634,7 @@
           var v = (el.value || "").trim();
           if (!v) return;
           var name = (function (sp) { var c = sp.cloneNode(true); c.querySelectorAll("small").forEach(function (x) { x.remove(); }); return c.textContent.trim(); })(row.querySelector(".mlab span"));
-          var cls = row.classList.contains("boss") ? " boss" : row.classList.contains("red") ? " red" : row.classList.contains("blue") ? " blue" : "";
+          var cls = row.classList.contains("boss") ? " boss" : row.classList.contains("addon") ? " addon" : row.classList.contains("red") ? " red" : row.classList.contains("blue") ? " blue" : "";
           // 사장님 덧붙임 자리에 표시를 끼워 두었다가 아래에서 노란 형광 · 큰 글씨로 바꾼다
           var owk = rpOw[el.dataset.k];
           if (owk && owk.length && window.__CS_OWN) v = v.split(NL).map(function (ln) { return window.__CS_OWN.html(ln, window.__CS_OWN.mask(ln, owk), function (x) { return x; }).split('<span class="own">').join(S1).split("</span>").join(S2); }).join(NL);
