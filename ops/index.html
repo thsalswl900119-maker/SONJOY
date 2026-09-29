@@ -1342,14 +1342,17 @@ tr.moved td{background:var(--openbg);transition:background .6s}
 /* 서식 (월말회의 · 평가) */
 .fform{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:10px;align-items:start}
 .fsec{border:1px solid var(--rule);background:var(--surface)}
-#mtForm{grid-template-columns:1fr 1fr}
+/* 월말회의 — 한 칸씩: 묶음도 칸도 한 줄에 하나 · 이름은 왼쪽, 쓰는 칸은 오른쪽 넓게 */
+#mtForm{grid-template-columns:1fr;gap:14px}
 #mtForm>.fsec{grid-column:1/-1}
-#mtForm>.fsec.half{grid-column:auto}
-#mtForm>.fsec:not(.half)>.frows{display:grid;grid-template-columns:1fr 1fr}
-#mtForm>.fsec:not(.half)>.frows>.frow{border-right:1px solid var(--rule)}
-#mtForm>.fsec:not(.half)>.frows>.frow:nth-child(2n){border-right:0}
-#mtForm>.fsec:not(.half)>.frows>.frow:last-child{border-bottom:1px solid var(--rule)}
-@media (max-width:760px){#mtForm{grid-template-columns:1fr}#mtForm>.fsec:not(.half)>.frows{grid-template-columns:1fr}#mtForm>.fsec:not(.half)>.frows>.frow{border-right:0}}
+#mtForm>.fsec>.fsh{font-family:var(--sans);font-size:15.5px;font-weight:900;color:#1E1A17;
+  background:var(--openbg);border-left:5px solid var(--open);padding:10px 14px}
+#mtForm>.fsec>.frows{display:flex;flex-direction:column}
+#mtForm .frow{grid-template-columns:200px minmax(0,1fr);gap:4px 16px;padding:11px 14px}
+#mtForm .frow:nth-child(2n){background:rgba(180,102,27,.035)}
+#mtForm .flab{padding-top:8px}
+#mtForm .flab em{font-size:12px}
+@media (max-width:900px){#mtForm .frow{grid-template-columns:1fr;gap:4px;padding:10px 12px}#mtForm .flab{padding-top:0}}
 .fsh{background:var(--raise);padding:9px 14px;font-family:var(--serif);font-weight:700;
   font-size:14px;border-bottom:1px solid var(--rule)}
 .frows{display:flex;flex-direction:column}
@@ -2441,7 +2444,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-126</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-127</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -3025,10 +3028,10 @@ input,select,textarea{border-radius:var(--r3)!important}
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/sync.js?v=v0924-126"></script>
-<script src="js/holidays.js?v=v0924-126"></script>
-<script src="js/sched.js?v=v0924-126"></script>
-<script src="js/app.js?v=v0924-126"></script>
+<script src="js/sync.js?v=v0924-127"></script>
+<script src="js/holidays.js?v=v0924-127"></script>
+<script src="js/sched.js?v=v0924-127"></script>
+<script src="js/app.js?v=v0924-127"></script>
 
 <style>
 /* 재고 · 발주 */
@@ -3230,7 +3233,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 .sksearch{font:inherit;font-size:13px;padding:6px 9px;width:100%;max-width:300px;background:var(--bg);color:var(--ink);
   border:1px solid var(--rule2);border-radius:2px;margin-bottom:10px}
 </style>
-<script src="js/stock.js?v=v0924-126"></script>
+<script src="js/stock.js?v=v0924-127"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -3259,7 +3262,7 @@ input,select,textarea{border-radius:var(--r3)!important}
   })();
 </script>
 
-<script src="js/presence.js?v=v0924-126"></script>
-<script src="js/weekrep.js?v=v0924-126"></script>
-<script src="js/monthlog.js?v=v0924-126"></script>
+<script src="js/presence.js?v=v0924-127"></script>
+<script src="js/weekrep.js?v=v0924-127"></script>
+<script src="js/monthlog.js?v=v0924-127"></script>
 </body></html>
