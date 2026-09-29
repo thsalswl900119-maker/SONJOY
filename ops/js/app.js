@@ -50,6 +50,15 @@
   });
   // 지난 날짜 · 지난 주 체크 기록은 지우지 않고 그대로 둔다 (누가 뭘 했는지 남기려고)
 
+  // 체크 하나만 저장 — 저장된 최신 목록을 다시 읽어 그 칸만 바꾼다 (다른 기기가 한 체크를 옛 화면으로 지우지 않게).
+  // 날짜 키도 누를 때마다 새로 계산 (자정 넘겨 켜 둔 화면이 어제 칸에 쓰지 않게)
+  function saveOne(k) {
+    var pre = String(k).charAt(0), key = pre === "t" || pre === "p" ? "cafesui.todo." + dayKey() : pre === "w" ? "cafesui.week." + weekKey() : pre === "z" ? "cafesui.clean." + monKey() : KEYS.m;
+    var cur = read(key);
+    if (state.done[k]) cur[k] = state.done[k]; else delete cur[k];
+    write(key, cur);
+    Object.keys(cur).forEach(function (x) { state.done[x] = cur[x]; });
+  }
   function save() {
     var by = {};
     Object.keys(state.done).forEach(function (k) {
@@ -250,7 +259,7 @@
       document.querySelectorAll('.chip[data-k="' + k + '"]').forEach(function (s) {
         s.setAttribute("aria-pressed", String(list.indexOf(s.dataset.v) >= 0));
       });
-      save();
+      var ow = read(OWNER_KEY); if (state.owner[k]) ow[k] = state.owner[k]; else delete ow[k]; write(OWNER_KEY, ow);
     });
   });
 
@@ -301,11 +310,20 @@
       if (state.done[k]) delete state.done[k];
       else state.done[k] = me || 1;
       paint(b);
-      save();
+      saveOne(k);
     });
   }
   boxes.forEach(bindBox);
   window.__CS_BIND_BOX = bindBox;
+  // 다른 기기에서 체크하면 이 화면에도 바로 (새로고침 없이)
+  window.addEventListener("cs:remote", function (e) {
+    var ks = (e.detail && e.detail.keys) || [];
+    var keys = ["cafesui.todo." + dayKey(), "cafesui.week." + weekKey(), "cafesui.clean." + monKey(), KEYS.m];
+    if (!ks.some(function (k) { return keys.indexOf(k) >= 0; })) return;
+    var fresh = {}; keys.forEach(function (key) { var o = read(key); Object.keys(o).forEach(function (x) { fresh[x] = o[x]; }); });
+    state.done = fresh;
+    document.querySelectorAll(".box[data-k]").forEach(function (b) { try { paint(b); } catch (er) {} });
+  });
 
   // 오늘 날짜 표시 + 오늘 할 일 결과 보고서 (마감 맨 아래) — 화면에 있는 체크 상태만 읽어서 그리므로 서버 통신은 없다
   (function () {

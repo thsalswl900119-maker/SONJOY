@@ -228,9 +228,30 @@
       FIELDS.forEach(function (k) { o[k] = $("#sk_" + k).value; });
       return o;
     }
+    // base: 이 화면이 날짜를 열 때(또는 마지막 저장 때) 본 모습. 저장할 때 이 화면에서 바꾼 칸만 쓰고,
+    // 안 건드린 칸은 서버(다른 기기)의 최신 값을 그대로 둔다 — 아침에 열어 둔 옛 화면이 매니저 입력을 덮는 사고 방지
+    var base = null;
+    function cp(x) { return JSON.parse(JSON.stringify(x == null ? null : x)); }
+    function merged() {
+      var now = read(), srv = load(cur);
+      if (!srv || !base) return now;
+      var out = cp(srv); out.date = now.date; out.month = now.month; out.by = now.by;
+      var bs = base.stock || {}, ns = now.stock || {}, ss = srv.stock || {}; out.stock = cp(ss) || {};
+      Object.keys(Object.assign({}, bs, ns)).forEach(function (k) { if (String(ns[k] == null ? "" : ns[k]) !== String(bs[k] == null ? "" : bs[k])) { if (ns[k] == null || ns[k] === "") delete out.stock[k]; else out.stock[k] = ns[k]; } });
+      FIELDS.concat(["orders"]).forEach(function (k) { if (String(now[k] || "") !== String(base[k] || "")) out[k] = now[k]; });
+      var bc = base.orderChecks || {}, nc = now.orderChecks || {}; out.orderChecks = cp(srv.orderChecks || {}) || {};
+      Object.keys(Object.assign({}, bc, nc)).forEach(function (l) { if (JSON.stringify(nc[l] || null) !== JSON.stringify(bc[l] || null)) { if (nc[l]) out.orderChecks[l] = nc[l]; else delete out.orderChecks[l]; } });
+      return out;
+    }
     function saveNow() {
+      saveT = null;
       if (!cur) return;
-      store(cur, read());
+      var m = merged(), mine = read();
+      store(cur, m); base = cp(m);
+      // 다른 기기가 바꾼 칸이 섞였으면 (쓰는 중이 아닐 때) 화면도 새로
+      if (JSON.stringify(m.stock) !== JSON.stringify(mine.stock) || JSON.stringify(m.orderChecks) !== JSON.stringify(mine.orderChecks) || FIELDS.concat(["orders"]).some(function (k) { return String(m[k] || "") !== String(mine[k] || ""); })) {
+        var ae = document.activeElement; if (!(ae && ae.closest && ae.closest("#tp12") && /INPUT|TEXTAREA/.test(ae.tagName))) setTimeout(function () { open(cur); }, 0);
+      }
       statusEl.textContent = "자동 저장됨 " + nowHM();
       renderList(); renderWeek();
     }
@@ -271,7 +292,14 @@
       byEl.textContent = o.by || me();
       statusEl.textContent = load(d) ? "" : "새 날 · 어제 숫자를 깔아뒀어요";
       renderGroups(); renderChecks(); renderList(); renderWeek(); renderReport();
+      base = cp(read());
     }
+    // 다른 기기에서 지금 보는 날짜가 바뀌면: 쓰는 중이 아니면 새로 연다 (쓰는 중이면 저장할 때 합쳐진다)
+    window.addEventListener("cs:remote", function (e) {
+      var ks = (e.detail && e.detail.keys) || []; if (!cur || ks.indexOf(PRE + cur) < 0) return;
+      var ae = document.activeElement; if (saveT || (ae && ae.closest && ae.closest("#tp12") && /INPUT|TEXTAREA/.test(ae.tagName))) return;
+      open(cur);
+    });
     // 월별 기록 — 달마다 접었다 펴는 묶음. 보고 있는 달은 펼쳐 둔다
     function renderList() {
       var box = $("#skList"), all = allDates().reverse(), curM = (cur || today()).slice(0, 7);
