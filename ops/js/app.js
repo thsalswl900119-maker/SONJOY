@@ -2188,7 +2188,7 @@
     var btn = document.getElementById("prinMore");
     if (!grid || !btn) return;
     grid.querySelectorAll(".pcard").forEach(function (c) {
-      if (c.querySelectorAll("li").length > 2) c.classList.add("more");
+      if (c.querySelectorAll("li:nth-child(n+3):not(.pk)").length) c.classList.add("more");
     });
     btn.addEventListener("click", function () {
       var brief = grid.classList.toggle("brief");
@@ -2544,7 +2544,14 @@
             });
           var tot = document.querySelector(
             '.cin[data-t="' + t + '"][data-col="' + col + '"][data-total]');
-          if (tot) tot.value = any ? sum.toLocaleString("ko-KR") : "";
+          if (!tot) return;
+          tot.value = any ? sum.toLocaleString("ko-KR") : "";
+          tot.title = "";
+          // 채널별(포스 · 배민 …)을 아직 안 적었으면 메모의 「일지 합계」로 총합계를 채운다
+          var memo = document.querySelector('.cin[data-k="cm5"]');
+          var lg = !any && col === "now" && memo && /일지 합계 ([\d,]+)원/.exec(memo.value);
+          if (lg) { tot.value = lg[1]; tot.title = "채널별 금액이 없어 일지 매출 합계로 넣었습니다"; }
+          tot.classList.toggle("fromlog", !!lg);
         });
       });
       // 일 매출 = 총합계 ÷ 총 영업일 (영업일은 유입 표에 있다)
@@ -2774,7 +2781,17 @@
       else if (rankEl) rankEl.value = data._rank || "";
       count();
     }
-    function load() { touched = {}; applyData(readKey(key())); if (gradeBox) paintRecover(); }
+    function load() { touched = {}; applyData(readKey(key())); if (gradeBox) paintRecover(); growAll(); }
+    // 월말회의 글 칸은 글 길이만큼 늘어난다 (잘려서 안 보이는 글이 없게)
+    var GROW = formId === "mtForm" && !(window.CSS && CSS.supports && CSS.supports("field-sizing", "content"));
+    function grow(el) {
+      if (!GROW || el.tagName !== "TEXTAREA") return;
+      el.style.height = "auto";
+      var h = el.scrollHeight;
+      el.style.height = h > 10 ? Math.min(h + 2, 480) + "px" : "";
+    }
+    function growAll() { if (GROW) form.querySelectorAll("textarea.fin").forEach(grow); }
+    if (GROW) form.addEventListener("input", function (e) { grow(e.target); });
     // 이 컴퓨터에 이전 저장본을 남긴다 (공유 안 함) — 다른 컴퓨터가 덮어써도 되살릴 수 있게
     var HIST_KEY = "cafesui.ui.hist." + keyBase;
     function histAll() { try { return JSON.parse(localStorage.getItem(HIST_KEY) || "{}") || {}; } catch (e) { return {}; } }
@@ -2915,6 +2932,15 @@
       return v.split(NL).map(function (x) { return x.trim(); })
               .filter(Boolean).join(" / ");
     }
+    // 회의록 미리보기: 줄마다 나눠 보이게 (예전에 한 줄 칸에 붙어 버린 글도 날짜 · 괄호 뒤에서 끊어 준다 — 보기만, 저장 글은 그대로)
+    function splitLines(v) {
+      if (formId !== "mtForm") return [v];
+      return String(v)
+        .replace(/\)(?=[가-힣])(?![이가은는을를의에와과도로만랑])/g, ")\n")
+        .replace(/([가-힣)])(?=\d{1,2}\/\d{1,2}[\s(])/g, "$1\n")
+        .replace(/ · (?=요일 평균|\d위 )/g, "\n")
+        .split("\n").map(function (x) { return x.trim(); }).filter(Boolean);
+    }
     function report() {
       var when = mEl.value || thisMonth();
       var head = when.replace("-", "년 ") + "월";
@@ -2942,14 +2968,16 @@
             var diff = tr.querySelector(".cdiff").textContent.trim();
             var val = (av || "—") + " → " + (bv || "—") +
                       (diff && diff !== "—" ? " (" + diff + ")" : "");
-            rows += "<tr><th>" + esc(name) + "</th><td>" + esc(val) + "</td></tr>";
+            var dcls = /\bup\b/.test(tr.querySelector(".cdiff").className) ? " up" : /\bdown\b/.test(tr.querySelector(".cdiff").className) ? " down" : "";
+            rows += "<tr><th>" + esc(name) + "</th><td>" + esc(av || "—") + "</td><td>" + esc(bv || "—") +
+                    '</td><td class="rpdiff' + dcls + '">' + esc(diff && diff !== "—" ? diff : "") + "</td></tr>";
             lines.push(name + " " + val + (mv ? " — " + mv : ""));
           });
           if (!rows) return;
           any = true;
           var ttl = wrap.querySelector(".cmph").textContent;
           html += '<div class="rpsec"><h4>' + esc(ttl) + "</h4>" +
-                  '<table class="rpnums">' + rows + "</table></div>";
+                  '<table class="rpnums rpcmp"><tr class="rpch"><th></th><td>작년</td><td>이번 달</td><td>차이</td></tr>' + rows + "</table></div>";
           text.push("");
           text.push("[" + ttl + "]");
           text.push(lines.join(NL));
@@ -3008,8 +3036,10 @@
           var v = (el.value || "").trim();
           if (!v) return;
           var name = row.querySelector(".flab span").textContent;
+          var ls = splitLines(v);
           items += '<div class="rpitem"><b>' + esc(name) + "</b><span>" +
-                   esc(v) + "</span></div>";
+                   (ls.length > 1 ? ls.map(function (l) { return '<i class="rpl">' + esc(l) + "</i>"; }).join("") : esc(v)) +
+                   "</span></div>";
           lines.push("· " + name + ": " + oneLine(v));
         });
         if (!items) return;

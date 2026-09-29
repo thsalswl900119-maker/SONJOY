@@ -93,10 +93,32 @@
     // 채널별 매출 표: 이번 달 영업일수 · 메모에 일지 매출 합계 (비어 있을 때만)
     var tot = sales.reduce(function (a, x) { return a + x[2]; }, 0);
     var opDays = keys.filter(function (k) { var f = (J(k) || {}).f || {}; return Object.keys(f).some(function (x) { return String(f[x] || "").trim(); }); }).length;
-    [["cn25", opDays ? String(opDays) : ""], ["cm5", sales.length ? "일지 합계 " + won(tot) + " (매출 적힌 " + sales.length + "일 · 일지 " + opDays + "일)" : ""]].forEach(function (x) {
+    // 품목 숫자 = 일지 한 달 합계 (에그타르트 · 조각 · 홀은 생산, 별조각 · 빙수는 판매)
+    var IT = [["cn10", "lf101", "에그타르트"], ["cn11", "lf103", "조각케이크"], ["cn12", "lf102", "홀케이크"], ["cn13", "lf104", "별조각"], ["cn14", "lf105", "빙수"]];
+    var isum = {}, iany = {};
+    keys.forEach(function (k) { var f = (J(k) || {}).f || {}; IT.forEach(function (x) { var n = num(f[x[1]]); if (n !== null) { isum[x[0]] = (isum[x[0]] || 0) + n; iany[x[0]] = 1; } }); });
+    // 직원 수 = 그 달 근무표에 근무가 있는 직원(사장님 빼고) · 근무표가 없으면 일지를 쓴 직원
+    var AWAY = { "휴무": 1, "휴가": 1, "반짝휴무": 1, "출장": 1, "공부": 1, "출강": 1, "서울출장": 1, "사무실 근무": 1, "해외출장": 1, "워크샵": 1 };
+    var staff = {}, sc = J("cafesui.sched." + ym) || {};
+    Object.keys(sc).forEach(function (md) { Object.keys(sc[md] || {}).forEach(function (w) { var r = sc[md][w]; if (w !== "공지" && w !== "사장님" && r && !AWAY[r]) staff[w] = 1; }); });
+    if (!Object.keys(staff).length) keys.forEach(function (k) {
+      var o = J(k) || {};
+      [o.by, o.who].concat(Object.keys(o.bl || {}).map(function (fk) { return [].concat(o.bl[fk] || []); }).reduce(function (a, x) { return a.concat(x); }, []))
+        .forEach(function (w) { w = String(w || "").replace(/님$/, "").trim(); if (/^(정항아|박혜빈|이해선)$/.test(w)) staff[w] = 1; });
+    });
+    var nStaff = Object.keys(staff).length;
+    [["cn25", opDays ? String(opDays) : "", "영업일수"],
+     ["cm5", sales.length ? "일지 합계 " + won(tot) + " (매출 적힌 " + sales.length + "일 · 일지 " + opDays + "일)" : "", "총합계(일지 합계)"],
+     ["cn8", nStaff ? String(nStaff) : "", "직원 수"]].concat(IT.map(function (x) {
+      return [x[0], iany[x[0]] ? isum[x[0]].toLocaleString("ko-KR") : "", x[2]];
+    })).forEach(function (x) {
       var el = document.querySelector('.cin[data-k="' + x[0] + '"]'); if (!el || !x[1]) return;
-      if (el.value.trim()) { if (x[0] === "cm5" && el.value !== x[1]) skipped.push({ el: el, v: x[1], n: "총합계 메모" }); return; }
-      el.value = x[1]; el.dispatchEvent(new Event("input", { bubbles: true })); filled.push(x[0] === "cn25" ? "영업일수" : "총합계 메모");
+      if (el.value.trim()) { if (el.value.replace(/,/g, "") !== x[1].replace(/,/g, "")) skipped.push({ el: el, v: x[1], n: "표 · " + x[2] }); return; }
+      el.value = x[1]; el.classList.add("filled"); el.dispatchEvent(new Event("input", { bubbles: true })); filled.push(x[2]);
+    });
+    IT.forEach(function (x) {   // 무엇을 센 숫자인지 메모에 (비어 있을 때만)
+      var m = document.querySelector('.cin[data-k="cm' + x[0].slice(2) + '"]');
+      if (m && iany[x[0]] && !m.value.trim()) { m.value = /cn1[34]/.test(x[0]) ? "일지 판매 합계" : "일지 생산 합계"; m.dispatchEvent(new Event("input", { bubbles: true })); }
     });
     lastSkipped = skipped;
     return filled;
