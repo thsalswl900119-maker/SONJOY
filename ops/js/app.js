@@ -2941,6 +2941,29 @@
         .replace(/ · (?=요일 평균|\d위 )/g, "\n")
         .split("\n").map(function (x) { return x.trim(); }).filter(Boolean);
     }
+    // 중요 표시(월말회의): 줄 앞 ★ → ⭐ 노란 바탕 · 줄 앞 ! 또는 **글** → 빨간 굵은 글씨 · __글__ → 밑줄 (여러 줄에 걸쳐도 이어짐)
+    function markHtml(ls) {
+      if (formId !== "mtForm") return ls.map(esc);
+      var all = ls.join("\n"), uLeft = (all.match(/__/g) || []).length, bLeft = (all.match(/\*\*/g) || []).length;
+      uLeft -= uLeft % 2; bLeft -= bLeft % 2;
+      var uOpen = false, bOpen = false;
+      return ls.map(function (ln) {
+        var star = /^\s*[★⭐]/.test(ln), imp = !star && /^\s*[!！]/.test(ln);
+        var t = esc(ln.replace(/^\s*[★⭐!！]\s*/, star || imp ? "" : "$&"));
+        var pre = (bOpen ? '<b class="imp">' : "") + (uOpen ? "<u>" : "");
+        t = t.replace(/\*\*|__/g, function (m) {
+          if (m === "**") { if (!bLeft) return m; bLeft--; bOpen = !bOpen; return bOpen ? '<b class="imp">' : "</b>"; }
+          if (!uLeft) return m; uLeft--; uOpen = !uOpen; return uOpen ? "<u>" : "</u>";
+        });
+        t = pre + t + (uOpen ? "</u>" : "") + (bOpen ? "</b>" : "");
+        return star ? '<b class="imp vimp">⭐ ' + t + "</b>" : imp ? '<b class="imp">❗ ' + t + "</b>" : t;
+      });
+    }
+    function markPlain(v) {
+      if (formId !== "mtForm") return v;
+      return String(v).replace(/\*\*([\s\S]+?)\*\*/g, "【$1】").replace(/__([\s\S]+?)__/g, "$1").split("\n")
+        .map(function (ln) { return ln.replace(/^\s*[★⭐]\s*/, "⭐ ").replace(/^\s*[!！]\s*/, "❗ "); }).join("\n");
+    }
     function report() {
       var when = mEl.value || thisMonth();
       var head = when.replace("-", "년 ") + "월";
@@ -3036,11 +3059,11 @@
           var v = (el.value || "").trim();
           if (!v) return;
           var name = row.querySelector(".flab span").textContent;
-          var ls = splitLines(v);
+          var ls = splitLines(v), hs = markHtml(ls);
           items += '<div class="rpitem"><b>' + esc(name) + "</b><span>" +
-                   (ls.length > 1 ? ls.map(function (l) { return '<i class="rpl">' + esc(l) + "</i>"; }).join("") : esc(v)) +
+                   (ls.length > 1 ? hs.map(function (l) { return '<i class="rpl">' + l + "</i>"; }).join("") : hs[0]) +
                    "</span></div>";
-          lines.push("· " + name + ": " + oneLine(v));
+          lines.push("· " + name + ": " + oneLine(markPlain(v)));
         });
         if (!items) return;
         any = true;

@@ -1377,7 +1377,12 @@ tr.moved td{background:var(--openbg);transition:background .6s}
 #tp5 .rpsec{margin-bottom:16px}
 #tp5 .rpsec h4{font-size:14px;letter-spacing:0;color:var(--ink);background:var(--openbg);border-left:4px solid var(--open);padding:5px 9px;margin:0 0 6px}
 #tp5 .rpitem{display:block;padding:7px 2px 8px;margin:0}
-#tp5 .rpitem b{font-size:12.5px;color:var(--open);margin-bottom:2px}
+#tp5 .rpitem>b{font-size:12.5px;color:var(--open);margin-bottom:2px}
+#tp5 .rpitem span b.imp{display:inline;color:var(--alert);font-weight:900;font-size:inherit;margin:0}
+#tp5 .rpitem span b.imp.vimp{display:inline-block;background:#FFF3B0;padding:1px 6px;border-radius:4px;font-size:14.5px;margin:2px 0}
+#tp5 .rpitem span u{text-decoration-thickness:2px;text-underline-offset:3px}
+#mtForm .bossbar.mtmk{border-bottom:1px dashed var(--rule2)}
+#mtForm .frow.mktarget .fin{box-shadow:0 0 0 2px #E0B40066}
 #tp5 .rpitem span{font-weight:500;font-size:14px;line-height:1.65}
 #tp5 .rpl{display:block;font-style:normal;position:relative;padding-left:13px;margin:2px 0}
 #tp5 .rpl::before{content:"";position:absolute;left:2px;top:.72em;width:5px;height:5px;border-radius:50%;background:var(--open)}
@@ -2444,7 +2449,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-127</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-128</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -3028,10 +3033,10 @@ input,select,textarea{border-radius:var(--r3)!important}
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/sync.js?v=v0924-127"></script>
-<script src="js/holidays.js?v=v0924-127"></script>
-<script src="js/sched.js?v=v0924-127"></script>
-<script src="js/app.js?v=v0924-127"></script>
+<script src="js/sync.js?v=v0924-128"></script>
+<script src="js/holidays.js?v=v0924-128"></script>
+<script src="js/sched.js?v=v0924-128"></script>
+<script src="js/app.js?v=v0924-128"></script>
 
 <style>
 /* 재고 · 발주 */
@@ -3233,7 +3238,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 .sksearch{font:inherit;font-size:13px;padding:6px 9px;width:100%;max-width:300px;background:var(--bg);color:var(--ink);
   border:1px solid var(--rule2);border-radius:2px;margin-bottom:10px}
 </style>
-<script src="js/stock.js?v=v0924-127"></script>
+<script src="js/stock.js?v=v0924-128"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -3262,7 +3267,7 @@ input,select,textarea{border-radius:var(--r3)!important}
   })();
 </script>
 
-<script src="js/presence.js?v=v0924-127"></script>
-<script src="js/weekrep.js?v=v0924-127"></script>
-<script src="js/monthlog.js?v=v0924-127"></script>
+<script src="js/presence.js?v=v0924-128"></script>
+<script src="js/weekrep.js?v=v0924-128"></script>
+<script src="js/monthlog.js?v=v0924-128"></script>
 </body></html>

@@ -173,3 +173,52 @@
   bind("mtCollect", "mtCollectMsg", "mtCollectBox", function () { var e = document.getElementById("mtMonth"); return e && e.value; }, true);
   bind("lgCollect", "lgCollectMsg", "lgCollectBox", function () { var e = document.getElementById("lgDate"); return e && e.value ? e.value.slice(0, 7) : ""; });
 })();
+
+// 월말회의 중요 표시 — 일지와 같은 버튼: ⭐ 매우 중요(줄 앞 ★) · 🔴 중요(**글** 또는 줄 앞 !) · 밑줄(__글__)
+// 묶음마다 버튼 한 줄, 마지막으로 누른 칸에 적용된다
+(function () {
+  var form = document.getElementById("mtForm"); if (!form) return;
+  form.querySelectorAll(".fsec").forEach(function (sec) {
+    var tas = Array.prototype.slice.call(sec.querySelectorAll("textarea.fin")); if (!tas.length) return;
+    var head = sec.querySelector(".fsh"); if (!head) return;
+    var bar = document.createElement("div"); bar.className = "bossbar secbar mtmk";
+    bar.innerHTML = '<button type="button" class="wsmini" data-act="star">⭐ 매우 중요</button>' +
+      '<button type="button" class="wsmini" data-act="imp">🔴 중요</button>' +
+      '<button type="button" class="wsmini" data-act="und"><u>밑줄</u></button>' +
+      '<span class="mkto">적용 칸: <b></b></span>';
+    var toEl = bar.querySelector(".mkto b"), ta = tas[0];
+    function name(t) { var l = t.closest(".frow").querySelector(".flab span"); return l ? l.textContent.trim() : ""; }
+    toEl.textContent = name(ta);
+    tas.forEach(function (t) {
+      t.addEventListener("focus", function () {
+        ta = t; toEl.textContent = name(t);
+        tas.forEach(function (x) { x.closest(".frow").classList.toggle("mktarget", x === t); });
+      });
+    });
+    head.insertAdjacentElement("afterend", bar);
+    bar.addEventListener("mousedown", function (e) { if (e.target.closest("[data-act]")) e.preventDefault(); });
+    bar.addEventListener("click", function (e) {
+      var btn = e.target.closest("[data-act]"); if (!btn) return;
+      var act = btn.dataset.act, a = ta.selectionStart, b = ta.selectionEnd, v = ta.value;
+      if (act === "star") {
+        var ls = v.lastIndexOf("\n", a - 1) + 1, le = v.indexOf("\n", ls); if (le < 0) le = v.length;
+        var line = v.slice(ls, le);
+        var nl = /^\s*[★⭐]/.test(line) ? line.replace(/^\s*[★⭐]\s*/, "") : "★ " + line.replace(/^\s*[!！]\s*/, "");
+        ta.value = v.slice(0, ls) + nl + v.slice(le); ta.setSelectionRange(ls + nl.length, ls + nl.length);
+      } else if (act === "und") {
+        if (b <= a) { alert("밑줄 칠 글을 먼저 드래그해서 골라 주세요"); ta.focus(); return; }
+        var sel = v.slice(a, b), al = /^__[\s\S]*__$/.test(sel), rep = al ? sel.slice(2, -2) : "__" + sel + "__";
+        ta.value = v.slice(0, a) + rep + v.slice(b); ta.setSelectionRange(a, a + rep.length);
+      } else if (b > a) {
+        var sel2 = v.slice(a, b), al2 = /^\*\*[\s\S]*\*\*$/.test(sel2), rep2 = al2 ? sel2.slice(2, -2) : "**" + sel2 + "**";
+        ta.value = v.slice(0, a) + rep2 + v.slice(b); ta.setSelectionRange(a, a + rep2.length);
+      } else {
+        var ls2 = v.lastIndexOf("\n", a - 1) + 1, le2 = v.indexOf("\n", ls2); if (le2 < 0) le2 = v.length;
+        var line2 = v.slice(ls2, le2);
+        var nl2 = /^\s*[!！]/.test(line2) ? line2.replace(/^\s*[!！]\s*/, "") : "! " + line2;
+        ta.value = v.slice(0, ls2) + nl2 + v.slice(le2); ta.setSelectionRange(ls2 + nl2.length, ls2 + nl2.length);
+      }
+      ta.focus(); ta.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+  });
+})();
