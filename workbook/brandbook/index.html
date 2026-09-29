@@ -278,6 +278,7 @@ button.fillDay{color:var(--corald);background:var(--panel)}
 #panel4 input::placeholder,#panel4 textarea::placeholder{color:#B9AC9F}
 .foot .in .btn{width:auto;flex:0 0 auto}
 #btnBook,#btnSend{flex:1 1 auto !important}
+a.btn{text-decoration:none}
 .days{grid-template-columns:repeat(5,1fr)}
 .day.d5.on{background:var(--grey);border-color:var(--grey)}
 @media (max-width:480px){.days{gap:5px}.day{font-size:12.5px;padding:9px 2px}.day span{display:none}}
@@ -568,7 +569,7 @@ input,textarea,select{color-scheme:light}
       <div class="field"><label>타깃 고객 최종 정리</label><div class="help">2교시에 적은 타깃을 오늘 배운 상권과 이유를 반영해 다시 적습니다. 그대로면 복사해도 됩니다.<span class="ex">예) 아침 · 주말 식탁을 빵으로 차리는 30~40대 가족과 직장인</span></div><div class="hint">2교시에 적은 타깃: <b class="hTarget">아직 없음</b></div><textarea data-k="targetFinal"></textarea></div>
       <div class="ai" data-ai="concept"><div class="ah"><b>이어서 · 5교시 콘셉트 한 줄 다듬기</b><button class="copy" type="button">복사</button></div><pre></pre><div class="how">같은 대화창에 이어서 붙여넣으세요. 오늘 마지막이라 브랜드 카드를 완성해 달라고 되어 있습니다.</div></div>
       <div class="result">오늘 적은 답은 내일 <b>2일차 화면 맨 위</b>에 그대로 보입니다. 메뉴를 정할 때 다시 꺼내 씁니다.</div>
-      <div class="daysend"><button type="button" class="btn dsend" data-d="1">1일차 저장하고 강사에게 보내기</button><p>누르면 오늘 답이 저장되고 <b>강사님 화면으로 바로 전달</b>됩니다. 인터넷이 안 될 때만 "복사하기"로 카톡에 붙여 넣어 보내면 됩니다.</p></div>
+      <div class="daysend"><a class="btn dsend" data-d="1" href="https://thsalswl900119-maker.github.io/cafesui-camp/send.html" target="_blank" rel="noopener">1일차 저장하고 강사에게 보내기</a><p>누르면 오늘 답이 저장되고 <b>새 창</b>에서 강사님 화면으로 전달됩니다. 새 창에 「보냈습니다 ✓」가 뜨면 창을 닫고 돌아오세요.</p></div>
     </div>
   </div>
 
@@ -759,7 +760,7 @@ input,textarea,select{color-scheme:light}
       <div class="field big"><label>1일차 콘셉트 한 줄 다듬기</label><div class="help">메뉴를 정하고 나니 콘셉트 문장이 바뀌었으면 고쳐 씁니다. 그대로면 비워 두세요.<span class="ex">예) 제철 재료와 직접 만든 잠봉으로, 매일의 한 끼가 되는 식사빵 가게</span></div><div class="hint">어제 문장: <b class="hConcept">아직 없음</b></div><textarea data-k="concept_v2" placeholder="메뉴를 정하고 나니 바뀐 게 있으면 고쳐 씁니다. 그대로면 비워 두세요."></textarea></div>
       <div class="ai" data-ai="day2final"><div class="ah"><b>이어서 · 5교시 오늘 정리 점검</b><button class="copy" type="button">복사</button></div><pre></pre><div class="how">같은 대화창에 이어서 붙여넣으세요.</div></div>
       <div class="result">오늘 답은 내일 <b>3일차 화면 맨 위</b>에 보이고, 브랜드 북 3·4장에 들어갑니다.</div>
-      <div class="daysend"><button type="button" class="btn dsend" data-d="2">2일차 저장하고 강사에게 보내기</button><p>누르면 오늘 답이 저장되고 <b>강사님 화면으로 바로 전달</b>됩니다. 인터넷이 안 될 때만 "복사하기"로 카톡에 붙여 넣어 보내면 됩니다.</p></div>
+      <div class="daysend"><a class="btn dsend" data-d="2" href="https://thsalswl900119-maker.github.io/cafesui-camp/send.html" target="_blank" rel="noopener">2일차 저장하고 강사에게 보내기</a><p>누르면 오늘 답이 저장되고 <b>새 창</b>에서 강사님 화면으로 전달됩니다. 새 창에 「보냈습니다 ✓」가 뜨면 창을 닫고 돌아오세요.</p></div>
     </div>
   </div>
 
@@ -879,7 +880,7 @@ input,textarea,select{color-scheme:light}
         <input data-k="one1" placeholder="첫째"><input data-k="one2" placeholder="둘째" style="margin-top:8px"><input data-k="one3" placeholder="셋째" style="margin-top:8px"></div>
       <div class="ai" data-ai="final"><div class="ah"><b>이어서 · 5교시 발표 3분 대본</b><button class="copy" type="button">복사</button></div><pre></pre><div class="how">같은 대화창에 이어서 붙여넣으세요. 처음 브랜드 카드와 최종 카드를 나란히 보여 달라고 되어 있습니다.</div></div>
       <div class="result">아래 <b>브랜드 북 보기</b>를 누르면 3일 동안 적은 답이 한 권으로 모입니다. 발표는 이 화면을 띄우고 합니다.</div>
-      <div class="daysend"><button type="button" class="btn dsend" data-d="3">3일차 저장하고 강사에게 보내기</button><p>누르면 오늘 답이 저장되고 <b>강사님 화면으로 바로 전달</b>됩니다. 인터넷이 안 될 때만 "복사하기"로 카톡에 붙여 넣어 보내면 됩니다.</p></div>
+      <div class="daysend"><a class="btn dsend" data-d="3" href="https://thsalswl900119-maker.github.io/cafesui-camp/send.html" target="_blank" rel="noopener">3일차 저장하고 강사에게 보내기</a><p>누르면 오늘 답이 저장되고 <b>새 창</b>에서 강사님 화면으로 전달됩니다. 새 창에 「보냈습니다 ✓」가 뜨면 창을 닫고 돌아오세요.</p></div>
     </div>
   </div>
 
@@ -948,8 +949,8 @@ input,textarea,select{color-scheme:light}
   <div id="tMain" class="hidden">
     <div class="card" style="margin-top:14px">
       <h2 style="font-size:19px;color:var(--corald)">받은 브랜드 북 <small id="tCount" style="font-size:14px;color:var(--grey)"></small></h2>
-      <p style="font-size:14px;margin:4px 0 8px">학생이 「강사에게 보내기」를 누른 답은 <b>제출 목록</b>에 바로 쌓입니다. 거기서 학생별 답 전체와 CSV를 볼 수 있습니다. 같은 6자리 숫자로 들어갑니다.</p>
-      <button class="btn" id="tRefresh" type="button" style="margin-top:0;padding:12px;font-size:17px">📋 제출 목록 열기</button>
+      <p style="font-size:14px;margin:4px 0 8px">학생이 「강사에게 보내기」를 누른 답은 <b>제출 목록(새 창)</b>에 바로 쌓입니다. 거기서 학생별 답 전체와 CSV를 볼 수 있습니다. 같은 6자리 숫자로 들어갑니다.</p>
+      <a class="btn" id="tRefresh" href="https://thsalswl900119-maker.github.io/cafesui-camp/teacher.html" target="_blank" rel="noopener" style="margin-top:0;padding:12px;font-size:17px">📋 제출 목록 열기 (새 창)</a>
       <div id="tRemoteMsg" style="font-size:13px;color:var(--corald);margin-top:8px"></div>
       <div id="tList" style="margin-top:8px"></div>
     </div>
@@ -1056,7 +1057,7 @@ input,textarea,select{color-scheme:light}
     </section>
     <div class="todo" id="bkTodo"></div>
   </div>
-  <div class="foot noprint"><div class="in"><button class="btn" id="btnSend">강사에게 보내기</button><button class="btn ghost" id="btnMove" style="flex:0 0 auto;padding-left:14px;padding-right:14px">기기 옮기기</button><button class="btn ghost" id="btnPrint" style="flex:0 0 auto;padding-left:14px;padding-right:14px">PDF</button></div></div>
+  <div class="foot noprint"><div class="in"><a class="btn" id="btnSend" href="https://thsalswl900119-maker.github.io/cafesui-camp/send.html" target="_blank" rel="noopener">강사에게 보내기</a><button class="btn ghost" id="btnCopy" style="flex:0 0 auto;padding-left:12px;padding-right:12px" title="인터넷이 안 될 때">복사</button><button class="btn ghost" id="btnMove" style="flex:0 0 auto;padding-left:14px;padding-right:14px">기기 옮기기</button><button class="btn ghost" id="btnPrint" style="flex:0 0 auto;padding-left:14px;padding-right:14px">PDF</button></div></div>
 </div>
 </div>
 
@@ -1064,7 +1065,7 @@ input,textarea,select{color-scheme:light}
   <h3 id="mTitle"></h3><p id="mDesc"></p>
   <textarea id="mText"></textarea>
   <div class="ok" id="mOk"></div>
-  <div class="row"><button class="btn" id="mMain" type="button"></button><button class="btn ghost" id="mAlt" type="button" style="flex:0 0 auto;padding-left:14px;padding-right:14px;display:none">복사하기 (예비)</button><button class="btn ghost" id="mClose" type="button" style="flex:0 0 auto;padding-left:18px;padding-right:18px">닫기</button></div>
+  <div class="row"><button class="btn" id="mMain" type="button"></button><button class="btn ghost" id="mClose" type="button" style="flex:0 0 auto;padding-left:18px;padding-right:18px">닫기</button></div>
 </div></div>
 
 <script>
@@ -1648,7 +1649,7 @@ window.FIREBASE_CONFIG = {
   var mMainFn=null;
   function openModal(title,desc,text,mainLabel,fn,readonly){
     $('#mTitle').textContent=title;$('#mDesc').textContent=desc;$('#mText').value=text;$('#mText').readOnly=!!readonly;
-    $('#mMain').textContent=mainLabel;mMainFn=fn;$('#mOk').textContent='';$('#mAlt').style.display='none';$('#modal').classList.remove('hidden');
+    $('#mMain').textContent=mainLabel;mMainFn=fn;$('#mOk').textContent='';$('#modal').classList.remove('hidden');
   }
   $('#mClose').addEventListener('click',function(){$('#modal').classList.add('hidden');});
   $('#mMain').addEventListener('click',function(){if(mMainFn)mMainFn();});
@@ -1707,7 +1708,7 @@ window.FIREBASE_CONFIG = {
     m.textContent='서버에서 불러오는 중…';
     fetchRemote().then(function(o){tRemote=o||{};var d=new Date();m.textContent='서버에서 '+Object.keys(tRemote).length+'명 불러왔습니다 ('+d.getHours()+':'+('0'+d.getMinutes()).slice(-2)+').';tRender();},
       function(){m.textContent='서버 목록을 불러오지 못했습니다. 인터넷을 확인하고 「새로 불러오기」를 누르세요.';tRender();});}
-  $('#tRefresh').addEventListener('click',function(){location.assign('https://thsalswl900119-maker.github.io/cafesui-camp/teacher.html');});
+
   $('#toTeacher').addEventListener('click',function(e){e.preventDefault();show('screenTeacher');$('#tLogin').classList.toggle('hidden',tUnlocked);$('#tMain').classList.toggle('hidden',!tUnlocked);if(tUnlocked)tRefresh();});
   $('#tExit').addEventListener('click',function(){tUnlocked=false;$('#tPin').value='';show('screenEnter');});
   $('#tEnter').addEventListener('click',function(){
@@ -1793,9 +1794,11 @@ window.FIREBASE_CONFIG = {
     try{sessionStorage.setItem('cbb_re',JSON.stringify({n:state.name,c:state.code,d:state.day,s:curNav().s}));}catch(e){}
     clearTimeout(timer);persist();location.reload();});
   /* 일차 끝: 저장하고 강사에게 보내기 */
-  $$('.dsend').forEach(function(b){b.addEventListener('click',function(){
-    clearTimeout(timer);persist();var d=new Date();setSaved('on','저장됨 '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2));
-    $('#btnBook').click();$('#btnSend').click();});});
+  function sendUrl(){return 'https://thsalswl900119-maker.github.io/cafesui-camp/send.html#'+encodeURIComponent('CAFEBB1:'+b64({n:state.name,c:state.code,d:state.day,a:state.a,t:Date.now()}));}
+  function armSend(a){clearTimeout(timer);persist();var d=new Date();setSaved('on','저장됨 '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2));
+    if(!state.name||!/^\d{4}$/.test(String(state.code||''))){a.href='#';toast('이름과 휴대폰 뒤 4자리가 있어야 보낼 수 있습니다.\n나가기 → 첫 화면에서 다시 들어와 주세요.');return false;}
+    a.href=sendUrl();toast('새 창이 열립니다. 「보냈습니다 ✓」가 뜨면 창을 닫고 돌아오세요.');return true;}
+  $$('.dsend').forEach(function(a){a.addEventListener('click',function(e){if(!armSend(a))e.preventDefault();});});
   /* 저장하기 버튼 */
   $('#btnSave').addEventListener('click',function(){
     clearTimeout(timer); var ok=true;
@@ -1805,16 +1808,12 @@ window.FIREBASE_CONFIG = {
     else toast('이 창에서는 저장이 안 됩니다. 크롬 · 사파리로 다시 열어 주세요.');
   });
   /* 강사에게 보내기: 브랜드 북 전체를 글로 */
-  $('#btnSend').addEventListener('click',function(){
+  $('#btnSend').addEventListener('click',function(e){if(!armSend(this))e.preventDefault();});
+  $('#btnCopy').addEventListener('click',function(){
     var book=$('#screenBook .book').innerText.replace(/\n{3,}/g,'\n\n').trim();
     var head='[카페 브랜드 북] '+state.name+' (뒤 4자리 '+state.code+')\n';
     var tcode='CAFEBB1:'+b64({n:state.name,c:state.code,d:state.day,a:state.a,t:Date.now()});
-    var txt=head+'\n'+book+'\n\n[강사용 코드 · 지우지 마세요]\n'+tcode;
-    var url='https://thsalswl900119-maker.github.io/cafesui-camp/send.html#'+encodeURIComponent(tcode);
-    function goSend(){try{sessionStorage.setItem('cbb_re',JSON.stringify({n:state.name,c:state.code,d:state.day,s:'screenDay'}));}catch(e){}clearTimeout(timer);persist();try{location.assign(url);}catch(e){}}
-    openModal('강사에게 보내기','보내기 화면으로 이동합니다… 「보냈습니다 ✓」가 뜨면 「워크북으로 돌아가기」를 누르세요. 화면이 안 바뀌면 아래 「보내기 화면으로 가기」를 누르고, 그래도 안 되면 「복사하기 (예비)」로 복사해 강사 카카오톡에 보내 주세요.',txt,'보내기 화면으로 가기',goSend,true);
-    $('#mAlt').style.display='';$('#mAlt').onclick=modalCopy;
-    setTimeout(goSend,150);
+    openModal('복사해서 카톡으로 보내기 (예비)','인터넷이 안 될 때 씁니다. 아래 "복사하기"를 누른 뒤 강사 카카오톡에 붙여 넣어 보내세요. 맨 아래 코드까지 전부.',head+'\n'+book+'\n\n[강사용 코드 · 지우지 마세요]\n'+tcode,'복사하기',modalCopy,true);
   });
   /* 기기 옮기기: 내 답을 코드로 */
   $('#btnMove').addEventListener('click',function(){
