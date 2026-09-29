@@ -227,8 +227,8 @@
       "일 · 정기휴무 " + rest + "일" + note +
       '<button type="button" class="editbtn" data-k="' + key +
       '" aria-pressed="false">✎ 근무표 수정하기</button></div>' +
-      reqbar +
-      '<div class="cal" id="rc' + key + '">' + WDHEAD + readCal(m) + "</div>" + editwrap + "</div>";
+      '<div class="cal" id="rc' + key + '">' + WDHEAD + readCal(m) + "</div>" + editwrap +
+      reqbar + "</div>";   // 휴무 신청은 달력 아래 — 달력이 한 화면에 먼저 보이게
   }
 
   // 해마다 바인더 한 권. 누를 때 그 해만 그린다.
