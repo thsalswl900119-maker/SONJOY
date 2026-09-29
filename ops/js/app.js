@@ -618,7 +618,7 @@
       var lg = by("cafesui.log.").sort().reverse(), h = "";
       lg.forEach(function (k) {
         var o = J(k) || {}, f = o.f || {}, d = k.slice(12);
-        var ORDER = ["lf143", "lf140", "lf141", "lf142", "lf101", "lf102", "lf103", "lf104", "lf105", "lf106", "lf120", "lf121", "lf122", "lf110", "lf185", "lf180", "lf181", "lf190", "lf183", "lf184", "lf154", "lf150", "lf151", "lf152", "lf153", "lf160", "lf161", "lf162", "lf163", "lf164", "lf170", "lf171", "lf172", "lf182"];
+        var ORDER = ["lf143", "lf140", "lf141", "lf142", "lf101", "lf102", "lf103", "lf104", "lf105", "lf106", "lf120", "lf123", "lf121", "lf122", "lf124", "lf110", "lf185", "lf180", "lf181", "lf190", "lf183", "lf184", "lf154", "lf150", "lf151", "lf152", "lf153", "lf160", "lf161", "lf162", "lf163", "lf164", "lf170", "lf171", "lf172", "lf182"];
         var seen = {}, b = "";
         ORDER.concat(Object.keys(f)).forEach(function (fk) {
           if (seen[fk]) return; seen[fk] = 1;
@@ -3661,7 +3661,10 @@
       document.querySelectorAll(".lgng").forEach(function (g) {
         var gt = (g.querySelector(".lgngh") ? g.querySelector(".lgngh").firstChild.textContent : "").trim(), grows = "", gl = [];
         g.querySelectorAll(".lgnum").forEach(function (l) {
-          var v = l.querySelector("input").value.trim();
+          var inp = l.querySelector("input"), v = inp.value.trim();
+          // 입고: 숫자 옆에 무엇이 들어왔는지 (시트 · 과일 내역)
+          var wEl = g.querySelector('.lginrow[data-for="' + inp.dataset.k + '"] input'), w = wEl ? wEl.value.trim() : "";
+          if (w) v = (v ? v + " — " : "") + w;
           if (!v) return;
           var name = l.querySelector("span").textContent;
           grows += "<tr><th>" + esc(name) + "</th><td>" + esc(v) + "</td></tr>";
