@@ -1107,7 +1107,7 @@ window.FIREBASE_CONFIG = {
 
   var teacherView=false;
   function show(id){_nav();['screenEnter','screenDay','screenBook','screenTeacher'].forEach(function(s){$('#'+s).classList.toggle('hidden',s!==id)}); window.scrollTo(0,0);}
-  function persist(){if(!KEY)return;try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
+  function persist(){if(!KEY)return;try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}try{updSendLinks();}catch(e){}}
   function v(k){return (state.a[k]||'').trim();}
   function or(k,alt){return v(k)||alt}
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
@@ -1795,10 +1795,14 @@ window.FIREBASE_CONFIG = {
     clearTimeout(timer);persist();location.reload();});
   /* 일차 끝: 저장하고 강사에게 보내기 */
   function sendUrl(){return 'https://thsalswl900119-maker.github.io/cafesui-camp/send.html#'+encodeURIComponent('CAFEBB1:'+b64({n:state.name,c:state.code,d:state.day,a:state.a,t:Date.now()}));}
-  function armSend(a){clearTimeout(timer);persist();var d=new Date();setSaved('on','저장됨 '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2));
-    if(!state.name||!/^\d{4}$/.test(String(state.code||''))){a.href='#';toast('이름과 휴대폰 뒤 4자리가 있어야 보낼 수 있습니다.\n나가기 → 첫 화면에서 다시 들어와 주세요.');return false;}
-    a.href=sendUrl();toast('새 창이 열립니다. 「보냈습니다 ✓」가 뜨면 창을 닫고 돌아오세요.');return true;}
-  $$('.dsend').forEach(function(a){a.addEventListener('click',function(e){if(!armSend(a))e.preventDefault();});});
+  function sendOk(){return !!(state.name&&/^\d{4}$/.test(String(state.code||'')));}
+  function updSendLinks(){var u=sendOk()?sendUrl():'#';$$('.dsend,#btnSend').forEach(function(a){a.href=u;});}
+  function armSend(a,quiet){clearTimeout(timer);persist();var d=new Date();setSaved('on','저장됨 '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2));
+    if(!sendOk()){a.href='#';if(!quiet)toast('이름과 휴대폰 뒤 4자리가 있어야 보낼 수 있습니다.\n나가기 → 첫 화면에서 다시 들어와 주세요.');return false;}
+    a.href=sendUrl();if(!quiet)toast('새 창이 열립니다. 「보냈습니다 ✓」가 뜨면 창을 닫고 돌아오세요.');return true;}
+  $$('.dsend,#btnSend').forEach(function(a){['pointerdown','mousedown','touchstart','mouseenter','focus'].forEach(function(ev){a.addEventListener(ev,function(){armSend(a,true);});});
+    a.addEventListener('click',function(e){if(!armSend(a))e.preventDefault();});});
+  updSendLinks();
   /* 저장하기 버튼 */
   $('#btnSave').addEventListener('click',function(){
     clearTimeout(timer); var ok=true;
@@ -1808,7 +1812,6 @@ window.FIREBASE_CONFIG = {
     else toast('이 창에서는 저장이 안 됩니다. 크롬 · 사파리로 다시 열어 주세요.');
   });
   /* 강사에게 보내기: 브랜드 북 전체를 글로 */
-  $('#btnSend').addEventListener('click',function(e){if(!armSend(this))e.preventDefault();});
   $('#btnCopy').addEventListener('click',function(){
     var book=$('#screenBook .book').innerText.replace(/\n{3,}/g,'\n\n').trim();
     var head='[카페 브랜드 북] '+state.name+' (뒤 4자리 '+state.code+')\n';
