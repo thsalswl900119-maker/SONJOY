@@ -24,11 +24,11 @@ PIN_HASH = hashlib.sha256(('b2o:' + os.environ.get('TPIN', '181204')).encode()).
 
 def rd(n): return open(os.path.join(HERE, n), encoding='utf-8').read()
 out = os.path.join(HERE, 'out'); os.makedirs(out, exist_ok=True)
-idx = rd('tpl_index.html').replace('__CUR__', J(CUR)).replace('__WKEYS__', J(cur.WKEYS)).replace('__EX__', J(cur.EX)).replace('__BASE__', cur.BASE).replace('__COST__', cur.COST_URL).replace('__DRINKS__', J(cur.DRINKS)).replace('__CUP__', J(cur.CUP))
+idx = rd('tpl_index.html').replace('__TITLE__', cur.TITLE + ' ver.' + cur.VER).replace('__CUR__', J(CUR)).replace('__WKEYS__', J(cur.WKEYS)).replace('__EX__', J(cur.EX)).replace('__BASE__', cur.BASE).replace('__COST__', cur.COST_URL).replace('__DRINKS__', J(cur.DRINKS)).replace('__CUP__', J(cur.CUP))
 snd = rd('tpl_send.html').replace('__VER__', cur.VER).replace('__ROSTER__', cur.ROSTER)
 tch = rd('tpl_teacher.html').replace('__VER__', cur.VER).replace('__ROSTER__', cur.ROSTER).replace('__FIELDS__', J(FIELDS)).replace('__DAYN__', J(DAYN)).replace('__PINHASH__', PIN_HASH)
 for n, s in (('index.html', idx), ('send.html', snd), ('teacher.html', tch)):
-    assert not [p for p in ('__CUR__','__WKEYS__','__EX__','__BASE__','__COST__','__DRINKS__','__CUP__','__VER__','__ROSTER__','__FIELDS__','__DAYN__','__PINHASH__') if p in s], n
+    assert not [p for p in ('__TITLE__','__CUR__','__WKEYS__','__EX__','__BASE__','__COST__','__DRINKS__','__CUP__','__VER__','__ROSTER__','__FIELDS__','__DAYN__','__PINHASH__') if p in s], n
     open(os.path.join(out, n), 'w', encoding='utf-8').write(s)
     print(n, len(s.encode()), 'bytes')
 # 아티팩트용: 껍데기 태그 제거 · 인쇄 버튼 제거 (아티팩트 창은 window.print 불가)
