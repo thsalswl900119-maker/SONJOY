@@ -3318,18 +3318,8 @@
         if (!tag) { tag = document.createElement("i"); tag.className = "lgby"; row.appendChild(tag); }
         tag.innerHTML = "쓴 사람: " + names.map(function (n) { return '<b class="' + (WCLR[n] ? "w" + WCLR[n] : "") + '">' + esc(n === "사장님" ? n : n + "님") + "</b>"; }).join(" · ");
       }
-      // 칸 아래 「👑 사장님 덧붙임」 — 직원이 쓴 칸에 사장님이 더 쓴 글을 크게 모아 보여준다
-      var adds = [];
-      el.value.split(String.fromCharCode(10)).forEach(function (ln, i) {
-        if (!ln.trim()) return;
-        if (names.length > 1 && (lineBy || [])[i] === "사장님") { adds.push(ln.trim()); return; }
-        if (el.tagName !== "TEXTAREA" && (lineBy || [])[0] === "사장님" && first0 && first0 !== "사장님") { adds.push(ln.trim()); return; }
-        ownRuns(ln, ownMask(ln, own)).forEach(function (t) { adds.push(t); });
-      });
-      var box = row.querySelector(".lgown");
-      if (!adds.length) { if (box) box.remove(); return; }
-      if (!box) { box = document.createElement("div"); box.className = "lgown"; row.appendChild(box); }
-      box.innerHTML = "<b>👑 사장님 덧붙임</b>" + adds.map(function (t) { return "<p>" + esc(t.replace(/^\s*[★⭐!！]\s*/, "").replace(/\*\*|__/g, "")) + "</p>"; }).join("");
+      // 칸 아래 「👑 사장님 덧붙임」 박스는 쓰지 않는다 (사장님 확정 — 칸 안 형광만). 예전 화면에 남은 것만 지운다
+      var box = row.querySelector(".lgown"); if (box) box.remove();
     }
     var ownSnap = {};   // 칸별 「누른 순간」 모습 (사장님 덧붙임 비교용 · 이 화면에서만)
     function sameEnds(a, b) {
