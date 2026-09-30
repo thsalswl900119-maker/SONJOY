@@ -3327,6 +3327,7 @@
       if (!box) { box = document.createElement("div"); box.className = "lgown"; row.appendChild(box); }
       box.innerHTML = "<b>👑 사장님 덧붙임</b>" + adds.map(function (t) { return "<p>" + esc(t.replace(/^\s*[★⭐!！]\s*/, "").replace(/\*\*|__/g, "")) + "</p>"; }).join("");
     }
+    var ownSnap = {};   // 칸별 「누른 순간」 모습 (사장님 덧붙임 비교용 · 이 화면에서만)
     function sameEnds(a, b) {
       var p = 0; while (p < a.length && p < b.length && a[p] === b[p]) p++;
       var q = 0; while (q < a.length - p && q < b.length - p && a[a.length - 1 - q] === b[b.length - 1 - q]) q++;
@@ -3402,6 +3403,9 @@
         // 단, 사장님이 직원 줄 중간에 끼워 쓰면 줄은 직원 것 그대로 두고, 끼워 쓴 글만 사장님 덧붙임으로 기억한다
         var pl = String(oldF[k] || "").split(NL), pb = oldBl[k] || [], po = oldOw[k] || [], usedI = {};
         var nl = el.value.split(NL), lb = [], pair = [], boss = me2 === "사장님";
+        // 사장님은 글자마다 저장돼도 한 글자씩 비교하면 덧붙임(2글자 이상)으로 안 잡힌다 → 칸을 누른 순간의 글과 비교
+        var sn = boss && ownSnap[k] && ownSnap[k].d === keyFor() && ownSnap[k];
+        if (sn) { pl = String(sn.v || "").split(NL); pb = sn.bl || []; po = sn.ow || []; }
         nl.forEach(function (ln, i) {
           if (!ln.trim()) { lb[i] = ""; return; }
           for (var j = 0; j < pl.length; j++) { if (!usedI[j] && pl[j] === ln) { usedI[j] = 1; pair[i] = j; lb[i] = pb[j] || prev[k] || me2 || ""; return; } }
@@ -3622,6 +3626,14 @@
     });
     whoEl.addEventListener("change", save);
     inputs.forEach(function (el) {
+      // 칸을 누른 순간의 저장본을 기억 — 사장님 덧붙임을 한 번에 이어서 잡기 위해
+      el.addEventListener("focus", function () {
+        var k = el.dataset.k, o = {};
+        try { o = JSON.parse(localStorage.getItem(keyFor()) || "{}") || {}; } catch (e) {}
+        var sv = (o.f || {})[k] || "";
+        if (sv === el.value) ownSnap[k] = { d: keyFor(), v: sv, bl: (o.bl || {})[k] || [], ow: (o.ow || {})[k] || [] };
+        else delete ownSnap[k];
+      });
       el.addEventListener("input", function () {
         el.classList.toggle("filled", !!el.value.trim());
         save();
