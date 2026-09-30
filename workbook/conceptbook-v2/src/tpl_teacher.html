@@ -19,13 +19,12 @@ table{width:100%;border-collapse:collapse;font-size:14px;margin-top:6px}th{font-
 .ok2{color:#4E6B2E}.warn{color:#B8860B}.bad2{color:#B04A3A}
 .sw{display:inline-block;width:18px;height:18px;border-radius:4px;border:1px solid var(--line);vertical-align:middle;margin-right:4px}
 </style>
-<script>window.FIREBASE_CONFIG={apiKey:"AIzaSyDDwIS0nXg5cDBe5ZO8yWUgUMIK3hizNGI",projectId:"cafesui"};var COHORTS=__COHORTS__,FIELDS=__FIELDS__,DAYN=__DAYN__,PIN_HASH="__PINHASH__";</script>
+<script>window.FIREBASE_CONFIG={apiKey:"AIzaSyDDwIS0nXg5cDBe5ZO8yWUgUMIK3hizNGI",projectId:"cafesui"};var VER="__VER__",ROSTER="__ROSTER__",FIELDS=__FIELDS__,DAYN=__DAYN__,PIN_HASH="__PINHASH__";</script>
 </head><body><div class="wrap">
-<div class="top"><h1>강사 화면 · 받은 컨셉북</h1><div style="display:flex;gap:6px"><button class="btn ghost sm" id="backwb">이 창 닫기</button><button class="btn ghost sm" id="out" style="display:none">나가기</button></div></div>
+<div class="top"><h1>강사 화면 · 받은 컨셉북 <small style="font-size:14px;color:var(--grey)">ver.__VER__</small></h1><div style="display:flex;gap:6px"><button class="btn ghost sm" id="backwb">이 창 닫기</button><button class="btn ghost sm" id="out" style="display:none">나가기</button></div></div>
 <div class="card" id="login"><h2>강사 6자리 숫자</h2><input id="pin" type="password" inputmode="numeric" maxlength="6" placeholder="숫자 6자리" style="text-align:center;letter-spacing:.2em;font-size:22px"><button class="btn" id="enter">들어가기</button><div class="msg" id="lmsg"></div></div>
 <div id="main" style="display:none">
   <div class="card"><div class="top"><h2>받은 컨셉북 <small id="cnt" style="font-size:14px;color:var(--grey)"></small></h2><div style="display:flex;gap:6px"><button class="btn ghost sm" id="refresh">↻ 새로 불러오기</button><button class="btn ghost sm" id="csv">📊 CSV</button></div></div>
-    <div style="display:flex;gap:8px;align-items:center;margin-top:8px"><label style="font-size:13px;color:var(--grey);white-space:nowrap">기수</label><select id="cohort" style="margin:0"></select><input id="cohortCustom" placeholder="다른 기수 숫자 4자리" inputmode="numeric" maxlength="4" style="margin:0;max-width:170px;display:none"></div>
     <div class="msg" id="rmsg"></div><div id="list"></div></div>
   <div class="card" id="detail" style="display:none"><div class="top"><h2 id="dname"></h2><button class="btn ghost sm" id="back">← 목록</button></div><div id="dbody"></div></div>
 </div>
@@ -54,12 +53,11 @@ function bep(a){var fx=['fx_rent','fx_labor','fx_util','fx_sub','fx_loan','fx_et
 function conceptLine(a){return v(a,'book1_line')||v(a,'concept2')||v(a,'concept1')||'';}
 function done(a){var n=0;[1,2,3].forEach(function(d){for(var p=1;p<=5;p++){if(FIELDS.some(function(f){return f.d===d&&f.p===p&&v(a,f.k)}))n++;}});return n;}
 function tm(t){var d=new Date(t||0);return (d.getMonth()+1)+'/'+d.getDate()+' '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2);}
-function roster(){var s=$('#cohort').value;if(s==='_'){var c=$('#cohortCustom').value.trim();return /^\d{4}$/.test(c)?c:null;}return s;}
-function cohortLabel(id){var c=COHORTS.filter(function(x){return x.id===id})[0];return c?c.label:id+' 기수';}
-function load(){var r=roster();if(!r){$('#rmsg').textContent='기수 숫자 4자리를 적어 주세요.';return;}$('#rmsg').textContent='서버에서 불러오는 중…';
+function roster(){return ROSTER;}
+function load(){var r=roster();$('#rmsg').textContent='서버에서 불러오는 중…';
   fsGet('명단_'+r).then(function(rd){var ids=rd&&rd.a?Object.keys(rd.a):[];return Promise.all(ids.map(function(id){return fsGet(id).then(null,function(){return null;});}));}).then(function(docs){
     books=docs.filter(function(x){return x&&x.a&&typeof x.a==='object';}).sort(function(x,y){return (y.updatedAt||0)-(x.updatedAt||0);});
-    var d=new Date();$('#rmsg').textContent=cohortLabel(r)+' · 서버에서 '+books.length+'명 불러왔습니다 ('+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2)+').';draw();
+    var d=new Date();$('#rmsg').textContent='ver.'+VER+' 워크북 · 서버에서 '+books.length+'명 불러왔습니다 ('+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2)+').';draw();
   },function(e){$('#rmsg').innerHTML='<span class="bad">불러오지 못했습니다.</span> 인터넷을 확인하고 「새로 불러오기」를 누르세요. <small>'+esc(e&&e.message||'')+'</small>';});}
 function draw(){var L=$('#list');L.innerHTML='';$('#cnt').textContent=books.length+'명';
   if(!books.length){L.innerHTML='<p style="color:var(--grey);font-size:14px">아직 받은 컨셉북이 없습니다. 학생이 워크북에서 「강사에게 보내기」를 누르면 여기에 뜹니다.</p>';return;}
@@ -87,12 +85,7 @@ $('#csv').onclick=function(){if(!books.length){alert('내려받을 제출이 없
   cols.push(['손익분기 월매출',function(b){var x=bep(b.a);return x?Math.round(x.month):''}]);cols.push(['하루 손익분기 개수',function(b){var x=bep(b.a);return x&&x.units?Math.ceil(x.units):''}]);
   FIELDS.forEach(function(f){if(f.ck)return;cols.push([f.d+'일차 '+f.p+'교시 '+f.l,function(b){return v(b.a,f.k)}]);});
   var q=function(x){return '"'+String(x==null?'':x).replace(/"/g,'""')+'"'};var csv='﻿'+cols.map(function(c){return q(c[0])}).join(',')+'\n'+books.map(function(b){return cols.map(function(c){return q(c[1](b))}).join(',')}).join('\n');
-  var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='컨셉북_제출_'+roster()+'_'+new Date().toISOString().slice(0,10)+'.csv';document.body.appendChild(a);a.click();a.remove();};
-COHORTS.forEach(function(c){var o=document.createElement('option');o.value=c.id;o.textContent=c.label;$('#cohort').appendChild(o);});
-(function(){var o=document.createElement('option');o.value='_';o.textContent='다른 기수 (숫자 직접 입력)';$('#cohort').appendChild(o);})();
-$('#cohort').value=COHORTS[COHORTS.length-1].id;
-$('#cohort').onchange=function(){$('#cohortCustom').style.display=this.value==='_'?'':'none';if(this.value!=='_')load();};
-$('#cohortCustom').addEventListener('keydown',function(e){if(e.key==='Enter')load();});
+  var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='컨셉북_ver'+VER+'_제출_'+new Date().toISOString().slice(0,10)+'.csv';document.body.appendChild(a);a.click();a.remove();};
 $('#refresh').onclick=load;$('#backwb').onclick=function(){window.close();};
 function unlock(){$('#login').style.display='none';$('#main').style.display='';$('#out').style.display='';load();}
 $('#enter').onclick=function(){var p=$('#pin').value.trim();if(!/^\d{6}$/.test(p)){$('#lmsg').textContent='숫자 6자리를 적어 주세요.';return;}
