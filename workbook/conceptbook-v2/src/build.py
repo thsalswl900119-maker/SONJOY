@@ -31,4 +31,14 @@ for n, s in (('index.html', idx), ('send.html', snd), ('teacher.html', tch)):
     assert not [p for p in ('__CUR__','__WKEYS__','__EX__','__BASE__','__COST__','__COHORTS__','__FIELDS__','__DAYN__','__PINHASH__') if p in s], n
     open(os.path.join(out, n), 'w', encoding='utf-8').write(s)
     print(n, len(s.encode()), 'bytes')
+# 아티팩트용: 껍데기 태그 제거 · 인쇄 버튼 제거 (아티팩트 창은 window.print 불가)
+import re
+art = idx
+for tag in ('<!doctype html>', '<html lang="ko">', '<head>', '</head>', '<body>', '</body>', '</html>', '<meta charset="utf-8">', '<meta name="viewport" content="width=device-width, initial-scale=1">'):
+    art = art.replace(tag, '')
+art = art.replace('<button type="button" class="sub" id="btnPrint">🖨 인쇄 · PDF</button>', '')
+art = art.replace("$('#btnPrint').addEventListener('click',function(){renderBook();try{window.print();}catch(e){}setTimeout(function(){toast('인쇄 창이 안 뜨면 「컨셉북 전체 복사」로 메모장에 붙여 넣어 보관하세요.');},800);});", '')
+assert 'btnPrint' not in art
+open(os.path.join(out, 'artifact.html'), 'w', encoding='utf-8').write(art.strip() + '\n')
+print('artifact.html', len(art.encode()), 'bytes')
 print('fields', len(FIELDS))
