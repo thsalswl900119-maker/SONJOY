@@ -3247,9 +3247,13 @@
       var lines = el.value.split(String.fromCharCode(10));
       var marks = lines.map(function (ln) { return ownMask(ln, own); });
       var anyOwn = marks.some(function (m) { return m.indexOf(true) >= 0; });
+      // 사장님이 쓴 글은 어느 칸이든 노란 형광 · 빨간 글씨 (사장님 지시사항 칸은 원래 사장님 칸이라 제외)
+      // 근무 묶음(영업시간 자동 · 근무 현황 · 사장님 업무 · 알바)은 사장님이 써도 표시하지 않는다
+      var bossRow = !!el.closest(".mrow2.boss") || /^lf14[0-3]$/.test(el.dataset.k || "");
+      var allBoss = !bossRow && !!el.value.trim() && (names.length ? names.length === 1 && names[0] === "사장님" : first === "사장님");
       // 한 줄 칸(input)은 글자마다 색을 못 칠하니, 사장님이 덧붙인 게 있으면 칸 전체를 노란 형광 테두리로 (아래 「👑 사장님 덧붙임」에 크게)
-      el.classList.toggle("ownin", el.tagName !== "TEXTAREA" && !!el.value.trim() && (anyOwn || (lineBy[0] === "사장님" && first && first !== "사장님")));
-      if (el.tagName !== "TEXTAREA" || (names.length < 2 && !anyOwn)) {
+      el.classList.toggle("ownin", el.tagName !== "TEXTAREA" && !!el.value.trim() && (anyOwn || allBoss || (lineBy[0] === "사장님" && first && first !== "사장님")));
+      if (el.tagName !== "TEXTAREA" || (names.length < 2 && !anyOwn && !allBoss)) {
         if (ov) ov.remove();
         el.classList.remove("ovon");
         // 한 줄 칸 · 한 사람만 쓴 칸: 마지막으로 쓴 줄의 사람 색 (없으면 처음 쓴 사람)
@@ -3262,7 +3266,7 @@
       el.classList.add("ovon");
       // 사장님이 덧붙인 곳은 노란 형광 + 빨간 글씨 (다른 사람이 쓴 칸 안에서만)
       ov.innerHTML = lines.map(function (ln, i) {
-        var n = lineBy[i] || first || "", whole = n === "사장님" && names.length > 1 && ln.trim();
+        var n = lineBy[i] || first || "", whole = n === "사장님" && (names.length > 1 || allBoss) && ln.trim();
         var body = whole ? '<span class="own">' + esc(ln) + "</span>" : ownHtml(ln, marks[i], esc);
         return '<span class="' + (WCLR[n] ? "w" + WCLR[n] : "") + '">' + (body || " ") + "</span>";
       }).join(String.fromCharCode(10)) + " ";
@@ -3702,7 +3706,7 @@
 
       // 묶음별로 만들어 두고, 정한 순서로 붙인다
       var secH = {}, secT = {}, rpBl = {}, rpOw = {};
-      try { var rpO = JSON.parse(localStorage.getItem(keyFor()) || "{}") || {}; rpBl = rpO.bl || {}; rpOw = rpO.ow || {}; } catch (e) {}
+      var rpBy = {}; try { var rpO = JSON.parse(localStorage.getItem(keyFor()) || "{}") || {}; rpBl = rpO.bl || {}; rpOw = rpO.ow || {}; rpBy = rpO.by || {}; } catch (e) {}
       var S1 = String.fromCharCode(1), S2 = String.fromCharCode(2);
       // 맨 위에 먼저 볼 것: 사장님 지시사항 → 인계사항 → 직원들에게 알릴 것 → 폐기 · 파손 → 매출 → 매장 흐름
       var TOPK = ["lf185", "lf180", "lf181", "lf162", "lf163", "lf166", "lf183", "lf184", "lf154"], topH = {}, topT = {};
@@ -3744,6 +3748,10 @@
             var shLines = shown.split("<br>"), plLines = plain.split(NL), srcLines = v.split(NL);
             if (shLines.length === srcLines.length) shown = shLines.map(function (h, i) { var nn = lb[i] || ""; return '<span class="wl ' + (WCLR[nn] ? "w" + WCLR[nn] : "") + (nn === "사장님" && srcLines[i].trim() ? " rpownl" : "") + '">' + (nn === "사장님" && srcLines[i].trim() ? "👑 " : "") + h + "</span>"; }).join("");
             plain = plLines.map(function (x, i) { var nn = lb[i] || ""; return x.trim() ? x + (nn ? " (" + nn + ")" : "") : x; }).join(NL);
+          } else if (cls !== " boss" && !/^lf14[0-3]$/.test(el.dataset.k) && (distinct.length ? distinct[0] === "사장님" : rpBy[el.dataset.k] === "사장님")) {
+            // 사장님 혼자 쓴 칸도 노란 형광 · 빨간 글씨로
+            shown = '<span class="rpown">👑 ' + shown + "</span>";
+            plain = "〔사장님〕 " + plain;
           }
           shown = shown.split(S1).join('<span class="rpown">👑 ').split(S2).join("</span>");
           plain = plain.split(S1).join("〔사장님: ").split(S2).join("〕");
