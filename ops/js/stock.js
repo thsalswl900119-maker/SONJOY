@@ -10,7 +10,7 @@
 
     var MGR = ["정항아", "사장님"];
     var PRE = "cafesui.stock.";
-    var FIELDS = ["prod", "fruitUseA", "fruitUseB", "fruitUseC", "creamUse", "fruitOrder", "creamPlan", "report"];
+    var FIELDS = ["prod", "fruitUseA", "fruitUseB", "fruitUseC", "creamUse", "fruitOrder", "creamPlan", "report", "noOrder"];   // noOrder: 「발주 넣을 것 없음」 확인 (누가 · 몇 시)
     var NL = String.fromCharCode(10);
     var TIP = {
       fruit: "사장님 꿀팁 — 망고 1박스 최대 58,000원. 후숙 과일은 1~1.5박스 여유. 조림 복숭아 반박스 남으면 미리 주문. 주마다 과일 단가 체크. 파손 시 바로 A/S.",
@@ -58,6 +58,11 @@
     }
 
     var cur = null, stock = {}, checks = {}, saveT = null;
+    var hint = {}, hintDay = "";   // 전날(마지막으로 적은 날) 재고 — 빈 칸에 흐린 글씨로만 보여준다 (새 날은 빈 칸으로 시작)
+    function hintPh(name) {
+      var v = hint[name]; if (v == null || v === "") return "수량";
+      return (hintDay ? hintDay.slice(5).replace("-", "/") + " " : "전날 ") + v;
+    }
     var dateEl = $("#skDate"), ordEl = $("#skOrders"), statusEl = $("#skStatus"), byEl = $("#skBy");
 
     function needs() {
@@ -99,8 +104,8 @@
             row.className = "skit pair";
             row.innerHTML = '<span class="nm">' + esc(name.replace("케이크 상자 ", "케이크 ")) + ' <em>상자 · 하판</em>' +
               (re != null ? "<small>" + re + unit + " 이하면 발주" + (memo ? " · " + esc(memo) : "") + "</small>" : (memo ? "<small>" + esc(memo) + "</small>" : "")) + "</span>" +
-              '<span class="pr"><label>상자<input type="text" inputmode="decimal" class="skin" value="' + esc(val) + '" placeholder="수량"></label>' +
-              '<label>하판<input type="text" inputmode="decimal" class="skin" value="' + esc(val2) + '" placeholder="수량"></label></span>' +
+              '<span class="pr"><label>상자<input type="text" inputmode="decimal" class="skin" value="' + esc(val) + '" placeholder="' + esc(hintPh(name)) + '"></label>' +
+              '<label>하판<input type="text" inputmode="decimal" class="skin" value="' + esc(val2) + '" placeholder="' + esc(hintPh(name2)) + '"></label></span>' +
               '<span class="u">' + esc(unit) + "</span><span></span>";
             var ins = row.querySelectorAll("input");
             var paint2 = function () {
@@ -117,7 +122,7 @@
           row.innerHTML = '<span class="nm">' + esc(name) +
             (re != null ? "<small>" + re + unit + " 이하면 발주" + (memo ? " · " + esc(memo) : "") + "</small>"
                         : (memo ? "<small>" + esc(memo) + "</small>" : "")) + "</span>" +
-            '<input type="text" inputmode="decimal" class="skin" value="' + esc(val) + '" placeholder="수량">' +
+            '<input type="text" inputmode="decimal" class="skin" value="' + esc(val) + '" placeholder="' + esc(hintPh(name)) + '">' +
             '<span class="u">' + esc(unit) + "</span>" +
             (custom && isMgr() ? '<button type="button" class="x" title="항목 삭제">×</button>' : "<span></span>");
           var inp = row.querySelector("input");
@@ -187,6 +192,11 @@
       });
     }
     function lines() { return ordEl.value.split(NL).map(function (l) { return l.trim(); }).filter(Boolean); }
+    function paintNone() {
+      var v = $("#sk_noOrder").value, cb = $("#skNone"), lb = $("#skNoneL");
+      cb.checked = !!v; lb.classList.toggle("on", !!v);
+      $("#skNoneBy").textContent = v ? "확인 " + v : "";
+    }
 
     // 발주 확인 — 사장·매니저가 "확인 → 주문함" 순서로 체크. 직원은 상태만 본다
     function renderChecks() {
@@ -268,8 +278,12 @@
       if (!o) {
         var prevDates = allDates().filter(function (x) { return x < d; });
         var prev = prevDates.length ? load(prevDates[prevDates.length - 1]) : null;
-        o = { date: d, month: d.slice(0, 7), by: me(), stock: prev ? JSON.parse(JSON.stringify(prev.stock || {})) : {},
-              creamPlan: prev ? prev.creamPlan || "" : "", orders: "", orderChecks: {} };
+        // 새 날은 재고 숫자를 빈 칸으로 시작 (전날 숫자는 흐린 글씨로만) — 안 센 날이 센 것처럼 보이지 않게. 자유 메모 글만 넘긴다
+        var carryStock = {};
+        if (prev) [DESIGN_KEY].concat(Object.keys(GROUP_MEMO).map(function (g) { return GROUP_MEMO[g]; })).forEach(function (mk) {
+          if (prev.stock && prev.stock[mk]) carryStock[mk] = prev.stock[mk];
+        });
+        o = { date: d, month: d.slice(0, 7), by: me(), stock: carryStock, creamPlan: "", orders: "", orderChecks: {} };
         if (prev) {
           var pc = prev.orderChecks || {};
           var carry = (prev.orders || "").split(NL).map(function (l) { return l.trim(); })
@@ -286,12 +300,16 @@
       } else {
         $("#skDel").hidden = !isMgr();
       }
+      // 흐린 글씨용 전날 숫자 — 이 날보다 앞선 마지막 기록
+      var pds = allDates().filter(function (x) { return x < d; }), pdo = pds.length ? load(pds[pds.length - 1]) : null;
+      hint = (pdo && pdo.stock) || {}; hintDay = pdo ? pdo.date || pds[pds.length - 1] : "";
+      $("#sk_creamPlan").placeholder = pdo && pdo.creamPlan ? "전날: " + pdo.creamPlan : "목요일 12통";
       stock = o.stock || {}; checks = o.orderChecks || {};
       ordEl.value = o.orders || "";
       FIELDS.forEach(function (k) { $("#sk_" + k).value = o[k] == null ? "" : o[k]; });
       byEl.textContent = o.by || me();
-      statusEl.textContent = load(d) ? "" : "새 날 · 어제 숫자를 깔아뒀어요";
-      renderGroups(); renderChecks(); renderList(); renderWeek(); renderReport();
+      statusEl.textContent = load(d) ? "" : "새 날 · 재고는 빈 칸 (흐린 글씨가 전날 숫자)";
+      paintNone(); renderGroups(); renderChecks(); renderList(); renderWeek(); renderReport();
       base = cp(read());
     }
     // 다른 기기에서 지금 보는 날짜가 바뀌면: 쓰는 중이 아니면 새로 연다 (쓰는 중이면 저장할 때 합쳐진다)
@@ -391,7 +409,7 @@
           (c.ordered ? "<small>주문 " + esc(c.oBy) + "</small>" : c.ok ? "<small>확인 " + esc(c.by) + "</small>" : "<small>대기</small>") + "</li>";
       }).join("") + "</ul>" +
         (ls.length ? '<div class="kv" style="margin-top:3px"><span>진행</span><b>대기 ' + (ls.length - okN - ordN) + " · 확인 " + okN + " · 주문 완료 " + ordN + "</b></div>" : "")
-        : em;
+        : o.noOrder ? '<div class="rnone">✅ 오늘 발주 넣을 것 없음 <small>확인 ' + esc(o.noOrder) + "</small></div>" : em;
       if (n.length) html += '<div class="warn">발주점 이하 ' + n.length + ": " + esc(n.join(", ")) + "</div>";
       html += "</div>";
       html += "<h4>총괄 보고 · 특이사항</h4>" + (v("report") ? esc(v("report")).replace(/\n/g, "<br>") : em);
@@ -422,7 +440,7 @@
       };
       var ord = lines().map(function (l) { var c = checks[l] || {}; return (c.ordered ? "✅ " : c.ok ? "☑ " : "⬜ ") + l; }).join(NL);
       var t = ["[발주·재고 체크] " + o.date + " (" + dow(o.date) + ") " + (o.by || ""),
-        "■ 발주 넣을 것 (⬜대기 ☑확인 ✅주문완료)", ord || "-",
+        "■ 발주 넣을 것 (⬜대기 ☑확인 ✅주문완료)", ord || (o.noOrder ? "✅ 오늘 발주 넣을 것 없음 (확인 " + o.noOrder + ")" : "-"),
         n.length ? "(발주점 이하: " + n.join(", ") + ")" : "",
         "■ 특이사항", o.report || "-",
         "■ 조각케이크 생산: " + (o.prod || "-"),
@@ -532,7 +550,17 @@
     }
 
     // 묶기
-    ["#skOrders"].forEach(function (s) { $(s).addEventListener("input", function () { renderChecks(); queueSave(); }); });
+    ["#skOrders"].forEach(function (s) { $(s).addEventListener("input", function () {
+      // 발주 줄을 적으면 「발주 없음」 체크는 풀린다
+      if (lines().length && $("#sk_noOrder").value) { $("#sk_noOrder").value = ""; paintNone(); }
+      renderChecks(); queueSave();
+    }); });
+    $("#skNone").addEventListener("change", function () {
+      var on = $("#skNone").checked;
+      if (on && lines().length) { $("#skNone").checked = false; alert("발주 넣을 줄이 적혀 있어요. 줄을 지우거나 주문 완료 체크를 해 주세요."); return; }
+      $("#sk_noOrder").value = on ? me() + " " + nowHM() : "";
+      paintNone(); renderReport(); queueSave();
+    });
     FIELDS.forEach(function (k) { $("#sk_" + k).addEventListener("input", queueSave); });
     dateEl.addEventListener("change", function () { if (dateEl.value) { $("#skMonth").value = dateEl.value.slice(0, 7); open(dateEl.value); } });
     $("#skToday").addEventListener("click", function () { $("#skMonth").value = today().slice(0, 7); open(today()); });
@@ -547,6 +575,26 @@
     });
     $("#skRefQ").addEventListener("input", renderRef);
     // 숫자 칸(재고 수량 · 사용량)만 — 비어 있으면 0
+    // 빈 재고 칸에 전날 숫자 — 세어 보고 같은 것만 (적힌 칸은 그대로)
+    var pf = document.getElementById("skPrevFill");
+    if (pf) pf.addEventListener("click", function () {
+      var n = 0;
+      document.querySelectorAll("#skGroups input.skin").forEach(function (el) {
+        var ph = el.placeholder || "", m = /^(?:\d\d\/\d\d|전날) (.+)$/.exec(ph);
+        if (el.value.trim() || !m) return;
+        el.value = m[1]; el.dispatchEvent(new Event("input", { bubbles: true })); n++;
+      });
+      statusEl.textContent = n ? "빈 칸 " + n + "개에 전날 숫자를 넣었습니다" : "넣을 빈 칸이 없습니다";
+    });
+    // 발주 목록 전체 비우기 (이 날짜만)
+    $("#skOrdClear").addEventListener("click", function () {
+      var n = lines().length;
+      if (!n) { statusEl.textContent = "비울 발주 줄이 없습니다"; return; }
+      if (!confirm("발주 넣을 것 " + n + "줄을 모두 지울까요?\n(이 날짜만 · 주문 체크도 같이 지워집니다)")) return;
+      ordEl.value = ""; checks = {};
+      renderChecks(); renderReport(); queueSave();
+      statusEl.textContent = "발주 목록을 비웠습니다";
+    });
     var zb = document.getElementById("skZero");
     if (zb) zb.addEventListener("click", function () {
       var n = 0;
@@ -568,6 +616,21 @@
     $("#skMonth").value = today().slice(0, 7);
     renderRef(); renderSeason();
     open(today());
+    // 켜 둔 채 날짜가 바뀌면 오늘로 넘어간다 (오늘을 보고 있을 때만 · 쓰는 중이면 다 쓴 뒤에)
+    var dayNow = today();
+    function rollDay() {
+      var t = today(); if (t === dayNow) return;
+      var ae = document.activeElement;
+      if (ae && ae.closest && ae.closest("#tp12") && /INPUT|TEXTAREA/.test(ae.tagName)) return;
+      var was = dayNow; dayNow = t;
+      if (cur !== was) return;
+      if (saveT) { clearTimeout(saveT); saveNow(); }
+      $("#skMonth").value = t.slice(0, 7); open(t);
+      statusEl.textContent = "날짜가 바뀌어 오늘(" + t.slice(5).replace("-", "/") + ")로 넘어왔어요";
+    }
+    setInterval(rollDay, 60000);
+    document.addEventListener("visibilitychange", function () { if (!document.hidden) rollDay(); });
+    window.addEventListener("focus", rollDay);
   })();
 
   // 상단 저장 · 백업 줄 — 흩어져 있던 백업 버튼을 전부 위로 모은다 (기능은 그대로)

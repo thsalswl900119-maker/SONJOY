@@ -2455,7 +2455,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-133</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-134</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -2553,7 +2553,7 @@ input,select,textarea{border-radius:var(--r3)!important}
   </div>
 </section></div><div class="panel" id="tp12" role="tabpanel" hidden><section>
   <div class="shead"><h2>재고 · 발주</h2>
-    <span class="sub">어제 숫자가 들어 있어요 · 바뀐 것만 고치면 자동 저장 · 주황색은 발주 넣을 때</span></div>
+    <span class="sub">새 날은 빈 칸 · 흐린 글씨는 전날 숫자 · 세어서 적으면 자동 저장 · 주황색은 발주 넣을 때</span></div>
   <div class="tnotice" id="orderRule"><div class="tnhead">📦 발주 규칙 · 꼭 지키기</div><ul><li><b>빨간날이 있는 주간에는 <mark>4~5일 전에 무조건 재고 · 발주 체크</mark> 다 하기</b><span>예) 추석 연휴가 9/24~9/26이라면 9/18~9/21까지는 꼭 발주 + 재고 체크</span></li><li><b><mark>인쇄물 · 포장재료 · 주재료 전부</mark> 빠짐없이</b><span>자주 안 시키는 것까지 목록을 보면서 하나씩 확인</span></li></ul></div>
   <nav class="sktabs" role="tablist" aria-label="재고 화면"><button type="button" class="sktab" data-c="sk0" aria-selected="true">📦 발주·재고 체크</button><button type="button" class="sktab" data-c="sk1" aria-selected="false">📒 발주 기준표</button><button type="button" class="sktab" data-c="sk2" aria-selected="false">🍓 과일 시즌</button></nav>
   <div id="sk0">
@@ -2571,7 +2571,7 @@ input,select,textarea{border-radius:var(--r3)!important}
       <button type="button" class="skbtn danger" id="skDel" hidden>삭제</button>
       </span>
     </div>
-    <div class="lgzero skzero"><button type="button" class="wsmini" id="skZero">0 빈 칸에 0 채우기</button><span>재고 수량 · 사용량 숫자 칸 중 비어 있는 칸만 0으로 채웁니다 (적힌 숫자 · 글 칸은 그대로) · <b>0이 되면 발주점 이하로 잡히니 실제로 없는 것만 0으로 두세요</b></span></div>
+    <div class="lgzero skzero"><button type="button" class="wsmini" id="skPrevFill">↓ 빈 칸에 전날 숫자 넣기</button><button type="button" class="wsmini" id="skZero">0 빈 칸에 0 채우기</button><span>「전날 숫자」는 <b>세어 보고 전날과 같은 것</b>만 한 번에 넣을 때 · 「0」은 빈 칸만 0으로 (적힌 숫자 · 글 칸은 그대로) · <b>0이 되면 발주점 이하로 잡히니 실제로 없는 것만 0으로 두세요</b></span></div>
     <div class="skgrid">
       <div class="skcol skrpcol"><div class="skrp" id="skReport"></div>
         <div class="skbox skuse"><div class="skh">📊 주별 사용량 <span class="n" id="skUseLabel"></span></div><div class="skb">
@@ -2581,6 +2581,7 @@ input,select,textarea{border-radius:var(--r3)!important}
       <div class="skcol">
         <div class="skbox hot"><div class="skh">🛒 발주 넣을 것 <span class="n" id="skOrdN"></span></div><div class="skb">
           <div class="skneed" id="skNeed"></div>
+<div class="skordbar"><button type="button" class="wsmini" id="skOrdClear">🗑 발주 목록 전체 비우기</button></div><label class="sknone" id="skNoneL"><input type="checkbox" id="skNone"><span>✅ 오늘 발주 넣을 것 없음</span><small id="skNoneBy"></small></label><input type="hidden" id="sk_noOrder">
           <textarea id="skOrders" class="skta" placeholder="한 줄에 하나씩&#10;난황 10개&#10;에타용 휘핑크림 12통"></textarea>
           <div id="skChecks"></div>
           <p class="tip" style="margin:8px 0 0">발주 넣어야 하는 목록은 캡처해서 텔레그램방에도 꼭 올려주세요 (누락 이슈). 주문 안 된 줄은 다음 날로 넘어갑니다.</p>
@@ -3039,10 +3040,10 @@ input,select,textarea{border-radius:var(--r3)!important}
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/sync.js?v=v0924-133"></script>
-<script src="js/holidays.js?v=v0924-133"></script>
-<script src="js/sched.js?v=v0924-133"></script>
-<script src="js/app.js?v=v0924-133"></script>
+<script src="js/sync.js?v=v0924-134"></script>
+<script src="js/holidays.js?v=v0924-134"></script>
+<script src="js/sched.js?v=v0924-134"></script>
+<script src="js/app.js?v=v0924-134"></script>
 
 <style>
 /* 재고 · 발주 */
@@ -3081,6 +3082,13 @@ input,select,textarea{border-radius:var(--r3)!important}
 .skadd{font:inherit;font-size:13px;font-weight:700;padding:2px 9px;cursor:pointer;
   background:var(--surface);color:var(--off);border:1px dashed var(--off);border-radius:999px}
 .skadd:hover{background:var(--offbg)}
+/* 발주 없음 체크 */
+.skordbar{display:flex;justify-content:flex-end;margin:-2px 0 6px}
+.skordbar .wsmini{border-style:solid;border-color:#B3261E;color:#B3261E}
+.sknone{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 8px;padding:8px 11px;border:2px dashed var(--rule2);border-radius:8px;cursor:pointer;font-weight:800;font-size:14.5px;color:var(--ink2);background:var(--surface)}
+.sknone input{width:20px;height:20px;accent-color:#2E7D32;margin:0}
+.sknone small{font-weight:600;font-size:12px;color:var(--muted)}
+.sknone.on{border-style:solid;border-color:#2E7D32;background:#EAF4E6;color:#2E7D32}
 .skta{font:inherit;font-size:13.5px;width:100%;min-height:74px;padding:7px 9px;background:var(--bg);
   color:var(--ink);border:1px solid var(--rule2);border-radius:2px;resize:vertical;line-height:1.6}
 .skta:focus-visible,.skin:focus-visible{outline:2px solid var(--open);outline-offset:1px}
@@ -3176,6 +3184,8 @@ input,select,textarea{border-radius:var(--r3)!important}
 .skrp .empty{color:var(--rule2);font-style:italic}
 .skrp .rorder{border:2px solid var(--rule2);border-radius:8px;padding:8px 10px 10px;margin:6px 0 12px;background:var(--surface)}
 .skrp .rorder.on{border-color:#B3261E;background:#FFF6F4}
+.skrp .rnone{font-size:16px;font-weight:900;color:#2E7D32;background:#EAF4E6;border-radius:6px;padding:6px 9px}
+.skrp .rnone small{font-size:12px;font-weight:600;color:var(--muted);margin-left:4px}
 .skrp .rorder h4{margin-top:0!important;font-size:17px!important;color:#B3261E!important}
 .skrp .rorder h4 em{font-style:normal;font-size:12.5px;background:#B3261E;color:#fff;border-radius:10px;padding:1px 8px;margin-left:4px;vertical-align:2px}
 .skrp .rorder h4 em.ok{background:#2E7D32}
@@ -3244,7 +3254,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 .sksearch{font:inherit;font-size:13px;padding:6px 9px;width:100%;max-width:300px;background:var(--bg);color:var(--ink);
   border:1px solid var(--rule2);border-radius:2px;margin-bottom:10px}
 </style>
-<script src="js/stock.js?v=v0924-133"></script>
+<script src="js/stock.js?v=v0924-134"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -3273,7 +3283,7 @@ input,select,textarea{border-radius:var(--r3)!important}
   })();
 </script>
 
-<script src="js/presence.js?v=v0924-133"></script>
-<script src="js/weekrep.js?v=v0924-133"></script>
-<script src="js/monthlog.js?v=v0924-133"></script>
+<script src="js/presence.js?v=v0924-134"></script>
+<script src="js/weekrep.js?v=v0924-134"></script>
+<script src="js/monthlog.js?v=v0924-134"></script>
 </body></html>
