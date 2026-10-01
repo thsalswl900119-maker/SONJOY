@@ -19,11 +19,11 @@
            "-" + String(mon.getDate()).padStart(2, "0");
   }
   var KEYS = {
-    t: "cafesui.todo." + dayKey(),     // 오늘 할 일 — 하루
-    p: "cafesui.todo." + dayKey(),
-    w: "cafesui.week." + weekKey(),    // 요일 고정 청소 — 한 주
-    z: "cafesui.clean." + monKey(),    // 월 1회 청소 — 한 달
-    m: "cafesui.maint"                 // 주기 정비 — 계속 쌓는다
+    t: "csdemo.todo." + dayKey(),     // 오늘 할 일 — 하루
+    p: "csdemo.todo." + dayKey(),
+    w: "csdemo.week." + weekKey(),    // 요일 고정 청소 — 한 주
+    z: "csdemo.clean." + monKey(),    // 월 1회 청소 — 한 달
+    m: "csdemo.maint"                 // 주기 정비 — 계속 쌓는다
   };
   function bucket(k) { return KEYS[String(k).charAt(0)] || KEYS.m; }
 
@@ -42,8 +42,8 @@
   }
 
   // 담당자와 정비 날짜는 달이 바뀌어도 그대로 둔다
-  var OWNER_KEY = "cafesui.cleanowner";
-  var state = { owner: read(OWNER_KEY), done: {}, dates: read("cafesui.maintdate") };
+  var OWNER_KEY = "csdemo.cleanowner";
+  var state = { owner: read(OWNER_KEY), done: {}, dates: read("csdemo.maintdate") };
   ["t", "w", "z", "m"].forEach(function (pre) {
     var o = read(KEYS[pre]);
     Object.keys(o).forEach(function (k) { state.done[k] = o[k]; });
@@ -53,7 +53,7 @@
   // 체크 하나만 저장 — 저장된 최신 목록을 다시 읽어 그 칸만 바꾼다 (다른 기기가 한 체크를 옛 화면으로 지우지 않게).
   // 날짜 키도 누를 때마다 새로 계산 (자정 넘겨 켜 둔 화면이 어제 칸에 쓰지 않게)
   function saveOne(k) {
-    var pre = String(k).charAt(0), key = pre === "t" || pre === "p" ? "cafesui.todo." + dayKey() : pre === "w" ? "cafesui.week." + weekKey() : pre === "z" ? "cafesui.clean." + monKey() : KEYS.m;
+    var pre = String(k).charAt(0), key = pre === "t" || pre === "p" ? "csdemo.todo." + dayKey() : pre === "w" ? "csdemo.week." + weekKey() : pre === "z" ? "csdemo.clean." + monKey() : KEYS.m;
     var cur = read(key);
     if (state.done[k]) cur[k] = state.done[k]; else delete cur[k];
     write(key, cur);
@@ -69,12 +69,12 @@
       write(KEYS[pre], by[KEYS[pre]] || {});
     });
     write(OWNER_KEY, state.owner);
-    write("cafesui.maintdate", state.dates);
+    write("csdemo.maintdate", state.dates);
   }
 
   // ── 업무 편집 — 직원이 할 일의 문구 · 순서 · 색 · 위치를 바꾸거나 추가 · 삭제한다.
-  //    바뀐 내용은 cafesui.todo.custom 에 쌓이고(서버 동기화), 원래 HTML은 그대로 둔 채 화면에서 덮어쓴다.
-  var TC_KEY = "cafesui.todo.custom";
+  //    바뀐 내용은 csdemo.todo.custom 에 쌓이고(서버 동기화), 원래 HTML은 그대로 둔 채 화면에서 덮어쓴다.
+  var TC_KEY = "csdemo.todo.custom";
   var COLORS = ["", "imp", "big", "blue", "green", "yellow", "orange", "purple"];
   var COLOR_LABEL = { "": "기본", imp: "연한 강조", big: "빨강", blue: "파랑", green: "초록", yellow: "노랑", orange: "주황", purple: "보라" };
   function tcRead() { var o = read(TC_KEY); o.items = o.items || {}; o.order = o.order || {}; o.added = o.added || {}; return o; }
@@ -144,7 +144,7 @@
   (function () {
     var tog = document.getElementById("tedToggle"); if (!tog) return;
     var on = false;
-    function who() { var m = null; try { m = localStorage.getItem("cafesui.me"); } catch (e) {} return m || ""; }
+    function who() { var m = null; try { m = localStorage.getItem("csdemo.me"); } catch (e) {} return m || ""; }
     function saveOrder(blk) {
       var o = tcRead(); var bid = blockId(blk);
       o.order[bid] = Array.prototype.map.call(blk.querySelectorAll(".titem .box"), function (b) { return b.dataset.k; });
@@ -267,7 +267,7 @@
   var WHOC = { "김하늘": "p1", "이다온": "p2", "최서하": "p3", "사장님": "p4" };
   var whoBtns = Array.prototype.slice.call(document.querySelectorAll(".wbtn"));
   var whoMsg = document.getElementById("whoMsg");
-  var meKey = "cafesui.me";
+  var meKey = "csdemo.me";
   var me = null;
   try { me = localStorage.getItem(meKey); } catch (e) {}
 
@@ -318,7 +318,7 @@
   // 다른 기기에서 체크하면 이 화면에도 바로 (새로고침 없이)
   window.addEventListener("cs:remote", function (e) {
     var ks = (e.detail && e.detail.keys) || [];
-    var keys = ["cafesui.todo." + dayKey(), "cafesui.week." + weekKey(), "cafesui.clean." + monKey(), KEYS.m];
+    var keys = ["csdemo.todo." + dayKey(), "csdemo.week." + weekKey(), "csdemo.clean." + monKey(), KEYS.m];
     if (!ks.some(function (k) { return keys.indexOf(k) >= 0; })) return;
     var fresh = {}; keys.forEach(function (key) { var o = read(key); Object.keys(o).forEach(function (x) { fresh[x] = o[x]; }); });
     state.done = fresh;
@@ -390,7 +390,7 @@
   (function () {
     var ALLOW = ["김하늘", "사장님"];
     var who = null;
-    try { who = localStorage.getItem("cafesui.me"); } catch (e) {}
+    try { who = localStorage.getItem("csdemo.me"); } catch (e) {}
     if (who && ALLOW.indexOf(who) >= 0) return;
     var wrap = document.querySelector(".ztable-wrap");
     if (!wrap) return;
@@ -424,7 +424,7 @@
   // 글자 색으로 누가 썼는지 — 김하늘 주황 · 이다온 파랑 · 최서하 보라 · 사장님 초록
   var WCLR = { "김하늘": "p1", "이다온": "p2", "최서하": "p3", "사장님": "p4" };
   function meNow() {
-    try { return localStorage.getItem("cafesui.me") || ""; } catch (e) { return ""; }
+    try { return localStorage.getItem("csdemo.me") || ""; } catch (e) { return ""; }
   }
   function paintBy(el, name) {
     ["wp1", "wp2", "wp3", "wp4"].forEach(function (c) { el.classList.remove(c); });
@@ -453,7 +453,7 @@
     document.querySelectorAll(".bkmini").forEach(function (b) {
       b.addEventListener("click", function () {
         var pres = b.dataset.pre.split(",").map(function (x) {
-          return "cafesui." + x;
+          return "csdemo." + x;
         });
         var o = {}, n = 0;
         try {
@@ -505,7 +505,7 @@
       try {
         for (var i = 0; i < localStorage.length; i++) {
           var k = localStorage.key(i);
-          if (k.indexOf("cafesui.") === 0 && !/^cafesui\.(me|unlocked|device|syncstate|ui\..*|presence\..*)$/.test(k)) out.push(k);   // 기기 번호 · 로그인 상태 · 접속 표시는 빼고 전부
+          if (k.indexOf("csdemo.") === 0 && !/^csdemo\.(me|unlocked|device|syncstate|ui\..*|presence\..*)$/.test(k)) out.push(k);   // 기기 번호 · 로그인 상태 · 접속 표시는 빼고 전부
         }
       } catch (e) {}
       return out.sort();
@@ -615,7 +615,7 @@
       var out = [];
       var sec = function (t, body) { if (body) out.push('<section><h2>' + E(t) + "</h2>" + body + "</section>"); };
       // 일지
-      var lg = by("cafesui.log.").sort().reverse(), h = "";
+      var lg = by("csdemo.log.").sort().reverse(), h = "";
       lg.forEach(function (k) {
         var o = J(k) || {}, f = o.f || {}, d = k.slice(12);
         var ORDER = ["lf143", "lf140", "lf141", "lf142", "lf101", "lf102", "lf103", "lf104", "lf105", "lf106", "lf120", "lf123", "lf121", "lf122", "lf124", "lf110", "lf185", "lf180", "lf181", "lf190", "lf183", "lf184", "lf154", "lf150", "lf151", "lf152", "lf153", "lf160", "lf161", "lf162", "lf163", "lf164", "lf170", "lf171", "lf172", "lf182"];
@@ -632,7 +632,7 @@
       sec("마감 일지", h);
       // 출퇴근
       h = "";
-      by("cafesui.att.").sort().reverse().forEach(function (k) {
+      by("csdemo.att.").sort().reverse().forEach(function (k) {
         var o = J(k) || {}, d = k.slice(12), b = "";
         Object.keys(o).forEach(function (nm) { var r = o[nm] || {}; if (!r.role && !r.out) return; b += "<tr><th>" + E(nm) + "</th><td>" + E(r.role || "") + "</td><td>" + E(r.out ? "퇴근 " + r.out : "") + "</td></tr>"; });
         if (b) h += "<h3>" + dlab(d) + '</h3><table class="kv">' + b + "</table>";
@@ -640,7 +640,7 @@
       sec("출퇴근", h);
       // 근무표 + 휴무 신청
       h = "";
-      by("cafesui.sched.").sort().forEach(function (k) {
+      by("csdemo.sched.").sort().forEach(function (k) {
         var o = J(k) || {}, ym = k.slice(14), names = {}, days = [];
         Object.keys(o).forEach(function (dk) { var m = dk.match(/^(\d+)-(\d+)$/); if (!m) return; days.push(dk); Object.keys(o[dk] || {}).forEach(function (nm) { names[nm] = 1; }); });
         if (!days.length) return;
@@ -649,13 +649,13 @@
         var b = "<tr><th>날짜</th>" + nl.map(function (n) { return "<th>" + E(n) + "</th>"; }).join("") + "<th>공지</th></tr>";
         days.forEach(function (dk) { var r = o[dk] || {}; var dd = ym.slice(0, 4) + "-" + String(dk.split("-")[0]).padStart(2, "0") + "-" + String(dk.split("-")[1]).padStart(2, "0"); b += "<tr><th>" + dlab(dd).slice(5) + "</th>" + nl.map(function (n) { return "<td>" + E(r[n] || "") + "</td>"; }).join("") + "<td>" + E(r["공지"] || "") + "</td></tr>"; });
         h += "<h3>" + ym.replace("-", "년 ") + '월 근무표</h3><table class="grid">' + b + "</table>";
-        var off = J("cafesui.off." + ym);
+        var off = J("csdemo.off." + ym);
         if (off && off.days && off.days.length) h += "<p><b>휴무 신청</b> · " + E(off.who || "") + " — " + off.days.map(function (d) { return E(d) + (off.why && off.why[d] ? " (" + E(off.why[d]) + ")" : ""); }).join(", ") + "</p>";
       });
       sec("근무표", h);
       // 재고 · 발주
       h = "";
-      by("cafesui.stock.").sort().reverse().forEach(function (k) {
+      by("csdemo.stock.").sort().reverse().forEach(function (k) {
         var o = J(k) || {}, d = k.slice(14), b = "";
         [["orders", "발주 넣을 것"], ["report", "총괄 보고 · 특이사항"], ["prod", "조각케이크 생산"], ["fruitUseA", "과일 사용 (알)"], ["fruitUseB", "과일 사용 (병)"], ["fruitUseC", "과일 사용 (통)"], ["creamUse", "생크림 사용 (통)"], ["fruitOrder", "과일 주문 · 입고"], ["creamPlan", "생크림 주문 계획"]].forEach(function (f) { if (o[f[0]] && String(o[f[0]]).trim()) b += "<tr><th>" + f[1] + "</th><td>" + P(o[f[0]]) + "</td></tr>"; });
         var st = o.stock || {}, sb = "";
@@ -666,16 +666,16 @@
       sec("재고 · 발주", h);
       // 메모 달력 · 휴가
       h = "";
-      var dn = J("cafesui.daynotes") || {};
+      var dn = J("csdemo.daynotes") || {};
       Object.keys(dn).sort().forEach(function (d) { var a = dn[d] || []; if (!a.length) return; h += "<p><b>" + dlab(d) + "</b> — " + a.map(function (n) { return E(n.t) + (n.by ? " <i>(" + E(n.by) + ")</i>" : ""); }).join(" · ") + "</p>"; });
-      var vc = J("cafesui.vacations") || [];
+      var vc = J("csdemo.vacations") || [];
       if (vc.length) h += "<h3>일정 · 직원 휴가</h3>" + vc.map(function (v) { var sc = v.kind === "sched"; return "<p>" + (sc ? "[일정] " + E(v.title || "") + (v.who ? " · " + E(v.who) : "") : "[휴가] " + E(v.who)) + " · " + E(v.from) + " ~ " + E(v.to) + (v.memo ? " · " + E(v.memo) : "") + "</p>"; }).join("");
       sec("메모 달력 · 일정 · 휴가", h);
       // 매니저 주간 보고
       h = "";
       var WRL = { sum: "이번 주 매출 · 흐름 요약", good: "잘된 점", bad: "문제점 · 개선할 점", stock: "재고 · 발주 이슈", staff: "직원 · 근무 이슈", next: "다음 주 계획 · 준비할 것", ask: "사장님께 요청 · 건의" };
-      var meR = ""; try { meR = localStorage.getItem("cafesui.me") || ""; } catch (e) {}
-      if (meR === "사장님" || meR === "김하늘") by("cafesui.weekrep.").sort().reverse().forEach(function (k) {
+      var meR = ""; try { meR = localStorage.getItem("csdemo.me") || ""; } catch (e) {}
+      if (meR === "사장님" || meR === "김하늘") by("csdemo.weekrep.").sort().reverse().forEach(function (k) {
         var o = J(k) || {}, f = o.f || {}, b = "";
         Object.keys(WRL).forEach(function (fk) { if (f[fk] && String(f[fk]).trim()) b += "<tr><th>" + WRL[fk] + "</th><td>" + P(f[fk]) + "</td></tr>"; });
         if (b) h += "<h3>" + E(k.slice(16)) + " 주" + (o.who ? " · " + E(o.who) : "") + '</h3><table class="kv">' + b + "</table>";
@@ -683,14 +683,14 @@
       sec("매니저 주간 보고", h);
       // 독서나눔
       h = "";
-      var bk = J("cafesui.books"); (bk && bk.items || []).forEach(function (it) {
+      var bk = J("csdemo.books"); (bk && bk.items || []).forEach(function (it) {
         h += "<h3>" + E(it.title || "제목 없음") + (it.author ? " · " + E(it.author) : "") + "</h3>" + (it.summary ? '<p class="box">' + P(it.summary) + "</p>" : "");
         Object.keys(it.resp || {}).forEach(function (nm) { var r = it.resp[nm] || {}; if (!r.feel && !r.apply && !r.rec) return; h += "<h4>" + E(nm) + '</h4><table class="kv">' + (r.feel ? "<tr><th>느낀 점</th><td>" + P(r.feel) + "</td></tr>" : "") + (r.apply ? "<tr><th>카페에 적용해볼 것</th><td>" + P(r.apply) + "</td></tr>" : "") + (r.rec ? "<tr><th>추천 도서</th><td>" + P(r.rec) + "</td></tr>" : "") + "</table>"; });
       });
       sec("독서나눔", h);
       // 워크샵
       h = "";
-      by("cafesui.ws.").sort().reverse().forEach(function (k) {
+      by("csdemo.ws.").sort().reverse().forEach(function (k) {
         var o = J(k) || {}, y = k.slice(11), b = "";
         ["w1", "w2", "w3", "w4", "w5", "w6"].forEach(function (f) { if (o[f]) b += "<tr><th>" + E(L(f)) + "</th><td>" + P(o[f]) + "</td></tr>"; });
         if (b) b = '<table class="kv">' + b + "</table>";
@@ -711,7 +711,7 @@
       sec("워크샵", h);
       // 월말 평가
       h = "";
-      by("cafesui.review.").sort().reverse().forEach(function (k) {
+      by("csdemo.review.").sort().reverse().forEach(function (k) {
         var o = J(k) || {}, parts = k.slice(15).split("."), ym = parts[0], who = parts[1] || "";
         var checks = Object.keys(o).filter(function (x) { return /^k\d+$/.test(x) && o[x]; });
         var b = rows(o, /^(k\d+|_by|_rank|_level)$/);
@@ -722,15 +722,15 @@
       sec("월말 평가", h);
       // 월말회의
       h = "";
-      by("cafesui.meeting.").sort().reverse().forEach(function (k) { var o = J(k) || {}, b = rows(o, /^_/); if (b) h += "<h3>" + k.slice(16).replace("-", "년 ") + "월 회의</h3>" + b; });
-      var mt = J("cafesui.mtable"); if (mt) { var mb = rows(mt); if (mb) h += "<h3>채널별 · 품목별 비교표</h3>" + mb; }
+      by("csdemo.meeting.").sort().reverse().forEach(function (k) { var o = J(k) || {}, b = rows(o, /^_/); if (b) h += "<h3>" + k.slice(16).replace("-", "년 ") + "월 회의</h3>" + b; });
+      var mt = J("csdemo.mtable"); if (mt) { var mb = rows(mt); if (mb) h += "<h3>채널별 · 품목별 비교표</h3>" + mb; }
       sec("월말회의", h);
       // 제과제빵
       h = "";
-      var bg = J("cafesui.baking"); (bg && bg.items || []).forEach(function (it) { if (!it.title && !it.body) return; h += "<h3>" + E(it.cat ? "[" + it.cat + "] " : "") + E(it.title || "제목 없음") + (it.by ? " · " + E(it.by) : "") + '</h3><p class="box">' + P(it.body || "") + "</p>"; });
+      var bg = J("csdemo.baking"); (bg && bg.items || []).forEach(function (it) { if (!it.title && !it.body) return; h += "<h3>" + E(it.cat ? "[" + it.cat + "] " : "") + E(it.title || "제목 없음") + (it.by ? " · " + E(it.by) : "") + '</h3><p class="box">' + P(it.body || "") + "</p>"; });
       sec("제과제빵", h);
       // 보건증
-      var hc = J("cafesui.health"); if (hc) { var hb = ""; Object.keys(hc).forEach(function (n) { if (hc[n]) hb += "<tr><th>" + E(n) + "</th><td>발급일 " + E(hc[n]) + "</td></tr>"; }); if (hb) sec("보건증", '<table class="kv">' + hb + "</table>"); }
+      var hc = J("csdemo.health"); if (hc) { var hb = ""; Object.keys(hc).forEach(function (n) { if (hc[n]) hb += "<tr><th>" + E(n) + "</th><td>발급일 " + E(hc[n]) + "</td></tr>"; }); if (hb) sec("보건증", '<table class="kv">' + hb + "</table>"); }
       var now = new Date(), stamp = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0") + "-" + String(now.getDate()).padStart(2, "0") + " " + String(now.getHours()).padStart(2, "0") + ":" + String(now.getMinutes()).padStart(2, "0");
       var css = "body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;max-width:900px;margin:24px auto;padding:0 18px;color:#2b2620;line-height:1.6;background:#fffdf8}h1{font-size:22px;border-bottom:3px solid #8a6b3a;padding-bottom:8px}h1 small{font-size:13px;color:#8a7f6e;font-weight:400;margin-left:10px}nav{font-size:13px;margin:10px 0 24px}nav a{margin-right:12px;color:#8a6b3a}section{margin:26px 0;page-break-inside:avoid}h2{font-size:18px;color:#8a6b3a;border-left:5px solid #8a6b3a;padding-left:10px;margin:30px 0 10px}h3{font-size:15px;margin:18px 0 6px;background:#f3ede0;padding:6px 10px;border-radius:6px}h4{font-size:13.5px;margin:12px 0 4px;color:#5f5546}table{border-collapse:collapse;width:100%;font-size:13.5px;margin:4px 0 10px}table.kv th{width:160px;text-align:left;background:#f8f4ea;font-weight:700;vertical-align:top}table.kv.two th{width:220px}th,td{border:1px solid #e3dccb;padding:5px 8px;vertical-align:top}table.grid th{background:#f8f4ea}tr.boss th,tr.boss td{background:#f3eedf;font-weight:900}tr.red th,tr.red td{color:#a8402f;font-weight:700}p.box{background:#f8f4ea;padding:10px 12px;border-radius:6px;white-space:normal}p.sub{margin:8px 0 2px;font-size:12.5px;color:#8a7f6e;font-weight:700}i{color:#8a7f6e}@media print{body{margin:0}h2{page-break-after:avoid}}";
       var toc = out.map(function (x) { var m = x.match(/<h2>(.*?)<\/h2>/); return m ? m[1] : ""; }).filter(Boolean);
@@ -784,12 +784,12 @@
       var o;
       try { o = JSON.parse(v.slice(i)); }
       catch (e) { msg.textContent = "복사본 글이 깨졌습니다"; return; }
-      var cnt = Object.keys(o).filter(function (k) { return k.indexOf("cafesui.") === 0; }).length;
+      var cnt = Object.keys(o).filter(function (k) { return k.indexOf("csdemo.") === 0; }).length;
       var stamp = (v.match(/CAFESUI-BACKUP\s+(\d{4}-\d{2}-\d{2})/) || [])[1] || "";
       if (!window.confirm("복사본" + (stamp ? " (" + stamp + " 것)" : "") + " " + cnt + "개 항목을 불러올까요?\n\n복사본에 들어 있는 항목은 복사본 내용으로 바뀝니다 (같은 날짜 일지 · 같은 달 근무표 등).\n복사본에 없는 항목은 그대로 남습니다.")) return;
       var n = 0;
       Object.keys(o).forEach(function (k) {
-        if (k.indexOf("cafesui.") !== 0 || /^cafesui\.(me|unlocked|device|syncstate|ui\..*|presence\..*)$/.test(k)) return;   // 기기 번호는 컴퓨터마다 달라야 한다
+        if (k.indexOf("csdemo.") !== 0 || /^csdemo\.(me|unlocked|device|syncstate|ui\..*|presence\..*)$/.test(k)) return;   // 기기 번호는 컴퓨터마다 달라야 한다
         try { localStorage.setItem(k, o[k]); n += 1; } catch (e) {}
       });
       msg.textContent = n + "개를 불러왔습니다 · 화면을 새로 엽니다";
@@ -803,7 +803,7 @@
       var c = cut.toISOString().slice(0, 10);
       var gone = 0;
       keys().forEach(function (k) {
-        var m = k.match(/^cafesui\.(log|att)\.(\d{4}-\d{2}-\d{2})$/);
+        var m = k.match(/^csdemo\.(log|att)\.(\d{4}-\d{2}-\d{2})$/);
         if (m && m[2] < c) {
           try { localStorage.removeItem(k); gone += 1; } catch (e) {}
         }
@@ -835,7 +835,7 @@
     function get(k) { try { return localStorage.getItem(k) || ""; } catch (e) { return ""; } }
     function set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
     function del(k) { try { localStorage.removeItem(k); } catch (e) {} }
-    function pinKey(n) { return "cafesui.pin." + n; }
+    function pinKey(n) { return "csdemo.pin." + n; }
     // 그대로 적어두지 않으려고 살짝 섞는다 (진짜 암호화는 아니다)
     function mix(n, v) {
       var out = "";
@@ -850,7 +850,7 @@
              '">' + n + "</button>";
     }).join("");
 
-    if (!get("cafesui.me")) gate.hidden = false;
+    if (!get("csdemo.me")) gate.hidden = false;
 
     gb.addEventListener("click", function (e) {
       var b = e.target.closest(".gatebtn");
@@ -883,8 +883,8 @@
       }
       if (mode === "make") {
         set(pinKey(picked), mix(picked, v));
-        set("cafesui.me", picked);
-        try { sessionStorage.setItem("cafesui.unlocked", "1"); } catch (e) {}
+        set("csdemo.me", picked);
+        try { sessionStorage.setItem("csdemo.unlocked", "1"); } catch (e) {}
         location.reload();
         return;
       }
@@ -894,8 +894,8 @@
         pin1.value = ""; pin1.focus();
         return;
       }
-      set("cafesui.me", picked);
-      try { sessionStorage.setItem("cafesui.unlocked", "1"); } catch (e) {}
+      set("csdemo.me", picked);
+      try { sessionStorage.setItem("csdemo.unlocked", "1"); } catch (e) {}
       location.reload();
     }
     document.getElementById("pinOk").addEventListener("click", go);
@@ -941,7 +941,7 @@
     });
 
     // 월말 평가는 대상자 본인과 사장님만
-    var me = get("cafesui.me");
+    var me = get("csdemo.me");
     if (me) {
       var allowed = [BOSS, "김하늘"];
       if (allowed.indexOf(me) < 0) {
@@ -961,7 +961,7 @@
     var NAMES = ["김하늘", "이다온", "최서하", "사장님"];
     var bar = document.getElementById("myBar");
     var me = "";
-    try { me = localStorage.getItem("cafesui.me") || ""; } catch (e) {}
+    try { me = localStorage.getItem("csdemo.me") || ""; } catch (e) {}
     if (!me || NAMES.indexOf(me) < 0 || !bar) return;
 
     // 오늘 내 근무
@@ -1019,7 +1019,7 @@
     bar.hidden = false;
 
     document.getElementById("myOff").addEventListener("click", function () {
-      try { localStorage.removeItem("cafesui.me"); sessionStorage.removeItem("cafesui.unlocked"); } catch (e) {}
+      try { localStorage.removeItem("csdemo.me"); sessionStorage.removeItem("csdemo.unlocked"); } catch (e) {}
       location.reload();
     });
 
@@ -1056,7 +1056,7 @@
     var RORDER = { "오픈": 0, "반죽": 1, "미들": 2, "전일": 2, "토요일": 2, "전일(케이크+사무실근무)": 3, "마감": 4,
                    "공부": 5, "출강": 5, "서울출장": 5, "출장": 5, "사무실 근무": 5, "해외출장": 5, "워크샵": 5 };
 
-    function keyOf(ym) { return "cafesui.sched." + ym; }
+    function keyOf(ym) { return "csdemo.sched." + ym; }
     function draftOf(ym) {
       return window.__CS_DRAFT ? window.__CS_DRAFT(ym) : {};
     }
@@ -1323,7 +1323,7 @@
     if (!dateEl || !listEl) return;
     var COL = { "김하늘": "p1", "이다온": "p2", "최서하": "p3", "사장님": "p4" };
     var ROLES = ["오픈", "미들", "마감", "전일", "전일(케이크+사무실근무)", "반죽 근무"];
-    function keyOf(d) { return "cafesui.att." + d; }
+    function keyOf(d) { return "csdemo.att." + d; }
     function load(d) {
       try { var raw = localStorage.getItem(keyOf(d)); return raw ? (JSON.parse(raw) || {}) : {}; }
       catch (e) { return {}; }
@@ -1441,7 +1441,7 @@
     // 찍은 것이 날짜순으로 쌓인다
     var logEl = document.getElementById("atLog");
     var cntEl = document.getElementById("atCount");
-    var PRE = "cafesui.att.";
+    var PRE = "csdemo.att.";
     var WD2 = ["일", "월", "화", "수", "목", "금", "토"];
     function drawLog() {
       var rows = [];
@@ -1789,7 +1789,7 @@
     // 가고 싶은 곳 — 사람별로 묶고, 이름 줄을 눌러 접는다 (접힘 상태는 이 기기에만)
     var WL_ORDER = ["사장님", "김하늘", "이다온", "최서하", "다 같이"];
     var WL_COL = { "김하늘": "p1", "이다온": "p2", "최서하": "p3", "사장님": "p4" };
-    var FOLD_KEY = "cafesui.ui.wlfold";
+    var FOLD_KEY = "csdemo.ui.wlfold";
     function foldState() { try { return JSON.parse(localStorage.getItem(FOLD_KEY) || "{}") || {}; } catch (e) { return {}; } }
     function saveFold(o) { try { localStorage.setItem(FOLD_KEY, JSON.stringify(o)); } catch (e) {} }
     function wishTable() { return document.querySelectorAll(".wstable.mtg")[0]; }
@@ -1919,7 +1919,7 @@
       var ref = document.getElementById("wsRef");
       if (ref) ref.innerHTML = REF[y] || "<p class='tnote'>이 해에는 옮겨 온 자료가 없습니다.</p>";
     }
-    function key() { return "cafesui.ws." + (yearEl.value || "2026"); }
+    function key() { return "csdemo.ws." + (yearEl.value || "2026"); }
     var base = {};   // 마지막으로 읽어온 값 — 저장할 때 이것과 다른 칸만 「내가 고친 것」으로 본다
     function snapBase() { ins.forEach(function (el) { base[el.dataset.k] = el.type === "checkbox" ? (el.checked ? 1 : "") : (el.value || ""); }); }
     function load() {
@@ -2176,7 +2176,7 @@
     var CATS = {"bingsu":["c-bing","빙수"],"fruit":["c-fruit","과일"],"holiday":["c-hol","명절"],"giftset":["c-gift","선물세트"],"event":["c-ev","기념일"],"order":["c-ord","발주·관리"],"menu":["c-menu","메뉴"],"memo":["c-memo","메모·예약"],"log":["c-log","마감 일지"]};
     var ORDER = ["bingsu", "fruit", "menu", "event", "giftset", "order", "holiday"];
     var WDN = ["월", "화", "수", "목", "금", "토", "일"];
-    var KEY = "cafesui.annual";
+    var KEY = "csdemo.annual";
     var st = { edits: {}, adds: [] };
     try {
       var raw = localStorage.getItem(KEY);
@@ -2220,7 +2220,7 @@
     // 일지 탭 「이달 메모 달력」에 적은 것도 같이 보여준다 (그 해 그 달만)
     function noteItems(m) {
       var out = [], yr = yearOf(m), all = {};
-      try { all = JSON.parse(localStorage.getItem("cafesui.daynotes") || "{}"); } catch (e) {}
+      try { all = JSON.parse(localStorage.getItem("csdemo.daynotes") || "{}"); } catch (e) {}
       Object.keys(all).forEach(function (date) {
         if (date.slice(0, 4) != yr || +date.slice(5, 7) !== m) return;
         (all[date] || []).forEach(function (n, i) {
@@ -2232,7 +2232,7 @@
       try {
         for (var i = 0; i < localStorage.length; i++) {
           var k = localStorage.key(i);
-          if (k.indexOf("cafesui.log.") !== 0) continue;
+          if (k.indexOf("csdemo.log.") !== 0) continue;
           var date = k.slice(12);
           if (date.slice(0, 4) != yr || +date.slice(5, 7) !== m) continue;
           var v = JSON.parse(localStorage.getItem(k) || "{}"), f = v.f || {};
@@ -2483,7 +2483,7 @@
   (function () {
     var cins = Array.prototype.slice.call(document.querySelectorAll(".cin"));
     if (!cins.length) return;
-    var KEY = "cafesui.mtable";
+    var KEY = "csdemo.mtable";
     var st = {};
     try { var raw = localStorage.getItem(KEY); if (raw) st = JSON.parse(raw) || {}; }
     catch (e) {}
@@ -2758,7 +2758,7 @@
     function growAll() { if (GROW) form.querySelectorAll("textarea.fin").forEach(grow); }
     if (GROW) form.addEventListener("input", function (e) { grow(e.target); });
     // 이 컴퓨터에 이전 저장본을 남긴다 (공유 안 함) — 다른 컴퓨터가 덮어써도 되살릴 수 있게
-    var HIST_KEY = "cafesui.ui.hist." + keyBase;
+    var HIST_KEY = "csdemo.ui.hist." + keyBase;
     function histAll() { try { return JSON.parse(localStorage.getItem(HIST_KEY) || "{}") || {}; } catch (e) { return {}; } }
     function histPush(k, o) {
       try {
@@ -3099,9 +3099,9 @@
     });
   }
   bindForm("mtMonth", "mtForm", "mtMsg", "mtCopy", "mtClear",
-           "cafesui.meeting", "○○카페 월말회의", null, "mtReport", ".cmpwrap");
+           "csdemo.meeting", "○○카페 월말회의", null, "mtReport", ".cmpwrap");
   bindForm("rvMonth", "rvForm", "rvMsg", "rvCopy", "rvClear",
-           "cafesui.review", "월말 성과 체크", "rvWho", "rvReport", null,
+           "csdemo.review", "월말 성과 체크", "rvWho", "rvReport", null,
            "rvChecks", "rvCount", "rvRank");
 
   // 마감 일지 — 채우고 복사해서 텔레그램으로
@@ -3119,7 +3119,7 @@
       return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") +
              "-" + String(d.getDate()).padStart(2, "0");
     }
-    function keyFor() { return "cafesui.log." + (dateEl.value || today()); }
+    function keyFor() { return "csdemo.log." + (dateEl.value || today()); }
     window.__CS_OPEN_LOG = function (d) { dateEl.value = d; load(); report(); drawList(); };
 
     // base: 이 화면이 마지막으로 읽거나 저장한 값. 저장할 때 이 화면에서 바꾼 칸만 쓰고,
@@ -3162,7 +3162,7 @@
       el.querySelector("button").onclick = function () { var b = document.getElementById("myOff"); if (b) b.click(); };
     }
     // ↩ 되돌리기 — 저장하기 바로 전 모습을 이 기기에 남겨 두고(글 쓰는 한 묶음마다 1개 · 날짜별 최대 30개), 누르면 한 단계씩 되돌린다
-    var UNDO_PRE = "cafesui.ui.undo.", undoLast = {};
+    var UNDO_PRE = "csdemo.ui.undo.", undoLast = {};
     function undoList(k) { try { return JSON.parse(localStorage.getItem(UNDO_PRE + k.slice(12)) || "[]") || []; } catch (e) { return []; } }
     function undoPush(k, old) {
       var now = Date.now(); if (undoLast[k] && now - undoLast[k] < 6000) { undoLast[k] = now; return; }
@@ -3415,7 +3415,7 @@
     var savedEl = document.getElementById("lgSaved");
     var countEl = document.getElementById("lgCount");
     var saveBtn = document.getElementById("lgSave");
-    var PRE = "cafesui.log.";
+    var PRE = "csdemo.log.";
     var WD2 = ["일", "월", "화", "수", "목", "금", "토"];
 
     function allLogs() {
@@ -3839,7 +3839,7 @@
     var copyBtn = bar.querySelector(".reqcopy");
     var clearBtn = bar.querySelector(".reqclear");
     var msgEl = bar.querySelector(".reqmsg");
-    var KEY = "cafesui.off." + month;
+    var KEY = "csdemo.off." + month;
     var who = null, picked = [], reasons = {};
 
     try {

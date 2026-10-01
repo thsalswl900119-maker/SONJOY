@@ -1,20 +1,20 @@
-  // ☁ 여러 컴퓨터 공유 — 이 기기에 저장되는 cafesui.* 내용을 Firebase(ops 컬렉션)에도 같이 쓰고, 다른 컴퓨터에서 바뀐 건 받아온다.
+  // ☁ 여러 컴퓨터 공유 — 이 기기에 저장되는 csdemo.* 내용을 Firebase(ops 컬렉션)에도 같이 쓰고, 다른 컴퓨터에서 바뀐 건 받아온다.
   //   · 저장 키 하나 = 문서 하나 (id = 키). 마지막에 쓴 쪽이 이긴다.
-  //   · 로그인(cafesui.me)과 잠금 상태는 기기마다 따로. 비밀번호(cafesui.pin.*)는 같이 공유해서 한 번 정하면 어느 컴퓨터에서나 통한다.
+  //   · 로그인(csdemo.me)과 잠금 상태는 기기마다 따로. 비밀번호(csdemo.pin.*)는 같이 공유해서 한 번 정하면 어느 컴퓨터에서나 통한다.
   //   · Firebase가 없거나(오프라인·차단) 익명 로그인이 꺼져 있으면 이 기기에만 저장하고 위에 표시만 한다.
   (function () {
-    var LOCAL_ONLY = /^cafesui\.(me|unlocked|device|syncstate|ui\..*)$/;
+    var LOCAL_ONLY = /^csdemo\.(me|unlocked|device|syncstate|ui\..*)$/;
     var origSet = Storage.prototype.setItem, origRem = Storage.prototype.removeItem;
     var pending = {}, timers = {}, remote = {}, sent = {}, applying = false, ready = false, first = true, changed = false, changedKeys = [];
     var inflight = 0, retryT = {};
     var boot = {};   // 화면 열 때 이 기기에 있던 값 — 이것과 같은 저장은 「내가 고친 것」이 아니다
-    try { for (var bi = 0; bi < localStorage.length; bi++) { var bk = localStorage.key(bi); if (bk.indexOf("cafesui.") === 0 && !LOCAL_ONLY.test(bk)) boot[bk] = localStorage.getItem(bk); } } catch (e) {}
+    try { for (var bi = 0; bi < localStorage.length; bi++) { var bk = localStorage.key(bi); if (bk.indexOf("csdemo.") === 0 && !LOCAL_ONLY.test(bk)) boot[bk] = localStorage.getItem(bk); } } catch (e) {}
     var dirtyBoot = {};   // 지난번에 못 보낸 저장 — 이건 서버보다 이 기기가 맞다
-    try { dirtyBoot = JSON.parse(localStorage.getItem("cafesui.ui.dirty") || "{}") || {}; } catch (e) {}
+    try { dirtyBoot = JSON.parse(localStorage.getItem("csdemo.ui.dirty") || "{}") || {}; } catch (e) {}
     var state = { s: "off", msg: "" };
     window.__CS_SYNC = state;
     // 아직 서버로 못 보낸 저장 — 이 기기에 표시해 두고, 다음에 열 때 서버 값 대신 이 기기 값을 올린다 (저장한 건 무조건 남긴다)
-    var DIRTYK = "cafesui.ui.dirty";
+    var DIRTYK = "csdemo.ui.dirty";
     function dirtyGet() { try { return JSON.parse(localStorage.getItem(DIRTYK) || "{}") || {}; } catch (e) { return {}; } }
     function dirtySet(o) { try { origSet.call(localStorage, DIRTYK, JSON.stringify(o)); } catch (e) {} }
     function markDirty(k) { var o = dirtyGet(); o[k] = Date.now(); dirtySet(o); }
@@ -39,13 +39,13 @@
     // 이 기기의 저장을 가로채서 서버에도 보낸다
     Storage.prototype.setItem = function (k, v) {
       origSet.call(this, k, v);
-      if (this !== localStorage || applying || k.indexOf("cafesui.") !== 0 || LOCAL_ONLY.test(k)) return;
+      if (this !== localStorage || applying || k.indexOf("csdemo.") !== 0 || LOCAL_ONLY.test(k)) return;
       if (!ready && boot[k] === String(v)) return;   // 아직 서버 값을 못 받았는데 열 때 값 그대로 다시 저장한 것 — 서버 값을 기다린다
       markDirty(k); queue(k, String(v));
     };
     Storage.prototype.removeItem = function (k) {
       origRem.call(this, k);
-      if (this === localStorage && !applying && k.indexOf("cafesui.") === 0 && !LOCAL_ONLY.test(k)) { markDirty(k); queue(k, null); }
+      if (this === localStorage && !applying && k.indexOf("csdemo.") === 0 && !LOCAL_ONLY.test(k)) { markDirty(k); queue(k, null); }
     };
     function queue(k, v) {
       pending[k] = v;
@@ -54,8 +54,8 @@
     }
     // 기기 번호 — 브라우저마다 다르게. 백업 되살리기로 같은 번호가 복사됐을 수 있어 한 번은 새로 만든다
     var dev = null;
-    try { dev = localStorage.getItem("cafesui.device"); if (!localStorage.getItem("cafesui.ui.dev2")) dev = null; } catch (e) {}
-    if (!dev) { dev = "d" + Math.random().toString(36).slice(2, 8); try { origSet.call(localStorage, "cafesui.device", dev); origSet.call(localStorage, "cafesui.ui.dev2", "1"); } catch (e) {} }
+    try { dev = localStorage.getItem("csdemo.device"); if (!localStorage.getItem("csdemo.ui.dev2")) dev = null; } catch (e) {}
+    if (!dev) { dev = "d" + Math.random().toString(36).slice(2, 8); try { origSet.call(localStorage, "csdemo.device", dev); origSet.call(localStorage, "csdemo.ui.dev2", "1"); } catch (e) {} }
     window.__CS_DEV = dev;
 
     var app, db, col;
@@ -137,7 +137,7 @@
         applying = true;
         snap.docChanges().forEach(function (ch) {
           var k = ch.doc.id, d = ch.doc.data() || {};
-          if (k.indexOf("cafesui.") !== 0 || LOCAL_ONLY.test(k)) return;
+          if (k.indexOf("csdemo.") !== 0 || LOCAL_ONLY.test(k)) return;
           var local = null; try { local = localStorage.getItem(k); } catch (e) {}
           if (ch.type === "removed") {
             remote[k] = null;
@@ -165,7 +165,7 @@
             try {
               for (var i = 0; i < localStorage.length; i++) {
                 var k2 = localStorage.key(i);
-                if (k2.indexOf("cafesui.") !== 0 || LOCAL_ONLY.test(k2) || (k2 in remote)) continue;
+                if (k2.indexOf("csdemo.") !== 0 || LOCAL_ONLY.test(k2) || (k2 in remote)) continue;
                 pending[k2] = localStorage.getItem(k2);
               }
             } catch (e) {}
@@ -182,8 +182,8 @@
         setStatus(state.s === "err" ? "err" : "on", state.msg);
         if (changed) {
           changed = false;
-          var presKeys = changedKeys.filter(function (k) { return k.indexOf("cafesui.presence.") === 0; });
-          var dataKeys = changedKeys.filter(function (k) { return k.indexOf("cafesui.presence.") !== 0; });
+          var presKeys = changedKeys.filter(function (k) { return k.indexOf("csdemo.presence.") === 0; });
+          var dataKeys = changedKeys.filter(function (k) { return k.indexOf("csdemo.presence.") !== 0; });
           changedKeys = [];
           if (presKeys.length) { try { window.dispatchEvent(new CustomEvent("cs:presence", { detail: { keys: presKeys } })); } catch (e) {} }
           if (dataKeys.length) {

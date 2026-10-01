@@ -18,7 +18,7 @@
   }
   function build(ym) {
     var keys = [];
-    for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (k.indexOf("cafesui.log." + ym + "-") === 0) keys.push(k); }
+    for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (k.indexOf("csdemo.log." + ym + "-") === 0) keys.push(k); }
     keys.sort();
     var F = fields(), days = [], tot = 0, sd = 0, miss = [], sums = { lf101: 0, lf102: 0, lf104: 0, lf105: 0, lf106: 0 };
     keys.forEach(function (k) {
@@ -48,7 +48,7 @@
   // 월말회의 자동 채우기 — 일지에서 그대로 셀 수 있는 것만, 비어 있는 칸에만 (이미 적힌 칸은 절대 안 덮음)
   function autoFill(ym) {
     var keys = [];
-    for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (k.indexOf("cafesui.log." + ym + "-") === 0) keys.push(k); }
+    for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (k.indexOf("csdemo.log." + ym + "-") === 0) keys.push(k); }
     keys.sort(); if (!keys.length) return 0;
     var sales = [], sold = [], comp = [], brk = [], hide = [], W = { "폐기": [], "서비스": [], "직원": [], "테스트": [], "기타": [] }, wdSum = {}, wdN = {};
     keys.forEach(function (k) {
@@ -99,7 +99,7 @@
     keys.forEach(function (k) { var f = (J(k) || {}).f || {}; IT.forEach(function (x) { var n = num(f[x[1]]); if (n !== null) { isum[x[0]] = (isum[x[0]] || 0) + n; iany[x[0]] = 1; } }); });
     // 직원 수 = 그 달 근무표에 근무가 있는 직원(사장님 빼고) · 근무표가 없으면 일지를 쓴 직원
     var AWAY = { "휴무": 1, "휴가": 1, "반짝휴무": 1, "출장": 1, "공부": 1, "출강": 1, "서울출장": 1, "사무실 근무": 1, "해외출장": 1, "워크샵": 1 };
-    var staff = {}, sc = J("cafesui.sched." + ym) || {};
+    var staff = {}, sc = J("csdemo.sched." + ym) || {};
     Object.keys(sc).forEach(function (md) { Object.keys(sc[md] || {}).forEach(function (w) { var r = sc[md][w]; if (w !== "공지" && w !== "사장님" && r && !AWAY[r]) staff[w] = 1; }); });
     if (!Object.keys(staff).length) keys.forEach(function (k) {
       var o = J(k) || {};
@@ -129,7 +129,7 @@
     var wrap = document.getElementById("mtRefill");
     if (!wrap) { wrap = document.createElement("span"); wrap.id = "mtRefill"; msg.parentNode.insertBefore(wrap, msg.nextSibling); }
     wrap.innerHTML = "";
-    var UK = "cafesui.ui.mtundo." + ym, saved = null; try { saved = JSON.parse(localStorage.getItem(UK) || "null"); } catch (e) {}
+    var UK = "csdemo.ui.mtundo." + ym, saved = null; try { saved = JSON.parse(localStorage.getItem(UK) || "null"); } catch (e) {}
     if (lastSkipped.length) {
       var b = document.createElement("button"); b.type = "button"; b.className = "skbtn"; b.textContent = "🔄 이미 적힌 " + lastSkipped.length + "칸도 일지 기준으로 다시 채우기";
       b.onclick = function () {

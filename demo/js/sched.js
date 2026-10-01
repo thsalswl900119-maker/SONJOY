@@ -100,7 +100,7 @@
     try {
       for (var i = 0; i < localStorage.length; i++) {
         var k = localStorage.key(i);
-        if (k.indexOf("cafesui.sched.") !== 0) continue;
+        if (k.indexOf("csdemo.sched.") !== 0) continue;
         var ym = k.slice(14), data = JSON.parse(localStorage.getItem(k) || "{}");
         Object.keys(data).forEach(function (md) {
           var day = md.split("-")[1];

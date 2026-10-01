@@ -1,5 +1,5 @@
   // ── 재고 · 발주 ─────────────────────────────────────────────
-  // 운영노트(sonjoy)의 재고·발주 화면을 그대로 옮겼다. 기기별 저장(cafesui.stock.날짜).
+  // 운영노트(sonjoy)의 재고·발주 화면을 그대로 옮겼다. 기기별 저장(csdemo.stock.날짜).
   (function () {
     var root = document.getElementById("tp12");
     if (!root) return;
@@ -9,7 +9,7 @@
   var SEASON=[];
 
     var MGR = ["김하늘", "사장님"];
-    var PRE = "cafesui.stock.";
+    var PRE = "csdemo.stock.";
     var FIELDS = ["prod", "fruitUseA", "fruitUseB", "fruitUseC", "creamUse", "fruitOrder", "creamPlan", "report", "noOrder"];   // noOrder: 「발주 넣을 것 없음」 확인 (누가 · 몇 시)
     var NL = String.fromCharCode(10);
     var TIP = {
@@ -24,7 +24,7 @@
     var PAIR = { "케이크 상자 미니": "케이크 하판 미니", "케이크 상자 1호": "케이크 하판 1호", "케이크 상자 2호": "케이크 하판 2호", "케이크 상자 3호": "케이크 하판 3호", "케이크 상자 4호": "케이크 하판 4호" };
     var PAIRED = {}; Object.keys(PAIR).forEach(function (k) { PAIRED[PAIR[k]] = k; });
 
-    function me() { try { return localStorage.getItem("cafesui.me") || ""; } catch (e) { return ""; } }
+    function me() { try { return localStorage.getItem("csdemo.me") || ""; } catch (e) { return ""; } }
     function isMgr() { return MGR.indexOf(me()) >= 0; }
     function pad(n) { return String(n).padStart(2, "0"); }
     function ymd(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
@@ -52,8 +52,8 @@
       } catch (e) {}
       return out.sort();
     }
-    function customItems() { try { return JSON.parse(localStorage.getItem("cafesui.stockitems") || "[]"); } catch (e) { return []; } }
-    function setCustom(a) { try { localStorage.setItem("cafesui.stockitems", JSON.stringify(a)); } catch (e) {} }
+    function customItems() { try { return JSON.parse(localStorage.getItem("csdemo.stockitems") || "[]"); } catch (e) { return []; } }
+    function setCustom(a) { try { localStorage.setItem("csdemo.stockitems", JSON.stringify(a)); } catch (e) {} }
     function allItems() {
       return ITEMS.concat(customItems().map(function (c) { return [c.g, c.name, c.unit, c.re, c.memo, true]; }));
     }
@@ -708,13 +708,13 @@
     }, true);
   })();
 
-  // 보건증 — 발급일 넣으면 만료일(1년)과 남은 날 계산. 기기에 고정 저장 (cafesui.health)
+  // 보건증 — 발급일 넣으면 만료일(1년)과 남은 날 계산. 기기에 고정 저장 (csdemo.health)
   (function () {
     var box = document.getElementById("hcRows");
     if (!box) return;
     var NAMES = ["김하늘", "이다온", "최서하", "사장님"];
     var COL = { "김하늘": "wp1", "이다온": "wp2", "최서하": "wp3", "사장님": "wp4" };
-    var KEY = "cafesui.health";
+    var KEY = "csdemo.health";
     function load() { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { return {}; } }
     function save(o) { try { localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) {} }
     function pad(n) { return String(n).padStart(2, "0"); }
@@ -751,13 +751,13 @@
     render();
   })();
 
-  // 일지 — 이달 메모 달력. 예약·공지를 날짜에 적는다 (cafesui.daynotes). 연간 행사에도 같이 보인다.
+  // 일지 — 이달 메모 달력. 예약·공지를 날짜에 적는다 (csdemo.daynotes). 연간 행사에도 같이 보인다.
   (function () {
     var cal = document.getElementById("mcCal"); if (!cal) return;
     var monEl = document.getElementById("mcMonth"), edit = document.getElementById("mcEdit");
     var titleEl = document.getElementById("mcTitle"), listEl = document.getElementById("mcList");
     var textEl = document.getElementById("mcText");
-    var KEY = "cafesui.daynotes", VKEY = "cafesui.vacations";   // 휴가: [{id, who, from, to, memo, by, t}]
+    var KEY = "csdemo.daynotes", VKEY = "csdemo.vacations";   // 휴가: [{id, who, from, to, memo, by, t}]
     var COL = { "김하늘": "p1", "이다온": "p2", "최서하": "p3", "사장님": "p4" };
     function vload() { try { var a = JSON.parse(localStorage.getItem(VKEY) || "[]"); return Array.isArray(a) ? a : []; } catch (e) { return []; } }
     function vsave(a) { try { localStorage.setItem(VKEY, JSON.stringify(a)); } catch (e) {} }
@@ -772,7 +772,7 @@
     function vfmt(d) { var p = d.split("-"); return (+p[1]) + "/" + (+p[2]); }
     var WD = ["월", "화", "수", "목", "금", "토", "일"];
     var sel = null;
-    function me() { try { return localStorage.getItem("cafesui.me") || ""; } catch (e) { return ""; } }
+    function me() { try { return localStorage.getItem("csdemo.me") || ""; } catch (e) { return ""; } }
     function load() { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { return {}; } }
     function save(o) { try { localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) {} if (window.__CS_ANNUAL_REFRESH) window.__CS_ANNUAL_REFRESH(); }
     function pad(n) { return String(n).padStart(2, "0"); }

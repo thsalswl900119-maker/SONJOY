@@ -20,7 +20,13 @@ NAMES = [  # 긴 것부터
 HIDE_TABS = ["tp7", "tp8", "tp9", "tp13", "tp14"]   # 과일(무게) · 월말 평가(급여) · 워크샵(비용) · 제과제빵 · 독서나눔
 
 
+def iso(s):
+    # 체험판은 같은 주소(github.io) 아래라 브라우저 저장소를 실제 시스템과 같이 쓴다 → 저장 이름을 따로 (csdemo.*)
+    return s.replace("cafesui\\.", "csdemo\\.").replace("cafesui.", "csdemo.")
+
+
 def scrub(s):
+    s = iso(s)
     for a, b in NAMES:
         s = s.replace(a, b)
     s = re.sub(r"\b0\d{1,2}-\d{3,4}-\d{4}\b", "010-0000-0000", s)
@@ -123,7 +129,7 @@ for pid in ["tp8", "tp9"]:
 write("index.html", scrub(h))
 
 # ── 예시 데이터 · 잠금 건너뛰기
-write("js/demo.js", r"""// 체험판 — 처음 열면 예시 데이터를 깔고, 사장님 이름으로 바로 들어간다 (서버 연결 없음)
+write("js/demo.js", iso(r"""// 체험판 — 처음 열면 예시 데이터를 깔고, 사장님 이름으로 바로 들어간다 (서버 연결 없음)
 (function () {
   function p2(n) { return String(n).padStart(2, "0"); }
   function ymd(d) { return d.getFullYear() + "-" + p2(d.getMonth() + 1) + "-" + p2(d.getDate()); }
@@ -155,10 +161,10 @@ write("js/demo.js", r"""// 체험판 — 처음 열면 예시 데이터를 깔�
     location.reload();
   });
 })();
-""")
+"""))
 
 # ── 마지막 점검: 남으면 안 되는 것
-bad = ["정항아", "박혜빈", "이해선", "혜빈", "항아님", "firebasejs", "config.js", "망고사장", "58,000", "서울우유", "미나리", "꿀팁 — 망고"]
+bad = ["cafesui.", "정항아", "박혜빈", "이해선", "혜빈", "항아님", "firebasejs", "config.js", "망고사장", "58,000", "서울우유", "미나리", "꿀팁 — 망고"]
 leftover = []
 for root, _, files in os.walk(OUT):
     for f in files:

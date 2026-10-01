@@ -7,9 +7,9 @@
   };
   // 매일 자동 백업 — 이 컴퓨터에 하루 한 번 모든 내용을 통째로 남긴다 (공유 안 함 · 7일 보관)
   (function () {
-    var PRE = "cafesui.ui.snap.";
+    var PRE = "csdemo.ui.snap.";
     function today() { var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
-    function skip(k) { return k.indexOf("cafesui.") !== 0 || /^cafesui\.(ui\..*|me|unlocked|device|syncstate)$/.test(k); }
+    function skip(k) { return k.indexOf("csdemo.") !== 0 || /^csdemo\.(ui\..*|me|unlocked|device|syncstate)$/.test(k); }
     function dump() {
       var o = {};
       try { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (!skip(k)) o[k] = localStorage.getItem(k); } } catch (e) {}
@@ -78,15 +78,15 @@
     });
     window.__CS_SNAP = take;
   })();
-  // 독서나눔 — cafesui.books = { items: [{id, title, author, summary, by, t, resp: {이름: {feel, apply, rec, t}}}] } (최신이 앞)
+  // 독서나눔 — csdemo.books = { items: [{id, title, author, summary, by, t, resp: {이름: {feel, apply, rec, t}}}] } (최신이 앞)
   (function () {
-    var KEY = "cafesui.books";
+    var KEY = "csdemo.books";
     var listEl = document.getElementById("rdList"); if (!listEl) return;
     var addBtn = document.getElementById("rdAdd"), msgEl = document.getElementById("rdMsg");
     var STAFF = ["김하늘", "이다온", "최서하"];
     var WHOC = { "김하늘": "p1", "이다온": "p2", "최서하": "p3", "사장님": "p4" };
     var MGR = ["사장님", "김하늘"];   // 필독서 · 요약을 올리고 고칠 수 있는 사람
-    function me() { try { return localStorage.getItem("cafesui.me") || ""; } catch (e) { return ""; } }
+    function me() { try { return localStorage.getItem("csdemo.me") || ""; } catch (e) { return ""; } }
     function isMgr() { return MGR.indexOf(me()) >= 0; }
     function load() { try { var o = JSON.parse(localStorage.getItem(KEY) || "{}"); return (o && o.items) ? o : { items: [] }; } catch (e) { return { items: [] }; } }
     var data = load(), saveT = null;
@@ -285,14 +285,14 @@
     setTimeout(all, 0); setTimeout(all, 600);
     var tab = document.querySelector('.tab[data-p="tp4"]'); if (tab) tab.addEventListener("click", function () { setTimeout(all, 50); });
   })();
-  // 제과제빵 — 레시피 · 제조 기준 카드. cafesui.baking = { items: [{id, cat, title, body, by, t}] }
+  // 제과제빵 — 레시피 · 제조 기준 카드. csdemo.baking = { items: [{id, cat, title, body, by, t}] }
   (function () {
-    var KEY = "cafesui.baking";
+    var KEY = "csdemo.baking";
     var listEl = document.getElementById("bkgList"); if (!listEl) return;
     var addBtn = document.getElementById("bkgAdd"), qEl = document.getElementById("bkgQ"), msgEl = document.getElementById("bkgMsg");
     var CATS = ["케이크", "에그타르트", "빙수", "음료", "구움과자", "과일 손질", "포장", "기타"];
     var WHOC = { "김하늘": "p1", "이다온": "p2", "최서하": "p3", "사장님": "p4" };
-    function me() { try { return localStorage.getItem("cafesui.me") || ""; } catch (e) { return ""; } }
+    function me() { try { return localStorage.getItem("csdemo.me") || ""; } catch (e) { return ""; } }
     function load() { try { var o = JSON.parse(localStorage.getItem(KEY) || "{}"); return (o && o.items) ? o : { items: [] }; } catch (e) { return { items: [] }; } }
     var data = load();
     var saveT = null;
@@ -357,17 +357,17 @@
   // 공용 컴퓨터 — 탭을 새로 열거나 30분 동안 안 만지면 이름을 다시 고른다
   (function () {
     var LOCK_MS = 30 * 60 * 1000;   // 30분 안 만지면 잠근다 (잠그기 전에 적던 것은 저장)
-    try { if (!sessionStorage.getItem("cafesui.unlocked")) localStorage.removeItem("cafesui.me"); } catch (e) {}
+    try { if (!sessionStorage.getItem("csdemo.unlocked")) localStorage.removeItem("csdemo.me"); } catch (e) {}
     function lock() {
       try { if (window.__CS_FLUSH) window.__CS_FLUSH(); } catch (e) {}   // 잠그기 전에 안 저장된 것 저장
-      try { localStorage.removeItem("cafesui.me"); sessionStorage.removeItem("cafesui.unlocked"); } catch (e) {}
+      try { localStorage.removeItem("csdemo.me"); sessionStorage.removeItem("csdemo.unlocked"); } catch (e) {}
       location.reload();
     }
     window.__CS_LOCK = lock;
     var t = null;
     function arm() {
       clearTimeout(t);
-      var me = null; try { me = localStorage.getItem("cafesui.me"); } catch (e) {}
+      var me = null; try { me = localStorage.getItem("csdemo.me"); } catch (e) {}
       if (me) t = setTimeout(lock, LOCK_MS);
     }
     ["pointerdown", "keydown", "input", "change", "scroll", "touchstart"].forEach(function (ev) {

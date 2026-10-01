@@ -1,7 +1,7 @@
-// 매니저 주간 보고 — 주마다 한 장 (월~토). 토요일 근무 마치고 쓴다. 매니저 · 사장님만 본다. cafesui.weekrep.<그 주 월요일> = { f:{sum,good,...}, by:{...}, savedAt, who }
+// 매니저 주간 보고 — 주마다 한 장 (월~토). 토요일 근무 마치고 쓴다. 매니저 · 사장님만 본다. csdemo.weekrep.<그 주 월요일> = { f:{sum,good,...}, by:{...}, savedAt, who }
 (function () {
   var box = document.getElementById("wrBox"); if (!box) return;
-  var PRE = "cafesui.weekrep.";
+  var PRE = "csdemo.weekrep.";
   var ins = Array.prototype.slice.call(box.querySelectorAll(".wrin"));
   var labelEl = document.getElementById("wrLabel"), autoEl = document.getElementById("wrAuto"), stateEl = document.getElementById("wrState"), footEl = document.getElementById("wrFoot");
   var CL = { "김하늘": "p1", "이다온": "p2", "최서하": "p3", "사장님": "p4" };
@@ -11,7 +11,7 @@
   function monOf(d) { var x = new Date(d.getFullYear(), d.getMonth(), d.getDate()); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return x; }
   function add(s, n) { var p = s.split("-"), d = new Date(+p[0], +p[1] - 1, +p[2]); d.setDate(d.getDate() + n); return ymd(d); }
   function md(s) { var p = s.split("-"); return (+p[1]) + "/" + (+p[2]); }
-  function me() { try { return localStorage.getItem("cafesui.me") || ""; } catch (e) { return ""; } }
+  function me() { try { return localStorage.getItem("csdemo.me") || ""; } catch (e) { return ""; } }
   function nim(n) { return !n ? "" : n === "사장님" ? n : n + "님"; }
   function load(k) { try { return JSON.parse(localStorage.getItem(PRE + k) || "{}") || {}; } catch (e) { return {}; } }
   function J(k) { try { return JSON.parse(localStorage.getItem(k) || "null"); } catch (e) { return null; } }
@@ -22,7 +22,7 @@
   function autoSum() {
     var tot = 0, days = 0, rec = [];
     for (var i = 0; i < 6; i++) {
-      var d = add(cur, i), lg = J("cafesui.log." + d); if (!lg || !lg.f) continue;
+      var d = add(cur, i), lg = J("csdemo.log." + d); if (!lg || !lg.f) continue;
       var v = String(lg.f.lf183 || ""), n = parseInt(v.replace(/[^0-9]/g, ""), 10);
       if (n > 10000) { tot += n; days += 1; rec.push(md(d) + " " + Math.round(n / 10000) + "만"); }
     }
@@ -115,7 +115,7 @@
       } else dl();
     }, "image/png");
   });
-  window.addEventListener("cs:remote", function (e) { var ks = (e.detail && e.detail.keys) || []; if (ks.some(function (k) { return k.indexOf(PRE) === 0 || k.indexOf("cafesui.log.") === 0; })) render(); });
+  window.addEventListener("cs:remote", function (e) { var ks = (e.detail && e.detail.keys) || []; if (ks.some(function (k) { return k.indexOf(PRE) === 0 || k.indexOf("csdemo.log.") === 0; })) render(); });
   box.addEventListener("toggle", function () { if (box.open) render(); });
   // 매니저 · 사장님만 보인다. 토요일에는 펼쳐 두고, 다른 날은 접어 둔다 (이번 주 안 썼으면 빨간 글씨로 표시)
   var SEE = ["김하늘", "사장님"], opened = false;
@@ -127,6 +127,6 @@
     render();
   }
   window.addEventListener("cs:me", gate);
-  window.addEventListener("storage", function (e) { if (e.key === "cafesui.me") gate(); });
+  window.addEventListener("storage", function (e) { if (e.key === "csdemo.me") gate(); });
   gate();
 })();
