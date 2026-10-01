@@ -4,7 +4,7 @@
     var root = document.getElementById("tp12");
     if (!root) return;
   var GROUPS={"sheet":"🍞 시트","fruit":"🥭 과일","cream":"🥛 생크림","bar":"☕ 우유·원두·휘핑","sub":"🥚 매일 쓰는 부재료","pack":"📦 포장 재료","design":"🎨 디자인 재료","etc":"🍧 빙수·기타 (4월 중순 ~ 9월 말)"};
-  var ITEMS=[["sheet", "기본 시트", "개", 2, ""], ["sheet", "초코 시트", "개", 1, ""], ["sheet", "말차 시트", "개", 1, ""], ["fruit", "망고 (안 익은 것)", "알", null, ""], ["fruit", "망고 (익은 것)", "알", null, ""], ["fruit", "애플망고", "알", null, ""], ["fruit", "멜론", "통", 1, ""], ["fruit", "복숭아 조림", "병", 12, ""], ["fruit", "체리", "박스", 0.5, ""], ["fruit", "무화과", "박스", 2, ""], ["fruit", "샤인머스켓", "박스", null, ""], ["fruit", "골드키위", "알", 4, ""], ["fruit", "바나나", "손", 1, ""], ["fruit", "딸기", "통", 2, ""], ["cream", "생크림 500ml", "통", 4, ""], ["bar", "우유", "통", 3, ""], ["bar", "우유 나100", "통", 3, ""], ["bar", "원두 RR2 1kg", "개", 2, ""], ["bar", "원두 디카페인", "개", 1, ""], ["bar", "휘핑크림 케이크용 (매일 1L)", "통", 2, ""], ["bar", "휘핑크림 에타용 (앵커/라르사)", "통", 4, ""], ["sub", "난황 1L", "통", 4, ""], ["sub", "마스카포네 500g", "개", 2, ""], ["sub", "설탕 15kg", "포", 1, ""], ["sub", "크림치즈 1kg", "통", 1, ""], ["sub", "판버터 1kg", "판", 5, ""], ["sub", "밀가루 (박력/강력)", "포", 0.5, ""], ["pack", "조각 상자 1개용 (케상)", "개", 20, ""], ["pack", "조각 상자 2개용", "개", 20, ""], ["pack", "케이크 상자 미니", "개", 20, ""], ["pack", "케이크 하판 미니", "개", 20, ""], ["pack", "케이크 상자 1호", "개", 20, ""], ["pack", "케이크 하판 1호", "개", 20, ""], ["pack", "케이크 상자 2호", "개", 20, ""], ["pack", "케이크 하판 2호", "개", 20, ""], ["pack", "케이크 상자 3호", "개", 20, ""], ["pack", "케이크 하판 3호", "개", 20, ""], ["pack", "케이크 상자 4호", "개", 5, ""], ["pack", "케이크 하판 4호", "개", 5, ""], ["pack", "케이크 칼", "개", 20, ""], ["pack", "케이크 초", "통", 1, ""], ["pack", "에타 각대봉투 1개용", "묶음", 2, ""], ["pack", "에타 각대봉투 2개용", "묶음", 2, ""], ["pack", "에타 4구 박스", "개", 50, ""], ["pack", "에타 6구 박스", "개", 50, ""], ["pack", "종이가방", "개", 50, ""], ["etc", "빙수 통단팥 3kg", "통", 1, ""], ["etc", "홀토마토 (토마토소스)", "통", 3, ""], ["etc", "연유 5kg", "통", 1, ""], ["etc", "코코넛밀크 1L", "병", 1, ""], ["etc", "인절미 다이스 1kg", "봉", 2, ""], ["etc", "인절미 가루 1kg", "봉", 1, ""], ["etc", "잉어 모나카 100개", "봉", 0.5, ""], ["etc", "다크블라썸 1kg", "박스", 1, ""], ["etc", "말차 빙수가루 1kg", "봉", 1, ""], ["etc", "냉동망고 1kg", "봉", 1, ""], ["etc", "레몬즙 1L", "병", 1, ""], ["etc", "토마토청 (만든 것)", "통", 0.5, ""], ["etc", "빙수 백 1인용", "개", 20, ""], ["etc", "빙수 백 2인용", "개", 20, ""], ["etc", "패션후르츠 퓨레 1kg", "봉", 1, ""], ["etc", "더치커피", "병", 1, ""], ["etc", "말차가루 (선인) 1kg", "봉", 0.3, ""]];
+  var ITEMS=[];   // 체험판: 재고 목록은 비워 두고 보는 사람이 직접 추가
   var REF={"예시": [["품목", "단위", "주문량", "주문 시점", "거래처", "010-0000-0000", "결제"]]};
   var SEASON=[];
 
@@ -17,6 +17,7 @@
       etc: "빙수 재료 메모 — 시즈너리 빙수는 종류에 따라 달라지니 그때그때 체크. 코코넛밀크(노브랜드) · 패션후르츠 퓨레는 웬만하면 넣기."
     };
     var OPEN = { sheet: 1, fruit: 1, cream: 1, bar: 1, sub: 1, design: 1 };
+    var ADD_TOP = true;   // 항목 추가 서식을 맨 위에 (체험판에서 켬)
     var GROUP_MEMO = { pack: "포장 메모" };   // 묶음 아래 자유 메모 (자주 안 시키는 것)
     var DESIGN_KEY = "디자인 재료";   // 자유 메모 — 없으면 발주 넣는 디자인 재료 (데코 · 픽 · 초 · 리본 · 프린트 등)
     // 케이크 상자 · 하판은 한 줄에 같이 입력 (저장 이름은 그대로)
@@ -152,20 +153,28 @@
         box.appendChild(d);
       });
       if (isMgr()) {
-        var add = document.createElement("button");
-        add.type = "button"; add.className = "skbtn"; add.textContent = "+ 재고 항목 추가";
-        add.addEventListener("click", function () {
-          var g = prompt("묶음: sheet(시트) fruit(과일) cream(생크림) bar(우유·원두·휘핑) sub(부재료) pack(포장) etc(빙수·기타)", "etc");
-          if (g === "design") return;
-          if (!g || !GROUPS[g]) return;
-          var name = prompt("품목명"); if (!name) return;
-          var unit = prompt("단위", "개") || "개";
-          var re = prompt("발주점 (이 수량 이하면 발주 표시 · 없으면 비워두기)", "");
-          var memo = prompt("발주 메모 (거래처 · 주문량)", "") || "";
-          var c = customItems(); c.push({ g: g, name: name, unit: unit, re: re === "" ? null : Number(re), memo: memo });
-          setCustom(c); renderGroups();
-        });
-        box.appendChild(add);
+        // 재고 항목 추가 — 한 줄 서식 (묶음 · 품목 · 단위 · 발주점 · 메모)
+        var add = document.createElement("div"); add.className = "skaddf";
+        add.innerHTML = '<b>+ 재고 항목 추가</b>' +
+          '<select aria-label="묶음">' + Object.keys(GROUPS).filter(function (g) { return g !== "design"; }).map(function (g) { return '<option value="' + g + '">' + esc(GROUPS[g]) + "</option>"; }).join("") + "</select>" +
+          '<input type="text" class="skin" data-f="name" placeholder="품목명 (예: 기본 시트)" aria-label="품목명">' +
+          '<input type="text" class="skin" data-f="unit" value="개" aria-label="단위" style="max-width:70px">' +
+          '<input type="text" inputmode="decimal" class="skin" data-f="re" placeholder="발주점 (선택)" aria-label="발주점" style="max-width:120px">' +
+          '<input type="text" class="skin" data-f="memo" placeholder="거래처 · 주문량 메모 (선택)" aria-label="메모">' +
+          '<button type="button" class="skbtn">추가</button>';
+        var fv = function (f) { return add.querySelector('[data-f="' + f + '"]').value.trim(); };
+        var doAdd = function () {
+          var g = add.querySelector("select").value, name = fv("name");
+          if (!name) { add.querySelector('[data-f="name"]').focus(); return; }
+          if (allItems().some(function (it) { return it[1] === name; })) { alert('"' + name + '" 은(는) 이미 있어요'); return; }
+          var re = fv("re"), c = customItems();
+          c.push({ g: g, name: name, unit: fv("unit") || "개", re: re === "" || isNaN(Number(re)) ? null : Number(re), memo: fv("memo") });
+          setCustom(c); OPEN[g] = 1; renderGroups();
+          statusEl.textContent = '"' + name + '" 항목을 추가했어요';
+        };
+        add.querySelector("button").addEventListener("click", doAdd);
+        add.querySelectorAll("input").forEach(function (x) { x.addEventListener("keydown", function (e) { if (e.key === "Enter") doAdd(); }); });
+        if (ADD_TOP) box.insertBefore(add, box.firstChild); else box.appendChild(add);
       }
       renderNeed();
     }
@@ -427,7 +436,7 @@
         var d = addDays(mon, i); var w = (d === cur) ? o : (load(d) || {});
         tA += Number(w.fruitUseA) || 0; tB += Number(w.fruitUseB) || 0; tT += Number(w.fruitUseC) || 0; tC += Number(w.creamUse) || 0;
       });
-      html += '<div class="rf"><span>이번 주 사용 <i>' + tA + "알 " + tB + "병" + (tT ? " " + tT + "통" : "") + " · 생크림 " + tC + "통</i></span><span>카페스이 · 재고발주</span></div>";
+      html += '<div class="rf"><span>이번 주 사용 <i>' + tA + "알 " + tB + "병" + (tT ? " " + tT + "통" : "") + " · 생크림 " + tC + "통</i></span><span>○○카페 · 재고발주</span></div>";
       box.innerHTML = html;
       renderUseCal();
     }
@@ -502,7 +511,7 @@
         y += LH;
       });
       cx.font = "600 22px " + FONT; cx.fillStyle = "#8C7B6B"; cx.textAlign = "right";
-      cx.fillText("카페스이 · 재고발주 " + new Date().toLocaleString("ko-KR", { hour12: false }), W - PAD, H - 26);
+      cx.fillText("○○카페 · 재고발주 " + new Date().toLocaleString("ko-KR", { hour12: false }), W - PAD, H - 26);
       var name = "발주재고_" + (cur || today()) + ".png";
       statusEl.textContent = "이미지 만드는 중…";
       cv.toBlob(function (blob) {

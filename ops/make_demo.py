@@ -14,6 +14,7 @@ NAMES = [  # 긴 것부터
     ("이해선", "최서하"), ("해선", "서하"),
     ("은비", "보라"), ("손민지", "대표"), ("손조이", "대표"), ("민지", "대표"),
     ("망고사장님", "과일 거래처"), ("과일사장님", "과일 거래처"), ("미스터돌", "병조림 거래처"),
+    ("카페스이", "○○카페"), ("CAFE すい", "CAFE ○○"), ("부산 3대 디저트", "우리 동네 디저트"), ("명지", "○○동"),
     ("서울우유", "우유 거래처"), ("미나리시트", "시트 거래처"), ("우유 밀크마스터", "우유"), ("105,000원", "○○원"),
 ]
 HIDE_TABS = ["tp7", "tp8", "tp9", "tp13", "tp14"]   # 과일(무게) · 월말 평가(급여) · 워크샵(비용) · 제과제빵 · 독서나눔
@@ -67,10 +68,8 @@ if os.path.isdir(OUT):
 # ── 재고 · 발주: 거래처 · 연락처 · 단가 · 과일 무게는 예시로 바꾸고, 품목 메모(거래처 이름)는 비운다
 st = read("js/stock.js")
 items_m = re.search(r"var ITEMS=(\[.*?\]);\n", st)
-items = json.loads(items_m.group(1))
-for it in items:
-    if len(it) > 4: it[4] = ""
-st = st.replace(items_m.group(0), "var ITEMS=" + json.dumps(items, ensure_ascii=False) + ";\n")
+st = st.replace(items_m.group(0), "var ITEMS=[];   // 체험판: 재고 목록은 비워 두고 보는 사람이 직접 추가\n")
+st = st.replace("var ADD_TOP = false;", "var ADD_TOP = true;")
 st = swap_literal(st, "var REF=", json.dumps({"예시": [["품목", "단위", "주문량", "주문 시점", "거래처", "010-0000-0000", "결제"]]}, ensure_ascii=False))
 st = swap_literal(st, "var SEASON=", "[]")
 st = re.sub(r'(fruit: )"사장님 꿀팁[^"]*"', r'\1""', st)   # 단가 들어간 꿀팁
@@ -100,6 +99,13 @@ h = read("index.html")
 h = re.sub(r'<script src="https://www\.gstatic\.com/firebasejs/[^"]+"></script>\n', "", h)
 h = h.replace('<script src="../js/config.js"></script>\n', '<script src="js/demo.js"></script>\n')
 h = re.sub(r"<title>[^<]*</title>", "<title>카페스이 직원 시스템 · 체험판</title>", h, count=1)
+TABS = [("tp0", "퇴근"), ("tp1", "근무"), ("tp4", "일지"), ("tp12", "발주")]
+TABS2 = [("tp5", "회의"), ("tp3", "청소·정비"), ("tp6", "연간행사"), ("tp11", "사용법")]
+btn = lambda p, t, sel: '<button type="button" class="tab" role="tab" data-p="%s" aria-controls="%s" aria-selected="%s">%s</button>' % (p, p, sel, t)
+nav0 = h.index('<nav class="tabs"'); nav1 = h.index("</nav>", nav0) + len("</nav>")
+h = h[:nav0] + '<nav class="tabs" role="tablist" aria-label="화면 선택"><span class="tabgrp">' + \
+    "".join(btn(p, t, "true" if p == "tp0" else "false") for p, t in TABS) + "</span>" + \
+    "".join(btn(p, t, "false") for p, t in TABS2) + "</nav>" + h[nav1:]
 # 과일 시즌 안내(거래처 전화) 문단은 통째로 빼기
 h = re.sub(r'<p class="tip"[^>]*>과일은 거의 다[^<]*</p>', "", h)
 hide = ",".join('.tab[data-p="%s"]' % t for t in HIDE_TABS) + ',.sktab[data-c="sk1"],.sktab[data-c="sk2"]'
@@ -125,7 +131,10 @@ write("js/demo.js", r"""// 체험판 — 처음 열면 예시 데이터를 깔�
   try {
     if (!localStorage.getItem("cafesui.me")) localStorage.setItem("cafesui.me", "사장님");
     sessionStorage.setItem("cafesui.unlocked", "1");
-    if (!localStorage.getItem("cafesui.ui.demo1")) {
+    if (!localStorage.getItem("cafesui.ui.demo2")) {
+      // 예전 체험판에서 남은 것(예시 재고 · 발주 등)은 지우고 새로 시작
+      Object.keys(localStorage).forEach(function (k) { if (k.indexOf("cafesui.") === 0) localStorage.removeItem(k); });
+      localStorage.setItem("cafesui.me", "사장님");
       var L = function (d, who, f) { var by = {}, bl = {}; Object.keys(f).forEach(function (k) { by[k] = who; bl[k] = f[k].split("\n").map(function () { return who; }); }); return JSON.stringify({ who: who, f: f, by: by, bl: bl }); };
       localStorage.setItem("cafesui.log." + T, L(T, "김하늘", {
         lf101: "36", lf102: "4", lf103: "12", lf104: "3", lf120: "6", lf123: "기본 4 · 초코 2", lf121: "10", lf122: "2", lf124: "망고 1박스 · 샤인머스캣 1박스",
@@ -136,9 +145,7 @@ write("js/demo.js", r"""// 체험판 — 처음 열면 예시 데이터를 깔�
         lf170: "배달 음료 1잔 누락 → 사과 후 다시 보내드림",
         lf180: "내일 생크림 입고 · 오픈 때 수량 확인",
       }));
-      localStorage.setItem("cafesui.stock." + Y, JSON.stringify({ date: Y, month: Y.slice(0, 7), by: "김하늘",
-        stock: { "기본 시트": "4", "초코 시트": "1", "말차 시트": "2" }, orders: "초코 시트 4개", orderChecks: {}, prod: "망2 티1 초밤1", creamUse: "5" }));
-      localStorage.setItem("cafesui.ui.demo1", "1");
+      localStorage.setItem("cafesui.ui.demo2", "1");
     }
   } catch (e) {}
   document.addEventListener("click", function (e) {

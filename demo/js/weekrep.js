@@ -100,7 +100,7 @@
       y += LH;
     });
     cx.font = "600 22px " + FONT; cx.fillStyle = "#8C7B6B"; cx.textAlign = "right";
-    cx.fillText("카페스이 · 매니저 주간 보고 " + new Date().toLocaleString("ko-KR", { hour12: false }), W - PAD, H - 26);
+    cx.fillText("○○카페 · 매니저 주간 보고 " + new Date().toLocaleString("ko-KR", { hour12: false }), W - PAD, H - 26);
     var name = "주간보고_" + cur + ".png", LBL = btn.textContent;
     var msg = function (t) { btn.textContent = t; setTimeout(function () { btn.textContent = LBL; }, 2500); };
     cv.toBlob(function (blob) {

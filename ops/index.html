@@ -2455,7 +2455,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-134</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-135</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -3040,10 +3040,10 @@ input,select,textarea{border-radius:var(--r3)!important}
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/sync.js?v=v0924-134"></script>
-<script src="js/holidays.js?v=v0924-134"></script>
-<script src="js/sched.js?v=v0924-134"></script>
-<script src="js/app.js?v=v0924-134"></script>
+<script src="js/sync.js?v=v0924-135"></script>
+<script src="js/holidays.js?v=v0924-135"></script>
+<script src="js/sched.js?v=v0924-135"></script>
+<script src="js/app.js?v=v0924-135"></script>
 
 <style>
 /* 재고 · 발주 */
@@ -3083,6 +3083,10 @@ input,select,textarea{border-radius:var(--r3)!important}
   background:var(--surface);color:var(--off);border:1px dashed var(--off);border-radius:999px}
 .skadd:hover{background:var(--offbg)}
 /* 발주 없음 체크 */
+.skaddf{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:10px 12px;margin:8px 0;border:2px dashed var(--open);border-radius:8px;background:var(--surface)}
+.skaddf b{color:var(--open);font-size:14px;margin-right:4px}
+.skaddf select{font:inherit;font-size:13px;padding:5px 6px;border:1px solid var(--rule2);border-radius:4px;background:var(--bg)}
+.skaddf .skin{flex:1 1 120px;min-width:0}
 .skordbar{display:flex;justify-content:flex-end;margin:-2px 0 6px}
 .skordbar .wsmini{border-style:solid;border-color:#B3261E;color:#B3261E}
 .sknone{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 8px;padding:8px 11px;border:2px dashed var(--rule2);border-radius:8px;cursor:pointer;font-weight:800;font-size:14.5px;color:var(--ink2);background:var(--surface)}
@@ -3254,7 +3258,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 .sksearch{font:inherit;font-size:13px;padding:6px 9px;width:100%;max-width:300px;background:var(--bg);color:var(--ink);
   border:1px solid var(--rule2);border-radius:2px;margin-bottom:10px}
 </style>
-<script src="js/stock.js?v=v0924-134"></script>
+<script src="js/stock.js?v=v0924-135"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -3283,7 +3287,7 @@ input,select,textarea{border-radius:var(--r3)!important}
   })();
 </script>
 
-<script src="js/presence.js?v=v0924-134"></script>
-<script src="js/weekrep.js?v=v0924-134"></script>
-<script src="js/monthlog.js?v=v0924-134"></script>
+<script src="js/presence.js?v=v0924-135"></script>
+<script src="js/weekrep.js?v=v0924-135"></script>
+<script src="js/monthlog.js?v=v0924-135"></script>
 </body></html>

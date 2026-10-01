@@ -734,8 +734,8 @@
       var now = new Date(), stamp = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0") + "-" + String(now.getDate()).padStart(2, "0") + " " + String(now.getHours()).padStart(2, "0") + ":" + String(now.getMinutes()).padStart(2, "0");
       var css = "body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;max-width:900px;margin:24px auto;padding:0 18px;color:#2b2620;line-height:1.6;background:#fffdf8}h1{font-size:22px;border-bottom:3px solid #8a6b3a;padding-bottom:8px}h1 small{font-size:13px;color:#8a7f6e;font-weight:400;margin-left:10px}nav{font-size:13px;margin:10px 0 24px}nav a{margin-right:12px;color:#8a6b3a}section{margin:26px 0;page-break-inside:avoid}h2{font-size:18px;color:#8a6b3a;border-left:5px solid #8a6b3a;padding-left:10px;margin:30px 0 10px}h3{font-size:15px;margin:18px 0 6px;background:#f3ede0;padding:6px 10px;border-radius:6px}h4{font-size:13.5px;margin:12px 0 4px;color:#5f5546}table{border-collapse:collapse;width:100%;font-size:13.5px;margin:4px 0 10px}table.kv th{width:160px;text-align:left;background:#f8f4ea;font-weight:700;vertical-align:top}table.kv.two th{width:220px}th,td{border:1px solid #e3dccb;padding:5px 8px;vertical-align:top}table.grid th{background:#f8f4ea}tr.boss th,tr.boss td{background:#f3eedf;font-weight:900}tr.red th,tr.red td{color:#a8402f;font-weight:700}p.box{background:#f8f4ea;padding:10px 12px;border-radius:6px;white-space:normal}p.sub{margin:8px 0 2px;font-size:12.5px;color:#8a7f6e;font-weight:700}i{color:#8a7f6e}@media print{body{margin:0}h2{page-break-after:avoid}}";
       var toc = out.map(function (x) { var m = x.match(/<h2>(.*?)<\/h2>/); return m ? m[1] : ""; }).filter(Boolean);
-      return "<!doctype html><html lang=\"ko\"><head><meta charset=\"utf-8\"><title>카페스이 기록 " + E(stamp) + "</title><style>" + css + "</style></head><body>" +
-        "<h1>카페스이 기록 모음<small>" + E(stamp) + " 저장 · 읽기 전용</small></h1>" +
+      return "<!doctype html><html lang=\"ko\"><head><meta charset=\"utf-8\"><title>○○카페 기록 " + E(stamp) + "</title><style>" + css + "</style></head><body>" +
+        "<h1>○○카페 기록 모음<small>" + E(stamp) + " 저장 · 읽기 전용</small></h1>" +
         "<nav>" + toc.map(function (t, i) { return '<a href="#s' + i + '">' + t + "</a>"; }).join("") + "</nav>" +
         out.map(function (x, i) { return x.replace("<section>", '<section id="s' + i + '">'); }).join("") +
         (out.length ? "" : "<p>아직 적은 내용이 없습니다.</p>") + "</body></html>";
@@ -1254,7 +1254,7 @@
       });
       var copy = wrap.querySelector(".pcopy");
       if (copy) copy.addEventListener("click", function () {
-        var lines = ["[카페스이 근무표] " + String(ym).replace("-", "년 ") + "월"];
+        var lines = ["[○○카페 근무표] " + String(ym).replace("-", "년 ") + "월"];
         wrap.querySelectorAll(".pcell:not(.closed)").forEach(function (cell) {
           var day = cell.querySelector(".dnum").textContent;
           var wd = cell.dataset.wd || "";
@@ -3099,7 +3099,7 @@
     });
   }
   bindForm("mtMonth", "mtForm", "mtMsg", "mtCopy", "mtClear",
-           "cafesui.meeting", "카페스이 월말회의", null, "mtReport", ".cmpwrap");
+           "cafesui.meeting", "○○카페 월말회의", null, "mtReport", ".cmpwrap");
   bindForm("rvMonth", "rvForm", "rvMsg", "rvCopy", "rvClear",
            "cafesui.review", "월말 성과 체크", "rvWho", "rvReport", null,
            "rvChecks", "rvCount", "rvRank");
@@ -3621,10 +3621,10 @@
       var dt = new Date(+p[0], +p[1] - 1, +p[2]);
       var when = +p[0] + "년 " + (+p[1]) + "월 " + (+p[2]) + "일 (" +
                  WDN[dt.getDay()] + ")";
-      var html = '<div class="rptitle">카페스이 마감 일지</div>' +
+      var html = '<div class="rptitle">○○카페 마감 일지</div>' +
                  '<div class="rpmeta">' + when +
                  (whoEl.value ? " · 작성 " + esc(whoEl.value) : "") + '</div>';
-      var text = ["[카페스이 마감 일지] " + when +
+      var text = ["[○○카페 마감 일지] " + when +
                   (whoEl.value ? " · 작성 " + whoEl.value : "")];
       var any = false;
 

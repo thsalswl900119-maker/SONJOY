@@ -6,7 +6,10 @@
   try {
     if (!localStorage.getItem("cafesui.me")) localStorage.setItem("cafesui.me", "사장님");
     sessionStorage.setItem("cafesui.unlocked", "1");
-    if (!localStorage.getItem("cafesui.ui.demo1")) {
+    if (!localStorage.getItem("cafesui.ui.demo2")) {
+      // 예전 체험판에서 남은 것(예시 재고 · 발주 등)은 지우고 새로 시작
+      Object.keys(localStorage).forEach(function (k) { if (k.indexOf("cafesui.") === 0) localStorage.removeItem(k); });
+      localStorage.setItem("cafesui.me", "사장님");
       var L = function (d, who, f) { var by = {}, bl = {}; Object.keys(f).forEach(function (k) { by[k] = who; bl[k] = f[k].split("\n").map(function () { return who; }); }); return JSON.stringify({ who: who, f: f, by: by, bl: bl }); };
       localStorage.setItem("cafesui.log." + T, L(T, "김하늘", {
         lf101: "36", lf102: "4", lf103: "12", lf104: "3", lf120: "6", lf123: "기본 4 · 초코 2", lf121: "10", lf122: "2", lf124: "망고 1박스 · 샤인머스캣 1박스",
@@ -17,9 +20,7 @@
         lf170: "배달 음료 1잔 누락 → 사과 후 다시 보내드림",
         lf180: "내일 생크림 입고 · 오픈 때 수량 확인",
       }));
-      localStorage.setItem("cafesui.stock." + Y, JSON.stringify({ date: Y, month: Y.slice(0, 7), by: "김하늘",
-        stock: { "기본 시트": "4", "초코 시트": "1", "말차 시트": "2" }, orders: "초코 시트 4개", orderChecks: {}, prod: "망2 티1 초밤1", creamUse: "5" }));
-      localStorage.setItem("cafesui.ui.demo1", "1");
+      localStorage.setItem("cafesui.ui.demo2", "1");
     }
   } catch (e) {}
   document.addEventListener("click", function (e) {

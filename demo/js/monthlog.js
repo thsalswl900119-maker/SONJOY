@@ -37,7 +37,7 @@
     if (!days.length) return "";
     var mm = +ym.slice(5);
     var head = [
-      "[카페스이 일지 한 달 모음] " + ym.slice(0, 4) + "년 " + mm + "월",
+      "[○○카페 일지 한 달 모음] " + ym.slice(0, 4) + "년 " + mm + "월",
       "일지 " + days.length + "일 · 매출 적힌 날 " + sd + "일" + (miss.length ? " · 매출 안 적힌 날: " + miss.join(", ") : ""),
       "매출 합계 " + tot.toLocaleString("ko-KR") + "원" + (sd ? " · 일 평균 " + Math.round(tot / sd).toLocaleString("ko-KR") + "원" : ""),
       "에그타르트 " + sums.lf101 + " · 홀케이크 " + sums.lf102 + " · 별조각 " + sums.lf104 + " · 빙수 " + sums.lf105 + " · 선물세트 " + sums.lf106,

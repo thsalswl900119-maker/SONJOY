@@ -17,6 +17,7 @@
       etc: "빙수 재료 메모 — 시즈너리 빙수는 종류에 따라 달라지니 그때그때 체크. 코코넛밀크(노브랜드) · 패션후르츠 퓨레는 웬만하면 넣기."
     };
     var OPEN = { sheet: 1, fruit: 1, cream: 1, bar: 1, sub: 1, design: 1 };
+    var ADD_TOP = false;   // 항목 추가 서식을 맨 위에 (체험판에서 켬)
     var GROUP_MEMO = { pack: "포장 메모" };   // 묶음 아래 자유 메모 (자주 안 시키는 것)
     var DESIGN_KEY = "디자인 재료";   // 자유 메모 — 없으면 발주 넣는 디자인 재료 (데코 · 픽 · 초 · 리본 · 프린트 등)
     // 케이크 상자 · 하판은 한 줄에 같이 입력 (저장 이름은 그대로)
@@ -152,20 +153,28 @@
         box.appendChild(d);
       });
       if (isMgr()) {
-        var add = document.createElement("button");
-        add.type = "button"; add.className = "skbtn"; add.textContent = "+ 재고 항목 추가";
-        add.addEventListener("click", function () {
-          var g = prompt("묶음: sheet(시트) fruit(과일) cream(생크림) bar(우유·원두·휘핑) sub(부재료) pack(포장) etc(빙수·기타)", "etc");
-          if (g === "design") return;
-          if (!g || !GROUPS[g]) return;
-          var name = prompt("품목명"); if (!name) return;
-          var unit = prompt("단위", "개") || "개";
-          var re = prompt("발주점 (이 수량 이하면 발주 표시 · 없으면 비워두기)", "");
-          var memo = prompt("발주 메모 (거래처 · 주문량)", "") || "";
-          var c = customItems(); c.push({ g: g, name: name, unit: unit, re: re === "" ? null : Number(re), memo: memo });
-          setCustom(c); renderGroups();
-        });
-        box.appendChild(add);
+        // 재고 항목 추가 — 한 줄 서식 (묶음 · 품목 · 단위 · 발주점 · 메모)
+        var add = document.createElement("div"); add.className = "skaddf";
+        add.innerHTML = '<b>+ 재고 항목 추가</b>' +
+          '<select aria-label="묶음">' + Object.keys(GROUPS).filter(function (g) { return g !== "design"; }).map(function (g) { return '<option value="' + g + '">' + esc(GROUPS[g]) + "</option>"; }).join("") + "</select>" +
+          '<input type="text" class="skin" data-f="name" placeholder="품목명 (예: 기본 시트)" aria-label="품목명">' +
+          '<input type="text" class="skin" data-f="unit" value="개" aria-label="단위" style="max-width:70px">' +
+          '<input type="text" inputmode="decimal" class="skin" data-f="re" placeholder="발주점 (선택)" aria-label="발주점" style="max-width:120px">' +
+          '<input type="text" class="skin" data-f="memo" placeholder="거래처 · 주문량 메모 (선택)" aria-label="메모">' +
+          '<button type="button" class="skbtn">추가</button>';
+        var fv = function (f) { return add.querySelector('[data-f="' + f + '"]').value.trim(); };
+        var doAdd = function () {
+          var g = add.querySelector("select").value, name = fv("name");
+          if (!name) { add.querySelector('[data-f="name"]').focus(); return; }
+          if (allItems().some(function (it) { return it[1] === name; })) { alert('"' + name + '" 은(는) 이미 있어요'); return; }
+          var re = fv("re"), c = customItems();
+          c.push({ g: g, name: name, unit: fv("unit") || "개", re: re === "" || isNaN(Number(re)) ? null : Number(re), memo: fv("memo") });
+          setCustom(c); OPEN[g] = 1; renderGroups();
+          statusEl.textContent = '"' + name + '" 항목을 추가했어요';
+        };
+        add.querySelector("button").addEventListener("click", doAdd);
+        add.querySelectorAll("input").forEach(function (x) { x.addEventListener("keydown", function (e) { if (e.key === "Enter") doAdd(); }); });
+        if (ADD_TOP) box.insertBefore(add, box.firstChild); else box.appendChild(add);
       }
       renderNeed();
     }
