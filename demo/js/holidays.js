@@ -83,9 +83,9 @@
     var KEY = "csdemo.books";
     var listEl = document.getElementById("rdList"); if (!listEl) return;
     var addBtn = document.getElementById("rdAdd"), msgEl = document.getElementById("rdMsg");
-    var STAFF = ["김하늘", "이다온", "최서하"];
-    var WHOC = { "김하늘": "p1", "이다온": "p2", "최서하": "p3", "사장님": "p4" };
-    var MGR = ["사장님", "김하늘"];   // 필독서 · 요약을 올리고 고칠 수 있는 사람
+    var STAFF = __S.slice();
+    var WHOC = __CM("p");
+    var MGR = ["사장님"].concat(__MGR);   // 필독서 · 요약을 올리고 고칠 수 있는 사람
     function me() { try { return localStorage.getItem("csdemo.me") || ""; } catch (e) { return ""; } }
     function isMgr() { return MGR.indexOf(me()) >= 0; }
     function load() { try { var o = JSON.parse(localStorage.getItem(KEY) || "{}"); return (o && o.items) ? o : { items: [] }; } catch (e) { return { items: [] }; } }
@@ -193,10 +193,8 @@
     function hoursFor(d) {
       if (!d) return "";
       var wd = new Date(d + "T00:00:00").getDay(), hol = (window.__CS_HOL || {})[d];
-      if (wd === 0) return "정기휴무";
-      if (wd === 6) return "10:30–17:00";
-      if (hol) return "9:30–17:00";
-      return "9:30–18:30";
+      var w2 = (wd + 6) % 7; if (window.__DEMO_OFF.indexOf(w2) >= 0) return "정기휴무";
+      return window.__DEMO_HOURS(w2, hol) || "";
     }
     function fillHours() {
       var el = grid.querySelector('[data-k="lf143"]'), de = document.getElementById("lgDate");
@@ -291,7 +289,7 @@
     var listEl = document.getElementById("bkgList"); if (!listEl) return;
     var addBtn = document.getElementById("bkgAdd"), qEl = document.getElementById("bkgQ"), msgEl = document.getElementById("bkgMsg");
     var CATS = ["케이크", "에그타르트", "빙수", "음료", "구움과자", "과일 손질", "포장", "기타"];
-    var WHOC = { "김하늘": "p1", "이다온": "p2", "최서하": "p3", "사장님": "p4" };
+    var WHOC = __CM("p");
     function me() { try { return localStorage.getItem("csdemo.me") || ""; } catch (e) { return ""; } }
     function load() { try { var o = JSON.parse(localStorage.getItem(KEY) || "{}"); return (o && o.items) ? o : { items: [] }; } catch (e) { return { items: [] }; } }
     var data = load();

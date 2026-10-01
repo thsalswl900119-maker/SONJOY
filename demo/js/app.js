@@ -264,7 +264,7 @@
   });
 
   // 누가 체크했는지 — 이름을 고르면 그 사람 색으로 칠해진다
-  var WHOC = { "김하늘": "p1", "이다온": "p2", "최서하": "p3", "사장님": "p4" };
+  var WHOC = __CM("p");
   var whoBtns = Array.prototype.slice.call(document.querySelectorAll(".wbtn"));
   var whoMsg = document.getElementById("whoMsg");
   var meKey = "csdemo.me";
@@ -388,7 +388,7 @@
 
   // 이달 청소 배정표 — 담당 지정과 완료 확인은 매니저 · 사장님만
   (function () {
-    var ALLOW = ["김하늘", "사장님"];
+    var ALLOW = __MGR.concat(["사장님"]);
     var who = null;
     try { who = localStorage.getItem("csdemo.me"); } catch (e) {}
     if (who && ALLOW.indexOf(who) >= 0) return;
@@ -422,7 +422,7 @@
   });
 
   // 글자 색으로 누가 썼는지 — 김하늘 주황 · 이다온 파랑 · 최서하 보라 · 사장님 초록
-  var WCLR = { "김하늘": "p1", "이다온": "p2", "최서하": "p3", "사장님": "p4" };
+  var WCLR = __CM("p");
   function meNow() {
     try { return localStorage.getItem("csdemo.me") || ""; } catch (e) { return ""; }
   }
@@ -675,7 +675,7 @@
       h = "";
       var WRL = { sum: "이번 주 매출 · 흐름 요약", good: "잘된 점", bad: "문제점 · 개선할 점", stock: "재고 · 발주 이슈", staff: "직원 · 근무 이슈", next: "다음 주 계획 · 준비할 것", ask: "사장님께 요청 · 건의" };
       var meR = ""; try { meR = localStorage.getItem("csdemo.me") || ""; } catch (e) {}
-      if (meR === "사장님" || meR === "김하늘") by("csdemo.weekrep.").sort().reverse().forEach(function (k) {
+      if (meR === "사장님" || __MGR.indexOf(meR) >= 0) by("csdemo.weekrep.").sort().reverse().forEach(function (k) {
         var o = J(k) || {}, f = o.f || {}, b = "";
         Object.keys(WRL).forEach(function (fk) { if (f[fk] && String(f[fk]).trim()) b += "<tr><th>" + WRL[fk] + "</th><td>" + P(f[fk]) + "</td></tr>"; });
         if (b) h += "<h3>" + E(k.slice(16)) + " 주" + (o.who ? " · " + E(o.who) : "") + '</h3><table class="kv">' + b + "</table>";
@@ -816,8 +816,8 @@
   // 첫 화면 — 누가 쓰는지 고르고, 본인이 정한 네 자리 숫자로 들어간다.
   //           (파일 하나짜리 미리보기라 진짜 잠금은 아니다. 옆사람이 못 열게 하는 정도.)
   (function () {
-    var NAMES2 = ["김하늘", "이다온", "최서하", "사장님"];
-    var COL2 = { "김하늘": "p1", "이다온": "p2", "최서하": "p3", "사장님": "p4" };
+    var NAMES2 = __S.concat(["사장님"]);
+    var COL2 = __CM("p");
     var BOSS = "사장님";
     var gate = document.getElementById("gate");
     var gb = document.getElementById("gateBtns");
@@ -943,7 +943,7 @@
     // 월말 평가는 대상자 본인과 사장님만
     var me = get("csdemo.me");
     if (me) {
-      var allowed = [BOSS, "김하늘"];
+      var allowed = [BOSS].concat(__MGR);
       if (allowed.indexOf(me) < 0) {
         document.querySelectorAll(".tab").forEach(function (t) {
           if (t.textContent.indexOf("월말 평가") < 0) return;
@@ -958,7 +958,7 @@
   // 내 화면 — 고른 이름에 맞춰 화면을 맞춘다
   (function () {
     var SCHED = window.__CS_SCHED || {};
-    var NAMES = ["김하늘", "이다온", "최서하", "사장님"];
+    var NAMES = __S.concat(["사장님"]);
     var bar = document.getElementById("myBar");
     var me = "";
     try { me = localStorage.getItem("csdemo.me") || ""; } catch (e) {}
@@ -973,7 +973,7 @@
     var WDN3 = ["일", "월", "화", "수", "목", "금", "토"];
     function label(sh) {
       return "<b>" + sh.r + "</b>" +
-             (sh.s ? " " + sh.s + "–" + sh.e : " · 매장 상황 보며");
+             (sh.s ? " " + sh.s + "–" + sh.e : " · ");
     }
     function josa(w) {
       var c = w.charCodeAt(w.length - 1);
@@ -999,7 +999,7 @@
     var msg;
     if (today) {
       msg = "오늘은 <b>" + today.r + "</b>" + josa(today.r) +
-            (today.s ? " " + today.s + "–" + today.e : " · 매장 상황 보며");
+            (today.s ? " " + today.s + "–" + today.e : " · ");
     } else {
       var head = (new Date().getDay() === 0) ? "오늘은 정기휴무예요"
                                              : "오늘은 쉬는 날이에요";
@@ -1048,7 +1048,7 @@
   (function () {
 
     var TIMES = {"김하늘":{"토요일":["09:00","18:00"],"오픈":["08:30","17:30"],"마감":["10:00","19:30"]},"이다온":{"토요일":["09:00","18:00"],"오픈":["08:30","18:00"],"마감":["10:00","19:30"]},"최서하":{"토요일":["09:00","18:00"],"미들":["09:30","16:30"],"전일":["08:30","19:30"]},"사장님":{"토요일":["09:00","18:00"],"전일(케이크+사무실근무)":["08:30","19:30"],"오픈":["08:30","17:30"],"마감":["10:00","19:30"],"반죽":[null,null]}};
-    var NAMES = ["김하늘", "이다온", "최서하", "사장님"];
+    var NAMES = __S.concat(["사장님"]);
     var NL = String.fromCharCode(10);
     var RCLS = { "오픈": "open", "마감": "close", "미들": "mid",
                  "전일": "full", "토요일": "full", "전일(케이크+사무실근무)": "own", "반죽": "own",
@@ -1119,7 +1119,7 @@
               (r.s ? '<span class="tm">' + r.s + '<span class="dash">–</span>' + r.e +
                      "</span>"
                    : (RCLS[r.r] === "away" ? '<span class="tm free">가게 밖</span>'
-                                           : '<span class="tm free">매장 상황 보며</span>')) + "</div>";
+                                           : '<span class="tm free"></span>')) + "</div>";
           }).join("");
         c.innerHTML = html;
       });
@@ -1321,8 +1321,8 @@
     var listEl = document.getElementById("atList");
     var msgEl = document.getElementById("atMsg");
     if (!dateEl || !listEl) return;
-    var COL = { "김하늘": "p1", "이다온": "p2", "최서하": "p3", "사장님": "p4" };
-    var ROLES = ["오픈", "미들", "마감", "전일", "전일(케이크+사무실근무)", "반죽 근무"];
+    var COL = __CM("p");
+    var ROLES = ["오픈", "미들", "마감", "전일"];
     function keyOf(d) { return "csdemo.att." + d; }
     function load(d) {
       try { var raw = localStorage.getItem(keyOf(d)); return raw ? (JSON.parse(raw) || {}) : {}; }
@@ -1345,18 +1345,15 @@
       var plan = SCHED[d];
       var wd0 = new Date(d + "T00:00:00").getDay();
       // 근무표가 없는 날(10월 전, 아직 안 짠 달)도 퇴근은 찍을 수 있게 세 명을 그대로 보여준다
-      if (!plan && wd0 !== 0) plan = [{ w: "김하늘", r: "", s: null, e: null }, { w: "이다온", r: "", s: null, e: null }, { w: "최서하", r: "", s: null, e: null }];
+      if ((!plan || !plan.length) && window.__DEMO_OFF.indexOf((wd0 + 6) % 7) < 0) plan = __S.map(function (w) { return { w: w, r: "", s: null, e: null }; });
       // 퇴근 칸은 직원만 — 사장님은 빼고, 최서하은 근무표에 없는 날도 넣는다
       if (plan) {
         plan = plan.filter(function (x) { return x.w !== "사장님"; });
-        if (!plan.some(function (x) { return x.w === "최서하"; })) {
-          plan = plan.concat([{ w: "최서하", r: "미들", c: "mid", s: null, e: null }]);
-        }
       }
       var rec = load(d);
       listEl.innerHTML = "";
       if (!plan) {
-        listEl.innerHTML = '<div class="atnone">일요일 정기휴무입니다</div>';
+        listEl.innerHTML = '<div class="atnone">정기휴무입니다</div>';
         msgEl.textContent = "";
         drawLog(); drawMonth();
         return;
@@ -1374,7 +1371,7 @@
           : '<button type="button" class="atbig off">퇴근</button>';
         card.innerHTML =
           '<div class="ath"><span class="atwho">' + sh.w + '</span>' +
-          '<span class="atplan">' + (sh.e ? "예정 " + sh.e + " 퇴근" : "매장 상황 보며") +
+          '<span class="atplan">' + (sh.e ? "예정 " + sh.e + " 퇴근" : "") +
           '</span></div>' +
           '<div class="atbody">' +
             '<div class="atrow"><span>근무</span>' +
@@ -1480,7 +1477,7 @@
       }).join("");
     }
     // 한 달 퇴근 현황 — 날짜 × 직원 표. 예정보다 늦게 남은 날은 +분으로 표시
-    var STAFF = ["김하늘", "이다온", "최서하"];
+    var STAFF = __S.slice();
     var monEl = document.getElementById("atMonth"), tblEl = document.getElementById("atMon");
     function mins(t) { var p = String(t || "").split(":"); return p.length === 2 ? (+p[0]) * 60 + (+p[1]) : null; }
     function drawMonth() {
@@ -1787,8 +1784,8 @@
     window.__CS_WS_SETEDIT = setEdit;
     if (editBtn) editBtn.addEventListener("click", function () { setEdit(!editBtn.classList.contains("on")); });
     // 가고 싶은 곳 — 사람별로 묶고, 이름 줄을 눌러 접는다 (접힘 상태는 이 기기에만)
-    var WL_ORDER = ["사장님", "김하늘", "이다온", "최서하", "다 같이"];
-    var WL_COL = { "김하늘": "p1", "이다온": "p2", "최서하": "p3", "사장님": "p4" };
+    var WL_ORDER = ["사장님"].concat(__S, ["다 같이"]);
+    var WL_COL = __CM("p");
     var FOLD_KEY = "csdemo.ui.wlfold";
     function foldState() { try { return JSON.parse(localStorage.getItem(FOLD_KEY) || "{}") || {}; } catch (e) { return {}; } }
     function saveFold(o) { try { localStorage.setItem(FOLD_KEY, JSON.stringify(o)); } catch (e) {} }
@@ -2169,8 +2166,8 @@
     var wrap = document.getElementById("ycWrap");
     if (!grid || !tabsEl || !wrap) return;
 
-    var BASE = [{"id": 20, "m": 1, "d": 10, "t": "겨울 감귤류 라인", "a": "", "c": "fruit"}, {"id": 60, "m": 1, "d": 25, "t": "발렌타인데이 준비 회의", "a": "", "c": "event"}, {"id": 61, "m": 2, "d": 14, "t": "발렌타인데이", "a": "", "c": "event"}, {"id": 1, "m": 3, "d": 1, "t": "빙수 개발 시작", "a": "", "c": "bingsu"}, {"id": 21, "m": 3, "d": 1, "t": "딸기 마무리 준비", "a": "", "c": "fruit"}, {"id": 62, "m": 3, "d": 1, "t": "화이트데이 준비", "a": "", "c": "event"}, {"id": 63, "m": 3, "d": 14, "t": "화이트데이", "a": "", "c": "event"}, {"id": 2, "m": 4, "d": 1, "t": "빙수 세미 테스트", "a": "", "c": "bingsu"}, {"id": 3, "m": 4, "d": 4, "t": "빙수 최종 테스트", "a": "", "c": "bingsu"}, {"id": 4, "m": 4, "d": 20, "t": "빙수 메뉴판·가격표·포스터 준비", "a": "", "c": "bingsu"}, {"id": 80, "m": 4, "d": 25, "t": "망고꽃다발 준비 — 자재 작업", "a": "", "c": "menu"}, {"id": 5, "m": 5, "d": 1, "t": "빙수 판매 시작", "a": "", "c": "bingsu"}, {"id": 81, "m": 5, "d": 1, "t": "망고꽃다발 판매 시작 · 전사 목표", "a": "", "c": "menu"}, {"id": 64, "m": 5, "d": 5, "t": "어린이날", "a": "", "c": "event"}, {"id": 65, "m": 5, "d": 8, "t": "어버이날", "a": "", "c": "event"}, {"id": 22, "m": 5, "d": 15, "t": "멜론(허니듀) 시작", "a": "", "c": "fruit"}, {"id": 6, "m": 6, "d": 1, "t": "빙수 성수기 진입", "a": "", "c": "bingsu"}, {"id": 23, "m": 6, "d": 1, "t": "초당옥수수 시작", "a": "", "c": "fruit"}, {"id": 82, "m": 6, "d": 30, "t": "망고꽃다발 마무리 · 다음 과일 판단", "a": "", "c": "menu"}, {"id": 24, "m": 7, "d": 1, "t": "복숭아 시작", "a": "", "c": "fruit"}, {"id": 25, "m": 8, "d": 1, "t": "무화과·샤인머스캣 시작", "a": "", "c": "fruit"}, {"id": 28, "m": 8, "d": 15, "t": "초당옥수수 종료 · 밤 준비", "a": "", "c": "fruit"}, {"id": 26, "m": 9, "d": 15, "t": "복숭아 종료", "a": "", "c": "fruit"}, {"id": 27, "m": 9, "d": 20, "t": "무화과 마무리", "a": "", "c": "fruit"}, {"id": 66, "m": 11, "d": 1, "t": "수능 선물 준비", "a": "", "c": "event"}, {"id": 29, "m": 11, "d": 10, "t": "첫딸기 시즌 시작", "a": "", "c": "fruit"}, {"id": 67, "m": 11, "d": 25, "t": "크리스마스 케이크 예약 오픈", "a": "", "c": "event"}, {"id": 68, "m": 12, "d": 22, "t": "크리스마스 피크 주간 (12/22~25)", "a": "", "c": "event"}, {"id": 69, "m": 12, "d": 26, "t": "망년회 · 신년회 주간 (12/26~31)", "a": "", "c": "event"}];
-    var WEA = {"1":["한파","가장 추운 달. 매장 방문이 줄고 배달·택배 비중이 올라간다. 딸기·감귤류가 주력."],"2":["늦추위","아직 춥다. 설날·발렌타인으로 예약이 몰리는 달."],"3":["풀리기 시작","★ 딸기가 마무리로 가고 빙수 개발을 시작하는 기점. 제빙기 점검도 지금."],"4":["따뜻해짐","손님이 늘기 시작. 빙수 테스트·메뉴판·사진 작업하기 좋은 시기."],"5":["더워지기 시작","★ 빙수를 여는 기점. 영업시간을 11:00–18:30 으로 바꾼다."],"6":["장마","★ 비 오는 날은 빙수가 뚝 떨어진다. 날씨 보고 망고·재료 발주량을 줄일 것."],"7":["본격 더위","빙수 성수기. 매일 6~10개씩 나간다. 재료가 끊기지 않게."],"8":["폭염","★ 더위에 체리가 물러 못 쓴다. 8/10 전후로 체리를 내린다. 샤인머스캣·무화과 시작."],"9":["한풀 꺾임","★ 낮엔 아직 덥지만 빙수가 떨어진다. 추석 지나면 급감 — 재료 소진 맞춰 마무리."],"10":["선선함","케이크 판매가 회복된다. 밤 라인으로 넘어가되 샤인머스캣은 계속."],"11":["쌀쌀해짐","★ 첫딸기가 10~20일 사이에 들어온다. 수능·크리스마스 예약이 겹치니 수량을 미리 확보."],"12":["추위","★ 1년 중 가장 바쁜 달. 12/22~25 크리스마스 피크, 12/26~31 망년회·신년회. 배달이 늘고 매장은 예약 위주로 돌아간다."]};
+    var BASE = [{"id": 900, "m": 1, "d": 1, "t": "신정 연휴", "a": "", "c": "holiday"}, {"id": 901, "m": 1, "d": 20, "t": "비수기 — 한파 · 연초 (재고 줄이기)", "a": "", "c": "memo"}, {"id": 902, "m": 2, "d": 14, "t": "발렌타인데이", "a": "", "c": "event"}, {"id": 903, "m": 3, "d": 2, "t": "신학기 시작", "a": "", "c": "memo"}, {"id": 904, "m": 3, "d": 14, "t": "화이트데이", "a": "", "c": "event"}, {"id": 905, "m": 4, "d": 10, "t": "봄나들이 시즌 — 성수기 시작", "a": "", "c": "memo"}, {"id": 906, "m": 5, "d": 5, "t": "어린이날", "a": "", "c": "holiday"}, {"id": 907, "m": 5, "d": 8, "t": "어버이날", "a": "", "c": "event"}, {"id": 908, "m": 5, "d": 15, "t": "스승의날", "a": "", "c": "event"}, {"id": 909, "m": 6, "d": 6, "t": "현충일", "a": "", "c": "holiday"}, {"id": 910, "m": 6, "d": 25, "t": "장마 시작 — 비 오는 날 매장 손님 감소", "a": "", "c": "memo"}, {"id": 911, "m": 7, "d": 20, "t": "여름휴가 시즌 — 성수기", "a": "", "c": "memo"}, {"id": 912, "m": 8, "d": 15, "t": "광복절", "a": "", "c": "holiday"}, {"id": 913, "m": 8, "d": 25, "t": "휴가 끝 · 개학 — 비수기", "a": "", "c": "memo"}, {"id": 914, "m": 10, "d": 3, "t": "개천절", "a": "", "c": "holiday"}, {"id": 915, "m": 10, "d": 9, "t": "한글날", "a": "", "c": "holiday"}, {"id": 916, "m": 10, "d": 31, "t": "핼러윈", "a": "", "c": "event"}, {"id": 917, "m": 11, "d": 11, "t": "빼빼로데이", "a": "", "c": "event"}, {"id": 918, "m": 11, "d": 20, "t": "수능 무렵", "a": "", "c": "memo"}, {"id": 919, "m": 12, "d": 24, "t": "크리스마스 이브 — 연중 최대 성수기", "a": "", "c": "event"}, {"id": 920, "m": 12, "d": 25, "t": "크리스마스", "a": "", "c": "holiday"}, {"id": 921, "m": 12, "d": 31, "t": "연말 · 송년 모임", "a": "", "c": "event"}];
+    var WEA = {"1": ["한파", "비수기 · 매장 방문이 줄고 배달 · 포장 비중이 올라간다."], "2": ["늦추위", "설 연휴 · 발렌타인 예약."], "3": ["풀리기 시작", "신학기 · 화이트데이. 봄 메뉴 준비."], "4": ["따뜻해짐", "나들이 손님 증가 — 성수기 시작."], "5": ["더워지기 시작", "가정의 달 성수기 — 기념일 예약이 몰린다."], "6": ["장마", "비 오는 날 매장 손님 감소 — 배달 대비."], "7": ["본격 더위", "여름 성수기 · 휴가철."], "8": ["폭염", "휴가 피크 후 개학 무렵부터 비수기."], "9": ["한풀 꺾임", "추석 연휴 · 선물 수요."], "10": ["선선함", "가을 나들이 · 연휴가 많은 달."], "11": ["쌀쌀해짐", "수능 · 연말 준비 — 크리스마스 예약 오픈 시기."], "12": ["추위", "연중 최대 성수기 — 크리스마스 · 연말 모임."]};
     var SEA = {"1":"겨울","2":"겨울","3":"봄","4":"봄","5":"봄","6":"여름","7":"여름","8":"여름","9":"가을","10":"가을","11":"겨울","12":"겨울"};
     var HOL = {"1":"설날","2":"설날","9":"추석","10":"추석"};
     var CATS = {"bingsu":["c-bing","빙수"],"fruit":["c-fruit","과일"],"holiday":["c-hol","명절"],"giftset":["c-gift","선물세트"],"event":["c-ev","기념일"],"order":["c-ord","발주·관리"],"menu":["c-menu","메뉴"],"memo":["c-memo","메모·예약"],"log":["c-log","마감 일지"]};

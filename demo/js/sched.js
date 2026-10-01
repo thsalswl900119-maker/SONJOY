@@ -3,18 +3,18 @@
   // 해가 바뀌어도 알아서 이어지도록, 로테이션 규칙만 넣고 그때그때 그린다.
   var EPOCH = new Date(2026, 8, 28);            // 로테이션 기준 월요일
   var OFFROT = [ {s:1,h:3}, {s:2,h:4}, {s:3,h:5}, {s:4,h:1}, {s:5,h:2} ];
-  var MINJI = "사장님", HANGA = "김하늘", HAESUN = "최서하", HYEBIN = "이다온";
-  var STAFF4 = [HANGA, HYEBIN, HAESUN, MINJI];
-  var WCOL = { "김하늘":"p1", "이다온":"p2", "최서하":"p3", "사장님":"p4" };
+  var MINJI = "사장님", HANGA = __S[0], HAESUN = __S[2] || __S[0], HYEBIN = __S[1] || __S[0];
+  var STAFF4 = __S.concat([MINJI]);
+  var WCOL = __CM("p");
   var TIMEMAP = {"김하늘":{"오픈":["08:30","17:30"],"마감":["10:00","19:30"]},"이다온":{"오픈":["08:30","18:00"],"마감":["10:00","19:30"]},"최서하":{"미들":["09:30","16:30"],"전일":["08:30","19:30"]},"사장님":{"전일(케이크+사무실근무)":["08:30","19:30"],"오픈":["08:30","17:30"],"마감":["10:00","19:30"],"반죽":[null,null]}};
   var ROLEKO = { open:"오픈", close:"마감", middle:"미들",
                  full:"전일", allday:"전일(케이크+사무실근무)", dough:"반죽" };
   var ROLECL = { open:"open", close:"close", middle:"mid",
                  full:"full", allday:"own", dough:"own" };
   var RORD = { open:0, dough:1, middle:2, full:2, allday:3, close:4 };
-  var ROLEOPTS = ["휴무", "휴가", "반짝휴무", "오픈", "미들", "마감", "전일", "토요일", "반죽", "출장", "워크샵"];   // 직원 칸 (전일(케이크+사무실근무)은 사장님만)
-  var BOSSOPTS = ["휴무", "휴가", "반짝휴무", "전일(케이크+사무실근무)", "반죽", "오픈", "마감", "토요일", "사무실 근무", "공부", "출강", "서울출장", "해외출장", "워크샵"];   // 사장님 칸
-  var NOTEOPTS = ["워크샵", "월말회의", "워크샵회의", "회식", "알바생 근무"];   // 그날 전체 공지
+  var ROLEOPTS = ["휴무", "휴가", "오픈", "미들", "마감", "전일"];   // 직원 칸 (전일(케이크+사무실근무)은 사장님만)
+  var BOSSOPTS = ["휴무", "휴가", "오픈", "미들", "마감", "전일", "사무실 근무", "출장"];   // 사장님 칸
+  var NOTEOPTS = ["회의", "회식", "행사", "대청소"];   // 그날 전체 공지
   var WDK = ["월","화","수","목","금","토","일"];
   var HOLI = { "1-1":"신정", "3-1":"삼일절", "5-5":"어린이날", "6-6":"현충일",
                "8-15":"광복절", "10-3":"개천절", "10-9":"한글날", "12-25":"크리스마스" };
@@ -36,26 +36,8 @@
       var d = new Date(Y, M - 1, dn);
       var wd = (d.getDay() + 6) % 7;                  // 0=월 … 6=일
       var cell = { day: dn, wd: wd, hol: HOLI[M + "-" + dn] || (window.__CS_HOL || {})[Y + "-" + String(M).padStart(2, "0") + "-" + String(dn).padStart(2, "0")] || null };
-      if (wd === 6) { cell.closed = true; cell.shifts = []; cell.off = []; days.push(cell); continue; }
-      var wi = weekIndex(d) + (shift || 0);   // shift: 로테이션 안 바꾸기 (0~4)
-      var plan = OFFROT[((wi % 5) + 5) % 5];
-      var iso = wd + 1;
-      var shared = iso <= 5 && iso === plan.s;
-      var hOff = iso <= 5 && iso === plan.h;
-      var off = (shared ? [HANGA, HYEBIN] : []).concat(hOff ? [HAESUN] : []);
-      var sh = [];
-      function put(who, role) {
-        var t = (TIMEMAP[who] || {})[ROLEKO[role]] || [null, null];
-        sh.push({ who: who, role: role, s: t[0], e: t[1] });
-      }
-      if (shared) { put(HAESUN, "full"); put(MINJI, "allday"); }
-      else {
-        put(HANGA, (wi % 2 === 0) ? "open" : "close");
-        put(HYEBIN, (wi % 2 === 0) ? "close" : "open");
-        if (hOff) put(MINJI, "dough"); else put(HAESUN, "middle");
-      }
-      sh.sort(function (a, b) { return RORD[a.role] - RORD[b.role]; });
-      cell.shifts = sh; cell.off = off;
+      if (window.__DEMO_OFF.indexOf(wd) >= 0) { cell.closed = true; cell.shifts = []; cell.off = []; days.push(cell); continue; }
+      cell.shifts = []; cell.off = [];
       days.push(cell);
     }
     return { year: Y, month: M, firstWd: (first.getDay() + 6) % 7, days: days };
@@ -130,9 +112,7 @@
                '</div><div class="restday">정기휴무</div></div>';
         return;
       }
-      var biz = c.wd === 5 ? '<div class="bizt">영업 10:30–17:00</div>'
-              : c.hol ? '<div class="bizt hol">영업 9:30–17:00</div>'
-              : '<div class="bizt">영업 9:30–18:30</div>';
+      var bzh = window.__DEMO_HOURS(c.wd, c.hol), biz = bzh ? '<div class="bizt' + (c.hol ? " hol" : "") + '">영업 ' + esc0(bzh) + '</div>' : "";
       out += '<div class="' + cls + '" data-d="' + m.month + "/" + c.day +
         '" data-wd="' + WDK[c.wd] + '"><div class="dnum">' + c.day + "</div>" +
         (c.hol ? '<div class="hol">' + esc0(c.hol) + "</div>" : "") + biz +
@@ -145,7 +125,7 @@
             '<span class="who">' + esc0(x.who) + "</span>" +
             '<span class="rl">' + ROLEKO[x.role] + "</span>" +
             (x.s ? '<span class="tm">' + x.s + '<span class="dash">–</span>' + x.e + "</span>"
-                 : '<span class="tm free">매장 상황 보며</span>') + "</div>";
+                 : '<span class="tm free"></span>') + "</div>";
         }).join("") + "</div>";
     });
     return out;

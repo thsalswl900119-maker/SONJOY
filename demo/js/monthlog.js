@@ -104,7 +104,7 @@
     if (!Object.keys(staff).length) keys.forEach(function (k) {
       var o = J(k) || {};
       [o.by, o.who].concat(Object.keys(o.bl || {}).map(function (fk) { return [].concat(o.bl[fk] || []); }).reduce(function (a, x) { return a.concat(x); }, []))
-        .forEach(function (w) { w = String(w || "").replace(/님$/, "").trim(); if (/^(김하늘|이다온|최서하)$/.test(w)) staff[w] = 1; });
+        .forEach(function (w) { w = String(w || "").replace(/님$/, "").trim(); if (__SRE.test(w)) staff[w] = 1; });
     });
     var nStaff = Object.keys(staff).length;
     [["cn25", opDays ? String(opDays) : "", "영업일수"],

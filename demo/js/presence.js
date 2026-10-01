@@ -47,7 +47,7 @@
     var top = document.getElementById("whoOn");
     if (top) {
       // 나 + 다른 사람 전부 — 이름은 각자 색, 어느 화면인지, 1분 30초 넘게 안 만지면 「자리 비움」
-      var CL = { "김하늘": "p1", "이다온": "p2", "최서하": "p3", "사장님": "p4" };
+      var CL = __CM("p");
       var rows = [{ who: me(), label: w.label, on: true, mine: true }].concat(list.filter(function (o) { return o.who !== me(); }));
       var seen = {}, html = '<b class="pol">접속 중</b>';
       rows.forEach(function (o) {

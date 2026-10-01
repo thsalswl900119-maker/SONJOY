@@ -3,25 +3,25 @@
   (function () {
     var root = document.getElementById("tp12");
     if (!root) return;
-  var GROUPS={"sheet":"🍞 시트","fruit":"🥭 과일","cream":"🥛 생크림","bar":"☕ 우유·원두·휘핑","sub":"🥚 매일 쓰는 부재료","pack":"📦 포장 재료","design":"🎨 디자인 재료","etc":"🍧 빙수·기타 (4월 중순 ~ 9월 말)"};
-  var ITEMS=[];   // 체험판: 재고 목록은 비워 두고 보는 사람이 직접 추가
+  var GROUPS=window.__DEMO_GROUPS();
+  var ITEMS=[];   // 체험판: 품목은 각 매장이 직접 넣는다
   var REF={"예시": [["품목", "단위", "주문량", "주문 시점", "거래처", "010-0000-0000", "결제"]]};
   var SEASON=[];
 
-    var MGR = ["김하늘", "사장님"];
+    var MGR = __MGR.concat(["사장님"]);
     var PRE = "csdemo.stock.";
     var FIELDS = ["prod", "fruitUseA", "fruitUseB", "fruitUseC", "creamUse", "fruitOrder", "creamPlan", "report", "noOrder"];   // noOrder: 「발주 넣을 것 없음」 확인 (누가 · 몇 시)
     var NL = String.fromCharCode(10);
-    var TIP = {
-      fruit: "",
-      etc: "빙수 재료 메모 — 시즈너리 빙수는 종류에 따라 달라지니 그때그때 체크. 코코넛밀크(노브랜드) · 패션후르츠 퓨레는 웬만하면 넣기."
-    };
-    var OPEN = { sheet: 1, fruit: 1, cream: 1, bar: 1, sub: 1, design: 1 };
-    var ADD_TOP = true;   // 항목 추가 서식을 맨 위에 (체험판에서 켬)
-    var GROUP_MEMO = { pack: "포장 메모" };   // 묶음 아래 자유 메모 (자주 안 시키는 것)
+    var TIP = {};
+    var OPEN = {};
+    Object.keys(GROUPS).forEach(function (g) { OPEN[g] = 1; });
+    var ADD_TOP = true;
+    var editing = null;   // 고치는 중인 추가 품목 이름
+    function editItem(name) { editing = name; renderGroups(); var f = document.querySelector("#skGroups .skaddf"); if (f) { f.scrollIntoView({ block: "center" }); var n = f.querySelector('[data-f="name"]'); if (n) n.focus(); } }   // 항목 추가 서식을 맨 위에 (체험판에서 켬)
+    var GROUP_MEMO = {};   // 묶음 아래 자유 메모 (자주 안 시키는 것)
     var DESIGN_KEY = "디자인 재료";   // 자유 메모 — 없으면 발주 넣는 디자인 재료 (데코 · 픽 · 초 · 리본 · 프린트 등)
     // 케이크 상자 · 하판은 한 줄에 같이 입력 (저장 이름은 그대로)
-    var PAIR = { "케이크 상자 미니": "케이크 하판 미니", "케이크 상자 1호": "케이크 하판 1호", "케이크 상자 2호": "케이크 하판 2호", "케이크 상자 3호": "케이크 하판 3호", "케이크 상자 4호": "케이크 하판 4호" };
+    var PAIR = {};
     var PAIRED = {}; Object.keys(PAIR).forEach(function (k) { PAIRED[PAIR[k]] = k; });
 
     function me() { try { return localStorage.getItem("csdemo.me") || ""; } catch (e) { return ""; } }
@@ -125,7 +125,7 @@
                         : (memo ? "<small>" + esc(memo) + "</small>" : "")) + "</span>" +
             '<input type="text" inputmode="decimal" class="skin" value="' + esc(val) + '" placeholder="' + esc(hintPh(name)) + '">' +
             '<span class="u">' + esc(unit) + "</span>" +
-            (custom && isMgr() ? '<button type="button" class="x" title="항목 삭제">×</button>' : "<span></span>");
+            (custom && isMgr() ? '<span class="xs"><button type="button" class="ed" title="항목 고치기">✎</button><button type="button" class="x" title="항목 삭제">×</button></span>' : "<span></span>");
           var inp = row.querySelector("input");
           var paint = function () {
             var v = parseFloat(String(inp.value).replace(/[^0-9.]/g, ""));
@@ -134,6 +134,8 @@
           };
           paint();
           inp.addEventListener("input", function () { stock[name] = inp.value; paint(); renderNeed(); queueSave(); });
+          var ed = row.querySelector(".ed");
+          if (ed) ed.addEventListener("click", function () { editItem(name); });
           var x = row.querySelector(".x");
           if (x) x.addEventListener("click", function () {
             if (!confirm('"' + name + '" 항목을 지울까요?')) return;
@@ -157,21 +159,37 @@
         var add = document.createElement("div"); add.className = "skaddf";
         add.innerHTML = '<b>+ 재고 항목 추가</b>' +
           '<select aria-label="묶음">' + Object.keys(GROUPS).filter(function (g) { return g !== "design"; }).map(function (g) { return '<option value="' + g + '">' + esc(GROUPS[g]) + "</option>"; }).join("") + "</select>" +
-          '<input type="text" class="skin" data-f="name" placeholder="품목명 (예: 기본 시트)" aria-label="품목명">' +
+          '<input type="text" class="skin" data-f="name" placeholder="품목명" aria-label="품목명">' +
           '<input type="text" class="skin" data-f="unit" value="개" aria-label="단위" style="max-width:70px">' +
           '<input type="text" inputmode="decimal" class="skin" data-f="re" placeholder="발주점 (선택)" aria-label="발주점" style="max-width:120px">' +
           '<input type="text" class="skin" data-f="memo" placeholder="거래처 · 주문량 메모 (선택)" aria-label="메모">' +
           '<button type="button" class="skbtn">추가</button>';
         var fv = function (f) { return add.querySelector('[data-f="' + f + '"]').value.trim(); };
         var doAdd = function () {
-          var g = add.querySelector("select").value, name = fv("name");
+          var g = add.querySelector("select").value, name = fv("name"), was = editing;
           if (!name) { add.querySelector('[data-f="name"]').focus(); return; }
-          if (allItems().some(function (it) { return it[1] === name; })) { alert('"' + name + '" 은(는) 이미 있어요'); return; }
-          var re = fv("re"), c = customItems();
+          if (name !== was && allItems().some(function (it) { return it[1] === name; })) { alert('"' + name + '" 은(는) 이미 있어요'); return; }
+          var re = fv("re"), c = customItems().filter(function (x) { return x.name !== was; });
           c.push({ g: g, name: name, unit: fv("unit") || "개", re: re === "" || isNaN(Number(re)) ? null : Number(re), memo: fv("memo") });
+          // 이름을 바꾸면 이 날 적은 수량도 새 이름으로 옮긴다
+          if (was && was !== name && stock[was] != null) { stock[name] = stock[was]; delete stock[was]; queueSave(); }
+          editing = null;
           setCustom(c); OPEN[g] = 1; renderGroups();
-          statusEl.textContent = '"' + name + '" 항목을 추가했어요';
+          statusEl.textContent = '"' + name + '" 항목을 ' + (was ? "고쳤어요" : "추가했어요");
         };
+        if (editing) {
+          var ce = customItems().filter(function (x) { return x.name === editing; })[0];
+          if (ce) {
+            add.querySelector("b").textContent = "✎ 재고 항목 고치기";
+            add.querySelector("select").value = ce.g;
+            add.querySelector('[data-f="name"]').value = ce.name; add.querySelector('[data-f="unit"]').value = ce.unit || "";
+            add.querySelector('[data-f="re"]').value = ce.re == null ? "" : ce.re; add.querySelector('[data-f="memo"]').value = ce.memo || "";
+            add.querySelector("button").textContent = "고치기 저장";
+            var cancel = document.createElement("button"); cancel.type = "button"; cancel.className = "skbtn"; cancel.textContent = "취소";
+            cancel.addEventListener("click", function () { editing = null; renderGroups(); });
+            add.appendChild(cancel);
+          } else editing = null;
+        }
         add.querySelector("button").addEventListener("click", doAdd);
         add.querySelectorAll("input").forEach(function (x) { x.addEventListener("keydown", function (e) { if (e.key === "Enter") doAdd(); }); });
         if (ADD_TOP) box.insertBefore(add, box.firstChild); else box.appendChild(add);
@@ -369,8 +387,8 @@
       box.innerHTML = weeks.map(function (w, i) {
         var on = w.mon === curMon;
         return '<div class="skwk' + (on ? " on" : "") + '"><span class="wl">' + (i + 1) + "주<small>" + w.from.slice(5).replace("-", "/") + "~" + w.to.slice(5).replace("-", "/") + "</small></span>" +
-          '<span class="wv"><b>' + w.a + "알 · " + w.b + "병" + (w.t ? " · " + w.t + "통" : "") + "</b><small>과일</small></span>" +
-          '<span class="wv"><b>' + w.c + "통</b><small>생크림</small></span>" +
+          '<span class="wv"><b>' + w.a + " · " + w.b + (w.t ? " · " + w.t : "") + "</b><small>사용량 ①②③</small></span>" +
+          '<span class="wv"><b>' + w.c + "</b><small>사용량 ④</small></span>" +
           '<span class="wd">' + (w.days ? w.days + "일 기록" : '<i>기록 없음</i>') + "</span></div>";
       }).join("");
     }
@@ -422,21 +440,16 @@
       if (n.length) html += '<div class="warn">발주점 이하 ' + n.length + ": " + esc(n.join(", ")) + "</div>";
       html += "</div>";
       html += "<h4>총괄 보고 · 특이사항</h4>" + (v("report") ? esc(v("report")).replace(/\n/g, "<br>") : em);
-      html += "<h4>오늘 생산 · 사용</h4><div class=\"kv\">" +
-        row("조각케이크", esc(v("prod"))) +
-        row("과일 사용", (v("fruitUseA") || v("fruitUseB") || v("fruitUseC")) ? (v("fruitUseA") || 0) + "알 / " + (v("fruitUseB") || 0) + "병" + (v("fruitUseC") ? " / " + v("fruitUseC") + "통" : "") : "", true) +
-        row("생크림 사용", v("creamUse") ? v("creamUse") + "통" : "", true) +
-        row("과일 주문·입고", esc(v("fruitOrder"))) +
-        row("생크림 계획", esc(v("creamPlan"))) + "</div>";
-      html += "<h4>재고</h4><div class=\"kv\">" +
-        row("시트", grp("sheet")) + row("과일", grp("fruit")) + row("생크림", grp("cream")) +
-        row("우유·원두·휘핑", grp("bar")) + row("부재료", grp("sub")) + row("포장", grp("pack") + (stock["포장 메모"] ? (grp("pack") ? " · " : "") + "<i>메모: " + esc(stock["포장 메모"]).replace(/\n/g, " / ") + "</i>" : "")) + row("디자인 재료", esc(stock[DESIGN_KEY] || "").replace(/\n/g, "<br>")) + row("빙수·기타", grp("etc")) + "</div>";
+      var DF = ["prod", "fruitUseA", "fruitUseB", "fruitUseC", "creamUse", "fruitOrder", "creamPlan"];
+      var flab = function (k) { var l = $("#sk_" + k); l = l && l.closest("label"); return l ? l.firstChild.textContent.trim() : k; };
+      html += "<h4>오늘 숫자</h4><div class=\"kv\">" + DF.map(function (k) { return row(esc(flab(k)), esc(v(k))); }).join("") + "</div>";
+      html += "<h4>재고</h4><div class=\"kv\">" + Object.keys(GROUPS).map(function (g) { return row(esc(GROUPS[g].replace(/^\S+\s/, "")), grp(g)); }).join("") + "</div>";
       var mon = weekMon(cur), tA = 0, tB = 0, tC = 0, tT = 0;
       [0, 1, 2, 3, 4, 5].forEach(function (i) {
         var d = addDays(mon, i); var w = (d === cur) ? o : (load(d) || {});
         tA += Number(w.fruitUseA) || 0; tB += Number(w.fruitUseB) || 0; tT += Number(w.fruitUseC) || 0; tC += Number(w.creamUse) || 0;
       });
-      html += '<div class="rf"><span>이번 주 사용 <i>' + tA + "알 " + tB + "병" + (tT ? " " + tT + "통" : "") + " · 생크림 " + tC + "통</i></span><span>○○카페 · 재고발주</span></div>";
+      html += '<div class="rf"><span>이번 주 합계 <i>' + [tA, tB, tT, tC].join(" · ") + "</i></span><span>○○카페 · 재고발주</span></div>";
       box.innerHTML = html;
       renderUseCal();
     }
@@ -452,15 +465,8 @@
         "■ 발주 넣을 것 (⬜대기 ☑확인 ✅주문완료)", ord || (o.noOrder ? "✅ 오늘 발주 넣을 것 없음 (확인 " + o.noOrder + ")" : "-"),
         n.length ? "(발주점 이하: " + n.join(", ") + ")" : "",
         "■ 특이사항", o.report || "-",
-        "■ 조각케이크 생산: " + (o.prod || "-"),
-        "■ 시트: " + grp("sheet"),
-        "■ 과일 사용 " + (o.fruitUseA || 0) + "알 / " + (o.fruitUseB || 0) + "병" + (o.fruitUseC ? " / " + o.fruitUseC + "통" : "") + " · 재고: " + grp("fruit"),
-        "  주문: " + (o.fruitOrder || "-"),
-        "■ 생크림 사용 " + (o.creamUse || 0) + "통 · 재고 " + grp("cream") + " · " + (o.creamPlan || ""),
-        "■ 우유·원두·휘핑: " + grp("bar"),
-        "■ 부재료: " + grp("sub"),
-        stock["포장 메모"] ? "■ 포장 메모: " + String(stock["포장 메모"]).replace(/\n+/g, " / ") : "",
-        stock[DESIGN_KEY] ? "■ 디자인 재료: " + String(stock[DESIGN_KEY]).replace(/\n+/g, " / ") : ""].filter(function (x) { return x !== ""; }).join(NL);
+        ["prod", "fruitUseA", "fruitUseB", "fruitUseC", "creamUse", "fruitOrder", "creamPlan"].map(function (k) { var l = $("#sk_" + k); l = l && l.closest("label"); return o[k] ? "■ " + (l ? l.firstChild.textContent.trim() : k) + ": " + o[k] : ""; }).join(NL),
+        Object.keys(GROUPS).map(function (g) { return "■ " + GROUPS[g].replace(/^\S+\s/, "") + ": " + grp(g); }).join(NL)].filter(function (x) { return x !== ""; }).join(NL);
       return t;
     }
     function sendText() {
@@ -712,8 +718,8 @@
   (function () {
     var box = document.getElementById("hcRows");
     if (!box) return;
-    var NAMES = ["김하늘", "이다온", "최서하", "사장님"];
-    var COL = { "김하늘": "wp1", "이다온": "wp2", "최서하": "wp3", "사장님": "wp4" };
+    var NAMES = __S.concat(["사장님"]);
+    var COL = __CM("wp");
     var KEY = "csdemo.health";
     function load() { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { return {}; } }
     function save(o) { try { localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) {} }
@@ -758,7 +764,7 @@
     var titleEl = document.getElementById("mcTitle"), listEl = document.getElementById("mcList");
     var textEl = document.getElementById("mcText");
     var KEY = "csdemo.daynotes", VKEY = "csdemo.vacations";   // 휴가: [{id, who, from, to, memo, by, t}]
-    var COL = { "김하늘": "p1", "이다온": "p2", "최서하": "p3", "사장님": "p4" };
+    var COL = __CM("p");
     function vload() { try { var a = JSON.parse(localStorage.getItem(VKEY) || "[]"); return Array.isArray(a) ? a : []; } catch (e) { return []; } }
     function vsave(a) { try { localStorage.setItem(VKEY, JSON.stringify(a)); } catch (e) {} }
     // 일정·휴가 공통: {id, kind:"vac"|"sched", who, title, from, to, days:[0..6], memo} — kind 없으면 예전 휴가

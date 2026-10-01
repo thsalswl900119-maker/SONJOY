@@ -4,7 +4,7 @@
   var PRE = "csdemo.weekrep.";
   var ins = Array.prototype.slice.call(box.querySelectorAll(".wrin"));
   var labelEl = document.getElementById("wrLabel"), autoEl = document.getElementById("wrAuto"), stateEl = document.getElementById("wrState"), footEl = document.getElementById("wrFoot");
-  var CL = { "김하늘": "p1", "이다온": "p2", "최서하": "p3", "사장님": "p4" };
+  var CL = __CM("p");
   var WD = ["일", "월", "화", "수", "목", "금", "토"];
   function pad(n) { return String(n).padStart(2, "0"); }
   function ymd(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
@@ -118,7 +118,7 @@
   window.addEventListener("cs:remote", function (e) { var ks = (e.detail && e.detail.keys) || []; if (ks.some(function (k) { return k.indexOf(PRE) === 0 || k.indexOf("csdemo.log.") === 0; })) render(); });
   box.addEventListener("toggle", function () { if (box.open) render(); });
   // 매니저 · 사장님만 보인다. 토요일에는 펼쳐 두고, 다른 날은 접어 둔다 (이번 주 안 썼으면 빨간 글씨로 표시)
-  var SEE = ["김하늘", "사장님"], opened = false;
+  var SEE = __MGR.concat(["사장님"]), opened = false;
   function gate() {
     var ok = SEE.indexOf(me()) >= 0;
     box.hidden = !ok;

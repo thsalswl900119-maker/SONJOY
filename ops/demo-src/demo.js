@@ -1,7 +1,7 @@
 // 배포용 체험판 — 각 매장이 가게 이름 · 직원 · 칸을 넣고 빼고 고쳐 쓰는 뼈대 (서버 연결 없음 · 이 기기 브라우저에만 저장)
 // 안쪽에서는 직원을 「이름표(칸 번호)」로 쓰고, 화면에는 사장님이 정한 이름으로 바꿔 보여 준다 (저장된 기록은 이름을 바꿔도 그대로 이어진다)
 (function () {
-  var P = "csdemo.";   // make_demo 가 체험판 전용 이름(csdemo.)으로 바꾼다
+  var P = "cafesui.";   // make_demo 가 체험판 전용 이름(csdemo.)으로 바꾼다
   function J(k, d) { try { var v = localStorage.getItem(P + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }
   function W(k, v) { try { localStorage.setItem(P + k, JSON.stringify(v)); } catch (e) {} }
   function esc(v) { return String(v == null ? "" : v).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }

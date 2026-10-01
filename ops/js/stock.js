@@ -17,7 +17,9 @@
       etc: "빙수 재료 메모 — 시즈너리 빙수는 종류에 따라 달라지니 그때그때 체크. 코코넛밀크(노브랜드) · 패션후르츠 퓨레는 웬만하면 넣기."
     };
     var OPEN = { sheet: 1, fruit: 1, cream: 1, bar: 1, sub: 1, design: 1 };
-    var ADD_TOP = false;   // 항목 추가 서식을 맨 위에 (체험판에서 켬)
+    var ADD_TOP = false;
+    var editing = null;   // 고치는 중인 추가 품목 이름
+    function editItem(name) { editing = name; renderGroups(); var f = document.querySelector("#skGroups .skaddf"); if (f) { f.scrollIntoView({ block: "center" }); var n = f.querySelector('[data-f="name"]'); if (n) n.focus(); } }   // 항목 추가 서식을 맨 위에 (체험판에서 켬)
     var GROUP_MEMO = { pack: "포장 메모" };   // 묶음 아래 자유 메모 (자주 안 시키는 것)
     var DESIGN_KEY = "디자인 재료";   // 자유 메모 — 없으면 발주 넣는 디자인 재료 (데코 · 픽 · 초 · 리본 · 프린트 등)
     // 케이크 상자 · 하판은 한 줄에 같이 입력 (저장 이름은 그대로)
@@ -125,7 +127,7 @@
                         : (memo ? "<small>" + esc(memo) + "</small>" : "")) + "</span>" +
             '<input type="text" inputmode="decimal" class="skin" value="' + esc(val) + '" placeholder="' + esc(hintPh(name)) + '">' +
             '<span class="u">' + esc(unit) + "</span>" +
-            (custom && isMgr() ? '<button type="button" class="x" title="항목 삭제">×</button>' : "<span></span>");
+            (custom && isMgr() ? '<span class="xs"><button type="button" class="ed" title="항목 고치기">✎</button><button type="button" class="x" title="항목 삭제">×</button></span>' : "<span></span>");
           var inp = row.querySelector("input");
           var paint = function () {
             var v = parseFloat(String(inp.value).replace(/[^0-9.]/g, ""));
@@ -134,6 +136,8 @@
           };
           paint();
           inp.addEventListener("input", function () { stock[name] = inp.value; paint(); renderNeed(); queueSave(); });
+          var ed = row.querySelector(".ed");
+          if (ed) ed.addEventListener("click", function () { editItem(name); });
           var x = row.querySelector(".x");
           if (x) x.addEventListener("click", function () {
             if (!confirm('"' + name + '" 항목을 지울까요?')) return;
@@ -164,14 +168,30 @@
           '<button type="button" class="skbtn">추가</button>';
         var fv = function (f) { return add.querySelector('[data-f="' + f + '"]').value.trim(); };
         var doAdd = function () {
-          var g = add.querySelector("select").value, name = fv("name");
+          var g = add.querySelector("select").value, name = fv("name"), was = editing;
           if (!name) { add.querySelector('[data-f="name"]').focus(); return; }
-          if (allItems().some(function (it) { return it[1] === name; })) { alert('"' + name + '" 은(는) 이미 있어요'); return; }
-          var re = fv("re"), c = customItems();
+          if (name !== was && allItems().some(function (it) { return it[1] === name; })) { alert('"' + name + '" 은(는) 이미 있어요'); return; }
+          var re = fv("re"), c = customItems().filter(function (x) { return x.name !== was; });
           c.push({ g: g, name: name, unit: fv("unit") || "개", re: re === "" || isNaN(Number(re)) ? null : Number(re), memo: fv("memo") });
+          // 이름을 바꾸면 이 날 적은 수량도 새 이름으로 옮긴다
+          if (was && was !== name && stock[was] != null) { stock[name] = stock[was]; delete stock[was]; queueSave(); }
+          editing = null;
           setCustom(c); OPEN[g] = 1; renderGroups();
-          statusEl.textContent = '"' + name + '" 항목을 추가했어요';
+          statusEl.textContent = '"' + name + '" 항목을 ' + (was ? "고쳤어요" : "추가했어요");
         };
+        if (editing) {
+          var ce = customItems().filter(function (x) { return x.name === editing; })[0];
+          if (ce) {
+            add.querySelector("b").textContent = "✎ 재고 항목 고치기";
+            add.querySelector("select").value = ce.g;
+            add.querySelector('[data-f="name"]').value = ce.name; add.querySelector('[data-f="unit"]').value = ce.unit || "";
+            add.querySelector('[data-f="re"]').value = ce.re == null ? "" : ce.re; add.querySelector('[data-f="memo"]').value = ce.memo || "";
+            add.querySelector("button").textContent = "고치기 저장";
+            var cancel = document.createElement("button"); cancel.type = "button"; cancel.className = "skbtn"; cancel.textContent = "취소";
+            cancel.addEventListener("click", function () { editing = null; renderGroups(); });
+            add.appendChild(cancel);
+          } else editing = null;
+        }
         add.querySelector("button").addEventListener("click", doAdd);
         add.querySelectorAll("input").forEach(function (x) { x.addEventListener("keydown", function (e) { if (e.key === "Enter") doAdd(); }); });
         if (ADD_TOP) box.insertBefore(add, box.firstChild); else box.appendChild(add);
