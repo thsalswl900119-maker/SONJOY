@@ -3576,7 +3576,7 @@
       var tag = row.querySelector(".lgby");
       if (names.length < 2) { if (tag) tag.remove(); }
       else {
-        if (!tag) { tag = document.createElement("i"); tag.className = "lgby"; row.appendChild(tag); }
+        if (!tag) { tag = document.createElement("i"); tag.className = "lgby"; var rvb = row.querySelector(".rvbox"); if (rvb) row.insertBefore(tag, rvb); else row.appendChild(tag); }
         tag.innerHTML = "쓴 사람: " + names.map(function (n) { return '<b class="' + (WCLR[n] ? "w" + WCLR[n] : "") + '">' + esc(n === "사장님" ? n : n + "님") + "</b>"; }).join(" · ");
       }
       // 칸 아래 「👑 사장님 덧붙임」 박스는 쓰지 않는다 (사장님 확정 — 칸 안 형광만). 예전 화면에 남은 것만 지운다
