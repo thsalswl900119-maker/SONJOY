@@ -192,11 +192,13 @@
         "<h4>📦 발주 묶음</h4><div class=\"dhelp\">재고를 나눠 볼 종류입니다. 업종에 맞게 이름을 바꾸고 넣고 빼세요. 품목은 발주 화면에서 직접 넣습니다.</div>" +
         '<div id="dsGroups">' + s.groups.map(groupRow).join("") + "</div>" +
         '<div class="drow"><button type="button" id="dsAddGrp">＋ 묶음 추가</button></div>' +
-        '<div class="drow"><button type="button" class="dgo" id="dsGo">' + (s.done ? "저장하고 돌아가기" : "시작하기") + "</button>" + (s.done ? '<button type="button" id="dsClose">닫기</button>' : "") + "</div>";
+        '<div class="drow"><button type="button" class="dgo" id="dsGo">' + (s.done ? "저장하고 돌아가기" : "시작하기") + "</button>" + (s.done ? '<button type="button" id="dsClose">닫기</button>' : '<button type="button" class="dbrowse">👀 설정 없이 훑어보기</button>') + "</div>" +
+        (s.done ? "" : '<div class="dhelp" style="text-align:center">훑어보기는 예시 가게 · 직원으로 바로 들어가 화면을 둘러봅니다. 나중에 「⚙ 가게 · 직원 설정」에서 우리 가게로 바꾸면 됩니다.</div>');
       sec.querySelector("#dsAddStaff").onclick = function () { sec.querySelector("#dsStaff").insertAdjacentHTML("beforeend", staffRow({ name: "", role: "알바" })); };
       sec.querySelector("#dsAddGrp").onclick = function () { sec.querySelector("#dsGroups").insertAdjacentHTML("beforeend", groupRow(["", ""])); };
       sec.onclick = function (e) { var x = e.target.closest(".dx"); if (x) x.closest(".drow").remove(); };
       sec.querySelector("#dsGo").onclick = save;
+      var bw = sec.querySelector(".dbrowse"); if (bw) bw.onclick = browse;
       var cl = sec.querySelector("#dsClose"); if (cl) cl.onclick = function () { location.reload(); };
     }
     function save() {
@@ -226,13 +228,26 @@
       ["gateStep1", "gateStep2"].forEach(function (id) { var el = document.getElementById(id); if (el) el.hidden = true; });
       sec.hidden = false;
     }
+    // 👀 훑어보기 — 설정 전이면 예시 가게 · 직원으로, 비밀번호 없이 사장님 화면으로 바로
+    function browse() {
+      if (!setup.done) {
+        setup = { done: true, preview: true, store: "예시 가게", line: "우리 가게 한 줄 소개",
+          staff: [{ id: SLOTS[0], name: "김민수", role: "매니저" }, { id: SLOTS[1], name: "이지은", role: "직원" }, { id: SLOTS[2], name: "박현우", role: "알바" }],
+          off: [6], hours: { wk: "10:00–21:00", sat: "10:00–21:00", sun: "", hol: "" }, groups: DEF_GROUPS };
+        W("setup", setup);
+      }
+      try { localStorage.setItem(P + "me", "사장님"); sessionStorage.setItem(P + "unlocked", "1"); } catch (e) {}
+      location.reload();
+    }
     window.__DEMO_SETUP = open;
     // 로그인 화면 「누구세요?」 아래에 설정 바로가기
     if (st1) {
       var lk = document.createElement("div"); lk.className = "drow"; lk.style.justifyContent = "center"; lk.style.margin = "10px 0";
-      lk.innerHTML = '<button type="button" class="pinback" id="dsOpen">⚙ 가게 이름 · 직원 바꾸기</button>';
+      lk.innerHTML = '<button type="button" class="pinback dbrowse">👀 비밀번호 없이 훑어보기 (사장님 화면)</button><button type="button" class="pinback" id="dsOpen">⚙ 가게 이름 · 직원 바꾸기</button>';
+      lk.style.gap = "8px";
+      lk.querySelector(".dbrowse").onclick = browse;
       st1.insertBefore(lk, st1.querySelector(".gatenote"));
-      lk.querySelector("button").onclick = open;
+      lk.querySelector("#dsOpen").onclick = open;
     }
     if (!setup.done) open();
   }
