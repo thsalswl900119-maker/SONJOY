@@ -18,7 +18,62 @@
     function dirtyGet() { try { return JSON.parse(localStorage.getItem(DIRTYK) || "{}") || {}; } catch (e) { return {}; } }
     function dirtySet(o) { try { origSet.call(localStorage, DIRTYK, JSON.stringify(o)); } catch (e) {} }
     function markDirty(k) { var o = dirtyGet(); o[k] = Date.now(); dirtySet(o); }
-    function clearDirty(k) { var o = dirtyGet(); if (k in o) { delete o[k]; dirtySet(o); } }
+    function clearDirty(k) { var o = dirtyGet(); if (k in o) { delete o[k]; dirtySet(o); } baseDel(k); }
+    // 고치기 시작할 때의 서버 값(base) — 보낼 때 서버 최신값과 견줘 「이 기기에서 바꾼 칸만」 얹는다 (옛 화면이 남의 글을 통째로 덮는 사고 방지)
+    var BASEK = "cafesui.ui.dirtybase", baseOf = {};
+    try { baseOf = JSON.parse(localStorage.getItem(BASEK) || "{}") || {}; } catch (e) { baseOf = {}; }
+    var bootBase = {}; Object.keys(baseOf).forEach(function (k) { bootBase[k] = baseOf[k]; });
+    function baseSave() { try { origSet.call(localStorage, BASEK, JSON.stringify(baseOf)); } catch (e) {} }
+    function baseDel(k) { if (k in baseOf) { delete baseOf[k]; baseSave(); } }
+    function baseMark(k) {
+      if (k in baseOf) return;
+      baseOf[k] = (k in remote) ? (remote[k] == null ? "" : remote[k]) : (k in boot ? boot[k] : "");
+      if (String(baseOf[k]).length < 200000) baseSave();
+    }
+    function objOf(v) { try { var o = JSON.parse(v); return o && typeof o === "object" && !Array.isArray(o) ? o : null; } catch (e) { return null; } }
+    function same(a, b) { return JSON.stringify(a) === JSON.stringify(b); }
+    function blank(v) { return v == null || (typeof v === "string" && !v.trim()) || (typeof v === "object" && !Object.keys(v).length); }
+    function isObj(v) { return v && typeof v === "object" && !Array.isArray(v); }
+    // 둘 다 고친 글 칸 — 한쪽이 다른 쪽을 품으면 긴 쪽, 아니면 내 글 + 서버에만 있는 줄 (아무 글도 버리지 않는다)
+    function joinText(m, s) {
+      if (m.indexOf(s) >= 0) return m; if (s.indexOf(m) >= 0) return s;
+      var NL = String.fromCharCode(10), ml = m.split(NL);
+      var add = s.split(NL).filter(function (ln) { return ln.trim() && ml.indexOf(ln) < 0; });
+      return add.length ? m + NL + add.join(NL) : m;
+    }
+    function both(bv, mv, sv, x, path, known) {
+      if (same(mv, sv)) return mv;
+      if (isObj(mv) && isObj(sv)) return merge3(known ? (isObj(bv) ? bv : {}) : null, mv, sv, path + "." + x);
+      if (mv === undefined) return sv;            // 나는 지웠는데 다른 기기가 고쳤다 — 고친 걸 살린다
+      if (sv === undefined) return mv;
+      if (typeof mv === "string" && typeof sv === "string" && /(^|\.)f$/.test(path)) return joinText(mv, sv);
+      return known ? mv : sv;
+    }
+    function merge3(b, m, s, path) {
+      var out = {}, seen = {}, ks = Object.keys(m).concat(Object.keys(s), b ? Object.keys(b) : []);
+      ks.forEach(function (x) {
+        if (seen[x]) return; seen[x] = 1;
+        var mv = m[x], sv = s[x], r;
+        if (b) {
+          var bv = b[x];
+          if (same(mv, bv)) r = sv; else if (same(sv, bv)) r = mv; else r = both(bv, mv, sv, x, path, true);
+        } else {
+          if (blank(sv)) r = mv; else if (blank(mv)) r = sv; else r = both(undefined, mv, sv, x, path, false);
+        }
+        if (r !== undefined) out[x] = r;
+      });
+      return out;
+    }
+    // base: 고치기 전 서버 값("" = 없었음 · null = 모름) · mine: 이 기기 값 · theirs: 지금 서버 값
+    function mergeVal(base, mine, theirs) {
+      if (theirs == null || theirs === mine) return mine;
+      if (base != null && theirs === base) return mine;
+      var m = objOf(mine), t = objOf(theirs); if (!m || !t) return mine;
+      var b = base == null ? null : (base === "" ? {} : objOf(base));
+      if (base != null && !b) b = {};
+      return JSON.stringify(merge3(b, m, t, ""));
+    }
+    window.__CS_MERGE = mergeVal;
     function dirtyCount() { return Object.keys(dirtyGet()).length; }
     function setStatus(s, msg) {
       state.s = s; state.msg = msg || "";
@@ -41,11 +96,11 @@
       origSet.call(this, k, v);
       if (this !== localStorage || applying || k.indexOf("cafesui.") !== 0 || LOCAL_ONLY.test(k)) return;
       if (!ready && boot[k] === String(v)) return;   // 아직 서버 값을 못 받았는데 열 때 값 그대로 다시 저장한 것 — 서버 값을 기다린다
-      markDirty(k); queue(k, String(v));
+      baseMark(k); markDirty(k); queue(k, String(v));
     };
     Storage.prototype.removeItem = function (k) {
       origRem.call(this, k);
-      if (this === localStorage && !applying && k.indexOf("cafesui.") === 0 && !LOCAL_ONLY.test(k)) { markDirty(k); queue(k, null); }
+      if (this === localStorage && !applying && k.indexOf("cafesui.") === 0 && !LOCAL_ONLY.test(k)) { baseDel(k); markDirty(k); queue(k, null); }
     };
     function queue(k, v) {
       pending[k] = v;
@@ -66,24 +121,45 @@
       try { var pp = db.enablePersistence && db.enablePersistence({ synchronizeTabs: true }); if (pp && pp.catch) pp.catch(function () {}); } catch (e) {}
     } catch (e) { setStatus("err", e.message); return; }
 
+    var busy = {};
     function flush(k) {
       if (!ready) return;                       // 연결되면 한꺼번에 보낸다
       if (!(k in pending)) return;
+      if (busy[k]) return;                      // 같은 칸을 보내는 중 — 끝나면 이어서 보낸다
       var v = pending[k]; delete pending[k];
       clearTimeout(retryT[k]);
       if (remote[k] === v) { clearDirty(k); setStatus(state.s === "err" ? "on" : state.s); return; }   // 서버와 같으면 안 보냄
-      remote[k] = v; sent[k] = v;
-      inflight++;
-      var p = (v === null) ? col.doc(k).delete()
-                           : col.doc(k).set({ v: v, by: dev, t: firebase.firestore.FieldValue.serverTimestamp() });
-      p.then(function () {
-        inflight--;
-        if (!(k in pending)) clearDirty(k);     // 그 사이 또 고쳤으면 그건 다음 전송에서 지운다
+      var bs = (k in baseOf) ? baseOf[k] : null;
+      var useTx = v !== null && objOf(v) && k.indexOf("cafesui.presence.") !== 0 && db.runTransaction;
+      sent[k] = v;
+      inflight++; busy[k] = 1;
+      var ref = col.doc(k), p;
+      if (v === null) p = ref.delete().then(function () { return null; });
+      else if (!useTx) p = ref.set({ v: v, by: dev, t: firebase.firestore.FieldValue.serverTimestamp() }).then(function () { return v; });
+      else p = db.runTransaction(function (tx) {
+        return tx.get(ref).then(function (doc) {
+          var cur = doc.exists ? (doc.data() || {}).v : null;
+          var out = mergeVal(bs, v, cur == null ? null : cur);
+          tx.set(ref, { v: out, by: dev, t: firebase.firestore.FieldValue.serverTimestamp() });
+          return out;
+        });
+      });
+      p.then(function (out) {
+        inflight--; busy[k] = 0;
+        remote[k] = out; sent[k] = out;
+        if (!(k in pending)) {
+          clearDirty(k);
+          // 서버에 있던 다른 기기 글까지 합쳐졌다 — 이 기기에도 넣고 화면에 알린다
+          var lv = null; try { lv = localStorage.getItem(k); } catch (e) {}
+          if (out !== null && lv === v && out !== v) {
+            applying = true; try { origSet.call(localStorage, k, out); } catch (e) {} applying = false;
+            try { window.dispatchEvent(new CustomEvent("cs:remote", { detail: { keys: [k] } })); } catch (e) {}
+          }
+        } else { baseOf[k] = v; baseSave(); flush(k); }   // 그 사이 또 고친 것 — 방금 보낸 값을 기준으로 이어서
         setStatus("on");
       }).catch(function (e) {
-        inflight--;
+        inflight--; busy[k] = 0;
         if (!(k in pending)) pending[k] = v;    // 실패 — 다시 보낸다
-        if (remote[k] === v) remote[k] = undefined;
         setStatus("err", e.message);
         clearTimeout(retryT[k]); retryT[k] = setTimeout(function () { flush(k); }, 8000);
       });
@@ -153,7 +229,7 @@
             delete pending[k]; clearTimeout(timers[k]); clearDirty(k);
           }
           if (k in pending) return;                                   // 지금 이 기기가 고치는 중
-          if (first && dirtyBoot[k] && local !== d.v) { pending[k] = local; return; }   // 지난번에 못 보낸 저장 — 서버 값 대신 이 기기 값을 올린다
+          if (first && dirtyBoot[k] && local !== d.v) { if (!(k in bootBase)) baseOf[k] = null; pending[k] = local; return; }   // 지난번에 못 보낸 저장 — 서버 값에 이 기기에서 바꾼 칸만 얹어 올린다 (base 모르면 빈 칸만 채움)
           if (!first && d.by === dev && (k in sent) && d.v !== sent[k]) return;   // 내가 전에 보낸 게 늦게 돌아온 것 (지금 값이 더 새것)
           if (local !== d.v) { origSet.call(localStorage, k, d.v); changed = true; changedKeys.push(k); }
         });

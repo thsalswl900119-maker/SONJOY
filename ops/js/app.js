@@ -3319,6 +3319,69 @@
         msgEl.textContent = names.length + "칸을 되돌렸습니다";
       });
     })();
+    // 🛟 일지 되살리기 — 다른 기기가 옛 화면으로 덮어써서 지워진 글이 이 기기의 「되돌리기」 기록 · 매일 백업에 남아 있으면
+    //    지금 비어 있는 칸만 채운다 (적힌 칸은 절대 안 건드림). 쓴 기기에서 일지를 열면 위에 빨간 띠로 알려 준다.
+    function rescueFind() {
+      var k = keyFor(), cur = {}; try { cur = JSON.parse(localStorage.getItem(k) || "{}") || {}; } catch (e) {}
+      var cf = cur.f || {}, cands = [];
+      try { var ll = JSON.parse(localStorage.getItem("cafesui.ui.lastlog." + k.slice(12)) || "null"); if (ll) cands.push(ll); } catch (e) {}
+      undoList(k).slice().reverse().forEach(function (j) { try { cands.push(JSON.parse(j) || {}); } catch (e) {} });
+      var snaps = [];
+      try { for (var i = 0; i < localStorage.length; i++) { var sk = localStorage.key(i); if (sk.indexOf("cafesui.ui.snap.") === 0) snaps.push(sk); } } catch (e) {}
+      snaps.sort().reverse().forEach(function (sk) {
+        try { var all = JSON.parse(localStorage.getItem(sk) || "{}") || {}; if (all[k]) cands.push(JSON.parse(all[k]) || {}); } catch (e) {}
+      });
+      var got = {};
+      inputs.forEach(function (el) {
+        var fk = el.dataset.k; if (String(cf[fk] || "").trim()) return;
+        for (var c = 0; c < cands.length; c++) {
+          var v = (cands[c].f || {})[fk];
+          if (v && String(v).trim()) { got[fk] = { v: v, by: (cands[c].by || {})[fk], bl: (cands[c].bl || {})[fk], ow: (cands[c].ow || {})[fk] }; break; }
+        }
+      });
+      return got;
+    }
+    function rescuePaint() {
+      var box = document.getElementById("lgRescue");
+      if (!box) {
+        var act = document.getElementById("lgUndo"); act = act && act.closest(".lgact"); if (!act) return;
+        box = document.createElement("div"); box.id = "lgRescue"; box.className = "lgrescue"; box.hidden = true;
+        act.parentNode.insertBefore(box, act.nextSibling);
+        box.addEventListener("click", function (e) {
+          var b = e.target.closest && e.target.closest("button"); if (!b) return;
+          var hk = "cafesui.ui.rescuehide." + keyFor().slice(12);
+          if (b.dataset.a === "hide") { try { localStorage.setItem(hk, box.dataset.sig || ""); } catch (er) {} box.hidden = true; return; }
+          var got = rescueFind(), ks = Object.keys(got); if (!ks.length) { box.hidden = true; return; }
+          var k = keyFor(), cur = {}; try { cur = JSON.parse(localStorage.getItem(k) || "{}") || {}; } catch (er) {}
+          cur.f = cur.f || {}; cur.by = cur.by || {}; cur.bl = cur.bl || {};
+          ks.forEach(function (fk) {
+            if (String(cur.f[fk] || "").trim()) return;   // 그 사이 누가 적었으면 그대로
+            cur.f[fk] = got[fk].v;
+            if (got[fk].by) cur.by[fk] = got[fk].by;
+            if (got[fk].bl) cur.bl[fk] = got[fk].bl;
+            if (got[fk].ow) { cur.ow = cur.ow || {}; cur.ow[fk] = got[fk].ow; }
+          });
+          try { localStorage.setItem(k, JSON.stringify(cur)); } catch (er) {}
+          load(); report(); document.dispatchEvent(new Event("cs:log-loaded"));
+          msgEl.textContent = "🛟 빈 칸 " + ks.length + "개를 이 기기에 남아 있던 글로 되살렸습니다 (서버에도 저장됨)";
+          rescuePaint();
+        });
+      }
+      var got = rescueFind(), ks = Object.keys(got), sig = ks.join(",");
+      var hidden = ""; try { hidden = localStorage.getItem("cafesui.ui.rescuehide." + keyFor().slice(12)) || ""; } catch (e) {}
+      if (!ks.length || hidden === sig) { box.hidden = true; return; }
+      box.dataset.sig = sig;
+      var names = ks.map(function (fk) { var el = document.querySelector('.lgin[data-k="' + fk + '"]'); return el ? (el.getAttribute("aria-label") || fk) : fk; });
+      box.innerHTML = '<b>🛟 지금 일지에는 비어 있는데, 이 기기에는 전에 적은 글이 남아 있습니다 · ' + ks.length + '칸</b>' +
+        '<span>' + esc(names.slice(0, 12).join(" · ")) + (names.length > 12 ? " 외 " + (names.length - 12) + "칸" : "") + '</span>' +
+        '<div><button type="button" class="prim" data-a="go">빈 칸에 되살리기</button><button type="button" data-a="hide">일부러 지운 거예요 (숨기기)</button></div>';
+      box.hidden = false;
+    }
+    document.addEventListener("cs:log-loaded", function () { setTimeout(rescuePaint, 0); });
+    window.addEventListener("cs:remote", function () { setTimeout(rescuePaint, 300); });
+    setTimeout(rescuePaint, 1500);
+    dateEl.addEventListener("change", function () { setTimeout(rescuePaint, 0); });
+    ["lgPrev", "lgNext", "lgToday"].forEach(function (id) { var b = document.getElementById(id); if (b) b.addEventListener("click", function () { setTimeout(rescuePaint, 0); }); });
     // 한 칸을 여러 사람이 이어 쓰면 칸 아래에 "쓴 사람: …" 을 각자 색으로 보여준다
     // 칸 안 글자색 — 줄마다 쓴 사람 색. 여러 사람이 쓴 긴 칸은 같은 글자를 색 입혀 위에 겹쳐 보여준다(입력은 그대로 칸에서).
     function paintLines(el, lineBy, first, own) {
@@ -3523,6 +3586,12 @@
       if (prev.__savedAt) out.savedAt = prev.__savedAt;
       try { localStorage.setItem(keyFor(), JSON.stringify(out)); }
       catch (e) {}
+      // 이 기기에서 마지막으로 저장한 모습 — 다른 기기가 덮어써도 여기서 되살린다 (이 기기에만 · 최근 10일치)
+      try {
+        localStorage.setItem("cafesui.ui.lastlog." + keyFor().slice(12), JSON.stringify(out));
+        var lk = []; for (var li = 0; li < localStorage.length; li++) { var lkk = localStorage.key(li); if (lkk.indexOf("cafesui.ui.lastlog.") === 0) lk.push(lkk); }
+        lk.sort().reverse().slice(10).forEach(function (x) { localStorage.removeItem(x); });
+      } catch (e) {}
       var n = Object.keys(f).length;
       msgEl.textContent = n ? n + "개 항목 작성됨" : "";
     }
