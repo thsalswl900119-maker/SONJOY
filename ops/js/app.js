@@ -260,8 +260,18 @@
         s.setAttribute("aria-pressed", String(list.indexOf(s.dataset.v) >= 0));
       });
       var ow = read(OWNER_KEY); if (state.owner[k]) ow[k] = state.owner[k]; else delete ow[k]; write(OWNER_KEY, ow);
+      // 달마다 누가 맡았는지도 따로 남긴다 (지난달 배정표를 그대로 다시 볼 수 있게)
+      var mk = OWNER_KEY + "." + monKey(), om = read(mk);
+      if (state.owner[k]) om[k] = state.owner[k]; else delete om[k];
+      if (!Object.keys(om).length) om._ = 1;
+      write(mk, om);
     });
   });
+  // 이번 달 배정 기록이 아직 없으면 지금 배정을 이번 달 것으로 남긴다 (있으면 건드리지 않음)
+  (function () {
+    var mk = OWNER_KEY + "." + monKey();
+    try { if (localStorage.getItem(mk) == null && Object.keys(state.owner).length) write(mk, state.owner); } catch (e) {}
+  })();
 
   // 누가 체크했는지 — 이름을 고르면 그 사람 색으로 칠해진다
   var WHOC = { "정항아": "p1", "박혜빈": "p2", "이해선": "p3", "사장님": "p4" };
@@ -409,6 +419,77 @@
       foot.textContent = "담당 배정과 완료 확인은 매니저 · 사장님만 누릅니다 · " +
                          "청소를 마치면 매니저에게 말씀해 주세요";
     }
+  })();
+
+  // 청소 배정표 달 넘겨 보기 — 지난달은 그 달 담당 · 완료 체크를 그대로 보여 준다 (보기만 · 고칠 수 없음)
+  (function () {
+    var first = document.querySelector('.ztable-wrap:not(.weekly) .box[data-k^="z"]');
+    var wrap = first && first.closest(".ztable-wrap"); if (!wrap) return;
+    var chipsZ = wrap.querySelectorAll(".chip"), boxesZ = wrap.querySelectorAll('.box[data-k^="z"]');
+    var zones = []; boxesZ.forEach(function (b) { if (zones.indexOf(b.dataset.k) < 0) zones.push(b.dataset.k); });
+    function zname(k) {
+      var b = wrap.querySelector('.box[data-k="' + k + '"]'), tr = b && b.closest("tr"), zn = tr && tr.querySelector(".zn");
+      if (!zn) return k;
+      var c = zn.cloneNode(true); c.querySelectorAll(".zd,.keymark").forEach(function (x) { x.remove(); });
+      return c.textContent.trim();
+    }
+    chipsZ.forEach(function (c) { c.dataset.lk = c.disabled ? "1" : ""; });
+    boxesZ.forEach(function (b) { b.dataset.lk = b.disabled ? "1" : ""; });
+    var bar = document.createElement("div"); bar.className = "zmon";
+    var sum = document.createElement("div"); sum.className = "zsum";
+    wrap.parentNode.insertBefore(bar, wrap);
+    wrap.parentNode.insertBefore(sum, wrap);
+    var view = monKey();
+    function months() {
+      var set = {}; set[monKey()] = 1;
+      try {
+        for (var i = 0; i < localStorage.length; i++) {
+          var m = /^cafesui\.(?:clean|cleanowner)\.(\d{4}-\d{2})$/.exec(localStorage.key(i) || "");
+          if (m && m[1] <= monKey()) set[m[1]] = 1;
+        }
+      } catch (e) {}
+      return Object.keys(set).sort().slice(-6);
+    }
+    function lab(ym) { return +ym.slice(5) + "월"; }
+    function draw() {
+      var cur = monKey(), past = view !== cur;
+      bar.innerHTML = '<span class="zmlab">달 고르기</span>' + months().map(function (ym) {
+        return '<button type="button" class="zmb" data-ym="' + ym + '" aria-pressed="' + (ym === view) + '">' +
+               lab(ym) + (ym === cur ? " · 이번 달" : "") + "</button>";
+      }).join("");
+      var done = past ? read("cafesui.clean." + view) : state.done;
+      var om = past ? read(OWNER_KEY + "." + view) : state.owner;
+      var ownOf = function (k) { var v = om[k]; return v ? String(v).split(",").filter(Boolean) : []; };
+      chipsZ.forEach(function (c) {
+        c.setAttribute("aria-pressed", String(ownOf(c.dataset.k).indexOf(c.dataset.v) >= 0));
+        c.disabled = past || !!c.dataset.lk;
+      });
+      boxesZ.forEach(function (b) {
+        var v = done[b.dataset.k];
+        ["p1", "p2", "p3", "p4"].forEach(function (x) { b.classList.remove(x); });
+        b.setAttribute("aria-pressed", String(!!v));
+        if (v && typeof v === "string" && WHOC[v]) { b.classList.add(WHOC[v]); b.title = v; } else b.removeAttribute("title");
+        b.disabled = past || !!b.dataset.lk;
+      });
+      wrap.classList.toggle("zpast", past);
+      var ok = zones.filter(function (k) { return done[k]; }), left = zones.filter(function (k) { return !done[k]; });
+      var noOwn = past && !Object.keys(om).filter(function (k) { return k !== "_"; }).length;
+      sum.className = "zsum" + (past ? " past" : "") + (left.length ? "" : " all");
+      sum.innerHTML = "<b>" + lab(view) + (past ? " 기록 (보기만)" : " 진행") + "</b> " +
+        "<span>" + zones.length + "구역 중 <mark>" + ok.length + "구역 완료</mark>" + (left.length ? " · 남은 것 " + left.length + "구역" : " · 전부 끝 ✔") + "</span>" +
+        (left.length ? '<span class="zleft">안 한 곳: ' + left.map(zname).join(" · ") + "</span>" : "") +
+        (noOwn ? '<span class="zleft">이 달은 담당 기록이 따로 남지 않았습니다 (완료 체크만)</span>' : "");
+    }
+    bar.addEventListener("click", function (e) {
+      var b = e.target.closest && e.target.closest(".zmb"); if (!b) return;
+      view = b.dataset.ym; draw();
+    });
+    wrap.addEventListener("click", function () { if (view === monKey()) setTimeout(draw, 0); });
+    window.addEventListener("cs:remote", function (e) {
+      var ks = (e.detail && e.detail.keys) || [];
+      if (ks.some(function (k) { return /^cafesui\.clean/.test(k); })) setTimeout(draw, 50);
+    });
+    draw();
   })();
 
   // 연간 표 / 과일 달력 — 누르면 그 아래로 상세가 펼쳐진다
