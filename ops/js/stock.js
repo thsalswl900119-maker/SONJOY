@@ -852,7 +852,7 @@
         h += '<div class="mccell' + (wd === 6 ? " sun" : wd === 5 ? " sat" : "") + (date === t ? " today" : "") + (date === sel ? " on" : "") + (hol ? " hol" : "") +
           '" data-d="' + date + '"><span class="mcd">' + d + (hol ? '<i class="mchol">' + esc(hol) + "</i>" : "") + "</span>" +
           vfor(date).map(function (v) { var sc = vkind(v) === "sched"; return '<span class="mcn ' + (sc ? "sch " : "vac ") + (COL[v.who] || "") + '" title="' + esc(v.memo || "") + '">' + (sc ? "📅 " : "🏖 ") + esc(vlabel(v)) + "</span>"; }).join("") +
-          notes.slice(0, 4).map(function (n) { return '<span class="mcn ' + (COL[n.by] || "") + '">' + esc(n.t) + "</span>"; }).join("") +
+          notes.filter(function (n) { return n.imp; }).concat(notes.filter(function (n) { return !n.imp; })).slice(0, 4).map(function (n) { return '<span class="mcn ' + (COL[n.by] || "") + (n.imp ? " imp" : "") + '">' + (n.imp ? "⭐ " : "") + esc(n.t) + "</span>"; }).join("") +
           (notes.length > 4 ? '<span class="mcmore">+' + (notes.length - 4) + "개 더 · 눌러서 보기</span>" : "") +
           (notes.length ? "" : '<span class="mcplus">+</span>') + "</div>";
       }
@@ -933,9 +933,16 @@
       titleEl.textContent = (+p[1]) + "월 " + (+p[2]) + "일 (" + wd + ") 메모";
       var notes = (load()[date] || []);
       listEl.innerHTML = notes.length ? notes.map(function (n, i) {
-        return '<div class="mcitem" data-i="' + i + '"><span class="t ' + (COL[n.by] || "") + '">' + esc(n.t) + "</span><small>" + esc(n.by || "") + (n.at ? " · " + esc(n.at) : "") +
-          '</small><span class="mcbtns"><button type="button" class="e" data-i="' + i + '">고치기</button><button type="button" class="x" data-i="' + i + '">지우기</button></span></div>';
+        return '<div class="mcitem' + (n.imp ? " imp" : "") + '" data-i="' + i + '"><span class="t ' + (COL[n.by] || "") + '">' + (n.imp ? "⭐ " : "") + esc(n.t) + "</span><small>" + esc(n.by || "") + (n.at ? " · " + esc(n.at) : "") +
+          '</small><span class="mcbtns"><button type="button" class="st' + (n.imp ? " on" : "") + '" data-i="' + i + '" aria-pressed="' + !!n.imp + '">⭐ 매우 중요</button><button type="button" class="e" data-i="' + i + '">고치기</button><button type="button" class="x" data-i="' + i + '">지우기</button></span></div>';
       }).join("") : '<div class="mcnone">아직 적은 게 없습니다</div>';
+      listEl.querySelectorAll(".st").forEach(function (b) {
+        b.addEventListener("click", function () {
+          var all = load(), n = (all[date] || [])[+b.dataset.i]; if (!n) return;
+          if (n.imp) delete n.imp; else n.imp = true;
+          save(all); render(); open(date);
+        });
+      });
       listEl.querySelectorAll(".x").forEach(function (b) {
         b.addEventListener("click", function () {
           var all = load(); (all[date] || []).splice(+b.dataset.i, 1);
@@ -966,9 +973,12 @@
     }
     function add() {
       var t = (textEl.value || "").trim(); if (!t || !sel) return;
-      var all = load(); (all[sel] || (all[sel] = [])).push({ t: t, by: me(), at: today().slice(5) });
-      save(all); textEl.value = ""; render(); open(sel);
+      var impEl = document.getElementById("mcImp"), n = { t: t, by: me(), at: today().slice(5) };
+      if (impEl && impEl.checked) n.imp = true;
+      var all = load(); (all[sel] || (all[sel] = [])).push(n);
+      save(all); textEl.value = ""; if (impEl) { impEl.checked = false; impEl.parentNode.classList.remove("on"); } render(); open(sel);
     }
+    window.__CS_MC_RENDER = function () { render(); if (sel) open(sel); };
     document.getElementById("mcAdd").addEventListener("click", add);
     textEl.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); add(); } });
     document.getElementById("mcClose").addEventListener("click", function () { edit.hidden = true; sel = null; render(); });

@@ -44,6 +44,12 @@
     function both(bv, mv, sv, x, path, known) {
       if (same(mv, sv)) return mv;
       if (isObj(mv) && isObj(sv)) return merge3(known ? (isObj(bv) ? bv : {}) : null, mv, sv, path + "." + x);
+      // 목록(메모 달력 줄처럼 객체 목록) — 내가 더한 것 · 뺀 것만 서버 목록에 반영 (다른 기기가 더한 줄도 남긴다)
+      if (Array.isArray(mv) && Array.isArray(sv) && mv.concat(sv).every(isObj)) {
+        var bs = known && Array.isArray(bv) ? bv : [], has = function (a, x) { return a.some(function (y) { return same(x, y); }); };
+        var added = mv.filter(function (x) { return !has(bs, x); }), removed = known ? bs.filter(function (x) { return !has(mv, x); }) : [];
+        return sv.filter(function (x) { return !has(removed, x); }).concat(added.filter(function (x) { return !has(sv, x); }));
+      }
       if (mv === undefined) return sv;            // 나는 지웠는데 다른 기기가 고쳤다 — 고친 걸 살린다
       if (sv === undefined) return mv;
       if (typeof mv === "string" && typeof sv === "string" && /(^|\.)f$/.test(path)) return joinText(mv, sv);

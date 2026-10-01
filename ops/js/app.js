@@ -748,7 +748,7 @@
       // 메모 달력 · 휴가
       h = "";
       var dn = J("cafesui.daynotes") || {};
-      Object.keys(dn).sort().forEach(function (d) { var a = dn[d] || []; if (!a.length) return; h += "<p><b>" + dlab(d) + "</b> — " + a.map(function (n) { return E(n.t) + (n.by ? " <i>(" + E(n.by) + ")</i>" : ""); }).join(" · ") + "</p>"; });
+      Object.keys(dn).sort().forEach(function (d) { var a = dn[d] || []; if (!a.length) return; h += "<p><b>" + dlab(d) + "</b> — " + a.map(function (n) { return (n.imp ? "⭐ " : "") + E(n.t) + (n.by ? " <i>(" + E(n.by) + ")</i>" : ""); }).join(" · ") + "</p>"; });
       var vc = J("cafesui.vacations") || [];
       if (vc.length) h += "<h3>일정 · 직원 휴가</h3>" + vc.map(function (v) { var sc = v.kind === "sched"; return "<p>" + (sc ? "[일정] " + E(v.title || "") + (v.who ? " · " + E(v.who) : "") : "[휴가] " + E(v.who)) + " · " + E(v.from) + " ~ " + E(v.to) + (v.memo ? " · " + E(v.memo) : "") + "</p>"; }).join("");
       sec("메모 달력 · 일정 · 휴가", h);
@@ -2340,7 +2340,7 @@
       Object.keys(all).forEach(function (date) {
         if (date.slice(0, 4) != yr || +date.slice(5, 7) !== m) return;
         (all[date] || []).forEach(function (n, i) {
-          out.push({ id: "n:" + date + ":" + i, m: m, d: +date.slice(8, 10), t: n.t,
+          out.push({ id: "n:" + date + ":" + i, m: m, d: +date.slice(8, 10), t: (n.imp ? "⭐ " : "") + n.t,
                      a: "일지 메모 달력 · " + (n.by || "") + (n.at ? " " + n.at : ""), c: "memo", note: true });
         });
       });
@@ -3377,6 +3377,110 @@
         '<div><button type="button" class="prim" data-a="go">빈 칸에 되살리기</button><button type="button" data-a="hide">일부러 지운 거예요 (숨기기)</button></div>';
       box.hidden = false;
     }
+    // 📅 예약 넣기 (인계사항 아래) — 한 번 적으면 일지 메모 달력(cafesui.daynotes) 그 날짜에 올라가고, 인계사항에도 한 줄 붙는다.
+    //    아래에는 이 일지 날짜부터 사흘 동안의 예약이 시간순으로 보인다 (생산량 누락 방지)
+    (function () {
+      var box = document.getElementById("rvBox"); if (!box) return;
+      var DKEY = "cafesui.daynotes", WDK = ["일", "월", "화", "수", "목", "금", "토"];
+      function rd() { try { return JSON.parse(localStorage.getItem(DKEY) || "{}") || {}; } catch (e) { return {}; } }
+      function pad(n) { return String(n).padStart(2, "0"); }
+      function addDay(d, n) { var p = d.split("-"), x = new Date(+p[0], +p[1] - 1, +p[2] + n); return x.getFullYear() + "-" + pad(x.getMonth() + 1) + "-" + pad(x.getDate()); }
+      function md(d) { var p = d.split("-"), x = new Date(+p[0], +p[1] - 1, +p[2]); return (+p[1]) + "/" + (+p[2]) + "(" + WDK[x.getDay()] + ")"; }
+      function logDay() { return dateEl.value || today(); }
+      box.innerHTML = '<div class="rvh"><b>📅 예약 넣기</b><span>한 번 적으면 <b>메모 달력</b> 그 날짜와 <b>인계사항</b>에 같이 올라갑니다 · 연락처는 뒤 4자리만 적어도 됩니다</span></div>' +
+        '<div class="rvf">' +
+        '<label class="rvl"><span>날짜</span><input type="date" id="rvDate"></label>' +
+        '<label class="rvl"><span>성함</span><input type="text" id="rvName" placeholder="예) 정후마"></label>' +
+        '<label class="rvl"><span>결제여부</span><select id="rvPay"><option value="현결">현결 (현장 결제)</option><option value="선결">선결 (미리 결제)</option><option value="네이버">네이버 결제</option><option value="미결">미결 (아직 안 정함)</option></select></label>' +
+        '<label class="rvl"><span>픽업 or 배달</span><select id="rvKind"><option>픽업</option><option>배달</option><option>매장</option></select></label>' +
+        '<label class="rvl rvitem"><span>품목</span><input type="text" id="rvItem" placeholder="예) 에12 · 멜한케 1"></label>' +
+        '<label class="rvl"><span>시간</span><input type="time" id="rvTime" step="600"></label>' +
+        '<label class="rvl"><span>연락처</span><input type="text" id="rvTel" placeholder="뒤 4자리 (예: 1234)" inputmode="tel"></label>' +
+        '<label class="rvl rvreq"><span>요청사항 (메모)</span><input type="text" id="rvReq" placeholder="예) 문구 「생일 축하해」 · 초 2개 · 보냉백"></label>' +
+        '<label class="rvimp"><input type="checkbox" id="rvImp" onchange="this.parentNode.classList.toggle(\'on\',this.checked)">⭐ 매우 중요</label>' +
+        '<button type="button" id="rvAdd">📅 예약 올리기</button>' +
+        '</div><div class="rvmsg" id="rvMsg"></div><div class="rvlist" id="rvList"></div>';
+      var $ = function (id) { return document.getElementById(id); };
+      function resetDate() { $("rvDate").value = addDay(logDay(), 1); }
+      resetDate();
+      // 「오후 6:30」 처럼 — 지금 쓰는 캘린더 글 모양 그대로
+      function ampm(t) { if (!t) return ""; var p = t.split(":"), h = +p[0]; return (h < 12 ? "오전 " : "오후 ") + (h % 12 || 12) + ":" + p[1]; }
+      // 순서: 성함 / 결제여부 / 픽업or배달 / 품목 / 시간 / 연락처 / 요청사항(메모)
+      function title(r) { return "주문:" + [r.name, r.pay, r.kind, r.item, r.time ? ampm(r.time) : "시간 미정"].join(" / "); }
+      function line(r) { return title(r) + (r.tel ? " / " + r.tel : "") + (r.req ? " / " + r.req : ""); }
+      // 📲 휴대폰 · 맥 캘린더에 넣기 — .ics 파일 (누르면 캘린더 앱이 「추가」를 묻는다)
+      function ics(d, r) {
+        // 한국 시간 → UTC (어느 캘린더 앱이든 시간대 헷갈리지 않게)
+        var dp = d.split("-"), tp = (r.time || "12:00").split(":");
+        var utc = function (addMin) { var x = new Date(Date.UTC(+dp[0], +dp[1] - 1, +dp[2], +tp[0] - 9, +tp[1] + addMin)); return x.getUTCFullYear() + pad(x.getUTCMonth() + 1) + pad(x.getUTCDate()) + "T" + pad(x.getUTCHours()) + pad(x.getUTCMinutes()) + "00Z"; };
+        var dt = d.replace(/-/g, ""), tm = (r.time || "12:00").replace(":", "") + "00";
+        var desc = [r.tel ? "연락처 " + r.tel : "", r.req ? "요청사항: " + r.req : ""].filter(Boolean).join(" / ");
+        var e = function (v) { return String(v).replace(/[\\,;]/g, function (c) { return "\\" + c; }); };
+        var body = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//cafesui//ops//KO", "BEGIN:VEVENT",
+          "UID:" + dt + tm + Math.random().toString(36).slice(2, 8) + "@cafesui", "DTSTAMP:" + utc(0),
+          "DTSTART:" + utc(0), "DTEND:" + utc(30),
+          "SUMMARY:" + e(title(r)), desc ? "DESCRIPTION:" + e(desc) : "", "BEGIN:VALARM", "TRIGGER:-PT60M", "ACTION:DISPLAY", "DESCRIPTION:" + e(title(r)), "END:VALARM",
+          "END:VEVENT", "END:VCALENDAR"].filter(Boolean).join("\r\n");
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(new Blob([body], { type: "text/calendar;charset=utf-8" }));
+        a.download = "예약-" + d.slice(5) + "-" + (r.name || "") + ".ics";
+        document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+      }
+      function list() {
+        var all = rd(), d0 = logDay(), h = "", n = 0;
+        for (var i = 0; i < 3; i++) {
+          var d = addDay(d0, i), items = (all[d] || []).filter(function (x) { return x && x.rv; })
+            .sort(function (a, b) { return String(a.rv.time || "99").localeCompare(String(b.rv.time || "99")); });
+          if (!items.length) continue;
+          n += items.length;
+          h += '<div class="rvday">' + md(d) + (i === 0 ? " · 이 일지 날" : i === 1 ? " · 다음 날" : "") + " 예약 " + items.length + "건</div>" +
+            items.map(function (x) { var r = x.rv;
+              if (x.edit) return '<div class="rvit"><span class="tx">' + esc(x.t) + '</span><span class="by">' + esc(x.by || "") + " · 고침 " + esc(x.edit) + "</span></div>";
+              return '<div class="rvit' + (x.imp ? " imp" : "") + '">' + (x.imp ? '<span class="kd st">⭐ 매우 중요</span>' : "") + '<span class="tm">' + esc(r.time ? ampm(r.time) : "시간 ?") + '</span><span class="kd' + (r.kind === "배달" ? " dl" : "") + '">' + esc(r.kind) + '</span><span class="tx"><b>' + esc(r.name) + "</b> / " + esc(r.pay || "") + " / " + esc(r.kind) + " / <b>" + esc(r.item) + "</b>" +
+                (r.tel ? " / " + esc(r.tel) : "") + (r.req ? " / " + esc(r.req) : "") + '</span><button type="button" class="rvics" data-d="' + d + '" data-i="' + (all[d] || []).indexOf(x) + '" title="휴대폰 · 맥 캘린더에 넣기">📲 캘린더</button><span class="by">' + esc(x.by || "") + "</span></div>"; }).join("");
+        }
+        $("rvList").innerHTML = n ? h : '<div class="rvnone">이 일지 날부터 사흘 동안 달력에 올린 예약이 없습니다 (달력에서 고치기 · 지우기)</div>';
+      }
+      $("rvAdd").addEventListener("click", function () {
+        var r = { date: $("rvDate").value, time: $("rvTime").value, kind: $("rvKind").value, pay: $("rvPay").value, name: $("rvName").value.trim(),
+                  item: $("rvItem").value.trim(), tel: $("rvTel").value.trim(), req: $("rvReq").value.trim() };
+        if (!r.date) { alert("예약 날짜를 골라 주세요"); $("rvDate").focus(); return; }
+        if (!r.name) { alert("성함을 적어 주세요"); $("rvName").focus(); return; }
+        if (!r.item) { alert("제품 이름을 적어 주세요"); $("rvItem").focus(); return; }
+        if (!r.time && !confirm("시간이 비어 있습니다. 그대로 올릴까요?")) { $("rvTime").focus(); return; }
+        var all = rd(), day = all[r.date] || [];
+        if (day.some(function (x) { return x && x.rv && x.rv.name === r.name && x.rv.time === r.time && x.rv.item === r.item; })) { alert("같은 예약이 이미 달력에 있습니다"); return; }
+        var who = meNow();
+        var nn = { t: line(r), by: who, at: today().slice(5), rv: { time: r.time, kind: r.kind, pay: r.pay, name: r.name, item: r.item, tel: r.tel, req: r.req, from: logDay() } };
+        if ($("rvImp").checked) nn.imp = true;
+        day.push(nn);
+        all[r.date] = day;
+        try { localStorage.setItem(DKEY, JSON.stringify(all)); } catch (e) {}
+        if (window.__CS_MC_RENDER) window.__CS_MC_RENDER();
+        if (window.__CS_ANNUAL_REFRESH) window.__CS_ANNUAL_REFRESH();
+        // 인계사항에도 한 줄 (적어 둔 글 아래에 붙인다)
+        var el = document.querySelector('.lgin[data-k="lf180"]');
+        if (el) {
+          var ln = "📅 " + md(r.date) + " " + line(r);
+          if (el.value.indexOf(ln) < 0) { el.value = (el.value.trim() ? el.value.replace(/\s+$/, "") + String.fromCharCode(10) : "") + ln; el.dispatchEvent(new Event("input", { bubbles: true })); }
+        }
+        ["rvTime", "rvName", "rvItem", "rvTel", "rvReq"].forEach(function (id) { $(id).value = ""; }); $("rvImp").checked = false; $("rvImp").parentNode.classList.remove("on");
+        $("rvMsg").innerHTML = "✔ " + md(r.date) + ' 달력과 인계사항에 올렸습니다 <button type="button" class="rvics" id="rvIcsNow">📲 휴대폰 캘린더에도 넣기</button>';
+        $("rvIcsNow").addEventListener("click", function () { ics(r.date, r); });
+        setTimeout(function () { $("rvMsg").textContent = ""; }, 15000);
+        list();
+      });
+      $("rvList").addEventListener("click", function (e) {
+        var b = e.target.closest && e.target.closest(".rvics"); if (!b) return;
+        var x = (rd()[b.dataset.d] || [])[+b.dataset.i]; if (x && x.rv) ics(b.dataset.d, x.rv);
+      });
+      document.addEventListener("cs:log-loaded", function () { resetDate(); list(); });
+      dateEl.addEventListener("change", function () { resetDate(); list(); });
+      ["lgPrev", "lgNext", "lgToday"].forEach(function (id) { var b = document.getElementById(id); if (b) b.addEventListener("click", function () { setTimeout(function () { resetDate(); list(); }, 0); }); });
+      window.addEventListener("cs:remote", function (e) { if (((e.detail && e.detail.keys) || []).indexOf(DKEY) >= 0) list(); });
+      list();
+    })();
+
     // 일지 글 칸은 글 길이만큼 늘어난다 (잘려서 안 보이는 글이 없게) · 「매장 전반적인 흐름」은 처음부터 크게
     var GROWMIN = { lf154: 220 };
     function growLg(el) {
