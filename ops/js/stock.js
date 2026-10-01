@@ -297,6 +297,42 @@
     function queueSave() { statusEl.textContent = "입력 중…"; renderReport(); clearTimeout(saveT); saveT = setTimeout(saveNow, 900); }
     (window.__CS_SAVERS = window.__CS_SAVERS || []).push(function () { if (saveT) { clearTimeout(saveT); saveT = null; saveNow(); } });
 
+    // 아직 안 산 발주 줄 — 이 날보다 앞선 최근 7일 기록에서 「주문함」 체크가 없는 줄을 모은다.
+    //   · 다른 날에 주문함 체크 → 끝 · 넘겨받았다가(from) 그 날 목록에서 지운 줄 → 일부러 뺀 것 · 「없음」은 안 넘긴다
+    //   · 지난날에 나중에 적은 줄도(다음 날이 이미 만들어진 뒤라도) 넘어온다
+    var NOLINE = /^(없음|없어요|없습니다|x|-|ㄴ)\.?$/i;
+    function openLines(d) {
+      var open = {}, order = [];
+      var lim = new Date(d + "T00:00:00"); lim.setDate(lim.getDate() - 7); lim = ymd(lim);   // 최근 7일 안의 기록만
+      allDates().filter(function (x) { return x < d && x >= lim; }).forEach(function (p) {
+        var o = load(p) || {}, pc = o.orderChecks || {};
+        var ls = String(o.orders || "").split(NL).map(function (l) { return l.trim(); }).filter(Boolean);
+        Object.keys(pc).forEach(function (l) {
+          var c = pc[l] || {};
+          if (c.ordered || c.dropped || (c.from && ls.indexOf(l) < 0)) delete open[l];
+        });
+        ls.forEach(function (l) {
+          if (NOLINE.test(l)) return;
+          var c = pc[l] || {};
+          if (c.ordered) { delete open[l]; return; }
+          if (!open[l]) { var cc = {}; for (var k in c) cc[k] = c[k]; cc.from = c.from || p; open[l] = cc; if (order.indexOf(l) < 0) order.push(l); }
+        });
+      });
+      return order.filter(function (l) { return open[l]; }).map(function (l) { return [l, open[l]]; });
+    }
+    // 이미 있는 날(오늘 · 앞날)에도, 그 날 목록에 없고 그 날 일부러 뺀 적도 없는 안 산 줄은 아래에 붙인다
+    function carryOpen(d) {
+      if (d < today()) return 0;
+      var have = lines(), add = openLines(d).filter(function (x) { return have.indexOf(x[0]) < 0 && !checks[x[0]]; });
+      if (!add.length) return 0;
+      ordEl.value = (ordEl.value.trim() ? ordEl.value.replace(/\s+$/, "") + NL : "") + add.map(function (x) { return x[0]; }).join(NL);
+      add.forEach(function (x) { checks[x[0]] = x[1]; });
+      var nv = $("#sk_noOrder"); if (nv && nv.value) nv.value = "";   // 넘어온 발주가 있으니 「없음」 체크는 풀린다
+      paintNone(); renderChecks(); renderReport(); queueSave();
+      statusEl.textContent = "안 산 발주 " + add.length + "줄을 지난 날에서 넘겨받았습니다";
+      return add.length;
+    }
+
     // 날짜 열기 — 없으면 가장 최근 날의 재고 숫자를 깔고, 주문 안 된 발주 줄을 넘겨받는다
     function paintHol(d) { var hb = $("#skHol"); if (!hb) return; var hv = (window.__CS_HOL || {})[d]; hb.textContent = hv ? "🇰🇷 " + hv : ""; hb.hidden = !hv; }
     function open(d) {
@@ -313,17 +349,10 @@
           if (prev.stock && prev.stock[mk]) carryStock[mk] = prev.stock[mk];
         });
         o = { date: d, month: d.slice(0, 7), by: me(), stock: carryStock, creamPlan: "", orders: "", orderChecks: {} };
-        if (prev) {
-          var pc = prev.orderChecks || {};
-          var carry = (prev.orders || "").split(NL).map(function (l) { return l.trim(); })
-            .filter(function (l) { return l && !(pc[l] || {}).ordered; });
-          if (carry.length) {
-            o.orders = carry.join(NL);
-            carry.forEach(function (l) {
-              var c = {}; for (var k in (pc[l] || {})) c[k] = pc[l][k];
-              c.from = c.from || prev.date; o.orderChecks[l] = c;
-            });
-          }
+        var carry = openLines(d);
+        if (carry.length) {
+          o.orders = carry.map(function (x) { return x[0]; }).join(NL);
+          carry.forEach(function (x) { o.orderChecks[x[0]] = x[1]; });
         }
         $("#skDel").hidden = true;
       } else {
@@ -340,6 +369,7 @@
       statusEl.textContent = load(d) ? "" : "새 날 · 재고는 빈 칸 (흐린 글씨가 전날 숫자)";
       paintNone(); renderGroups(); renderChecks(); renderList(); renderWeek(); renderReport();
       base = cp(read());
+      if (load(d)) carryOpen(d);
     }
     // 다른 기기에서 지금 보는 날짜가 바뀌면: 쓰는 중이 아니면 새로 연다 (쓰는 중이면 저장할 때 합쳐진다)
     window.addEventListener("cs:remote", function (e) {
@@ -584,6 +614,15 @@
       if (lines().length && $("#sk_noOrder").value) { $("#sk_noOrder").value = ""; paintNone(); }
       renderChecks(); queueSave();
     }); });
+    // 넘어온(안 산) 줄을 손으로 지우면 일부러 뺀 것으로 기억 — 다시 열어도 안 돌아오게
+    var ordSnap = null;
+    ordEl.addEventListener("focus", function () { ordSnap = lines(); });
+    ordEl.addEventListener("blur", function () {
+      if (!ordSnap || !cur) return;
+      var now = lines(), opn = openLines(cur).map(function (x) { return x[0]; }), n = 0;
+      ordSnap.forEach(function (l) { if (now.indexOf(l) < 0 && opn.indexOf(l) >= 0 && !checks[l]) { checks[l] = { dropped: true, by: me(), at: nowHM() }; n++; } });
+      ordSnap = null; if (n) queueSave();
+    });
     $("#skNone").addEventListener("change", function () {
       var on = $("#skNone").checked;
       if (on && lines().length) { $("#skNone").checked = false; alert("발주 넣을 줄이 적혀 있어요. 줄을 지우거나 주문 완료 체크를 해 주세요."); return; }
@@ -620,7 +659,9 @@
       var n = lines().length;
       if (!n) { statusEl.textContent = "비울 발주 줄이 없습니다"; return; }
       if (!confirm("발주 넣을 것 " + n + "줄을 모두 지울까요?\n(이 날짜만 · 주문 체크도 같이 지워집니다)")) return;
-      ordEl.value = ""; checks = {};
+      var gone = lines(), nc = {};
+      gone.forEach(function (l) { nc[l] = { dropped: true, by: me(), at: nowHM() }; });   // 지운 줄은 다시 안 넘어오게 기억만
+      ordEl.value = ""; checks = nc;
       renderChecks(); renderReport(); queueSave();
       statusEl.textContent = "발주 목록을 비웠습니다";
     });

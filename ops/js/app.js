@@ -3377,11 +3377,24 @@
         '<div><button type="button" class="prim" data-a="go">빈 칸에 되살리기</button><button type="button" data-a="hide">일부러 지운 거예요 (숨기기)</button></div>';
       box.hidden = false;
     }
-    document.addEventListener("cs:log-loaded", function () { setTimeout(rescuePaint, 0); });
-    window.addEventListener("cs:remote", function () { setTimeout(rescuePaint, 300); });
-    setTimeout(rescuePaint, 1500);
-    dateEl.addEventListener("change", function () { setTimeout(rescuePaint, 0); });
-    ["lgPrev", "lgNext", "lgToday"].forEach(function (id) { var b = document.getElementById(id); if (b) b.addEventListener("click", function () { setTimeout(rescuePaint, 0); }); });
+    // 일지 글 칸은 글 길이만큼 늘어난다 (잘려서 안 보이는 글이 없게) · 「매장 전반적인 흐름」은 처음부터 크게
+    var GROWMIN = { lf154: 220 };
+    function growLg(el) {
+      if (el.tagName !== "TEXTAREA") return;
+      el.style.height = "auto";
+      var h = Math.max(GROWMIN[el.dataset.k] || 58, el.scrollHeight + 2);
+      el.style.height = Math.min(h, 900) + "px";
+      var ov = el.nextElementSibling; if (ov && ov.classList.contains("lgov")) placeOv(el, ov);
+    }
+    function growAll() { inputs.forEach(growLg); }
+    inputs.forEach(function (el) { if (el.tagName === "TEXTAREA") el.addEventListener("input", function () { growLg(el); }); });
+    function afterLoad() { rescuePaint(); growAll(); }
+    document.addEventListener("cs:log-loaded", function () { setTimeout(afterLoad, 0); });
+    window.addEventListener("cs:remote", function () { setTimeout(afterLoad, 300); });
+    setTimeout(afterLoad, 1500); growAll();
+    dateEl.addEventListener("change", function () { setTimeout(afterLoad, 0); });
+    ["lgPrev", "lgNext", "lgToday"].forEach(function (id) { var b = document.getElementById(id); if (b) b.addEventListener("click", function () { setTimeout(afterLoad, 0); }); });
+    document.addEventListener("click", function (e) { var t = e.target.closest && e.target.closest('.tab[data-p="tp4"]'); if (t) setTimeout(growAll, 60); });
     // 한 칸을 여러 사람이 이어 쓰면 칸 아래에 "쓴 사람: …" 을 각자 색으로 보여준다
     // 칸 안 글자색 — 줄마다 쓴 사람 색. 여러 사람이 쓴 긴 칸은 같은 글자를 색 입혀 위에 겹쳐 보여준다(입력은 그대로 칸에서).
     function paintLines(el, lineBy, first, own) {
