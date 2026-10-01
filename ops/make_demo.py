@@ -306,6 +306,12 @@ h = h.replace("</head>", "<style>" + hide + "{display:none!important}"
               ".demobar #demoReset{margin-left:auto;opacity:.75}"
               "</style>\n</head>", 1)
 h = re.sub(r"(<body[^>]*>)", r'\1<div class="demobar"><b>🧪 체험판</b> 우리 가게에 맞게 바꿔 써 보세요 · 입력한 내용은 이 기기 브라우저에만 저장됩니다<button type="button" id="demoReset">처음 상태로</button></div>', h, count=1)
+# 옛 파일이 브라우저에 남아 새 기능이 안 보이는 일 막기 — 만들 때마다 주소에 새 표시
+import time
+BID = time.strftime("%m%d%H%M")
+h = re.sub(r'(src="js/[a-z]+\.js)\?v=([^"]+)"', r'\1?v=\2-' + BID + '"', h)
+h = h.replace('<script src="js/demo.js"></script>', '<script src="js/demo.js?v=' + BID + '"></script>')
+h = re.sub(r'data-lazy="(tabs/[^"?]+)"', r'data-lazy="\1?v=' + BID + '"', h)
 write("index.html", staffize(scrub(h)))
 
 # ── 마지막 점검: 남으면 안 되는 것

@@ -161,7 +161,8 @@
     ".dset input[type=text],.dset select{font:inherit;font-size:14px;padding:7px 9px;border:1px solid #CDBFAE;border-radius:6px;background:#FFFDF6;min-width:0}" +
     ".dset .dname{flex:1 1 140px}.dset .dhelp{font-size:12px;color:#6B5D50;line-height:1.5}" +
     ".dset .dgo{background:#43604E!important;color:#fff!important;border-color:#43604E!important;font-size:15px!important;padding:9px 18px!important}" +
-    ".dset label.dday{font-size:13px;font-weight:700;display:inline-flex;gap:3px;align-items:center}";
+    ".dset label.dday{font-size:13px;font-weight:700;display:inline-flex;gap:3px;align-items:center}" +
+    ".demobar .dprev{background:#FFE86B;color:#2F3A33;font-weight:800;font-size:12.5px;padding:3px 9px;border-radius:12px}";
   document.head.appendChild(css);
 
   // ── 로그인 화면의 「가게 · 직원 설정」 ─────────────────────────
@@ -235,9 +236,40 @@
           staff: [{ id: SLOTS[0], name: "김민수", role: "매니저" }, { id: SLOTS[1], name: "이지은", role: "직원" }, { id: SLOTS[2], name: "박현우", role: "알바" }],
           off: [6], hours: { wk: "10:00–21:00", sat: "10:00–21:00", sun: "", hol: "" }, groups: DEF_GROUPS };
         W("setup", setup);
+        seedSample();
       }
       try { localStorage.setItem(P + "me", "사장님"); sessionStorage.setItem(P + "unlocked", "1"); } catch (e) {}
       location.reload();
+    }
+    // 훑어보기용 예시 기록 — 모든 화면이 「써 보면 이렇게 된다」로 보이게 (예시 가게 · 일반 품목)
+    function seedSample() {
+      function p2(n) { return String(n).padStart(2, "0"); }
+      function ymd(d) { return d.getFullYear() + "-" + p2(d.getMonth() + 1) + "-" + p2(d.getDate()); }
+      var now = new Date(), T = ymd(now), Y = ymd(new Date(now.getTime() - 864e5)), YM = T.slice(0, 7);
+      var A = SLOTS[0], B = SLOTS[1], C = SLOTS[2];
+      function log(who, f) { var by = {}, bl = {}; Object.keys(f).forEach(function (k) { by[k] = who; bl[k] = String(f[k]).split("\n").map(function () { return who; }); }); return { who: who, f: f, by: by, bl: bl }; }
+      W("log." + Y, log(A, { lf143: "10:00–21:00", lf140: "오픈 김민수 · 마감 이지은 · 미들 박현우", lf101: "40", lf102: "6", lf103: "18", lf104: "4", lf120: "2", lf121: "6", lf123: "기본 2",
+        lf183: "1,120,000", lf184: "배민 7 · 쿠팡이츠 3", lf154: "오전 한산 · 12시~1시 포장 손님 몰림\n저녁엔 매장 손님 꾸준", lf150: "맑음 · 쌀쌀", lf155: "점심 직장인 2~3명 · 저녁 가족 손님",
+        lf152: "2:30 대표 메뉴 품절 · 5시 디저트 전부 소진", lf162: "[폐기] 샌드위치 1 — 유통기한\n[서비스] 쿠키 1 — 단골 손님께", lf170: "배달 음료 1잔 누락 → 전화로 사과 후 다시 보냄",
+        lf180: "내일 우유 입고 · 오픈 때 수량 확인", lf181: "마감 때 냉장고 문 확인 부탁드려요", lf185: "오픈 때 냉장고 온도 꼭 확인하기" }));
+      W("log." + T, log(B, { lf143: "10:00–21:00", lf101: "36", lf154: "점심까지 바쁨 · 오후 한산", lf180: "저녁 단체 예약 6시 (10명)" }));
+      W("stockitems", [{ g: "g1", name: "우유 1L", unit: "팩", re: 6, memo: "전날 오후까지 주문" }, { g: "g1", name: "원두", unit: "kg", re: 2, memo: "" },
+        { g: "g2", name: "설탕", unit: "kg", re: 1, memo: "" }, { g: "g3", name: "바닐라 시럽", unit: "병", re: 1, memo: "" },
+        { g: "g4", name: "테이크아웃 컵", unit: "줄", re: 2, memo: "" }, { g: "g5", name: "물티슈", unit: "박스", re: 1, memo: "" }]);
+      W("stock." + Y, { date: Y, month: Y.slice(0, 7), by: "김민수", stock: { "우유 1L": "5", "원두": "3", "설탕": "2", "바닐라 시럽": "1", "테이크아웃 컵": "4", "물티슈": "2" },
+        orders: "우유 1L 12팩\n바닐라 시럽 2병", orderChecks: { "우유 1L 12팩": { ok: true, by: "사장님", at: "18:10", ordered: true, oBy: "사장님", oAt: "18:20" } }, prod: "대표 메뉴 20 · 디저트 12", report: "냉장고 2번 문이 잘 안 닫힘" });
+      var sc = {}, dim = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate(), R = [["오픈", "마감", "미들"], ["마감", "오픈", "미들"]];
+      for (var d = 1; d <= dim; d++) {
+        var wd = (new Date(now.getFullYear(), now.getMonth(), d).getDay() + 6) % 7; if (wd === 6) continue;
+        var wk = Math.floor((d + 6) / 7) % 2, day = {}; day[A] = R[wk][0]; day[B] = R[wk][1]; day[C] = wd === 2 ? "휴무" : R[wk][2];
+        if (d === 10) day["공지"] = "회의";
+        sc[(now.getMonth() + 1) + "-" + d] = day;
+      }
+      W("sched." + YM, sc);
+      var at = {}; at[A] = { role: "오픈", out: "17:05" }; at[B] = { role: "마감", out: "21:10" }; at[C] = { role: "미들", out: "16:00" };
+      W("att." + Y, at);
+      W("meeting." + YM, { ag300: "평일 점심 포장 주문 증가", ag301: "주말 저녁 매장 손님 감소", ag302: "근처 회사 단체 주문 · 날씨가 선선해짐", ag306: "대표 메뉴가 2~3시에 자주 품절" });
+      W("cleanowner", { z1: A, w32: B });
     }
     window.__DEMO_SETUP = open;
     // 로그인 화면 「누구세요?」 아래에 설정 바로가기
@@ -323,6 +355,15 @@
   }
   function editUI() {
     var db = document.querySelector(".demobar"); if (!db) return;
+    if (setup.preview) {
+      db.insertAdjacentHTML("beforeend", '<span class="dprev">👀 훑어보기 중 · 예시 가게 · 예시 기록입니다</span><button type="button" id="deNext">다음 화면 ▶</button>');
+      db.querySelector("#deNext").onclick = function () {
+        var tabs = Array.prototype.slice.call(document.querySelectorAll(".tab")).filter(function (t) { return t.offsetParent !== null; });
+        var i = tabs.findIndex(function (t) { return t.getAttribute("aria-selected") === "true"; });
+        var nx = tabs[(i + 1) % tabs.length]; if (!nx) return;
+        nx.click(); var pn = document.getElementById(nx.dataset.p); if (pn) { pn.scrollIntoView({ block: "start" }); window.scrollBy(0, -120); }
+      };
+    }
     db.insertAdjacentHTML("beforeend", '<button type="button" id="deSet">⚙ 가게 · 직원 설정</button><button type="button" id="deEdit">✏ 화면 고치기</button>');
     db.querySelector("#deSet").onclick = function () { if (window.__DEMO_SETUP) window.__DEMO_SETUP(); };
     db.querySelector("#deEdit").onclick = function () { setEdit(!editOn()); location.reload(); };
