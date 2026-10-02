@@ -2641,7 +2641,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-155</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-156</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -2845,12 +2845,6 @@ input,select,textarea{border-radius:var(--r3)!important}
       <i class="p1">정항아</i><i class="p2">박혜빈</i>
       <i class="p3">이해선</i><i class="p4">사장님</i></span>
   </div>
-  <details class="wrbox" id="wrBox" hidden><summary><b>📋 매니저 주간 보고</b><span class="wrsat">토요일 근무 마치고 꼭 작성해 주세요</span><em class="wronly">🔒 매니저 · 사장님만 보입니다</em><i id="wrState"></i></summary>
-    <div class="wrbar"><button type="button" class="daynav" id="wrPrev">◀ 지난주</button><b id="wrLabel"></b><button type="button" class="daynav" id="wrNext">다음 주 ▶</button><button type="button" class="daynav today" id="wrThis">이번 주</button>
-      <span class="wrauto" id="wrAuto"></span><button type="button" class="skbtn prim" id="wrCopy">📸 사장님께 보내기 (텔레그램에 보고)</button></div>
-    <div class="wrgrid"><label class="wrrow"><span>이번 주 매출 · 흐름 요약</span><textarea class="lgin wrin" data-f="sum" rows="2" placeholder="예) 주말 매출 좋음 · 평일 오후 한산 · 추석 연휴 영향"></textarea></label><label class="wrrow"><span>잘된 점</span><textarea class="lgin wrin" data-f="good" rows="2" placeholder="예) 리뷰 이벤트 참여 늘어남 · 케이크 품절 없이 마감"></textarea></label><label class="wrrow"><span>문제점 · 개선할 점</span><textarea class="lgin wrin" data-f="bad" rows="2" placeholder="예) 마감 청소 누락 2번 · 숨김 해제 늦음"></textarea></label><label class="wrrow"><span>재고 · 발주 이슈</span><textarea class="lgin wrin" data-f="stock" rows="2" placeholder="예) 생크림 입고 늦음 · 망고 단가 올라감"></textarea></label><label class="wrrow"><span>직원 · 근무 이슈</span><textarea class="lgin wrin" data-f="staff" rows="2" placeholder="예) 알바생 교육 필요 · 근무 교대 요청"></textarea></label><label class="wrrow"><span>다음 주 계획 · 준비할 것</span><textarea class="lgin wrin" data-f="next" rows="2" placeholder="예) 샤인머스캣 케이크 시작 · 할로윈 준비"></textarea></label><label class="wrrow"><span>사장님께 요청 · 건의</span><textarea class="lgin wrin" data-f="ask" rows="2" placeholder="예) 포장 상자 새로 주문 · 휴무 조정"></textarea></label></div>
-    <div class="wrfoot" id="wrFoot"></div>
-  </details>
   <div class="rpwrap">
     <div class="rpmain">
       <div class="lgpastebox" id="lgPasteBox" hidden>
@@ -3210,7 +3204,12 @@ input,select,textarea{border-radius:var(--r3)!important}
     <span class="bywho">글자 색이 쓴 사람입니다 <i class="p1">정항아</i><i class="p2">박혜빈</i><i class="p3">이해선</i><i class="p4">사장님</i></span>
   </div>
   <div class="rdlist" id="rdList"></div>
-</section></div><div class="panel" id="tp15" role="tabpanel" hidden data-lazy="tabs/tp15.html"><div class="lazyload">불러오는 중…</div></div><div class="panel" id="tp11" role="tabpanel" hidden data-lazy="tabs/tp11.html"><div class="lazyload">불러오는 중…</div></div>
+</section></div><div class="panel" id="tp15" role="tabpanel" hidden><div id="mgLazy" data-lazy="tabs/tp15.html"><div class="lazyload">불러오는 중…</div></div><div id="wrHold"><details class="wrbox" id="wrBox" hidden><summary><b>📋 매니저 주간 보고</b><span class="wrsat">토요일 근무 마치고 꼭 작성해 주세요</span><em class="wronly">🔒 매니저 · 사장님만 보입니다</em><i id="wrState"></i></summary>
+    <div class="wrbar"><button type="button" class="daynav" id="wrPrev">◀ 지난주</button><b id="wrLabel"></b><button type="button" class="daynav" id="wrNext">다음 주 ▶</button><button type="button" class="daynav today" id="wrThis">이번 주</button>
+      <span class="wrauto" id="wrAuto"></span><button type="button" class="skbtn prim" id="wrCopy">📸 사장님께 보내기 (텔레그램에 보고)</button></div>
+    <div class="wrgrid"><label class="wrrow"><span>이번 주 매출 · 흐름 요약</span><textarea class="lgin wrin" data-f="sum" rows="2" placeholder="예) 주말 매출 좋음 · 평일 오후 한산 · 추석 연휴 영향"></textarea></label><label class="wrrow"><span>잘된 점</span><textarea class="lgin wrin" data-f="good" rows="2" placeholder="예) 리뷰 이벤트 참여 늘어남 · 케이크 품절 없이 마감"></textarea></label><label class="wrrow"><span>문제점 · 개선할 점</span><textarea class="lgin wrin" data-f="bad" rows="2" placeholder="예) 마감 청소 누락 2번 · 숨김 해제 늦음"></textarea></label><label class="wrrow"><span>재고 · 발주 이슈</span><textarea class="lgin wrin" data-f="stock" rows="2" placeholder="예) 생크림 입고 늦음 · 망고 단가 올라감"></textarea></label><label class="wrrow"><span>직원 · 근무 이슈</span><textarea class="lgin wrin" data-f="staff" rows="2" placeholder="예) 알바생 교육 필요 · 근무 교대 요청"></textarea></label><label class="wrrow"><span>다음 주 계획 · 준비할 것</span><textarea class="lgin wrin" data-f="next" rows="2" placeholder="예) 샤인머스캣 케이크 시작 · 할로윈 준비"></textarea></label><label class="wrrow"><span>사장님께 요청 · 건의</span><textarea class="lgin wrin" data-f="ask" rows="2" placeholder="예) 포장 상자 새로 주문 · 휴무 조정"></textarea></label></div>
+    <div class="wrfoot" id="wrFoot"></div>
+  </details></div></div><div class="panel" id="tp11" role="tabpanel" hidden data-lazy="tabs/tp11.html"><div class="lazyload">불러오는 중…</div></div>
 
 <footer>
 근무표와 청소 배정표는 정항아 매니저가 전달 2째주까지 취합해 편성합니다.
@@ -3227,10 +3226,10 @@ input,select,textarea{border-radius:var(--r3)!important}
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/sync.js?v=v0924-155"></script>
-<script src="js/holidays.js?v=v0924-155"></script>
-<script src="js/sched.js?v=v0924-155"></script>
-<script src="js/app.js?v=v0924-155"></script>
+<script src="js/sync.js?v=v0924-156"></script>
+<script src="js/holidays.js?v=v0924-156"></script>
+<script src="js/sched.js?v=v0924-156"></script>
+<script src="js/app.js?v=v0924-156"></script>
 
 <style>
 /* 재고 · 발주 */
@@ -3445,7 +3444,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 .sksearch{font:inherit;font-size:13px;padding:6px 9px;width:100%;max-width:300px;background:var(--bg);color:var(--ink);
   border:1px solid var(--rule2);border-radius:2px;margin-bottom:10px}
 </style>
-<script src="js/stock.js?v=v0924-155"></script>
+<script src="js/stock.js?v=v0924-156"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -3474,7 +3473,7 @@ input,select,textarea{border-radius:var(--r3)!important}
   })();
 </script>
 
-<script src="js/presence.js?v=v0924-155"></script>
-<script src="js/weekrep.js?v=v0924-155"></script>
-<script src="js/monthlog.js?v=v0924-155"></script>
+<script src="js/presence.js?v=v0924-156"></script>
+<script src="js/weekrep.js?v=v0924-156"></script>
+<script src="js/monthlog.js?v=v0924-156"></script>
 </body></html>

@@ -40,26 +40,34 @@
     var sat = new Date().getDay() === 6;
     box.classList.toggle("satday", sat);
   }
+  // 저장은 「이 화면에서 고친 칸」만 — 안 건드린 칸은 저장된(다른 기기가 쓴) 글 그대로 둔다 (주간 보고가 날아가지 않게)
+  var touched = {};
   function save() {
     var o = load(cur); o.f = o.f || {}; o.by = o.by || {};
-    var w = me();
+    var w = me(), any = false;
     ins.forEach(function (el) {
       var k = el.dataset.f, v = el.value;
+      if (!touched[k]) return;
+      any = true;
       if (v.trim()) { if (o.f[k] !== v) { o.f[k] = v; o.by[k] = w || o.by[k] || ""; } }
       else { delete o.f[k]; delete o.by[k]; }
     });
+    if (!any) return;
+    // 이 기기에도 주마다 마지막 저장본을 한 벌 남긴다 (만약을 위한 보험)
+    try { localStorage.setItem("cafesui.ui.lastwr." + cur, JSON.stringify(o.f)); } catch (e) {}
     var d = new Date(); o.savedAt = (d.getMonth() + 1) + "/" + d.getDate() + " " + pad(d.getHours()) + ":" + pad(d.getMinutes()); o.who = w || o.who;
     try { localStorage.setItem(PRE + cur, JSON.stringify(o)); } catch (e) {}
   }
   var t = null;
   ins.forEach(function (el) {
-    el.addEventListener("input", function () { grow(el); paint(el, me()); clearTimeout(t); t = setTimeout(function () { save(); render(); }, 300); });
-    el.addEventListener("blur", function () { clearTimeout(t); save(); render(); });
+    el.addEventListener("input", function () { touched[el.dataset.f] = 1; grow(el); paint(el, me()); clearTimeout(t); t = setTimeout(function () { save(); render(); }, 300); });
+    el.addEventListener("blur", function () { clearTimeout(t); save(); touched = {}; render(); });
   });
   (window.__CS_SAVERS = window.__CS_SAVERS || []).push(function () { if (ins.some(function (el) { return document.activeElement === el; })) save(); });
-  document.getElementById("wrPrev").addEventListener("click", function () { cur = add(cur, -7); render(); });
-  document.getElementById("wrNext").addEventListener("click", function () { cur = add(cur, 7); render(); });
-  document.getElementById("wrThis").addEventListener("click", function () { cur = ymd(monOf(new Date())); render(); });
+  function go(c) { clearTimeout(t); save(); touched = {}; cur = c; render(); }
+  document.getElementById("wrPrev").addEventListener("click", function () { go(add(cur, -7)); });
+  document.getElementById("wrNext").addEventListener("click", function () { go(add(cur, 7)); });
+  document.getElementById("wrThis").addEventListener("click", function () { go(ymd(monOf(new Date()))); });
   // 보고서를 그림(PNG)으로 만들어 텔레그램으로 보낸다 — 휴대폰은 공유 창(텔레그램 선택), 컴퓨터는 그림 복사(붙여넣기) · 안 되면 파일 저장
   document.getElementById("wrCopy").addEventListener("click", function () {
     save(); var o = load(cur), f = o.f || {}, btn = this, NL = String.fromCharCode(10);
@@ -123,7 +131,7 @@
     var ok = SEE.indexOf(me()) >= 0;
     box.hidden = !ok;
     if (!ok) { box.open = false; return; }
-    if (!opened && new Date().getDay() === 6) { opened = true; box.open = true; }
+    if (!opened) { opened = true; box.open = true; }   // 관리자 탭 안에서는 늘 펼쳐 둔다
     render();
   }
   window.addEventListener("cs:me", gate);
