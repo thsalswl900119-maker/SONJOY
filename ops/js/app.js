@@ -4590,3 +4590,24 @@
     if (pn && window.MutationObserver) new MutationObserver(function () { if (pn.querySelector(".mgedit")) apply(); }).observe(pn, { childList: true });
     window.addEventListener("cs:remote", function (e) { if (((e.detail && e.detail.keys) || []).indexOf(KEY) >= 0) apply(); });
   })();
+
+  // 관리자 탭 → 「매니저 주간 보고」 바로 가기 (일지 탭 맨 위 상자를 열어 준다)
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest && e.target.closest("#mgGoWr"); if (!b) return;
+    var t = document.querySelector('.tab[data-p="tp4"]'); if (t) t.click();
+    setTimeout(function () {
+      var w = document.getElementById("wrBox"); if (!w) return;
+      if (w.hidden) { alert("매니저 주간 보고는 매니저 · 사장님 이름으로 들어왔을 때만 보입니다"); return; }
+      w.open = true; w.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 120);
+  });
+  // 관리자 탭 바로 가기 단추에 이번 주 작성 상태를 같이 보여준다
+  (function () {
+    var pn = document.getElementById("tp15"); if (!pn || !window.MutationObserver) return;
+    function paint() {
+      var s = document.getElementById("mgWrState"), src = document.getElementById("wrState"); if (!s) return;
+      if (src && src.textContent) { s.textContent = src.textContent; s.className = "mgwrs " + (src.className || ""); }
+    }
+    new MutationObserver(paint).observe(pn, { childList: true });
+    document.addEventListener("click", function (e) { if (e.target.closest && e.target.closest('.tab[data-p="tp15"]')) setTimeout(paint, 300); });
+  })();
