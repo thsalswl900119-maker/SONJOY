@@ -3547,13 +3547,28 @@
     var GROWMIN = { lf154: 220 };
     function growLg(el) {
       if (el.tagName !== "TEXTAREA") return;
+      if (!el.offsetWidth) return;   // 안 보이는 탭에서는 높이를 못 잰다 — 보일 때 다시 잰다 (아래 IntersectionObserver)
+      var keep = window.scrollY;
       el.style.height = "auto";
       var h = Math.max(GROWMIN[el.dataset.k] || 58, el.scrollHeight + 2);
-      el.style.height = Math.min(h, 900) + "px";
+      el.style.height = Math.min(h, 1600) + "px";
+      if (window.scrollY !== keep) window.scrollTo(0, keep);
       var ov = el.nextElementSibling; if (ov && ov.classList.contains("lgov")) placeOv(el, ov);
     }
     function growAll() { inputs.forEach(growLg); }
-    inputs.forEach(function (el) { if (el.tagName === "TEXTAREA") el.addEventListener("input", function () { growLg(el); }); });
+    inputs.forEach(function (el) {
+      if (el.tagName !== "TEXTAREA") return;
+      el.addEventListener("input", function () { growLg(el); });
+      // 그래도 넘치면 칸 안에서 내려 볼 수 있게 — 색 글씨 겹침(lgov)도 같이 내려간다
+      el.addEventListener("scroll", function () { var ov = el.nextElementSibling; if (ov && ov.classList.contains("lgov")) ov.scrollTop = el.scrollTop; });
+    });
+    // 화면에 들어올 때마다 높이를 다시 잰다 (탭을 처음 열 때 · 휴대폰에서 아래로 내릴 때 · 폭이 바뀔 때)
+    if (window.IntersectionObserver) {
+      var gio = new IntersectionObserver(function (es) { es.forEach(function (en) { if (en.isIntersecting) growLg(en.target); }); }, { rootMargin: "300px 0px" });
+      inputs.forEach(function (el) { if (el.tagName === "TEXTAREA") gio.observe(el); });
+    }
+    var growRT = null;
+    window.addEventListener("resize", function () { clearTimeout(growRT); growRT = setTimeout(growAll, 250); });
     function afterLoad() { rescuePaint(); growAll(); }
     document.addEventListener("cs:log-loaded", function () { setTimeout(afterLoad, 0); });
     window.addEventListener("cs:remote", function () { setTimeout(afterLoad, 300); });
