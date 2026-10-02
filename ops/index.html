@@ -1850,6 +1850,27 @@ table.zt tr:last-child td{border-bottom:0}
 .mgno2 mark{background:#FFE86B;color:#A11A12;padding:0 4px;border-radius:2px}
 .mgprom{margin-top:0}
 .tab.mgtab{font-weight:800}
+.mgdraft{font-size:11.5px;font-weight:800;color:#8A4A00;background:#FFE3BF;border-radius:10px;padding:2px 8px}
+.mged{margin-left:auto;font:inherit;font-size:12.5px;font-weight:800;padding:5px 12px;border:1px solid var(--rule2);border-radius:14px;background:var(--surface);color:var(--ink2);cursor:pointer}
+.mged.on{background:#2E7D32;border-color:#2E7D32;color:#fff}
+.mgedit.wsce{outline:2px dashed #2E7D32;outline-offset:6px;background:#FFFDF2}
+.mglead{margin:0 0 12px;font-size:15px;line-height:1.7;background:var(--surface);border:1px solid var(--rule2);border-radius:10px;padding:12px 16px}
+.mglead b{font-weight:900}
+.mgroles{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+.mgrl{background:var(--surface);border:1px solid var(--rule2);border-top:4px solid var(--ink);border-radius:10px;padding:12px 14px}
+.mgrl i{font-style:normal;font-size:22px}
+.mgrl>b{display:block;font-size:15.5px;font-weight:900;margin:4px 0 6px}
+.mgrl ul{margin:0;padding-left:17px;font-size:13.5px;line-height:1.75}
+.mgauth{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.mga{background:var(--surface);border:2px solid var(--rule2);border-radius:10px;padding:12px 14px}
+.mga.g{border-color:#7FB878} .mga.o{border-color:var(--mo)} .mga.r{border-color:var(--mr)}
+.mgah{font-size:16px;font-weight:900;margin-bottom:8px}
+.mga.g .mgah{color:#2E7D32} .mga.o .mgah{color:var(--mo)} .mga.r .mgah{color:var(--mr)}
+.mgah small{display:block;font-size:12px;font-weight:700;color:var(--muted);margin-top:2px}
+.mga ul{margin:0;padding-left:17px;font-size:14px;line-height:1.8}
+.mga mark{background:#FFE86B;color:#A11A12;padding:0 3px;border-radius:2px}
+.mgfoot{margin:12px 0 0;font-size:14px;background:#EEF7EC;border-radius:8px;padding:9px 12px}
+@media (max-width:820px){.mgauth{grid-template-columns:1fr}}
 @media (max-width:820px){.mgdec{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:640px){.mgdec,.mg2,.mgex{grid-template-columns:1fr}.mghero{padding:18px}.mghero .mgq{font-size:16.5px}.mgtb td:first-child{width:auto}}
 .rvbox{margin:6px 0 0;border:2px solid #8E3BB0;border-radius:6px;background:#FBF6FD;padding:10px 12px}
@@ -2611,7 +2632,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-151</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-152</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -3197,10 +3218,10 @@ input,select,textarea{border-radius:var(--r3)!important}
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/sync.js?v=v0924-151"></script>
-<script src="js/holidays.js?v=v0924-151"></script>
-<script src="js/sched.js?v=v0924-151"></script>
-<script src="js/app.js?v=v0924-151"></script>
+<script src="js/sync.js?v=v0924-152"></script>
+<script src="js/holidays.js?v=v0924-152"></script>
+<script src="js/sched.js?v=v0924-152"></script>
+<script src="js/app.js?v=v0924-152"></script>
 
 <style>
 /* 재고 · 발주 */
@@ -3415,7 +3436,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 .sksearch{font:inherit;font-size:13px;padding:6px 9px;width:100%;max-width:300px;background:var(--bg);color:var(--ink);
   border:1px solid var(--rule2);border-radius:2px;margin-bottom:10px}
 </style>
-<script src="js/stock.js?v=v0924-151"></script>
+<script src="js/stock.js?v=v0924-152"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -3444,7 +3465,7 @@ input,select,textarea{border-radius:var(--r3)!important}
   })();
 </script>
 
-<script src="js/presence.js?v=v0924-151"></script>
-<script src="js/weekrep.js?v=v0924-151"></script>
-<script src="js/monthlog.js?v=v0924-151"></script>
+<script src="js/presence.js?v=v0924-152"></script>
+<script src="js/weekrep.js?v=v0924-152"></script>
+<script src="js/monthlog.js?v=v0924-152"></script>
 </body></html>

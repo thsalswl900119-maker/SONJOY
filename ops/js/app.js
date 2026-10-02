@@ -4548,3 +4548,45 @@
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(ok, function () { window.prompt("복사해서 쓰세요", t); });
     else window.prompt("복사해서 쓰세요", t);
   });
+
+  // 관리자 탭 — 역할 · 권한은 화면에서 고친다 (cafesui.mgr 에 저장 · 모든 기기 같이)
+  (function () {
+    var KEY = "cafesui.mgr", editing = null;
+    function rd() { try { return JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { return {}; } }
+    function clean(h) {
+      var t = document.createElement("div"); t.innerHTML = String(h || "");
+      t.querySelectorAll("script,style,iframe,object,embed,link,meta").forEach(function (x) { x.remove(); });
+      t.querySelectorAll("*").forEach(function (x) { Array.prototype.slice.call(x.attributes).forEach(function (a) { if (/^on|^style$|^src$|^href$/i.test(a.name)) x.removeAttribute(a.name); }); });
+      return t.innerHTML;
+    }
+    function apply() {
+      var o = rd();
+      document.querySelectorAll("#tp15 .mgedit[data-mgk]").forEach(function (el) {
+        var k = el.dataset.mgk; if (editing === el) return;
+        if (o[k] != null) el.innerHTML = clean(o[k]);
+        var d = el.previousElementSibling && el.previousElementSibling.querySelector(".mgdraft");
+        if (d) d.hidden = !!o[k + "_ok"];
+      });
+      // 역할 · 권한은 대표가 정한다 — 고치기 버튼은 사장님 화면에만
+      var me = ""; try { me = localStorage.getItem("cafesui.me") || ""; } catch (e) {}
+      document.querySelectorAll("#tp15 .mged").forEach(function (b) { b.hidden = me !== "사장님"; });
+    }
+    document.addEventListener("click", function (e) {
+      var b = e.target.closest && e.target.closest("#tp15 .mged"); if (!b) return;
+      var el = document.querySelector('#tp15 .mgedit[data-mgk="' + b.dataset.mgk + '"]'); if (!el) return;
+      if (editing !== el) {
+        if (editing) { alert("다른 칸을 고치는 중입니다 — 먼저 「✔ 다 고침」을 눌러 주세요"); return; }
+        editing = el; el.contentEditable = "true"; el.classList.add("wsce"); b.textContent = "✔ 다 고침 (저장)"; b.classList.add("on"); el.focus();
+        return;
+      }
+      el.contentEditable = "false"; el.classList.remove("wsce"); editing = null; b.textContent = "✏ 고치기"; b.classList.remove("on");
+      var o = rd(), me = ""; try { me = localStorage.getItem("cafesui.me") || ""; } catch (er) {}
+      o[b.dataset.mgk] = clean(el.innerHTML); o[b.dataset.mgk + "_by"] = me; o[b.dataset.mgk + "_at"] = new Date().toISOString();
+      if (me === "사장님") o[b.dataset.mgk + "_ok"] = 1;   // 사장님이 고쳐 저장하면 「초안」 표시가 사라진다
+      try { localStorage.setItem(KEY, JSON.stringify(o)); } catch (er) {}
+      apply();
+    });
+    var pn = document.getElementById("tp15");
+    if (pn && window.MutationObserver) new MutationObserver(function () { if (pn.querySelector(".mgedit")) apply(); }).observe(pn, { childList: true });
+    window.addEventListener("cs:remote", function (e) { if (((e.detail && e.detail.keys) || []).indexOf(KEY) >= 0) apply(); });
+  })();
