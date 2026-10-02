@@ -699,7 +699,7 @@
       var lg = by("cafesui.log.").sort().reverse(), h = "";
       lg.forEach(function (k) {
         var o = J(k) || {}, f = o.f || {}, d = k.slice(12);
-        var ORDER = ["lf143", "lf140", "lf141", "lf142", "lf101", "lf102", "lf103", "lf104", "lf105", "lf106", "lf120", "lf123", "lf121", "lf122", "lf124", "lf110", "lf185", "lf180", "lf181", "lf190", "lf183", "lf184", "lf154", "lf150", "lf151", "lf152", "lf153", "lf160", "lf161", "lf162", "lf163", "lf164", "lf170", "lf171", "lf172", "lf182"];
+        var ORDER = ["lf143", "lf140", "lf141", "lf142", "lf144", "lf101", "lf102", "lf103", "lf104", "lf105", "lf106", "lf120", "lf123", "lf121", "lf122", "lf124", "lf110", "lf185", "lf180", "lf181", "lf190", "lf183", "lf184", "lf154", "lf150", "lf151", "lf152", "lf153", "lf160", "lf161", "lf162", "lf163", "lf164", "lf170", "lf171", "lf172", "lf182"];
         var seen = {}, b = "";
         ORDER.concat(Object.keys(f)).forEach(function (fk) {
           if (seen[fk]) return; seen[fk] = 1;
@@ -1414,6 +1414,7 @@
         if (Object.keys(o).length) localStorage.setItem(keyOf(d), JSON.stringify(o));
         else localStorage.removeItem(keyOf(d));
       } catch (e) {}
+      if (window.__CS_ATT_LOG) setTimeout(window.__CS_ATT_LOG, 50);   // 일지 「일찍 · 늦게 간 사람」도 바로
     }
     function todayStr() {
       var d = new Date();
@@ -3543,6 +3544,59 @@
       list();
     })();
 
+    // ⏱ 일찍 · 늦게 간 사람 (lf144) — 퇴근 기록(cafesui.att.날짜)과 근무표 예정 퇴근(__CS_SCHED)을 비교해 「⏱」 줄만 새로 쓴다.
+    //    ⏱ 아닌 줄(직원이 적은 이유 · 메모)은 그대로 둔다. 오늘 일지, 또는 이미 있는 일지에만 쓴다(지난날 빈 일지를 새로 만들지 않게).
+    (function () {
+      var el = document.querySelector('.lgin[data-k="lf144"]'); if (!el) return;
+      var NL = String.fromCharCode(10), TICK = "⏱";
+      function mins(t) { var m = /^(\d{1,2}):(\d{2})/.exec(String(t || "")); return m ? +m[1] * 60 + +m[2] : null; }
+      function nim(n) { return n === "사장님" ? n : n + "님"; }
+      function autoLines(d) {
+        var rec = {}; try { rec = JSON.parse(localStorage.getItem("cafesui.att." + d) || "{}") || {}; } catch (e) {}
+        var plan = (window.__CS_SCHED || {})[d] || [], out = [];
+        var wd = new Date(d + "T00:00:00").getDay(), hol = (window.__CS_HOL || {})[d];
+        var past = d < today();
+        var names = Object.keys(rec);
+        plan.forEach(function (p) { if (p.w !== "사장님" && names.indexOf(p.w) < 0) names.push(p.w); });
+        var lastOut = null;
+        names.forEach(function (w) {
+          var r = rec[w] || {}, p = plan.filter(function (x) { return x.w === w; })[0] || {};
+          var role = r.role || p.r || "", o = mins(r.out);
+          // 예정 퇴근은 실제로 한 근무(퇴근 칸에서 고른 오픈 · 마감 …) 기준 — 근무를 바꿔 선 날도 맞게
+          var tt = ((window.__CS_SHIFT_T || {})[w] || {})[role], pe = tt ? tt[1] : (p.r === role ? p.e : null), e = mins(pe);
+          if (o == null) { if (past && p.w && w !== "이해선") out.push(TICK + " " + nim(w) + (role ? " " + role : "") + " · 퇴근 안 찍음"); return; }
+          if (lastOut == null || o > lastOut) lastOut = o;
+          var ln = TICK + " " + nim(w) + (role ? " " + role : "") + " · " + r.out + " 퇴근" + (pe ? " (예정 " + pe + ")" : "");
+          if (e != null) { var df = o - e; ln += Math.abs(df) < 10 ? " → 정시" : " → " + Math.abs(df) + "분 " + (df < 0 ? "일찍" : "늦게"); }
+          if (!hol && wd >= 1 && wd <= 5 && /마감/.test(role) && o < 19 * 60 + 15) ln += " ⚠ 7:15 전 퇴근";
+          if (r.memo) ln += " — 사유: " + r.memo;
+          out.push(ln);
+        });
+        if (!hol && wd === 6 && lastOut != null && lastOut < 17 * 60 + 15 && past) out.push(TICK + " ⚠ 토요일 5:15 전에 모두 퇴근");
+        return out;
+      }
+      function sync() {
+        var d = dateEl.value || today();
+        if (d < "2026-10-01" || document.activeElement === el) return;
+        var exists = !!localStorage.getItem(keyFor());
+        if (!exists && d !== today()) return;
+        var auto = autoLines(d);
+        var keep = el.value.split(NL).filter(function (l) { return l.trim() && l.trim().indexOf(TICK) !== 0; });
+        var nv = auto.concat(keep).join(NL);
+        if (nv === el.value) return;
+        if (!auto.length && !el.value.trim()) return;
+        el.value = nv; el.classList.toggle("filled", !!nv.trim());
+        el.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+      window.__CS_ATT_LOG = sync;
+      document.addEventListener("cs:log-loaded", function () { setTimeout(sync, 50); });
+      window.addEventListener("cs:remote", function (e) { var ks = (e.detail && e.detail.keys) || []; if (ks.some(function (k) { return k.indexOf("cafesui.att.") === 0; })) setTimeout(sync, 100); });
+      dateEl.addEventListener("change", function () { setTimeout(sync, 50); });
+      ["lgPrev", "lgNext", "lgToday"].forEach(function (id) { var b = document.getElementById(id); if (b) b.addEventListener("click", function () { setTimeout(sync, 50); }); });
+      document.addEventListener("click", function (e) { var t = e.target.closest && e.target.closest('.tab[data-p="tp4"]'); if (t) setTimeout(sync, 80); });
+      setTimeout(sync, 1600);
+    })();
+
     // 일지 글 칸은 글 길이만큼 늘어난다 (잘려서 안 보이는 글이 없게) · 「매장 전반적인 흐름」은 처음부터 크게
     var GROWMIN = { lf154: 220 };
     function growLg(el) {
@@ -3587,7 +3641,7 @@
       var anyOwn = marks.some(function (m) { return m.indexOf(true) >= 0; });
       // 사장님이 쓴 글은 어느 칸이든 노란 형광 · 빨간 글씨 (사장님 지시사항 칸은 원래 사장님 칸이라 제외)
       // 근무 묶음(영업시간 자동 · 근무 현황 · 사장님 업무 · 알바)은 사장님이 써도 표시하지 않는다
-      var bossRow = !!el.closest(".mrow2.boss") || /^lf14[0-3]$/.test(el.dataset.k || "");
+      var bossRow = !!el.closest(".mrow2.boss") || /^lf14[0-4]$/.test(el.dataset.k || "");
       var allBoss = !bossRow && !!el.value.trim() && (names.length ? names.length === 1 && names[0] === "사장님" : first === "사장님");
       // 한 줄 칸(input)은 글자마다 색을 못 칠하니, 사장님이 덧붙인 게 있으면 칸 전체를 노란 형광 테두리로 (아래 「👑 사장님 덧붙임」에 크게)
       el.classList.toggle("ownin", el.tagName !== "TEXTAREA" && !!el.value.trim() && (anyOwn || allBoss || (lineBy[0] === "사장님" && first && first !== "사장님")));
@@ -3770,7 +3824,7 @@
           ownRuns(ln, m).forEach(function (t) { if (owk.indexOf(t) < 0) owk.push(t); });
         });
         bl[k] = lb;
-        if (owk.length) ow[k] = owk;
+        if (owk.length && k !== "lf144") ow[k] = owk;   // 자동 줄(⏱)은 사장님 덧붙임으로 잡지 않는다
         paintLines(el, bl[k], by[k], ow[k]);
         tagAuthors(el, bl[k], ow[k], by[k]);
       });
@@ -4082,7 +4136,7 @@
             var shLines = shown.split("<br>"), plLines = plain.split(NL), srcLines = v.split(NL);
             if (shLines.length === srcLines.length) shown = shLines.map(function (h, i) { var nn = lb[i] || ""; return '<span class="wl ' + (WCLR[nn] ? "w" + WCLR[nn] : "") + (nn === "사장님" && srcLines[i].trim() ? " rpownl" : "") + '">' + (nn === "사장님" && srcLines[i].trim() ? "👑 " : "") + h + "</span>"; }).join("");
             plain = plLines.map(function (x, i) { var nn = lb[i] || ""; return x.trim() ? x + (nn ? " (" + nn + ")" : "") : x; }).join(NL);
-          } else if (cls !== " boss" && !/^lf14[0-3]$/.test(el.dataset.k) && (distinct.length ? distinct[0] === "사장님" : rpBy[el.dataset.k] === "사장님")) {
+          } else if (cls !== " boss" && !/^lf14[0-4]$/.test(el.dataset.k) && (distinct.length ? distinct[0] === "사장님" : rpBy[el.dataset.k] === "사장님")) {
             // 사장님 혼자 쓴 칸도 노란 형광 · 빨간 글씨로
             shown = '<span class="rpown">👑 ' + shown + "</span>";
             plain = "〔사장님〕 " + plain;
