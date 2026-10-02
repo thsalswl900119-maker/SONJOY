@@ -4539,3 +4539,12 @@
 })();
 
   // (탭 전환은 위쪽 스크립트에서 한 번만 처리한다 — 중복 제거)
+
+  // 관리자 보고 탭 — 보고 예시 카드를 누르면 글이 복사된다 (텔레그램에 붙여 넣기)
+  document.addEventListener("click", function (e) {
+    var c = e.target.closest && e.target.closest(".mgcard[data-copy]"); if (!c) return;
+    var t = c.getAttribute("data-copy"), lab = c.querySelector(".mgcp");
+    var ok = function () { c.classList.add("done"); if (lab) lab.textContent = "✔ 복사됨"; setTimeout(function () { c.classList.remove("done"); if (lab) lab.textContent = "📋 복사"; }, 1600); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(ok, function () { window.prompt("복사해서 쓰세요", t); });
+    else window.prompt("복사해서 쓰세요", t);
+  });

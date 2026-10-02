@@ -1770,6 +1770,88 @@ table.zt tr:last-child td{border-bottom:0}
 .zfoot{display:flex;justify-content:space-between;gap:12px;padding:10px 14px;
   background:var(--raise);font-size:12px;color:var(--ink2);flex-wrap:wrap}
 .zfoot b{font-family:var(--mono);font-weight:500}
+/* 관리자 보고 (tabs/tp15.html) */
+.mgpage{--mr:#C62828;--mo:#E65100;--my:#B88A00;--mg:#2E7D32}
+.mghero{background:linear-gradient(135deg,#2B2320,#4A3A33);color:#FFF8EE;border-radius:10px;padding:22px 24px;margin:6px 0 22px}
+.mghero .mgq{font-size:19px;line-height:1.6;font-weight:500;letter-spacing:-.01em}
+.mghero .mgq b{color:#FFE08A;font-weight:900}
+.mghero p{margin:10px 0 0;font-size:14px;color:#EADFD2;line-height:1.6}
+.mghero .mgqk mark{background:#FFE86B;color:#8A1C12;font-weight:900;padding:1px 6px;border-radius:3px}
+.mgh{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:900;margin:28px 0 12px;color:var(--ink)}
+.mgh small{font-size:12.5px;font-weight:600;color:var(--muted)}
+.mgno{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--ink);color:var(--surface);font-size:14px;flex:none}
+.mgdec{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.mgd{display:flex;flex-direction:column;gap:8px;padding:14px;border-radius:10px;background:var(--surface);border:2px solid var(--rule2);position:relative}
+.mgd i{font-style:normal;font-size:22px;font-weight:900;line-height:1}
+.mgd .q{font-size:14.5px;line-height:1.5;flex:1}
+.mgd .q b{font-weight:900}
+.mgd .a{align-self:flex-start;font-size:15px;font-weight:900;padding:5px 12px;border-radius:999px;color:#fff}
+.mgd.red{border-color:var(--mr)} .mgd.red i{color:var(--mr)} .mgd.red .a{background:var(--mr)}
+.mgd.orange{border-color:var(--mo)} .mgd.orange i{color:var(--mo)} .mgd.orange .a{background:var(--mo)}
+.mgd.green{border-color:var(--mg)} .mgd.green i{color:var(--mg)} .mgd.green .a{background:var(--mg)}
+.mgd.amber{border-color:var(--my);border-style:dashed} .mgd.amber i{color:var(--my)} .mgd.amber .a{background:var(--mo)}
+.mgch{background:var(--surface);border:1px solid var(--rule2);border-left:6px solid var(--rule2);border-radius:10px;padding:0 0 14px;margin:0 0 14px;overflow:hidden}
+.mgch.red{border-left-color:var(--mr)} .mgch.orange{border-left-color:var(--mo)} .mgch.green{border-left-color:var(--mg)}
+.mgchh{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;padding:12px 16px;background:var(--raise);border-bottom:1px solid var(--rule)}
+.mgchh b{font-size:18px;font-weight:900}
+.mgch.red .mgchh b{color:var(--mr)} .mgch.orange .mgchh b{color:var(--mo)} .mgch.green .mgchh b{color:var(--mg)}
+.mgchh span{font-size:14.5px;font-weight:800}
+.mgchh em{flex-basis:100%;font-style:normal;font-size:12.5px;color:var(--muted)}
+.mgrule{margin:12px 16px 8px;font-size:14px}
+.mgtb{width:calc(100% - 32px);margin:0 16px;border-collapse:collapse;font-size:14px}
+.mgtb th{text-align:left;font-size:12px;color:var(--muted);font-weight:700;padding:6px 10px;border-bottom:2px solid var(--rule2)}
+.mgtb td{padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+.mgtb td:first-child{font-weight:700;width:50%}
+.mgtb td b{color:var(--mr)}
+.mgnote{margin:12px 16px 0;padding:9px 12px;background:#FDECEC;border:1px dashed var(--mr);border-radius:6px;font-size:14px}
+.mgnote b{color:var(--mr)}
+.mg2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:12px 16px 0}
+.mgsub{border:1px solid var(--rule);border-radius:8px;padding:10px 12px;background:var(--bg)}
+.mgsubh{font-weight:900;font-size:15px;margin-bottom:6px}
+.mgsubh small{display:block;font-size:12px;font-weight:700;color:var(--muted);margin-top:1px}
+.mgsubh.pre{color:var(--mo)} .mgsubh.post{color:var(--my)}
+.mgsub ul{margin:0;padding-left:18px;font-size:14px;line-height:1.75}
+.mgwhen{margin:8px 0 0;font-size:13px;background:#FFF3E0;padding:6px 9px;border-radius:5px}
+.mgwhen b{color:var(--mo)}
+.mgchips{list-style:none;display:flex;flex-wrap:wrap;gap:6px;margin:12px 16px 0;padding:0}
+.mgchips li{font-size:13.5px;padding:5px 11px;border-radius:999px;background:#E8F3E6;color:#1F5A22;font-weight:700}
+.mgboth{margin:4px 0 6px;padding:14px 16px;border-radius:10px;background:#FFF8D6;border:2px solid #E0B400}
+.mgboth>b{font-size:15.5px;font-weight:900}
+.mgflow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:10px 0 8px}
+.mgflow span{background:var(--surface);border:1px solid var(--rule2);border-radius:6px;padding:6px 10px;font-size:13.5px;font-weight:800}
+.mgflow i{font-style:normal;font-weight:900;color:var(--muted)}
+.mgboth p{margin:0;font-size:13.5px;line-height:1.6}
+.mgwrap{overflow-x:auto;border:1px solid var(--rule2);border-radius:10px;background:var(--surface)}
+.mgmx{width:100%;border-collapse:collapse;font-size:14px;min-width:520px}
+.mgmx th{background:var(--raise);padding:9px 10px;font-size:13px;text-align:center;border-bottom:2px solid var(--rule2)}
+.mgmx th:first-child,.mgmx td:first-child{text-align:left;font-weight:800}
+.mgmx td{padding:8px 10px;border-bottom:1px solid var(--rule);text-align:center}
+.mgmx tbody tr:nth-child(even){background:var(--bg)}
+.bd{display:inline-block;font-size:12.5px;font-weight:900;padding:2px 9px;border-radius:999px;white-space:nowrap}
+.bd.r{background:var(--mr);color:#fff} .bd.o{background:var(--mo);color:#fff} .bd.y{background:#FFE08A;color:#6B4E00}
+.bd.g{background:#DDEFDB;color:#1F5A22} .bd.ok{color:var(--mg);font-size:16px;padding:0} .bd.n{color:var(--muted);font-weight:700;background:var(--raise)}
+.mgex{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.mgcard{font:inherit;text-align:left;cursor:pointer;background:var(--surface);border:1px solid var(--rule2);border-top:5px solid var(--rule2);border-radius:10px;padding:12px 14px;position:relative;color:var(--ink)}
+.mgcard:hover{box-shadow:0 2px 10px rgba(0,0,0,.08)}
+.mgcard.o{border-top-color:var(--mo)} .mgcard.y{border-top-color:#E0B400} .mgcard.g{border-top-color:var(--mg)} .mgcard.r{border-top-color:var(--mr)}
+.mgtag{font-size:12px;font-weight:900;color:var(--muted)}
+.mgcard pre{margin:6px 0 0;white-space:pre-wrap;font-family:var(--sans);font-size:14px;line-height:1.65;background:#F6F1E8;border-radius:8px;padding:10px 12px}
+.mgcard pre b{font-weight:900}
+.mgcp{position:absolute;top:10px;right:12px;font-style:normal;font-size:12px;font-weight:800;color:var(--muted)}
+.mgcard.done .mgcp{color:var(--mg)}
+.mgmiss{padding:0}
+.mgok,.mgno2{border-radius:10px;padding:14px 16px}
+.mgok{background:#EEF7EC;border:2px solid #9CCB95}
+.mgno2{background:#FDECEC;border:2px solid var(--mr)}
+.mgok b,.mgno2 b{font-size:16px;font-weight:900}
+.mgok p{margin:8px 0 2px;font-size:14px;font-weight:700}
+.mgok small{color:var(--muted);font-size:12.5px}
+.mgno2 ul{margin:8px 0 0;padding-left:18px;font-size:14px;line-height:1.8;font-weight:700}
+.mgno2 mark{background:#FFE86B;color:#A11A12;padding:0 4px;border-radius:2px}
+.mgprom{margin-top:0}
+.tab.mgtab{font-weight:800}
+@media (max-width:820px){.mgdec{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.mgdec,.mg2,.mgex{grid-template-columns:1fr}.mghero{padding:18px}.mghero .mgq{font-size:16.5px}.mgtb td:first-child{width:auto}}
 .rvbox{margin:6px 0 0;border:2px solid #8E3BB0;border-radius:6px;background:#FBF6FD;padding:10px 12px}
 .rvh{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;margin-bottom:8px}
 .rvh b{font-size:15px;color:#6A1B9A}
@@ -2529,14 +2611,14 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-149</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-150</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
   <div class="bkrow" id="saveRow"></div>
   <button type="button" class="newver" id="newVer" hidden>🔄 새 버전이 올라왔어요 — 눌러서 새로고침 (적은 내용은 그대로 남습니다)</button>
 </div>
-<nav class="tabs" role="tablist" aria-label="화면 선택"><span class="tabgrp"><button type="button" class="tab" role="tab" data-p="tp0" aria-controls="tp0" aria-selected="true">출퇴근</button><button type="button" class="tab" role="tab" data-p="tp1" aria-controls="tp1" aria-selected="false">근무표</button><button type="button" class="tab" role="tab" data-p="tp2" aria-controls="tp2" aria-selected="false">오늘 할 일</button><button type="button" class="tab" role="tab" data-p="tp12" aria-controls="tp12" aria-selected="false">재고·발주</button><button type="button" class="tab daily" role="tab" data-p="tp4" aria-controls="tp4" aria-selected="false">일지</button></span><button type="button" class="tab" role="tab" data-p="tp3" aria-controls="tp3" aria-selected="false">청소·정비</button><button type="button" class="tab" role="tab" data-p="tp5" aria-controls="tp5" aria-selected="false">월말회의</button><button type="button" class="tab" role="tab" data-p="tp6" aria-controls="tp6" aria-selected="false">연간 행사</button><button type="button" class="tab" role="tab" data-p="tp7" aria-controls="tp7" aria-selected="false">과일</button><button type="button" class="tab" role="tab" data-p="tp8" aria-controls="tp8" aria-selected="false">월말 평가</button><button type="button" class="tab" role="tab" data-p="tp9" aria-controls="tp9" aria-selected="false">워크샵</button><button type="button" class="tab" role="tab" data-p="tp10" aria-controls="tp10" aria-selected="false">고객 응대</button><button type="button" class="tab" role="tab" data-p="tp13" aria-controls="tp13" aria-selected="false">제과제빵</button><button type="button" class="tab" role="tab" data-p="tp14" aria-controls="tp14" aria-selected="false">독서나눔</button><button type="button" class="tab" role="tab" data-p="tp11" aria-controls="tp11" aria-selected="false">사용법</button></nav><div class="panel" id="tp0" role="tabpanel"><section>
+<nav class="tabs" role="tablist" aria-label="화면 선택"><span class="tabgrp"><button type="button" class="tab" role="tab" data-p="tp0" aria-controls="tp0" aria-selected="true">출퇴근</button><button type="button" class="tab" role="tab" data-p="tp1" aria-controls="tp1" aria-selected="false">근무표</button><button type="button" class="tab" role="tab" data-p="tp2" aria-controls="tp2" aria-selected="false">오늘 할 일</button><button type="button" class="tab" role="tab" data-p="tp12" aria-controls="tp12" aria-selected="false">재고·발주</button><button type="button" class="tab daily" role="tab" data-p="tp4" aria-controls="tp4" aria-selected="false">일지</button></span><button type="button" class="tab" role="tab" data-p="tp3" aria-controls="tp3" aria-selected="false">청소·정비</button><button type="button" class="tab" role="tab" data-p="tp5" aria-controls="tp5" aria-selected="false">월말회의</button><button type="button" class="tab" role="tab" data-p="tp6" aria-controls="tp6" aria-selected="false">연간 행사</button><button type="button" class="tab" role="tab" data-p="tp7" aria-controls="tp7" aria-selected="false">과일</button><button type="button" class="tab" role="tab" data-p="tp8" aria-controls="tp8" aria-selected="false">월말 평가</button><button type="button" class="tab mgtab" role="tab" data-p="tp15" aria-controls="tp15" aria-selected="false">관리자 보고</button><button type="button" class="tab" role="tab" data-p="tp9" aria-controls="tp9" aria-selected="false">워크샵</button><button type="button" class="tab" role="tab" data-p="tp10" aria-controls="tp10" aria-selected="false">고객 응대</button><button type="button" class="tab" role="tab" data-p="tp13" aria-controls="tp13" aria-selected="false">제과제빵</button><button type="button" class="tab" role="tab" data-p="tp14" aria-controls="tp14" aria-selected="false">독서나눔</button><button type="button" class="tab" role="tab" data-p="tp11" aria-controls="tp11" aria-selected="false">사용법</button></nav><div class="panel" id="tp0" role="tabpanel"><section>
   <div class="shead"><h2>출퇴근</h2><span class="en">clock out</span>
     <span class="sub">갈 때 본인 칸의 퇴근만 누르세요 · 출근은 10분 일찍, 서로 챙깁니다</span></div>
   <div class="lgbar">
@@ -3098,7 +3180,7 @@ input,select,textarea{border-radius:var(--r3)!important}
     <span class="bywho">글자 색이 쓴 사람입니다 <i class="p1">정항아</i><i class="p2">박혜빈</i><i class="p3">이해선</i><i class="p4">사장님</i></span>
   </div>
   <div class="rdlist" id="rdList"></div>
-</section></div><div class="panel" id="tp11" role="tabpanel" hidden data-lazy="tabs/tp11.html"><div class="lazyload">불러오는 중…</div></div>
+</section></div><div class="panel" id="tp15" role="tabpanel" hidden data-lazy="tabs/tp15.html"><div class="lazyload">불러오는 중…</div></div><div class="panel" id="tp11" role="tabpanel" hidden data-lazy="tabs/tp11.html"><div class="lazyload">불러오는 중…</div></div>
 
 <footer>
 근무표와 청소 배정표는 정항아 매니저가 전달 2째주까지 취합해 편성합니다.
@@ -3115,10 +3197,10 @@ input,select,textarea{border-radius:var(--r3)!important}
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/sync.js?v=v0924-149"></script>
-<script src="js/holidays.js?v=v0924-149"></script>
-<script src="js/sched.js?v=v0924-149"></script>
-<script src="js/app.js?v=v0924-149"></script>
+<script src="js/sync.js?v=v0924-150"></script>
+<script src="js/holidays.js?v=v0924-150"></script>
+<script src="js/sched.js?v=v0924-150"></script>
+<script src="js/app.js?v=v0924-150"></script>
 
 <style>
 /* 재고 · 발주 */
@@ -3333,7 +3415,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 .sksearch{font:inherit;font-size:13px;padding:6px 9px;width:100%;max-width:300px;background:var(--bg);color:var(--ink);
   border:1px solid var(--rule2);border-radius:2px;margin-bottom:10px}
 </style>
-<script src="js/stock.js?v=v0924-149"></script>
+<script src="js/stock.js?v=v0924-150"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -3362,7 +3444,7 @@ input,select,textarea{border-radius:var(--r3)!important}
   })();
 </script>
 
-<script src="js/presence.js?v=v0924-149"></script>
-<script src="js/weekrep.js?v=v0924-149"></script>
-<script src="js/monthlog.js?v=v0924-149"></script>
+<script src="js/presence.js?v=v0924-150"></script>
+<script src="js/weekrep.js?v=v0924-150"></script>
+<script src="js/monthlog.js?v=v0924-150"></script>
 </body></html>
