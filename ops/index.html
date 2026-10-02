@@ -438,6 +438,9 @@ input.wp1,input.wp2,input.wp3,input.wp4{font-weight:600}
 .wsref{width:100%;border-collapse:collapse;font-size:12px;margin:4px 0 8px}
 .wsref th{background:var(--bg);text-align:left;font-size:12.5px;color:var(--muted);padding:5px 8px;border-bottom:1px solid var(--rule2)}
 .wsref td{padding:5px 8px;border-bottom:1px solid var(--rule);vertical-align:top;line-height:1.5}
+.wsedit2{float:right;font:inherit;font-size:12px;font-weight:700;padding:3px 10px;margin:0 0 6px 8px;border:1px solid var(--rule2);border-radius:14px;background:var(--surface);color:var(--ink2);cursor:pointer}
+.wsedit2.on{background:#2E7D32;border-color:#2E7D32;color:#fff}
+.wsce{outline:2px dashed #2E7D32;outline-offset:3px;background:#FFFDF2;min-height:1.4em;cursor:text}
 .wsmtl{display:block;font-size:13px;font-weight:700;color:var(--ink2);margin-top:8px}
 .wsmtl textarea{display:block;width:100%;margin-top:4px;font:inherit;font-size:13px;padding:7px 9px;background:var(--bg);color:var(--ink);border:1px solid var(--rule2);border-radius:2px;resize:vertical;line-height:1.5}
 .wsrefbox{border:1px solid var(--rule2);border-radius:3px;background:var(--surface);padding:10px 14px 12px;font-size:12.5px;line-height:1.65;color:var(--ink2);margin-bottom:6px}
@@ -2526,7 +2529,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-141</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-142</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -3041,7 +3044,7 @@ input,select,textarea{border-radius:var(--r3)!important}
   <div class="wsaddbar"><button type="button" class="wsadd" data-mtg="1">＋ 줄 추가</button>
     <span class="wsaddnote">회의가 더 생기면 눌러서 늘리세요</span></div>
   <h3 class="subhead">회의 내용</h3>
-  <p class="tnote">회의 제목을 누르면 내용이 펼쳐지고, 다시 누르면 접힙니다. 노션 「전체 워크샵」 내용을 그대로 옮겼고, 새로 정한 것은 각 회의 아래 칸에 이어서 적으세요 (적는 사람 색으로 남습니다).</p>
+  <p class="tnote">회의 제목을 누르면 내용이 펼쳐지고, 다시 누르면 접힙니다. 내용이 바뀌면 각 회의의 「✏ 이 내용 고치기」로 제목 · 날짜 · 내용을 바로 고치세요. 새로 정한 것은 아래 칸에 이어서 적어도 됩니다 (적는 사람 색으로 남습니다).</p>
   <div class="wsmts">
     <details class="wsmt" id="wsMt1"><summary><b class="wsmtt"></b><span class="wsmtd"></span></summary><div class="wsmtb"><div class="wsmtnote"></div><label class="wsmtl">회의에서 정한 것 · 추가 메모<textarea class="wsin" data-k="mt1" rows="3" placeholder="예) 회비 10/20까지 · 비행기표 예매 완료"></textarea></label></div></details>
     <details class="wsmt" id="wsMt2"><summary><b class="wsmtt"></b><span class="wsmtd"></span></summary><div class="wsmtb"><div class="wsmtnote"></div><label class="wsmtl">회의에서 정한 것 · 추가 메모<textarea class="wsin" data-k="mt2" rows="3"></textarea></label></div></details>
@@ -3049,7 +3052,7 @@ input,select,textarea{border-radius:var(--r3)!important}
     <details class="wsmt" id="wsMt4"><summary><b class="wsmtt"></b><span class="wsmtd"></span></summary><div class="wsmtb"><div class="wsmtnote"></div><label class="wsmtl">회의에서 정한 것 · 추가 메모<textarea class="wsin" data-k="mt4" rows="3"></textarea></label></div></details>
   </div>
   <h3 class="subhead">예약 · 참고 자료</h3>
-  <p class="tnote">노션에서 옮겨 온 예약 기록 · 동선 · 경비 메모입니다.</p>
+  <p class="tnote">예약 기록 · 동선 · 경비 메모입니다. 「✏ 이 내용 고치기」로 바뀐 것을 바로 고치세요 (모든 기기에 같이 바뀝니다).</p>
   <div class="wsrefbox" id="wsRef"></div>
 
   <h3 class="subhead">일자별 일정</h3>
@@ -3111,10 +3114,10 @@ input,select,textarea{border-radius:var(--r3)!important}
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/sync.js?v=v0924-141"></script>
-<script src="js/holidays.js?v=v0924-141"></script>
-<script src="js/sched.js?v=v0924-141"></script>
-<script src="js/app.js?v=v0924-141"></script>
+<script src="js/sync.js?v=v0924-142"></script>
+<script src="js/holidays.js?v=v0924-142"></script>
+<script src="js/sched.js?v=v0924-142"></script>
+<script src="js/app.js?v=v0924-142"></script>
 
 <style>
 /* 재고 · 발주 */
@@ -3329,7 +3332,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 .sksearch{font:inherit;font-size:13px;padding:6px 9px;width:100%;max-width:300px;background:var(--bg);color:var(--ink);
   border:1px solid var(--rule2);border-radius:2px;margin-bottom:10px}
 </style>
-<script src="js/stock.js?v=v0924-141"></script>
+<script src="js/stock.js?v=v0924-142"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -3358,7 +3361,7 @@ input,select,textarea{border-radius:var(--r3)!important}
   })();
 </script>
 
-<script src="js/presence.js?v=v0924-141"></script>
-<script src="js/weekrep.js?v=v0924-141"></script>
-<script src="js/monthlog.js?v=v0924-141"></script>
+<script src="js/presence.js?v=v0924-142"></script>
+<script src="js/weekrep.js?v=v0924-142"></script>
+<script src="js/monthlog.js?v=v0924-142"></script>
 </body></html>

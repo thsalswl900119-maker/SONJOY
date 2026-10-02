@@ -64,7 +64,8 @@
           var bv = b[x];
           if (same(mv, bv)) r = sv; else if (same(sv, bv)) r = mv; else r = both(bv, mv, sv, x, path, true);
         } else {
-          if (blank(sv)) r = mv; else if (blank(mv)) r = sv; else r = both(undefined, mv, sv, x, path, false);
+          // 고치기 전 모습을 모를 때(오래 못 보낸 저장): 서버에 아예 없는 칸만 이 기기 값으로 채운다 — 서버에서 일부러 비운 칸을 옛 글로 되살리지 않게
+          if (!(x in s)) r = mv; else if (blank(mv)) r = sv; else r = both(undefined, mv, sv, x, path, false);
         }
         if (r !== undefined) out[x] = r;
       });

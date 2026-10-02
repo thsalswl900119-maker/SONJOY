@@ -2028,12 +2028,74 @@
         if (!box) continue;
         box.hidden = !m;
         if (!m) continue;
-        box.querySelector(".wsmtt").textContent = m.t;
-        box.querySelector(".wsmtd").textContent = m.d;
-        box.querySelector(".wsmtnote").innerHTML = m.h;
+        // 고친 내용(mtNt · mtNd · mtNh)이 있으면 그걸 — 노션에서 옮겨 온 글은 처음 모습일 뿐
+        var sv = wsStored();
+        if (wsEditing !== box) {
+          box.querySelector(".wsmtt").textContent = sv["mt" + i + "t"] != null ? sv["mt" + i + "t"] : m.t;
+          box.querySelector(".wsmtd").textContent = sv["mt" + i + "d"] != null ? sv["mt" + i + "d"] : m.d;
+          box.querySelector(".wsmtnote").innerHTML = sv["mt" + i + "h"] != null ? cleanH(sv["mt" + i + "h"]) : m.h;
+        }
+        edBtn(box.querySelector(".wsmtb"), box);
       }
       var ref = document.getElementById("wsRef");
-      if (ref) ref.innerHTML = REF[y] || "<p class='tnote'>이 해에는 옮겨 온 자료가 없습니다.</p>";
+      if (ref && wsEditing !== ref) { var sr = wsStored().refh; ref.innerHTML = sr != null ? cleanH(sr) : (REF[y] || "<p class='tnote'>이 해에는 옮겨 온 자료가 없습니다.</p>"); }
+      if (ref) edBtn(ref.parentNode, ref);
+      paintCards();
+    }
+    // ── 회의 내용 · 참고 자료 · 지난 워크샵 카드도 고칠 수 있게 (예전엔 코드에 박힌 글이라 안 바뀌었음)
+    var wsEditing = null;
+    function wsStored() { try { return JSON.parse(localStorage.getItem(key()) || "{}") || {}; } catch (e) { return {}; } }
+    function cleanH(h) {   // 붙여 넣은 글의 위험한 태그 · 속성은 뺀다
+      var t = document.createElement("div"); t.innerHTML = String(h || "");
+      t.querySelectorAll("script,style,iframe,object,embed,link,meta").forEach(function (x) { x.remove(); });
+      t.querySelectorAll("*").forEach(function (x) { Array.prototype.slice.call(x.attributes).forEach(function (a) { if (/^on|^style$|^src$|^href$/i.test(a.name) && !/^class$/i.test(a.name)) x.removeAttribute(a.name); }); });
+      return t.innerHTML;
+    }
+    function wsPatch(vals) {
+      var o = wsStored(), by = o._by || {}, who = meNow();
+      Object.keys(vals).forEach(function (k) { o[k] = vals[k]; if (who) by[k] = who; });
+      o._by = by;
+      try { localStorage.setItem(key(), JSON.stringify(o)); } catch (e) {}
+    }
+    function edBtn(host, target) {
+      if (!host || host.querySelector(":scope > .wsedit2")) return;
+      var b = document.createElement("button"); b.type = "button"; b.className = "wsedit2"; b.textContent = "✏ 이 내용 고치기";
+      host.insertBefore(b, host.firstChild);
+      b.addEventListener("click", function (e) {
+        e.preventDefault();
+        var parts = target.id === "wsRef" ? [target] : [target.querySelector(".wsmtt"), target.querySelector(".wsmtd"), target.querySelector(".wsmtnote")];
+        if (wsEditing !== target) {
+          if (wsEditing) return alert("다른 칸을 고치는 중입니다 — 먼저 「✔ 다 고침」을 눌러 주세요");
+          wsEditing = target; if (target.tagName === "DETAILS") target.open = true;
+          parts.forEach(function (x) { x.contentEditable = "true"; x.classList.add("wsce"); });
+          b.textContent = "✔ 다 고침 (저장)"; b.classList.add("on"); parts[parts.length - 1].focus();
+          return;
+        }
+        parts.forEach(function (x) { x.contentEditable = "false"; x.classList.remove("wsce"); });
+        wsEditing = null; b.textContent = "✏ 이 내용 고치기"; b.classList.remove("on");
+        if (target.id === "wsRef") wsPatch({ refh: cleanH(target.innerHTML) });
+        else { var i = target.id.slice(-1); var v = {}; v["mt" + i + "t"] = parts[0].textContent.trim(); v["mt" + i + "d"] = parts[1].textContent.trim(); v["mt" + i + "h"] = cleanH(parts[2].innerHTML); wsPatch(v); }
+        renderMeet();
+      });
+    }
+    // 고치는 중엔 제목을 눌러도 접히지 않게 · 띄어쓰기도 그대로
+    document.addEventListener("click", function (e) { var sm = e.target.closest && e.target.closest(".wsmt > summary"); if (sm && wsEditing === sm.parentNode) e.preventDefault(); }, true);
+    document.addEventListener("keyup", function (e) { if (wsEditing && e.target.closest && e.target.closest(".wsmt > summary") && (e.key === " " || e.key === "Enter")) e.preventDefault(); }, true);
+    // 지난 워크샵 카드 — 그 해에 적어 둔 「정하고 갈 것」(주제 · 가는 곳 · 인원 · 회비)을 그대로 보여준다
+    function paintCards() {
+      document.querySelectorAll(".wpcard[data-y]").forEach(function (c) {
+        var y = c.dataset.y, sd = SEED[y] || {}, o = {};
+        try { o = JSON.parse(localStorage.getItem("cafesui.ws." + y) || "{}") || {}; } catch (e) {}
+        var g = function (k) { return o[k] != null ? String(o[k]) : (sd[k] != null ? String(sd[k]) : ""); };
+        var w1 = g("w1").trim(), w2 = g("w2").trim(), w3 = g("w3").trim(), w4 = g("w4").trim();
+        var place = w2.split(/\s*·\s*/)[0], rest = w2.split(/\s*·\s*/).slice(1).join(" · ");
+        var ppl = w3.split("/")[0].trim();
+        var wpt = c.querySelector(".wpt"), wpm = c.querySelector(".wpm"), wpn = c.querySelector(".wpn"), wph = c.querySelector(".wph");
+        if (w1 && wpt) wpt.textContent = w1;
+        if ((ppl || rest) && wpm) wpm.textContent = [ppl, rest].filter(Boolean).join(" · ");
+        if (w4 && wpn) wpn.textContent = "회비 · 경비: " + w4;
+        if (place && wph && wph.firstChild && wph.firstChild.nextSibling && wph.firstChild.nextSibling.nodeType === 3) wph.firstChild.nextSibling.nodeValue = place;
+      });
     }
     function key() { return "cafesui.ws." + (yearEl.value || "2026"); }
     var base = {};   // 마지막으로 읽어온 값 — 저장할 때 이것과 다른 칸만 「내가 고친 것」으로 본다
