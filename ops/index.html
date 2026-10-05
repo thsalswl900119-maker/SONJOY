@@ -126,6 +126,8 @@ section{margin-top:44px}
 @media(max-width:640px){.tnotice{padding:10px 10px}.tnotice li{font-size:13.5px}.tnotice b{font-size:14px}}
 .tnrow{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
 .tnrow .tnotice{margin-bottom:16px}
+.tnotice.tnwarn{border-width:3px;border-left-width:8px;background:#FDE3DE}
+.tnotice.tnwarn .tnhead{background:#B3261E;color:#fff;margin:-10px -14px 10px;padding:9px 14px;font-size:16px;font-weight:900;letter-spacing:-.01em}
 @media(max-width:900px){.tnrow{grid-template-columns:1fr}}
 .tblock{border:1px solid var(--rule);background:var(--surface);margin-bottom:12px}
 .tblock,.msec,.skgrp,.tdrs,.ztable-wrap{content-visibility:auto;contain-intrinsic-size:auto 320px}
@@ -2647,7 +2649,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-158</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-159</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -2702,6 +2704,7 @@ input,select,textarea{border-radius:var(--r3)!important}
     <div class="hch"><b>🩺 보건증</b><span>1년마다 갱신 · 발급일만 넣으면 만료일과 남은 날이 자동으로 계산됩니다 · 고정 항목이라 날이 바뀌어도 지워지지 않습니다</span></div>
     <div class="hcrows" id="hcRows"></div>
   </div>
+  <div class="tnotice tnwarn" id="honestRule"><div class="tnhead">🚨 체크는 양심껏 — 꼭 지키기</div><ul><li><b>오늘 할 일에는 <mark>안 한 일은 체크하지 말고</mark> 양심껏 해 주세요</b><span>체크 = 「내가 했습니다」라는 약속입니다 · 누가 언제 체크했는지 이름 색으로 그대로 남습니다</span></li><li><b>안 하시고 체크하면 <mark>안 좋은 습관</mark>입니다</b><span>못 했으면 비워 두고 다음 근무자 · 매니저에게 말해 주세요 — 빈 칸은 괜찮지만 거짓 체크는 신뢰를 잃습니다</span></li></ul></div>
   <div class="whobar">
     <span class="wblab">누가 체크하나요?</span>
     <div class="wbtns"><button type="button" class="wbtn p1" data-n="정항아" aria-pressed="false">정항아</button><button type="button" class="wbtn p2" data-n="박혜빈" aria-pressed="false">박혜빈</button><button type="button" class="wbtn p3" data-n="이해선" aria-pressed="false">이해선</button><button type="button" class="wbtn p4" data-n="사장님" aria-pressed="false">사장님</button></div>
@@ -3232,10 +3235,10 @@ input,select,textarea{border-radius:var(--r3)!important}
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/sync.js?v=v0924-158"></script>
-<script src="js/holidays.js?v=v0924-158"></script>
-<script src="js/sched.js?v=v0924-158"></script>
-<script src="js/app.js?v=v0924-158"></script>
+<script src="js/sync.js?v=v0924-159"></script>
+<script src="js/holidays.js?v=v0924-159"></script>
+<script src="js/sched.js?v=v0924-159"></script>
+<script src="js/app.js?v=v0924-159"></script>
 
 <style>
 /* 재고 · 발주 */
@@ -3450,7 +3453,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 .sksearch{font:inherit;font-size:13px;padding:6px 9px;width:100%;max-width:300px;background:var(--bg);color:var(--ink);
   border:1px solid var(--rule2);border-radius:2px;margin-bottom:10px}
 </style>
-<script src="js/stock.js?v=v0924-158"></script>
+<script src="js/stock.js?v=v0924-159"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -3479,7 +3482,7 @@ input,select,textarea{border-radius:var(--r3)!important}
   })();
 </script>
 
-<script src="js/presence.js?v=v0924-158"></script>
-<script src="js/weekrep.js?v=v0924-158"></script>
-<script src="js/monthlog.js?v=v0924-158"></script>
+<script src="js/presence.js?v=v0924-159"></script>
+<script src="js/weekrep.js?v=v0924-159"></script>
+<script src="js/monthlog.js?v=v0924-159"></script>
 </body></html>
