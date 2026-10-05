@@ -281,8 +281,12 @@
   var me = null;
   try { me = localStorage.getItem(meKey); } catch (e) {}
 
+  // 지난 날 오늘 할 일 보기 — VIEW = { d: 날짜, rec: 그날 체크 } (보기만 · 고칠 수 없음)
+  var VIEW = null;
+  function pastBox(b) { return !!(VIEW && /^[tp]/.test(b.dataset.k || "") && b.closest && b.closest("#tp2")); }
+  function doneOf(b) { return pastBox(b) ? VIEW.rec[b.dataset.k] : state.done[b.dataset.k]; }
   function paint(b) {
-    var v = state.done[b.dataset.k];
+    var v = doneOf(b);
     ["p1", "p2", "p3", "p4"].forEach(function (c) { b.classList.remove(c); });
     if (!v) { b.setAttribute("aria-pressed", "false"); return; }
     b.setAttribute("aria-pressed", "true");
@@ -315,8 +319,9 @@
 
   function bindBox(b) {
     paint(b);
-    b.addEventListener("click", function () {
+    b.addEventListener("click", function (e) {
       var k = b.dataset.k;
+      if (pastBox(b)) { if (e) e.preventDefault(); var w = document.getElementById("tdPastMsg"); if (w) { w.classList.remove("flash"); void w.offsetWidth; w.classList.add("flash"); } return; }
       if (state.done[k]) delete state.done[k];
       else state.done[k] = me || 1;
       paint(b);
@@ -334,22 +339,50 @@
     state.done = fresh;
     document.querySelectorAll(".box[data-k]").forEach(function (b) { try { paint(b); } catch (er) {} });
   });
+  window.addEventListener("cs:remote", function (e) {
+    var ks = (e.detail && e.detail.keys) || [];
+    if (VIEW && ks.indexOf("cafesui.todo." + VIEW.d) >= 0) { VIEW.rec = read("cafesui.todo." + VIEW.d); document.querySelectorAll("#tp2 .box[data-k]").forEach(function (b) { try { paint(b); } catch (er) {} }); if (window.__CS_TD_DRAW) window.__CS_TD_DRAW(); }
+  });
 
   // 오늘 날짜 표시 + 오늘 할 일 결과 보고서 (마감 맨 아래) — 화면에 있는 체크 상태만 읽어서 그리므로 서버 통신은 없다
   (function () {
     var WDK = ["일", "월", "화", "수", "목", "금", "토"];
     var dEl = document.getElementById("tdDate");
-    if (dEl) {
-      var d = now(), key = dayKey(), hol = (window.__CS_HOL || {})[key];
-      dEl.innerHTML = "<b>" + (d.getMonth() + 1) + "월 " + d.getDate() + "일 (" + WDK[d.getDay()] + ")</b>" + (hol ? '<i class="lghol">🇰🇷 ' + hol + "</i>" : "") + "<span>오늘 체크는 오늘만 · 날이 바뀌면 새로 시작합니다</span>";
+    function viewKey() { return VIEW ? VIEW.d : dayKey(); }
+    function ymdD(s) { var p = s.split("-"); return new Date(+p[0], +p[1] - 1, +p[2]); }
+    function recDates() {
+      var out = [];
+      try { for (var i = 0; i < localStorage.length; i++) { var m = /^cafesui\.todo\.(\d{4}-\d{2}-\d{2})$/.exec(localStorage.key(i) || ""); if (m && m[1] < dayKey()) out.push(m[1]); } } catch (e) {}
+      return out.sort();
     }
+    function head() {
+      if (!dEl) return;
+      var k = viewKey(), d = ymdD(k), hol = (window.__CS_HOL || {})[k], past = !!VIEW, ds = recDates();
+      var prev = ds.filter(function (x) { return x < k; }).pop();
+      dEl.innerHTML = '<button type="button" class="daynav" id="tdPrev"' + (prev ? "" : " disabled") + '>◀ 지난 기록</button>' +
+        "<b>" + (d.getMonth() + 1) + "월 " + d.getDate() + "일 (" + WDK[d.getDay()] + ")</b>" + (hol ? '<i class="lghol">🇰🇷 ' + hol + "</i>" : "") +
+        (past ? '<button type="button" class="daynav" id="tdNext">다음 ▶</button><button type="button" class="daynav today" id="tdToday">오늘로</button>' : "") +
+        '<input type="date" class="dinp tdpick" id="tdPick" value="' + k + '" max="' + dayKey() + '" aria-label="날짜 골라 보기">' +
+        (past ? '<span class="tdpastmsg" id="tdPastMsg">📅 지난 기록 — 보기만 됩니다 (체크는 오늘 화면에서)</span>' : "<span>오늘 체크는 오늘 칸에 · 지난 날 기록은 「◀ 지난 기록」으로 다시 볼 수 있습니다</span>");
+      var pb = document.getElementById("tdPrev"); if (pb && prev) pb.onclick = function () { setView(prev); };
+      var nb = document.getElementById("tdNext"); if (nb) nb.onclick = function () { var nx = ds.filter(function (x) { return x > k; })[0]; setView(nx || dayKey()); };
+      var tb = document.getElementById("tdToday"); if (tb) tb.onclick = function () { setView(dayKey()); };
+      var pk = document.getElementById("tdPick"); if (pk) pk.onchange = function () { if (pk.value) setView(pk.value > dayKey() ? dayKey() : pk.value); };
+    }
+    function setView(d) {
+      VIEW = (!d || d >= dayKey()) ? null : { d: d, rec: read("cafesui.todo." + d) };
+      var tp = document.getElementById("tp2"); if (tp) tp.classList.toggle("tdpast", !!VIEW);
+      document.querySelectorAll("#tp2 .box[data-k]").forEach(function (b) { try { paint(b); } catch (er) {} });
+      head(); if (window.__CS_TD_DRAW) window.__CS_TD_DRAW();
+    }
+    head();
     var body = document.getElementById("tdRepBody"); if (!body) return;
     function esc(v) { return String(v == null ? "" : v).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
     function nim(n) { return n === "사장님" ? n : n + "님"; }
     var SH = [["td0", "오픈"], ["td1", "미들"], ["td2", "마감"]];
     var lastText = "";
     function draw() {
-      var html = "", text = ["[오늘 할 일 결과] " + dayKey() + " (" + WDK[now().getDay()] + ")"];
+      var html = "", text = ["[오늘 할 일 결과] " + viewKey() + " (" + WDK[ymdD(viewKey()).getDay()] + ")"];
       SH.forEach(function (s) {
         var panel = document.getElementById(s[0]); if (!panel) return;
         // 묶음(시간대)별로 나눠서 한 줄에 하나씩
@@ -360,7 +393,7 @@
           Array.prototype.forEach.call(blk.querySelectorAll(".titem .box"), function (b) {
             var lab = b.closest(".titem"); if (!lab || lab.hidden) return;
             var title = (lab.querySelector(".ttitle") || {}).textContent || "";
-            var v = state.done[b.dataset.k]; tot += 1;
+            var v = doneOf(b); tot += 1;
             if (v) { doneN += 1; doneAll.push({ t: title, w: typeof v === "string" ? v : "" }); } else un.push(title);
           });
           if (un.length) groups.push({ g: gname, un: un });
@@ -380,9 +413,10 @@
         groups.forEach(function (g) { text.push("[" + g.g + "] 안 한 것: " + g.un.join(" / ")); });
         if (doneAll.length) text.push("✔ 한 것: " + doneAll.map(function (x) { return x.t + (x.w ? "(" + x.w + ")" : ""); }).join(" / "));
       });
-      body.innerHTML = html || '<div class="tdl">오늘 체크한 항목이 아직 없습니다</div>';
+      body.innerHTML = html || '<div class="tdl">' + (VIEW ? "이 날 체크한 기록이 없습니다" : "오늘 체크한 항목이 아직 없습니다") + "</div>";
       lastText = text.join(String.fromCharCode(10));
     }
+    window.__CS_TD_DRAW = draw;
     window.__CS_TODO_REPORT = draw;
     draw();
     document.addEventListener("click", function (e) { if (e.target.closest("#tp2 .box, #tp2 .tedbar, #tp2 .tedadd, .stab.prog")) setTimeout(draw, 50); }, true);
