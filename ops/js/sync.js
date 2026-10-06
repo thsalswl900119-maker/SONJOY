@@ -5,10 +5,33 @@
   (function () {
     var LOCAL_ONLY = /^cafesui\.(me|unlocked|device|syncstate|ui\..*)$/;
     var origSet = Storage.prototype.setItem, origRem = Storage.prototype.removeItem;
+    // 큰 묶음(레시피)은 기기 저장소에 넣지 않고 메모리에만 — 10/6 사고: 레시피가 기기 저장 한도를 넘겨 그 뒤 저장이 서버로 안 감
+    var MEMK = /^cafesui\.recipe\./, mem = {};
+    window.__CS_MEM = mem;
+    try { var mk = []; for (var mi = 0; mi < localStorage.length; mi++) { var mkk = localStorage.key(mi); if (MEMK.test(mkk)) mk.push(mkk); } mk.forEach(function (x) { origRem.call(localStorage, x); }); } catch (e) {}
+    // 기기 저장소가 꽉 차면 이 기기 자동 백업(오래된 것부터)을 지워 자리를 만든다 — 기록 자체(서버에 있음)는 안 지운다
+    function freeSpace() {
+      var snaps = [], lls = [];
+      try { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (k.indexOf("cafesui.ui.snap.") === 0) snaps.push(k); else if (k.indexOf("cafesui.ui.lastlog.") === 0) lls.push(k); } } catch (e) { return false; }
+      snaps.sort(); lls.sort();
+      if (snaps.length > 1) { origRem.call(localStorage, snaps[0]); return true; }
+      if (lls.length > 3) { origRem.call(localStorage, lls[0]); return true; }
+      return false;
+    }
+    window.__CS_FREE = freeSpace;
+    function safeSet(k, v) {
+      for (var t = 0; t < 12; t++) {
+        try { origSet.call(localStorage, k, v); return true; }
+        catch (e) { if (!freeSpace()) return false; }
+      }
+      return false;
+    }
     var pending = {}, timers = {}, remote = {}, sent = {}, applying = false, ready = false, first = true, changed = false, changedKeys = [];
     var inflight = 0, retryT = {};
     var boot = {};   // 화면 열 때 이 기기에 있던 값 — 이것과 같은 저장은 「내가 고친 것」이 아니다
     try { for (var bi = 0; bi < localStorage.length; bi++) { var bk = localStorage.key(bi); if (bk.indexOf("cafesui.") === 0 && !LOCAL_ONLY.test(bk)) boot[bk] = localStorage.getItem(bk); } } catch (e) {}
+    var RESCUE = /^cafesui\.(log|todo|stock|att)\.2026-10-0[67]$|^cafesui\.(daynotes|weekrep\.2026-10-05|clean\.2026-10)$/;
+    var rescue = false; try { rescue = !localStorage.getItem("cafesui.ui.fix1006") && Date.now() < new Date(2026, 9, 10).getTime(); } catch (e) {}
     var dirtyBoot = {};   // 지난번에 못 보낸 저장 — 이건 서버보다 이 기기가 맞다
     try { dirtyBoot = JSON.parse(localStorage.getItem("cafesui.ui.dirty") || "{}") || {}; } catch (e) {}
     var state = { s: "off", msg: "" };
@@ -16,14 +39,14 @@
     // 아직 서버로 못 보낸 저장 — 이 기기에 표시해 두고, 다음에 열 때 서버 값 대신 이 기기 값을 올린다 (저장한 건 무조건 남긴다)
     var DIRTYK = "cafesui.ui.dirty";
     function dirtyGet() { try { return JSON.parse(localStorage.getItem(DIRTYK) || "{}") || {}; } catch (e) { return {}; } }
-    function dirtySet(o) { try { origSet.call(localStorage, DIRTYK, JSON.stringify(o)); } catch (e) {} }
+    function dirtySet(o) { safeSet(DIRTYK, JSON.stringify(o)); }
     function markDirty(k) { var o = dirtyGet(); o[k] = Date.now(); dirtySet(o); }
     function clearDirty(k) { var o = dirtyGet(); if (k in o) { delete o[k]; dirtySet(o); } baseDel(k); }
     // 고치기 시작할 때의 서버 값(base) — 보낼 때 서버 최신값과 견줘 「이 기기에서 바꾼 칸만」 얹는다 (옛 화면이 남의 글을 통째로 덮는 사고 방지)
     var BASEK = "cafesui.ui.dirtybase", baseOf = {};
     try { baseOf = JSON.parse(localStorage.getItem(BASEK) || "{}") || {}; } catch (e) { baseOf = {}; }
     var bootBase = {}; Object.keys(baseOf).forEach(function (k) { bootBase[k] = baseOf[k]; });
-    function baseSave() { try { origSet.call(localStorage, BASEK, JSON.stringify(baseOf)); } catch (e) {} }
+    function baseSave() { safeSet(BASEK, JSON.stringify(baseOf)); }
     function baseDel(k) { if (k in baseOf) { delete baseOf[k]; baseSave(); } }
     function baseMark(k) {
       if (k in baseOf) return;
@@ -100,8 +123,11 @@
 
     // 이 기기의 저장을 가로채서 서버에도 보낸다
     Storage.prototype.setItem = function (k, v) {
-      origSet.call(this, k, v);
-      if (this !== localStorage || applying || k.indexOf("cafesui.") !== 0 || LOCAL_ONLY.test(k)) return;
+      if (this === localStorage && MEMK.test(k)) { mem[k] = String(v); if (!applying) queue(k, String(v)); return; }
+      if (this !== localStorage) return origSet.call(this, k, v);
+      // 기기가 꽉 차도 서버로는 꼭 보낸다 (자리를 만들어 다시 시도 · 그래도 안 되면 서버에만)
+      var okLocal = safeSet(k, v);
+      if (applying || k.indexOf("cafesui.") !== 0 || LOCAL_ONLY.test(k)) { if (!okLocal) throw new DOMException("기기 저장 공간이 꽉 찼습니다", "QuotaExceededError"); return; }
       if (!ready && boot[k] === String(v)) return;   // 아직 서버 값을 못 받았는데 열 때 값 그대로 다시 저장한 것 — 서버 값을 기다린다
       baseMark(k); markDirty(k); queue(k, String(v));
     };
@@ -137,7 +163,7 @@
       clearTimeout(retryT[k]);
       if (remote[k] === v) { clearDirty(k); setStatus(state.s === "err" ? "on" : state.s); return; }   // 서버와 같으면 안 보냄
       var bs = (k in baseOf) ? baseOf[k] : null;
-      var useTx = v !== null && objOf(v) && k.indexOf("cafesui.presence.") !== 0 && db.runTransaction;
+      var useTx = v !== null && objOf(v) && k.indexOf("cafesui.presence.") !== 0 && !MEMK.test(k) && db.runTransaction;
       sent[k] = v;
       inflight++; busy[k] = 1;
       var ref = col.doc(k), p;
@@ -159,7 +185,7 @@
           // 서버에 있던 다른 기기 글까지 합쳐졌다 — 이 기기에도 넣고 화면에 알린다
           var lv = null; try { lv = localStorage.getItem(k); } catch (e) {}
           if (out !== null && lv === v && out !== v) {
-            applying = true; try { origSet.call(localStorage, k, out); } catch (e) {} applying = false;
+            applying = true; safeSet(k, out); applying = false;
             try { window.dispatchEvent(new CustomEvent("cs:remote", { detail: { keys: [k] } })); } catch (e) {}
           }
         } else { baseOf[k] = v; baseSave(); flush(k); }   // 그 사이 또 고친 것 — 방금 보낸 값을 기준으로 이어서
@@ -217,10 +243,16 @@
       col.onSnapshot({ includeMetadataChanges: false }, function (snap) {
         var fromCache = !!(snap.metadata && snap.metadata.fromCache);
         var dirty = first ? dirtyGet() : null;
+        var memKeys = [];
         applying = true;
-        snap.docChanges().forEach(function (ch) {
+        try { snap.docChanges().forEach(function (ch) { try {
           var k = ch.doc.id, d = ch.doc.data() || {};
           if (k.indexOf("cafesui.") !== 0 || LOCAL_ONLY.test(k)) return;
+          if (MEMK.test(k)) {
+            if (k in pending) return;
+            if (ch.type === "removed") { remote[k] = null; delete mem[k]; } else { remote[k] = d.v; if (mem[k] === d.v) return; mem[k] = d.v; }
+            memKeys.push(k); return;   // 새로 읽기 알림은 안 띄운다 (레시피 화면만 다시 그림)
+          }
           var local = null; try { local = localStorage.getItem(k); } catch (e) {}
           if (ch.type === "removed") {
             remote[k] = null;
@@ -236,11 +268,13 @@
             delete pending[k]; clearTimeout(timers[k]); clearDirty(k);
           }
           if (k in pending) return;                                   // 지금 이 기기가 고치는 중
-          if (first && dirtyBoot[k] && local !== d.v) { if (!(k in bootBase)) baseOf[k] = null; pending[k] = local; return; }   // 지난번에 못 보낸 저장 — 서버 값에 이 기기에서 바꾼 칸만 얹어 올린다 (base 모르면 빈 칸만 채움)
+          if (first && dirtyBoot[k] && local !== d.v) { if (!(k in bootBase)) baseOf[k] = null; pending[k] = local; return; }
+          // 10/6 사고 되살리기(한 번만): 그날 저장이 서버로 못 갔다 — 이 기기에만 남은 10/6 · 10/7 글을 서버 값에 「빈 칸 채우기 · 글 합치기」로 올린다
+          if (first && rescue && local !== null && local !== d.v && RESCUE.test(k) && objOf(local) && objOf(d.v)) { baseOf[k] = null; pending[k] = local; markDirty(k); return; }   // 지난번에 못 보낸 저장 — 서버 값에 이 기기에서 바꾼 칸만 얹어 올린다 (base 모르면 빈 칸만 채움)
           if (!first && d.by === dev && (k in sent) && d.v !== sent[k]) return;   // 내가 전에 보낸 게 늦게 돌아온 것 (지금 값이 더 새것)
-          if (local !== d.v) { origSet.call(localStorage, k, d.v); changed = true; changedKeys.push(k); }
-        });
-        applying = false;
+          if (local !== d.v) { if (!safeSet(k, d.v)) return; changed = true; changedKeys.push(k); }
+        } catch (e1) {} }); } finally { applying = false; }   // 한 칸이 실패해도 멈추지 않는다 (예전엔 여기서 멈춰 그 뒤 저장이 서버로 안 갔음)
+        if (first && rescue) { rescue = false; try { origSet.call(localStorage, "cafesui.ui.fix1006", "1"); } catch (e) {} }
         if (first) {
           first = false; ready = true;
           // 서버에 없는 이 기기 내용은 올린다 (캐시가 아니라 서버에서 온 첫 응답일 때만)
@@ -263,6 +297,7 @@
           Object.keys(pending).forEach(flush);
         }
         setStatus(state.s === "err" ? "err" : "on", state.msg);
+        if (memKeys.length) { try { window.dispatchEvent(new CustomEvent("cs:mem", { detail: { keys: memKeys } })); } catch (e) {} }
         if (changed) {
           changed = false;
           var presKeys = changedKeys.filter(function (k) { return k.indexOf("cafesui.presence.") === 0; });

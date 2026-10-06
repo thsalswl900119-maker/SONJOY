@@ -10,7 +10,8 @@
       bodyEl = document.getElementById("rcBody"), msgEl = document.getElementById("rcMsg"), pwEl = document.getElementById("rcPw"),
       whoEl = document.getElementById("rcWho"), toolEl = document.getElementById("rcTools");
   var key = null, cur = "egg", jamSub = "grapefruit", plain = {};
-  function J(k) { try { return JSON.parse(localStorage.getItem(k) || "null"); } catch (e) { return null; } }
+  // 레시피는 기기 저장소가 아니라 메모리(sync.js __CS_MEM)에만 — 기기 저장 한도를 넘기지 않게
+  function J(k) { try { var m = window.__CS_MEM; return JSON.parse((m && k in m ? m[k] : localStorage.getItem(k)) || "null"); } catch (e) { return null; } }
   function me() { try { return localStorage.getItem("cafesui.me") || ""; } catch (e) { return ""; } }
   function nim(n) { return !n ? "" : n === "사장님" ? n : n + "님"; }
   function esc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
@@ -102,11 +103,14 @@
     });
   });
   // 다른 기기에서 바뀌면 (과일청 담는 법 · 비밀번호 변경)
-  window.addEventListener("cs:remote", function (e) {
+  // 레시피는 sync.js가 메모리에 받으면 cs:mem 으로 알려 준다 (열 때 처음 받는 것도 여기로)
+  function onKeys(e) {
     var ks = (e.detail && e.detail.keys) || []; if (!ks.some(function (k) { return k.indexOf(PRE) === 0; })) return;
     if (ks.indexOf(PRE + "meta") >= 0) { auto(); return; }
     if (key) open(key); else if (!lockEl.hidden) auto();
-  });
+  }
+  window.addEventListener("cs:mem", onKeys);
+  window.addEventListener("cs:remote", onKeys);
   window.addEventListener("cs:me", draw);
   auto();
 })();

@@ -904,7 +904,7 @@
       if (!window.confirm("복사본" + (stamp ? " (" + stamp + " 것)" : "") + " " + cnt + "개 항목을 불러올까요?\n\n복사본에 들어 있는 항목은 복사본 내용으로 바뀝니다 (같은 날짜 일지 · 같은 달 근무표 등).\n복사본에 없는 항목은 그대로 남습니다.")) return;
       var n = 0;
       Object.keys(o).forEach(function (k) {
-        if (k.indexOf("cafesui.") !== 0 || /^cafesui\.(me|unlocked|device|syncstate|ui\..*|presence\..*)$/.test(k)) return;   // 기기 번호는 컴퓨터마다 달라야 한다
+        if (k.indexOf("cafesui.") !== 0 || /^cafesui\.(me|unlocked|device|syncstate|ui\..*|presence\..*|recipe\..*)$/.test(k)) return;   // 기기 번호는 컴퓨터마다 달라야 한다
         try { localStorage.setItem(k, o[k]); n += 1; } catch (e) {}
       });
       msg.textContent = n + "개를 불러왔습니다 · 화면을 새로 엽니다";

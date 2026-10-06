@@ -9,7 +9,7 @@
   (function () {
     var PRE = "cafesui.ui.snap.";
     function today() { var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
-    function skip(k) { return k.indexOf("cafesui.") !== 0 || /^cafesui\.(ui\..*|me|unlocked|device|syncstate)$/.test(k); }
+    function skip(k) { return k.indexOf("cafesui.") !== 0 || /^cafesui\.(ui\..*|me|unlocked|device|syncstate|presence\..*|recipe\..*)$/.test(k); }
     function dump() {
       var o = {};
       try { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (!skip(k)) o[k] = localStorage.getItem(k); } } catch (e) {}
@@ -23,10 +23,20 @@
     function take() {
       try {
         var t = today();
+        // 예전 백업에 섞인 레시피 · 접속 표시는 빼서 자리를 줄인다
+        dates().forEach(function (d) {
+          var raw = localStorage.getItem(PRE + d); if (!raw || (raw.indexOf("cafesui.recipe.") < 0 && raw.indexOf("cafesui.presence.") < 0)) return;
+          try { var so = JSON.parse(raw); Object.keys(so).forEach(function (k) { if (skip(k)) delete so[k]; }); localStorage.setItem(PRE + d, JSON.stringify(so)); } catch (e) {}
+        });
         if (localStorage.getItem(PRE + t)) return;
         var o = dump(); if (!Object.keys(o).length) return;
-        localStorage.setItem(PRE + t, JSON.stringify(o));
-        dates().slice(7).forEach(function (d) { localStorage.removeItem(PRE + d); });
+        dates().slice(6).forEach(function (d) { localStorage.removeItem(PRE + d); });
+        var txt = JSON.stringify(o);
+        // 자리가 모자라면 오래된 백업부터 지우고 다시 (다 지워도 안 되면 백업만 건너뜀 — 기록은 서버에 있음)
+        for (;;) {
+          try { localStorage.setItem(PRE + t, txt); break; }
+          catch (e) { var ds = dates(); if (!ds.length) break; localStorage.removeItem(PRE + ds[ds.length - 1]); }
+        }
       } catch (e) {}
     }
     setTimeout(take, 3000);                      // 화면이 다 열리고(다른 컴퓨터 내용까지 받은 뒤) 남긴다
@@ -42,6 +52,7 @@
       var snap = {}; try { snap = JSON.parse(localStorage.getItem(PRE + d) || "{}") || {}; } catch (e) { return 0; }
       var n = 0;
       Object.keys(snap).forEach(function (k) {
+        if (skip(k)) return;
         var cur = null; try { cur = localStorage.getItem(k); } catch (e) {}
         if (emptier(cur)) { try { localStorage.setItem(k, snap[k]); n++; } catch (e) {} return; }
         // 둘 다 JSON 객체면: 지금 비어 있는 칸만 백업 값으로 채운다 (있는 값은 절대 안 건드림)
