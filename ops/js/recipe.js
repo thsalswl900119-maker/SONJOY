@@ -5,7 +5,7 @@
   var box = document.getElementById("rcBox"); if (!box) return;
   var C = window.crypto && window.crypto.subtle;
   var PRE = "cafesui.recipe.", KEYK = "cafesui.ui.rk";   // ui.* 는 이 기기에만 (서버로 안 감)
-  var SECS = [["egg", "🥧 에그타르트"], ["cake", "🎂 과일케이크"], ["bingsu", "🍧 빙수 (26년 ver.)"], ["coffee", "☕ 커피"], ["drink", "🥤 음료"], ["jam", "🫙 과일청"], ["etc", "🍰 티라미수 · 기타"]];
+  var SECS = [["egg", "🥧 에그타르트"], ["cake", "🎂 과일케이크"], ["etc", "🍰 티라미수 · 기타"], ["bingsu", "🍧 빙수 (26년 ver.)"], ["coffee", "☕ 커피"], ["drink", "🥤 음료"], ["jam", "🫙 과일청"]];
   var lockEl = document.getElementById("rcLock"), mainEl = document.getElementById("rcMain"), navEl = document.getElementById("rcNav"),
       bodyEl = document.getElementById("rcBody"), msgEl = document.getElementById("rcMsg"), pwEl = document.getElementById("rcPw"),
       whoEl = document.getElementById("rcWho"), toolEl = document.getElementById("rcTools");
@@ -78,14 +78,182 @@
     C.importKey("raw", ub(st.k), { name: "AES-GCM" }, true, ["encrypt", "decrypt"]).then(check).then(open).catch(function () { showLock(""); });
   }
   // 그리기
+  // ── 읽기 쉽게: 레시피 글은 그대로 두고 화면에서만 다듬는다 (재료 줄 → 재료표 · 숫자 강조 · 소제목)
+  var UNIT = "(?:kg|mg|g|ml|mL|ML|L|l|cc|개입|개|장|봉지|봉|스푼|큰술|작은술|T|t|컵|샷|알|팩|줌|꼬집|%|cm|mm|병|통|판|바퀴|방울)";
+  var AMT = "(?:\\d[\\d.,/]*(?:\\s*[~\\-]\\s*\\d[\\d.,]*)?\\s*" + UNIT + "|약간|적당량|조금|한\\s?줌|반\\s?개)";
+  var ING = new RegExp("^(.{1,30}?)\\s*[:：]?\\s*(" + AMT + "(?:\\s*\\([^)]*\\))?)\\s*$");
+  var NUM = new RegExp("(\\d[\\d.,]*(?:\\s*[~\\-]\\s*\\d[\\d.,]*)?\\s*(?:도|℃|°C|°|분|초|시간|일|" + UNIT.slice(3, -1) + "))(?![a-zA-Z])", "g");
+  var AMTSP = new RegExp("(\\d[\\d.]*\\s*" + UNIT + ")\\s+(?=[가-힣])", "g");   // "우유 3430g 뜨거운 물 600g" → 두 재료
+  var AMTIN = new RegExp("\\d\\s*" + UNIT + "(?![a-zA-Z가-힣])");
+  function ing(t) {   // "박력분 135g" → [이름, 양]
+    var m = t.trim().match(ING); if (!m || !/[가-힣a-zA-Z]/.test(m[1]) || /[.。]$/.test(m[1]) || AMTIN.test(m[1])) return null;
+    return [m[1].replace(/[\s:：\-–]+$/, ""), m[2]];
+  }
+  function ingLine(t) {   // 한 줄에 재료 여럿: "박력분 135g. 강력분 50g. 소금 4g"
+    t = t.replace(/\u00a0/g, " ").trim(); if (!t) return null;
+    function split(x) {
+      var parts = x.replace(/(\D)\.(\s|$)/g, "$1\n").replace(/(\D)\s*,\s*|\s*,\s*(?=\D)/g, function (m0, a1) { return (a1 || "") + "\n"; }).replace(AMTSP, "$1\n").split("\n").map(function (y) { return y.trim(); }).filter(Boolean);
+      var note = []; parts = parts.filter(function (y) { if (/^\(.*\)$/.test(y)) { note.push(y); return false; } return true; });   // 끝에 붙은 (2배합 16개) 같은 메모
+      var items = parts.map(ing); if (!parts.length || items.some(function (y) { return !y; })) return null;
+      items.note = note.join(" "); return items;
+    }
+    // 「4L : 노른자 650g, 우유 1700g …」 처럼 앞에 이름표가 붙은 줄
+    var m = t.match(/^([^:：]{1,14})\s*[:：]\s*(.+)$/), items;
+    if (m && (items = split(m[2])) && items.length >= 2) return { cap: m[1].trim() + (items.note ? " " + items.note : ""), items: items };
+    items = split(t); if (!items) return null;
+    return items.length < 2 && !items.note ? { one: items[0] } : { cap: items.note || "", items: items };
+  }
+  function grid(items, cap, cls) {
+    return '<div class="rcing' + (cls ? " " + cls : "") + '">' + (cap ? '<div class="rcingc">' + esc(cap) + "</div>" : "") + '<div class="rcingl">' +
+      items.map(function (x) { return '<div class="rcir"><span>' + esc(x[0]) + "</span><b>" + esc(x[1]) + "</b></div>"; }).join("") + "</div></div>";
+  }
+  function pretty(root) {
+    // 1) 문단을 줄(<br>) 단위로 보고 재료 줄을 재료표로
+    Array.prototype.slice.call(root.querySelectorAll("p")).forEach(function (p) {
+      if (p.closest("table")) return;
+      var lines = p.innerHTML.split(/<br\s*\/?>/i), out = [], run = [], hit = false;
+      var cls = p.querySelector("u") ? "u" : (p.querySelector("b") && p.textContent.trim() === (p.querySelector("b").textContent || "").trim() ? "b" : "");
+      function flush() { if (run.length >= 2) { out.push(grid(run, "", cls)); hit = true; } else if (run.length) out.push(esc(run[0][0] + " " + run[0][1])); run = []; }
+      lines.forEach(function (ln) {
+        var tmp = document.createElement("div"); tmp.innerHTML = ln; var txt = tmp.textContent, r = txt.trim() ? ingLine(txt) : null;
+        if (r && r.one) { run.push(r.one); return; }
+        flush();
+        if (r) { out.push(grid(r.items, r.cap, cls)); hit = true; } else out.push(ln);
+      });
+      flush();
+      if (!hit) return;
+      // 재료표와 글이 섞이면 글은 문단으로 남긴다
+      var html = "", buf = [];
+      out.forEach(function (x) { if (x.indexOf('<div class="rcing') === 0) { if (buf.join("").trim()) html += "<p>" + buf.join("<br>") + "</p>"; buf = []; html += x; } else buf.push(x); });
+      if (buf.join("").trim()) html += "<p>" + buf.join("<br>") + "</p>";
+      var w = document.createElement("div"); w.innerHTML = html;
+      while (w.firstChild) p.parentNode.insertBefore(w.firstChild, p);
+      p.remove();
+    });
+    // 한 줄짜리 재료 문단이 이어지면(박력분 370g / 강력분 137g / 소금 11g …) 하나의 재료표로
+    Array.prototype.slice.call(root.querySelectorAll("p")).forEach(function (p) {
+      if (!p.isConnected || p.closest("table") || p.querySelector("br")) return;
+      var r = ingLine(p.textContent); if (!r || !r.one) return;
+      var run = [p], n = p.nextElementSibling;
+      while (n && n.tagName === "P" && !n.querySelector("br")) { var r2 = ingLine(n.textContent); if (!r2 || !r2.one) break; run.push(n); n = n.nextElementSibling; }
+      if (run.length < 2) return;
+      var w = document.createElement("div"); w.innerHTML = grid(run.map(function (x) { return ingLine(x.textContent).one; }), "", "");
+      p.parentNode.insertBefore(w.firstChild, p); run.forEach(function (x) { x.remove(); });
+    });
+    // 표: 휴대폰에서는 줄마다 카드로 (칸 제목을 각 칸 앞에)
+    Array.prototype.slice.call(root.querySelectorAll("table.rct")).forEach(function (tb) {
+      var head = tb.querySelector("tr"); if (!head || !head.querySelector("th")) return;
+      var hs = Array.prototype.map.call(head.children, function (c) { return c.textContent.trim(); });
+      tb.classList.add("rccards");
+      Array.prototype.forEach.call(tb.querySelectorAll("tr"), function (tr) { if (tr === head) return; Array.prototype.forEach.call(tr.children, function (td, i) { if (hs[i]) td.setAttribute("data-l", hs[i]); if (!td.textContent.trim()) td.classList.add("rcempty"); }); });
+    });
+    // 「… 하기 - … 하기 -」 처럼 줄표로 이어 쓴 작업 순서 → 번호 단계
+    function dashSplit(t) {
+      var out = [], cur = "", depth = 0;
+      for (var i = 0; i < t.length; i++) {
+        var ch = t[i];
+        if (ch === "(" || ch === "（") depth++; else if ((ch === ")" || ch === "）") && depth) depth--;
+        if (ch === "-" && !depth) {
+          // 동작이 끝나는 곳(…하기 - · …주고 - · …에 - · 줄 끝 -)에서만 나눈다 — 「반짝-1호」 「휘핑크림- 에타용」은 그대로
+          var bef = cur.replace(/\s+$/, ""), rest = t.slice(i + 1).trim();
+          if (!bef) { continue; }
+          if (!rest || /(기|고|서|며|요|다|함|음|줌|후|뒤|에|지|면|게|록|\))$/.test(bef)) { out.push(cur); cur = ""; continue; }
+        }
+        cur += ch;
+      }
+      out.push(cur);
+      return out.map(function (x) { return x.trim(); }).filter(Boolean);
+    }
+    Array.prototype.slice.call(root.querySelectorAll(".rcb, .rcsec")).forEach(function (box) {
+      var kids = Array.prototype.slice.call(box.children), runs = [], run = [];
+      kids.forEach(function (k) { if (k.tagName === "P" && !k.className) run.push(k); else { if (run.length) runs.push(run); run = []; } });
+      if (run.length) runs.push(run);
+      runs.forEach(function (r) {
+        var pieces = [], splits = 0;
+        r.forEach(function (pp) {
+          // 문단 전체가 색 굵은 글씨(사장님 강조)면 그 문단 줄은 모두 강조 줄
+          var em = pp.querySelector("b[class], mark"), pWarn = !!(em && /c-(pink|red|orange)|m-(red|pink|orange)/.test(em.className) && em.textContent.trim() === pp.textContent.trim());
+          pp.innerHTML.split(/<br\s*\/?>/i).forEach(function (ln) {
+            if (!ln.replace(/&nbsp;/g, " ").trim()) return;
+            if (pWarn) { var tw0 = document.createElement("div"); tw0.innerHTML = ln; if (tw0.textContent.trim()) pieces.push({ h: esc(tw0.textContent.trim()), warn: true }); return; }
+            if (/<\/?(b|mark|u)\b/i.test(ln)) { pieces.push({ h: ln.trim(), warn: /c-(pink|red|orange)|m-(red|pink|orange)/.test(ln) }); return; }
+            var tmp = document.createElement("div"); tmp.innerHTML = ln; var parts = dashSplit(tmp.textContent);
+            splits += parts.length - 1;
+            parts.forEach(function (x) { pieces.push({ t: x.replace(/^[\-+·]\s*/, "") }); });
+          });
+        });
+        if (splits < 2) return;
+        var ol = document.createElement("ol"), prev = null; ol.className = "rcsteps";
+        pieces.forEach(function (pc) {
+          if (pc.t != null && !pc.t) return;
+          if (pc.t != null && /^\//.test(pc.t) && prev) { prev.appendChild(document.createTextNode(" " + pc.t)); return; }
+          var li = document.createElement("li");
+          if (pc.h != null) { li.innerHTML = pc.h; li.className = pc.warn ? "rcwarn" : "rcplain"; }
+          else { li.textContent = pc.t; if (/^[*※(（]/.test(pc.t) || /^(테이크|포장)/.test(pc.t) && prev && prev.className === "rctip") li.className = "rctip"; }
+          ol.appendChild(li); prev = li;
+        });
+        r[0].parentNode.insertBefore(ol, r[0]); r.forEach(function (x) { x.remove(); });
+      });
+    });
+    // 회색 짧은 줄(HOT/10oz · ICE /14oz) → 갈래 표시
+    Array.prototype.slice.call(root.querySelectorAll("p.rcq")).forEach(function (q) { if (q.textContent.trim().length <= 24) q.className = "rcvar"; });
+    // 2) 형광 한 줄짜리 목록(• 에그타르트 파이지) → 소제목
+    Array.prototype.slice.call(root.querySelectorAll("ul")).forEach(function (ul) {
+      var lis = ul.children; if (!lis.length) return;
+      var all = Array.prototype.every.call(lis, function (li) { var mk = li.querySelector("mark"); return mk && li.children.length === 1 && li.textContent.trim() === mk.textContent.trim(); });
+      if (!all) return;
+      var frag = document.createDocumentFragment();
+      Array.prototype.forEach.call(lis, function (li) { var h = document.createElement("div"); h.className = "rcsub"; h.textContent = li.textContent.trim(); frag.appendChild(h); });
+      ul.parentNode.replaceChild(frag, ul);
+    });
+    // 3) 숫자(양 · 온도 · 시간) 강조
+    var tw = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null), nodes = [], nd;
+    while ((nd = tw.nextNode())) { if (nd.parentNode.closest(".rcing, summary, .rcnum, mark.rcfind")) continue; NUM.lastIndex = 0; if (NUM.test(nd.nodeValue)) nodes.push(nd); }
+    nodes.forEach(function (t) {
+      var span = document.createElement("span"); span.innerHTML = esc(t.nodeValue).replace(NUM, '<b class="rcnum">$1</b>');
+      while (span.firstChild) t.parentNode.insertBefore(span.firstChild, t); t.remove();
+    });
+  }
+  // ── 찾기
+  var qEl = document.getElementById("rcQ"), qnEl = document.getElementById("rcQn"), qT = null;
+  function strip(h) { var d = document.createElement("div"); d.innerHTML = h || ""; return d.textContent || ""; }
+  var txtCache = {};
+  function txtOf(k) { if (!(k in txtCache) || txtCache[k][0] !== plain[k]) txtCache[k] = [plain[k], k === "jam" ? strip(plain[k]) : strip(plain[k])]; return txtCache[k][1]; }
+  function countIn(k, q) { if (!q || plain[k] == null) return 0; var t = txtOf(k).toLowerCase(), n = 0, i = 0; q = q.toLowerCase(); while ((i = t.indexOf(q, i)) >= 0) { n++; i += q.length; } return n; }
+  function find(q) {
+    if (!q) { qnEl.textContent = ""; return; }
+    var tw = document.createTreeWalker(bodyEl, NodeFilter.SHOW_TEXT, null), nodes = [], nd, ql = q.toLowerCase();
+    while ((nd = tw.nextNode())) if (nd.nodeValue.toLowerCase().indexOf(ql) >= 0) nodes.push(nd);
+    var first = null, n = 0;
+    nodes.forEach(function (t) {
+      var v = t.nodeValue, lv = v.toLowerCase(), i = 0, j, frag = document.createDocumentFragment();
+      while ((j = lv.indexOf(ql, i)) >= 0) {
+        frag.appendChild(document.createTextNode(v.slice(i, j)));
+        var mk = document.createElement("mark"); mk.className = "rcfind"; mk.textContent = v.slice(j, j + q.length); frag.appendChild(mk); n++; if (!first) first = mk;
+        i = j + q.length;
+      }
+      frag.appendChild(document.createTextNode(v.slice(i)));
+      for (var d = t.parentNode; d && d !== bodyEl; d = d.parentNode) if (d.tagName === "DETAILS") d.open = true;
+      t.parentNode.replaceChild(frag, t);
+    });
+    qnEl.textContent = n ? n + "곳" : "이 묶음엔 없음";
+    if (first) first.scrollIntoView({ block: "center" });
+  }
   function draw() {
-    navEl.innerHTML = SECS.map(function (s) { return '<button type="button" class="rcnb" data-k="' + s[0] + '" aria-pressed="' + (s[0] === cur) + '">' + s[1] + "</button>"; }).join("");
+    var q = qEl ? qEl.value.trim() : "";
+    navEl.innerHTML = SECS.map(function (s) { var c = q ? countIn(s[0], q) : 0; return '<button type="button" class="rcnb" data-k="' + s[0] + '" aria-pressed="' + (s[0] === cur) + '">' + s[1] + (c ? ' <i class="rcqc">' + c + "</i>" : "") + "</button>"; }).join("");
     whoEl.textContent = "열람 " + (nim(me()) || "?") + " · 외부 유출 · 개인 사용 금지 (법적 대응)";
     toolEl.hidden = me() !== "사장님";
-    if (cur === "jam") return drawJam();
+    if (cur === "jam") { drawJam(); find(q); return; }
     var h = plain[cur];
     bodyEl.innerHTML = h ? '<div class="rcsec">' + h + "</div>" : '<p class="rcnone">이 부분은 아직 옮겨진 레시피가 없습니다</p>';
+    try { pretty(bodyEl); } catch (e) {}
+    find(q);
   }
+  if (qEl) qEl.addEventListener("input", function () { clearTimeout(qT); qT = setTimeout(draw, 250); });
+  var allBtn = document.getElementById("rcAll"), noneBtn = document.getElementById("rcNone");
+  if (allBtn) allBtn.addEventListener("click", function () { bodyEl.querySelectorAll("details").forEach(function (d) { d.open = true; }); });
+  if (noneBtn) noneBtn.addEventListener("click", function () { bodyEl.querySelectorAll("details").forEach(function (d) { d.open = false; }); bodyEl.scrollIntoView({ block: "start" }); });
   function jamData() { try { return JSON.parse(plain.jam || "{}") || {}; } catch (e) { return {}; } }
   function drawJam() {
     var d = jamData(), ks = Object.keys(d); if (ks.indexOf(jamSub) < 0) jamSub = ks[0];
