@@ -38,11 +38,39 @@
     var m = J(PRE + "meta"); if (!m) { say("레시피를 아직 서버에서 받는 중입니다 · 잠시 뒤 다시 눌러 주세요", true); return; }
     var pw = (pwEl.value || "").trim(); if (!pw) { pwEl.focus(); return; }
     say("여는 중…");
-    derive(pw, m).then(check).then(function (k) {
-      pwEl.value = "";
-      if (document.getElementById("rcKeep").checked) C.exportKey("raw", k).then(function (raw) { try { localStorage.setItem(KEYK, JSON.stringify({ s: m.s, k: bu(raw) })); } catch (e) {} });
-      return open(k);
-    }).catch(function () { say("비밀번호가 맞지 않습니다", true); pwEl.select(); });
+    var cands = variants(pw), err = null;
+    // 휴대폰 입력 실수(한글 자판 · 자동 대문자 · 긴 줄표 · 띄어쓰기)도 한 번씩 맞춰 본다
+    (function next(i) {
+      if (i >= cands.length) {
+        say(err && err.name !== "OperationError" && err.message !== "bad" ? "열다가 오류가 났습니다 (" + (err.name || "") + " " + (err.message || "") + ") · 화면을 새로고침한 뒤 다시 해 주세요" : "비밀번호가 맞지 않습니다 · 「보기」를 눌러 적은 글자를 확인해 주세요", true);
+        return;
+      }
+      derive(cands[i], m).then(check).then(function (k) {
+        pwEl.value = "";
+        if (document.getElementById("rcKeep").checked) C.exportKey("raw", k).then(function (raw) { try { localStorage.setItem(KEYK, JSON.stringify({ s: m.s, k: bu(raw) })); } catch (e) {} }, function () {});
+        return open(k).catch(function (e) { say("열다가 오류가 났습니다 (" + (e && e.message || e) + ")", true); });
+      }, function (e) { err = e; next(i + 1); });
+    })(0);
+  }
+  // 두벌식 한글 자판으로 친 글자 → 같은 자리의 영문 글자 (예: 퍼ㅓㄷ → vjje)
+  var CHO = ["r","R","s","e","E","f","a","q","Q","t","T","d","w","W","c","z","x","v","g"],
+      JUNG = ["k","o","i","O","j","p","u","P","h","hk","ho","hl","y","n","nj","np","nl","b","m","ml","l"],
+      JONG = ["","r","R","rt","s","sw","sg","e","f","fr","fa","fq","ft","fx","fv","fg","a","q","qt","t","T","d","w","c","z","x","v","g"],
+      JAMO = { "ㄱ":"r","ㄲ":"R","ㄳ":"rt","ㄴ":"s","ㄵ":"sw","ㄶ":"sg","ㄷ":"e","ㄸ":"E","ㄹ":"f","ㄺ":"fr","ㄻ":"fa","ㄼ":"fq","ㄽ":"ft","ㄾ":"fx","ㄿ":"fv","ㅀ":"fg","ㅁ":"a","ㅂ":"q","ㅃ":"Q","ㅄ":"qt","ㅅ":"t","ㅆ":"T","ㅇ":"d","ㅈ":"w","ㅉ":"W","ㅊ":"c","ㅋ":"z","ㅌ":"x","ㅍ":"v","ㅎ":"g",
+        "ㅏ":"k","ㅐ":"o","ㅑ":"i","ㅒ":"O","ㅓ":"j","ㅔ":"p","ㅕ":"u","ㅖ":"P","ㅗ":"h","ㅘ":"hk","ㅙ":"ho","ㅚ":"hl","ㅛ":"y","ㅜ":"n","ㅝ":"nj","ㅞ":"np","ㅟ":"nl","ㅠ":"b","ㅡ":"m","ㅢ":"ml","ㅣ":"l" };
+  function hanToKey(t) {
+    return t.replace(/[\uAC00-\uD7A3\u3131-\u3163]/g, function (ch) {
+      var c = ch.charCodeAt(0);
+      if (c < 0xAC00) return JAMO[ch] || ch;
+      c -= 0xAC00; return CHO[Math.floor(c / 588)] + JUNG[Math.floor((c % 588) / 28)] + JONG[c % 28];
+    });
+  }
+  function variants(pw) {
+    var out = [];
+    function add(x) { if (x && out.indexOf(x) < 0) out.push(x); }
+    var a = pw.replace(/[\u2010-\u2015\u2212\uFF0D]/g, "-").replace(/\s+/g, "");
+    add(pw); add(a); add(hanToKey(a)); add(a.toLowerCase()); add(hanToKey(a).toLowerCase());
+    return out;
   }
   function auto() {
     var st = J(KEYK), m = J(PRE + "meta"); if (!st || !m || !C) return showLock("");
@@ -82,6 +110,8 @@
   navEl.addEventListener("click", function (e) { var b = e.target.closest && e.target.closest(".rcnb"); if (!b) return; cur = b.dataset.k; draw(); bodyEl.scrollIntoView({ block: "nearest" }); });
   bodyEl.addEventListener("click", function (e) { var b = e.target.closest && e.target.closest(".rcjb"); if (!b) return; jamSub = b.dataset.j; drawJam(); });
   document.getElementById("rcOpen").addEventListener("click", unlock);
+  var seeBtn = document.getElementById("rcSee");
+  if (seeBtn) seeBtn.addEventListener("click", function () { var on = pwEl.type === "password"; pwEl.type = on ? "text" : "password"; seeBtn.textContent = on ? "숨기기" : "보기"; });
   pwEl.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); unlock(); } });
   document.getElementById("rcLockBtn").addEventListener("click", function () { try { localStorage.removeItem(KEYK); } catch (e) {} showLock("잠갔습니다 · 이 기기에서 비밀번호를 지웠습니다"); });
   // 사장님: 비밀번호 바꾸기 — 지금 열린 글을 새 비밀번호로 다시 잠가서 저장한다 (모든 기기는 새 비밀번호로 다시 열어야 함)
