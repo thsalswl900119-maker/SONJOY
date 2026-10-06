@@ -1778,6 +1778,47 @@ table.zt tr:last-child td{border-bottom:0}
 .zfoot{display:flex;justify-content:space-between;gap:12px;padding:10px 14px;
   background:var(--raise);font-size:12px;color:var(--ink2);flex-wrap:wrap}
 .zfoot b{font-family:var(--mono);font-weight:500}
+/* 레시피 (js/recipe.js) — 글은 서버에 잠가서만 있음 */
+.tab.rctab{font-weight:800}
+.rcpagewrap{-webkit-user-select:none;user-select:none}
+.rcpagewrap input,.rcpagewrap textarea{-webkit-user-select:text;user-select:text}
+.rctitle{font-size:20px;font-weight:900;margin:4px 0 12px}.rctitle small{font-size:13px;font-weight:600;color:var(--muted);margin-left:6px}
+.rclock{border:2px dashed var(--line);border-radius:10px;padding:18px;max-width:520px}
+.rclead{font-weight:800;margin:0 0 10px}
+.rcrow{display:flex;gap:8px}.rcrow input{flex:1;min-width:0;font-size:16px}
+.rckeep{display:block;font-size:13px;color:var(--muted);margin-top:10px}
+.rcmsg{min-height:1.4em;margin:8px 0 0;font-size:14px}.rcmsg.bad{color:#C62828;font-weight:800}
+.rcbar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}
+.rcwho{font-size:12.5px;font-weight:800;color:#C62828;background:#FFF1F0;border-radius:6px;padding:4px 8px}
+.rctools{display:flex;gap:6px;flex-wrap:wrap}
+.rcnav,.rcjn{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.rcnb,.rcjb{border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 14px;font:inherit;font-size:14px;font-weight:700;cursor:pointer}
+.rcnb[aria-pressed="true"],.rcjb[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.rcbody{position:relative}
+.rcsec{font-size:15px;line-height:1.7;overflow-wrap:anywhere}
+.rcsec p{margin:6px 0}.rcsec ul,.rcsec ol{margin:6px 0;padding-left:22px}
+.rcd{border:1px solid var(--line);border-radius:8px;margin:8px 0;background:var(--surface)}
+.rcd>summary{cursor:pointer;padding:10px 12px;font-weight:800;list-style-position:inside}
+.rcd[open]>summary{border-bottom:1px solid var(--line)}
+.rcb{padding:6px 12px 10px}
+.rcd.rcpage>summary{color:var(--ink);background:rgba(0,0,0,.03)}
+.rch{font-size:16px;font-weight:900;margin:16px 0 6px}
+.rctw{overflow-x:auto;margin:8px 0}.rct{border-collapse:collapse;font-size:14px;min-width:100%}
+.rct th,.rct td{border:1px solid var(--line);padding:6px 8px;vertical-align:top;text-align:left}.rct th{background:rgba(0,0,0,.04)}
+.rccall{border-left:4px solid #E6A100;background:#FFF8E1;color:#3A2E00;border-radius:6px;padding:8px 12px;margin:8px 0}
+.rcnote{color:var(--muted);font-size:13.5px}
+.rcq{border-left:3px solid var(--line);padding-left:10px;color:var(--muted)}
+.rcimg{display:inline-block;font-size:12.5px;color:var(--muted);border:1px dashed var(--line);border-radius:6px;padding:2px 8px;margin:4px 0}
+.rcsec mark{padding:0 3px;border-radius:3px;color:inherit}
+.rcsec mark.m-orange{background:#FFE3C2}.rcsec mark.m-red{background:#FFD6D6}.rcsec mark.m-blue{background:#D6E8FF}.rcsec mark.m-green{background:#D8F2DA}.rcsec mark.m-pink{background:#FFDDEE}.rcsec mark.m-gray{background:#E9E6E3}
+.rcsec b.c-orange{color:#C45A00}.rcsec b.c-pink{color:#C2185B}
+.rcnone{color:var(--muted);font-size:14px}
+.rcby{font-size:12.5px;color:var(--muted)}
+.rchow{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.rced{margin:8px 0;border:1.5px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 12px;font:inherit;font-weight:700;cursor:pointer}.rced.prim{background:var(--ink);color:var(--surface)}
+.rcjed textarea{width:100%;box-sizing:border-box;font:inherit;font-size:15px;padding:8px;border:1px solid var(--line);border-radius:8px}
+.rcfoot{font-size:12.5px;color:var(--muted);margin-top:16px}
+@media print{#tp16{display:none!important}}
 /* 관리자 보고 (tabs/tp15.html) */
 .mgpage{--mr:#C62828;--mo:#E65100;--my:#B88A00;--mg:#2E7D32}
 .mghero{background:linear-gradient(135deg,#2B2320,#4A3A33);color:#FFF8EE;border-radius:10px;padding:22px 24px;margin:6px 0 22px}
@@ -2649,14 +2690,14 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-160</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-161</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
   <div class="bkrow" id="saveRow"></div>
   <button type="button" class="newver" id="newVer" hidden>🔄 새 버전이 올라왔어요 — 눌러서 새로고침 (적은 내용은 그대로 남습니다)</button>
 </div>
-<nav class="tabs" role="tablist" aria-label="화면 선택"><span class="tabgrp"><button type="button" class="tab" role="tab" data-p="tp0" aria-controls="tp0" aria-selected="true">출퇴근</button><button type="button" class="tab" role="tab" data-p="tp1" aria-controls="tp1" aria-selected="false">근무표</button><button type="button" class="tab" role="tab" data-p="tp2" aria-controls="tp2" aria-selected="false">오늘 할 일</button><button type="button" class="tab" role="tab" data-p="tp12" aria-controls="tp12" aria-selected="false">재고·발주</button><button type="button" class="tab daily" role="tab" data-p="tp4" aria-controls="tp4" aria-selected="false">일지</button></span><button type="button" class="tab mgtab" role="tab" data-p="tp15" aria-controls="tp15" aria-selected="false">관리자</button><button type="button" class="tab" role="tab" data-p="tp3" aria-controls="tp3" aria-selected="false">청소·정비</button><button type="button" class="tab" role="tab" data-p="tp5" aria-controls="tp5" aria-selected="false">월말회의</button><button type="button" class="tab" role="tab" data-p="tp6" aria-controls="tp6" aria-selected="false">연간 행사</button><button type="button" class="tab" role="tab" data-p="tp7" aria-controls="tp7" aria-selected="false">과일</button><button type="button" class="tab" role="tab" data-p="tp8" aria-controls="tp8" aria-selected="false">월말 평가</button><button type="button" class="tab" role="tab" data-p="tp9" aria-controls="tp9" aria-selected="false">워크샵</button><button type="button" class="tab" role="tab" data-p="tp10" aria-controls="tp10" aria-selected="false">고객 응대</button><button type="button" class="tab" role="tab" data-p="tp13" aria-controls="tp13" aria-selected="false">제과제빵</button><button type="button" class="tab" role="tab" data-p="tp14" aria-controls="tp14" aria-selected="false">독서나눔</button><button type="button" class="tab" role="tab" data-p="tp11" aria-controls="tp11" aria-selected="false">사용법</button></nav><div class="panel" id="tp0" role="tabpanel"><section>
+<nav class="tabs" role="tablist" aria-label="화면 선택"><span class="tabgrp"><button type="button" class="tab" role="tab" data-p="tp0" aria-controls="tp0" aria-selected="true">출퇴근</button><button type="button" class="tab" role="tab" data-p="tp1" aria-controls="tp1" aria-selected="false">근무표</button><button type="button" class="tab" role="tab" data-p="tp2" aria-controls="tp2" aria-selected="false">오늘 할 일</button><button type="button" class="tab" role="tab" data-p="tp12" aria-controls="tp12" aria-selected="false">재고·발주</button><button type="button" class="tab daily" role="tab" data-p="tp4" aria-controls="tp4" aria-selected="false">일지</button></span><button type="button" class="tab mgtab" role="tab" data-p="tp15" aria-controls="tp15" aria-selected="false">관리자</button><button type="button" class="tab rctab" role="tab" data-p="tp16" aria-controls="tp16" aria-selected="false">레시피</button><button type="button" class="tab" role="tab" data-p="tp3" aria-controls="tp3" aria-selected="false">청소·정비</button><button type="button" class="tab" role="tab" data-p="tp5" aria-controls="tp5" aria-selected="false">월말회의</button><button type="button" class="tab" role="tab" data-p="tp6" aria-controls="tp6" aria-selected="false">연간 행사</button><button type="button" class="tab" role="tab" data-p="tp7" aria-controls="tp7" aria-selected="false">과일</button><button type="button" class="tab" role="tab" data-p="tp8" aria-controls="tp8" aria-selected="false">월말 평가</button><button type="button" class="tab" role="tab" data-p="tp9" aria-controls="tp9" aria-selected="false">워크샵</button><button type="button" class="tab" role="tab" data-p="tp10" aria-controls="tp10" aria-selected="false">고객 응대</button><button type="button" class="tab" role="tab" data-p="tp13" aria-controls="tp13" aria-selected="false">제과제빵</button><button type="button" class="tab" role="tab" data-p="tp14" aria-controls="tp14" aria-selected="false">독서나눔</button><button type="button" class="tab" role="tab" data-p="tp11" aria-controls="tp11" aria-selected="false">사용법</button></nav><div class="panel" id="tp0" role="tabpanel"><section>
   <div class="shead"><h2>출퇴근</h2><span class="en">clock out</span>
     <span class="sub">갈 때 본인 칸의 퇴근만 누르세요 · 출근은 10분 일찍, 서로 챙깁니다</span></div>
   <div class="lgbar">
@@ -3217,7 +3258,22 @@ input,select,textarea{border-radius:var(--r3)!important}
       <span class="wrauto" id="wrAuto"></span><button type="button" class="skbtn prim" id="wrCopy">📸 사장님께 보내기 (텔레그램에 보고)</button></div>
     <div class="wrgrid"><label class="wrrow"><span>이번 주 매출 · 흐름 요약</span><textarea class="lgin wrin" data-f="sum" rows="2" placeholder="예) 주말 매출 좋음 · 평일 오후 한산 · 추석 연휴 영향"></textarea></label><label class="wrrow"><span>잘된 점</span><textarea class="lgin wrin" data-f="good" rows="2" placeholder="예) 리뷰 이벤트 참여 늘어남 · 케이크 품절 없이 마감"></textarea></label><label class="wrrow"><span>문제점 · 개선할 점</span><textarea class="lgin wrin" data-f="bad" rows="2" placeholder="예) 마감 청소 누락 2번 · 숨김 해제 늦음"></textarea></label><label class="wrrow"><span>재고 · 발주 이슈</span><textarea class="lgin wrin" data-f="stock" rows="2" placeholder="예) 생크림 입고 늦음 · 망고 단가 올라감"></textarea></label><label class="wrrow"><span>직원 · 근무 이슈</span><textarea class="lgin wrin" data-f="staff" rows="2" placeholder="예) 알바생 교육 필요 · 근무 교대 요청"></textarea></label><label class="wrrow"><span>다음 주 계획 · 준비할 것</span><textarea class="lgin wrin" data-f="next" rows="2" placeholder="예) 샤인머스캣 케이크 시작 · 할로윈 준비"></textarea></label><label class="wrrow"><span>사장님께 요청 · 건의</span><textarea class="lgin wrin" data-f="ask" rows="2" placeholder="예) 포장 상자 새로 주문 · 휴무 조정"></textarea></label></div>
     <div class="wrfoot" id="wrFoot"></div>
-  </details></div></div><div class="panel" id="tp11" role="tabpanel" hidden data-lazy="tabs/tp11.html"><div class="lazyload">불러오는 중…</div></div>
+  </details></div></div><div class="panel" id="tp16" role="tabpanel" hidden><section class="rcpagewrap" id="rcBox">
+  <h2 class="rctitle">📖 레시피 <small>카페스이 Manual · 제품별 레시피 (노션)</small></h2>
+  <div class="tnotice tnwarn"><div class="tnhead">🔒 레시피 보안 · 꼭 지키기</div><ul><li><b>레시피는 <mark>외부 유출 금지 · 개인 사용 금지</mark></b><span>사진 찍기 · 캡처 · 복사해서 밖으로 보내는 것 모두 안 됩니다 (법적 대응합니다)</span></li><li><b>비밀번호는 <mark>직원끼리도 말로만</mark> 전달</b><span>단톡방 · 메모에 적어 두지 않기 · 그만둔 직원이 생기면 사장님이 비밀번호를 바꿉니다</span></li></ul></div>
+  <div class="rclock" id="rcLock">
+    <p class="rclead">🔒 레시피는 잠겨 있습니다 · 비밀번호를 넣어 주세요</p>
+    <div class="rcrow"><input type="password" id="rcPw" class="lgin" autocomplete="off" placeholder="레시피 비밀번호"><button type="button" class="skbtn prim" id="rcOpen">열기</button></div>
+    <label class="rckeep"><input type="checkbox" id="rcKeep" checked> 이 기기에서 기억하기 (가게 기기만 · 개인 휴대폰은 끄기)</label>
+    <p class="rcmsg" id="rcMsg"></p>
+  </div>
+  <div class="rcmain" id="rcMain" hidden>
+    <div class="rcbar"><span class="rcwho" id="rcWho"></span><span class="rctools"><button type="button" class="skbtn" id="rcLockBtn">🔒 잠그기</button><span id="rcTools" hidden><button type="button" class="skbtn" id="rcChg">🔑 비밀번호 바꾸기</button></span></span></div>
+    <nav class="rcnav" id="rcNav"></nav>
+    <div class="rcbody" id="rcBody"></div>
+    <p class="rcfoot">📷 사진은 옮기지 않았습니다 · 사진은 노션에서 봐 주세요 · 바뀐 레시피는 노션을 먼저 고치고 알려 주세요</p>
+  </div>
+</section></div><div class="panel" id="tp11" role="tabpanel" hidden data-lazy="tabs/tp11.html"><div class="lazyload">불러오는 중…</div></div>
 
 <footer>
 근무표와 청소 배정표는 정항아 매니저가 전달 2째주까지 취합해 편성합니다.
@@ -3234,10 +3290,10 @@ input,select,textarea{border-radius:var(--r3)!important}
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/sync.js?v=v0924-160"></script>
-<script src="js/holidays.js?v=v0924-160"></script>
-<script src="js/sched.js?v=v0924-160"></script>
-<script src="js/app.js?v=v0924-160"></script>
+<script src="js/sync.js?v=v0924-161"></script>
+<script src="js/holidays.js?v=v0924-161"></script>
+<script src="js/sched.js?v=v0924-161"></script>
+<script src="js/app.js?v=v0924-161"></script>
 
 <style>
 /* 재고 · 발주 */
@@ -3452,7 +3508,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 .sksearch{font:inherit;font-size:13px;padding:6px 9px;width:100%;max-width:300px;background:var(--bg);color:var(--ink);
   border:1px solid var(--rule2);border-radius:2px;margin-bottom:10px}
 </style>
-<script src="js/stock.js?v=v0924-160"></script>
+<script src="js/stock.js?v=v0924-161"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -3481,7 +3537,8 @@ input,select,textarea{border-radius:var(--r3)!important}
   })();
 </script>
 
-<script src="js/presence.js?v=v0924-160"></script>
-<script src="js/weekrep.js?v=v0924-160"></script>
-<script src="js/monthlog.js?v=v0924-160"></script>
+<script src="js/presence.js?v=v0924-161"></script>
+<script src="js/weekrep.js?v=v0924-161"></script>
+<script src="js/recipe.js?v=v0924-161"></script>
+<script src="js/monthlog.js?v=v0924-161"></script>
 </body></html>
