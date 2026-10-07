@@ -145,6 +145,8 @@
       var head = tb.querySelector("tr"); if (!head || !head.querySelector("th")) return;
       var hs = Array.prototype.map.call(head.children, function (c) { return c.textContent.trim(); });
       tb.classList.add("rccards");
+      // 추천 · 같이 · 페어링 칸은 딱지로, 빈 칸은 「—」
+      hs.forEach(function (h, i) { if (!/추천|같이|페어/.test(h)) return; Array.prototype.forEach.call(tb.querySelectorAll("tr"), function (tr) { if (tr === head) return; var td = tr.children[i]; if (td && td.textContent.trim() && !td.querySelector("span.rcpill")) td.innerHTML = td.textContent.split(/\s*[,/]\s*/).filter(Boolean).map(function (x) { return '<span class="rcpill">' + esc(x) + "</span>"; }).join(" "); }); });
       Array.prototype.forEach.call(tb.querySelectorAll("tr"), function (tr) { if (tr === head) return; Array.prototype.forEach.call(tr.children, function (td, i) { if (hs[i]) td.setAttribute("data-l", hs[i]); if (!td.textContent.trim()) td.classList.add("rcempty"); }); });
     });
     // 「… 하기 - … 하기 -」 처럼 줄표로 이어 쓴 작업 순서 → 번호 단계
