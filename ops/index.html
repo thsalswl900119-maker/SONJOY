@@ -1815,6 +1815,7 @@ mark.rcfind{background:#FFE86B;color:#A11A12;font-weight:900;border-radius:2px;p
 .rcir{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:7px 12px;border-bottom:1px dashed #EAD9C4;font-size:15px}
 .rcir span{color:#3B302A}
 .rcir b{font-weight:900;color:#8A3A00;white-space:nowrap;font-size:15.5px}
+.rcing.rcwide .rcingl,.rcsec .rcing.rcwide .rcingl{grid-template-columns:1fr!important}.rcing.rcwide .rcir b{white-space:normal;text-align:right}
 .rcing.u .rcir span,.rcing.u .rcir b{text-decoration:underline;text-decoration-color:#E0B98A}
 .rcsec ol{counter-reset:rcs;list-style:none;padding-left:0}
 .rcsec ol>li{counter-increment:rcs;position:relative;padding:6px 0 6px 34px;border-bottom:1px dotted #EAD9C4}
@@ -1870,6 +1871,18 @@ mark.rcfind{background:#FFE86B;color:#A11A12;font-weight:900;border-radius:2px;p
 .rchow{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
 .rced{margin:8px 0;border:1.5px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 12px;font:inherit;font-weight:700;cursor:pointer}.rced.prim{background:var(--ink);color:var(--surface)}
 .rcjed textarea{width:100%;box-sizing:border-box;font:inherit;font-size:15px;padding:8px;border:1px solid var(--line);border-radius:8px}
+.rcjn{display:block}
+.rcjrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 8px}
+.rcjlab{font-weight:900;font-size:13px;color:var(--muted);min-width:56px}
+.rccommon{border-left-color:#2E7D32}.rccommon>summary{background:#EEF6EE}
+.rccalc{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:10px 0;padding:10px 12px;background:#FFF8E1;border:1px solid #F0D98A;border-radius:10px;font-weight:800}
+.rccalc input{width:110px;font-size:17px;font-weight:800;padding:6px 8px;border:1px solid #E3D2BC;border-radius:8px;margin:0 4px}
+.rccalc b{font-size:20px;color:#8A3A00}
+.rcjt{font-size:20px;font-weight:900;margin:14px 0 4px}.rcjt small{font-size:13px;color:var(--muted);font-weight:700}
+.rcingt td.rcamt{font-weight:900;color:#8A3A00;white-space:nowrap}
+.rcuses{list-style:none;padding:0;margin:6px 0}
+.rcuses li{border:1px solid #EAD9C4;border-radius:8px;padding:8px 12px;margin:0 0 6px;background:#fff}
+.rcuses li>b{display:block;font-size:14px;color:#5A3100;margin-bottom:2px}
 .rcfoot{font-size:12.5px;color:var(--muted);margin-top:16px}
 @media print{#tp16{display:none!important}}
 /* 관리자 보고 (tabs/tp15.html) */
@@ -2743,7 +2756,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-165</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-166</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -3340,15 +3353,15 @@ input,select,textarea{border-radius:var(--r3)!important}
 </footer>
 </div>
 
-<script src="js/chrome.js?v=v0924-165"></script>
+<script src="js/chrome.js?v=v0924-166"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/sync.js?v=v0924-165"></script>
-<script src="js/holidays.js?v=v0924-165"></script>
-<script src="js/sched.js?v=v0924-165"></script>
-<script src="js/app.js?v=v0924-165"></script>
+<script src="js/sync.js?v=v0924-166"></script>
+<script src="js/holidays.js?v=v0924-166"></script>
+<script src="js/sched.js?v=v0924-166"></script>
+<script src="js/app.js?v=v0924-166"></script>
 
 <style>
 /* 재고 · 발주 */
@@ -3563,7 +3576,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 .sksearch{font:inherit;font-size:13px;padding:6px 9px;width:100%;max-width:300px;background:var(--bg);color:var(--ink);
   border:1px solid var(--rule2);border-radius:2px;margin-bottom:10px}
 </style>
-<script src="js/stock.js?v=v0924-165"></script>
+<script src="js/stock.js?v=v0924-166"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -3592,8 +3605,8 @@ input,select,textarea{border-radius:var(--r3)!important}
   })();
 </script>
 
-<script src="js/presence.js?v=v0924-165"></script>
-<script src="js/weekrep.js?v=v0924-165"></script>
-<script src="js/recipe.js?v=v0924-165"></script>
-<script src="js/monthlog.js?v=v0924-165"></script>
+<script src="js/presence.js?v=v0924-166"></script>
+<script src="js/weekrep.js?v=v0924-166"></script>
+<script src="js/recipe.js?v=v0924-166"></script>
+<script src="js/monthlog.js?v=v0924-166"></script>
 </body></html>

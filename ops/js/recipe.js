@@ -5,7 +5,7 @@
   var box = document.getElementById("rcBox"); if (!box) return;
   var C = window.crypto && window.crypto.subtle;
   var PRE = "cafesui.recipe.", KEYK = "cafesui.ui.rk";   // ui.* 는 이 기기에만 (서버로 안 감)
-  var SECS = [["egg", "🥧 에그타르트"], ["cake", "🎂 과일케이크"], ["etc", "🍰 티라미수 · 기타"], ["bingsu", "🍧 빙수 (26년 ver.)"], ["coffee", "☕ 커피"], ["drink", "🥤 음료"], ["jam", "🫙 과일청"]];
+  var SECS = [["egg", "🥧 에그타르트"], ["cake", "🎂 과일케이크"], ["etc", "🍰 티라미수 · 기타"], ["bingsu", "🍧 빙수 (26년 ver.)"], ["coffee", "☕ 커피"], ["drink", "🥤 음료"], ["jam", "🫙 과일청 · 시럽"]];
   var lockEl = document.getElementById("rcLock"), mainEl = document.getElementById("rcMain"), navEl = document.getElementById("rcNav"),
       bodyEl = document.getElementById("rcBody"), msgEl = document.getElementById("rcMsg"), pwEl = document.getElementById("rcPw"),
       whoEl = document.getElementById("rcWho"), toolEl = document.getElementById("rcTools");
@@ -104,6 +104,7 @@
     return items.length < 2 && !items.note ? { one: items[0] } : { cap: items.note || "", items: items };
   }
   function grid(items, cap, cls) {
+    if (items.some(function (x) { return String(x[1]).length > 9 || String(x[0]).length > 16; })) cls = (cls ? cls + " " : "") + "rcwide";   // 긴 줄은 한 줄에 하나씩
     return '<div class="rcing' + (cls ? " " + cls : "") + '">' + (cap ? '<div class="rcingc">' + esc(cap) + "</div>" : "") + '<div class="rcingl">' +
       items.map(function (x) { return '<div class="rcir"><span>' + esc(x[0]) + "</span><b>" + esc(x[1]) + "</b></div>"; }).join("") + "</div></div>";
   }
@@ -258,15 +259,45 @@
   if (noneBtn) noneBtn.addEventListener("click", function () { bodyEl.querySelectorAll("details").forEach(function (d) { d.open = false; }); bodyEl.scrollIntoView({ block: "start" }); });
   function jamData() { try { return JSON.parse(plain.jam || "{}") || {}; } catch (e) { return {}; } }
   function drawJam() {
-    var d = jamData(), ks = Object.keys(d); if (ks.indexOf(jamSub) < 0) jamSub = ks[0];
-    var j = d[jamSub] || { uses: [] }, canEdit = me() === "사장님" || me() === "정항아";
-    bodyEl.innerHTML = '<nav class="rcjn">' + ks.map(function (k) { return '<button type="button" class="rcjb" data-j="' + k + '" aria-pressed="' + (k === jamSub) + '">' + esc(d[k].title) + "</button>"; }).join("") + "</nav>" +
-      '<div class="rcsec"><h5 class="rch">담는 법</h5>' +
-      (j.how ? '<div class="rchow">' + esc(j.how).replace(/\n/g, "<br>") + "</div>" : '<p class="rcnone">노션에는 담는 법이 따로 없습니다 · ' + (canEdit ? "아래 「✏ 담는 법 적기」로 적어 주세요" : "사장님 · 매니저가 적을 예정입니다") + "</p>") +
+    var d = jamData(), order = (d._order || Object.keys(d)).filter(function (k) { return k.charAt(0) !== "_" && d[k]; });
+    Object.keys(d).forEach(function (k) { if (k.charAt(0) !== "_" && order.indexOf(k) < 0) order.push(k); });
+    if (order.indexOf(jamSub) < 0) jamSub = order[0];
+    var j = d[jamSub] || { uses: [] }, cm = d._common || null, canEdit = me() === "사장님" || me() === "정항아";
+    var isJam = (j.kind || "청") === "청";
+    function navRow(kind, label) {
+      var ks = order.filter(function (k) { return (d[k].kind || "청") === kind; }); if (!ks.length) return "";
+      return '<div class="rcjrow"><span class="rcjlab">' + label + "</span>" + ks.map(function (k) { return '<button type="button" class="rcjb" data-j="' + k + '" aria-pressed="' + (k === jamSub) + '">' + esc(d[k].title) + "</button>"; }).join("") + "</div>";
+    }
+    function ingTable(it) {
+      if (!it.ing || !it.ing.length) return "";
+      if (it.cols) return '<div class="rctw"><table class="rct rcingt"><tr><th>재료</th>' + it.cols.map(function (c) { return "<th>" + esc(c) + "</th>"; }).join("") + "</tr>" +
+        it.ing.map(function (r) { return "<tr><td>" + esc(r[0]) + "</td>" + it.cols.map(function (c, ci) { return '<td class="rcamt">' + (r[ci + 1] ? esc(r[ci + 1]) : "") + "</td>"; }).join("") + "</tr>"; }).join("") + "</table></div>";
+      return grid(it.ing.map(function (r) { return [r[0], r[1]]; }), it.batch || "", "");
+    }
+    function list(arr, cls) { return arr && arr.length ? '<ol class="rcsteps">' + arr.map(function (x) { return "<li" + (cls ? ' class="' + cls + '"' : "") + ">" + esc(x) + "</li>"; }).join("") + "</ol>" : ""; }
+    var h = '<nav class="rcjn">' + navRow("청", "🫙 청") + navRow("시럽", "🍯 시럽") + "</nav>";
+    // 청 공통 + 설탕 계산
+    if (isJam && cm) {
+      h += '<details class="rcd rcpage rccommon" open><summary>📌 ' + esc(cm.title || "청 담는 기본") + "</summary><div class=\"rcb\">" +
+        (cm.facts ? grid(cm.facts, "", "") : "") +
+        (cm.minus != null ? '<div class="rccalc"><label>⚖ 과일 무게 <input type="number" inputmode="numeric" id="rcCalcW" placeholder="예) 2000"> g</label><span id="rcCalcOut">→ 설탕 <b>—</b></span></div>' : "") +
+        '<div class="rcsub">순서</div>' + list(cm.steps) + list(cm.tips, "rctip") + "</div></details>";
+    }
+    h += '<div class="rcjitem"><h4 class="rcjt">' + esc(j.title || "") + (j.batch && j.cols ? ' <small>' + esc(j.batch) + "</small>" : "") + "</h4>";
+    if (j.ing && j.ing.length) h += '<div class="rcsub">재료</div>' + ingTable(j);
+    if (j.prep && j.prep.length) h += '<div class="rcsub">손질 · 준비</div>' + list(j.prep);
+    if (j.steps && j.steps.length) h += '<div class="rcsub">만드는 순서</div>' + list(j.steps);
+    if (isJam && cm && !(j.steps && j.steps.length)) h += '<p class="rcnone">그다음은 위 「📌 청 담는 기본」 순서대로 (설탕 넣고 → 고무주걱 2개로 자주 젓기 → 마감조가 병에 담아 라벨링)</p>';
+    if (!isJam && !(j.steps && j.steps.length)) h += '<p class="rcnone">만드는 순서는 아직 없습니다 · ' + (canEdit ? "아래 「✏ 메모 적기」로 적어 주세요" : "사장님 · 매니저가 적을 예정입니다") + "</p>";
+    h += '<div class="rcsub">메모</div>' + (j.how ? '<div class="rchow">' + esc(j.how).replace(/\n/g, "<br>") + "</div>" : '<p class="rcnone">추가 메모 없음</p>') +
       (j.by ? '<p class="rcby">마지막 수정 ' + esc(nim(j.by)) + (j.at ? " · " + esc(j.at) : "") + "</p>" : "") +
-      (canEdit ? '<button type="button" class="rced" id="rcJamEd">✏ 담는 법 적기</button><div class="rcjed" id="rcJamBox" hidden><textarea id="rcJamTa" rows="10" placeholder="예) 재료 · 비율(과일 : 설탕) · 소독 · 숙성 기간 · 보관 · 유통기한"></textarea><button type="button" class="rced prim" id="rcJamSave">저장 (잠가서 저장)</button></div>' : "") +
-      '<h5 class="rch">어디에 쓰나 (레시피에서 모음)</h5>' +
-      ((j.uses || []).length ? "<ul>" + j.uses.map(function (u) { return "<li><b>" + esc(u.where) + "</b> — " + u.text + "</li>"; }).join("") + "</ul>" : '<p class="rcnone">없음</p>') + "</div>";
+      (canEdit ? '<button type="button" class="rced" id="rcJamEd">✏ 메모 적기</button><div class="rcjed" id="rcJamBox" hidden><textarea id="rcJamTa" rows="8" placeholder="예) 보관 · 유통기한 · 바뀐 점"></textarea><button type="button" class="rced prim" id="rcJamSave">저장 (잠가서 저장)</button></div>' : "");
+    if ((j.uses || []).length) h += '<div class="rcsub">어디에 쓰나 (레시피에서 모음)</div><ul class="rcuses">' + j.uses.map(function (u) { return "<li><b>" + esc(u.where) + "</b><span>" + u.text + "</span></li>"; }).join("") + "</ul>";
+    h += "</div>";
+    bodyEl.innerHTML = '<div class="rcsec">' + h + "</div>";
+    try { Array.prototype.forEach.call(bodyEl.querySelectorAll(".rcuses span"), function (sp) { var tw = document.createTreeWalker(sp, NodeFilter.SHOW_TEXT, null), ns = [], nd; while ((nd = tw.nextNode())) { NUM.lastIndex = 0; if (NUM.test(nd.nodeValue)) ns.push(nd); } ns.forEach(function (t) { var x = document.createElement("span"); x.innerHTML = esc(t.nodeValue).replace(NUM, '<b class="rcnum">$1</b>'); while (x.firstChild) t.parentNode.insertBefore(x.firstChild, t); t.remove(); }); }); } catch (e) {}
+    var cw = document.getElementById("rcCalcW"), co = document.getElementById("rcCalcOut");
+    if (cw && co) cw.oninput = function () { var w = parseFloat(cw.value); co.innerHTML = w > 0 ? "→ 설탕 <b>" + Math.max(0, Math.round(w - cm.minus)).toLocaleString() + "g</b>" : "→ 설탕 <b>—</b>"; };
     var ed = document.getElementById("rcJamEd");
     if (ed) ed.onclick = function () { var b = document.getElementById("rcJamBox"); b.hidden = !b.hidden; document.getElementById("rcJamTa").value = j.how || ""; };
     var sv = document.getElementById("rcJamSave");
