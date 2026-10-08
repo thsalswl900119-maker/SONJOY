@@ -98,7 +98,7 @@
     var isum = {}, iany = {};
     keys.forEach(function (k) { var f = (J(k) || {}).f || {}; IT.forEach(function (x) { var n = num(f[x[1]]); if (n !== null) { isum[x[0]] = (isum[x[0]] || 0) + n; iany[x[0]] = 1; } }); });
     // 직원 수 = 그 달 근무표에 근무가 있는 직원(사장님 빼고) · 근무표가 없으면 일지를 쓴 직원
-    var AWAY = { "휴무": 1, "휴가": 1, "반짝휴무": 1, "출장": 1, "공부": 1, "출강": 1, "서울출장": 1, "사무실 근무": 1, "해외출장": 1, "워크샵": 1 };
+    var AWAY = { "휴무": 1, "휴가": 1, "반짝휴무": 1, "출장": 1, "공부": 1, "출강": 1, "서울출장": 1, "사무실 근무": 1, "수업 준비": 1, "해외출장": 1, "워크샵": 1 };
     var staff = {}, sc = J("cafesui.sched." + ym) || {};
     Object.keys(sc).forEach(function (md) { Object.keys(sc[md] || {}).forEach(function (w) { var r = sc[md][w]; if (w !== "공지" && w !== "사장님" && r && !AWAY[r]) staff[w] = 1; }); });
     if (!Object.keys(staff).length) keys.forEach(function (k) {

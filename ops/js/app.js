@@ -1167,9 +1167,9 @@
     var NL = String.fromCharCode(10);
     var RCLS = { "오픈": "open", "마감": "close", "미들": "mid",
                  "전일": "full", "토요일": "full", "전일(케이크+사무실근무)": "own", "반죽": "own",
-                 "공부": "away", "출강": "away", "서울출장": "away", "출장": "away", "사무실 근무": "away", "해외출장": "away", "워크샵": "away" };
+                 "공부": "away", "출강": "away", "서울출장": "away", "출장": "away", "사무실 근무": "away", "수업 준비": "away", "해외출장": "away", "워크샵": "away" };
     var RORDER = { "오픈": 0, "반죽": 1, "미들": 2, "전일": 2, "토요일": 2, "전일(케이크+사무실근무)": 3, "마감": 4,
-                   "공부": 5, "출강": 5, "서울출장": 5, "출장": 5, "사무실 근무": 5, "해외출장": 5, "워크샵": 5 };
+                   "공부": 5, "출강": 5, "서울출장": 5, "출장": 5, "사무실 근무": 5, "수업 준비": 5, "해외출장": 5, "워크샵": 5 };
 
     function keyOf(ym) { return "cafesui.sched." + ym; }
     function draftOf(ym) {
@@ -1228,9 +1228,10 @@
               '<span class="offwho">' + esc(o.n) + "</span></div>";
           }).join("") +
           rows.map(function (r) {
-            return '<div class="sh ' + (RCLS[r.r] || "own") + '">' +
+            var boss = r.n === "사장님", ic = boss ? bossIc(r.r) : "";
+            return '<div class="sh ' + (RCLS[r.r] || "own") + (boss ? " boss" : "") + '">' +
               '<span class="who">' + esc(r.n) + "</span>" +
-              '<span class="rl">' + esc(r.r) + "</span>" +
+              '<span class="rl">' + (ic ? ic + " " : "") + esc(r.r) + "</span>" +
               (r.s ? '<span class="tm">' + r.s + '<span class="dash">–</span>' + r.e +
                      "</span>"
                    : (RCLS[r.r] === "away" ? '<span class="tm free">가게 밖</span>'
@@ -1238,7 +1239,47 @@
           }).join("");
         c.innerHTML = html;
       });
+      paintBoss();
     }
+
+    // 👑 사장님 일정 — 오늘 · 앞으로 6일 (근무표 저장값 → 없으면 로테이션)
+    var BOSS = { "전일(케이크+사무실근무)": ["🎂", "가게 · 케이크 + 사무실"], "반죽": ["🥣", "가게 · 반죽"], "반죽 근무": ["🥣", "가게 · 반죽"],
+                 "오픈": ["☀️", "가게 · 오픈"], "마감": ["🌙", "가게 · 마감"], "토요일": ["🏪", "가게"],
+                 "사무실 근무": ["💼", "가게 밖 · 사무실"], "수업 준비": ["📚", "가게 밖 · 수업 준비"], "공부": ["📖", "가게 밖 · 공부"],
+                 "출강": ["🎤", "가게 밖 · 출강"], "서울출장": ["🚄", "가게 밖 · 서울 출장"], "출장": ["🧳", "가게 밖 · 출장"],
+                 "해외출장": ["✈️", "가게 밖 · 해외 출장"], "워크샵": ["🏕", "워크샵"], "휴무": ["🌿", "휴무"], "휴가": ["🏖", "휴가"], "반짝휴무": ["🌿", "반짝휴무"] };
+    function bossIc(r) { return (BOSS[r] || [""])[0]; }
+    window.__CS_BOSSIC = bossIc;
+    function bossOn(d) {
+      var ym = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0"), md = (d.getMonth() + 1) + "-" + d.getDate();
+      var day = load(ym)[md];
+      if (day) return day["사장님"] || "";
+      var dr = draftOf(ym)[md]; return (dr && dr["사장님"]) || "";
+    }
+    function paintBoss() {
+      var bars = document.querySelectorAll(".bossbar"); if (!bars.length) return;
+      var WD = ["일", "월", "화", "수", "목", "금", "토"], d = new Date(), list = [];
+      for (var i = 0; list.length < 7 && i < 14; i++) {
+        var x = new Date(d.getFullYear(), d.getMonth(), d.getDate() + i);
+        if (x.getDay() === 0) continue;   // 일요일 정기휴무
+        list.push({ d: x, r: bossOn(x), today: i === 0 });
+      }
+      var t = list[0] && list[0].today ? list[0] : null, tb = t && BOSS[t.r];
+      var away = function (r) { return RCLS[r] === "away"; };
+      var head = t ? '<div class="bbtoday' + (t.r && away(t.r) ? " away" : "") + '"><span class="bbk">👑 오늘 사장님</span><b>' + (t.r ? (tb ? tb[0] + " " : "") + esc(t.r) : "근무 없음") + "</b>" +
+        (tb ? '<span class="bbw">' + esc(tb[1]) + "</span>" : "") +
+        (t.r && away(t.r) ? '<span class="bbh">급한 일은 📞 전화 · 💬 텔레그램</span>' : "") + "</div>"
+        : '<div class="bbtoday"><span class="bbk">👑 오늘은 일요일 정기휴무</span></div>';
+      var rest = list.filter(function (x) { return !x.today; }).map(function (x) {
+        var b = BOSS[x.r];
+        return '<span class="bbday' + (x.r && away(x.r) ? " away" : "") + '"><i>' + (x.d.getMonth() + 1) + "/" + x.d.getDate() + "(" + WD[x.d.getDay()] + ")</i>" +
+          (x.r ? (b ? b[0] + " " : "") + esc(x.r) : '<em class="bbnone">일정 없음</em>') + "</span>";
+      }).join("");
+      var html = head + '<div class="bbweek">' + rest + "</div>";
+      Array.prototype.forEach.call(bars, function (el) { el.innerHTML = html; });
+    }
+    setTimeout(paintBoss, 0);
+    window.addEventListener("cs:remote", function (e) { var ks = (e.detail && e.detail.keys) || []; if (ks.some(function (k) { return k.indexOf("cafesui.sched.") === 0; })) paintBoss(); });
 
     function check(panel, wrap) {
       var chk = wrap.querySelector(".pcheck");

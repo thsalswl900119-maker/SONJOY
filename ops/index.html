@@ -1727,6 +1727,22 @@ textarea.lgin.mi[data-k="lf154"]{min-height:220px;height:220px;font-size:14.5px;
 .sh.full{background:var(--fullbg);border-color:var(--full);color:var(--full)}
 .sh.own{background:var(--raise);border-color:var(--ink);color:var(--ink)}
 .sh.away{background:var(--bg);border-color:var(--rule2);color:var(--muted)}
+.sh.boss{border-left-color:#2E7D32!important;background:#EEF6EE;color:#1E4D22}
+.sh.boss .who{color:#2E7D32;font-weight:900}.sh.boss .rl{font-weight:900}
+.sh.boss.away{background:#F3F8F3;border-style:dashed;color:#2E5A31}
+.bossbar{margin:0 0 12px;border:2px solid #2E7D32;border-radius:12px;background:#F4FAF4;padding:10px 12px}
+.bossbar:empty{display:none}
+.bbtoday{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
+.bbk{font-size:13px;font-weight:900;color:#2E7D32}
+.bbtoday b{font-size:19px;font-weight:900;color:#1E4D22}
+.bbw{font-size:13.5px;font-weight:800;color:#2E7D32;background:#fff;border:1px solid #BFDDBF;border-radius:999px;padding:1px 10px}
+.bbtoday.away .bbw{background:#FFF4E5;border-color:#F0C58A;color:#8A4B00}
+.bbh{font-size:12.5px;color:#5B4E45;font-weight:700}
+.bbweek{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.bbday{font-size:13px;font-weight:800;background:#fff;border:1px solid #CFE3CF;border-radius:8px;padding:3px 8px;color:#1E4D22}
+.bbday i{font-style:normal;color:var(--muted);font-weight:700;margin-right:4px}
+.bbday.away{border-style:dashed;color:#8A4B00}
+.bbnone{font-style:normal;color:var(--muted);font-weight:600}
 .sh .tm.free{opacity:.75;font-family:var(--sans);font-size:11px}
 .lnote{color:var(--muted)}
 
@@ -2768,7 +2784,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-168</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-169</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -2778,6 +2794,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 <nav class="tabs" role="tablist" aria-label="화면 선택"><span class="tabgrp"><button type="button" class="tab" role="tab" data-p="tp0" aria-controls="tp0" aria-selected="true">출퇴근</button><button type="button" class="tab" role="tab" data-p="tp1" aria-controls="tp1" aria-selected="false">근무표</button><button type="button" class="tab" role="tab" data-p="tp2" aria-controls="tp2" aria-selected="false">오늘 할 일</button><button type="button" class="tab" role="tab" data-p="tp12" aria-controls="tp12" aria-selected="false">재고·발주</button><button type="button" class="tab daily" role="tab" data-p="tp4" aria-controls="tp4" aria-selected="false">일지</button></span><button type="button" class="tab mgtab" role="tab" data-p="tp15" aria-controls="tp15" aria-selected="false">관리자</button><button type="button" class="tab rctab" role="tab" data-p="tp16" aria-controls="tp16" aria-selected="false">레시피</button><button type="button" class="tab" role="tab" data-p="tp3" aria-controls="tp3" aria-selected="false">청소·정비</button><button type="button" class="tab" role="tab" data-p="tp5" aria-controls="tp5" aria-selected="false">월말회의</button><button type="button" class="tab" role="tab" data-p="tp6" aria-controls="tp6" aria-selected="false">연간 행사</button><button type="button" class="tab" role="tab" data-p="tp7" aria-controls="tp7" aria-selected="false">과일</button><button type="button" class="tab" role="tab" data-p="tp8" aria-controls="tp8" aria-selected="false">월말 평가</button><button type="button" class="tab" role="tab" data-p="tp9" aria-controls="tp9" aria-selected="false">워크샵</button><button type="button" class="tab" role="tab" data-p="tp10" aria-controls="tp10" aria-selected="false">고객 응대</button><button type="button" class="tab" role="tab" data-p="tp13" aria-controls="tp13" aria-selected="false">제과제빵</button><button type="button" class="tab" role="tab" data-p="tp14" aria-controls="tp14" aria-selected="false">독서나눔</button><button type="button" class="tab" role="tab" data-p="tp11" aria-controls="tp11" aria-selected="false">사용법</button></nav><div class="panel" id="tp0" role="tabpanel"><section>
   <div class="shead"><h2>출퇴근</h2><span class="en">clock out</span>
     <span class="sub">갈 때 본인 칸의 퇴근만 누르세요 · 출근은 10분 일찍, 서로 챙깁니다</span></div>
+  <div class="bossbar" aria-live="polite"></div>
   <div class="lgbar">
     <label class="lgdate">날짜
       <input type="date" id="atDate" class="dinp"></label>
@@ -2795,6 +2812,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 </section></div><div class="panel" id="tp1" role="tabpanel" hidden><section>
   <div class="shead"><h2>근무표</h2><span class="en">work schedule</span>
     <span class="sub">일요일 정기휴무 · 오픈/마감은 정항아 ↔ 박혜빈 주간 교대 · 달을 눌러 바꾸세요</span></div>
+  <div class="bossbar" aria-live="polite"></div>
   <div class="bizbox">
     <b>🕘 영업시간</b>
     <span><i>평일</i> 9:30 – 18:30</span>
@@ -2812,7 +2830,7 @@ input,select,textarea{border-radius:var(--r3)!important}
     <span class="lc"><i></i>마감</span>
     <span class="lm"><i></i>미들</span>
     <span class="lf"><i></i>전일</span>
-    <span class="lw"><i></i>사장님 <span class="lnote">— 전일(케이크+사무실근무) 08:30–19:30 (*중간에 사무업무로 자리 비움) · 반죽 근무는 시간 정해두지 않고 매장 상황 보며 · 사무실 근무 · 출장 · 공부 · 출강 · 서울출장은 가게 밖</span></span>
+    <span class="lw"><i></i>사장님 <span class="lnote">— 전일(케이크+사무실근무) 08:30–19:30 (*중간에 사무업무로 자리 비움) · 반죽 근무는 시간 정해두지 않고 매장 상황 보며 · 사무실 근무 · 수업 준비 · 출장 · 공부 · 출강 · 서울출장은 가게 밖</span></span>
   </div>
 </section></div><div class="panel" id="tp2" role="tabpanel" hidden><section>
   <div class="shead"><h2>오늘의 할 일</h2><span class="en">today's tasks</span>
@@ -3365,15 +3383,15 @@ input,select,textarea{border-radius:var(--r3)!important}
 </footer>
 </div>
 
-<script src="js/chrome.js?v=v0924-168"></script>
+<script src="js/chrome.js?v=v0924-169"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/sync.js?v=v0924-168"></script>
-<script src="js/holidays.js?v=v0924-168"></script>
-<script src="js/sched.js?v=v0924-168"></script>
-<script src="js/app.js?v=v0924-168"></script>
+<script src="js/sync.js?v=v0924-169"></script>
+<script src="js/holidays.js?v=v0924-169"></script>
+<script src="js/sched.js?v=v0924-169"></script>
+<script src="js/app.js?v=v0924-169"></script>
 
 <style>
 /* 재고 · 발주 */
@@ -3588,7 +3606,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 .sksearch{font:inherit;font-size:13px;padding:6px 9px;width:100%;max-width:300px;background:var(--bg);color:var(--ink);
   border:1px solid var(--rule2);border-radius:2px;margin-bottom:10px}
 </style>
-<script src="js/stock.js?v=v0924-168"></script>
+<script src="js/stock.js?v=v0924-169"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -3617,8 +3635,8 @@ input,select,textarea{border-radius:var(--r3)!important}
   })();
 </script>
 
-<script src="js/presence.js?v=v0924-168"></script>
-<script src="js/weekrep.js?v=v0924-168"></script>
-<script src="js/recipe.js?v=v0924-168"></script>
-<script src="js/monthlog.js?v=v0924-168"></script>
+<script src="js/presence.js?v=v0924-169"></script>
+<script src="js/weekrep.js?v=v0924-169"></script>
+<script src="js/recipe.js?v=v0924-169"></script>
+<script src="js/monthlog.js?v=v0924-169"></script>
 </body></html>
