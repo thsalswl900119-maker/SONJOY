@@ -1256,15 +1256,22 @@
       if (day) return day["사장님"] || "";
       var dr = draftOf(ym)[md]; return (dr && dr["사장님"]) || "";
     }
-    function paintBoss() {   // 오늘만 (사장님 요청 · 다른 날은 근무표 달력에서)
-      var bars = document.querySelectorAll(".bossbar"); if (!bars.length) return;
-      var d = new Date(), r = d.getDay() === 0 ? null : bossOn(d), tb = r && BOSS[r], away = r && RCLS[r] === "away";
-      var html = r === null ? '<div class="bbtoday"><span class="bbk">👑 오늘은 일요일 정기휴무</span></div>'
-        : '<div class="bbtoday' + (away ? " away" : "") + '"><span class="bbk">👑 오늘 사장님</span><b>' + (r ? (tb ? tb[0] + " " : "") + esc(r) : "근무 없음") + "</b>" +
+    // 👑 사장님 — 일지 근무 묶음에만 (그 일지 날짜의 근무표 · 사장님 요청 v0924-171)
+    function paintBoss() {
+      var bars = document.querySelectorAll(".csboss"); if (!bars.length) return;
+      var de = document.getElementById("lgDate"), v = de && de.value, d = new Date();
+      if (/^\d{4}-\d{2}-\d{2}$/.test(v || "")) { var pp = v.split("-"); d = new Date(+pp[0], +pp[1] - 1, +pp[2]); }
+      var n0 = new Date(), isToday = d.getFullYear() === n0.getFullYear() && d.getMonth() === n0.getMonth() && d.getDate() === n0.getDate();
+      var r = d.getDay() === 0 ? null : bossOn(d), tb = r && BOSS[r], away = r && RCLS[r] === "away";
+      var lab = isToday ? "👑 오늘 사장님" : "👑 이날 사장님";
+      var html = r === null ? '<div class="bbtoday"><span class="bbk">👑 일요일 정기휴무</span></div>'
+        : '<div class="bbtoday' + (away ? " away" : "") + '"><span class="bbk">' + lab + "</span><b>" + (r ? (tb ? tb[0] + " " : "") + esc(r) : "근무 없음") + "</b>" +
           (tb ? '<span class="bbw">' + esc(tb[1]) + "</span>" : "") +
-          (away ? '<span class="bbh">급한 일은 📞 전화 · 💬 텔레그램</span>' : "") + "</div>";
+          (away && isToday ? '<span class="bbh">급한 일은 📞 전화 · 💬 텔레그램</span>' : "") + "</div>";
       Array.prototype.forEach.call(bars, function (el) { el.innerHTML = html; });
     }
+    window.__CS_PAINTBOSS = paintBoss;
+    document.addEventListener("change", function (e) { if (e.target && e.target.id === "lgDate") paintBoss(); });
     setTimeout(paintBoss, 0);
     window.addEventListener("cs:remote", function (e) { var ks = (e.detail && e.detail.keys) || []; if (ks.some(function (k) { return k.indexOf("cafesui.sched.") === 0; })) paintBoss(); });
 
@@ -3368,8 +3375,12 @@
     var base = {};
     // 「서비스 나간 것」은 폐기 칸으로 합쳤다 — 예전에 적어 둔 날만 그 칸을 보여준다 (기록은 그대로)
     function legacy163() {
-      var el = document.querySelector('.lgin[data-k="lf163"]'); if (!el) return;
-      var row = el.closest(".mrow2"); if (row) row.style.display = el.value.trim() ? "" : "none";
+      // 「사장님 업무」(lf141)도 근무표 자동 띠로 바꿨다 — 예전에 적어 둔 날만 그 칸을 보여준다 (기록은 그대로)
+      ["lf163", "lf141"].forEach(function (k) {
+        var el = document.querySelector('.lgin[data-k="' + k + '"]'); if (!el) return;
+        var row = el.closest(".mrow2"); if (row) row.style.display = el.value.trim() ? "" : "none";
+      });
+      if (window.__CS_PAINTBOSS) window.__CS_PAINTBOSS();
     }
     function load() {
       var data = {};
@@ -4167,7 +4178,7 @@
       document.querySelectorAll(".msec").forEach(function (sec) {
         var items = "", lines = [];
         sec.querySelectorAll(".mrow2").forEach(function (row) {
-          var el = row.querySelector(".lgin");
+          var el = row.querySelector(".lgin"); if (!el) return;   // 👑 사장님 띠(근무표 자동)처럼 칸이 없는 줄
           var v = (el.value || "").trim();
           if (!v) return;
           var name = (function (sp) { var c = sp.cloneNode(true); c.querySelectorAll("small").forEach(function (x) { x.remove(); }); return c.textContent.trim(); })(row.querySelector(".mlab span"));
