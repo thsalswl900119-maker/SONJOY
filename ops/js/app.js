@@ -1242,7 +1242,7 @@
       paintBoss();
     }
 
-    // 👑 사장님 일정 — 오늘 · 앞으로 6일 (근무표 저장값 → 없으면 로테이션)
+    // 👑 오늘 사장님 — 오늘 근무만 (근무표 저장값 → 없으면 로테이션)
     var BOSS = { "전일(케이크+사무실근무)": ["🎂", "가게 · 케이크 + 사무실"], "반죽": ["🥣", "가게 · 반죽"], "반죽 근무": ["🥣", "가게 · 반죽"],
                  "오픈": ["☀️", "가게 · 오픈"], "마감": ["🌙", "가게 · 마감"], "토요일": ["🏪", "가게"],
                  "사무실 근무": ["💼", "가게 밖 · 사무실"], "수업 준비": ["📚", "가게 밖 · 수업 준비"], "공부": ["📖", "가게 밖 · 공부"],
@@ -1256,26 +1256,13 @@
       if (day) return day["사장님"] || "";
       var dr = draftOf(ym)[md]; return (dr && dr["사장님"]) || "";
     }
-    function paintBoss() {
+    function paintBoss() {   // 오늘만 (사장님 요청 · 다른 날은 근무표 달력에서)
       var bars = document.querySelectorAll(".bossbar"); if (!bars.length) return;
-      var WD = ["일", "월", "화", "수", "목", "금", "토"], d = new Date(), list = [];
-      for (var i = 0; list.length < 7 && i < 14; i++) {
-        var x = new Date(d.getFullYear(), d.getMonth(), d.getDate() + i);
-        if (x.getDay() === 0) continue;   // 일요일 정기휴무
-        list.push({ d: x, r: bossOn(x), today: i === 0 });
-      }
-      var t = list[0] && list[0].today ? list[0] : null, tb = t && BOSS[t.r];
-      var away = function (r) { return RCLS[r] === "away"; };
-      var head = t ? '<div class="bbtoday' + (t.r && away(t.r) ? " away" : "") + '"><span class="bbk">👑 오늘 사장님</span><b>' + (t.r ? (tb ? tb[0] + " " : "") + esc(t.r) : "근무 없음") + "</b>" +
-        (tb ? '<span class="bbw">' + esc(tb[1]) + "</span>" : "") +
-        (t.r && away(t.r) ? '<span class="bbh">급한 일은 📞 전화 · 💬 텔레그램</span>' : "") + "</div>"
-        : '<div class="bbtoday"><span class="bbk">👑 오늘은 일요일 정기휴무</span></div>';
-      var rest = list.filter(function (x) { return !x.today; }).map(function (x) {
-        var b = BOSS[x.r];
-        return '<span class="bbday' + (x.r && away(x.r) ? " away" : "") + '"><i>' + (x.d.getMonth() + 1) + "/" + x.d.getDate() + "(" + WD[x.d.getDay()] + ")</i>" +
-          (x.r ? (b ? b[0] + " " : "") + esc(x.r) : '<em class="bbnone">일정 없음</em>') + "</span>";
-      }).join("");
-      var html = head + '<div class="bbweek">' + rest + "</div>";
+      var d = new Date(), r = d.getDay() === 0 ? null : bossOn(d), tb = r && BOSS[r], away = r && RCLS[r] === "away";
+      var html = r === null ? '<div class="bbtoday"><span class="bbk">👑 오늘은 일요일 정기휴무</span></div>'
+        : '<div class="bbtoday' + (away ? " away" : "") + '"><span class="bbk">👑 오늘 사장님</span><b>' + (r ? (tb ? tb[0] + " " : "") + esc(r) : "근무 없음") + "</b>" +
+          (tb ? '<span class="bbw">' + esc(tb[1]) + "</span>" : "") +
+          (away ? '<span class="bbh">급한 일은 📞 전화 · 💬 텔레그램</span>' : "") + "</div>";
       Array.prototype.forEach.call(bars, function (el) { el.innerHTML = html; });
     }
     setTimeout(paintBoss, 0);
