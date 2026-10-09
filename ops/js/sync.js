@@ -257,9 +257,18 @@
       fetch(location.pathname + "?vc=" + Date.now(), { cache: "no-store" }).then(function (r) { return r.ok ? r.text() : ""; }).then(function (t) {
         var m = String(t).match(/v0924-(\d+)/), cur = verNow(); if (!m || !cur || +m[1] <= cur) return;
         verAsked = true;
-        warnBar("csWarnVer", "🔄 새 버전(v0924-" + m[1] + ")이 나왔습니다 — 적던 것은 저장하고 곧 새로 엽니다 · <u>지금 새로 열기</u>", "ver");
-        var b = document.getElementById("csWarnVer"); if (b) b.addEventListener("click", reloadSafely);
-        (function wait() { if (idle()) reloadSafely(); else setTimeout(wait, 5000); })();
+        // 캐시 때문에 옛 화면이 다시 열려도 같은 버전으로는 한 번만 자동 새로고침 (무한 새로고침 방지)
+        var tried = ""; try { tried = sessionStorage.getItem("cs.vertry") || ""; } catch (e) {}
+        function go() {
+          try { sessionStorage.setItem("cs.vertry", m[1]); } catch (e) {}
+          try { if (window.__CS_FLUSH) window.__CS_FLUSH(); } catch (e) {}
+          flushNow();
+          var t0 = Date.now();
+          (function w() { if ((inflight === 0 && !Object.keys(pending).length) || Date.now() - t0 > 6000) location.replace(location.pathname + "?nv=" + m[1] + location.hash); else setTimeout(w, 150); })();
+        }
+        warnBar("csWarnVer", "🔄 새 버전(v0924-" + m[1] + ")이 나왔습니다 — " + (tried === m[1] ? "<u>눌러서 새로 열기</u> (적던 것은 저장됩니다)" : "적던 것은 저장하고 곧 새로 엽니다 · <u>지금 새로 열기</u>"), "ver");
+        var b = document.getElementById("csWarnVer"); if (b) b.addEventListener("click", go);
+        if (tried !== m[1]) (function wait() { if (idle()) go(); else setTimeout(wait, 5000); })();
       }).catch(function () {});
     }
     setTimeout(checkVer, 20000); setInterval(checkVer, 10 * 60000);
