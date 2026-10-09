@@ -2219,7 +2219,17 @@
       if (typeof timetable === "function") timetable();
       renderMeet();
       snapBase();
+      wsGrow();
     }
+    // 「정하고 갈 것」 · 「역할 나누기」 칸은 글 길이만큼 늘어난다 (한 줄 칸에 잘려 안 보이던 것)
+    function wsGrow(el) {
+      (el ? [el] : Array.prototype.slice.call(document.querySelectorAll("textarea.wsgrow"))).forEach(function (t) {
+        if (!t.offsetParent) return;   // 숨은 탭에선 높이를 못 잰다 — 탭을 열 때 다시
+        t.style.height = "auto"; t.style.height = t.scrollHeight + 2 + "px";
+      });
+    }
+    document.addEventListener("input", function (e) { if (e.target.classList && e.target.classList.contains("wsgrow")) wsGrow(e.target); });
+    document.addEventListener("click", function (e) { var t = e.target.closest && e.target.closest('.tab[data-p="tp9"]'); if (t) setTimeout(function () { wsGrow(); }, 30); });
     function save() {
       var o = {}, stored = {}, prev = {};
       try { stored = JSON.parse(localStorage.getItem(key()) || "{}") || {}; } catch (e) {}

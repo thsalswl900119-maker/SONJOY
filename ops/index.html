@@ -1803,6 +1803,60 @@ table.zt tr:last-child td{border-bottom:0}
 .chromeov button{display:block;width:100%;border:1px solid #DDD;background:#fff;border-radius:10px;padding:11px;font:inherit;font-size:14px;font-weight:700;margin-top:8px;color:#333}
 .chromeov .costay{border:0;color:#888;font-weight:600}
 .chromebar .cbx{border:0;background:transparent;color:#fff;font-size:18px;cursor:pointer;padding:4px 6px}
+/* ── 가독성 점검(10/9 · v0924-177): 드물게 쓰는 탭의 작은 글씨(12~13px)를 읽기 좋은 크기로 · 줄 간격 · 단어 단위 줄바꿈 ── */
+#tp3,#tp5,#tp6,#tp7,#tp8,#tp9,#tp11,#tp14,#tp15,#tp17{word-break:keep-all;overflow-wrap:anywhere}
+.tnote{font-size:14px!important;line-height:1.65}
+.shead .sub{font-size:13.5px}
+/* 입력 칸 — 아이폰은 16px보다 작으면 누를 때마다 화면이 확대된다 */
+#tp5 :is(input[type=text],input:not([type]),textarea,select),#tp8 :is(input[type=text],input:not([type]),textarea,select),
+#tp9 :is(input[type=text],input:not([type]),input[type=date],textarea,select),#tp14 :is(input[type=text],input:not([type]),textarea,select),
+#tp15 :is(input[type=text],input:not([type]),textarea,select),#tp17 :is(input[type=text],textarea,select){font-size:16px}
+/* 워크샵 */
+#tp9 .wstable td,#tp9 .wsro{font-size:15px;line-height:1.55}
+#tp9 .wstable th{font-size:13.5px}
+#tp9 .wsrefbox{font-size:15px;line-height:1.7}
+#tp9 .wsrefbox h4{font-size:16px}
+#tp9 .wsref{font-size:14px}#tp9 .wsref th{font-size:13.5px}
+#tp9 .wsmtnote{font-size:15px;line-height:1.7}
+#tp9 .wsmt>summary{font-size:15.5px}
+#tp9 label.wsrow span,#tp9 .wsaddnote,#tp9 em{font-size:14px}
+#tp9 .ttbody,#tp9 .ttbody span,#tp9 .rpbody{font-size:14px;line-height:1.55}
+#tp9 .wpcard{font-size:14px}
+#tp9 textarea.wsgrow{resize:none;overflow:hidden;min-height:2.4em;line-height:1.5;font-family:inherit;width:100%;box-sizing:border-box}
+/* 월말회의 */
+#tp5 td,#tp5 th{font-size:14px;line-height:1.55}
+#tp5 span.ri,#tp5 li.pk span{font-size:13.5px}
+#tp5 label.flab em,#tp5 th em,#tp5 .zfoot .lock{font-size:13px}
+/* 연간 행사 */
+#tp6 span.hact,#tp6 span.iact{font-size:14px;line-height:1.55}
+#tp6 .yychip,#tp6 .ycev{font-size:13px}
+/* 과일 */
+#tp7 .gbody{font-size:15px;line-height:1.7}
+#tp7 .fnotice{font-size:14px}
+#tp7 .fbtn .fn2,#tp7 .fbtn .fn3{font-size:13.5px}
+/* 월말 평가 */
+#tp8 td.rq{font-size:15px;line-height:1.6}
+#tp8 td,#tp8 th{font-size:14px}
+#tp8 .rvri span,#tp8 .rvstep span,#tp8 .rvgbar span,#tp8 .rvgtable,#tp8 li{font-size:14px;line-height:1.55}
+#tp8 label.flab em{font-size:13px}
+/* 사용법 */
+#tp11 li,#tp11 .tbody p,#tp11 .tfaq span,#tp11 p{font-size:15px;line-height:1.75}
+#tp11 .tfaq b,#tp11 li b{font-size:15.5px}
+/* 독서나눔 */
+#tp14 h4{font-size:16px}#tp14 h4 .cnt,#tp14 .rdrule span,#tp14 .rdfoot span,#tp14 summary .dt,#tp14 em{font-size:13.5px}
+/* 관리자 */
+#tp15 li span,#tp15 .mgchh em,#tp15 .mgah small,#tp15 .mgsubh small,#tp15 .wrauto{font-size:13.5px;line-height:1.55}
+/* 청소 · 정비 */
+#tp3 span.zd{font-size:13.5px;line-height:1.5}#tp3 .zsum,#tp3 .zleft,#tp3 .zfoot span{font-size:13.5px}
+#tp3 button.chip{font-size:13.5px}
+/* 제과제빵 표 · 탭 제목 설명 · 월말회의 비교표 */
+#tp13 .thtbl td,#tp13 .thtbl th{font-size:14px;line-height:1.55}
+#tp13 summary small{font-size:13px}
+.shead span.sub{font-size:13.5px;line-height:1.5}
+#tp5 .rpcmp td{font-size:13.5px!important}#tp5 .rpcmp tr.rpch td{font-size:12.5px!important}
+/* 벤치마킹 */
+#tp17 small{font-size:12.5px}#tp17 .bnrow span{font-size:14px}#tp17 .bnfoot,#tp17 .bnx{font-size:13px}#tp17 .bnavg{font-size:13.5px}
+#tp17 .bntable{font-size:14px}#tp17 .bnnote{font-size:14.5px}
 /* 경고 띠 (js/sync.js) */
 .cswarn{position:sticky;top:0;z-index:9999;padding:10px 14px;font-size:14px;font-weight:800;line-height:1.5;cursor:pointer;text-align:center}
 .cswarn.bad{background:#B3261E;color:#fff}.cswarn.ver{background:#1B5FC1;color:#fff}
@@ -3311,7 +3365,7 @@ input,select,textarea{border-radius:var(--r3)!important}
   <div class="wpgrid"><button type="button" class="wpcard" data-y="2025"><div class="wph"><b>25.11</b>도쿄<em class="wpgo">눌러서 열기</em></div><div class="wpt">카페스이의 치즈케이크와 진정한 말차를 찾아서</div><div class="wpm">3명 · 3박 4일 (11/10~13)</div><div class="wpn">회비 1인 100,000엔 · 카페 지출 2,066,927원 · 3일 총 경비 290,767엔. 회의 4번.</div></button><button type="button" class="wpcard" data-y="2026"><div class="wph"><b>26.11</b>후쿠오카<em class="wpgo">눌러서 열기</em></div><div class="wpt">협력으로 만드는 진짜 오래 팔 수 있는 카페스이의 그것</div><div class="wpm">4명 · 2박 3일 (11/9~11)</div><div class="wpn">경비 아침·점심·저녁 각 10만원 + 교통비 = 총 80만원. 회의 3번 + 최종 점검.</div></button></div>
 
   <h3 class="subhead">올해 워크샵</h3>
-  <div class="wsgrid"><div class="wssec"><div class="wssh">정하고 갈 것</div><div class="wsrows"><label class="wsrow"><span>컨셉 · 주제<em>올해 워크샵으로 무엇을 찾아올 것인가</em></span><input type="text" class="wsin" data-k="w1"></label><label class="wsrow"><span>가는 곳 · 날짜<em>예: 후쿠오카 26.11.9~11 (월~수)</em></span><input type="text" class="wsin" data-k="w2"></label><label class="wsrow"><span>인원 · 숙소<em>인원수와 숙소 주소</em></span><input type="text" class="wsin" data-k="w3"></label><label class="wsrow"><span>회비 · 경비<em>1인 회비와 아침·점심·저녁 경비 배분</em></span><input type="text" class="wsin" data-k="w4"></label><label class="wsrow"><span>비행기 편<em>가는 편 / 오는 편 시간</em></span><input type="text" class="wsin" data-k="w5"></label></div></div><div class="wssec"><div class="wssh">역할 나누기</div><div class="wsrows"><label class="wsrow"><span>스케줄 짜기</span><input type="text" class="wsin" data-k="w10"></label><label class="wsrow"><span>환전 및 회계</span><input type="text" class="wsin" data-k="w11"></label><label class="wsrow"><span>촬영</span><input type="text" class="wsin" data-k="w12"></label><label class="wsrow"><span>예약하기</span><input type="text" class="wsin" data-k="w13"></label><label class="wsrow"><span>타임키퍼 · 길찾기 · 이동</span><input type="text" class="wsin" data-k="w14"></label></div></div><div class="wssec"><div class="wssh">미리 준비할 것</div><div class="wsrows"><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w20"><span>예약한 것 전부 캡쳐해두기<em>항공권 · 숙소 · 식당 · 티켓</em></span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w21"><span>로밍하기</span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w22"><span>해외 사용 가능 카드<em>여권 명의자와 같아야 함</em></span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w23"><span>여행자보험 가입<em>인원수대로</em></span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w24"><span>비짓재팬 작성 + QR 준비<em>필수는 아니지만 해두면 편함</em></span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w25"><span>일본 교통카드 준비<em>아이폰에 교통카드 등록</em></span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w26"><span>환전하기</span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w27"><span>여권</span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w28"><span>개인 짐</span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w29"><span>멀티탭 · 돼지코</span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w30"><span>면세한 사람 체크</span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w31"><span>일정 최종 점검</span></label></div></div><div class="wssec warn"><div class="wssh">기내에 못 가져가는 것</div><div class="wsrows"><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w40"><span>액체류는 100ml 이하로</span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w41"><span>보조배터리는 기내로<em>부치면 안 됨</em></span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w42"><span>배터리 분리 안 되는 무선 고데기는 반입 불가</span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w43"><span>컵 형태 곤약젤리는 한국으로 못 가져옴</span></label></div></div><div class="wssec"><div class="wssh">다녀와서</div><div class="wsrows"><label class="wsrow"><span>좋았던 것<em>숙소에서 마지막 밤에 다 같이</em></span><textarea class="wsin" data-k="w50" rows="2"></textarea></label><label class="wsrow"><span>아쉬웠던 점</span><textarea class="wsin" data-k="w51" rows="2"></textarea></label><label class="wsrow"><span>매장에 바로 적용할 것<em>맛 · 메뉴 · 패키지 · 응대 중에서</em></span><textarea class="wsin" data-k="w52" rows="2"></textarea></label><label class="wsrow"><span>다음 워크샵에 바꿀 것</span><textarea class="wsin" data-k="w53" rows="2"></textarea></label></div></div></div>
+  <div class="wsgrid"><div class="wssec"><div class="wssh">정하고 갈 것</div><div class="wsrows"><label class="wsrow"><span>컨셉 · 주제<em>올해 워크샵으로 무엇을 찾아올 것인가</em></span><textarea class="wsin wsgrow" rows="1" data-k="w1"></textarea></label><label class="wsrow"><span>가는 곳 · 날짜<em>예: 후쿠오카 26.11.9~11 (월~수)</em></span><textarea class="wsin wsgrow" rows="1" data-k="w2"></textarea></label><label class="wsrow"><span>인원 · 숙소<em>인원수와 숙소 주소</em></span><textarea class="wsin wsgrow" rows="1" data-k="w3"></textarea></label><label class="wsrow"><span>회비 · 경비<em>1인 회비와 아침·점심·저녁 경비 배분</em></span><textarea class="wsin wsgrow" rows="1" data-k="w4"></textarea></label><label class="wsrow"><span>비행기 편<em>가는 편 / 오는 편 시간</em></span><textarea class="wsin wsgrow" rows="1" data-k="w5"></textarea></label></div></div><div class="wssec"><div class="wssh">역할 나누기</div><div class="wsrows"><label class="wsrow"><span>스케줄 짜기</span><textarea class="wsin wsgrow" rows="1" data-k="w10"></textarea></label><label class="wsrow"><span>환전 및 회계</span><textarea class="wsin wsgrow" rows="1" data-k="w11"></textarea></label><label class="wsrow"><span>촬영</span><textarea class="wsin wsgrow" rows="1" data-k="w12"></textarea></label><label class="wsrow"><span>예약하기</span><textarea class="wsin wsgrow" rows="1" data-k="w13"></textarea></label><label class="wsrow"><span>타임키퍼 · 길찾기 · 이동</span><textarea class="wsin wsgrow" rows="1" data-k="w14"></textarea></label></div></div><div class="wssec"><div class="wssh">미리 준비할 것</div><div class="wsrows"><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w20"><span>예약한 것 전부 캡쳐해두기<em>항공권 · 숙소 · 식당 · 티켓</em></span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w21"><span>로밍하기</span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w22"><span>해외 사용 가능 카드<em>여권 명의자와 같아야 함</em></span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w23"><span>여행자보험 가입<em>인원수대로</em></span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w24"><span>비짓재팬 작성 + QR 준비<em>필수는 아니지만 해두면 편함</em></span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w25"><span>일본 교통카드 준비<em>아이폰에 교통카드 등록</em></span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w26"><span>환전하기</span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w27"><span>여권</span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w28"><span>개인 짐</span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w29"><span>멀티탭 · 돼지코</span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w30"><span>면세한 사람 체크</span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w31"><span>일정 최종 점검</span></label></div></div><div class="wssec warn"><div class="wssh">기내에 못 가져가는 것</div><div class="wsrows"><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w40"><span>액체류는 100ml 이하로</span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w41"><span>보조배터리는 기내로<em>부치면 안 됨</em></span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w42"><span>배터리 분리 안 되는 무선 고데기는 반입 불가</span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w43"><span>컵 형태 곤약젤리는 한국으로 못 가져옴</span></label></div></div><div class="wssec"><div class="wssh">다녀와서</div><div class="wsrows"><label class="wsrow"><span>좋았던 것<em>숙소에서 마지막 밤에 다 같이</em></span><textarea class="wsin" data-k="w50" rows="2"></textarea></label><label class="wsrow"><span>아쉬웠던 점</span><textarea class="wsin" data-k="w51" rows="2"></textarea></label><label class="wsrow"><span>매장에 바로 적용할 것<em>맛 · 메뉴 · 패키지 · 응대 중에서</em></span><textarea class="wsin" data-k="w52" rows="2"></textarea></label><label class="wsrow"><span>다음 워크샵에 바꿀 것</span><textarea class="wsin" data-k="w53" rows="2"></textarea></label></div></div></div>
 
   <h3 class="subhead">가고 싶은 곳 · 하고 싶은 것</h3>
   <p class="tnote">회의 때 각자 다섯 개씩 적습니다. 다녀온 곳은 왼쪽을 체크하면 줄이 그어집니다. 사람별로 묶여 있고, 이름 줄을 누르면 접거나 펼 수 있습니다.</p>
