@@ -323,6 +323,7 @@
     Object.keys(d).forEach(function (k) { if (k.charAt(0) !== "_" && order.indexOf(k) < 0) order.push(k); });
     if (order.indexOf(jamSub) < 0) jamSub = order[0];
     var j = d[jamSub] || { uses: [] }, cm = d._common || null, canEdit = me() === "사장님" || me() === "정항아";
+    function jxBtn(w, label) { return canEdit ? '<div class="rcedrow"><button type="button" class="rcedb rcjx" data-jx="' + w + '">' + label + "</button></div>" : ""; }
     var isJam = (j.kind || "청") === "청";
     function navRow(kind, label) {
       var ks = order.filter(function (k) { return (d[k].kind || "청") === kind; }); if (!ks.length) return "";
@@ -341,12 +342,12 @@
       h += '<details class="rcd rcpage rccommon" open><summary>📌 ' + esc(cm.title || "청 담는 기본") + "</summary><div class=\"rcb\">" +
         (cm.facts ? grid(cm.facts, "", "") : "") +
         (cm.minus != null ? '<div class="rccalc"><label>⚖ 과일 무게 <input type="number" inputmode="numeric" id="rcCalcW" placeholder="예) 2000"> g</label><span id="rcCalcOut">→ 설탕 <b>—</b></span></div>' : "") +
-        '<div class="rcsub">순서</div>' + list(cm.steps) + list(cm.tips, "rctip") + "</div></details>";
+        '<div class="rcsub">순서</div>' + list(cm.steps) + list(cm.tips, "rctip") + jxBtn("_common", "✏ 공통 고치기") + "</div></details>";
     }
     // 시럽 공통 (모든 시럽 끓이는 법)
     var sc = d._scommon || null;
-    if (!isJam && sc) h += '<details class="rcd rcpage rccommon" open><summary>📌 ' + esc(sc.title || "시럽 끓이는 기본") + '</summary><div class="rcb"><div class="rcsub">순서</div>' + list(sc.steps) + list(sc.tips, "rctip") + "</div></details>";
-    h += '<div class="rcjitem"><h4 class="rcjt">' + esc(j.title || "") + (j.batch && j.cols ? ' <small>' + esc(j.batch) + "</small>" : "") + "</h4>";
+    if (!isJam && sc) h += '<details class="rcd rcpage rccommon" open><summary>📌 ' + esc(sc.title || "시럽 끓이는 기본") + '</summary><div class="rcb"><div class="rcsub">순서</div>' + list(sc.steps) + list(sc.tips, "rctip") + jxBtn("_scommon", "✏ 공통 고치기") + "</div></details>";
+    h += '<div class="rcjitem"><h4 class="rcjt">' + esc(j.title || "") + (j.batch && j.cols ? ' <small>' + esc(j.batch) + "</small>" : "") + "</h4>" + jxBtn("item", "✏ 이 레시피 고치기");
     if (j.ing && j.ing.length) h += '<div class="rcsub">재료</div>' + ingTable(j);
     if (j.prep && j.prep.length) h += '<div class="rcsub">손질 · 준비</div>' + list(j.prep);
     if (j.steps && j.steps.length) h += '<div class="rcsub">만드는 순서</div>' + list(j.steps);
@@ -359,6 +360,7 @@
     if ((j.uses || []).length) h += '<div class="rcsub">어디에 쓰나 (레시피에서 모음)</div><ul class="rcuses">' + j.uses.map(function (u) { return "<li><b>" + esc(u.where) + "</b><span>" + u.text + "</span></li>"; }).join("") + "</ul>";
     h += "</div>";
     bodyEl.innerHTML = '<div class="rcsec">' + h + "</div>";
+    if (canEdit) { var jb = document.createElement("div"); jb.className = "rcedbar"; jb.innerHTML = '<button type="button" class="rced" data-a="newjam">＋ 새 청 · 시럽 추가</button><button type="button" class="rced" data-a="hist">📜 고친 기록</button><span>「✏ 이 레시피 고치기」로 재료 · 양 · 순서를 바로 고칩니다 (사장님 · 정항아님)</span>'; bodyEl.appendChild(jb); }
     try { Array.prototype.forEach.call(bodyEl.querySelectorAll(".rcuses span"), function (sp) { var tw = document.createTreeWalker(sp, NodeFilter.SHOW_TEXT, null), ns = [], nd; while ((nd = tw.nextNode())) { NUM.lastIndex = 0; if (NUM.test(nd.nodeValue)) ns.push(nd); } ns.forEach(function (t) { var x = document.createElement("span"); x.innerHTML = esc(t.nodeValue).replace(NUM, '<b class="rcnum">$1</b>'); while (x.firstChild) t.parentNode.insertBefore(x.firstChild, t); t.remove(); }); }); } catch (e) {}
     var cw = document.getElementById("rcCalcW"), co = document.getElementById("rcCalcOut");
     if (cw && co) cw.oninput = function () { var w = parseFloat(cw.value); co.innerHTML = w > 0 ? "→ 설탕 <b>" + Math.max(0, Math.round(w - cm.minus)).toLocaleString() + "g</b>" : "→ 설탕 <b>—</b>"; };
@@ -382,8 +384,10 @@
   function sumOf(el) { for (var i = 0; i < el.children.length; i++) if (el.children[i].tagName === "SUMMARY") return el.children[i]; return null; }
   function edButtons() {
     Array.prototype.forEach.call(bodyEl.querySelectorAll("[data-rid]"), function (el) {
-      var b = document.createElement("button"); b.type = "button"; b.className = "rcedb"; b.dataset.rid = el.getAttribute("data-rid"); b.textContent = "✏ 고치기";
-      if (el.tagName === "DETAILS") { var bd = bodyOf(el); if (bd) bd.insertBefore(b, bd.firstChild); } else el.appendChild(b);
+      // 단추는 따로 한 줄에 (예전엔 오른쪽에 띄워 놨더니 아래 순서 목록이 덮어서 눌리지 않았음 · 10/9)
+      var row = document.createElement("div"); row.className = "rcedrow";
+      row.innerHTML = '<button type="button" class="rcedb" data-rid="' + el.getAttribute("data-rid") + '">✏ 이 카드 고치기</button>';
+      if (el.tagName === "DETAILS") { var bd = bodyOf(el); if (bd) bd.insertBefore(row, bd.firstChild); } else el.appendChild(row);
     });
     var bar = document.createElement("div"); bar.className = "rcedbar";
     bar.innerHTML = '<button type="button" class="rced" data-a="new">＋ 새 카드 추가</button><button type="button" class="rced" data-a="hist">📜 고친 기록</button><span>카드마다 「✏ 고치기」로 글 · 숫자 · 표를 바로 고칩니다 (사장님 · 정항아님)</span>';
@@ -448,10 +452,14 @@
     at.parentNode.insertBefore(box, at);
     if (!isNew) { at.hidden = true; ED.hid = at; }
     try { document.execCommand("defaultParagraphSeparator", false, "p"); } catch (e) {}
-    // 위에 붙어 있는 저장 줄에 가리지 않게 조금 더 내려서 보여 준다
-    var top = box.getBoundingClientRect().top + window.pageYOffset, hd = 0;
-    Array.prototype.forEach.call(document.querySelectorAll("body *"), function (x) { if (hd > 400) return; var cs = getComputedStyle(x); if ((cs.position === "sticky" || cs.position === "fixed") && x.getBoundingClientRect().top <= 1 && x.offsetHeight < 400 && !box.contains(x)) hd = Math.max(hd, x.getBoundingClientRect().bottom); });
-    window.scrollTo(0, Math.max(0, top - hd - 12));
+    showBox(box);
+  }
+  // 위에 붙어 있는 저장 줄(휴대폰에선 꽤 높다)에 가리지 않게 그만큼 더 내려서 보여 준다
+  function showBox(box) {
+    window.scrollTo(0, Math.max(0, box.getBoundingClientRect().top + window.pageYOffset - 400));
+    var hd = 0;
+    Array.prototype.forEach.call(document.querySelectorAll("body *"), function (x) { var cs = getComputedStyle(x); if ((cs.position === "sticky" || cs.position === "fixed") && x.offsetHeight < window.innerHeight * 0.6 && !box.contains(x)) { var r = x.getBoundingClientRect(); if (r.top <= 1 && r.bottom > 0) hd = Math.max(hd, r.bottom); } });
+    window.scrollTo(0, Math.max(0, box.getBoundingClientRect().top + window.pageYOffset - hd - 12));
   }
   function endEdit(redraw) { var b = bodyEl.querySelector(".rcedbox"); if (ED && ED.hid) ED.hid.hidden = false; if (b) b.remove(); ED = null; if (redraw || edPend) { edPend = false; draw(); } }
   function selIn(area) { var s = window.getSelection(); if (!s.rangeCount) return null; var r = s.getRangeAt(0); return area.contains(r.commonAncestorContainer) ? r : null; }
@@ -529,24 +537,127 @@
     var hl = histList(), x;
     if (b.dataset.hv != null) {
       x = hl[+b.dataset.hv]; var v = b.parentNode.querySelector(".rchv"); if (!x || !v) return;
+      if (v.hidden && x.s === "jam") { v.innerHTML = jamTxt(x.b); v.hidden = false; return; }
       if (v.hidden) { v.innerHTML = '<div class="rcsec">' + x.b + "</div>"; Array.prototype.forEach.call(v.querySelectorAll("details"), function (d) { d.open = true; }); try { pretty(v); } catch (e) {} }
       v.hidden = !v.hidden; return;
     }
     x = hl[+b.dataset.hr]; if (!x || !x.b) return;
     if (ED) { alert("고치던 카드를 먼저 저장하거나 취소해 주세요"); return; }
+    if (x.s === "jam") {
+      var dj = jamData(); if (!x.k || JSON.stringify(dj[x.k]) !== x.a) { alert("그 뒤에 또 고쳐서 바로 되돌릴 수 없습니다 · 「고치기 전 보기」를 보고 ✏ 고치기로 직접 고쳐 주세요"); return; }
+      if (!confirm("「" + x.t + "」을(를) " + x.at + " 고치기 전 모습으로 되돌릴까요?")) return;
+      dj[x.k] = JSON.parse(x.b);
+      writeSec("jam", JSON.stringify(dj), { s: "jam", k: x.k, t: x.t, b: x.a, a: x.b, by: me(), at: stamp(), r: 1 }).then(function () { draw(); say("↩ 되돌렸습니다"); });
+      return;
+    }
     var rc = rawCards(plain[x.s]), el = rc.list.filter(function (y) { return y.outerHTML === x.a; })[0];
     if (!el) { alert("그 뒤에 이 카드를 또 고쳐서 바로 되돌릴 수 없습니다 · 「고치기 전 보기」를 보고 ✏ 고치기로 직접 고쳐 주세요"); return; }
     if (!confirm("「" + x.t + "」을(를) " + x.at + " 고치기 전 모습으로 되돌릴까요?")) return;
     var w = document.createElement("div"); w.innerHTML = x.b; var nb = w.firstChild; el.parentNode.replaceChild(nb, el);
     writeSec(x.s, rc.root.innerHTML, { s: x.s, t: x.t, b: x.a, a: nb.outerHTML, by: me(), at: stamp(), r: 1 }).then(function () { draw(); say("↩ 되돌렸습니다"); });
   }
+  // ── 과일청 · 시럽 고치기 (JSON 레시피: 이름 · 종류 · 배합 · 재료표 · 손질 · 순서 / 공통 상자: 제목 · 알아둘 것 · 순서 · 팁)
+  function lines(a) { return (a || []).join("\n"); }
+  function unlines(s) { return String(s || "").split("\n").map(function (x) { return x.trim(); }).filter(Boolean); }
+  function ea(v) { return esc(v).replace(/"/g, "&quot;"); }
+  function jamTxt(json) {
+    var it = {}; try { it = JSON.parse(json || "{}") || {}; } catch (e) {}
+    var h = "<b>" + esc(it.title || "") + "</b>";
+    if (it.ing) h += "<p>재료: " + esc(it.ing.map(function (r) { return r.filter(Boolean).join(" "); }).join(" · ")) + "</p>";
+    if (it.facts) h += "<p>" + esc(it.facts.map(function (r) { return r.join(" "); }).join(" · ")) + "</p>";
+    ["prep", "steps", "tips"].forEach(function (k) { if (it[k] && it[k].length) h += "<ol>" + it[k].map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ol>"; });
+    return h;
+  }
+  function ingRows(ing, ncol) {
+    return (ing.length ? ing : [["", ""]]).map(function (r) {
+      var c = ""; for (var i = 0; i < ncol; i++) c += '<input type="text" class="rcjamt" placeholder="양" value="' + ea(r[i + 1] || "") + '">';
+      return '<div class="rcjir"><input type="text" class="rcjnm" placeholder="재료 이름" value="' + ea(r[0] || "") + '">' + c + '<button type="button" class="rced" data-jr="del" title="이 줄 지우기">✕</button></div>';
+    }).join("");
+  }
+  function readIng(box) {
+    return Array.prototype.map.call(box.querySelectorAll(".rcjir"), function (row) {
+      return [row.querySelector(".rcjnm").value.trim()].concat(Array.prototype.map.call(row.querySelectorAll(".rcjamt"), function (x) { return x.value.trim(); }));
+    }).filter(function (r) { return r.join("").trim(); });
+  }
+  function colsOf(box) { var el = box.querySelector(".rcjcols"); return el ? unlines(el.value.replace(/,/g, "\n")) : []; }
+  function jamRow(b) {
+    var box = b.closest(".rcedbox"); if (!box) return;
+    if (b.dataset.jr === "del") { var row = b.closest(".rcjir"); if (box.querySelectorAll(".rcjir").length > 1) row.remove(); else Array.prototype.forEach.call(row.querySelectorAll("input"), function (x) { x.value = ""; }); return; }
+    if (b.dataset.jr === "add") { var n = Math.max(1, colsOf(box).length), w = document.createElement("div"); w.innerHTML = ingRows([["", ""]], n); box.querySelector(".rcjing").appendChild(w.firstChild); }
+  }
+  function jamEdit(what) {
+    if (ED) { alert("고치던 것이 있습니다 · 먼저 저장하거나 취소해 주세요"); return; }
+    var d = jamData(), isNew = what === "new", isItem = isNew || what === "item", k = what === "item" ? jamSub : what;
+    var it = isNew ? { title: "", kind: "청", ing: [], steps: [] } : d[k]; if (!it) return;
+    ED = { jam: true, what: what, k: isNew ? null : k, isItem: isItem, orig: isNew ? null : JSON.stringify(it) };
+    var h = '<div class="rcedh">✏ ' + (isNew ? "새 청 · 시럽 만들기" : isItem ? "레시피 고치기" : "공통 고치기") + ' <small>저장하면 모든 기기에 바로 바뀝니다 · 고치기 전 모습은 「📜 고친 기록」에 남습니다 · 큰 칸은 한 줄에 하나씩</small></div>';
+    if (isItem) {
+      var ncol = it.cols ? it.cols.length : 1;
+      h += '<label class="rcedl">이름<input type="text" class="rcjf" data-f="title" value="' + ea(it.title) + '" placeholder="예) 🍋 레몬청"></label>' +
+        '<label class="rcedl">종류<select class="rcjf" data-f="kind"><option' + ((it.kind || "청") === "청" ? " selected" : "") + '>청</option><option' + (it.kind === "시럽" ? " selected" : "") + ">시럽</option></select></label>" +
+        '<label class="rcedl">배합 기준 (예: 5배합 기준)<input type="text" class="rcjf" data-f="batch" value="' + ea(it.batch || "") + '"></label>' +
+        '<label class="rcedl">양 칸이 여러 개면 칸 이름을 쉼표로 (예: 1배합, 7배합) · 하나면 비워 두기<input type="text" class="rcjcols" value="' + ea((it.cols || []).join(", ")) + '"></label>' +
+        '<div class="rcedl">재료 · 양</div><div class="rcjing">' + ingRows(it.ing || [], ncol) + '</div><button type="button" class="rced" data-jr="add">＋ 재료 줄</button>' +
+        '<label class="rcedl">손질 · 준비<textarea class="rcjf" data-f="prep" rows="4">' + esc(lines(it.prep)) + "</textarea></label>" +
+        '<label class="rcedl">만드는 순서<textarea class="rcjf" data-f="steps" rows="6">' + esc(lines(it.steps)) + "</textarea></label>";
+    } else {
+      h += '<label class="rcedl">제목<input type="text" class="rcjf" data-f="title" value="' + ea(it.title || "") + '"></label>' +
+        (it.facts ? '<label class="rcedl">알아둘 것 (한 줄에 「이름 | 내용」)<textarea class="rcjf" data-f="facts" rows="4">' + esc(it.facts.map(function (r) { return r.join(" | "); }).join("\n")) + "</textarea></label>" : "") +
+        (it.minus != null ? '<label class="rcedl">⚖ 설탕 계산: 과일 무게에서 빼는 g<input type="number" class="rcjf" data-f="minus" value="' + ea(it.minus) + '"></label>' : "") +
+        '<label class="rcedl">순서<textarea class="rcjf" data-f="steps" rows="6">' + esc(lines(it.steps)) + "</textarea></label>" +
+        '<label class="rcedl">팁 · 주의<textarea class="rcjf" data-f="tips" rows="3">' + esc(lines(it.tips)) + "</textarea></label>";
+    }
+    h += '<div class="rcedbtns"><button type="button" class="rced prim" data-a="save">✔ 저장 (잠가서 저장)</button><button type="button" class="rced" data-a="cancel">취소</button></div>';
+    var box = document.createElement("div"); box.className = "rcedbox rcjbox"; box.innerHTML = h;
+    var jb = bodyEl.querySelector('.rcjx[data-jx="' + what + '"]');
+    var at = isNew ? bodyEl.querySelector(".rcedbar") : isItem ? bodyEl.querySelector(".rcjitem") : jb && jb.closest("details");
+    if (!at) { ED = null; return; }
+    at.parentNode.insertBefore(box, at); if (!isNew) { at.hidden = true; ED.hid = at; }
+    // 양 칸 수가 바뀌면 재료표 칸도 맞춘다 (적은 글은 그대로)
+    var colEl = box.querySelector(".rcjcols");
+    if (colEl) colEl.addEventListener("change", function () { var n = Math.max(1, colsOf(box).length), cur = readIng(box); box.querySelector(".rcjing").innerHTML = ingRows(cur, n); });
+    showBox(box);
+  }
+  function jamSave() {
+    var box = bodyEl.querySelector(".rcedbox"); if (!ED || !box || !key) return;
+    var f = function (n) { var el = box.querySelector('.rcjf[data-f="' + n + '"]'); return el ? el.value : null; };
+    var dd = jamData();
+    if (ED.k && JSON.stringify(dd[ED.k]) !== ED.orig) { alert("그 사이 다른 기기에서 이 레시피가 바뀌었습니다 · 고친 글을 복사해 두고 「취소」 → 다시 고쳐 주세요"); return; }
+    var n = ED.orig ? JSON.parse(ED.orig) : {}, title = (f("title") || "").trim();
+    if (ED.isItem && !title) { alert("이름을 적어 주세요"); return; }
+    if (title) n.title = title;
+    if (ED.isItem) {
+      n.kind = f("kind") || "청";
+      var bt = (f("batch") || "").trim(); if (bt) n.batch = bt; else delete n.batch;
+      var cols = colsOf(box);
+      if (cols.length >= 2) n.cols = cols; else delete n.cols;
+      n.ing = readIng(box).map(function (r) { return cols.length >= 2 ? r.slice(0, cols.length + 1) : [r[0], r[1] || ""]; });
+      n.prep = unlines(f("prep")); if (!n.prep.length) delete n.prep;
+      n.steps = unlines(f("steps"));
+      if (!n.uses) n.uses = [];
+    } else {
+      if (f("facts") != null) n.facts = unlines(f("facts")).map(function (x) { var i = x.indexOf("|"); return i < 0 ? [x, ""] : [x.slice(0, i).trim(), x.slice(i + 1).trim()]; });
+      if (f("minus") != null && f("minus") !== "") n.minus = +f("minus");
+      n.steps = unlines(f("steps"));
+      n.tips = unlines(f("tips")); if (!n.tips.length) delete n.tips;
+    }
+    var k = ED.k;
+    if (!k) { k = "j" + Date.now().toString(36); dd._order = (dd._order || Object.keys(dd).filter(function (x) { return x.charAt(0) !== "_"; })).concat([k]); jamSub = k; }
+    dd[k] = n;
+    var btn = box.querySelector('[data-a="save"]'); btn.disabled = true; btn.textContent = "저장 중…";
+    writeSec("jam", JSON.stringify(dd), { s: "jam", k: k, t: n.title || k, b: ED.orig || "", a: JSON.stringify(n), by: me(), at: stamp(), n: ED.orig ? 0 : 1 })
+      .then(function () { endEdit(true); say("✔ 저장했습니다 · 모든 기기에 바로 바뀝니다"); setTimeout(function () { say(""); }, 6000); },
+            function (e) { btn.disabled = false; btn.textContent = "✔ 저장 (잠가서 저장)"; alert("저장하지 못했습니다 (" + (e && e.message || e) + ")"); });
+  }
   bodyEl.addEventListener("click", function (e) {
     var t0 = e.target.closest ? e.target : e.target.parentNode;
+    var jx = t0.closest(".rcjx"); if (jx) { e.preventDefault(); jamEdit(jx.dataset.jx); return; }
     var eb = t0.closest(".rcedb"); if (eb) { e.preventDefault(); startEdit(+eb.dataset.rid); return; }
+    var jr = t0.closest("[data-jr]"); if (jr) { jamRow(jr); return; }
     var tb = t0.closest(".rcedtool button"); if (tb) { e.preventDefault(); tool(tb.dataset.c, bodyEl.querySelector(".rcedarea")); return; }
     var ab = t0.closest("[data-a]");
-    if (ab && ab.closest(".rcedbox")) { if (ab.dataset.a === "save") saveEdit(); else if (confirm("고친 것을 버리고 닫을까요?")) endEdit(false); return; }
-    if (ab && ab.closest(".rcedbar")) { if (ab.dataset.a === "new") startEdit(-1, true); else showHist(); return; }
+    if (ab && ab.closest(".rcedbox")) { if (ab.dataset.a === "save") { if (ED && ED.jam) jamSave(); else saveEdit(); } else if (confirm("고친 것을 버리고 닫을까요?")) endEdit(false); return; }
+    if (ab && ab.closest(".rcedbar")) { if (ab.dataset.a === "new") startEdit(-1, true); else if (ab.dataset.a === "newjam") jamEdit("new"); else showHist(); return; }
     var hb = t0.closest("[data-hv],[data-hr]"); if (hb) { histAct(hb); return; }
   });
   // 붙여넣기는 글자만 (다른 곳 서식 · 색이 딸려오지 않게)
@@ -558,7 +669,7 @@
   // 고치는 중 이 화면을 떠나면 경고
   window.addEventListener("beforeunload", function (e) { if (ED) { e.preventDefault(); e.returnValue = ""; } });
   navEl.addEventListener("click", function (e) { var b = e.target.closest && e.target.closest(".rcnb"); if (!b) return; if (ED && !confirm("고치던 카드가 저장되지 않았습니다. 다른 묶음으로 갈까요?")) return; if (ED) endEdit(false); cur = b.dataset.k; draw(); bodyEl.scrollIntoView({ block: "nearest" }); });
-  bodyEl.addEventListener("click", function (e) { var b = e.target.closest && e.target.closest(".rcjb"); if (!b) return; jamSub = b.dataset.j; drawJam(); });
+  bodyEl.addEventListener("click", function (e) { var b = e.target.closest && e.target.closest(".rcjb"); if (!b) return; if (ED) { if (!confirm("고치던 것이 저장되지 않았습니다. 다른 레시피로 갈까요?")) return; endEdit(false); } jamSub = b.dataset.j; drawJam(); });
   document.getElementById("rcOpen").addEventListener("click", unlock);
   var seeBtn = document.getElementById("rcSee");
   if (seeBtn) seeBtn.addEventListener("click", function () { var on = pwEl.type === "password"; pwEl.type = on ? "text" : "password"; seeBtn.textContent = on ? "숨기기" : "보기"; });
