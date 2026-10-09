@@ -1325,17 +1325,22 @@
         el.classList.toggle("off", el.value === "휴무" || el.value === "휴가" || el.value === "반짝휴무");
         el.classList.toggle("set", !!el.value && el.value !== "휴무");
       }
+      // 일지처럼 「이 화면에서 바꾼 칸만」 저장한다 — 다른 컴퓨터가 고친 칸을 옛 화면 값으로 덮지 않게 (10/9 사고)
+      var touched = {}, all = false;   // all: 로테이션 채우기 · 아직 저장된 적 없는 달 → 화면 전체가 내 것
+      var lastSave = { t: 0, vals: {} };   // 방금 저장한 칸 — 컴퓨터를 막 켜서 서버 값이 늦게 들어와 밀리면 다시 얹는다
+      function kOf(el) { return el.dataset.d + "|" + (el.classList.contains("pnote") ? "공지" : el.dataset.n); }
       function save() {
-        var o = {};
-        slots.forEach(function (el) {
-          if (!el.value) return;
-          (o[el.dataset.d] || (o[el.dataset.d] = {}))[el.dataset.n] = el.value;
+        var cur = load(ym), fresh = !Object.keys(cur).length, vals = {};
+        slots.concat(notes).forEach(function (el) {
+          var k = kOf(el); if (!(all || fresh || touched[k])) return;
+          var d = el.dataset.d, n = el.classList.contains("pnote") ? "공지" : el.dataset.n;
+          vals[k] = el.value;
+          if (el.value) (cur[d] || (cur[d] = {}))[n] = el.value;
+          else if (cur[d]) { delete cur[d][n]; if (!Object.keys(cur[d]).length) delete cur[d]; }
         });
-        notes.forEach(function (el) {
-          if (!el.value) return;
-          (o[el.dataset.d] || (o[el.dataset.d] = {}))["공지"] = el.value;
-        });
-        store(ym, o);
+        store(ym, cur);
+        lastSave = { t: Date.now(), vals: vals };
+        touched = {}; all = false;
         repaint(ym);
       }
       function apply(data) {
@@ -1356,6 +1361,29 @@
       // 짜는 달이 아니면 로테이션을 밑그림으로 깔아둔다
       apply(Object.keys(saved).length ? saved
             : (wrap.classList.contains("planmode") ? {} : draftOf(ym)));
+      // 다른 컴퓨터에서 이 달을 고치면 — 내가 안 건드린 칸은 바로 새 값으로 바꿔 끼운다 (건드린 칸은 그대로)
+      window.addEventListener("cs:remote", function (e) {
+        var ks = (e.detail && e.detail.keys) || []; if (ks.indexOf(keyOf(ym)) < 0) return;
+        var fr = load(ym);
+        if (Date.now() - lastSave.t < 20000) {
+          var lost = false;
+          Object.keys(lastSave.vals).forEach(function (k) {
+            var p = k.split("|"), v = lastSave.vals[k], dd = fr[p[0]];
+            if (((dd && dd[p[1]]) || "") === v) return;
+            lost = true;
+            if (v) (fr[p[0]] || (fr[p[0]] = {}))[p[1]] = v; else if (dd) { delete dd[p[1]]; if (!Object.keys(dd).length) delete fr[p[0]]; }
+          });
+          if (lost) store(ym, fr);
+        }
+        if (!Object.keys(fr).length) { repaint(ym); return; }
+        if (!all) slots.concat(notes).forEach(function (el) {
+          if (touched[kOf(el)]) return;
+          var dd = fr[el.dataset.d], n = el.classList.contains("pnote") ? "공지" : el.dataset.n;
+          el.value = (dd && dd[n]) || "";
+          if (el.classList.contains("pnote")) el.classList.toggle("set", !!el.value); else paint(el);
+        });
+        check(panel, wrap); repaint(ym);
+      });
 
       // 한 칸씩 저장하지 않는다 — 다 채운 뒤 "저장"을 눌러야 달력에 들어간다
       var dirty = false;
@@ -1375,12 +1403,12 @@
       (window.__CS_SAVERS = window.__CS_SAVERS || []).push(function () { if (dirty) commit(); });
       slots.forEach(function (el) {
         el.addEventListener("change", function () {
-          paint(el); mark(true); check(panel, wrap);
+          touched[kOf(el)] = 1; paint(el); mark(true); check(panel, wrap);
         });
       });
       notes.forEach(function (el) {
         el.addEventListener("change", function () {
-          el.classList.toggle("set", !!el.value); mark(true);
+          touched[kOf(el)] = 1; el.classList.toggle("set", !!el.value); mark(true);
         });
       });
       if (saveBtn) saveBtn.addEventListener("click", commit);
@@ -1392,7 +1420,7 @@
         var keep = {}; notes.forEach(function (el) { if (el.value) keep[el.dataset.d] = el.value; });
         var dr = window.__CS_DRAFT ? window.__CS_DRAFT(ym, variant) : {};
         Object.keys(keep).forEach(function (d) { (dr[d] || (dr[d] = {}))["공지"] = keep[d]; });
-        apply(dr); mark(true);
+        apply(dr); all = true; mark(true);
         fill.textContent = "로테이션 " + (variant + 1) + "안 · 다시 누르면 다른 안";
         if (msg) msg.textContent = "로테이션 " + (variant + 1) + "안으로 채웠습니다 (5가지 중) · 휴무 신청 보고 고친 뒤 저장을 누르세요";
       });

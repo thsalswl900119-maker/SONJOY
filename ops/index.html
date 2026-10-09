@@ -1803,6 +1803,41 @@ table.zt tr:last-child td{border-bottom:0}
 .chromeov button{display:block;width:100%;border:1px solid #DDD;background:#fff;border-radius:10px;padding:11px;font:inherit;font-size:14px;font-weight:700;margin-top:8px;color:#333}
 .chromeov .costay{border:0;color:#888;font-weight:600}
 .chromebar .cbx{border:0;background:transparent;color:#fff;font-size:18px;cursor:pointer;padding:4px 6px}
+/* 경고 띠 (js/sync.js) */
+.cswarn{position:sticky;top:0;z-index:9999;padding:10px 14px;font-size:14px;font-weight:800;line-height:1.5;cursor:pointer;text-align:center}
+.cswarn.bad{background:#B3261E;color:#fff}.cswarn.ver{background:#1B5FC1;color:#fff}
+/* 🔎 벤치마킹 (js/bench.js) */
+.bnsub{font-size:12px;font-weight:600;color:var(--muted);margin-left:6px}
+.bntabs{display:flex;gap:6px;margin:4px 0 8px}
+.bntab{border:1.5px solid var(--rule2);background:var(--surface);border-radius:999px;padding:7px 16px;font:inherit;font-weight:800;cursor:pointer}
+.bntab[aria-selected="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.bnme{font-size:13px;margin:4px 0 8px;color:var(--ink2)}.bnme b.p1{color:var(--p1)}.bnme b.p2{color:var(--p2)}.bnme b.p3{color:var(--p3)}.bnme b.p4{color:var(--p4)}
+.bnrank{display:flex;flex-wrap:wrap;gap:6px;align-items:center;background:#FFF9E0;border:1px solid #F0D98A;border-radius:10px;padding:8px 10px;margin-bottom:10px;font-size:13px}
+.bnrank span{background:#fff;border:1px solid #EAD9A0;border-radius:999px;padding:2px 10px;font-weight:700}.bnrank i{font-style:normal;font-weight:900;color:#B3261E;margin-right:4px}.bnrank em{font-style:normal;color:#8A3A00;font-weight:900}
+.bnnone{color:var(--muted);font-size:13px}
+.bncard{border:1px solid var(--rule2);border-radius:10px;background:var(--surface);margin:0 0 8px}
+.bncard>summary{cursor:pointer;padding:10px 12px;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;font-size:15px}
+.bncard[open]>summary{border-bottom:1px dashed var(--rule2)}
+.bnavg{font-size:12.5px;color:#8A3A00;font-weight:700}.bnavg b{font-size:15px}.bnavg.none{color:var(--muted);font-weight:600}
+.bnbody{padding:8px 12px 12px}
+.bnmine{border:2px solid var(--rule2);border-radius:10px;padding:8px 10px;background:#FFFCF7}
+.bnmh{font-weight:900;margin-bottom:6px}.bnmh small{font-weight:600;color:var(--muted);margin-left:6px}
+.bnmh.p1{color:var(--p1)}.bnmh.p2{color:var(--p2)}.bnmh.p3{color:var(--p3)}.bnmh.p4{color:var(--p4)}
+.bngrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:6px}
+.bnit{display:flex;justify-content:space-between;align-items:center;gap:8px;border:1px solid #EAD9C4;border-radius:8px;padding:6px 8px;background:#fff}
+.bnit span{font-weight:800;font-size:14px;line-height:1.3}.bnit small{display:block;font-weight:500;font-size:11.5px;color:var(--muted)}
+.bnit select{font:inherit;font-size:16px;font-weight:800;padding:4px 6px;border:1px solid var(--rule2);border-radius:6px;min-width:64px}
+.bntot{text-align:right;margin:6px 0;font-weight:800}.bntot b{font-size:18px;color:#8A3A00}
+.bnrow{display:block;margin-top:6px}.bnrow span{display:block;font-size:12.5px;font-weight:800;color:var(--ink2);margin-bottom:2px}
+.bnrow input,.bnrow textarea{width:100%;box-sizing:border-box;font:inherit;font-size:15px;padding:7px 9px;border:1px solid var(--rule2);border-radius:8px;background:#fff}
+.bnrow.take span{color:#B3261E}
+.bnothers{margin-top:10px}.bnoh{font-weight:900;font-size:13px;color:var(--muted);margin-bottom:4px}
+.bntable{border-collapse:collapse;font-size:12.5px;min-width:100%}.bntable th,.bntable td{border-bottom:1px solid var(--rule);padding:4px 6px;text-align:center;white-space:nowrap}.bntable th{color:var(--muted);font-weight:700}
+.bntable td.p1 b{color:var(--p1)}.bntable td.p2 b{color:var(--p2)}.bntable td.p3 b{color:var(--p3)}.bntable td.p4 b{color:var(--p4)}
+.bnnote{border-left:4px solid var(--rule2);padding:4px 10px;margin:6px 0;font-size:13.5px;line-height:1.6}.bnnote p{margin:2px 0}.bnnote small{color:var(--muted)}.bnnote .tk{color:#B3261E;font-weight:800}
+.bnnote.p1{border-color:var(--p1)}.bnnote.p1>b{color:var(--p1)}.bnnote.p2{border-color:var(--p2)}.bnnote.p2>b{color:var(--p2)}.bnnote.p3{border-color:var(--p3)}.bnnote.p3>b{color:var(--p3)}.bnnote.p4{border-color:var(--p4)}.bnnote.p4>b{color:var(--p4)}
+.bnfoot{margin-top:8px;font-size:12px;color:var(--muted);text-align:right}.bnx{border:0;background:none;color:var(--muted);text-decoration:underline;font:inherit;font-size:12px;cursor:pointer}
+.bnadd{display:flex;gap:6px;margin-top:6px}.bnadd input{flex:1;min-width:0;font:inherit;font-size:15px;padding:7px 9px;border:1px solid var(--rule2);border-radius:8px}
 /* 레시피 (js/recipe.js) — 글은 서버에 잠가서만 있음 */
 .tab.rctab{font-weight:800}
 .rcpagewrap{-webkit-user-select:none;user-select:none}
@@ -2781,7 +2816,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-172</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-173</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -3312,6 +3347,10 @@ input,select,textarea{border-radius:var(--r3)!important}
     </aside>
   </div>
 
+  <h3 class="subhead">🔎 벤치마킹 <small class="bnsub">가게마다 직원별로 7항목 /10 · 메모 · 카페스이에 가져올 것</small></h3>
+  <p class="tnote">처음엔 일자별 일정에서 ⭐ 붙은 곳이 가게 목록으로 들어옵니다 · 개별 미션으로 간 곳은 「＋ 가게 추가」 · 적는 즉시 저장되고 모든 기기에 같이 보입니다 (다른 직원 칸은 보기만).</p>
+  <div class="bnbox" id="bnBox"></div>
+
   <h3 class="subhead">비용</h3>
   <div class="wscosts"><div class="wscost" data-cd="1"><div class="wscosth"><b>1일차 지출</b><span class="wsdayd" data-cd="1"></span></div><div class="ztable-wrap"><table class="wstable cost" data-cd="1"><thead><tr><th class="c2">시간</th><th>지출 목록</th><th class="c3">금액</th><th>메모</th><th class="wsdel"></th></tr></thead><tbody><tr><td><input type="text" class="wsin tin" data-k="c1d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c1n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c1a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c1m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c2d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c2n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c2a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c2m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c3d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c3n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c3a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c3m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c4d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c4n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c4a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c4m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c5d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c5n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c5a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c5m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c6d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c6n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c6a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c6m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c7d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c7n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c7a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c7m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c8d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c8n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c8a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c8m" placeholder="메모"></td></tr></tbody><tfoot><tr><th colspan="2">1일차 합계</th><td class="wstotal" data-cd="1">—</td><td></td><td></td></tr></tfoot></table></div><div class="wsaddbar"><button type="button" class="wsadd" data-cost="1">＋ 줄 추가</button><span class="wsaddnote">지출이 더 있으면 눌러서 늘리세요 · ☰ ▲▼로 줄을 옮기고 ✕로 지웁니다</span></div></div><div class="wscost" data-cd="2"><div class="wscosth"><b>2일차 지출</b><span class="wsdayd" data-cd="2"></span></div><div class="ztable-wrap"><table class="wstable cost" data-cd="2"><thead><tr><th class="c2">시간</th><th>지출 목록</th><th class="c3">금액</th><th>메모</th><th class="wsdel"></th></tr></thead><tbody><tr><td><input type="text" class="wsin tin" data-k="c2_1d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c2_1n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c2_1a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c2_1m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c2_2d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c2_2n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c2_2a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c2_2m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c2_3d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c2_3n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c2_3a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c2_3m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c2_4d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c2_4n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c2_4a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c2_4m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c2_5d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c2_5n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c2_5a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c2_5m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c2_6d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c2_6n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c2_6a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c2_6m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c2_7d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c2_7n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c2_7a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c2_7m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c2_8d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c2_8n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c2_8a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c2_8m" placeholder="메모"></td></tr></tbody><tfoot><tr><th colspan="2">2일차 합계</th><td class="wstotal" data-cd="2">—</td><td></td><td></td></tr></tfoot></table></div><div class="wsaddbar"><button type="button" class="wsadd" data-cost="2">＋ 줄 추가</button><span class="wsaddnote">지출이 더 있으면 눌러서 늘리세요 · ☰ ▲▼로 줄을 옮기고 ✕로 지웁니다</span></div></div><div class="wscost" data-cd="3"><div class="wscosth"><b>3일차 지출</b><span class="wsdayd" data-cd="3"></span></div><div class="ztable-wrap"><table class="wstable cost" data-cd="3"><thead><tr><th class="c2">시간</th><th>지출 목록</th><th class="c3">금액</th><th>메모</th><th class="wsdel"></th></tr></thead><tbody><tr><td><input type="text" class="wsin tin" data-k="c3_1d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c3_1n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c3_1a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c3_1m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c3_2d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c3_2n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c3_2a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c3_2m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c3_3d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c3_3n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c3_3a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c3_3m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c3_4d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c3_4n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c3_4a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c3_4m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c3_5d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c3_5n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c3_5a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c3_5m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c3_6d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c3_6n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c3_6a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c3_6m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c3_7d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c3_7n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c3_7a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c3_7m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c3_8d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c3_8n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c3_8a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c3_8m" placeholder="메모"></td></tr></tbody><tfoot><tr><th colspan="2">3일차 합계</th><td class="wstotal" data-cd="3">—</td><td></td><td></td></tr></tfoot></table></div><div class="wsaddbar"><button type="button" class="wsadd" data-cost="3">＋ 줄 추가</button><span class="wsaddnote">지출이 더 있으면 눌러서 늘리세요 · ☰ ▲▼로 줄을 옮기고 ✕로 지웁니다</span></div></div>
   </div>
@@ -3378,15 +3417,15 @@ input,select,textarea{border-radius:var(--r3)!important}
 </footer>
 </div>
 
-<script src="js/chrome.js?v=v0924-172"></script>
+<script src="js/chrome.js?v=v0924-173"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/sync.js?v=v0924-172"></script>
-<script src="js/holidays.js?v=v0924-172"></script>
-<script src="js/sched.js?v=v0924-172"></script>
-<script src="js/app.js?v=v0924-172"></script>
+<script src="js/sync.js?v=v0924-173"></script>
+<script src="js/holidays.js?v=v0924-173"></script>
+<script src="js/sched.js?v=v0924-173"></script>
+<script src="js/app.js?v=v0924-173"></script>
 
 <style>
 /* 재고 · 발주 */
@@ -3601,7 +3640,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 .sksearch{font:inherit;font-size:13px;padding:6px 9px;width:100%;max-width:300px;background:var(--bg);color:var(--ink);
   border:1px solid var(--rule2);border-radius:2px;margin-bottom:10px}
 </style>
-<script src="js/stock.js?v=v0924-172"></script>
+<script src="js/stock.js?v=v0924-173"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -3630,8 +3669,9 @@ input,select,textarea{border-radius:var(--r3)!important}
   })();
 </script>
 
-<script src="js/presence.js?v=v0924-172"></script>
-<script src="js/weekrep.js?v=v0924-172"></script>
-<script src="js/recipe.js?v=v0924-172"></script>
-<script src="js/monthlog.js?v=v0924-172"></script>
+<script src="js/presence.js?v=v0924-173"></script>
+<script src="js/weekrep.js?v=v0924-173"></script>
+<script src="js/recipe.js?v=v0924-173"></script>
+<script src="js/bench.js?v=v0924-173"></script>
+<script src="js/monthlog.js?v=v0924-173"></script>
 </body></html>

@@ -238,6 +238,33 @@
       }, 1200);
     }
 
+    // ⚠ 경고 띠 — ① 저장이 1분 넘게 서버에 안 올라감 ② 새 버전이 나왔는데 이 컴퓨터는 옛 버전 (10/9: 오래 켜 둔 컴퓨터는 옛 버전이라 저장이 안 되던 일)
+    function warnBar(id, html, cls) {
+      var el = document.getElementById(id);
+      if (!html) { if (el) el.remove(); return; }
+      if (!el) { el = document.createElement("div"); el.id = id; el.className = "cswarn " + (cls || ""); document.body.insertBefore(el, document.body.firstChild); }
+      el.innerHTML = html;
+    }
+    setInterval(function () {
+      var o = dirtyGet(), old = Object.keys(o).filter(function (k) { return Date.now() - (o[k] || 0) > 60000; }).length;
+      warnBar("csWarnSave", old ? "⚠ 저장한 내용 <b>" + old + "건</b>이 1분 넘게 서버(다른 컴퓨터)로 안 올라갔습니다 — 인터넷을 확인하고 이 띠를 눌러 주세요 · <u>이 화면을 닫거나 새로고침하지 마세요</u>" : "", "bad");
+      var b = document.getElementById("csWarnSave"); if (b && !b.__w) { b.__w = 1; b.addEventListener("click", function () { flushNow(); }); }
+    }, 15000);
+    var verNow = (function () { var m = String((document.getElementById("verTag") || {}).textContent || "").match(/v0924-(\d+)/); return m ? +m[1] : 0; });
+    var verAsked = false;
+    function checkVer() {
+      if (!window.fetch || verAsked) return;
+      fetch(location.pathname + "?vc=" + Date.now(), { cache: "no-store" }).then(function (r) { return r.ok ? r.text() : ""; }).then(function (t) {
+        var m = String(t).match(/v0924-(\d+)/), cur = verNow(); if (!m || !cur || +m[1] <= cur) return;
+        verAsked = true;
+        warnBar("csWarnVer", "🔄 새 버전(v0924-" + m[1] + ")이 나왔습니다 — 적던 것은 저장하고 곧 새로 엽니다 · <u>지금 새로 열기</u>", "ver");
+        var b = document.getElementById("csWarnVer"); if (b) b.addEventListener("click", reloadSafely);
+        (function wait() { if (idle()) reloadSafely(); else setTimeout(wait, 5000); })();
+      }).catch(function () {});
+    }
+    setTimeout(checkVer, 20000); setInterval(checkVer, 10 * 60000);
+    document.addEventListener("visibilitychange", function () { if (document.visibilityState === "visible") checkVer(); });
+
     setStatus("wait");
     firebase.auth().signInAnonymously().then(function () {
       col.onSnapshot({ includeMetadataChanges: false }, function (snap) {
