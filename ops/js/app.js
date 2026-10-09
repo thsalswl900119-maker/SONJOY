@@ -3600,7 +3600,74 @@
         a.download = "예약-" + d.slice(5) + "-" + (r.name || "") + ".ics";
         document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
       }
+      // ✏ 예약 고치기 — 목록에서 그 자리에 칸을 펼쳐 고친다. 날짜를 바꾸면 메모 달력에서도 그 날로 옮긴다.
+      //    고친 줄만 바꿔 저장(메모 달력 합치기는 「내가 뺀 것 · 더한 것」만 반영) · 인계사항의 원래 한 줄도 같이 바꾼다.
+      var ed = null, pend = false;   // 고치는 중: {d, i, orig(JSON)}
+      function ea(v) { return esc(v).replace(/"/g, "&quot;"); }
+      var PAYS = [["현결", "현결 (현장 결제)"], ["선결", "선결 (미리 결제)"], ["네이버", "네이버 결제"], ["미결", "미결 (아직 안 정함)"]];
+      function opts(arr, v) {
+        if (v && !arr.some(function (o) { return o[0] === v; })) arr = arr.concat([[v, v]]);
+        return arr.map(function (o) { return '<option value="' + ea(o[0]) + '"' + (o[0] === v ? " selected" : "") + ">" + esc(o[1]) + "</option>"; }).join("");
+      }
+      function formH(d, x) {
+        var r = x.rv || {};
+        return '<div class="rvf rvedf" data-d="' + d + '">' +
+          '<div class="rvedh">✏ 예약 고치기' + (x.edit ? ' <small>달력에서 고친 글: ' + esc(x.t) + '</small>' : "") + '</div>' +
+          '<label class="rvl"><span>날짜</span><input type="date" data-f="date" value="' + d + '"></label>' +
+          '<label class="rvl"><span>성함</span><input type="text" data-f="name" value="' + ea(r.name) + '"></label>' +
+          '<label class="rvl"><span>결제여부</span><select data-f="pay">' + opts(PAYS, r.pay) + '</select></label>' +
+          '<label class="rvl"><span>픽업 or 배달</span><select data-f="kind">' + opts([["픽업", "픽업"], ["배달", "배달"], ["매장", "매장"]], r.kind) + '</select></label>' +
+          '<label class="rvl rvitem"><span>품목</span><input type="text" data-f="item" value="' + ea(r.item) + '"></label>' +
+          '<label class="rvl"><span>시간</span><input type="time" step="600" data-f="time" value="' + ea(r.time) + '"></label>' +
+          '<label class="rvl"><span>연락처</span><input type="text" inputmode="tel" data-f="tel" value="' + ea(r.tel) + '"></label>' +
+          '<label class="rvl rvreq"><span>요청사항 (메모)</span><input type="text" data-f="req" value="' + ea(r.req) + '"></label>' +
+          '<label class="rvimp' + (x.imp ? " on" : "") + '"><input type="checkbox" data-f="imp"' + (x.imp ? " checked" : "") + ' onchange="this.parentNode.classList.toggle(\'on\',this.checked)">⭐ 매우 중요</label>' +
+          '<div class="rvedb"><button type="button" data-a="save">✔ 고친 대로 저장</button><button type="button" class="no" data-a="cancel">취소</button></div></div>';
+      }
+      // 인계사항(lf180)에 붙어 있던 원래 한 줄을 고친 줄로 — 지금 연 일지에 있으면 화면에서, 아니면 예약을 올린 날 일지에서 (그 줄만 바꾼다)
+      function fixLog(oldLn, newLn, from) {
+        var el = document.querySelector('.lgin[data-k="lf180"]');
+        if (el && el.value.indexOf(oldLn) >= 0) { el.value = el.value.replace(oldLn, newLn); el.dispatchEvent(new Event("input", { bubbles: true })); return true; }
+        if (!from || from === logDay()) return false;
+        var k = "cafesui.log." + from, o = null; try { o = JSON.parse(localStorage.getItem(k) || "null"); } catch (e) {}
+        if (o && o.f && typeof o.f.lf180 === "string" && o.f.lf180.indexOf(oldLn) >= 0) {
+          o.f.lf180 = o.f.lf180.replace(oldLn, newLn);
+          try { localStorage.setItem(k, JSON.stringify(o)); } catch (e) { return false; }
+          return true;
+        }
+        return false;
+      }
+      function saveEdit(form) {
+        var g = function (f) { return form.querySelector('[data-f="' + f + '"]'); };
+        var r = { date: g("date").value, time: g("time").value, kind: g("kind").value, pay: g("pay").value, name: g("name").value.trim(),
+                  item: g("item").value.trim(), tel: g("tel").value.trim(), req: g("req").value.trim() };
+        if (!r.date) { alert("예약 날짜를 골라 주세요"); g("date").focus(); return; }
+        if (!r.name) { alert("성함을 적어 주세요"); g("name").focus(); return; }
+        if (!r.item) { alert("제품 이름을 적어 주세요"); g("item").focus(); return; }
+        var all = rd(), day = all[ed.d] || [], idx = -1;
+        day.forEach(function (y, j) { if (idx < 0 && JSON.stringify(y) === ed.orig) idx = j; });
+        if (idx < 0) { alert("그 사이 다른 기기에서 이 예약이 바뀌었거나 지워졌습니다 · 목록을 새로 보여 드릴 테니 다시 「✏ 고치기」를 눌러 주세요"); ed = null; list(); return; }
+        var x = day[idx], oldR = x.rv || {}, from = oldR.from || "";
+        var nx = JSON.parse(JSON.stringify(x));
+        nx.rv = { time: r.time, kind: r.kind, pay: r.pay, name: r.name, item: r.item, tel: r.tel, req: r.req, from: from || logDay() };
+        nx.t = line(r); delete nx.edit; nx.fix = meNow() + " " + today().slice(5);
+        if (g("imp").checked) nx.imp = true; else delete nx.imp;
+        var same = r.date === ed.d;
+        if (same) day[idx] = nx;
+        else { day.splice(idx, 1); all[ed.d] = day; (all[r.date] = all[r.date] || []).push(nx); }
+        try { localStorage.setItem(DKEY, JSON.stringify(all)); } catch (e) {}
+        if (window.__CS_MC_RENDER) window.__CS_MC_RENDER();
+        if (window.__CS_ANNUAL_REFRESH) window.__CS_ANNUAL_REFRESH();
+        var oldLn = "📅 " + md(ed.d) + " " + line(oldR), newLn = "📅 " + md(r.date) + " " + line(r);
+        var logOk = x.rv ? fixLog(oldLn, newLn, from) : false;
+        ed = null; list();
+        $("rvMsg").innerHTML = "✔ 고쳤습니다 — " + md(r.date) + " 메모 달력" + (logOk ? " · 인계사항 줄" : "") + "도 바뀌었습니다 · 휴대폰 캘린더에 넣어 두셨다면 그건 직접 고쳐 주세요 " +
+          '<button type="button" class="rvics" id="rvIcsNow">📲 고친 걸로 새로 넣기</button>';
+        $("rvIcsNow").addEventListener("click", function () { ics(r.date, r); });
+        setTimeout(function () { $("rvMsg").textContent = ""; }, 20000);
+      }
       function list() {
+        pend = false;
         var all = rd(), d0 = logDay(), h = "", n = 0;
         for (var i = 0; i < 3; i++) {
           var d = addDay(d0, i), items = (all[d] || []).filter(function (x) { return x && x.rv; })
@@ -3608,10 +3675,12 @@
           if (!items.length) continue;
           n += items.length;
           h += '<div class="rvday">' + md(d) + (i === 0 ? " · 이 일지 날" : i === 1 ? " · 다음 날" : "") + " 예약 " + items.length + "건</div>" +
-            items.map(function (x) { var r = x.rv;
-              if (x.edit) return '<div class="rvit"><span class="tx">' + esc(x.t) + '</span><span class="by">' + esc(x.by || "") + " · 고침 " + esc(x.edit) + "</span></div>";
+            items.map(function (x) { var r = x.rv, xi = (all[d] || []).indexOf(x);
+              if (ed && ed.d === d && ed.i === xi) return formH(d, x);
+              var eb = '<button type="button" class="rvedit" data-d="' + d + '" data-i="' + xi + '">✏ 고치기</button>';
+              if (x.edit) return '<div class="rvit"><span class="tx">' + esc(x.t) + '</span>' + eb + '<span class="by">' + esc(x.by || "") + " · 고침 " + esc(x.edit) + "</span></div>";
               return '<div class="rvit' + (x.imp ? " imp" : "") + '">' + (x.imp ? '<span class="kd st">⭐ 매우 중요</span>' : "") + '<span class="tm">' + esc(r.time ? ampm(r.time) : "시간 ?") + '</span><span class="kd' + (r.kind === "배달" ? " dl" : "") + '">' + esc(r.kind) + '</span><span class="tx"><b>' + esc(r.name) + "</b> / " + esc(r.pay || "") + " / " + esc(r.kind) + " / <b>" + esc(r.item) + "</b>" +
-                (r.tel ? " / " + esc(r.tel) : "") + (r.req ? " / " + esc(r.req) : "") + '</span><button type="button" class="rvics" data-d="' + d + '" data-i="' + (all[d] || []).indexOf(x) + '" title="휴대폰 · 맥 캘린더에 넣기">📲 캘린더</button><span class="by">' + esc(x.by || "") + "</span></div>"; }).join("");
+                (r.tel ? " / " + esc(r.tel) : "") + (r.req ? " / " + esc(r.req) : "") + '</span><button type="button" class="rvics" data-d="' + d + '" data-i="' + xi + '" title="휴대폰 · 맥 캘린더에 넣기">📲 캘린더</button>' + eb + '<span class="by">' + esc(x.by || "") + (x.fix ? " · 고침 " + esc(x.fix) : "") + "</span></div>"; }).join("");
         }
         $("rvList").innerHTML = n ? h : '<div class="rvnone">이 일지 날부터 사흘 동안 달력에 올린 예약이 없습니다 (달력에서 고치기 · 지우기)</div>';
       }
@@ -3645,13 +3714,25 @@
         list();
       });
       $("rvList").addEventListener("click", function (e) {
+        var a = e.target.closest && e.target.closest("[data-a]");
+        if (a && ed) { var f = a.closest(".rvedf"); if (a.dataset.a === "save") saveEdit(f); else if (a.dataset.a === "cancel") { ed = null; list(); } return; }
+        var eb = e.target.closest && e.target.closest(".rvedit");
+        if (eb) {
+          if (ed && !confirm("고치던 예약이 있습니다. 저장하지 않고 이 예약을 고칠까요?")) return;
+          var y = (rd()[eb.dataset.d] || [])[+eb.dataset.i]; if (!y) { list(); return; }
+          ed = { d: eb.dataset.d, i: +eb.dataset.i, orig: JSON.stringify(y) }; list();
+          var nf = document.querySelector("#rvList .rvedf [data-f=name]"); if (nf) { nf.closest(".rvedf").scrollIntoView({ block: "nearest" }); nf.focus(); }
+          return;
+        }
         var b = e.target.closest && e.target.closest(".rvics"); if (!b) return;
         var x = (rd()[b.dataset.d] || [])[+b.dataset.i]; if (x && x.rv) ics(b.dataset.d, x.rv);
       });
-      document.addEventListener("cs:log-loaded", function () { resetDate(); list(); });
-      dateEl.addEventListener("change", function () { resetDate(); list(); });
-      ["lgPrev", "lgNext", "lgToday"].forEach(function (id) { var b = document.getElementById(id); if (b) b.addEventListener("click", function () { setTimeout(function () { resetDate(); list(); }, 0); }); });
-      window.addEventListener("cs:remote", function (e) { if (((e.detail && e.detail.keys) || []).indexOf(DKEY) >= 0) list(); });
+      function relist() { ed = null; resetDate(); list(); }
+      document.addEventListener("cs:log-loaded", function () { if (ed) { resetDate(); pend = true; return; } relist(); });
+      dateEl.addEventListener("change", relist);
+      ["lgPrev", "lgNext", "lgToday"].forEach(function (id) { var b = document.getElementById(id); if (b) b.addEventListener("click", function () { setTimeout(relist, 0); }); });
+      // 다른 기기가 달력을 바꾸면 새로 그린다 — 고치는 중이면 칸이 사라지지 않게 다 고친 뒤에
+      window.addEventListener("cs:remote", function (e) { if (((e.detail && e.detail.keys) || []).indexOf(DKEY) >= 0) { if (ed) pend = true; else list(); } });
       list();
     })();
 

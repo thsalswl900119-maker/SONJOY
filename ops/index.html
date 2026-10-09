@@ -2232,6 +2232,14 @@ mark.rcfind{background:#FFE86B;color:#A11A12;font-weight:900;border-radius:2px;p
 .rvnone{font-size:12.5px;color:var(--muted)}
 .rvit.imp{background:#FFF8D6;border-color:#E0B400}
 .rvit .kd.st{background:#FFE36E;color:#B3261E}
+.rvedit{font:inherit;font-size:12.5px;font-weight:700;padding:3px 9px;border:1px solid var(--rule2);background:var(--surface);color:var(--ink);cursor:pointer;white-space:nowrap}
+.rvit .rvics+.rvedit{margin-left:0}.rvit .tx+.rvedit{margin-left:auto}
+.rvedf{background:#fff;border:2px solid #8E3BB0;padding:10px 11px;margin:2px 0}
+.rvedh{grid-column:1/-1;font-size:14px;font-weight:800;color:#6A1B9A}
+.rvedh small{display:block;font-weight:400;font-size:12.5px;color:var(--ink2);margin-top:2px}
+.rvedb{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap}
+.rvf .rvedb button{flex:1 1 160px}
+.rvf .rvedb button.no{background:var(--surface);color:var(--ink);border-color:var(--rule2);flex:0 0 auto}
 .lgrescue{border:2px solid #C62828;background:#FFF5F5;padding:10px 14px;margin:8px 0;display:flex;flex-direction:column;gap:6px;font-size:13px}
 .lgrescue b{color:#C62828;font-size:14px}
 .lgrescue span{color:var(--ink2);line-height:1.5}
@@ -2951,7 +2959,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-179</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-180</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -3556,15 +3564,15 @@ input,select,textarea{border-radius:var(--r3)!important}
 </footer>
 </div>
 
-<script src="js/chrome.js?v=v0924-179"></script>
+<script src="js/chrome.js?v=v0924-180"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/sync.js?v=v0924-179"></script>
-<script src="js/holidays.js?v=v0924-179"></script>
-<script src="js/sched.js?v=v0924-179"></script>
-<script src="js/app.js?v=v0924-179"></script>
+<script src="js/sync.js?v=v0924-180"></script>
+<script src="js/holidays.js?v=v0924-180"></script>
+<script src="js/sched.js?v=v0924-180"></script>
+<script src="js/app.js?v=v0924-180"></script>
 
 <style>
 /* 재고 · 발주 */
@@ -3779,7 +3787,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 .sksearch{font:inherit;font-size:13px;padding:6px 9px;width:100%;max-width:300px;background:var(--bg);color:var(--ink);
   border:1px solid var(--rule2);border-radius:2px;margin-bottom:10px}
 </style>
-<script src="js/stock.js?v=v0924-179"></script>
+<script src="js/stock.js?v=v0924-180"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -3808,9 +3816,9 @@ input,select,textarea{border-radius:var(--r3)!important}
   })();
 </script>
 
-<script src="js/presence.js?v=v0924-179"></script>
-<script src="js/weekrep.js?v=v0924-179"></script>
-<script src="js/recipe.js?v=v0924-179"></script>
-<script src="js/bench.js?v=v0924-179"></script>
-<script src="js/monthlog.js?v=v0924-179"></script>
+<script src="js/presence.js?v=v0924-180"></script>
+<script src="js/weekrep.js?v=v0924-180"></script>
+<script src="js/recipe.js?v=v0924-180"></script>
+<script src="js/bench.js?v=v0924-180"></script>
+<script src="js/monthlog.js?v=v0924-180"></script>
 </body></html>
