@@ -318,6 +318,7 @@
     try { pretty(bodyEl); } catch (e) {}
     // 저장된 표(재료 × 분량)는 옆으로 밀어 볼 수 있게 감싼다 (화면에서만)
     Array.prototype.forEach.call(bodyEl.querySelectorAll("table.rcmx"), function (tb) { if (!tb.parentNode.classList.contains("rcmxw")) { var w = document.createElement("div"); w.className = "rcmxw"; tb.parentNode.insertBefore(w, tb); w.appendChild(tb); } });
+    Array.prototype.forEach.call(bodyEl.querySelectorAll(".rcmx td"), function (td) { if (td.textContent.trim().length > 12) td.classList.add("tx"); });
     if (canEdit() && h != null) edButtons(false);
     find(q);
   }
