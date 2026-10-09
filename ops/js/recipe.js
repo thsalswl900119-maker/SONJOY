@@ -26,13 +26,13 @@
   function encr(k, text) { var iv = crypto.getRandomValues(new Uint8Array(12)); return C.encrypt({ name: "AES-GCM", iv: iv }, k, new TextEncoder().encode(text)).then(function (c) { return { i: bu(iv), c: bu(c) }; }); }
   function check(k) { var m = J(PRE + "meta"); if (!m || !m.chk) return Promise.reject(new Error("nometa")); return dec(k, m.chk).then(function (t) { if (t !== "cafesui-recipe-ok") throw new Error("bad"); return k; }); }
   function say(t, bad) { msgEl.textContent = t || ""; msgEl.className = "rcmsg" + (bad ? " bad" : ""); }
-  function showLock(t, bad) { key = null; plain = {}; lockEl.hidden = false; mainEl.hidden = true; bodyEl.innerHTML = ""; say(t, bad); }
+  function showLock(t, bad) { LIVE = false; var lb = document.getElementById("rcLiveBar"); if (lb) lb.hidden = true; document.body.classList.remove("rcliveon"); key = null; plain = {}; lockEl.hidden = false; mainEl.hidden = true; bodyEl.innerHTML = ""; say(t, bad); }
   // 풀기
   function open(k) {
     key = k; plain = {};
     var jobs = SECS.map(function (s) { var o = J(PRE + s[0]); return o ? dec(k, o).then(function (t) { plain[s[0]] = t; }, function () {}) : Promise.resolve(); });
     var ho = J(PRE + "hist"); if (ho) jobs.push(dec(k, ho).then(function (t) { histPlain = t; }, function () {}));
-    return Promise.all(jobs).then(function () { lockEl.hidden = true; mainEl.hidden = false; say(""); if (ED) { edPend = true; return; } draw(); });
+    return Promise.all(jobs).then(function () { lockEl.hidden = true; mainEl.hidden = false; say(""); if (ED || liveBusy()) { edPend = true; return; } draw(); });
   }
   function unlock() {
     if (!C) { say("이 브라우저에서는 레시피를 열 수 없습니다 (주소가 https 인지 확인)", true); return; }
@@ -171,7 +171,10 @@
         if (g.length < 2) return;
         var cols = g.map(function (b) {
           var m = {}, order = [];
-          b.grids.forEach(function (gr) { Array.prototype.forEach.call(gr.querySelectorAll(".rcir"), function (r) { var n = r.children[0].textContent.trim(), k = key(n); if (!(k in m)) { m[k] = r.children[1].textContent.trim(); order.push([k, n]); } }); });
+          b.grids.forEach(function (gr) { Array.prototype.forEach.call(gr.querySelectorAll(".rcir"), function (r) { var n = r.children[0].textContent.trim(), k = key(n);
+            // 같은 묶음 안에 이름이 겹치면(생크림 · 가나슈용 생크림(휘핑크림)) 따로 한 줄 — 값이 사라지지 않게
+            if (k in m) { k = n.replace(/\s/g, ""); while (k in m) k += "＋"; }
+            m[k] = r.children[1].textContent.trim(); order.push([k, n]); }); });
           return { label: b.label, m: m, order: order };
         });
         var rows = [], seen = {}, mx = 0;
@@ -274,6 +277,7 @@
       while (span.firstChild) t.parentNode.insertBefore(span.firstChild, t); t.remove();
     });
   }
+  window.__CS_RCPRETTY = pretty;   // 원본 정리(표 · 번호 단계로 저장)할 때 같은 규칙을 쓰려고
   // ── 찾기
   var qEl = document.getElementById("rcQ"), qnEl = document.getElementById("rcQn"), qT = null;
   function strip(h) { var d = document.createElement("div"); d.innerHTML = h || ""; return d.textContent || ""; }
@@ -304,16 +308,20 @@
     navEl.innerHTML = SECS.map(function (s) { var c = q ? countIn(s[0], q) : 0; return '<button type="button" class="rcnb" data-k="' + s[0] + '" aria-pressed="' + (s[0] === cur) + '">' + s[1] + (c ? ' <i class="rcqc">' + c + "</i>" : "") + "</button>"; }).join("");
     whoEl.textContent = "열람 " + (nim(me()) || "?") + " · 외부 유출 · 개인 사용 금지 (법적 대응)";
     toolEl.hidden = me() !== "사장님";
+    liveBar();
     if (cur === "jam") { drawJam(); find(q); return; }
     var h = plain[cur]; if (h != null) h = junk(h);
     bodyEl.innerHTML = h ? '<div class="rcsec">' + h + "</div>" : '<p class="rcnone">이 부분은 아직 옮겨진 레시피가 없습니다</p>';
     // 카드마다 번호(원본 글에서 같은 순서) — 고치기에서 원본의 같은 카드를 찾는 데 쓴다
     Array.prototype.forEach.call(bodyEl.querySelectorAll(".rcsec details, .rcsec div.rccall"), function (el, i) { el.setAttribute("data-rid", i); });
+    if (liveOn() && h != null) { liveSetup(); edButtons(true); return; }
     try { pretty(bodyEl); } catch (e) {}
-    if (canEdit() && h != null) edButtons();
+    // 저장된 표(재료 × 분량)는 옆으로 밀어 볼 수 있게 감싼다 (화면에서만)
+    Array.prototype.forEach.call(bodyEl.querySelectorAll("table.rcmx"), function (tb) { if (!tb.parentNode.classList.contains("rcmxw")) { var w = document.createElement("div"); w.className = "rcmxw"; tb.parentNode.insertBefore(w, tb); w.appendChild(tb); } });
+    if (canEdit() && h != null) edButtons(false);
     find(q);
   }
-  if (qEl) qEl.addEventListener("input", function () { clearTimeout(qT); qT = setTimeout(function () { if (ED) { edPend = true; return; } draw(); }, 250); });
+  if (qEl) qEl.addEventListener("input", function () { clearTimeout(qT); qT = setTimeout(function () { if (ED || liveBusy()) { edPend = true; return; } draw(); }, 250); });
   var allBtn = document.getElementById("rcAll"), noneBtn = document.getElementById("rcNone");
   if (allBtn) allBtn.addEventListener("click", function () { bodyEl.querySelectorAll("details").forEach(function (d) { d.open = true; }); });
   if (noneBtn) noneBtn.addEventListener("click", function () { bodyEl.querySelectorAll("details").forEach(function (d) { d.open = false; }); bodyEl.scrollIntoView({ block: "start" }); });
@@ -382,15 +390,20 @@
   function rawCards(html) { var d = document.createElement("div"); d.innerHTML = html || ""; return { root: d, list: Array.prototype.slice.call(d.querySelectorAll("details, div.rccall")) }; }
   function bodyOf(el) { if (el.tagName !== "DETAILS") return el; for (var i = 0; i < el.children.length; i++) if (el.children[i].tagName === "DIV" && el.children[i].classList.contains("rcb")) return el.children[i]; return null; }
   function sumOf(el) { for (var i = 0; i < el.children.length; i++) if (el.children[i].tagName === "SUMMARY") return el.children[i]; return null; }
-  function edButtons() {
+  function edButtons(live) {
+    var top = document.createElement("div"); top.className = "rcedbar rclivetop";
+    top.innerHTML = live ? '<b>✏ 바로 고치기 중</b><span>점선 칸(글 줄 · 표 칸 · 순서 · 제목)을 눌러 바로 고치세요 · 엔터 = 아래에 새 줄 · 칸에서 나오면 자동 저장</span><button type="button" class="rced prim" data-a="liveoff">✔ 다 고쳤어요</button>'
+      : '<button type="button" class="rced prim" data-a="live">✏ 바로 고치기 켜기</button><span>켜면 보이는 글 줄 · 표 칸 · 순서를 하나하나 눌러서 바로 고치고 자동 저장됩니다 (사장님 · 정항아님)</span>';
+    bodyEl.insertBefore(top, bodyEl.firstChild);
+    if (live) { var bar0 = document.createElement("div"); bar0.className = "rcedbar"; bar0.innerHTML = '<button type="button" class="rced" data-a="new">＋ 새 카드 추가</button><button type="button" class="rced" data-a="hist">📜 고친 기록</button>'; bodyEl.appendChild(bar0); return; }
     Array.prototype.forEach.call(bodyEl.querySelectorAll("[data-rid]"), function (el) {
       // 단추는 따로 한 줄에 (예전엔 오른쪽에 띄워 놨더니 아래 순서 목록이 덮어서 눌리지 않았음 · 10/9)
       var row = document.createElement("div"); row.className = "rcedrow";
-      row.innerHTML = '<button type="button" class="rcedb" data-rid="' + el.getAttribute("data-rid") + '">✏ 이 카드 고치기</button>';
+      row.innerHTML = '<button type="button" class="rcedb" data-rid="' + el.getAttribute("data-rid") + '">✏ 고치기</button>';
       if (el.tagName === "DETAILS") { var bd = bodyOf(el); if (bd) bd.insertBefore(row, bd.firstChild); } else el.appendChild(row);
     });
     var bar = document.createElement("div"); bar.className = "rcedbar";
-    bar.innerHTML = '<button type="button" class="rced" data-a="new">＋ 새 카드 추가</button><button type="button" class="rced" data-a="hist">📜 고친 기록</button><span>카드마다 「✏ 고치기」로 글 · 숫자 · 표를 바로 고칩니다 (사장님 · 정항아님)</span>';
+    bar.innerHTML = '<button type="button" class="rced" data-a="new">＋ 새 카드 추가</button><button type="button" class="rced" data-a="hist">📜 고친 기록</button>';
     bodyEl.appendChild(bar);
   }
   function clean(node) {
@@ -649,15 +662,165 @@
       .then(function () { endEdit(true); say("✔ 저장했습니다 · 모든 기기에 바로 바뀝니다"); setTimeout(function () { say(""); }, 6000); },
             function (e) { btn.disabled = false; btn.textContent = "✔ 저장 (잠가서 저장)"; alert("저장하지 못했습니다 (" + (e && e.message || e) + ")"); });
   }
+  // ── ✏ 바로 고치기 (10/9 · 사장님 「하나하나 다 수정되게」) — 보이는 글 줄 · 표 칸 · 순서 하나를 눌러 그 자리에서 고치고,
+  //    칸에서 나오면(또는 2초 쉬면) 그 카드만 잠가서 자동 저장. 엔터 = 아래에 새 줄 · 지운 빈 줄은 백스페이스로 없앰.
+  //    원본 글을 그대로 보여 주고(꾸미기 pretty 안 함) 그대로 고치므로 보이는 것 = 저장되는 것.
+  var LIVE = false, ORIG = [], liveT = null, liveDirty = {}, liveCur = null, liveSaving = false;
+  var LEAF = "summary, p, li, h4, h5, td, th";
+  function liveOn() { return LIVE && canEdit() && cur !== "jam"; }
+  function liveSetup() {
+    ORIG = rawCards(plain[cur]).list.map(function (x) { return x.outerHTML; });
+    var sec = bodyEl.querySelector(".rcsec"); if (!sec) return;
+    Array.prototype.forEach.call(sec.querySelectorAll("details"), function (d) { d.open = true; });
+    Array.prototype.forEach.call(sec.querySelectorAll("table.rcmx"), function (tb) { if (!tb.parentNode.classList.contains("rcmxw")) { var w = document.createElement("div"); w.className = "rcmxw"; tb.parentNode.insertBefore(w, tb); w.appendChild(tb); } });
+    Array.prototype.forEach.call(sec.querySelectorAll(LEAF), function (el) {
+      if (el.parentElement.closest("[contenteditable]")) return;
+      if (el.tagName === "LI" && el.querySelector("ul,ol,table")) return;
+      el.setAttribute("contenteditable", "true"); el.setAttribute("spellcheck", "false");
+    });
+    sec.classList.add("rclive");
+  }
+  function liveBar() {
+    var b = document.getElementById("rcLiveBar");
+    if (!b) {
+      b = document.createElement("div"); b.id = "rcLiveBar"; b.className = "rclivebar";
+      b.innerHTML = '<span class="st" id="rcLiveSt">✏ 바로 고치기 중 · 글을 눌러 고치세요</span>' +
+        '<button type="button" data-l="add">＋ 아래 줄</button><button type="button" data-l="del">🗑 이 줄</button>' +
+        '<button type="button" data-l="col">＋ 표 칸</button><button type="button" data-l="bold"><b>굵게</b></button><button type="button" data-l="mark">🖍 형광</button><button type="button" data-l="red">🔴 빨강</button>' +
+        '<button type="button" class="end" data-l="end">✔ 다 고쳤어요</button>';
+      document.body.appendChild(b);
+      // 단추를 눌러도 글 칸에서 커서가 빠지지 않게
+      b.addEventListener("pointerdown", function (e) { if (e.target.closest("button")) e.preventDefault(); });
+      b.addEventListener("mousedown", function (e) { if (e.target.closest("button")) e.preventDefault(); });
+      b.addEventListener("click", function (e) { var x = e.target.closest("button"); if (x) liveAct(x.dataset.l); });
+    }
+    b.hidden = !liveOn() || box.offsetParent === null || mainEl.hidden;
+    document.body.classList.toggle("rcliveon", !b.hidden);
+  }
+  // 다른 탭으로 가면 아래 고치기 줄을 숨기고, 고치던 것은 저장
+  document.addEventListener("click", function (e) { if (e.target.closest && e.target.closest(".tab")) setTimeout(function () { if (box.offsetParent === null && Object.keys(liveDirty).length) liveFlush(); liveBar(); }, 60); });
+  function liveSay(t) { var s = document.getElementById("rcLiveSt"); if (s) s.textContent = t; }
+  function cardOf(el) { return el && el.closest("[data-rid]"); }
+  function markDirty(el) { var c = cardOf(el); if (!c) return; liveDirty[c.getAttribute("data-rid")] = c; clearTimeout(liveT); liveT = setTimeout(liveFlush, 2000); liveSay("✏ 고치는 중…"); }
+  function liveClone(card) {
+    var c = card.cloneNode(true);
+    Array.prototype.forEach.call(c.querySelectorAll(".rcedrow, .rcph"), function (x) { x.remove(); });
+    Array.prototype.forEach.call(c.querySelectorAll("div.rcmxw"), function (w) { while (w.firstChild) w.parentNode.insertBefore(w.firstChild, w); w.remove(); });
+    [c].concat(Array.prototype.slice.call(c.querySelectorAll("*"))).forEach(function (el) {
+      ["contenteditable", "spellcheck", "data-rid", "open", "style"].forEach(function (a) { el.removeAttribute(a); });
+      if (el.matches && el.matches(LEAF)) { clean(el); var tw = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null), nd; while ((nd = tw.nextNode())) if (nd.nodeValue.indexOf("\u00a0") >= 0) nd.nodeValue = nd.nodeValue.replace(/\u00a0/g, " "); }
+      if (el.classList && el.classList.contains("rclive")) el.classList.remove("rclive");
+    });
+    return c;
+  }
+  function liveFlush() {
+    clearTimeout(liveT);
+    var ids = Object.keys(liveDirty); if (!ids.length || liveSaving || !key) return Promise.resolve();
+    var rc = rawCards(plain[cur]), changed = [], conflict = null;
+    // 바깥 카드도 고쳤으면 안쪽 카드는 바깥 카드와 같이 저장된다 (겹쳐 저장하지 않게)
+    ids = ids.filter(function (rid) { var c = liveDirty[rid]; return c.isConnected && !ids.some(function (o) { return o !== rid && liveDirty[o].isConnected && liveDirty[o] !== c && liveDirty[o].contains(c); }); });
+    // 먼저 모두 확인 (다른 기기가 그 사이 바꿨는지) — 바꾸기 전에
+    ids.forEach(function (rid) { var el = rc.list[+rid]; if (!el || el.outerHTML !== ORIG[+rid]) conflict = liveDirty[rid]; });
+    ids.forEach(function (rid) {
+      var card = liveDirty[rid], el = rc.list[+rid]; if (conflict || !el) return;
+      var nc = liveClone(card), w = document.createElement("div"); w.innerHTML = nc.outerHTML;
+      var nn = w.firstChild; if (nn.outerHTML === el.outerHTML) return;
+      changed.push({ rid: +rid, b: el.outerHTML, a: nn.outerHTML, t: (sumOf(nn) || {}).textContent || "📌 상자" });
+      el.parentNode.replaceChild(nn, el); rc.list[+rid] = nn;
+    });
+    liveDirty = {};
+    if (conflict) { alert("그 사이 다른 기기에서 이 카드가 바뀌었습니다 · 화면을 새로 보여 드릴 테니 방금 고친 곳을 한 번 더 고쳐 주세요"); draw(); return Promise.resolve(); }
+    if (!changed.length) { liveSay("✔ 바뀐 것 없음"); return Promise.resolve(); }
+    liveSaving = true; liveSay("저장 중…");
+    var html = rc.root.innerHTML, hl = histList(), last = hl[hl.length - 1], ch = changed[0];
+    // 같은 카드를 10분 안에 이어서 고치면 기록 한 줄로 합친다 (고치기 전 모습은 처음 것)
+    var entry = { s: cur, t: ch.t.trim(), b: ch.b, a: ch.a, by: me(), at: stamp() };
+    var merge = last && last.s === cur && last.by === me() && last.a === ch.b && last.lt && Date.now() - last.lt < 600000;
+    if (merge) { hl.pop(); entry.b = last.b; histPlain = JSON.stringify(hl); }
+    entry.lt = Date.now();
+    return writeSec(cur, html, entry).then(function () {
+      liveSaving = false; ORIG = rawCards(plain[cur]).list.map(function (x) { return x.outerHTML; });
+      var n = new Date(); liveSay("✔ 저장됨 " + String(n.getHours()).padStart(2, "0") + ":" + String(n.getMinutes()).padStart(2, "0") + " · 모든 기기에 바뀝니다");
+      if (Object.keys(liveDirty).length) liveFlush();
+    }, function (e) { liveSaving = false; liveSay("⚠ 저장 못 함 — 인터넷 확인 후 다시 눌러 주세요"); alert("저장하지 못했습니다 (" + (e && e.message || e) + ")"); });
+  }
+  function editable(el) { el.setAttribute("contenteditable", "true"); el.setAttribute("spellcheck", "false"); return el; }
+  function focusEnd(el) { if (!el) return; el.focus(); try { var r = document.createRange(); r.selectNodeContents(el); r.collapse(false); var s = getSelection(); s.removeAllRanges(); s.addRange(r); } catch (e) {} }
+  function addBelow(el) {
+    if (!el) return;
+    var nx;
+    if (el.tagName === "TD" || el.tagName === "TH") {
+      var tr = el.parentNode, ci = Array.prototype.indexOf.call(tr.children, el), nr = document.createElement("tr");
+      Array.prototype.forEach.call(tr.children, function (c, i) { var x = editable(document.createElement(tr.parentNode.tagName === "THEAD" ? "td" : c.tagName.toLowerCase())); nr.appendChild(x); });
+      if (tr.parentNode.tagName === "THEAD") { var tb = tr.closest("table"), body = tb.tBodies[0] || tb.appendChild(document.createElement("tbody")); body.insertBefore(nr, body.firstChild); } else tr.parentNode.insertBefore(nr, tr.nextSibling);
+      nx = nr.children[ci];
+    } else if (el.tagName === "SUMMARY") { var bd = el.parentNode.querySelector(".rcb") || el.parentNode; nx = editable(document.createElement("p")); bd.insertBefore(nx, bd.firstChild && bd.firstChild.classList && bd.firstChild.classList.contains("rcedrow") ? bd.firstChild.nextSibling : bd.firstChild); }
+    else { nx = editable(document.createElement(el.tagName === "LI" ? "li" : "p")); el.parentNode.insertBefore(nx, el.nextSibling); }
+    markDirty(el); focusEnd(nx);
+  }
+  function delLine(el) {
+    if (!el) return;
+    if (el.tagName === "SUMMARY") { alert("카드 제목은 지울 수 없습니다 · 글자를 바꿔 주세요"); return; }
+    var tgt = (el.tagName === "TD" || el.tagName === "TH") ? el.parentNode : el;
+    if (tgt.textContent.trim() && !confirm("이 줄을 지울까요?\n「" + tgt.textContent.trim().slice(0, 60) + "」")) return;
+    var card = cardOf(tgt), prev = tgt.previousElementSibling, list = tgt.parentNode;
+    tgt.remove();
+    if ((list.tagName === "UL" || list.tagName === "OL" || list.tagName === "TBODY") && !list.children.length) { var t2 = list.tagName === "TBODY" ? list.closest("table") : list; var w = t2.parentNode && t2.parentNode.classList.contains("rcmxw") ? t2.parentNode : t2; w.remove(); }
+    if (card) { liveDirty[card.getAttribute("data-rid")] = card; clearTimeout(liveT); liveT = setTimeout(liveFlush, 300); }
+    if (prev && prev.getAttribute && prev.getAttribute("contenteditable")) focusEnd(prev);
+  }
+  function addCol(el) {
+    if (!el || !(el.tagName === "TD" || el.tagName === "TH")) { alert("표 안의 칸을 먼저 눌러 주세요"); return; }
+    var tb = el.closest("table"), ci = Array.prototype.indexOf.call(el.parentNode.children, el);
+    Array.prototype.forEach.call(tb.querySelectorAll("tr"), function (r) { var ref = r.children[ci], x = editable(document.createElement(ref && ref.tagName === "TH" && r.parentNode.tagName === "THEAD" ? "th" : "td")); r.insertBefore(x, ref ? ref.nextSibling : null); });
+    markDirty(el); focusEnd(el.parentNode.children[ci + 1]);
+  }
+  function liveAct(a) {
+    var el = liveCur && liveCur.isConnected ? liveCur : null;
+    if (a === "end") { liveFlush().then(function () { LIVE = false; draw(); }); return; }
+    if (!el) { alert("먼저 고칠 글 줄을 눌러 주세요"); return; }
+    if (a === "add") addBelow(el);
+    else if (a === "del") delLine(el);
+    else if (a === "col") addCol(el);
+    else if (a === "bold") { el.focus(); document.execCommand("bold"); markDirty(el); }
+    else if (a === "mark" || a === "red") { el.focus(); wrapSel(el, a === "mark" ? "mark" : "b", a === "mark" ? "m-orange" : "c-pink"); markDirty(el); }
+  }
+  bodyEl.addEventListener("focusin", function (e) { if (!liveOn()) return; var el = e.target.closest && e.target.closest("[contenteditable]"); if (el) { liveCur = el; liveSay("✏ 고치는 중 · 엔터 = 아래에 새 줄"); } });
+  bodyEl.addEventListener("focusout", function (e) { if (!liveOn()) return; var el = e.target.closest && e.target.closest("[contenteditable]"); if (el && Object.keys(liveDirty).length) { clearTimeout(liveT); liveT = setTimeout(liveFlush, 150); } });
+  bodyEl.addEventListener("input", function (e) { if (!liveOn()) return; var el = e.target.closest && e.target.closest("[contenteditable]"); if (el) markDirty(el); });
+  bodyEl.addEventListener("keydown", function (e) {
+    if (!liveOn()) return; var el = e.target.closest && e.target.closest("[contenteditable]"); if (!el) return;
+    if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); addBelow(el); }
+    else if (e.key === "Backspace" && !el.textContent.length && /^(P|LI)$/.test(el.tagName)) { e.preventDefault(); var p = el.previousElementSibling, par = el.parentNode; markDirty(el); el.remove(); if (par.tagName !== "DIV" && !par.children.length) par.remove(); if (p && p.getAttribute("contenteditable")) focusEnd(p); }
+  });
+  // 고치는 중엔 카드가 접히지 않게 (제목 글자를 누르거나 띄어쓰기를 쳐도)
+  bodyEl.addEventListener("toggle", function (e) { if (liveOn() && e.target.tagName === "DETAILS" && !e.target.open) e.target.open = true; }, true);
+  bodyEl.addEventListener("click", function (e) { if (liveOn() && e.target.closest && e.target.closest("summary")) e.preventDefault(); }, true);
+  window.addEventListener("pagehide", function () { if (Object.keys(liveDirty).length) liveFlush(); });
+  document.addEventListener("visibilitychange", function () { if (document.visibilityState === "hidden" && Object.keys(liveDirty).length) liveFlush(); });
+  function liveBusy() { if (!liveOn()) return false; var a = document.activeElement; return Object.keys(liveDirty).length > 0 || liveSaving || !!(a && a.closest && a.closest("#rcBody [contenteditable]")); }
+  function liveGo(rid) {
+    if (ED) { alert("고치던 것이 있습니다 · 먼저 저장하거나 취소해 주세요"); return; }
+    LIVE = true; draw();
+    var card = rid >= 0 ? bodyEl.querySelector('[data-rid="' + rid + '"]') : null;
+    var first = (card || bodyEl).querySelector("[contenteditable]");
+    if (card) showBox(card); if (first && card) focusEnd(first);
+  }
   bodyEl.addEventListener("click", function (e) {
     var t0 = e.target.closest ? e.target : e.target.parentNode;
     var jx = t0.closest(".rcjx"); if (jx) { e.preventDefault(); jamEdit(jx.dataset.jx); return; }
-    var eb = t0.closest(".rcedb"); if (eb) { e.preventDefault(); startEdit(+eb.dataset.rid); return; }
+    var eb = t0.closest(".rcedb"); if (eb) { e.preventDefault(); liveGo(+eb.dataset.rid); return; }
     var jr = t0.closest("[data-jr]"); if (jr) { jamRow(jr); return; }
     var tb = t0.closest(".rcedtool button"); if (tb) { e.preventDefault(); tool(tb.dataset.c, bodyEl.querySelector(".rcedarea")); return; }
     var ab = t0.closest("[data-a]");
     if (ab && ab.closest(".rcedbox")) { if (ab.dataset.a === "save") { if (ED && ED.jam) jamSave(); else saveEdit(); } else if (confirm("고친 것을 버리고 닫을까요?")) endEdit(false); return; }
-    if (ab && ab.closest(".rcedbar")) { if (ab.dataset.a === "new") startEdit(-1, true); else if (ab.dataset.a === "newjam") jamEdit("new"); else showHist(); return; }
+    if (ab && ab.closest(".rcedbar")) {
+      if (ab.dataset.a === "live") liveGo(-1);
+      else if (ab.dataset.a === "liveoff") liveAct("end");
+      else if (ab.dataset.a === "new") { if (LIVE) { liveFlush().then(function () { LIVE = false; draw(); startEdit(-1, true); }); } else startEdit(-1, true); }
+      else if (ab.dataset.a === "newjam") jamEdit("new"); else showHist();
+      return;
+    }
     var hb = t0.closest("[data-hv],[data-hr]"); if (hb) { histAct(hb); return; }
   });
   // 붙여넣기는 글자만 (다른 곳 서식 · 색이 딸려오지 않게)
@@ -668,7 +831,13 @@
   });
   // 고치는 중 이 화면을 떠나면 경고
   window.addEventListener("beforeunload", function (e) { if (ED) { e.preventDefault(); e.returnValue = ""; } });
-  navEl.addEventListener("click", function (e) { var b = e.target.closest && e.target.closest(".rcnb"); if (!b) return; if (ED && !confirm("고치던 카드가 저장되지 않았습니다. 다른 묶음으로 갈까요?")) return; if (ED) endEdit(false); cur = b.dataset.k; draw(); bodyEl.scrollIntoView({ block: "nearest" }); });
+  navEl.addEventListener("click", function (e) {
+    var b = e.target.closest && e.target.closest(".rcnb"); if (!b) return;
+    if (ED && !confirm("고치던 카드가 저장되지 않았습니다. 다른 묶음으로 갈까요?")) return; if (ED) endEdit(false);
+    // 바로 고치기 중이면 고친 것부터 저장하고 넘어간다 (안 그러면 마지막 글이 사라짐)
+    var go = function () { cur = b.dataset.k; draw(); bodyEl.scrollIntoView({ block: "nearest" }); };
+    if (LIVE && (Object.keys(liveDirty).length || liveSaving)) { liveFlush().then(go); } else go();
+  });
   bodyEl.addEventListener("click", function (e) { var b = e.target.closest && e.target.closest(".rcjb"); if (!b) return; if (ED) { if (!confirm("고치던 것이 저장되지 않았습니다. 다른 레시피로 갈까요?")) return; endEdit(false); } jamSub = b.dataset.j; drawJam(); });
   document.getElementById("rcOpen").addEventListener("click", unlock);
   var seeBtn = document.getElementById("rcSee");
