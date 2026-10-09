@@ -1857,6 +1857,75 @@ table.zt tr:last-child td{border-bottom:0}
 /* 벤치마킹 */
 #tp17 small{font-size:12.5px}#tp17 .bnrow span{font-size:14px}#tp17 .bnfoot,#tp17 .bnx{font-size:13px}#tp17 .bnavg{font-size:13.5px}
 #tp17 .bntable{font-size:14px}#tp17 .bnnote{font-size:14.5px}
+/* ── 가독성 2차(10/9 · v0924-179 · 사장님 「워크샵 여전히 안 보인다」): 흐린 회색 글씨(대비 3:1)를 진하게 · 남은 12~13px 글씨 · 제목 크게 ── */
+:is(#tp3,#tp5,#tp6,#tp7,#tp8,#tp9,#tp11,#tp13,#tp14,#tp15,#tp17){--muted:#625646;--open:#97510F}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) :is(#tp3,#tp5,#tp6,#tp7,#tp8,#tp9,#tp11,#tp13,#tp14,#tp15,#tp17){--muted:#BDB098;--open:#E2A45C}}
+:root[data-theme="dark"] :is(#tp3,#tp5,#tp6,#tp7,#tp8,#tp9,#tp11,#tp13,#tp14,#tp15,#tp17){--muted:#BDB098;--open:#E2A45C}
+:is(#tp3,#tp5,#tp6,#tp7,#tp8,#tp9,#tp11,#tp13,#tp14,#tp15,#tp17) .subhead{font-size:21px;margin:42px 0 14px;padding-bottom:8px;border-bottom:2px solid var(--ink2)}
+:is(#tp3,#tp5,#tp6,#tp7,#tp8,#tp9,#tp11,#tp13,#tp14,#tp15,#tp17) .shead span.sub{font-size:15px}:is(#tp3,#tp5,#tp6,#tp7,#tp8,#tp9,#tp11,#tp13,#tp14,#tp15,#tp17) .shead .en{font-size:12.5px}
+:is(#tp3,#tp5,#tp6,#tp7,#tp8,#tp9,#tp11,#tp13,#tp14,#tp15,#tp17) .tnote{font-size:15px!important;color:var(--ink2)}
+/* 워크샵 — 상자 제목 · 칸 이름 · 설명 */
+#tp9 .lgdate,#tp9 .lgmsg{font-size:15px}
+#tp9 .wph{font-size:14.5px}#tp9 .wph b{font-size:15px}#tp9 .wpt{font-size:17.5px;line-height:1.45}#tp9 .wpm{font-size:15px}#tp9 .wpn{font-size:14.5px;line-height:1.6}#tp9 .wpgo{font-size:14.5px}
+#tp9 .wssh{font-size:17.5px;padding:11px 15px}
+#tp9 .wsrows{gap:13px;padding:13px 15px 15px}
+#tp9 .wsrow{font-size:16px;gap:5px;color:var(--ink)}
+#tp9 label.wsrow span{font-size:16px}
+#tp9 .wsrow em,#tp9 label.wsrow span em{font-size:14.5px;margin-top:2px;line-height:1.45}
+#tp9 .wsrow.chk,#tp9 label.wsrow.chk span{font-size:16px;line-height:1.5}
+#tp9 .wsrow.chk input{width:20px;height:20px;margin-top:2px}
+#tp9 .wsin{background:var(--surface);border-color:var(--rule2)}
+/* 워크샵 — 가고 싶은 곳 · 회의 표 */
+#tp9 .wstable th{font-size:15px;color:var(--ink2)}
+#tp9 .wstable td{font-size:16px}
+#tp9 .wlfold{font-size:16.5px;padding:11px 14px}#tp9 .wlfold .n{font-size:14.5px}
+#tp9 .wsx{font-size:14.5px;padding:7px 9px}#tp9 .wsdrag{font-size:16px}
+#tp9 .wsadd{font-size:15px;padding:8px 15px}#tp9 .wsmini{font-size:14.5px;padding:7px 13px}#tp9 .wsaddnote{font-size:14.5px}
+/* 워크샵 — 회의 내용 */
+#tp9 .wsmt>summary{font-size:17px;padding-top:12px;padding-bottom:12px}#tp9 .wsmtt{font-size:17px}#tp9 .wsmtd{font-size:15px}
+#tp9 .wsmtl{font-size:15px}#tp9 .wsedit2{font-size:14.5px}#tp9 .wsmtnote{font-size:16px}
+#tp9 .wsrefbox{font-size:16px}#tp9 .wsrefbox h4{font-size:18px;margin-top:14px}
+/* 워크샵 — 일자별 일정 · 타임테이블 */
+#tp9 .wsdtab{font-size:16px;padding:9px 20px}#tp9 .wsedit{font-size:15px}#tp9 .wsdays{font-size:14.5px}#tp9 .wsedithint{font-size:14.5px}
+#tp9 .wsdate{font-size:15px}
+#tp9 .rphead{font-size:17px}#tp9 .rphead span{font-size:14.5px}#tp9 .ttmeta{font-size:15px}
+#tp9 .tttime{font-size:15.5px}#tp9 .ttbody b{font-size:16.5px}#tp9 .ttbody span{font-size:15.5px;color:var(--ink2);line-height:1.6}
+#tp9 .wsro{font-size:16px}
+/* 워크샵 — 벤치마킹 요약 · 비용 */
+#tp9 .bnsub{font-size:14.5px}#tp9 .bnsumc b{font-size:16.5px}#tp9 .bnsumc span{font-size:15px}
+#tp9 .wscosth b{font-size:17px}#tp9 .wscosth .wsdayd{font-size:14.5px}
+#tp9 .wsgrand{font-size:16px}#tp9 .wsgrand b{font-size:22px}#tp9 .wsgrand small{font-size:14.5px}
+#tp9 .wsref,#tp9 .wsref td{font-size:15.5px}#tp9 .wsref th{font-size:15px}
+#tp9 .lgdate .dinp{font-size:16px}#tp9 .lgmsg{color:#3F4A2C}
+#tp9 .wssec.warn .wssh{color:#7A2C1C}
+#tp9 .wstable.mtg th.c2+th.c2{width:132px;min-width:132px}
+/* 휴대폰: 잠긴 일자별 일정 표는 옆으로 잘리지 않게 줄마다 카드처럼 (시간 | 일정 굵게 · 아래 할 일 + 메모) */
+@media (max-width:640px){
+#tp9 .wsday.locked .ztable-wrap{overflow:visible}
+#tp9 .wsday.locked .wstable{display:block;min-width:0;width:100%}
+#tp9 .wsday.locked .wstable thead{display:none}
+#tp9 .wsday.locked .wstable tbody{display:block}
+#tp9 .wsday.locked .wstable tr{display:grid;grid-template-columns:64px 1fr;padding:9px 2px;border-bottom:1px solid var(--rule)}
+#tp9 .wsday.locked .wstable td{display:block;border:0;padding:0;background:transparent}
+#tp9 .wsday.locked .wstable .wsdel{display:none}
+#tp9 .wsday.locked .wstable td:nth-child(2) .wsro{font-weight:700;padding-bottom:1px}
+#tp9 .wsday.locked .wstable td:nth-child(3){grid-column:2}
+#tp9 .wsday.locked .wstable td:nth-child(3) .wsro{color:var(--ink2);padding-top:0;font-size:15.5px}
+#tp9 .wsday.locked .wstable td:nth-child(3) .wsro:empty{display:none}
+#tp9 .wsedithint{text-align:left}
+/* 가고 싶은 곳 · 회의 표: 체크 | 누가(차수) · 곳 · 메모를 위아래로 — 옆으로 밀지 않아도 다 보이게 */
+#tp9 .wstable.mtg{display:block;min-width:0;width:100%}
+#tp9 .wstable.mtg thead{display:none}
+#tp9 .wstable.mtg tbody{display:block}
+#tp9 .wstable.mtg tr.mtgrow{display:grid;grid-template-columns:34px 1fr;gap:5px 6px;padding:9px 4px;border-bottom:1px solid var(--rule)}
+#tp9 .wstable.mtg tr.mtgrow td{display:block;border:0;padding:0;background:transparent;grid-column:2}
+#tp9 .wstable.mtg tr.mtgrow td.mtgc{grid-column:1;grid-row:1 / span 4;padding-top:8px}
+#tp9 .wstable.mtg tr.mtgrow td .wsin.tin{width:auto;max-width:150px}
+#tp9 .wstable.mtg tr:not(.mtgrow){display:block}#tp9 .wstable.mtg tr:not(.mtgrow) td{display:block}
+#tp9 .wsmtgwrap,#tp9 .wstable.mtg{overflow:visible}
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #tp9 .lgmsg{color:var(--mid)}:root:not([data-theme="light"]) #tp9 .wssec.warn .wssh{color:var(--off)}}
+:root[data-theme="dark"] #tp9 .lgmsg{color:var(--mid)}:root[data-theme="dark"] #tp9 .wssec.warn .wssh{color:var(--off)}
 /* 경고 띠 (js/sync.js) */
 .cswarn{position:sticky;top:0;z-index:9999;padding:10px 14px;font-size:14px;font-weight:800;line-height:1.5;cursor:pointer;text-align:center}
 .cswarn.bad{background:#B3261E;color:#fff}.cswarn.ver{background:#1B5FC1;color:#fff}
@@ -2882,7 +2951,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-178</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-179</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -3487,15 +3556,15 @@ input,select,textarea{border-radius:var(--r3)!important}
 </footer>
 </div>
 
-<script src="js/chrome.js?v=v0924-178"></script>
+<script src="js/chrome.js?v=v0924-179"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/sync.js?v=v0924-178"></script>
-<script src="js/holidays.js?v=v0924-178"></script>
-<script src="js/sched.js?v=v0924-178"></script>
-<script src="js/app.js?v=v0924-178"></script>
+<script src="js/sync.js?v=v0924-179"></script>
+<script src="js/holidays.js?v=v0924-179"></script>
+<script src="js/sched.js?v=v0924-179"></script>
+<script src="js/app.js?v=v0924-179"></script>
 
 <style>
 /* 재고 · 발주 */
@@ -3710,7 +3779,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 .sksearch{font:inherit;font-size:13px;padding:6px 9px;width:100%;max-width:300px;background:var(--bg);color:var(--ink);
   border:1px solid var(--rule2);border-radius:2px;margin-bottom:10px}
 </style>
-<script src="js/stock.js?v=v0924-178"></script>
+<script src="js/stock.js?v=v0924-179"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -3739,9 +3808,9 @@ input,select,textarea{border-radius:var(--r3)!important}
   })();
 </script>
 
-<script src="js/presence.js?v=v0924-178"></script>
-<script src="js/weekrep.js?v=v0924-178"></script>
-<script src="js/recipe.js?v=v0924-178"></script>
-<script src="js/bench.js?v=v0924-178"></script>
-<script src="js/monthlog.js?v=v0924-178"></script>
+<script src="js/presence.js?v=v0924-179"></script>
+<script src="js/weekrep.js?v=v0924-179"></script>
+<script src="js/recipe.js?v=v0924-179"></script>
+<script src="js/bench.js?v=v0924-179"></script>
+<script src="js/monthlog.js?v=v0924-179"></script>
 </body></html>
