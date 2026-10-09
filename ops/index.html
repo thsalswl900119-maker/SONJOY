@@ -2007,6 +2007,38 @@ mark.rcfind{background:#FFE86B;color:#A11A12;font-weight:900;border-radius:2px;p
 .rcir b{font-weight:900;color:#8A3A00;white-space:nowrap;font-size:15.5px}
 .rcing.rcwide .rcingl,.rcsec .rcing.rcwide .rcingl{grid-template-columns:1fr!important}.rcing.rcwide .rcir b{white-space:normal;text-align:right}
 .rcing.u .rcir span,.rcing.u .rcir b{text-decoration:underline;text-decoration-color:#E0B98A}
+.rcmxw{overflow-x:auto;margin:10px 0 14px;border:1px solid #EAD9C4;border-radius:10px;background:#FFFCF7;-webkit-overflow-scrolling:touch}
+.rcmx{border-collapse:separate;border-spacing:0;width:100%;font-size:15px}
+.rcmx th,.rcmx td{padding:8px 11px;border-bottom:1px solid #F0E3D2;text-align:right;white-space:nowrap}
+.rcmx thead th{background:#F6E9D8;color:#5A3100;font-weight:900;font-size:14px;white-space:normal;min-width:82px;text-align:center;vertical-align:bottom;line-height:1.35}
+.rcmx thead th:first-child,.rcmx tbody th{position:sticky;left:0;z-index:1;text-align:left;min-width:92px;max-width:150px;white-space:normal;border-right:1px solid #EAD9C4}
+.rcmx thead th:first-child{background:#F0DDC6}
+.rcmx tbody th{background:#FFFCF7;font-weight:700;color:#3B302A}
+.rcmx td{font-weight:900;color:#8A3A00;font-size:15.5px}
+.rcmx td.no{color:#C9B9A6;font-weight:400}
+.rcmx tbody tr:nth-child(even) td,.rcmx tbody tr:nth-child(even) th{background:#FBF3E8}
+.rcmx tbody tr:last-child th,.rcmx tbody tr:last-child td{border-bottom:0}
+.rcedb{float:right;margin:2px 0 6px 8px;font:inherit;font-size:13.5px;font-weight:800;padding:5px 11px;border:1.5px solid #C57A2B;border-radius:8px;background:#fff;color:#8A3A00;cursor:pointer}
+.rccall>.rcedb{float:none;display:inline-block;margin-top:6px}
+.rcedbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:16px 0 4px;padding-top:12px;border-top:1px dashed var(--line)}
+.rcedbar span{font-size:14px;color:var(--ink2)}
+.rcedbox{border:2.5px solid #C57A2B;border-radius:10px;background:#FFFDF8;padding:12px;margin:8px 0;box-shadow:0 3px 14px rgba(120,70,20,.12)}
+.rcedh{font-weight:900;font-size:16px;color:#8A3A00;margin-bottom:8px}
+.rcedh small{display:block;font-weight:400;font-size:13.5px;color:var(--ink2);margin-top:2px}
+.rcedl{display:flex;flex-direction:column;gap:4px;font-size:14px;font-weight:800;color:#5A3100;margin-bottom:8px}
+.rcedl input{font:inherit;font-size:16px;font-weight:700;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#fff}
+.rcedtool{display:flex;flex-wrap:wrap;gap:5px;background:#FFFDF8;padding:4px 0 6px}
+.rcedtool button{font:inherit;font-size:14px;padding:6px 10px;border:1px solid var(--line);border-radius:7px;background:#fff;cursor:pointer;color:var(--ink)}
+.rcedarea{min-height:180px;border:1.5px solid #E0C9A8;border-radius:8px;background:#fff;padding:10px 12px;font-size:16px;line-height:1.7;outline:none}
+.rcedarea:focus{border-color:#C57A2B;box-shadow:0 0 0 3px rgba(197,122,43,.15)}
+.rcedarea p{margin:0 0 6px}
+.rcedarea table{border-collapse:collapse;margin:6px 0}.rcedarea td,.rcedarea th{border:1px solid #D9C4A6;padding:5px 9px;min-width:60px}
+.rcph{margin:8px 0;padding:8px 12px;border:1.5px dashed #C9B08E;border-radius:8px;background:#F6EEE2;color:#6B5640;font-size:14.5px;user-select:none}
+.rcedbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.rcedbtns .rced{font-size:15px;padding:9px 16px}
+.rchist{margin:8px 0;border:1px solid var(--line);border-radius:10px;padding:4px 12px 10px;background:var(--surface)}
+.rchi{padding:8px 0;border-bottom:1px dashed var(--line);font-size:14.5px}.rchi span{color:var(--ink2);font-size:13.5px}
+.rchi .rced{margin:4px 6px 0 0;font-size:13.5px;padding:5px 10px}.rchv{margin-top:6px;border-left:4px solid #E0C9A8;padding-left:10px}
+@media(max-width:640px){.rcmx{font-size:14.5px}.rcmx th,.rcmx td{padding:7px 8px}.rcmx thead th{min-width:70px;font-size:13.5px}.rcmx tbody th{min-width:80px}}
 .rcsec ol{counter-reset:rcs;list-style:none;padding-left:0}
 .rcsec ol>li{counter-increment:rcs;position:relative;padding:6px 0 6px 34px;border-bottom:1px dotted #EAD9C4}
 .rcsec ol>li::before{content:counter(rcs);position:absolute;left:0;top:7px;width:24px;height:24px;border-radius:50%;background:#3B302A;color:#fff;font-size:13px;font-weight:800;display:grid;place-items:center}
@@ -2959,7 +2991,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-180</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-181</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -3564,15 +3596,15 @@ input,select,textarea{border-radius:var(--r3)!important}
 </footer>
 </div>
 
-<script src="js/chrome.js?v=v0924-180"></script>
+<script src="js/chrome.js?v=v0924-181"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/sync.js?v=v0924-180"></script>
-<script src="js/holidays.js?v=v0924-180"></script>
-<script src="js/sched.js?v=v0924-180"></script>
-<script src="js/app.js?v=v0924-180"></script>
+<script src="js/sync.js?v=v0924-181"></script>
+<script src="js/holidays.js?v=v0924-181"></script>
+<script src="js/sched.js?v=v0924-181"></script>
+<script src="js/app.js?v=v0924-181"></script>
 
 <style>
 /* 재고 · 발주 */
@@ -3787,7 +3819,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 .sksearch{font:inherit;font-size:13px;padding:6px 9px;width:100%;max-width:300px;background:var(--bg);color:var(--ink);
   border:1px solid var(--rule2);border-radius:2px;margin-bottom:10px}
 </style>
-<script src="js/stock.js?v=v0924-180"></script>
+<script src="js/stock.js?v=v0924-181"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -3816,9 +3848,9 @@ input,select,textarea{border-radius:var(--r3)!important}
   })();
 </script>
 
-<script src="js/presence.js?v=v0924-180"></script>
-<script src="js/weekrep.js?v=v0924-180"></script>
-<script src="js/recipe.js?v=v0924-180"></script>
-<script src="js/bench.js?v=v0924-180"></script>
-<script src="js/monthlog.js?v=v0924-180"></script>
+<script src="js/presence.js?v=v0924-181"></script>
+<script src="js/weekrep.js?v=v0924-181"></script>
+<script src="js/recipe.js?v=v0924-181"></script>
+<script src="js/bench.js?v=v0924-181"></script>
+<script src="js/monthlog.js?v=v0924-181"></script>
 </body></html>
