@@ -255,7 +255,7 @@
     function checkVer() {
       if (!window.fetch || verAsked) return;
       fetch(location.pathname + "?vc=" + Date.now(), { cache: "no-store" }).then(function (r) { return r.ok ? r.text() : ""; }).then(function (t) {
-        var m = String(t).match(/v0924-(\d+)/), cur = verNow(); if (!m || !cur || +m[1] <= cur) return;
+        var m = String(t).match(/id="verTag"[^>]*>v0924-(\d+)</), cur = verNow(); if (!m || !cur || +m[1] <= cur) return; // 화면 버전 칸에서만 읽기 (주석 속 버전 글자 말고)
         verAsked = true;
         // 캐시 때문에 옛 화면이 다시 열려도 같은 버전으로는 한 번만 자동 새로고침 (무한 새로고침 방지)
         var tried = ""; try { tried = sessionStorage.getItem("cs.vertry") || ""; } catch (e) {}
