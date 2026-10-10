@@ -2050,6 +2050,9 @@ mark.rcfind{background:#FFE86B;color:#A11A12;font-weight:900;border-radius:2px;p
 .rclivebar button{font:inherit;font-size:14px;padding:7px 11px;border:0;border-radius:8px;background:#fff;color:#3B2A1A;cursor:pointer;touch-action:manipulation}
 .rclivebar button.end{background:#E08A2E;color:#fff;font-weight:800;margin-left:auto}
 body.rcliveon{padding-bottom:120px}
+.refimg{margin:8px 0 22px;border:1px solid var(--rule2);border-radius:10px;background:var(--surface);padding:10px;max-width:640px}
+.refimg img{display:block;width:100%;height:auto;border-radius:6px}
+.refimg figcaption{margin-top:8px;font-size:15px;line-height:1.55}.refimg figcaption span{display:block;font-size:14px;color:var(--ink2)}
 /* 바로 고치기 중엔 위 저장 줄을 붙여 두지 않는다 (휴대폰에서 고칠 자리가 반밖에 안 남아서) · 저장 상태는 아래 고치기 줄에 */
 body.rcliveon .savebar{position:static}
 .rcedbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.rcedbtns .rced{font-size:15px;padding:9px 16px}
@@ -3009,7 +3012,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-187</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-188</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -3419,6 +3422,13 @@ input,select,textarea{border-radius:var(--r3)!important}
   <button type="button" id="prepAll" class="moreBtn" aria-expanded="false">
     다른 달도 보기</button>
 
+  <!-- csonly:start -->
+  <h3 class="subhead">🎀 포장 자재 참고</h3>
+  <figure class="refimg" id="ribbonRef">
+    <a href="img/ribbon-sizes.webp" target="_blank" rel="noopener" title="누르면 크게 봅니다"><img src="img/ribbon-sizes.webp" alt="벨벳 리본끈 사이즈 비교 — 36mm · 25mm · 15mm · 10mm · 6mm" loading="lazy" width="1476" height="1294"></a>
+    <figcaption><b>리본끈 사이즈 비교</b> · 36mm · 25mm · 15mm · 10mm · 6mm <span>(사진을 누르면 크게 보입니다 · 선물세트 · 명절 포장 주문할 때 참고)</span></figcaption>
+  </figure>
+  <!-- csonly:end -->
   <h3 class="subhead">명절 D-데이</h3>
   <div class="callout">
     추석·설날은 음력이라 매년 날짜가 바뀝니다. 올해 <b>추석 당일</b>과 <b>설날 당일</b>만 넣으면
@@ -3614,15 +3624,15 @@ input,select,textarea{border-radius:var(--r3)!important}
 </footer>
 </div>
 
-<script src="js/chrome.js?v=v0924-187"></script>
+<script src="js/chrome.js?v=v0924-188"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/sync.js?v=v0924-187"></script>
-<script src="js/holidays.js?v=v0924-187"></script>
-<script src="js/sched.js?v=v0924-187"></script>
-<script src="js/app.js?v=v0924-187"></script>
+<script src="js/sync.js?v=v0924-188"></script>
+<script src="js/holidays.js?v=v0924-188"></script>
+<script src="js/sched.js?v=v0924-188"></script>
+<script src="js/app.js?v=v0924-188"></script>
 
 <style>
 /* 재고 · 발주 */
@@ -3837,7 +3847,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 .sksearch{font:inherit;font-size:13px;padding:6px 9px;width:100%;max-width:300px;background:var(--bg);color:var(--ink);
   border:1px solid var(--rule2);border-radius:2px;margin-bottom:10px}
 </style>
-<script src="js/stock.js?v=v0924-187"></script>
+<script src="js/stock.js?v=v0924-188"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -3866,9 +3876,9 @@ input,select,textarea{border-radius:var(--r3)!important}
   })();
 </script>
 
-<script src="js/presence.js?v=v0924-187"></script>
-<script src="js/weekrep.js?v=v0924-187"></script>
-<script src="js/recipe.js?v=v0924-187"></script>
-<script src="js/bench.js?v=v0924-187"></script>
-<script src="js/monthlog.js?v=v0924-187"></script>
+<script src="js/presence.js?v=v0924-188"></script>
+<script src="js/weekrep.js?v=v0924-188"></script>
+<script src="js/recipe.js?v=v0924-188"></script>
+<script src="js/bench.js?v=v0924-188"></script>
+<script src="js/monthlog.js?v=v0924-188"></script>
 </body></html>

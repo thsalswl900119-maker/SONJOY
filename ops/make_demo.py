@@ -207,6 +207,7 @@ while True:
     if not m: break
     h = h[:m.start()] + h[div_end(h, m.start()):]
 h = re.sub(r'<p class="tip"[^>]*>과일은 거의 다[^<]*</p>', "", h)
+h = re.sub(r"\s*<!-- csonly:start -->.*?<!-- csonly:end -->\n?", "\n", h, flags=re.S)   # 카페스이 전용(포장 자재 사진 등)은 체험판에서 뺀다
 # 연간행사: 「미리 챙기기」 · 「명절 D-데이」(카페스이 계획) 묶음은 통째로 빼기 — 날씨 · 계절 · 연휴 · 성수기/비수기 달력만 남긴다
 m0 = h.index('<h2>미리 챙기기</h2>'); s0 = h.rfind("<section>", 0, m0); s1 = h.index("</section>", m0) + len("</section>")
 h = h[:s0] + h[s1:]
