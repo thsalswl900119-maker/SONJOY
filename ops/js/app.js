@@ -772,7 +772,7 @@
       h = "";
       by("cafesui.stock.").sort().reverse().forEach(function (k) {
         var o = J(k) || {}, d = k.slice(14), b = "";
-        [["orders", "발주 넣을 것"], ["report", "총괄 보고 · 특이사항"], ["prod", "조각케이크 생산"], ["fruitUseA", "과일 사용 (알)"], ["fruitUseB", "과일 사용 (병)"], ["fruitUseC", "과일 사용 (통)"], ["creamUse", "생크림 사용 (통)"], ["fruitOrder", "과일 주문 · 입고"], ["creamPlan", "생크림 주문 계획"]].forEach(function (f) { if (o[f[0]] && String(o[f[0]]).trim()) b += "<tr><th>" + f[1] + "</th><td>" + P(o[f[0]]) + "</td></tr>"; });
+        [["orders", "발주 넣을 것"], ["report", "총괄 보고 · 특이사항"], ["prod", "조각케이크 생산"], ["fruitUseA", "과일 사용 (알)"], ["fruitUseB", "과일 사용 (병)"], ["fruitUseC", "과일 사용 (통)"], ["fu1n", "과일 1"], ["fu1q", "과일 1 수량"], ["fu1u", "과일 1 단위"], ["fu2n", "과일 2"], ["fu2q", "과일 2 수량"], ["fu2u", "과일 2 단위"], ["fu3n", "과일 3"], ["fu3q", "과일 3 수량"], ["fu3u", "과일 3 단위"], ["fu4n", "과일 4"], ["fu4q", "과일 4 수량"], ["fu4u", "과일 4 단위"], ["creamUse", "생크림 사용 (통)"], ["fruitOrder", "과일 주문 · 입고"], ["creamPlan", "생크림 주문 계획"]].forEach(function (f) { if (o[f[0]] && String(o[f[0]]).trim()) b += "<tr><th>" + f[1] + "</th><td>" + P(o[f[0]]) + "</td></tr>"; });
         var st = o.stock || {}, sb = "";
         Object.keys(st).forEach(function (nm) { if (st[nm] != null && String(st[nm]).trim() !== "") sb += "<tr><th>" + E(nm) + "</th><td>" + P(st[nm]) + "</td></tr>"; });
         if (!b && !sb) return;

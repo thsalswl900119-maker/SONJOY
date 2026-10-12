@@ -10,7 +10,24 @@
 
     var MGR = ["정항아", "사장님"];
     var PRE = "cafesui.stock.";
-    var FIELDS = ["prod", "fruitUseA", "fruitUseB", "fruitUseC", "creamUse", "fruitOrder", "creamPlan", "report", "noOrder"];   // noOrder: 「발주 넣을 것 없음」 확인 (누가 · 몇 시)
+    var FIELDS = ["prod", "fruitUseA", "fruitUseB", "fruitUseC", "creamUse", "fruitOrder", "creamPlan", "report", "noOrder"];
+    // 과일 사용 — 과일 이름 · 수량 · 단위 4줄 (10/12 · 사장님). 예전 칸(fruitUseA/B/C = 알/병/통 합계)도 합계에 같이 더한다(「이름 없음」)
+    var FU = [1, 2, 3, 4];
+    FU.forEach(function (i) { FIELDS.push("fu" + i + "n", "fu" + i + "q", "fu" + i + "u"); });
+    function fuse(o) {
+      o = o || {};
+      var r = { a: Number(o.fruitUseA) || 0, b: Number(o.fruitUseB) || 0, t: Number(o.fruitUseC) || 0, any: !!(o.fruitUseA || o.fruitUseB || o.fruitUseC), list: [], items: [] };
+      [["fruitUseA", "알"], ["fruitUseB", "병"], ["fruitUseC", "통"]].forEach(function (x) { var n = Number(o[x[0]]) || 0; if (n) r.items.push({ n: "", q: n, u: x[1] }); });
+      FU.forEach(function (i) {
+        var q = o["fu" + i + "q"]; if (q == null || String(q).trim() === "") return;
+        var n = Number(q) || 0, u = o["fu" + i + "u"] || "알", nm = String(o["fu" + i + "n"] || "").trim(); r.any = true;
+        if (u === "병") r.b += n; else if (u === "통") r.t += n; else r.a += n;
+        if (n) { r.list.push((nm || "과일") + " " + q + u); r.items.push({ n: nm, q: n, u: u }); }
+      });
+      return r;
+    }
+    function fuseTxt(r) { return r.a + "알 / " + r.b + "병" + (r.t ? " / " + r.t + "통" : ""); }
+    function legacyFruit() { ["fruitUseA", "fruitUseB", "fruitUseC"].forEach(function (k) { var el = $("#sk_" + k); if (el) el.closest("label").hidden = !(Number(el.value) > 0); }); }   // noOrder: 「발주 넣을 것 없음」 확인 (누가 · 몇 시)
     var NL = String.fromCharCode(10);
     var TIP = {
       fruit: "사장님 꿀팁 — 망고 1박스 최대 58,000원. 후숙 과일은 1~1.5박스 여유. 조림 복숭아 반박스 남으면 미리 주문. 주마다 과일 단가 체크. 파손 시 바로 A/S.",
@@ -265,6 +282,12 @@
     function read() {
       var o = { date: cur, month: cur.slice(0, 7), by: byEl.textContent, stock: stock, orders: ordEl.value, orderChecks: checks };
       FIELDS.forEach(function (k) { o[k] = $("#sk_" + k).value; });
+      // 과일 이름을 비워 두고 수량만 적으면 흐린 글씨(전날 과일 이름)를 쓴다 · 수량이 없으면 단위는 저장 안 함
+      FU.forEach(function (i) {
+        var q = String(o["fu" + i + "q"] || "").trim();
+        if (!q) { o["fu" + i + "u"] = ""; return; }
+        if (!String(o["fu" + i + "n"] || "").trim()) { var ph = $("#sk_fu" + i + "n").placeholder; if (ph && ph.indexOf("예:") < 0) o["fu" + i + "n"] = ph; }
+      });
       return o;
     }
     // base: 이 화면이 날짜를 열 때(또는 마지막 저장 때) 본 모습. 저장할 때 이 화면에서 바꾼 칸만 쓰고,
@@ -365,6 +388,13 @@
       stock = o.stock || {}; checks = o.orderChecks || {};
       ordEl.value = o.orders || "";
       FIELDS.forEach(function (k) { $("#sk_" + k).value = o[k] == null ? "" : o[k]; });
+      // 과일 이름 · 단위: 비어 있으면 전날(마지막 기록) 것을 흐린 글씨 · 기본 단위로
+      FU.forEach(function (i) {
+        var pn = pdo && pdo["fu" + i + "n"], pu = pdo && pdo["fu" + i + "u"];
+        $("#sk_fu" + i + "n").placeholder = pn ? pn : "과일 이름 (예: 망고)";
+        if (!o["fu" + i + "u"]) $("#sk_fu" + i + "u").value = pu || "알";
+      });
+      legacyFruit(); useYm = d.slice(0, 7);
       byEl.textContent = o.by || me();
       statusEl.textContent = load(d) ? "" : "새 날 · 재고는 빈 칸 (흐린 글씨가 전날 숫자)";
       paintNone(); renderGroups(); renderChecks(); renderList(); renderWeek(); renderReport();
@@ -387,7 +417,7 @@
       box.innerHTML = months.map(function (m) {
         var ds = all.filter(function (d) { return d.slice(0, 7) === m; });
         var lines = 0, fa = 0, fb = 0, fc = 0, cc = 0;
-        ds.forEach(function (d) { var o = load(d) || {}; lines += (o.orders || "").split(NL).filter(Boolean).length; fa += Number(o.fruitUseA) || 0; fb += Number(o.fruitUseB) || 0; fc += Number(o.fruitUseC) || 0; cc += Number(o.creamUse) || 0; });
+        ds.forEach(function (d) { var o = load(d) || {}; lines += (o.orders || "").split(NL).filter(Boolean).length; var fz = fuse(o); fa += fz.a; fb += fz.b; fc += fz.t; cc += Number(o.creamUse) || 0; });
         var isOpen = (m in openState) ? openState[m] : (m === curM);
         return '<details class="skmon" data-m="' + m + '"' + (isOpen ? " open" : "") + '><summary>' + m.slice(0, 4) + "년 " + (+m.slice(5)) + "월" +
           '<span class="n">' + ds.length + "일 기록 · 발주 " + lines + "줄 · 과일 " + fa + "알 " + fb + "병" + (fc ? " " + fc + "통" : "") + " · 생크림 " + cc + "통</span></summary>" +
@@ -401,28 +431,36 @@
       $$("[data-d]", box).forEach(function (b) { b.addEventListener("click", function () { open(b.dataset.d); }); });
     }
     // 사용량 — 한 달을 주 단위로 합산해서 보여준다 (과일 알/병 · 생크림 통)
+    var useYm = "";
     function renderUseCal() {
       var box = $("#skUseCal"); if (!box || !cur) return;
-      var ym = cur.slice(0, 7), y = +ym.slice(0, 4), m = +ym.slice(5, 7);
+      var ym = useYm || cur.slice(0, 7), y = +ym.slice(0, 4), m = +ym.slice(5, 7);
       $("#skUseLabel").textContent = y + "년 " + m + "월";
       var nd = new Date(y, m, 0).getDate(), curDoc = read(), curMon = weekMon(cur);
-      var weeks = [], wk = null;
+      var weeks = [], wk = null, mon = {};
+      function add(map, it) { var k = (it.n || "") + "|" + it.u; map[k] = (map[k] || 0) + it.q; }
       for (var d = 1; d <= nd; d++) {
         var date = ym + "-" + pad(d), wd = (new Date(y, m - 1, d).getDay() + 6) % 7;
-        if (!wk || wd === 0) { wk = { from: date, to: date, a: 0, b: 0, t: 0, c: 0, days: 0, mon: weekMon(date) }; weeks.push(wk); }
+        if (!wk || wd === 0) { wk = { from: date, to: date, f: {}, c: 0, days: 0, mon: weekMon(date) }; weeks.push(wk); }
         wk.to = date;
-        var o = (date === cur) ? curDoc : (load(date) || {});
-        var a = Number(o.fruitUseA) || 0, b = Number(o.fruitUseB) || 0, tt = Number(o.fruitUseC) || 0, c = Number(o.creamUse) || 0;
-        if (o.fruitUseA || o.fruitUseB || o.fruitUseC || o.creamUse) wk.days += 1;
-        wk.a += a; wk.b += b; wk.t += tt; wk.c += c;
+        var o = (date === cur) ? curDoc : (load(date) || {}), fz = fuse(o);
+        if (fz.any || o.creamUse) wk.days += 1;
+        fz.items.forEach(function (it) { add(wk.f, it); add(mon, it); });
+        wk.c += Number(o.creamUse) || 0;
       }
-      box.innerHTML = weeks.map(function (w, i) {
-        var on = w.mon === curMon;
-        return '<div class="skwk' + (on ? " on" : "") + '"><span class="wl">' + (i + 1) + "주<small>" + w.from.slice(5).replace("-", "/") + "~" + w.to.slice(5).replace("-", "/") + "</small></span>" +
-          '<span class="wv"><b>' + w.a + "알 · " + w.b + "병" + (w.t ? " · " + w.t + "통" : "") + "</b><small>과일</small></span>" +
-          '<span class="wv"><b>' + w.c + "통</b><small>생크림</small></span>" +
-          '<span class="wd">' + (w.days ? w.days + "일 기록" : '<i>기록 없음</i>') + "</span></div>";
+      function sorted(map) { return Object.keys(map).map(function (k) { var p = k.split("|"); return { n: p[0], u: p[1], q: Math.round(map[k] * 10) / 10 }; }).sort(function (a, b) { return (!a.n) - (!b.n) || b.q - a.q; }); }
+      var ms = sorted(mon), max = {};
+      ms.forEach(function (x) { max[x.u] = Math.max(max[x.u] || 0, x.q); });
+      var h = '<div class="skfsum"><h5>🍓 ' + m + "월 과일별 사용 <small>시즌마다 얼마나 썼는지 · 많이 쓴 순서</small></h5>" +
+        (ms.length ? ms.map(function (x) {
+          return '<div class="skfbar u-' + x.u + (x.n ? "" : " nn") + '"><span class="nm">' + (x.n ? esc(x.n) : "이름 없음 (예전 칸)") + '</span><span class="bar"><i style="width:' + Math.max(4, Math.round(x.q / max[x.u] * 100)) + '%"></i></span><b>' + x.q + x.u + "</b></div>";
+        }).join("") : '<p class="none">아직 이 달에 적은 과일 사용이 없습니다 · 위 「과일 사용」에 과일 이름과 수량을 적으면 여기 모입니다</p>') + "</div>";
+      h += weeks.map(function (w, i) {
+        var on = w.mon === curMon, fs = sorted(w.f);
+        return '<div class="skwk2' + (on ? " on" : "") + '"><div class="wh"><b>' + (i + 1) + "주</b><small>" + w.from.slice(5).replace("-", "/") + "~" + w.to.slice(5).replace("-", "/") + '</small><span class="dy">' + (w.days ? w.days + "일 기록" : "기록 없음") + '</span><span class="cr">생크림 ' + w.c + "통</span></div>" +
+          '<div class="fr">' + (fs.length ? fs.map(function (x) { return '<span class="' + (x.n ? "" : "nn") + '">' + (x.n ? esc(x.n) : "이름 없음") + "<b>" + x.q + x.u + "</b></span>"; }).join("") : "<em>과일 사용 없음</em>") + "</div></div>";
       }).join("");
+      box.innerHTML = h;
     }
     function renderWeek() {
       renderUseCal();
@@ -434,9 +472,9 @@
       var f = "", c = "";
       days.forEach(function (d) {
         var o = (d === cur) ? read() : (load(d) || {});
-        var a = Number(o.fruitUseA) || 0, b = Number(o.fruitUseB) || 0, cc = Number(o.creamUse) || 0;
-        tA += a; tB += b; tC += cc; tT += Number(o.fruitUseC) || 0;
-        f += "<div><span>" + dow(d) + "</span><b>" + ((o.fruitUseA || o.fruitUseB || o.fruitUseC) ? (o.fruitUseA || 0) + "/" + (o.fruitUseB || 0) + (o.fruitUseC ? "/" + o.fruitUseC : "") : "·") + "</b></div>";
+        var fz = fuse(o), cc = Number(o.creamUse) || 0;
+        tA += fz.a; tB += fz.b; tC += cc; tT += fz.t;
+        f += "<div><span>" + dow(d) + "</span><b>" + (fz.any ? fz.a + "/" + fz.b + (fz.t ? "/" + fz.t : "") : "·") + "</b></div>";
         c += "<div><span>" + dow(d) + "</span><b>" + (o.creamUse !== "" && o.creamUse != null ? o.creamUse : "·") + "</b></div>";
       });
       $("#skWeekFruit").innerHTML = f + '<div class="tot"><span>합계</span><b>' + tA + "알 " + tB + "병" + (tT ? " " + tT + "통" : "") + "</b></div>";
@@ -474,7 +512,7 @@
       html += "<h4>총괄 보고 · 특이사항</h4>" + (v("report") ? esc(v("report")).replace(/\n/g, "<br>") : em);
       html += "<h4>오늘 생산 · 사용</h4><div class=\"kv\">" +
         row("조각케이크", esc(v("prod"))) +
-        row("과일 사용", (v("fruitUseA") || v("fruitUseB") || v("fruitUseC")) ? (v("fruitUseA") || 0) + "알 / " + (v("fruitUseB") || 0) + "병" + (v("fruitUseC") ? " / " + v("fruitUseC") + "통" : "") : "", true) +
+        (function () { var fz = fuse(o); return row("과일 사용", fz.any ? (fz.list.length ? esc(fz.list.join(" · ")) + " <small>(합 " + fuseTxt(fz) + ")</small>" : fuseTxt(fz)) : "", true); })() +
         row("생크림 사용", v("creamUse") ? v("creamUse") + "통" : "", true) +
         row("과일 주문·입고", esc(v("fruitOrder"))) +
         row("생크림 계획", esc(v("creamPlan"))) + "</div>";
@@ -484,7 +522,7 @@
       var mon = weekMon(cur), tA = 0, tB = 0, tC = 0, tT = 0;
       [0, 1, 2, 3, 4, 5].forEach(function (i) {
         var d = addDays(mon, i); var w = (d === cur) ? o : (load(d) || {});
-        tA += Number(w.fruitUseA) || 0; tB += Number(w.fruitUseB) || 0; tT += Number(w.fruitUseC) || 0; tC += Number(w.creamUse) || 0;
+        var fz = fuse(w); tA += fz.a; tB += fz.b; tT += fz.t; tC += Number(w.creamUse) || 0;
       });
       html += '<div class="rf"><span>이번 주 사용 <i>' + tA + "알 " + tB + "병" + (tT ? " " + tT + "통" : "") + " · 생크림 " + tC + "통</i></span><span>카페스이 · 재고발주</span></div>";
       box.innerHTML = html;
@@ -504,7 +542,7 @@
         "■ 특이사항", o.report || "-",
         "■ 조각케이크 생산: " + (o.prod || "-"),
         "■ 시트: " + grp("sheet"),
-        "■ 과일 사용 " + (o.fruitUseA || 0) + "알 / " + (o.fruitUseB || 0) + "병" + (o.fruitUseC ? " / " + o.fruitUseC + "통" : "") + " · 재고: " + grp("fruit"),
+        (function () { var fz = fuse(o); return "■ 과일 사용 " + (fz.list.length ? fz.list.join(", ") + " (합 " + fuseTxt(fz) + ")" : fuseTxt(fz)) + " · 재고: " + grp("fruit"); })(),
         "  주문: " + (o.fruitOrder || "-"),
         "■ 생크림 사용 " + (o.creamUse || 0) + "통 · 재고 " + grp("cream") + " · " + (o.creamPlan || ""),
         "■ 우유·원두·휘핑: " + grp("bar"),
@@ -629,7 +667,9 @@
       $("#sk_noOrder").value = on ? me() + " " + nowHM() : "";
       paintNone(); renderReport(); queueSave();
     });
-    FIELDS.forEach(function (k) { $("#sk_" + k).addEventListener("input", queueSave); });
+    FIELDS.forEach(function (k) { var el = $("#sk_" + k); el.addEventListener("input", queueSave); if (el.tagName === "SELECT") el.addEventListener("change", queueSave); });
+    // 사용량 판: 지난 달 · 다음 달 (시즌마다 과일을 얼마나 썼는지 보기)
+    ["Prev", "Next"].forEach(function (w, i) { var b = $("#skUse" + w); if (b) b.addEventListener("click", function () { var y = +useYm.slice(0, 4), m = +useYm.slice(5, 7) + (i ? 1 : -1); if (m < 1) { m = 12; y--; } if (m > 12) { m = 1; y++; } useYm = y + "-" + pad(m); renderUseCal(); }); });
     dateEl.addEventListener("change", function () { if (dateEl.value) { $("#skMonth").value = dateEl.value.slice(0, 7); open(dateEl.value); } });
     $("#skToday").addEventListener("click", function () { $("#skMonth").value = today().slice(0, 7); open(today()); });
     $("#skPrev").addEventListener("click", function () { var d = addDays(cur || today(), -1); $("#skMonth").value = d.slice(0, 7); open(d); });

@@ -3012,7 +3012,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-189</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-190</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -3132,9 +3132,9 @@ input,select,textarea{border-radius:var(--r3)!important}
     <div class="lgzero skzero"><button type="button" class="wsmini" id="skPrevFill">↓ 빈 칸에 전날 숫자 넣기</button><button type="button" class="wsmini" id="skZero">0 빈 칸에 0 채우기</button><span>「전날 숫자」는 <b>세어 보고 전날과 같은 것</b>만 한 번에 넣을 때 · 「0」은 빈 칸만 0으로 (적힌 숫자 · 글 칸은 그대로) · <b>0이 되면 발주점 이하로 잡히니 실제로 없는 것만 0으로 두세요</b></span></div>
     <div class="skgrid">
       <div class="skcol skrpcol"><div class="skrp" id="skReport"></div>
-        <div class="skbox skuse"><div class="skh">📊 주별 사용량 <span class="n" id="skUseLabel"></span></div><div class="skb">
+        <div class="skbox skuse"><div class="skh">📊 과일 · 생크림 사용량 <span class="n"><button type="button" class="skum" id="skUsePrev" aria-label="이전 달">◀</button> <span id="skUseLabel"></span> <button type="button" class="skum" id="skUseNext" aria-label="다음 달">▶</button></span></div><div class="skb">
           <div class="skusecal" id="skUseCal"></div>
-          <p class="tip" style="margin:6px 0 0">주마다 과일(알·병·통)과 생크림(통) 사용 합계 · 이번 주는 주황 · 토요일 마감 전에 이 숫자로 주 단위 발주</p>
+          <p class="tip" style="margin:6px 0 0">위 「과일 사용」에 과일 이름 · 수량을 적으면 달마다 · 주마다 과일별로 모입니다 · ◀ ▶ 로 지난 달(지난 시즌)도 볼 수 있어요 · 이번 주는 주황 · 토요일 마감 전에 이 숫자로 주 단위 발주</p>
         </div></div></div>
       <div class="skcol">
         <div class="skbox hot"><div class="skh">🛒 발주 넣을 것 <span class="n" id="skOrdN"></span></div><div class="skb">
@@ -3146,9 +3146,16 @@ input,select,textarea{border-radius:var(--r3)!important}
         </div></div>
         <div class="skbox"><div class="skh">🍰 오늘 숫자</div><div class="skb"><div class="skf">
           <label class="w">오늘 조각케이크 생산<input type="text" id="sk_prod" class="skin" placeholder="망2 무피2 초체1 복1 멜1"></label>
-          <label>과일 사용 (알)<input type="text" inputmode="decimal" id="sk_fruitUseA" class="skin num"></label>
-          <label>과일 사용 (병)<input type="text" inputmode="decimal" id="sk_fruitUseB" class="skin num"></label>
-          <label>과일 사용 (통)<input type="text" inputmode="decimal" id="sk_fruitUseC" class="skin num"></label>
+          <div class="skfu w"><span class="skful">과일 사용 <small>과일 이름 · 수량 · 단위(알 · 병 · 통)</small></span>
+            <div class="skfur"><span class="skfui">1</span><input type="text" id="sk_fu1n" class="skin" placeholder="과일 이름 (예: 망고)" aria-label="과일 1 이름"><input type="text" inputmode="decimal" id="sk_fu1q" class="skin num" placeholder="0" aria-label="과일 1 사용 수량"><select id="sk_fu1u" class="skin" aria-label="과일 1 단위"><option>알</option><option>병</option><option>통</option></select></div>
+            <div class="skfur"><span class="skfui">2</span><input type="text" id="sk_fu2n" class="skin" placeholder="과일 이름 (예: 망고)" aria-label="과일 2 이름"><input type="text" inputmode="decimal" id="sk_fu2q" class="skin num" placeholder="0" aria-label="과일 2 사용 수량"><select id="sk_fu2u" class="skin" aria-label="과일 2 단위"><option>알</option><option>병</option><option>통</option></select></div>
+            <div class="skfur"><span class="skfui">3</span><input type="text" id="sk_fu3n" class="skin" placeholder="과일 이름 (예: 망고)" aria-label="과일 3 이름"><input type="text" inputmode="decimal" id="sk_fu3q" class="skin num" placeholder="0" aria-label="과일 3 사용 수량"><select id="sk_fu3u" class="skin" aria-label="과일 3 단위"><option>알</option><option>병</option><option>통</option></select></div>
+            <div class="skfur"><span class="skfui">4</span><input type="text" id="sk_fu4n" class="skin" placeholder="과일 이름 (예: 망고)" aria-label="과일 4 이름"><input type="text" inputmode="decimal" id="sk_fu4q" class="skin num" placeholder="0" aria-label="과일 4 사용 수량"><select id="sk_fu4u" class="skin" aria-label="과일 4 단위"><option>알</option><option>병</option><option>통</option></select></div>
+          </div>
+          <!-- 예전 칸(알 · 병 · 통 합계만) — 그 날 숫자가 적혀 있을 때만 보인다 (stock.js legacyFruit) -->
+          <label class="skleg" hidden>과일 사용 (알) · 예전 칸<input type="text" inputmode="decimal" id="sk_fruitUseA" class="skin num"></label>
+          <label class="skleg" hidden>과일 사용 (병) · 예전 칸<input type="text" inputmode="decimal" id="sk_fruitUseB" class="skin num"></label>
+          <label class="skleg" hidden>과일 사용 (통) · 예전 칸<input type="text" inputmode="decimal" id="sk_fruitUseC" class="skin num"></label>
           <label>생크림 사용 (통)<input type="text" inputmode="decimal" id="sk_creamUse" class="skin num"></label>
           <label class="w">과일 주문·입고 예정<input type="text" id="sk_fruitOrder" class="skin" placeholder="월요일 망고 2박스"></label>
           <label class="w">생크림 주문 계획<input type="text" id="sk_creamPlan" class="skin" placeholder="목요일 12통"></label>
@@ -3624,15 +3631,15 @@ input,select,textarea{border-radius:var(--r3)!important}
 </footer>
 </div>
 
-<script src="js/chrome.js?v=v0924-189"></script>
+<script src="js/chrome.js?v=v0924-190"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/sync.js?v=v0924-189"></script>
-<script src="js/holidays.js?v=v0924-189"></script>
-<script src="js/sched.js?v=v0924-189"></script>
-<script src="js/app.js?v=v0924-189"></script>
+<script src="js/sync.js?v=v0924-190"></script>
+<script src="js/holidays.js?v=v0924-190"></script>
+<script src="js/sched.js?v=v0924-190"></script>
+<script src="js/app.js?v=v0924-190"></script>
 
 <style>
 /* 재고 · 발주 */
@@ -3733,6 +3740,11 @@ input,select,textarea{border-radius:var(--r3)!important}
 .skf label.w{grid-column:1/-1}
 .skf .skin{text-align:left;font-family:var(--sans)}
 .skf .skin.num{text-align:right;font-family:var(--mono)}
+.skfu{grid-column:1/-1;display:flex;flex-direction:column;gap:6px}
+.skful{font-size:13px;font-weight:700;color:var(--ink2)}.skful small{font-weight:400;margin-left:6px;color:var(--ink2)}
+.skfur{display:grid;grid-template-columns:22px minmax(0,2fr) minmax(0,1fr) 64px;gap:6px;align-items:center}
+.skfui{font-size:12px;font-weight:800;color:var(--ink2);text-align:center}
+.skf .skfur select.skin{text-align:left;font-family:var(--sans);padding:4px}
 .skweek{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:6px}
 .skweek div{text-align:center;background:var(--bg);border:1px solid var(--rule);border-radius:2px;padding:4px 2px}
 .skweek span{display:block;font-size:12px;color:var(--muted)}
@@ -3824,6 +3836,23 @@ input,select,textarea{border-radius:var(--r3)!important}
 @media (max-width:620px){.savebar .sep{display:none}.savebar .svlab{display:none}}
 .skuse{margin-top:10px}
 .skwk{display:grid;grid-template-columns:auto 1fr 1fr auto;gap:8px;align-items:center;padding:6px 8px;border:1px solid var(--rule);border-radius:2px;background:var(--bg);margin-bottom:4px}
+/* 과일 사용 — 과일별 한 달 합계 막대 · 주마다 과일별 (10/12 · 시즌별 과일 사용량이 중요한 지표) */
+.skfsum{border:2px solid #C57A2B;border-radius:10px;background:#FFF8EE;padding:10px 12px;margin:0 0 12px}
+.skfsum h5{margin:0 0 8px;font-size:15.5px;font-weight:900;color:#7A3E00;font-family:var(--sans)}.skfsum h5 small{font-weight:400;font-size:12.5px;color:var(--ink2);margin-left:6px}
+.skfbar{display:grid;grid-template-columns:minmax(64px,auto) 1fr auto;gap:8px;align-items:center;margin:6px 0}
+.skfbar .nm{font-size:15px;font-weight:800;color:var(--ink);word-break:keep-all}
+.skfbar .bar{height:16px;border-radius:8px;background:#F1E2CC;overflow:hidden}.skfbar .bar i{display:block;height:100%;border-radius:8px;background:#E08A2E}
+.skfbar.u-병 .bar i{background:#8E3BB0}.skfbar.u-통 .bar i{background:#1B5FC1}.skfbar.nn .nm{color:var(--muted);font-weight:600}.skfbar.nn .bar i{background:#C9B9A6}
+.skfbar b{font-family:var(--mono);font-size:16px;font-weight:900;color:#7A3E00;white-space:nowrap}
+.skfsum .none{font-size:14px;color:var(--ink2)}
+.skwk2{border:1px solid var(--rule);border-radius:8px;background:var(--bg);padding:8px 10px;margin-bottom:6px}
+.skwk2.on{border-color:var(--open);background:var(--openbg)}
+.skwk2 .wh{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}.skwk2 .wh b{font-size:15px}.skwk2 .wh small{font-family:var(--mono);font-size:12.5px;color:var(--ink2)}
+.skwk2 .wh .cr{margin-left:auto;font-size:14px;font-weight:800;color:#1B5FC1;white-space:nowrap}.skwk2 .wh .dy{font-size:12.5px;color:var(--ink2)}
+.skwk2 .fr{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.skwk2 .fr span{font-size:14px;padding:3px 9px;border-radius:999px;background:#FFE9CC;color:#7A3E00;font-weight:700}.skwk2 .fr span b{font-family:var(--mono);margin-left:4px}
+.skwk2 .fr span.nn{background:#EFE7DA;color:var(--ink2);font-weight:600}.skwk2 .fr em{font-style:normal;font-size:13.5px;color:var(--muted)}
+.skum{font:inherit;font-size:13px;padding:1px 8px;border:1px solid var(--rule2);border-radius:6px;background:var(--surface);cursor:pointer}
 .skwk.on{border-color:var(--open);background:var(--openbg)}
 .skwk .wl{font-weight:700;font-size:12px;white-space:nowrap}
 .skwk .wl small{display:block;font-family:var(--mono);font-size:11.5px;color:var(--muted);font-weight:400}
@@ -3847,7 +3876,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 .sksearch{font:inherit;font-size:13px;padding:6px 9px;width:100%;max-width:300px;background:var(--bg);color:var(--ink);
   border:1px solid var(--rule2);border-radius:2px;margin-bottom:10px}
 </style>
-<script src="js/stock.js?v=v0924-189"></script>
+<script src="js/stock.js?v=v0924-190"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -3876,9 +3905,9 @@ input,select,textarea{border-radius:var(--r3)!important}
   })();
 </script>
 
-<script src="js/presence.js?v=v0924-189"></script>
-<script src="js/weekrep.js?v=v0924-189"></script>
-<script src="js/recipe.js?v=v0924-189"></script>
-<script src="js/bench.js?v=v0924-189"></script>
-<script src="js/monthlog.js?v=v0924-189"></script>
+<script src="js/presence.js?v=v0924-190"></script>
+<script src="js/weekrep.js?v=v0924-190"></script>
+<script src="js/recipe.js?v=v0924-190"></script>
+<script src="js/bench.js?v=v0924-190"></script>
+<script src="js/monthlog.js?v=v0924-190"></script>
 </body></html>
