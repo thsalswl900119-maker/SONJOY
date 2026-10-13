@@ -389,11 +389,13 @@
         var groups = [], doneAll = [], tot = 0, doneN = 0;
         Array.prototype.forEach.call(panel.querySelectorAll(".tblock, .onlbox"), function (blk) {
           var head = blk.querySelector(".tbhead, .onlh b"); var gname = head ? (head.childNodes[0] ? head.childNodes[0].textContent : head.textContent).trim() : "";
-          var un = [];
+          var un = [], opt = blk.classList.contains("tbopt");   // 눈에 보일 때 챙기기 — 한 것만 남기고 「안 한 것」 · 비율에는 안 넣음
           Array.prototype.forEach.call(blk.querySelectorAll(".titem .box"), function (b) {
             var lab = b.closest(".titem"); if (!lab || lab.hidden) return;
             var title = (lab.querySelector(".ttitle") || {}).textContent || "";
-            var v = doneOf(b); tot += 1;
+            var v = doneOf(b);
+            if (opt) { if (v) doneAll.push({ t: title, w: typeof v === "string" ? v : "" }); return; }
+            tot += 1;
             if (v) { doneN += 1; doneAll.push({ t: title, w: typeof v === "string" ? v : "" }); } else un.push(title);
           });
           if (un.length) groups.push({ g: gname, un: un });
@@ -4705,20 +4707,20 @@
   function renderNext(inp) {
     var out = document.getElementById("mn" + inp.dataset.k.slice(1));
     if (!out) return;
-    var months = parseInt(inp.dataset.months, 10);
-    if (!inp.value || !months) {
+    var months = parseInt(inp.dataset.months, 10), addD = parseInt(inp.dataset.days || "0", 10);   // 2주 같은 짧은 주기는 data-days
+    if (!inp.value || (!months && !addD)) {
       out.innerHTML = '<span class="mnpill">' + out.dataset.blank + "</span>";
       out.className = "mnext";
       return;
     }
     var p = inp.value.split("-");
     var d = new Date(+p[0], +p[1] - 1, +p[2]);
-    d.setMonth(d.getMonth() + months);
+    if (addD) d.setDate(d.getDate() + addD); else d.setMonth(d.getMonth() + months);
     var today = new Date(); today.setHours(0, 0, 0, 0);
     var days = Math.round((d - today) / 86400000);
-    var pill = days < 0 ? "⚠ " + (-days) + "일 지남 · 교체 필요" : days === 0 ? "⚠ 오늘 교체" : days <= 30 ? "곧 · " + days + "일 남음" : days + "일 남음";
+    var soon = addD ? 3 : 30, pill = days < 0 ? "⚠ " + (-days) + "일 지남 · 교체 필요" : days === 0 ? "⚠ 오늘 교체" : days <= soon ? "곧 · " + days + "일 남음" : days + "일 남음";
     out.innerHTML = '<b class="mnd">' + fmt(d).replace(/-/g, ". ") + '</b><span class="mnpill">' + pill + "</span>";
-    out.className = "mnext" + (days < 0 ? " due" : days <= 30 ? " soon" : " ok");
+    out.className = "mnext" + (days < 0 ? " due" : days <= soon ? " soon" : " ok");
   }
   inputs.forEach(function (inp) {
     if (state.dates && state.dates[inp.dataset.k]) inp.value = state.dates[inp.dataset.k];
