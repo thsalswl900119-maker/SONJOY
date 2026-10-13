@@ -2069,6 +2069,32 @@ body.rcliveon{padding-bottom:120px}
 #xmasSec .xmhead{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;margin:6px 0 10px;padding:12px 14px;border-radius:10px;background:#FBEDEC;border-left:6px solid #B3261E}
 #xmasSec .xmhead b{font-size:19px;color:#7E1A14}
 #xmasSec .xmhead span{font-size:14px;color:#5A4A3A}
+#xmasSec .xmck{margin:6px 0 16px;border:2px solid #1F6B3A;border-radius:12px;background:var(--surface);overflow:hidden}
+#xmasSec .xmckh{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;padding:12px 14px;background:#E8F3EC;border-bottom:1px solid var(--rule)}
+#xmasSec .xmckh b{font-size:18px;color:#14502B}
+#xmasSec .xmckh span{font-size:15px;color:#2A2522}#xmasSec .xmckh span b{font-size:16px;color:#B3261E}#xmasSec .xmckh span em{font-style:normal;font-weight:800;color:#B3261E}
+#xmasSec .xmckh small{flex-basis:100%;font-size:14px;color:#625646}
+.xck,.xtr{display:grid;grid-template-columns:auto 150px 1fr 110px auto auto;gap:8px;align-items:center;padding:8px 12px;border-top:1px solid var(--rule)}
+.xck:first-child{border-top:0}
+.xcb{width:30px;height:30px;border:2px solid #1F6B3A;border-radius:8px;background:var(--bg);cursor:pointer;flex:none}
+.xcb[aria-pressed="true"]{background:#1F6B3A}.xcb[aria-pressed="true"]::after{content:"✓";color:#fff;font-weight:900;font-size:18px}
+.xck input,.xck textarea{font:inherit;font-size:16px;padding:7px 9px;border:1px solid var(--rule2);border-radius:8px;background:var(--bg);color:var(--ink);box-sizing:border-box;width:100%;min-height:40px}
+.xck textarea.xct{resize:none;overflow:hidden;line-height:1.5;word-break:keep-all}
+.xcs{font-size:14px;font-weight:800;white-space:nowrap;color:#625646}
+.xcx{border:0;background:none;color:#8C7B6B;font-size:16px;cursor:pointer;min-width:36px;min-height:40px}
+.xck.done .xct{text-decoration:line-through;color:#625646}.xck.done .xcs{color:#1F6B3A}
+.xck.late,.xtr.late{background:#FDECEA}.xck.late .xcs,.xtr.late .xcs{color:#B3261E}
+.xck.today,.xtr.today{background:#FFF6D6}.xck.today .xcs,.xtr.today .xcs{color:#8A5A00}
+.xck.soon .xcs,.xtr.soon .xcs{color:#8A5A00}
+.xmust{font-style:normal;display:inline-block;margin-right:6px;padding:1px 7px;border-radius:999px;background:#B3261E;color:#fff;font-size:12.5px;font-weight:900}
+.xck.must .xct,.xtr.must .xtt{font-weight:800}
+#xmCkAdd{margin:10px 12px 12px}
+.xmtodo{margin:10px 0 14px;border:3px solid #B3261E;border-radius:12px;background:var(--surface);overflow:hidden}
+.xmtodo .xth{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:12px 14px;background:#B3261E;color:#fff}
+.xmtodo .xth b{font-size:17px}.xmtodo .xth span{font-size:14px;opacity:.95}.xmtodo .xth .skbtn{margin-left:auto}
+.xtr{grid-template-columns:auto 1fr auto}
+.xtt{font-size:16px;line-height:1.5;word-break:keep-all}.xtt b{color:#14502B;margin-right:4px}.xtt i{font-style:normal;color:#625646;font-size:14px}
+@media (max-width:640px){.xck{grid-template-columns:auto 1fr auto;grid-template-areas:"b d x" "t t t" "w s s"}.xck .xcb{grid-area:b}.xck .xcd{grid-area:d}.xck .xcx{grid-area:x}.xck .xct{grid-area:t}.xck .xcw{grid-area:w}.xck .xcs{grid-area:s;text-align:right}}
 #xmasSec .xmrows{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 #xmasSec .xmrow{display:flex;flex-direction:column;gap:6px;padding:12px;border:1px solid var(--rule2);border-radius:10px;background:var(--surface)}
 #xmasSec .xmrow>span{font-size:16px;font-weight:900;color:#7E1A14;line-height:1.4}
@@ -3049,7 +3075,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-195</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-196</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -3099,6 +3125,7 @@ input,select,textarea{border-radius:var(--r3)!important}
   <div class="shead"><h2>오늘의 할 일</h2><span class="en">today's tasks</span>
     <span class="sub">매일 하는 업무 · 본인 조를 누르고 하나씩 체크하세요</span></div>
   <div class="tddate" id="tdDate"></div>
+  <div class="xmtodo" id="xmTodo" hidden></div>
   <div class="tnotice" id="askRule"><div class="tnhead">★ 일하는 기본 · 꼭 지키기</div><ul><li><b>궁금하거나 헷갈리면 <mark>무조건 물어보고</mark> 일하기</b><span>혼자 판단해서 진행하지 않기 · 매니저나 사장님께 먼저 확인 · 물어보는 건 잘못이 아닙니다</span></li><li><b>케이크 디자인 · 과일 높이는 <mark>매일 같은 모양</mark>으로</b><span>만들기 전에 기준 사진과 한 번 견주고, 과일은 정해진 높이까지 · 다르게 나간 날은 마감 일지에 적기</span></li><li><b>근무 시 직원 간의 <mark>배려는 기본</mark></b><span>바쁜 쪽을 먼저 돕고, 힘든 일은 나눠서 · 말 한마디도 서로 편하게</span></li><li><b>오늘 할 일에는 <mark>안 한 일은 체크하지 말고</mark> 양심껏 해 주세요</b><span>체크 = 「내가 했습니다」라는 약속입니다 · 누가 언제 체크했는지 이름 색으로 그대로 남습니다</span></li><li><b>안 하시고 체크하면 <mark>안 좋은 습관</mark>입니다</b><span>못 했으면 비워 두고 다음 근무자 · 매니저에게 말해 주세요 — 빈 칸은 괜찮지만 거짓 체크는 신뢰를 잃습니다</span></li></ul></div>
   <div class="hcbox" id="hcBox">
     <div class="hch"><b>🩺 보건증</b><span>1년마다 갱신 · 발급일만 넣으면 만료일과 남은 날이 자동으로 계산됩니다 · 고정 항목이라 날이 바뀌어도 지워지지 않습니다</span></div>
@@ -3489,10 +3516,11 @@ input,select,textarea{border-radius:var(--r3)!important}
   <div class="shead"><h2>🎄 크리스마스</h2><span class="en">christmas</span>
     <span class="sub">해마다 크리스마스 준비 · 회의 결론 · 결과를 한 곳에 · 적는 즉시 저장되고 모든 기기에 같이 보입니다 · 작년 것을 보고 올해를 짜기</span></div>
 <!-- csonly:start -->
-  <div class="tnotice" id="xmRule"><div class="tnhead">🎄 크리스마스 · 해마다 지키는 것</div><ul><li><b>12월 크리스마스는 <mark>작년 생산량을 비교해서</mark> 계산해서 플랜을 짜기</b><span>아래에서 작년 칸(결과 · 생산량)을 먼저 보고 시작</span></li><li><b>11/25 쯤 <mark>예약 오픈 준비</mark> · 12/1 네이버 마케팅 메시지</b><span>예약 디데이 마감일 정해서 공지 (연간 운영 캘린더)</span></li><li><b>12/22~25 <mark>1년 중 가장 바쁜 나흘</mark></b><span>예약 픽업을 시간대별로 쪼개서 정리 · 인력 추가 · 딸기 · 생크림 · 시트 넉넉히 · 현장 판매분 남겨 두기</span></li><li><b>12월 크리스마스 작업 기간은 <mark>퇴근시간 예외</mark></b><span>평소엔 퇴근시간을 서로 존중 · 크리스마스 작업에는 예외 (월말회의록)</span></li><li><b>매장 음악은 <mark>크리스마스 팝송 OST</mark></b><span>크리스마스 시즌 동안 (시간대별 포지션 할 일)</span></li></ul></div>
+  <div class="tnotice" id="xmRule"><div class="tnhead">🎄 크리스마스 · 해마다 꼭 해야 하는 것</div><ul><li><b>9-10월쯤 <mark>크리스마스 케이크 디자인 회의</mark> 하기</b><span>꼭 해야 하는 것 · 체크리스트 「크리스마스 케이크 디자인 회의」</span></li><li><b>10월 말 11월 초에 <mark>무조건 크리스마스 분위기로 바꾸기</mark></b><span>꼭 해야 하는 것 · 데코 꺼내기 · 남은 데코 재고 파악 · 음악도 같이</span></li><li><b>딸기 첫 출하 되자마자 <mark>크리스마스 컨셉사진 찍기</mark></b><span>꼭 해야 하는 것 · 작년엔 딸기가 10/31쯤 나옴 · 체크리스트 날짜를 딸기 들어오는 날로 고치기</span></li><li><b>12월 크리스마스는 <mark>작년 생산량을 비교해서</mark> 계산해서 플랜을 짜기</b><span>아래에서 작년 칸(결과 · 생산량)을 먼저 보고 시작</span></li><li><b>11/25 쯤 <mark>예약 오픈 준비</mark> · 12/1 네이버 마케팅 메시지</b><span>예약 디데이 마감일 정해서 공지 (연간 운영 캘린더)</span></li><li><b>12/22~25 <mark>1년 중 가장 바쁜 나흘</mark></b><span>예약 픽업을 시간대별로 쪼개서 정리 · 인력 추가 · 딸기 · 생크림 · 시트 넉넉히 · 현장 판매분 남겨 두기</span></li><li><b>12월 크리스마스 작업 기간은 <mark>퇴근시간 예외</mark></b><span>평소엔 퇴근시간을 서로 존중 · 크리스마스 작업에는 예외 (월말회의록)</span></li><li><b>매장 음악은 <mark>크리스마스 팝송 OST</mark></b><span>크리스마스 시즌 동안 (시간대별 포지션 할 일)</span></li></ul></div>
 <!-- csonly:end -->
   <div class="xmbar"><button type="button" class="daynav" id="xmPrev" aria-label="이전 해">◀</button><span class="xmyears" id="xmYears"></span><button type="button" class="daynav" id="xmNext" aria-label="다음 해">▶</button><button type="button" class="skbtn" id="xmCopy">📋 이 해 정리 복사</button></div>
   <div class="xmhead"><b id="xmTitle">🎄 크리스마스</b><span id="xmState"></span></div>
+  <div class="xmck" id="xmCkBox"><div class="xmckh"><b>✅ 날짜별 체크리스트</b><span id="xmCkD"></span><small>날짜 · 할 일 · 담당은 눌러서 고치면 바로 저장 · 날짜가 되면 「오늘 할 일」 맨 위에 체크할 때까지 뜹니다</small></div><div id="xmCk"></div></div>
   <div class="xmrows" id="xmRows"><label class="xmrow"><span>한눈에 결론<em>맛 · 목표 개수 · 사이즈 · 공통 구성</em></span><textarea class="xmin" rows="1" data-f="x1"></textarea></label><label class="xmrow"><span>라인업 · 가격 · 판매 방식<em>케이크마다 가격 · 예약/현장 · 서비스</em></span><textarea class="xmin" rows="1" data-f="x2"></textarea></label><label class="xmrow"><span>디자인 · 데코<em>전체 무드 · 맛별 데코 · 데코 후보</em></span><textarea class="xmin" rows="1" data-f="x3"></textarea></label><label class="xmrow"><span>패키지 · 종이 작업<em>상자 · 리본 · 엽서 · 붙이는 종이</em></span><textarea class="xmin" rows="1" data-f="x4"></textarea></label><label class="xmrow"><span>회의에서 나온 의견<em>누가 · 의견 → 반영</em></span><textarea class="xmin" rows="1" data-f="x5"></textarea></label><label class="xmrow"><span>일정 · 예약 · 생산량<em>회의 날 · 예약 시작/마감 · 날짜별 생산 · 픽업 시간대</em></span><textarea class="xmin" rows="1" data-f="x6"></textarea></label><label class="xmrow"><span>아직 정할 것</span><textarea class="xmin" rows="1" data-f="x7"></textarea></label><label class="xmrow"><span>할 일 · 담당<em>한 줄에 하나 · 「— 담당: 누구」</em></span><textarea class="xmin" rows="1" data-f="x8"></textarea></label><label class="xmrow"><span>리스크 · 체크포인트</span><textarea class="xmin" rows="1" data-f="x9"></textarea></label><label class="xmrow wide"><span>결과 · 잘된 것 · 아쉬운 것 → 내년에<em>크리스마스 끝나고 꼭 · 실제 판매 개수 · 남은 것 · 다음 해에 바꿀 것</em></span><textarea class="xmin" rows="1" data-f="x10"></textarea></label></div>
   <div class="xmfoot" id="xmFoot"></div>
 <!-- csonly:start -->
@@ -3688,15 +3716,15 @@ input,select,textarea{border-radius:var(--r3)!important}
 </footer>
 </div>
 
-<script src="js/chrome.js?v=v0924-195"></script>
+<script src="js/chrome.js?v=v0924-196"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/sync.js?v=v0924-195"></script>
-<script src="js/holidays.js?v=v0924-195"></script>
-<script src="js/sched.js?v=v0924-195"></script>
-<script src="js/app.js?v=v0924-195"></script>
+<script src="js/sync.js?v=v0924-196"></script>
+<script src="js/holidays.js?v=v0924-196"></script>
+<script src="js/sched.js?v=v0924-196"></script>
+<script src="js/app.js?v=v0924-196"></script>
 
 <style>
 /* 재고 · 발주 */
@@ -3933,7 +3961,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 .sksearch{font:inherit;font-size:13px;padding:6px 9px;width:100%;max-width:300px;background:var(--bg);color:var(--ink);
   border:1px solid var(--rule2);border-radius:2px;margin-bottom:10px}
 </style>
-<script src="js/stock.js?v=v0924-195"></script>
+<script src="js/stock.js?v=v0924-196"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -3962,10 +3990,10 @@ input,select,textarea{border-radius:var(--r3)!important}
   })();
 </script>
 
-<script src="js/presence.js?v=v0924-195"></script>
-<script src="js/weekrep.js?v=v0924-195"></script>
-<script src="js/recipe.js?v=v0924-195"></script>
-<script src="js/bench.js?v=v0924-195"></script>
-<script src="js/monthlog.js?v=v0924-195"></script>
-<script src="js/xmas.js?v=v0924-195"></script>
+<script src="js/presence.js?v=v0924-196"></script>
+<script src="js/weekrep.js?v=v0924-196"></script>
+<script src="js/recipe.js?v=v0924-196"></script>
+<script src="js/bench.js?v=v0924-196"></script>
+<script src="js/monthlog.js?v=v0924-196"></script>
+<script src="js/xmas.js?v=v0924-196"></script>
 </body></html>
