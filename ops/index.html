@@ -2060,6 +2060,35 @@ body.rcliveon{padding-bottom:120px}
 .refimg{margin:8px 0 22px;border:1px solid var(--rule2);border-radius:10px;background:var(--surface);padding:10px;max-width:640px}
 .refimg img{display:block;width:100%;height:auto;border-radius:6px}
 .refimg figcaption{margin-top:8px;font-size:15px;line-height:1.55}.refimg figcaption span{display:block;font-size:14px;color:var(--ink2)}
+/* 🎄 크리스마스 (연간 행사 · js/xmas.js) */
+#xmasSec .xmbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:14px 0 10px}
+#xmasSec .xmyears{display:flex;flex-wrap:wrap;gap:6px}
+#xmasSec .xmy{font:inherit;font-size:15px;font-weight:800;padding:8px 14px;min-height:44px;border:1px solid var(--rule2);border-radius:999px;background:var(--surface);color:var(--ink);cursor:pointer}
+#xmasSec .xmy[aria-pressed="true"]{background:#B3261E;border-color:#B3261E;color:#fff}
+#xmasSec .xmy i{font-style:normal;font-size:12px;font-weight:700;margin-left:4px;opacity:.8}
+#xmasSec .xmhead{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;margin:6px 0 10px;padding:12px 14px;border-radius:10px;background:#FBEDEC;border-left:6px solid #B3261E}
+#xmasSec .xmhead b{font-size:19px;color:#7E1A14}
+#xmasSec .xmhead span{font-size:14px;color:#5A4A3A}
+#xmasSec .xmrows{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+#xmasSec .xmrow{display:flex;flex-direction:column;gap:6px;padding:12px;border:1px solid var(--rule2);border-radius:10px;background:var(--surface)}
+#xmasSec .xmrow>span{font-size:16px;font-weight:900;color:#7E1A14;line-height:1.4}
+#xmasSec .xmrow em{display:block;font-style:normal;font-size:14px;font-weight:500;color:#625646}
+#xmasSec textarea.xmin{font:inherit;font-size:16px;line-height:1.6;width:100%;box-sizing:border-box;min-height:3.4em;resize:none;overflow:hidden;padding:10px 12px;border:1px solid var(--rule2);border-radius:8px;background:var(--bg);color:var(--ink);word-break:keep-all}
+#xmasSec textarea.xmin:focus-visible{outline:2px solid #B3261E;outline-offset:1px}
+#xmasSec textarea.xmin.wp1{color:#C45A00}#xmasSec textarea.xmin.wp2{color:#1B5FC1}#xmasSec textarea.xmin.wp3{color:#8E3BB0}#xmasSec textarea.xmin.wp4{color:#2E7D32}
+#xmasSec .xmrow.wide{grid-column:1/-1}
+#xmasSec .xmfoot{margin:8px 0 4px;font-size:14px;color:#625646}
+#xmasSec .xmgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+#xmasSec .xmgrid .refimg{margin:0;max-width:none}
+#xmasSec .xmauto{margin-top:14px;border:1px solid var(--rule2);border-radius:10px;background:var(--surface)}
+#xmasSec .xmauto summary{cursor:pointer;padding:12px 14px;font-size:15px;font-weight:800}
+#xmasSec .xmauto summary b{color:#B3261E}
+#xmasSec .xmal{padding:9px 14px;border-top:1px solid var(--rule);font-size:15px;line-height:1.6;word-break:keep-all}
+#xmasSec .xmal small{display:block;font-size:13px;color:#625646;font-weight:700}
+#xmasSec .xmal mark{background:#FFF1A8;color:#B3261E;font-weight:800}
+@media (max-width:640px){#xmasSec .xmrows{grid-template-columns:1fr}}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #xmasSec .xmhead{background:#3A1E1C}:root:not([data-theme="light"]) #xmasSec .xmhead b,:root:not([data-theme="light"]) #xmasSec .xmrow>span{color:#F3B3AD}:root:not([data-theme="light"]) #xmasSec .xmrow em,:root:not([data-theme="light"]) #xmasSec .xmhead span,:root:not([data-theme="light"]) #xmasSec .xmfoot{color:#CDBFAF}}
+:root[data-theme="dark"] #xmasSec .xmhead{background:#3A1E1C}:root[data-theme="dark"] #xmasSec .xmhead b,:root[data-theme="dark"] #xmasSec .xmrow>span{color:#F3B3AD}:root[data-theme="dark"] #xmasSec .xmrow em,:root[data-theme="dark"] #xmasSec .xmhead span,:root[data-theme="dark"] #xmasSec .xmfoot{color:#CDBFAF}
 /* 바로 고치기 중엔 위 저장 줄을 붙여 두지 않는다 (휴대폰에서 고칠 자리가 반밖에 안 남아서) · 저장 상태는 아래 고치기 줄에 */
 body.rcliveon .savebar{position:static}
 .rcedbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.rcedbtns .rced{font-size:15px;padding:9px 16px}
@@ -3020,7 +3049,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-194</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-195</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -3456,6 +3485,20 @@ input,select,textarea{border-radius:var(--r3)!important}
     아래 일정이 전부 자동으로 계산됩니다. <b>D-14 택배 마감 안내</b>를 놓치면 배송 사고가 납니다.
   </div>
   <div class="hols"><div class="hcol"><h3>추석</h3><div class="hrow"><span class="hd">D-30</span><span class="httl">추석 선물세트 기획</span><span class="hact">세트 구성·가격 결정. 포장재(종이가방 포함)와 브로셔 발주. 작년 판매량 확인.</span></div><div class="hrow"><span class="hd">D-21</span><span class="httl">추석 선물세트 판매 시작</span><span class="hact">아이패드·프린트 메뉴판에 넣기. X배너·자석이벤트·배달찌라시 제작. 네이버 예약 열기.</span></div><div class="hrow"><span class="hd">D-14</span><span class="httl">★ 명절 택배 마감 안내</span><span class="hact">택배사가 명절 전 마감된다. 마지막 발송일 확인해서 고객 공지 + 네이버 예약에 안내 걸기. 이거 놓치면 배송 사고 난다.</span></div><div class="hrow"><span class="hd">D-10</span><span class="httl">공판장 휴무 대비 과일 확보</span><span class="hact">명절엔 공판장이 쉰다. 딸기·과일을 며칠치 한꺼번에 받아두고, 케이크 예약은 미리 닫는다.</span></div><div class="hrow"><span class="hd">D-7</span><span class="httl">추석 케이크 준비</span><span class="hact">추석용 케이크 기본 2종류 준비. 밤타르트 시작 / 말차타르트 아웃.</span></div><div class="hrow"><span class="hd">D-3</span><span class="httl">연휴 근무표·단축영업 확정</span><span class="hact">연휴 영업시간 10:30-17:00 로 단축 운영. 연휴 이후 오픈-마감 셋팅까지 근무표에 반드시 넣을 것(빠뜨리기 쉬움).</span></div><div class="hrow"><span class="hd">D+3</span><span class="httl">빙수 시즌 종료 판단</span><span class="hact">추석 연휴 지나면 판매가 뚝 떨어진다. 재료 소진 맞춰서 마지막날 정하고 메뉴판·배달앱에서 내리기.</span></div></div><div class="hcol"><h3>설날</h3><div class="hrow"><span class="hd">D-30</span><span class="httl">설날 선물세트 기획</span><span class="hact">세트 구성·가격 결정. 포장재 발주.</span></div><div class="hrow"><span class="hd">D-21</span><span class="httl">설날 선물세트 판매 시작</span><span class="hact">네이버 오픈. 초코딸기 미니 등 겨울 라인과 묶어서 구성.</span></div><div class="hrow"><span class="hd">D-14</span><span class="httl">★ 설날 택배 마감 안내</span><span class="hact">택배사 명절 마감일 확인 후 고객 공지. 네이버 예약에 안내.</span></div><div class="hrow"><span class="hd">D-10</span><span class="httl">공판장 휴무 대비 과일 확보</span><span class="hact">딸기 등 며칠치 미리 확보. 케이크 예약 조기 마감.</span></div></div></div>
+</section><section id="xmasSec">
+  <div class="shead"><h2>🎄 크리스마스</h2><span class="en">christmas</span>
+    <span class="sub">해마다 크리스마스 준비 · 회의 결론 · 결과를 한 곳에 · 적는 즉시 저장되고 모든 기기에 같이 보입니다 · 작년 것을 보고 올해를 짜기</span></div>
+<!-- csonly:start -->
+  <div class="tnotice" id="xmRule"><div class="tnhead">🎄 크리스마스 · 해마다 지키는 것</div><ul><li><b>12월 크리스마스는 <mark>작년 생산량을 비교해서</mark> 계산해서 플랜을 짜기</b><span>아래에서 작년 칸(결과 · 생산량)을 먼저 보고 시작</span></li><li><b>11/25 쯤 <mark>예약 오픈 준비</mark> · 12/1 네이버 마케팅 메시지</b><span>예약 디데이 마감일 정해서 공지 (연간 운영 캘린더)</span></li><li><b>12/22~25 <mark>1년 중 가장 바쁜 나흘</mark></b><span>예약 픽업을 시간대별로 쪼개서 정리 · 인력 추가 · 딸기 · 생크림 · 시트 넉넉히 · 현장 판매분 남겨 두기</span></li><li><b>12월 크리스마스 작업 기간은 <mark>퇴근시간 예외</mark></b><span>평소엔 퇴근시간을 서로 존중 · 크리스마스 작업에는 예외 (월말회의록)</span></li><li><b>매장 음악은 <mark>크리스마스 팝송 OST</mark></b><span>크리스마스 시즌 동안 (시간대별 포지션 할 일)</span></li></ul></div>
+<!-- csonly:end -->
+  <div class="xmbar"><button type="button" class="daynav" id="xmPrev" aria-label="이전 해">◀</button><span class="xmyears" id="xmYears"></span><button type="button" class="daynav" id="xmNext" aria-label="다음 해">▶</button><button type="button" class="skbtn" id="xmCopy">📋 이 해 정리 복사</button></div>
+  <div class="xmhead"><b id="xmTitle">🎄 크리스마스</b><span id="xmState"></span></div>
+  <div class="xmrows" id="xmRows"><label class="xmrow"><span>한눈에 결론<em>맛 · 목표 개수 · 사이즈 · 공통 구성</em></span><textarea class="xmin" rows="1" data-f="x1"></textarea></label><label class="xmrow"><span>라인업 · 가격 · 판매 방식<em>케이크마다 가격 · 예약/현장 · 서비스</em></span><textarea class="xmin" rows="1" data-f="x2"></textarea></label><label class="xmrow"><span>디자인 · 데코<em>전체 무드 · 맛별 데코 · 데코 후보</em></span><textarea class="xmin" rows="1" data-f="x3"></textarea></label><label class="xmrow"><span>패키지 · 종이 작업<em>상자 · 리본 · 엽서 · 붙이는 종이</em></span><textarea class="xmin" rows="1" data-f="x4"></textarea></label><label class="xmrow"><span>회의에서 나온 의견<em>누가 · 의견 → 반영</em></span><textarea class="xmin" rows="1" data-f="x5"></textarea></label><label class="xmrow"><span>일정 · 예약 · 생산량<em>회의 날 · 예약 시작/마감 · 날짜별 생산 · 픽업 시간대</em></span><textarea class="xmin" rows="1" data-f="x6"></textarea></label><label class="xmrow"><span>아직 정할 것</span><textarea class="xmin" rows="1" data-f="x7"></textarea></label><label class="xmrow"><span>할 일 · 담당<em>한 줄에 하나 · 「— 담당: 누구」</em></span><textarea class="xmin" rows="1" data-f="x8"></textarea></label><label class="xmrow"><span>리스크 · 체크포인트</span><textarea class="xmin" rows="1" data-f="x9"></textarea></label><label class="xmrow wide"><span>결과 · 잘된 것 · 아쉬운 것 → 내년에<em>크리스마스 끝나고 꼭 · 실제 판매 개수 · 남은 것 · 다음 해에 바꿀 것</em></span><textarea class="xmin" rows="1" data-f="x10"></textarea></label></div>
+  <div class="xmfoot" id="xmFoot"></div>
+<!-- csonly:start -->
+  <div class="xmgal" data-y="2026" hidden><h3 class="subhead">📷 2026 회의 참고 사진</h3><div class="xmgrid"><figure class="refimg xmimg"><a href="img/xmas26-ribbon-card.webp" target="_blank" rel="noopener" title="누르면 크게 봅니다"><img src="img/xmas26-ribbon-card.webp" alt="리본 기준" loading="lazy" width="450" height="370"></a><figcaption><b>리본 기준</b><span>케이크 띠지 위에 빨간 벨벳 리본 + 메리크리스마스 카드</span></figcaption></figure><figure class="refimg xmimg"><a href="img/xmas26-velvet.webp" target="_blank" rel="noopener" title="누르면 크게 봅니다"><img src="img/xmas26-velvet.webp" alt="벨벳 리본 색 샘플" loading="lazy" width="900" height="691"></a><figcaption><b>벨벳 리본 색 샘플</b><span>후보: 빨강 · 자주 / 두께 10mm · 15mm (혜빈님 확인)</span></figcaption></figure><figure class="refimg xmimg"><a href="img/xmas26-box.webp" target="_blank" rel="noopener" title="누르면 크게 봅니다"><img src="img/xmas26-box.webp" alt="상자 후보" loading="lazy" width="700" height="495"></a><figcaption><b>상자 후보</b><span>버건디 누드 투명 케이크상자 · 개당 1,380원</span></figcaption></figure><figure class="refimg xmimg"><a href="img/xmas26-snow.webp" target="_blank" rel="noopener" title="누르면 크게 봅니다"><img src="img/xmas26-snow.webp" alt="눈꽃 데코 후보" loading="lazy" width="700" height="1177"></a><figcaption><b>눈꽃 데코 후보</b><span>설탕 눈꽃 160매 / 눈꽃 초콜릿 120입 (항아님 확인 · 생크림 위엔 초콜릿이 안전)</span></figcaption></figure><figure class="refimg xmimg"><a href="img/xmas26-hat.webp" target="_blank" rel="noopener" title="누르면 크게 봅니다"><img src="img/xmas26-hat.webp" alt="종이 산타 모자 컵픽 (참고)" loading="lazy" width="700" height="724"></a><figcaption><b>종이 산타 모자 컵픽 (참고)</b><span>날 잡아서 한 번에 만들기</span></figcaption></figure></div></div>
+<!-- csonly:end -->
+  <details class="xmauto" id="xmAutoBox"><summary>📒 일지 · 메모 달력에서 자동으로 모은 「크리스마스」 글 <b id="xmAutoN"></b></summary><div id="xmAuto"></div></details>
 </section></div><div class="panel" id="tp7" role="tabpanel" hidden data-lazy="tabs/tp7.html"><div class="lazyload">불러오는 중…</div></div><div class="panel" id="tp8" role="tabpanel" hidden><section>
   <div class="shead"><h2>매니저 월말 평가</h2><span class="en">monthly review</span>
     <span class="sub">매니저 이상만 · 본인과 사장님만 볼 수 있습니다</span></div>
@@ -3645,15 +3688,15 @@ input,select,textarea{border-radius:var(--r3)!important}
 </footer>
 </div>
 
-<script src="js/chrome.js?v=v0924-194"></script>
+<script src="js/chrome.js?v=v0924-195"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/sync.js?v=v0924-194"></script>
-<script src="js/holidays.js?v=v0924-194"></script>
-<script src="js/sched.js?v=v0924-194"></script>
-<script src="js/app.js?v=v0924-194"></script>
+<script src="js/sync.js?v=v0924-195"></script>
+<script src="js/holidays.js?v=v0924-195"></script>
+<script src="js/sched.js?v=v0924-195"></script>
+<script src="js/app.js?v=v0924-195"></script>
 
 <style>
 /* 재고 · 발주 */
@@ -3890,7 +3933,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 .sksearch{font:inherit;font-size:13px;padding:6px 9px;width:100%;max-width:300px;background:var(--bg);color:var(--ink);
   border:1px solid var(--rule2);border-radius:2px;margin-bottom:10px}
 </style>
-<script src="js/stock.js?v=v0924-194"></script>
+<script src="js/stock.js?v=v0924-195"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -3919,9 +3962,10 @@ input,select,textarea{border-radius:var(--r3)!important}
   })();
 </script>
 
-<script src="js/presence.js?v=v0924-194"></script>
-<script src="js/weekrep.js?v=v0924-194"></script>
-<script src="js/recipe.js?v=v0924-194"></script>
-<script src="js/bench.js?v=v0924-194"></script>
-<script src="js/monthlog.js?v=v0924-194"></script>
+<script src="js/presence.js?v=v0924-195"></script>
+<script src="js/weekrep.js?v=v0924-195"></script>
+<script src="js/recipe.js?v=v0924-195"></script>
+<script src="js/bench.js?v=v0924-195"></script>
+<script src="js/monthlog.js?v=v0924-195"></script>
+<script src="js/xmas.js?v=v0924-195"></script>
 </body></html>
