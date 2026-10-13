@@ -1,4 +1,4 @@
-// 🎄 크리스마스 — 해마다 한 장 (연간 행사 탭). cafesui.xmas.<해> = { f:{x1..x10}, by:{...}, savedAt, who }
+// 🎄 크리스마스 — 해마다 한 장 (따로 탭 tp18 · 연간 행사 탭에는 바로가기만). cafesui.xmas.<해> = { f:{x1..x10}, by:{...}, savedAt, who }
 // 저장은 「이 화면에서 고친 칸」만 (다른 기기가 쓴 칸을 지우지 않게) · 빈 칸에는 작년 글이 흐린 글씨로 보인다.
 (function () {
   var sec = document.getElementById("xmasSec"); if (!sec) return;
@@ -199,7 +199,7 @@
       }).join("");
   }
   if (todoEl) todoEl.addEventListener("click", function (e) {
-    if (e.target.closest("#xmGo")) { var tb = document.querySelector('.tab[data-p="tp6"]'); if (tb) tb.click(); go(seasonY()); setTimeout(function () { var c = document.getElementById("xmCkBox"); if (c) c.scrollIntoView({ block: "start" }); }, 150); return; }
+    if (e.target.closest("#xmGo")) { var tb = document.querySelector('.tab[data-p="tp18"]'); if (tb) tb.click(); go(seasonY()); setTimeout(function () { var c = document.getElementById("xmCkBox"); if (c) c.scrollIntoView({ block: "start" }); }, 150); return; }
     var row = e.target.closest(".xtr"); if (!row || !e.target.closest(".xcb")) return;
     if (toggle(seasonY(), row.dataset.id)) { drawTodo(); if (cur === seasonY()) drawCk(); }
   });
