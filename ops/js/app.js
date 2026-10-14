@@ -3849,10 +3849,9 @@
       var lines = el.value.split(String.fromCharCode(10));
       var marks = lines.map(function (ln) { return ownMask(ln, own); });
       var anyOwn = marks.some(function (m) { return m.indexOf(true) >= 0; });
-      // 사장님이 쓴 글은 어느 칸이든 노란 형광 · 빨간 글씨 (사장님 지시사항 칸은 원래 사장님 칸이라 제외)
-      // 근무 묶음(영업시간 자동 · 근무 현황 · 사장님 업무 · 알바)은 사장님이 써도 표시하지 않는다
-      var bossRow = !!el.closest(".mrow2.boss") || /^lf14[0-4]$/.test(el.dataset.k || "");
-      var allBoss = HL && !bossRow && !!el.value.trim() && (names.length ? names.length === 1 && names[0] === "사장님" : first === "사장님");
+      // 사장님이 혼자 쓴 칸은 형광 없이 원래 글씨(사장님 초록) — 10/14 사장님 「덧붙이는 것 빼고는 나도 원래 글씨로」
+      // 노란 형광 · 빨간 글씨는 직원이 쓴 칸에 사장님이 덧붙인 글에만
+      var allBoss = false;
       // 한 줄 칸(input)은 글자마다 색을 못 칠하니, 사장님이 덧붙인 게 있으면 칸 전체를 노란 형광 테두리로 (아래 「👑 사장님 덧붙임」에 크게)
       el.classList.toggle("ownin", el.tagName !== "TEXTAREA" && !!el.value.trim() && (anyOwn || allBoss || (HL && lineBy[0] === "사장님" && first && first !== "사장님")));
       if (el.tagName !== "TEXTAREA" || (names.length < 2 && !anyOwn && !allBoss)) {
@@ -3874,6 +3873,40 @@
       }).join(String.fromCharCode(10)) + " ";
       placeOv(el, ov);
     }
+    // 두 글을 글자 단위로 비교(Myers) — 새 글(b)의 글자마다 「새로 들어감」이면 true. .src[x] = 원래 글에서 같은 글자의 자리
+    function insMask(a, b) {
+      var n = a.length, m = b.length, max = n + m, out = [], src = [];
+      for (var q = 0; q < m; q++) { out.push(true); src.push(-1); }
+      out.src = src;
+      var p0 = 0; while (p0 < n && p0 < m && a[p0] === b[p0]) { out[p0] = false; src[p0] = p0; p0++; }
+      var s0 = 0; while (s0 < n - p0 && s0 < m - p0 && a[n - 1 - s0] === b[m - 1 - s0]) { out[m - 1 - s0] = false; src[m - 1 - s0] = n - 1 - s0; s0++; }
+      var A = a.slice(p0, n - s0), B = b.slice(p0, m - s0), N = A.length, M = B.length;
+      if (!N || !M) return out;
+      if (N * M > 4e6 && Math.abs(N - M) > 1500) return out;   // 너무 다르면 가운데는 전부 새 글로
+      var MAX = N + M, off = MAX + 1, V = new Int32Array(2 * MAX + 3), trace = [], D, k, x, y, done = false;
+      for (D = 0; D <= MAX && !done; D++) {
+        trace.push(V.slice());
+        for (k = -D; k <= D; k += 2) {
+          if (k === -D || (k !== D && V[off + k - 1] < V[off + k + 1])) x = V[off + k + 1]; else x = V[off + k - 1] + 1;
+          y = x - k;
+          while (x < N && y < M && A[x] === B[y]) { x++; y++; }
+          V[off + k] = x;
+          if (x >= N && y >= M) { done = true; break; }
+        }
+        if (D > 3000) return out;   // 너무 오래 걸리면 그만 (가운데는 새 글)
+      }
+      // 거꾸로 따라가며 같은 글자(대각선)를 찾는다
+      x = N; y = M;
+      for (var d = trace.length - 1; d >= 0 && (x > 0 || y > 0); d--) {
+        var Vd = trace[d]; k = x - y;
+        var pk = (k === -d || (k !== d && Vd[off + k - 1] < Vd[off + k + 1])) ? k + 1 : k - 1;
+        var px = Vd[off + pk], py = px - pk;
+        while (x > px && y > py) { x--; y--; out[p0 + y] = false; src[p0 + y] = p0 + x; }
+        x = px; y = py;
+      }
+      return out;
+    }
+    window.__CS_INS = insMask;
     // 사장님 덧붙임 — 다른 사람 줄 안에 끼워 쓴 글은 그 글만 따로 기억한다 (ow: { 칸: [글, …] })
     function ownMask(ln, own) {
       var m = []; for (var i = 0; i < ln.length; i++) m.push(false);
@@ -4025,10 +4058,10 @@
             var o = pl[pair[i]], om = ownMask(o, po);
             if (o === ln) m = om;
             else {
-              var a = 0; while (a < o.length && a < ln.length && o[a] === ln[a]) a++;
-              var b = 0; while (b < o.length - a && b < ln.length - a && o[o.length - 1 - b] === ln[ln.length - 1 - b]) b++;
-              var mid = []; for (var x = a; x < ln.length - b; x++) mid.push(boss && lb[i] !== "사장님");
-              m = om.slice(0, a).concat(mid, om.slice(o.length - b));
+              // 글자 단위로 비교해 「새로 들어간 글자」만 사장님 덧붙임으로 (10/14 — 앞뒤만 비교하던 때는 앞부분이 조금만 달라도
+              // 그 사이 전체가 형광이 됐다). 원래 있던 글자는 원래 표시(om) 그대로
+              var ins = insMask(o, ln), tag = boss && lb[i] !== "사장님";
+              m = ins.map(function (v, x) { return v ? tag : !!om[ins.src[x]]; });
             }
           }
           ownRuns(ln, m).forEach(function (t) { if (owk.indexOf(t) < 0) owk.push(t); });
@@ -4347,9 +4380,9 @@
             var shLines = shown.split("<br>"), plLines = plain.split(NL), srcLines = v.split(NL);
             if (shLines.length === srcLines.length) shown = shLines.map(function (h, i) { var nn = lb[i] || ""; return '<span class="wl ' + (WCLR[nn] ? "w" + WCLR[nn] : "") + (rpHL && nn === "사장님" && srcLines[i].trim() ? " rpownl" : "") + '">' + (rpHL && nn === "사장님" && srcLines[i].trim() ? "👑 " : "") + h + "</span>"; }).join("");
             plain = plLines.map(function (x, i) { var nn = lb[i] || ""; return x.trim() ? x + (nn ? " (" + nn + ")" : "") : x; }).join(NL);
-          } else if (rpHL && cls !== " boss" && !/^lf14[0-4]$/.test(el.dataset.k) && (distinct.length ? distinct[0] === "사장님" : rpBy[el.dataset.k] === "사장님")) {
-            // 사장님 혼자 쓴 칸도 노란 형광 · 빨간 글씨로
-            shown = '<span class="rpown">👑 ' + shown + "</span>";
+          } else if (cls !== " boss" && !/^lf14[0-4]$/.test(el.dataset.k) && (distinct.length ? distinct[0] === "사장님" : rpBy[el.dataset.k] === "사장님")) {
+            // 사장님 혼자 쓴 칸은 형광 없이 사장님 글자색으로 (10/14) — 형광은 덧붙임에만
+            shown = '<span class="wl ' + (WCLR["사장님"] ? "w" + WCLR["사장님"] : "") + '">' + shown + "</span>";
             plain = "〔사장님〕 " + plain;
           }
           shown = shown.split(S1).join('<span class="rpown">👑 ').split(S2).join("</span>");
