@@ -3340,7 +3340,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-205</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-206</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -4011,15 +4011,15 @@ input,select,textarea{border-radius:var(--r3)!important}
 </footer>
 </div>
 
-<script src="js/chrome.js?v=v0924-205"></script>
+<script src="js/chrome.js?v=v0924-206"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/sync.js?v=v0924-205"></script>
-<script src="js/holidays.js?v=v0924-205"></script>
-<script src="js/sched.js?v=v0924-205"></script>
-<script src="js/app.js?v=v0924-205"></script>
+<script src="js/sync.js?v=v0924-206"></script>
+<script src="js/holidays.js?v=v0924-206"></script>
+<script src="js/sched.js?v=v0924-206"></script>
+<script src="js/app.js?v=v0924-206"></script>
 
 <style>
 /* 재고 · 발주 */
@@ -4255,8 +4255,144 @@ input,select,textarea{border-radius:var(--r3)!important}
 .lgmon>summary span{font-family:var(--sans);font-size:12px;font-weight:400;color:var(--muted);margin-left:auto}
 .sksearch{font:inherit;font-size:13px;padding:6px 9px;width:100%;max-width:300px;background:var(--bg);color:var(--ink);
   border:1px solid var(--rule2);border-radius:2px;margin-bottom:10px}
+
+/* ══════════════════════════════════════════════════════════
+   가독성 3차 — 전체 점검(10/14 · 사장님 「전체 각 부분 다 점검해서 싹」)
+   ① 글자색: 흐린 회색 · 갈색 · 초록 · 파랑 · 빨강을 바탕 대비 4.5:1 이상으로(카페스이 색감은 그대로 · 진하기만)
+   ② 작은 글씨: 10~12.5px → 13~15px (달력 칸은 칸 크기에 맞춰 한 단계씩)
+   ③ 설명 줄은 진한 회색(--ink2) · 단어 단위 줄바꿈
+   ══════════════════════════════════════════════════════════ */
+:root{--muted:#736350;--open:#8F5A22;--mid:#56703F;--close:#456270;--off:#9A4D35;--alert:#9E4430}
+:is(#tp3,#tp5,#tp6,#tp7,#tp8,#tp9,#tp11,#tp13,#tp14,#tp15,#tp17,#tp18){--muted:#736350;--open:#8F5A22}
+body{word-break:keep-all;overflow-wrap:anywhere}
+/* 공통 */
+.shead .en{font-size:13px;color:var(--muted)}
+.shead .sub{font-size:14.5px;color:var(--ink2);line-height:1.55}
+.tnotice li>span,.tnotice ul>li>span{font-size:14px;color:var(--ink2);line-height:1.55}
+.tip,p.tip{font-size:14px!important;color:var(--ink2)!important;line-height:1.6}
+.wsmini{font-size:13.5px}
+.daynav{font-size:14px}
+.tbcnt{font-size:13.5px}
+.lgcap{font-size:13.5px;color:var(--ink2)}
+.sep{color:var(--muted)}
+small.optt{font-size:12px;color:var(--ink2)}
+.mcplus,.ycadd{color:var(--muted)!important;font-size:14px!important}
+/* 출퇴근 기록표 */
+#tp0 th{font-size:14px;color:var(--ink2)}
+#tp0 .atp .atn{font-size:13.5px;font-weight:800}
+#tp0 .atp small,#tp0 .atp small.dash{font-size:12.5px;color:var(--ink2)}
+#tp0 .atoff{font-size:13px}
+#tp0 .atd em{font-size:12.5px}
+#tp0 .shead .en{font-size:13px}
+/* 근무표 달력 */
+#tp1 .cell .dnum{font-size:15px;font-weight:800}
+#tp1 .cell .bizt{font-size:12px;color:var(--ink2)}
+#tp1 .sh .who{font-size:13.5px;font-weight:800}
+#tp1 .sh .rl,#tp1 .sh .tm,#tp1 .sh .dash{font-size:12px}
+#tp1 .sh .rl,#tp1 .sh .tm{color:inherit;opacity:1}
+#tp1 .offmark{font-size:11.5px}
+#tp1 .offwho{font-size:13px}
+/* 오늘 할 일 */
+#tp2 .whobar .wblab,#tp2 .whobar .wbmsg{font-size:14px;color:var(--ink2)}
+#tp2 .wbtn{font-size:14px}
+#tp2 .hcbox .hch span,#tp2 .hcrow .dd span{font-size:13.5px;color:var(--ink2)}
+#tp2 .hcrow .nm{font-size:14px}
+#tp2 .twd{font-size:13px}
+/* 재고 · 발주 */
+#tp12 .skit .u{font-size:14px;color:var(--ink2)}
+#tp12 .skit .nm small{font-size:13px}
+#tp12 .skit.pair .pr label,#tp12 .skit .nm em{font-size:13px;color:var(--ink2)}
+#tp12 .skf label,#tp12 .skf label.w{font-size:14px;color:var(--ink)}
+#tp12 .skfui{font-size:13px}
+#tp12 .skwk2 .wh small,#tp12 .skwk2 .wh .dy{font-size:13px;color:var(--ink2)}
+#tp12 .sktab{font-size:14px}
+#tp12 .skzero span,#tp12 .skzero span b{font-size:13.5px}
+#tp12 .tipq{font-size:13.5px;color:var(--ink2)}
+/* 일지 */
+#tp4 .mlab>span{font-size:14px}
+#tp4 .lgnum>span{font-size:13.5px}
+#tp4 .bossbar .wsmini{font-size:13px}
+#tp4 .bossbar>span,#tp4 .bossbar>span b{font-size:13px;color:var(--ink2)}
+#tp4 .lgrow.wk .lgd,#tp4 .lgrow.wk .lgopen,#tp4 .lgrow.wk .lgtag{font-size:13.5px}
+#tp4 .rvl>span{font-size:13.5px;color:var(--ink2)}
+#tp4 .mcw{font-size:13.5px;color:var(--ink2)}
+#tp4 .mcvdays label{font-size:14px}
+/* 관리자 */
+#tp15 th{font-size:13.5px}
+#tp15 .bd{font-size:13px}
+#tp15 .mgdraft{font-size:12.5px}
+#tp15 .mged{font-size:13.5px}
+#tp15 .wronly,#tp15 #wrState{font-size:13px}
+/* 청소 · 정비 */
+#tp3 .keymark{font-size:12px}
+#tp3 .zmlab{font-size:13.5px}
+/* 고객 응대 */
+#tp10 .cstab{font-size:14px}
+#tp10 .cstab i,#tp10 .csflow-s i{font-size:12.5px}
+#tp10 .csqm{font-size:12.5px}
+#tp10 .csflow-s small{font-size:13px;color:var(--ink2)}
+#tp10 .csflow-a{color:var(--muted)}
+#tp10 .cslead,#tp10 .shead .sub{color:var(--ink2)}
+/* 과일 */
+#tp7 th.fm{font-size:13.5px}
+#tp7 .lf2{font-size:13.5px}
+#tp7 .fall{font-size:12px}
+/* 월말 회의 · 평가 */
+#tp5 .secbar .wsmini{font-size:13px}
+#tp5 .secbar .mkto,#tp5 .secbar .mkto b{font-size:13px}
+#tp5 .pbh span{font-size:13.5px}
+#tp5 .pj{font-size:13px}
+#tp8 .rvgbar em,#tp8 .rvno{font-size:13.5px}
+#tp8 .rvstep b{font-size:13px}
+#tp8 .lgbar label.lgdate,#tp8 .lgtot{font-size:13.5px}
+#tp8 .rvrh{font-size:13.5px}
+/* 연간 행사 */
+#tp6 .ycd{font-size:14px}
+#tp6 .ycw{font-size:13.5px;color:var(--ink2)}
+#tp6 .yctab{font-size:14px}
+#tp6 .yctab i{font-size:12.5px}
+#tp6 .yychip{font-size:13.5px}
+#tp6 .yychip b{font-size:13px}
+#tp6 .yyh i,#tp6 .yyw{font-size:13.5px}
+#tp6 .hrow .hd{font-size:13px}
+#tp6 .ycev{color:#4F6939}
+/* 벤치마킹 · 크리스마스 */
+#tp17 .bnt,#tp17 .bnhead small{font-size:13.5px}
+#tp2 .xtt,#tp18 .xtt{color:#4F6939}
+/* 휴대폰 */
+@media (max-width:640px){
+  #tp1 .sh .who{font-size:13.5px}
+  #tp1 .sh .rl,#tp1 .sh .tm,#tp1 .sh .dash{font-size:12.5px}
+  #tp1 .cell .bizt{font-size:12px}
+  #tp0 .atp .atn{font-size:13px}
+}
+/* 가독성 3차 — 남은 작은 글씨 */
+.lgbar label.lgdate,.lgmsg{font-size:13.5px}
+#tp0 .atplan,#tp0 .atrow span,#tp0 .atedit{font-size:13.5px}
+#tp0 .atsum .atn{font-size:13.5px}
+#tp2 .tedhint{font-size:13.5px;color:var(--ink2)}
+#tp2 .onlh span{font-size:13.5px}
+#tp12 .skful small{font-size:13px}
+#tp12 #skUseLabel{font-size:14px}
+#tp12 .skdesign p,#tp12 .skdesign p b{font-size:13.5px}
+#tp4 .mchol{font-size:12.5px}
+#tp4 .lginrow>span{font-size:13.5px}
+#tp4 .lgd i{font-size:12.5px}
+#tp4 .bkbox b,#tp4 .mcvh span,#tp4 .mcvdays em,#tp4 .mcvdays .lbl,#tp4 .mcvnone{font-size:13.5px}
+#tp4 .lgzero span,#tp4 .lgcollect .lgmsg{font-size:13.5px}
+#tp4 .lgngh i{font-size:12.5px}
+#tp15 .mgtag,#tp15 .mgcp{font-size:13px}
+#tp15 .wrfoot,#tp15 .mgok small,#tp15 .mgh small{font-size:13.5px}
+#tp15 .mgsubh{color:#7A5C00}
+#tp5 .rphead span,#tp5 .rpmeta,#tp5 .rpempty{font-size:13.5px}
+#tp6 .yctab i{font-size:13px}
+/* 노란 「요일」 딱지 — 흰 글씨가 잘 보이게 진하게 */
+#tp2 .titem.hastwd .twd,#tp2 .titem.yellow:not(.hastwd) .ttop::before,.tleg .yellow i{background:#7E6100}
+.twd{font-size:13px}
+/* 근무표 — 사장님 일정처럼 긴 이름은 칸 안에서 줄바꿈(잘리지 않게) */
+#tp1 .sh .rl{white-space:normal;overflow-wrap:anywhere}
 </style>
-<script src="js/stock.js?v=v0924-205"></script>
+<script src="js/stock.js?v=v0924-206"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -4309,11 +4445,11 @@ input,select,textarea{border-radius:var(--r3)!important}
   window.addEventListener("cs:me", function () { setTimeout(sync, 50); });
 })();
 </script>
-<script src="js/presence.js?v=v0924-205"></script>
-<script src="js/weekrep.js?v=v0924-205"></script>
-<script src="js/recipe.js?v=v0924-205"></script>
-<script src="js/bench.js?v=v0924-205"></script>
-<script src="js/monthlog.js?v=v0924-205"></script>
-<script src="js/xmas.js?v=v0924-205"></script>
-<script src="js/tg.js?v=v0924-205"></script>
+<script src="js/presence.js?v=v0924-206"></script>
+<script src="js/weekrep.js?v=v0924-206"></script>
+<script src="js/recipe.js?v=v0924-206"></script>
+<script src="js/bench.js?v=v0924-206"></script>
+<script src="js/monthlog.js?v=v0924-206"></script>
+<script src="js/xmas.js?v=v0924-206"></script>
+<script src="js/tg.js?v=v0924-206"></script>
 </body></html>
