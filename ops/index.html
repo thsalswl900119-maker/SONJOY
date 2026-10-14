@@ -2907,6 +2907,44 @@ h1{letter-spacing:-.01em}
 @media(max-width:640px){.tabs{flex-wrap:wrap}.tabgrp{flex:1 1 100%;display:grid;grid-template-columns:1fr 1fr;padding:14px 8px 8px;gap:6px;margin-right:0}
   .tabgrp .tab{font-size:16px;padding:12px 8px;text-align:center}.tabgrp .tab.daily{grid-column:1/-1}.tabgrp .tab.daily{font-size:16px!important;padding:12px 8px!important}}
 
+
+/* 왼쪽 메뉴 (10/14 · 사장님 「이거대로 메뉴 바꿔줄래」) — 컴퓨터: 왼쪽에 붙은 초록 메뉴 · 휴대폰: 위에 묶음 상자 */
+nav.tabs.side{display:block;background:#1E3A2B;color:#F4EFE3;border:0;border-radius:16px;padding:12px;margin:10px 0 16px;box-shadow:0 2px 0 rgba(0,0,0,.08)}
+nav.side .sdhead{display:none}
+nav.side .sdgrp{margin:0 0 6px}
+nav.side .sdlab{font-size:13px;font-weight:900;letter-spacing:.04em;color:#CFE3C7;padding:2px 4px 8px}
+nav.side .sdg{font:inherit;width:100%;display:flex;align-items:center;gap:8px;padding:11px 10px;min-height:46px;border:0;border-radius:10px;background:rgba(255,255,255,.06);color:#F4EFE3;font-size:16px;font-weight:800;text-align:left;cursor:pointer}
+nav.side .sdg:hover{background:rgba(255,255,255,.12)}
+nav.side .sdarr{display:inline-block;width:14px;font-size:12px;transition:transform .15s;color:#CFE3C7}
+nav.side .sdgrp.open .sdarr{transform:rotate(90deg)}
+nav.side .sdn{margin-left:auto;font-size:12.5px;font-weight:700;color:#CFE3C7;background:rgba(255,255,255,.1);border-radius:999px;padding:1px 8px}
+nav.side .sditems{display:none;padding:6px 0 4px}
+nav.side .sdgrp.open .sditems{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}
+nav.side .tab{display:flex;align-items:center;gap:8px;width:100%;flex:none;min-width:0;text-align:left;font:inherit;font-family:var(--sans);font-size:15.5px;font-weight:800;padding:10px 12px;min-height:44px;border:0;border-left:4px solid transparent;border-radius:10px;background:transparent;color:#F4EFE3;box-shadow:none;white-space:normal;word-break:keep-all}
+nav.side .tab:hover{background:rgba(255,255,255,.1);color:#fff}
+nav.side .tab .ti{width:22px;text-align:center;flex:none}
+nav.side .tab[aria-selected="true"]{background:#F4EFE3;color:#1E3A2B;border-left-color:#C8E06B;box-shadow:none}
+nav.side .daily .tab{font-size:17px;font-weight:900;background:rgba(255,255,255,.08)}
+nav.side .daily .tab[aria-selected="true"]{background:#F4EFE3;color:#1E3A2B}
+nav.side .tab.daily{font-size:17px!important;padding:10px 12px!important}
+nav.side .tab.daily{border:0!important;border-left:4px solid #C8E06B!important}nav.side .tab.daily[aria-selected="true"]{background:#F4EFE3!important;color:#1E3A2B!important}
+nav.side .tab.xmtab{background:#B3261E;color:#fff;border-left-color:#E8B931;box-shadow:none}
+nav.side .tab.xmtab[aria-selected="true"]{background:#F4EFE3;color:#8E1B14;border-left-color:#B3261E}
+@media (max-width:999px){nav.side .daily .sditems{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}}
+@media (max-width:640px){nav.side .daily .sditems{grid-template-columns:1fr 1fr}nav.side .daily .tab.daily{grid-column:1/-1;justify-content:center}nav.side .daily .tab{justify-content:center}
+  nav.tabs.side{padding:10px}nav.side .sdgrp.open .sditems{grid-template-columns:1fr 1fr}}
+@media (min-width:1000px){
+  nav.tabs.side{position:fixed;left:0;top:0;bottom:0;width:236px;margin:0;border-radius:0;padding:18px 12px 24px;overflow-y:auto;z-index:40}
+  nav.side .sdhead{display:block;padding:4px 8px 16px;margin:0 0 12px;border-bottom:1px solid rgba(255,255,255,.15)}
+  nav.side .sdhead b{display:block;font-size:24px;font-weight:900;letter-spacing:.02em;color:#fff}
+  nav.side .sdhead small{display:block;font-size:13px;color:#CFE3C7;margin-top:4px}
+  nav.side .daily .sditems,nav.side .sdgrp.open .sditems{display:flex;flex-direction:column;gap:3px}
+  .wrap{margin-left:236px;margin-right:auto;max-width:1180px}
+  body.xmprint .wrap{margin-left:0}
+}
+@media (min-width:1500px){.wrap{margin-left:calc(236px + (100vw - 236px - 1180px) / 2)}}
+@media print{nav.tabs.side{display:none}.wrap{margin-left:0!important}}
+
 /* 섹션 제목 */
 section{margin-top:38px}
 .shead{align-items:baseline;border-bottom:0;padding-bottom:6px;
@@ -3156,14 +3194,14 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-200</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-201</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
   <div class="bkrow" id="saveRow"></div>
   <button type="button" class="newver" id="newVer" hidden>🔄 새 버전이 올라왔어요 — 눌러서 새로고침 (적은 내용은 그대로 남습니다)</button>
 </div>
-<nav class="tabs" role="tablist" aria-label="화면 선택"><span class="tabgrp"><button type="button" class="tab" role="tab" data-p="tp0" aria-controls="tp0" aria-selected="true">출퇴근</button><button type="button" class="tab" role="tab" data-p="tp1" aria-controls="tp1" aria-selected="false">근무표</button><button type="button" class="tab" role="tab" data-p="tp2" aria-controls="tp2" aria-selected="false">오늘 할 일</button><button type="button" class="tab" role="tab" data-p="tp12" aria-controls="tp12" aria-selected="false">재고·발주</button><button type="button" class="tab daily" role="tab" data-p="tp4" aria-controls="tp4" aria-selected="false">일지</button></span><button type="button" class="tab mgtab" role="tab" data-p="tp15" aria-controls="tp15" aria-selected="false">관리자</button><button type="button" class="tab rctab" role="tab" data-p="tp16" aria-controls="tp16" aria-selected="false">레시피</button><button type="button" class="tab" role="tab" data-p="tp3" aria-controls="tp3" aria-selected="false">청소·정비</button><button type="button" class="tab" role="tab" data-p="tp5" aria-controls="tp5" aria-selected="false">월말회의</button><button type="button" class="tab" role="tab" data-p="tp6" aria-controls="tp6" aria-selected="false">연간 행사</button><button type="button" class="tab xmtab" role="tab" data-p="tp18" aria-controls="tp18" aria-selected="false">🎄 크리스마스</button><button type="button" class="tab" role="tab" data-p="tp7" aria-controls="tp7" aria-selected="false">과일</button><button type="button" class="tab" role="tab" data-p="tp8" aria-controls="tp8" aria-selected="false">월말 평가</button><button type="button" class="tab" role="tab" data-p="tp9" aria-controls="tp9" aria-selected="false">워크샵</button><button type="button" class="tab bntabbtn" role="tab" data-p="tp17" aria-controls="tp17" aria-selected="false">벤치마킹</button><button type="button" class="tab" role="tab" data-p="tp10" aria-controls="tp10" aria-selected="false">고객 응대</button><button type="button" class="tab" role="tab" data-p="tp13" aria-controls="tp13" aria-selected="false">제과제빵</button><button type="button" class="tab" role="tab" data-p="tp14" aria-controls="tp14" aria-selected="false">독서나눔</button><button type="button" class="tab" role="tab" data-p="tp11" aria-controls="tp11" aria-selected="false">사용법</button></nav><div class="panel" id="tp0" role="tabpanel"><section>
+<nav class="tabs side" id="sideNav" role="tablist" aria-label="화면 선택"><div class="sdhead"><b>카페스이</b><small>매장 운영 · 직원 시스템</small></div><div class="sdgrp daily open" data-g="daily"><div class="sdlab">매일 쓰는 화면</div><div class="sditems"><button type="button" class="tab" role="tab" data-p="tp0" aria-controls="tp0" aria-selected="true"><span class="ti" aria-hidden="true">⏰</span>출퇴근</button><button type="button" class="tab" role="tab" data-p="tp1" aria-controls="tp1" aria-selected="false"><span class="ti" aria-hidden="true">🗓</span>근무표</button><button type="button" class="tab" role="tab" data-p="tp2" aria-controls="tp2" aria-selected="false"><span class="ti" aria-hidden="true">✅</span>오늘 할 일</button><button type="button" class="tab" role="tab" data-p="tp12" aria-controls="tp12" aria-selected="false"><span class="ti" aria-hidden="true">📦</span>재고·발주</button><button type="button" class="tab daily" role="tab" data-p="tp4" aria-controls="tp4" aria-selected="false"><span class="ti" aria-hidden="true">📒</span>일지</button></div></div><div class="sdgrp" data-g="ops"><button type="button" class="sdg" aria-expanded="false"><span class="sdarr" aria-hidden="true">▶</span>🧰 운영 · 관리<small class="sdn">6</small></button><div class="sditems"><button type="button" class="tab mgtab" role="tab" data-p="tp15" aria-controls="tp15" aria-selected="false"><span class="ti" aria-hidden="true">👑</span>관리자</button><button type="button" class="tab" role="tab" data-p="tp3" aria-controls="tp3" aria-selected="false"><span class="ti" aria-hidden="true">🧽</span>청소·정비</button><button type="button" class="tab" role="tab" data-p="tp10" aria-controls="tp10" aria-selected="false"><span class="ti" aria-hidden="true">💬</span>고객 응대</button><button type="button" class="tab rctab" role="tab" data-p="tp16" aria-controls="tp16" aria-selected="false"><span class="ti" aria-hidden="true">📖</span>레시피</button><button type="button" class="tab" role="tab" data-p="tp7" aria-controls="tp7" aria-selected="false"><span class="ti" aria-hidden="true">🍓</span>과일</button><button type="button" class="tab" role="tab" data-p="tp13" aria-controls="tp13" aria-selected="false"><span class="ti" aria-hidden="true">🥐</span>제과제빵</button></div></div><div class="sdgrp" data-g="meet"><button type="button" class="sdg" aria-expanded="false"><span class="sdarr" aria-hidden="true">▶</span>📊 회의 · 성과<small class="sdn">5</small></button><div class="sditems"><button type="button" class="tab" role="tab" data-p="tp5" aria-controls="tp5" aria-selected="false"><span class="ti" aria-hidden="true">🗣</span>월말회의</button><button type="button" class="tab" role="tab" data-p="tp8" aria-controls="tp8" aria-selected="false"><span class="ti" aria-hidden="true">📝</span>월말 평가</button><button type="button" class="tab" role="tab" data-p="tp9" aria-controls="tp9" aria-selected="false"><span class="ti" aria-hidden="true">✈️</span>워크샵</button><button type="button" class="tab bntabbtn" role="tab" data-p="tp17" aria-controls="tp17" aria-selected="false"><span class="ti" aria-hidden="true">🔎</span>벤치마킹</button><button type="button" class="tab" role="tab" data-p="tp14" aria-controls="tp14" aria-selected="false"><span class="ti" aria-hidden="true">📚</span>독서나눔</button></div></div><div class="sdgrp" data-g="event"><button type="button" class="sdg" aria-expanded="false"><span class="sdarr" aria-hidden="true">▶</span>🎉 행사 · 일정<small class="sdn">2</small></button><div class="sditems"><button type="button" class="tab" role="tab" data-p="tp6" aria-controls="tp6" aria-selected="false"><span class="ti" aria-hidden="true">📅</span>연간 행사</button><button type="button" class="tab xmtab" role="tab" data-p="tp18" aria-controls="tp18" aria-selected="false"><span class="ti" aria-hidden="true">🎄</span>크리스마스</button></div></div><div class="sdgrp" data-g="help"><button type="button" class="sdg" aria-expanded="false"><span class="sdarr" aria-hidden="true">▶</span>📘 도움말 · 교육<small class="sdn">1</small></button><div class="sditems"><button type="button" class="tab" role="tab" data-p="tp11" aria-controls="tp11" aria-selected="false"><span class="ti" aria-hidden="true">❓</span>사용법</button></div></div></nav><div class="panel" id="tp0" role="tabpanel"><section>
   <div class="shead"><h2>출퇴근</h2><span class="en">clock out</span>
     <span class="sub">갈 때 본인 칸의 퇴근만 누르세요 · 출근은 10분 일찍, 서로 챙깁니다</span></div>
   <div class="lgbar">
@@ -3823,15 +3861,15 @@ input,select,textarea{border-radius:var(--r3)!important}
 </footer>
 </div>
 
-<script src="js/chrome.js?v=v0924-200"></script>
+<script src="js/chrome.js?v=v0924-201"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/sync.js?v=v0924-200"></script>
-<script src="js/holidays.js?v=v0924-200"></script>
-<script src="js/sched.js?v=v0924-200"></script>
-<script src="js/app.js?v=v0924-200"></script>
+<script src="js/sync.js?v=v0924-201"></script>
+<script src="js/holidays.js?v=v0924-201"></script>
+<script src="js/sched.js?v=v0924-201"></script>
+<script src="js/app.js?v=v0924-201"></script>
 
 <style>
 /* 재고 · 발주 */
@@ -4068,7 +4106,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 .sksearch{font:inherit;font-size:13px;padding:6px 9px;width:100%;max-width:300px;background:var(--bg);color:var(--ink);
   border:1px solid var(--rule2);border-radius:2px;margin-bottom:10px}
 </style>
-<script src="js/stock.js?v=v0924-200"></script>
+<script src="js/stock.js?v=v0924-201"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -4097,10 +4135,33 @@ input,select,textarea{border-radius:var(--r3)!important}
   })();
 </script>
 
-<script src="js/presence.js?v=v0924-200"></script>
-<script src="js/weekrep.js?v=v0924-200"></script>
-<script src="js/recipe.js?v=v0924-200"></script>
-<script src="js/bench.js?v=v0924-200"></script>
-<script src="js/monthlog.js?v=v0924-200"></script>
-<script src="js/xmas.js?v=v0924-200"></script>
+<script>
+// 왼쪽 메뉴 묶음 열고 닫기 — 연 묶음은 이 기기에 기억 · 지금 보는 화면이 든 묶음은 늘 열림 · 탭이 하나도 안 보이는 묶음은 숨김(체험판 · 권한)
+(function () {
+  var nav = document.getElementById("sideNav"); if (!nav) return;
+  var KEY = "cafesui.ui.navopen", st = {}; try { st = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) {}
+  var G = Array.prototype.slice.call(nav.querySelectorAll(".sdgrp:not(.daily)"));
+  function setOpen(g, on) { g.classList.toggle("open", on); var b = g.querySelector(".sdg"); if (b) b.setAttribute("aria-expanded", String(on)); }
+  function sync() {
+    G.forEach(function (g) {
+      var tabs = Array.prototype.filter.call(g.querySelectorAll(".tab"), function (t) { return t.isConnected && getComputedStyle(t).display !== "none" && !t.hidden; });
+      g.hidden = !tabs.length; var n = g.querySelector(".sdn"); if (n) n.textContent = tabs.length;
+      var act = g.querySelector('.tab[aria-selected="true"]');
+      setOpen(g, !!act || !!st[g.dataset.g]);
+    });
+  }
+  nav.addEventListener("click", function (e) {
+    var b = e.target.closest(".sdg"); if (b) { var g = b.closest(".sdgrp"), on = !g.classList.contains("open"); st[g.dataset.g] = on ? 1 : 0; try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (er) {} setOpen(g, on); return; }
+    var t = e.target.closest(".tab"); if (t) setTimeout(function () { sync(); if (window.innerWidth >= 1000) return; var p = document.getElementById(t.dataset.p); if (p) { var y = p.getBoundingClientRect().top + window.pageYOffset - 10; if (y < window.pageYOffset) window.scrollTo(0, y); } }, 30);
+  });
+  sync(); setTimeout(sync, 800);
+  window.addEventListener("cs:me", function () { setTimeout(sync, 50); });
+})();
+</script>
+<script src="js/presence.js?v=v0924-201"></script>
+<script src="js/weekrep.js?v=v0924-201"></script>
+<script src="js/recipe.js?v=v0924-201"></script>
+<script src="js/bench.js?v=v0924-201"></script>
+<script src="js/monthlog.js?v=v0924-201"></script>
+<script src="js/xmas.js?v=v0924-201"></script>
 </body></html>
