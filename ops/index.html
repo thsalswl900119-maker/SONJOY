@@ -2997,6 +2997,59 @@ nav.side .tab.xmtab[aria-selected="true"]{background:#14502B;border-color:#0C3A1
 .tblock.tbseason.offseason .ssoff{display:block;background:var(--surface);color:var(--ink2)}
 .tblock.tbseason.offseason .titems{opacity:.5;pointer-events:none;filter:grayscale(1)}
 .tblock.tbseason.offseason .titems .titem{padding-top:6px;padding-bottom:6px}
+/* 재고 · 발주 보기 편하게(10/14 · 사장님 「대시보드 빼고 · 보기 편하게」) — 왼쪽 넓게: 발주 넣을 것 → 재고 세기 / 오른쪽: 오늘 숫자 · 주 사용량 · 월별 기록
+   요약 카드(#skReport)는 화면에서 숨김(그림 · 텔레그램 보낼 글은 그대로 만든다) */
+#tp12 .skgrid.sk2{grid-template-columns:minmax(0,1.7fr) minmax(300px,1fr);gap:16px}
+@media (max-width:900px){#tp12 .skgrid.sk2{grid-template-columns:1fr}}
+#tp12 .sksend{display:inline-flex;flex-wrap:wrap;gap:8px;margin-left:auto}
+#tp12 .sksend .skbtn{min-height:42px;font-size:15px}
+#tp12 .skbox{border-radius:10px}
+#tp12 .skh{font-size:16px;font-weight:900;padding:11px 14px;color:var(--ink)}
+#tp12 .skbox.hot{border:2.5px solid #B3261E;box-shadow:0 3px 0 rgba(179,38,30,.14)}
+#tp12 .skbox.hot .skh{background:#FCE6E1;color:#9E1B13;font-size:18px}
+#tp12 .skbox.hot .skh{flex-wrap:wrap;row-gap:6px;white-space:nowrap}
+#tp12 .skoc li.dn .t{text-decoration:none}
+#tp12 .skoc li.dn .t::first-line{text-decoration:line-through}
+#tp12 .skbox.hot .skh .n{display:inline-flex;gap:6px;flex-wrap:wrap;font-family:var(--sans);font-size:13px}
+#tp12 .skh .n em{font-style:normal;font-weight:900;padding:3px 9px;border-radius:999px;color:#fff}
+#tp12 .skh .n em.w{background:#B3261E}#tp12 .skh .n em.o{background:#2E5E8C}#tp12 .skh .n em.d{background:#2F7A3E}
+#tp12 .skneed{gap:6px;margin-bottom:10px}
+#tp12 .skneed .sktag,#tp12 .skneed .skadd{font-size:14px;padding:5px 10px;border-radius:999px}
+#tp12 .skoc{margin:0 0 10px;gap:6px}
+#tp12 .skoc li{padding:11px 12px;border-radius:8px;border:1px solid var(--rule);border-left:6px solid #B3261E;background:#FFF;font-size:16px;gap:10px}
+#tp12 .skoc li.ok{border-left-color:#2E5E8C;background:#F3F8FD}
+#tp12 .skoc li.dn{border-left-color:#2F7A3E;background:#F1F7EF;opacity:1}
+#tp12 .skoc li.dn .t{color:#5E6B5A}
+#tp12 .skoc .ic{font-size:18px;flex:none}
+@media (max-width:640px){#tp12 .skoc li{flex-wrap:wrap}#tp12 .skoc .t{flex:1 1 calc(100% - 40px)}#tp12 .skoc li>label:first-of-type{margin-left:30px}}
+#tp12 .skoc .t{font-weight:800;color:var(--ink);min-width:140px}
+#tp12 .skoc small{font-size:13px;font-weight:600;color:var(--ink2);margin-top:2px;text-decoration:none}
+#tp12 .skoc label{font-size:14px;padding:6px 11px;border:1.5px solid var(--rule2);border-radius:999px;background:#fff;min-height:36px}
+#tp12 .skoc input{width:19px;height:19px}
+#tp12 .skoc .sktag{font-size:13px;padding:4px 10px;border-radius:999px}
+#tp12 .sknone{font-size:15px;margin:0 0 10px}
+#tp12 .skedit{border:1.5px dashed var(--rule2);border-radius:8px;background:var(--surface)}
+#tp12 .skedit summary{cursor:pointer;padding:10px 12px;font-weight:800;font-size:15px;color:var(--ink);list-style:none}
+#tp12 .skedit summary::-webkit-details-marker{display:none}
+#tp12 .skedit summary::before{content:"▸ ";color:var(--open)}
+#tp12 .skedit[open] summary::before{content:"▾ "}
+#tp12 .skedit summary small{display:block;font-weight:500;font-size:13px;color:var(--ink2);margin-top:2px}
+#tp12 .skedit .skta{margin:0 12px;width:calc(100% - 24px);box-sizing:border-box;font-size:16px;min-height:96px}
+#tp12 .skedit .skordbar{margin:8px 12px 12px}
+#tp12 .skcnt{margin:6px 0 0}
+#tp12 .skcnth{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;padding:4px 2px 8px;border-bottom:2px solid var(--rule2);margin-bottom:8px}
+#tp12 .skcnth b{font-size:18px;font-weight:900;color:var(--ink)}
+#tp12 .skcnth small{font-size:13.5px;color:var(--ink2)}
+#tp12 .skcnt .skzero{margin:0}
+#tp12 .skcnt .skzero span{font-size:13px;color:var(--ink2)}
+@media (min-width:1300px){#tp12 #skGroups{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start}}
+#tp12 .skit{padding:8px 13px}
+#tp12 .skit .nm{font-size:15px;font-weight:700;color:var(--ink)}
+#tp12 .skit .nm small{font-size:12.5px;font-weight:500;color:var(--ink2)}
+#tp12 .skit.need{background:#FCE6E1}
+#tp12 .skit.need .nm{color:#9E1B13}
+#tp12 .skit .skin{font-size:16px}
+#tp12 .skside .skbox .skh{font-size:15.5px}
 /* 📨 텔레그램 바로 보내기 (10/14 · js/tg.js) */
 .tgbtn{font:inherit;font-weight:800;background:#229ED9!important;color:#fff!important;border:1.5px solid #1B86BA!important;cursor:pointer;padding:8px 14px;min-height:40px;border-radius:999px}
 .tgbtn.off{background:var(--surface)!important;color:#1B6F98!important;border-style:dashed!important}
@@ -3287,7 +3340,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-204</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-205</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -3407,25 +3460,26 @@ input,select,textarea{border-radius:var(--r3)!important}
       <span class="lghol" id="skHol" hidden></span>
       <span class="who" id="skBy"></span>
       <span class="st" id="skStatus"></span>
-      <button type="button" class="skbtn prim" id="skShot" title="발주·재고 보고를 그림 파일로 저장합니다 (텔레그램에 바로 올리기)">📷 이미지로 저장</button><button type="button" class="skbtn tgbtn" data-tg="sk">📨 텔레그램으로 보내기</button>
+      <span class="sksend"><button type="button" class="skbtn prim" id="skShot" title="발주·재고 보고를 그림 파일로 저장합니다 (텔레그램에 바로 올리기)">📷 이미지로 저장</button><button type="button" class="skbtn tgbtn" data-tg="sk">📨 텔레그램으로 보내기</button></span>
       <button type="button" class="skbtn danger" id="skDel" hidden>삭제</button>
       </span>
     </div>
-    <div class="lgzero skzero"><button type="button" class="wsmini" id="skPrevFill">↓ 빈 칸에 전날 숫자 넣기</button><button type="button" class="wsmini" id="skZero">0 빈 칸에 0 채우기</button><span>「전날 숫자」는 <b>세어 보고 전날과 같은 것</b>만 한 번에 넣을 때 · 「0」은 빈 칸만 0으로 (적힌 숫자 · 글 칸은 그대로) · <b>0이 되면 발주점 이하로 잡히니 실제로 없는 것만 0으로 두세요</b></span></div>
-    <div class="skgrid">
-      <div class="skcol skrpcol"><div class="skrp" id="skReport"></div>
-        <div class="skbox skuse"><div class="skh">📊 주 사용량 · 과일 · 생크림 <span class="n"><button type="button" class="skum" id="skUsePrev" aria-label="이전 달">◀</button> <span id="skUseLabel"></span> <button type="button" class="skum" id="skUseNext" aria-label="다음 달">▶</button></span></div><div class="skb">
-          <div class="skusecal" id="skUseCal"></div>
-          <p class="tip" style="margin:6px 0 0">위 「과일 사용」에 과일 이름 · 수량을 적으면 주마다 과일별로 모입니다 · ◀ ▶ 로 지난 달(지난 시즌)도 볼 수 있어요 · 이번 주는 주황 · 토요일 마감 전에 이 숫자로 주 단위 발주</p>
-        </div></div></div>
-      <div class="skcol">
-        <div class="skbox hot"><div class="skh">🛒 발주 넣을 것 <span class="n" id="skOrdN"></span></div><div class="skb">
+    <div class="skgrid sk2">
+      <div class="skcol skmain">
+        <div class="skbox hot skorder"><div class="skh">🛒 발주 넣을 것 <span class="n" id="skOrdN"></span></div><div class="skb">
           <div class="skneed" id="skNeed"></div>
-<div class="skordbar"><button type="button" class="wsmini" id="skOrdClear">🗑 발주 목록 전체 비우기</button></div><label class="sknone" id="skNoneL"><input type="checkbox" id="skNone"><span>✅ 오늘 발주 넣을 것 없음</span><small id="skNoneBy"></small></label><input type="hidden" id="sk_noOrder">
-          <textarea id="skOrders" class="skta" placeholder="한 줄에 하나씩&#10;난황 10개&#10;에타용 휘핑크림 12통"></textarea>
           <div id="skChecks"></div>
-          <p class="tip" style="margin:8px 0 0">발주 넣어야 하는 목록은 캡처해서 텔레그램방에도 꼭 올려주세요 (누락 이슈). 주문 안 된 줄은 다음 날로 넘어갑니다.</p>
+          <label class="sknone" id="skNoneL"><input type="checkbox" id="skNone"><span>✅ 오늘 발주 넣을 것 없음</span><small id="skNoneBy"></small></label><input type="hidden" id="sk_noOrder">
+          <details class="skedit" id="skEdit"><summary>✏ 발주 줄 적기 · 고치기 <small>한 줄에 하나씩 · 주문 안 된 줄은 다음 날로 넘어갑니다</small></summary>
+            <textarea id="skOrders" class="skta" placeholder="한 줄에 하나씩&#10;난황 10개&#10;에타용 휘핑크림 12통"></textarea>
+            <div class="skordbar"><button type="button" class="wsmini" id="skOrdClear">🗑 발주 목록 전체 비우기</button></div>
+          </details>
         </div></div>
+        <div class="skcnt"><div class="skcnth"><b>📋 재고 세기</b><small>세어 본 숫자를 적으면 발주점 이하가 위 「발주 넣을 것」에 빨간 딱지로 뜹니다</small></div>
+        <div class="lgzero skzero"><button type="button" class="wsmini" id="skPrevFill">↓ 빈 칸에 전날 숫자 넣기</button><button type="button" class="wsmini" id="skZero">0 빈 칸에 0 채우기</button><span>「전날 숫자」는 <b>세어 보고 전날과 같은 것</b>만 한 번에 넣을 때 · 「0」은 빈 칸만 0으로 (적힌 숫자 · 글 칸은 그대로) · <b>0이 되면 발주점 이하로 잡히니 실제로 없는 것만 0으로 두세요</b></span></div></div>
+        <div class="skcol" id="skGroups"></div>
+      </div>
+      <div class="skcol skside">
         <div class="skbox"><div class="skh">🍰 오늘 숫자</div><div class="skb"><div class="skf">
           <label class="w">오늘 조각케이크 생산<input type="text" id="sk_prod" class="skin" placeholder="망2 무피2 초체1 복1 멜1"></label>
           <div class="skfu w"><span class="skful">과일 사용 <small>과일 이름 · 수량 · 단위(알 · 병 · 통)</small></span>
@@ -3443,11 +3497,14 @@ input,select,textarea{border-radius:var(--r3)!important}
           <label class="w">생크림 주문 계획<input type="text" id="sk_creamPlan" class="skin" placeholder="목요일 12통"></label>
           <label class="w">총괄 보고할 특이사항<textarea id="sk_report" class="skta" style="min-height:52px" placeholder="냉장고 고장, 키위 3일 전 미리 말하기 등"></textarea></label>
         </div></div></div>
+        <div class="skbox skuse"><div class="skh">📊 주 사용량 · 과일 · 생크림 <span class="n"><button type="button" class="skum" id="skUsePrev" aria-label="이전 달">◀</button> <span id="skUseLabel"></span> <button type="button" class="skum" id="skUseNext" aria-label="다음 달">▶</button></span></div><div class="skb">
+          <div class="skusecal" id="skUseCal"></div>
+          <p class="tip" style="margin:6px 0 0">위 「과일 사용」에 과일 이름 · 수량을 적으면 주마다 과일별로 모입니다 · ◀ ▶ 로 지난 달(지난 시즌)도 볼 수 있어요 · 이번 주는 주황 · 토요일 마감 전에 이 숫자로 주 단위 발주</p>
+        </div></div>
         <div class="skbox"><div class="skh">🗂 월별 기록 <span class="n"><input type="month" id="skMonth" class="dinp" style="width:auto" hidden></span></div><div class="skb"><div id="skList"></div></div></div>
+        <div class="skrp" id="skReport" hidden></div>
       </div>
-      <div class="skcol" id="skGroups"></div>
     </div>
-  </div>
   <div id="sk1" hidden>
     <p class="tip" style="font-size:12px;color:var(--muted);margin:0 0 8px">노션 「재료 재고 관리」 기준. 네이버 주문 거래처를 모르겠으면 네이버페이 결제내역에서 검색해서 재구매. 연휴 전에는 미리미리 주문.</p>
     <input type="search" id="skRefQ" class="sksearch" placeholder="품목 · 거래처 검색">
@@ -3954,15 +4011,15 @@ input,select,textarea{border-radius:var(--r3)!important}
 </footer>
 </div>
 
-<script src="js/chrome.js?v=v0924-204"></script>
+<script src="js/chrome.js?v=v0924-205"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/sync.js?v=v0924-204"></script>
-<script src="js/holidays.js?v=v0924-204"></script>
-<script src="js/sched.js?v=v0924-204"></script>
-<script src="js/app.js?v=v0924-204"></script>
+<script src="js/sync.js?v=v0924-205"></script>
+<script src="js/holidays.js?v=v0924-205"></script>
+<script src="js/sched.js?v=v0924-205"></script>
+<script src="js/app.js?v=v0924-205"></script>
 
 <style>
 /* 재고 · 발주 */
@@ -4199,7 +4256,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 .sksearch{font:inherit;font-size:13px;padding:6px 9px;width:100%;max-width:300px;background:var(--bg);color:var(--ink);
   border:1px solid var(--rule2);border-radius:2px;margin-bottom:10px}
 </style>
-<script src="js/stock.js?v=v0924-204"></script>
+<script src="js/stock.js?v=v0924-205"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -4252,11 +4309,11 @@ input,select,textarea{border-radius:var(--r3)!important}
   window.addEventListener("cs:me", function () { setTimeout(sync, 50); });
 })();
 </script>
-<script src="js/presence.js?v=v0924-204"></script>
-<script src="js/weekrep.js?v=v0924-204"></script>
-<script src="js/recipe.js?v=v0924-204"></script>
-<script src="js/bench.js?v=v0924-204"></script>
-<script src="js/monthlog.js?v=v0924-204"></script>
-<script src="js/xmas.js?v=v0924-204"></script>
-<script src="js/tg.js?v=v0924-204"></script>
+<script src="js/presence.js?v=v0924-205"></script>
+<script src="js/weekrep.js?v=v0924-205"></script>
+<script src="js/recipe.js?v=v0924-205"></script>
+<script src="js/bench.js?v=v0924-205"></script>
+<script src="js/monthlog.js?v=v0924-205"></script>
+<script src="js/xmas.js?v=v0924-205"></script>
+<script src="js/tg.js?v=v0924-205"></script>
 </body></html>

@@ -247,12 +247,16 @@
     // 발주 확인 — 사장·매니저가 "확인 → 주문함" 순서로 체크. 직원은 상태만 본다
     function renderChecks() {
       var box = $("#skChecks"), ls = lines();
-      $("#skOrdN").textContent = ls.length ? ls.length + "줄" : "";
+      // 위 숫자: 대기 · 확인 · 주문 완료 (10/14 — 한눈에)
+      var nW = 0, nO = 0, nD = 0;
+      ls.forEach(function (l) { var c = checks[l] || {}; if (c.ordered) nD++; else if (c.ok) nO++; else nW++; });
+      $("#skOrdN").innerHTML = ls.length ? (nW ? '<em class="w">대기 ' + nW + "</em>" : "") + (nO ? '<em class="o">확인 ' + nO + "</em>" : "") + (nD ? '<em class="d">주문 완료 ' + nD + "</em>" : "") : "";
+      var ed = $("#skEdit"); if (ed && !ls.length) ed.open = true;   // 줄이 없으면 적는 칸을 펼쳐 둔다
       if (!ls.length) { box.innerHTML = ""; return; }
       var mgr = isMgr();
       box.innerHTML = '<ul class="skoc">' + ls.map(function (l) {
         var c = checks[l] || {};
-        return '<li class="' + (c.ordered ? "dn" : "") + '"><span class="t">' + esc(l) + "<small>" +
+        return '<li class="' + (c.ordered ? "dn" : c.ok ? "ok" : "wait") + '"><span class="ic">' + (c.ordered ? "✅" : c.ok ? "☑" : "🛒") + '</span><span class="t">' + esc(l) + "<small>" +
           (c.from ? c.from.slice(5) + "부터 · " : "") +
           (c.ok ? "확인 " + esc(c.by) + " " + esc(c.at) : "") +
           (c.ordered ? " · 주문 완료 " + esc(c.oBy) + " " + esc(c.oAt) : "") + "</small></span>" +
