@@ -75,8 +75,9 @@
   // ── 업무 편집 — 직원이 할 일의 문구 · 순서 · 색 · 위치를 바꾸거나 추가 · 삭제한다.
   //    바뀐 내용은 cafesui.todo.custom 에 쌓이고(서버 동기화), 원래 HTML은 그대로 둔 채 화면에서 덮어쓴다.
   var TC_KEY = "cafesui.todo.custom";
-  var COLORS = ["", "imp", "big", "blue", "green", "yellow", "orange", "purple"];
-  var COLOR_LABEL = { "": "기본", imp: "연한 강조", big: "빨강", blue: "파랑", green: "초록", yellow: "노랑", orange: "주황", purple: "보라" };
+  // 색은 다섯 가지로 통일(10/14) — 예전 색(imp · orange · purple)은 저장된 그대로 두고 화면에서만 같은 단계로 보인다
+  var COLORS = ["", "big", "blue", "green", "yellow"];
+  var COLOR_LABEL = { "": "⚪ 기본", imp: "⚪ 기본", big: "🔴 꼭", blue: "🔵 확인", green: "🟢 재고·발주", yellow: "🟡 요일", orange: "🔴 꼭", purple: "🔵 확인" };
   function tcRead() { var o = read(TC_KEY); o.items = o.items || {}; o.order = o.order || {}; o.added = o.added || {}; return o; }
   function tcWrite(o) { o.t = new Date().toISOString(); write(TC_KEY, o); }
   function panelOf(el) { var p = el.closest(".spanel"); return p ? p.id : ""; }
@@ -381,7 +382,17 @@
     function nim(n) { return n === "사장님" ? n : n + "님"; }
     var SH = [["td0", "오픈"], ["td1", "미들"], ["td2", "마감"]];
     var lastText = "";
+    // 빙수 시즌 묶음(data-season="4-9") — 보는 날짜의 달이 시즌 밖이면 접고 체크 · 「안 한 것」에서 뺀다
+    function seasonPaint() {
+      var mo = ymdD(viewKey()).getMonth() + 1;
+      document.querySelectorAll("#tp2 .tblock[data-season]").forEach(function (b) {
+        var r = String(b.dataset.season).split("-"), a = +r[0], z = +r[1];
+        var on = a <= z ? (mo >= a && mo <= z) : (mo >= a || mo <= z);
+        b.classList.toggle("offseason", !on);
+      });
+    }
     function draw() {
+      seasonPaint();
       var html = "", text = ["[오늘 할 일 결과] " + viewKey() + " (" + WDK[ymdD(viewKey()).getDay()] + ")"];
       SH.forEach(function (s) {
         var panel = document.getElementById(s[0]); if (!panel) return;
@@ -389,6 +400,7 @@
         var groups = [], doneAll = [], tot = 0, doneN = 0;
         Array.prototype.forEach.call(panel.querySelectorAll(".tblock, .onlbox"), function (blk) {
           var head = blk.querySelector(".tbhead, .onlh b"); var gname = head ? (head.childNodes[0] ? head.childNodes[0].textContent : head.textContent).trim() : "";
+          if (blk.classList.contains("offseason")) return;   // 시즌 아닌 달은 아예 안 셈
           var un = [], opt = blk.classList.contains("tbopt");   // 눈에 보일 때 챙기기 — 한 것만 남기고 「안 한 것」 · 비율에는 안 넣음
           Array.prototype.forEach.call(blk.querySelectorAll(".titem .box"), function (b) {
             var lab = b.closest(".titem"); if (!lab || lab.hidden) return;

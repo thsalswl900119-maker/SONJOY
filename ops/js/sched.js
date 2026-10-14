@@ -250,7 +250,7 @@
       return '<button type="button" class="btab" data-y="' + y + '" aria-selected="' +
         (y === TY) + '">' + y + '년<small>' +
         (y === TY ? "올해" : y === TY - 1 ? "지난해" : y === TY + 1 ? "내년"
-          : y < TY ? "지난" : "앞으로") + "</small></button>";
+          : y < TY ? "지난" : "앞으로") + "</small></button>";   // 글자는 CSS(#tp1 .btab)에서 크게 · 「2026년 · 올해」
     }).join("") + "</nav>" +
     YEARS.map(function (y) {
       return '<div class="yearbox" id="yb' + y + '"' + (y === TY ? "" : " hidden") +
@@ -267,8 +267,9 @@
       var m = monthPlan(y, mo);
       var key = y + "-" + String(mo).padStart(2, "0");
       var isPlan = (y === PLANY && mo === PLANM);
-      strip += '<button type="button" class="mtab" data-m="cm' + key +
-        '" aria-selected="false">' + mo + "월" +
+      var isNow = (y === TY && mo === TM);   // 이번 달은 크게 · 다른 달은 작은 단추로
+      strip += '<button type="button" class="mtab' + (isNow ? " now" : "") + (isPlan ? " plan" : "") + '" data-m="cm' + key +
+        '" aria-selected="false">' + (isNow ? '<i class="mnow">이번 달</i>' : "") + mo + "월" +
         (isPlan ? '<i class="mdot">짜는 중</i>' : "") + "</button>";
       panels += monthPanel(m);
     }
