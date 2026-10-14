@@ -113,6 +113,7 @@
     var msg = function (t) { btn.textContent = t; setTimeout(function () { btn.textContent = LBL; }, 2500); };
     cv.toBlob(function (blob) {
       if (!blob) { msg("그림을 못 만들었습니다"); return; }
+      var tg = window.__CS_TG && window.__CS_TG.take(); if (tg) { tg(blob, name); return; }   // 📨 텔레그램 단추가 부른 것
       var file = null; try { file = new File([blob], name, { type: "image/png" }); } catch (e) {}
       var dl = function () { var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); setTimeout(function () { a.remove(); }, 2000); msg("그림 파일로 저장됨 · 텔레그램에 올리세요"); };
       var touch = window.matchMedia && window.matchMedia("(pointer:coarse)").matches;

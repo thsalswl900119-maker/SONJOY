@@ -91,7 +91,7 @@
     h += '<div class="bnrf"><div class="bnrfh">📝 ' + esc(dayLabel(day)) + " 하루 정리 — " + QS[day][1] + "</div>" +
       (who ? '<textarea class="bnin bnrfin" rows="4" data-rf="d' + day + '" placeholder="오늘 본 것 중 좋았던 것 · 이유 · 카페스이에 적용할 것">' + esc(myrf.t || "") + "</textarea>" + (myrf.at ? '<small class="bnrfat">저장 ' + esc(myrf.at) + "</small>" : "") : "") +
       Object.keys(rf).filter(function (w) { return w !== who && rf[w] && rf[w].t; }).map(function (w) { return '<div class="bnnote ' + col(w) + '"><b>' + esc(nim(w)) + "</b><p>" + esc(rf[w].t).replace(/\n/g, "<br>") + "</p><small>" + esc(rf[w].at || "") + "</small></div>"; }).join("") + "</div>";
-    h += '<div class="bncopy"><button type="button" class="skbtn" id="bnCopy">📋 ' + day + '일차 정리 복사 (텔레그램 공유)</button><span id="bnCopyMsg"></span></div>';
+    h += '<div class="bncopy"><button type="button" class="skbtn" id="bnCopy">📋 ' + day + '일차 정리 복사 (텔레그램 공유)</button><button type="button" class="skbtn tgbtn" data-tg="bn">📨 텔레그램으로 보내기</button><span id="bnCopyMsg"></span></div>';
     root.innerHTML = h;
     renderSum(o);
   }
@@ -105,6 +105,7 @@
     }).join("") + '</div><button type="button" class="skbtn prim" id="bnGo">🔎 벤치마킹 탭에서 평가 · 메모하기</button>';
     var go = document.getElementById("bnGo"); if (go) go.onclick = function () { var t = document.querySelector('.tab[data-p="tp17"]'); if (t) { t.click(); window.scrollTo(0, 0); } };
   }
+  window.__CS_BN_TEXT = function () { return copyText(load()); };   // 📨 텔레그램 (tg.js)
   function copyText(o) {
     var L = ["[카페스이 워크샵 벤치마킹] " + dayLabel(day), "❓ " + QS[day][1], ""];
     rankOf(o, day).forEach(function (x, i) { L.push((i + 1) + ". " + o.st[x.id].n + " — 평균 " + x.a.v.toFixed(1) + "/70 (" + x.a.n + "명)"); });

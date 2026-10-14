@@ -431,6 +431,7 @@
       lastText = text.join(String.fromCharCode(10));
     }
     window.__CS_TD_DRAW = draw;
+    window.__CS_TD_TEXT = function () { draw(); return lastText; };   // 📨 텔레그램 (tg.js)
     window.__CS_TODO_REPORT = draw;
     draw();
     document.addEventListener("click", function (e) { if (e.target.closest("#tp2 .box, #tp2 .tedbar, #tp2 .tedadd, .stab.prog")) setTimeout(draw, 50); }, true);
@@ -4452,6 +4453,7 @@
         pm.textContent = r.filled + "칸을 채웠습니다" + (r.skipped ? " · " + r.skipped + "칸은 이미 적혀 있어 그대로 두었습니다" : "") + " · 확인 후 「일지 저장」을 눌러 주세요";
       });
     })();
+    window.__CS_LOG_TEXT = function () { return report(); };   // 📨 텔레그램 (tg.js)
     copyEl.addEventListener("click", function () {
       var text = report();
       if (!text) { msgEl.textContent = "아직 쓴 내용이 없습니다"; return; }

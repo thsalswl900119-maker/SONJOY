@@ -449,12 +449,8 @@
         wk.c += Number(o.creamUse) || 0;
       }
       function sorted(map) { return Object.keys(map).map(function (k) { var p = k.split("|"); return { n: p[0], u: p[1], q: Math.round(map[k] * 10) / 10 }; }).sort(function (a, b) { return (!a.n) - (!b.n) || b.q - a.q; }); }
-      var ms = sorted(mon), max = {};
-      ms.forEach(function (x) { max[x.u] = Math.max(max[x.u] || 0, x.q); });
-      var h = '<div class="skfsum"><h5>🍓 ' + m + "월 과일별 사용 <small>시즌마다 얼마나 썼는지 · 많이 쓴 순서</small></h5>" +
-        (ms.length ? ms.map(function (x) {
-          return '<div class="skfbar u-' + x.u + (x.n ? "" : " nn") + '"><span class="nm">' + (x.n ? esc(x.n) : "이름 없음 (예전 칸)") + '</span><span class="bar"><i style="width:' + Math.max(4, Math.round(x.q / max[x.u] * 100)) + '%"></i></span><b>' + x.q + x.u + "</b></div>";
-        }).join("") : '<p class="none">아직 이 달에 적은 과일 사용이 없습니다 · 위 「과일 사용」에 과일 이름과 수량을 적으면 여기 모입니다</p>') + "</div>";
+      // 한 달 과일별 막대(대시보드)는 뺐다(10/14 사장님 「주 사용량만」) — 주마다 과일별 딱지만
+      var h = "";
       h += weeks.map(function (w, i) {
         var on = w.mon === curMon, fs = sorted(w.f);
         return '<div class="skwk2' + (on ? " on" : "") + '"><div class="wh"><b>' + (i + 1) + "주</b><small>" + w.from.slice(5).replace("-", "/") + "~" + w.to.slice(5).replace("-", "/") + '</small><span class="dy">' + (w.days ? w.days + "일 기록" : "기록 없음") + '</span><span class="cr">생크림 ' + w.c + "통</span></div>" +
@@ -551,6 +547,7 @@
         stock[DESIGN_KEY] ? "■ 디자인 재료: " + String(stock[DESIGN_KEY]).replace(/\n+/g, " / ") : ""].filter(function (x) { return x !== ""; }).join(NL);
       return t;
     }
+    window.__CS_SK_TEXT = function () { return cur ? buildText() : ""; };
     function sendText() {
       saveNow();
       var t = buildText();
@@ -604,6 +601,7 @@
       statusEl.textContent = "이미지 만드는 중…";
       cv.toBlob(function (blob) {
         if (!blob) { statusEl.textContent = "이미지를 만들지 못했습니다"; return; }
+        var tg = window.__CS_TG && window.__CS_TG.take(); if (tg) { statusEl.textContent = "텔레그램으로 보내는 중…"; tg(blob, name); return; }   // 📨 텔레그램 단추가 부른 것
         var file = null; try { file = new File([blob], name, { type: "image/png" }); } catch (e) {}
         var done = function () { statusEl.textContent = "이미지로 저장했습니다 · 텔레그램에 올리세요"; };
         var dl = function () { var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); setTimeout(function () { a.remove(); }, 2000); done(); };
