@@ -912,8 +912,8 @@
     }, true);
     function render() {
       var y = +ym().slice(0, 4), m = +ym().slice(5, 7), all = load(), t = today();
-      var first = new Date(y, m - 1, 1), lead = (first.getDay() + 6) % 7, nd = new Date(y, m, 0).getDate();
-      var h = WD.map(function (w, k) { return '<div class="mcw' + (k >= 5 ? " s" : "") + '">' + w + "</div>"; }).join("");
+      var first = new Date(y, m - 1, 1), lead = first.getDay(), nd = new Date(y, m, 0).getDate();   // 일요일부터(10/15)
+      var h = ["일", "월", "화", "수", "목", "금", "토"].map(function (w, k) { return '<div class="mcw' + (k === 0 || k === 6 ? " s" : "") + '">' + w + "</div>"; }).join("");
       for (var i = 0; i < lead; i++) h += '<div class="mcpad"></div>';
       for (var d = 1; d <= nd; d++) {
         var date = ym() + "-" + pad(d), wd = (new Date(y, m - 1, d).getDay() + 6) % 7;

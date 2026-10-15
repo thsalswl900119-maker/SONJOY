@@ -57,11 +57,11 @@
         put(HYEBIN, (wi % 2 === 0) ? "close" : "open");
         if (hOff) put(MINJI, "dough"); else put(HAESUN, "middle");
       }
-      sh.sort(function (a, b) { return RORD[a.role] - RORD[b.role]; });
+      sh.sort(function (a, b) { return ((a.who === MINJI) - (b.who === MINJI)) || (RORD[a.role] - RORD[b.role]); });   // 오픈 → 미들 → 마감 → 사장님
       cell.shifts = sh; cell.off = off;
       days.push(cell);
     }
-    return { year: Y, month: M, firstWd: (first.getDay() + 6) % 7, days: days };
+    return { year: Y, month: M, firstWd: first.getDay(), days: days };   // 달력은 일요일부터(10/15 사장님)
   }
 
   // 퇴근 · 내 화면에 쓸 근무 자료 — 지난달부터 1년치 (화면은 안 그린다)
@@ -196,9 +196,8 @@
     });
     return out;
   }
-  var WDHEAD = '<div class="wd">월</div><div class="wd">화</div><div class="wd">수</div>' +
-    '<div class="wd">목</div><div class="wd">금</div>' +
-    '<div class="wd s">토</div><div class="wd s">일</div>';
+  var WDHEAD = '<div class="wd s">일</div><div class="wd">월</div><div class="wd">화</div><div class="wd">수</div>' +
+    '<div class="wd">목</div><div class="wd">금</div><div class="wd s">토</div>';
 
   var TY = now0.getFullYear(), TM = now0.getMonth() + 1;
   var nextD = new Date(TY, TM, 1);                 // 다음 달 = 매니저가 짜는 달

@@ -1673,7 +1673,7 @@ textarea.lgin.mi[data-k="lf154"]{min-height:220px;height:220px;font-size:14.5px;
 
 /* 근무표 한 화면에 한 달 — 칸을 촘촘하게 · 일요일(정기휴무)은 좁게 */
 @media (min-width:761px){
-  #tp1 .cal{grid-template-columns:repeat(6,minmax(0,1fr)) minmax(0,.45fr)}
+  #tp1 .cal{grid-template-columns:minmax(0,.45fr) repeat(6,minmax(0,1fr))}   /* 일요일(정기휴무)이 첫 칸 — 좁게 */
   #tp1 .cell{min-height:0;padding:4px 5px 5px;gap:1px}
   #tp1 .pad{min-height:0}
   #tp1 .wd{padding:4px 0}
@@ -2827,7 +2827,7 @@ footer{margin-top:56px;padding-top:16px;border-top:1px solid var(--rule2);
   .cell{min-height:0}
   .item{grid-template-columns:1fr;gap:2px}
   .iact{grid-column:1}
-  .ycal{grid-template-columns:repeat(6,1fr)}
+  .ycal{grid-template-columns:repeat(7,1fr)}
   h1{font-size:26px}
 }
 
@@ -3340,7 +3340,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-215</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-216</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -4012,16 +4012,16 @@ input,select,textarea{border-radius:var(--r3)!important}
 </footer>
 </div>
 
-<script src="js/chrome.js?v=v0924-215"></script>
+<script src="js/chrome.js?v=v0924-216"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/drag.js?v=v0924-215"></script>
-<script src="js/sync.js?v=v0924-215"></script>
-<script src="js/holidays.js?v=v0924-215"></script>
-<script src="js/sched.js?v=v0924-215"></script>
-<script src="js/app.js?v=v0924-215"></script>
+<script src="js/drag.js?v=v0924-216"></script>
+<script src="js/sync.js?v=v0924-216"></script>
+<script src="js/holidays.js?v=v0924-216"></script>
+<script src="js/sched.js?v=v0924-216"></script>
+<script src="js/app.js?v=v0924-216"></script>
 
 <style>
 /* 재고 · 발주 */
@@ -4580,8 +4580,16 @@ nav.stabs .stab.prog[aria-selected="true"]{color:var(--open)!important;border-bo
 /* 휴무 신청 고른 날 — 테두리 없이 작은 딱지만(10/15 사장님 「휴무 신청해도 테두리선 안 되게」) */
 #tp1 .cal .cell.picked{box-shadow:none!important;outline:none!important;border-color:#EEE7D9!important}
 #tp1 .cal .cell .pickmark{display:inline-block;align-self:flex-start;font-size:12.5px;font-weight:800;color:#8E1B14;background:#FCE6E1;border-radius:999px;padding:2px 8px;margin:2px 0;border:0}
+/* 🏕 전체 워크샵 날 — 한 상자로 통일(10/15) */
+#tp1 .cal .cell.wsday{background:#F3EDE2}
+#tp1 .wsall{display:flex;flex-direction:column;align-items:center;gap:2px;margin:6px 0 0;padding:12px 8px;border-radius:10px;background:var(--nv,#4A3B2C);color:#FFF6E6;text-align:center}
+#tp1 .wsall b{font-size:16px;font-weight:900}
+#tp1 .wsall span{font-size:13px;font-weight:800;background:#B3261E;color:#fff;border-radius:999px;padding:1px 10px}
+#tp1 .wsall small{font-size:12.5px;color:#E8D9C0;line-height:1.5;margin-top:2px}
+#tp1 .wsallo{margin-top:6px;font-size:12.5px;color:var(--ink2);text-align:center}
+#tp1 .msub .planning.done{color:#2E7D32}
 </style>
-<script src="js/stock.js?v=v0924-215"></script>
+<script src="js/stock.js?v=v0924-216"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -4647,11 +4655,11 @@ nav.stabs .stab.prog[aria-selected="true"]{color:var(--open)!important;border-bo
   window.addEventListener("cs:remote", function () { setTimeout(mark, 400); });
 })();
 </script>
-<script src="js/presence.js?v=v0924-215"></script>
-<script src="js/weekrep.js?v=v0924-215"></script>
-<script src="js/recipe.js?v=v0924-215"></script>
-<script src="js/bench.js?v=v0924-215"></script>
-<script src="js/monthlog.js?v=v0924-215"></script>
-<script src="js/xmas.js?v=v0924-215"></script>
-<script src="js/tg.js?v=v0924-215"></script>
+<script src="js/presence.js?v=v0924-216"></script>
+<script src="js/weekrep.js?v=v0924-216"></script>
+<script src="js/recipe.js?v=v0924-216"></script>
+<script src="js/bench.js?v=v0924-216"></script>
+<script src="js/monthlog.js?v=v0924-216"></script>
+<script src="js/xmas.js?v=v0924-216"></script>
+<script src="js/tg.js?v=v0924-216"></script>
 </body></html>

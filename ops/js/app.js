@@ -1231,13 +1231,21 @@
           var t = (TIMES[n] || {})[r] || [null, null];
           rows.push({ n: n, r: r, s: t[0], e: t[1] });
         });
+        // 순서: 오픈 → 미들 → 마감 → 사장님(맨 아래) — 10/15 사장님
         rows.sort(function (x, y) {
-          return (RORDER[x.r] || 9) - (RORDER[y.r] || 9);
+          return ((x.n === "사장님") - (y.n === "사장님")) || ((RORDER[x.r] != null ? RORDER[x.r] : 9) - (RORDER[y.r] != null ? RORDER[y.r] : 9));
         });
         var hol = c.querySelector(".hol"), bz = c.querySelector(".bizt");
         // 워크샵 가는 날은 가게 영업을 쉰다(10/15 사장님) — 공지 「워크샵」이거나 다 같이 워크샵이면 「영업 쉼」
         var wsDay = day["공지"] === "워크샵" || (NAMES.every(function (n) { return !day[n] || day[n] === "워크샵" || /휴무|휴가/.test(day[n]); }) && NAMES.some(function (n) { return day[n] === "워크샵"; }));
         c.classList.toggle("wsday", !!wsDay);
+        if (wsDay) {   // 사람별 줄 대신 한 상자로 통일(10/15 사장님 「전체 워크샵이라고 · 전체 다 통일」)
+          var goers = NAMES.filter(function (n) { return day[n] === "워크샵"; }).map(function (n) { return n === "사장님" ? n : n + "님"; });
+          var stay = offs.length ? '<div class="wsallo">' + offs.map(function (o) { return esc(o.r) + " " + esc(o.n === "사장님" ? o.n : o.n + "님"); }).join(" · ") + "</div>" : "";
+          c.innerHTML = '<div class="dnum">' + c.querySelector(".dnum").textContent + "</div>" + (hol ? hol.outerHTML : "") +
+            '<div class="wsall"><b>🏕 전체 워크샵</b><span>영업 쉼</span><small>' + esc(goers.join(" · ")) + "</small></div>" + stay;
+          return;
+        }
         var html = '<div class="dnum">' + c.querySelector(".dnum").textContent + "</div>" +
           (hol ? hol.outerHTML : "") + (wsDay ? '<div class="bizt wsoff">🏕 워크샵 · 영업 쉼</div>' : (bz ? bz.outerHTML : "")) +
           (day["공지"] ? '<div class="allnote">📣 ' + esc(day["공지"]) + "</div>" : "") +
@@ -1257,6 +1265,15 @@
           }).join("");
         c.innerHTML = html;
       });
+      if (window.__CS_REQMARK && window.__CS_REQMARK[ym]) window.__CS_REQMARK[ym]();
+      // 짜는 달 머리 글 — 저장된 날 수로(10/15 사장님 「이것도 바뀌고」: 다 짰는데 「아직 안 짠 달」로 나오던 것)
+      var pl = read.closest(".mpanel"), pb = pl && pl.querySelector(".msub .planning");
+      if (pb && pl.classList.contains("plan")) {
+        var bizN = read.querySelectorAll(".cell[data-d]:not(.closed)").length, sv = 0;
+        read.querySelectorAll(".cell[data-d]:not(.closed)").forEach(function (c) { if (saved[String(c.dataset.d).replace("/", "-")]) sv++; });
+        pb.textContent = !sv ? "아직 안 짠 달 — 매니저가 짭니다" : sv >= bizN ? "✅ 다 짠 달 · 날짜를 누르면 오른쪽에서 고칩니다" : "짜는 중 · " + sv + " / " + bizN + "일 짬";
+        pb.classList.toggle("done", sv >= bizN && sv > 0);
+      }
       paintBoss();
     }
 
@@ -1578,8 +1595,9 @@
         ap.querySelector(".dpmsg").textContent = "저장했습니다 · 달력에 반영됐습니다";
       });
       read.addEventListener("click", function (e) {
-        var c = e.target.closest(".cell"); if (!c || c.classList.contains("closed") || c.classList.contains("pickable")) return;
-        if (panel.querySelector(".reqbar .rname[aria-pressed=\"true\"]")) return;   // 이 달 휴무 신청 고르는 중
+        var c = e.target.closest(".cell"); if (!c || c.classList.contains("closed")) return;
+        var picking = c.classList.contains("pickable");   // 휴무 신청 고르는 중이면 신청은 그쪽이 받고, 오른쪽 칸도 그 날짜로(컴퓨터)
+        if (picking && window.innerWidth < 1100) return;
         var p = String(c.dataset.d || "").split("/"); if (p.length < 2) return;
         show(p[0] + "-" + p[1]);
         if (window.innerWidth < 1100) ap.scrollIntoView({ block: "nearest", behavior: "smooth" });
@@ -1811,7 +1829,7 @@
         }
       } catch (e) {}
       // 근무표처럼 달력 모양 (월~일) — 칸마다 직원별 퇴근 시각
-      var cells = [], firstWd = (new Date(y, m - 1, 1).getDay() + 6) % 7;
+      var cells = [], firstWd = new Date(y, m - 1, 1).getDay();   // 일요일부터(10/15)
       for (var b0 = 0; b0 < firstWd; b0++) cells.push('<td class="atc blank"></td>');
       for (var dd = 1; dd <= last; dd++) {
         var d = ym + "-" + String(dd).padStart(2, "0");
@@ -1852,7 +1870,7 @@
                (tt.late ? ' <i class="late">늦게 남음 +' + tt.late + "분</i>" : "") +
                (tt.work - tt.out > 0 && ym <= today.slice(0, 7) ? ' <span class="miss">미기록 ' + (tt.work - tt.out) + "일</span>" : "");
       }).join(' <span class="sep">·</span> ') + "</td></tr>";
-      tblEl.innerHTML = "<thead><tr>" + ["월", "화", "수", "목", "금", "토", "일"].map(function (w, i) { return "<th" + (i === 6 ? ' class="sun"' : "") + ">" + w + "</th>"; }).join("") + "</tr></thead>" +
+      tblEl.innerHTML = "<thead><tr>" + ["일", "월", "화", "수", "목", "금", "토"].map(function (w, i) { return "<th" + (i === 0 ? ' class="sun"' : "") + ">" + w + "</th>"; }).join("") + "</tr></thead>" +
         "<tbody>" + body + "</tbody><tfoot>" + foot + "</tfoot>";
     }
     function esc(v) { return String(v == null ? "" : v).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
@@ -2594,7 +2612,7 @@
     var HOL = {"1":"설날","2":"설날","9":"추석","10":"추석"};
     var CATS = {"bingsu":["c-bing","빙수"],"fruit":["c-fruit","과일"],"holiday":["c-hol","명절"],"giftset":["c-gift","선물세트"],"event":["c-ev","기념일"],"order":["c-ord","발주·관리"],"menu":["c-menu","메뉴"],"memo":["c-memo","메모·예약"],"log":["c-log","마감 일지"]};
     var ORDER = ["bingsu", "fruit", "menu", "event", "giftset", "order", "holiday"];
-    var WDN = ["월", "화", "수", "목", "금", "토", "일"];
+    var WDN = ["일", "월", "화", "수", "목", "금", "토"];
     var KEY = "cafesui.annual";
     var st = { edits: {}, adds: [] };
     try {
@@ -2726,7 +2744,7 @@
       items.forEach(function (e) { (byDay[e.d] || (byDay[e.d] = [])).push(e); });
 
       var first = new Date(yr, m - 1, 1);
-      var lead = (first.getDay() + 6) % 7;          // 월요일 시작
+      var lead = first.getDay();          // 일요일 시작(10/15 사장님)
       var ndays = new Date(yr, m, 0).getDate();
       var cells = "";
       for (var i = 0; i < lead; i++) cells += '<div class="ycpad"></div>';
@@ -2759,7 +2777,7 @@
           (m === TM ? " · <b>이번 달</b>" : "") + "</div>" +
         '<div class="ycal">' +
           WDN.map(function (x, k) {
-            return '<div class="ycw' + (k >= 5 ? " s" : "") + '">' + x + "</div>";
+            return '<div class="ycw' + (k === 0 || k === 6 ? " s" : "") + '">' + x + "</div>";
           }).join("") + cells + "</div>" +
         (HOL[m] ? '<div class="ycnote hol"><b>' + HOL[m] +
           "</b>음력이라 해마다 날짜가 다릅니다. 그 해 날짜를 확인해서 표시하세요.</div>" : "") +
@@ -4648,155 +4666,123 @@
   })();
 
   // 휴무 신청 — 이름 고르고 날짜 눌러서 신청 내용 만들기
+  // 휴무 신청 — 사람마다 따로 저장(10/15 · cafesui.offreq.<달> = { 이름: { days: ["11/2"], why: { "11/2": "가족행사" }, at } })
+  //   예전 cafesui.off.<달>은 한 사람 몫만 담겨 다른 사람이 이름을 누르면 같이 쓰다 지워졌다(혜빈님 11/2 사고) — 예전 칸은 읽기만(빈 칸 채우기로 옮김)
+  //   「고르는 중」(act)은 이 화면에서만 · 고르는 중엔 칸 어디를 눌러도 신청/취소 · 사유가 적힌 날을 취소할 땐 한 번 묻는다
+  //   달력에는 테두리 없이 「🙋 혜빈 휴무 신청」 작은 딱지(누구 것이든 늘 보임 — 근무표를 다시 그려도 다시 붙임)
   function bindReq(root) {
   root.querySelectorAll(".reqbar").forEach(function (bar) {
     var month = bar.dataset.m;
     var panel = bar.closest(".mpanel");
-    var cells = Array.prototype.slice.call(
-      panel.querySelectorAll(".cell:not(.closed)"));
     var names = Array.prototype.slice.call(bar.querySelectorAll(".rname"));
     var pickEl = bar.querySelector(".reqpick");
     var copyBtn = bar.querySelector(".reqcopy");
     var clearBtn = bar.querySelector(".reqclear");
     var msgEl = bar.querySelector(".reqmsg");
-    var KEY = "cafesui.off." + month;
-    var who = null, picked = [], reasons = {};
-    // 고르는 중(act)은 이 화면에서만 — 예전엔 이름이 저장돼 모든 기기에서 계속 「고르는 중」이라, 날짜를 누르면
-    // 휴무 신청 날(빨간 테두리)이 되고 오른쪽 「그날 근무 조정」 칸이 안 열렸다(10/15 사장님 「왜 선이 그어졌는지」)
-    var act = false;
-
-    try {
-      var raw = localStorage.getItem(KEY);
-      if (raw) {
-        var p = JSON.parse(raw);
-        who = p.who || null; picked = p.days || []; reasons = p.why || {};
-      }
-    } catch (e) {}
-
-    function persist() {
-      try { localStorage.setItem(KEY,
-        JSON.stringify({ who: who, days: picked, why: reasons })); }
-      catch (e) {}
-    }
-    function label(d) {
-      var c = cells.filter(function (x) { return x.dataset.d === d; })[0];
-      return d + (c ? "(" + c.dataset.wd + ")" : "");
-    }
-    function render() {
-      names.forEach(function (n) {
-        n.setAttribute("aria-pressed", String(act && n.dataset.n === who));
-      });
-      cells.forEach(function (c) {
-        c.classList.toggle("pickable", act && !!who);
-        var on = act && picked.indexOf(c.dataset.d) >= 0;   // 빨간 테두리는 고르는 중에만
-        c.classList.toggle("picked", on);
-        var mark = c.querySelector(".pickmark");
-        if (on && !mark) {
-          mark = document.createElement("span");
-          mark.className = "pickmark";
-          mark.textContent = "휴무 신청";
-        }
-        if (on && mark) {
-          mark.textContent = reasons[c.dataset.d]
-            ? "휴무 · " + reasons[c.dataset.d] : "휴무 신청";
-          c.insertBefore(mark, c.firstChild.nextSibling);
-        } else if (!on && mark) { mark.remove(); }
-      });
-      picked.sort(function (a, b) {
-        return parseInt(a.split("/")[1], 10) - parseInt(b.split("/")[1], 10);
-      });
-      if (!act && who && picked.length) {
-        pickEl.textContent = who + (who === "사장님" ? "" : "님") + " 휴무 신청 " + picked.length + "일 — " + picked.map(function (d) { return label(d) + (reasons[d] ? " (" + reasons[d] + ")" : ""); }).join(", ") + " · 고치려면 이름을 누르세요";
-        pickEl.className = "reqpick has";
-      } else if (!act || !who) {
-        pickEl.textContent = "이름을 누르면 달력에서 쉬고 싶은 날을 고를 수 있어요 (고르는 동안은 날짜를 눌러도 근무 조정 칸이 안 열림)";
-        pickEl.className = "reqpick";
-      } else if (!picked.length) {
-        pickEl.textContent = who + (who === "사장님" ? "" : "님") + " — 달력에서 쉬고 싶은 날을 누르세요";
-        pickEl.className = "reqpick";
-      } else {
-        pickEl.textContent = who + (who === "사장님" ? "" : "님") + " · " + picked.length + "일 — " +
-          picked.map(function (d) {
-            return label(d) + (reasons[d] ? " (" + reasons[d] + ")" : "");
-          }).join(", ");
-        pickEl.className = "reqpick has";
-      }
-      copyBtn.disabled = !(who && picked.length);
-      clearBtn.disabled = !picked.length;
-      drawWhy();
-    }
-
-    // 고른 날마다 사유를 적는 칸
     var whysEl = bar.querySelector(".reqwhys");
-    function drawWhy() {
-      if (!picked.length) { whysEl.innerHTML = ""; return; }
-      whysEl.innerHTML = picked.map(function (d) {
-        return '<label class="reqrow"><span>' + label(d) + '</span>' +
-          '<input type="text" class="reqwhy" data-d="' + d +
-          '" placeholder="사유 (예: 병원 · 가족 행사)" value="' +
-          (reasons[d] || "").replace(/"/g, "&quot;") + '"></label>';
-      }).join("");
-      whysEl.querySelectorAll(".reqwhy").forEach(function (el) {
-        el.addEventListener("input", function () {
-          var v = el.value.trim();
-          if (v) reasons[el.dataset.d] = v; else delete reasons[el.dataset.d];
-          persist();
-          var c = cells.filter(function (x) { return x.dataset.d === el.dataset.d; })[0];
-          var mk = c && c.querySelector(".pickmark");
-          if (mk) mk.textContent = v ? "휴무 · " + v : "휴무 신청";
-          pickEl.textContent = who + (who === "사장님" ? "" : "님") + " · " + picked.length + "일 — " +
-            picked.map(function (d) {
-              return label(d) + (reasons[d] ? " (" + reasons[d] + ")" : "");
-            }).join(", ");
+    var KEY = "cafesui.offreq." + month, OLD = "cafesui.off." + month;
+    var who = null, act = false;
+    function readCells() { var rc = document.getElementById("rc" + month); return rc ? Array.prototype.slice.call(rc.querySelectorAll(".cell:not(.closed)")) : []; }
+    function rd() { try { return JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { return {}; } }
+    function wr(o) { try { localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) {} }
+    // 예전 칸에 남은 신청은 새 칸의 빈 자리에만 옮긴다
+    (function () {
+      try {
+        var old = JSON.parse(localStorage.getItem(OLD) || "null"); if (!old || !old.who || !(old.days || []).length) return;
+        var o = rd(), r = o[old.who] || (o[old.who] = { days: [], why: {} }), ch = false;
+        old.days.forEach(function (d) { if (r.days.indexOf(d) < 0) { r.days.push(d); ch = true; } if ((old.why || {})[d] && !(r.why || {})[d]) { (r.why = r.why || {})[d] = old.why[d]; ch = true; } });
+        if (ch) wr(o);
+      } catch (e) {}
+    })();
+    function mine() { var o = rd(), r = o[who] || { days: [], why: {} }; r.days = r.days || []; r.why = r.why || {}; return r; }
+    function save(r) { var o = rd(); r.at = new Date().toISOString(); if (r.days.length || Object.keys(r.why).length) o[who] = r; else delete o[who]; wr(o); }
+    function nim(n) { return n === "사장님" ? n : n + "님"; }
+    function wdOf(d) { var c = readCells().filter(function (x) { return x.dataset.d === d; })[0]; return c ? c.dataset.wd : ""; }
+    function label(d) { var w = wdOf(d); return d + (w ? "(" + w + ")" : ""); }
+    function sortD(a) { return a.slice().sort(function (x, y) { return parseInt(x.split("/")[1], 10) - parseInt(y.split("/")[1], 10); }); }
+    function marks() {
+      var o = rd(), by = {};
+      Object.keys(o).forEach(function (n) { (o[n].days || []).forEach(function (d) { (by[d] = by[d] || []).push({ n: n, w: (o[n].why || {})[d] || "" }); }); });
+      readCells().forEach(function (c) {
+        c.classList.toggle("pickable", act && !!who);
+        c.classList.toggle("picked", !!(act && who && by[c.dataset.d] && by[c.dataset.d].some(function (x) { return x.n === who; })));
+        Array.prototype.forEach.call(c.querySelectorAll(".pickmark"), function (m) { m.remove(); });
+        (by[c.dataset.d] || []).forEach(function (x) {
+          var m = document.createElement("span"); m.className = "pickmark";
+          m.textContent = "🙋 " + (x.n === "사장님" ? "사장님" : x.n.slice(1)) + " 휴무 신청" + (x.w ? " · " + x.w : "");
+          var dn = c.querySelector(".dnum"); c.insertBefore(m, dn ? dn.nextSibling : c.firstChild);
         });
       });
     }
-
+    (window.__CS_REQMARK = window.__CS_REQMARK || {})[month] = function () { marks(); };
+    function listAll() {
+      var o = rd(); return Object.keys(o).filter(function (n) { return (o[n].days || []).length; }).map(function (n) {
+        return nim(n) + " " + sortD(o[n].days).map(function (d) { return label(d) + ((o[n].why || {})[d] ? " " + o[n].why[d] : ""); }).join(", ");
+      });
+    }
+    function render() {
+      names.forEach(function (n) { n.setAttribute("aria-pressed", String(act && n.dataset.n === who)); });
+      marks();
+      var all = listAll();
+      if (!act || !who) {
+        pickEl.textContent = (all.length ? "휴무 신청 — " + all.join(" / ") + " · " : "") + "이름을 누르면 달력에서 쉬고 싶은 날을 고를 수 있어요";
+        pickEl.className = "reqpick" + (all.length ? " has" : "");
+      } else {
+        var r = mine();
+        pickEl.textContent = nim(who) + " 고르는 중 — " + (r.days.length ? sortD(r.days).map(function (d) { return label(d) + (r.why[d] ? " (" + r.why[d] + ")" : ""); }).join(", ") : "달력에서 쉬고 싶은 날을 누르세요") + " · 다 고르면 이름을 한 번 더 누르세요";
+        pickEl.className = "reqpick has";
+      }
+      var r2 = who ? mine() : { days: [] };
+      copyBtn.disabled = !(who && r2.days.length);
+      clearBtn.disabled = !(act && who && r2.days.length);
+      drawWhy();
+    }
+    function drawWhy() {
+      if (!act || !who) { whysEl.innerHTML = ""; return; }
+      var r = mine();
+      whysEl.innerHTML = sortD(r.days).map(function (d) {
+        return '<label class="reqrow"><span>' + label(d) + '</span><input type="text" class="reqwhy" data-d="' + d + '" placeholder="사유 (예: 병원 · 가족 행사)" value="' + (r.why[d] || "").replace(/"/g, "&quot;") + '"></label>';
+      }).join("");
+      whysEl.querySelectorAll(".reqwhy").forEach(function (el) {
+        el.addEventListener("change", function () { var r = mine(), v = el.value.trim(); if (v) r.why[el.dataset.d] = v; else delete r.why[el.dataset.d]; save(r); render(); });
+      });
+    }
     names.forEach(function (n) {
       n.addEventListener("click", function () {
-        if (act && who === n.dataset.n) act = false;   // 다시 누르면 고르기 끝
-        else { who = n.dataset.n; act = true; }
-        persist(); render();
+        if (act && who === n.dataset.n) act = false; else { who = n.dataset.n; act = true; }
+        render();
       });
     });
-    cells.forEach(function (c) {
-      c.addEventListener("click", function (e) {
-        if (!act || !who) return;   // 고르는 중이 아니면 날짜 누름은 「그날 근무 조정」 칸이 받는다
-        if (e.target.closest(".prow, select")) return;   // 고르는 중엔 칸 어디를 눌러도 신청/취소
-        var d = c.dataset.d, i = picked.indexOf(d);
-        // 한 번 누르면 신청, 다시 누르면 취소. 사유는 아래 칸에 적는다.
-        if (i < 0) picked.push(d);
-        else { picked.splice(i, 1); delete reasons[d]; }
-        msgEl.textContent = "";
-        persist(); render();
-      });
+    var rcEl = document.getElementById("rc" + month);
+    if (rcEl) rcEl.addEventListener("click", function (e) {
+      if (!act || !who) return;
+      var c = e.target.closest(".cell"); if (!c || c.classList.contains("closed")) return;
+      var d = c.dataset.d, r = mine(), i = r.days.indexOf(d);
+      if (i < 0) r.days.push(d);
+      else {
+        if (r.why[d] && !confirm(nim(who) + " " + label(d) + " 휴무 신청(사유: " + r.why[d] + ")을 취소할까요?")) return;
+        r.days.splice(i, 1); delete r.why[d];
+      }
+      msgEl.textContent = ""; save(r); render();
     });
     clearBtn.addEventListener("click", function () {
-      picked = []; reasons = {}; msgEl.textContent = ""; persist(); render();
+      if (!who || !confirm(nim(who) + "의 " + month.replace("-", "년 ") + "월 휴무 신청을 모두 지울까요?")) return;
+      save({ days: [], why: {} }); msgEl.textContent = ""; render();
     });
     copyBtn.addEventListener("click", function () {
-      var NL = String.fromCharCode(10);
-      var ymTxt = String(month).replace("-", "년 ") + "월";
-      var text = "[휴무 신청] " + who + " — " + ymTxt + NL +
-        picked.map(function (d) {
-          return "· " + label(d) + (reasons[d] ? " — " + reasons[d] : "");
-        }).join(NL) +
-        NL + "(총 " + picked.length + "일)";
-      var done = function () {
-        msgEl.textContent = "복사됐습니다 — 매니저에게 붙여넣어 보내주세요";
-      };
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(done, fallback);
-      } else { fallback(); }
+      var NL = String.fromCharCode(10), r = mine();
+      var text = "[휴무 신청] " + who + " — " + String(month).replace("-", "년 ") + "월" + NL +
+        sortD(r.days).map(function (d) { return "· " + label(d) + (r.why[d] ? " — " + r.why[d] : ""); }).join(NL) + NL + "(총 " + r.days.length + "일)";
+      var done = function () { msgEl.textContent = "복사됐습니다 — 매니저에게 붙여넣어 보내주세요"; };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fallback); else fallback();
       function fallback() {
-        var ta = document.createElement("textarea");
-        ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+        var ta = document.createElement("textarea"); ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
         document.body.appendChild(ta); ta.select();
-        try { document.execCommand("copy"); done(); }
-        catch (e) { msgEl.textContent = "복사가 안 됩니다 — 위 목록을 직접 적어 보내주세요"; }
+        try { document.execCommand("copy"); done(); } catch (e) { msgEl.textContent = "복사가 안 됩니다 — 위 목록을 직접 적어 보내주세요"; }
         ta.remove();
       }
     });
+    window.addEventListener("cs:remote", function (e) { var ks = (e.detail && e.detail.keys) || []; if (ks.indexOf(KEY) >= 0 || ks.indexOf(OLD) >= 0) render(); });
     render();
   });
   }
