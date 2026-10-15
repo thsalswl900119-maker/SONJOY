@@ -1249,7 +1249,7 @@
               '<span class="rl">' + (ic ? ic + " " : "") + esc(r.r) + "</span>" +
               (r.s ? '<span class="tm">' + r.s + '<span class="dash">–</span>' + r.e +
                      "</span>"
-                   : (RCLS[r.r] === "away" ? '<span class="tm free">가게 밖</span>'
+                   : (RCLS[r.r] === "away" ? ''
                                            : '<span class="tm free">매장 상황 보며</span>')) + "</div>";
           }).join("");
         c.innerHTML = html;
@@ -1260,9 +1260,9 @@
     // 👑 오늘 사장님 — 오늘 근무만 (근무표 저장값 → 없으면 로테이션)
     var BOSS = { "전일(케이크+사무실근무)": ["🎂", "가게 · 케이크 + 사무실"], "반죽": ["🥣", "가게 · 반죽"], "반죽 근무": ["🥣", "가게 · 반죽"],
                  "오픈": ["☀️", "가게 · 오픈"], "마감": ["🌙", "가게 · 마감"], "토요일": ["🏪", "가게"],
-                 "사무실 근무": ["💼", "가게 밖 · 사무실"], "수업 준비": ["📚", "가게 밖 · 수업 준비"], "공부": ["📖", "가게 밖 · 공부"],
-                 "출강": ["🎤", "가게 밖 · 출강"], "서울출장": ["🚄", "가게 밖 · 서울 출장"], "출장": ["🧳", "가게 밖 · 출장"],
-                 "해외출장": ["✈️", "가게 밖 · 해외 출장"], "워크샵": ["🏕", "워크샵"], "휴무": ["🌿", "휴무"], "휴가": ["🏖", "휴가"], "반짝휴무": ["🌿", "반짝휴무"] };
+                 "사무실 근무": ["💼", "사무실"], "수업 준비": ["📚", "수업 준비"], "공부": ["📖", "공부"],
+                 "출강": ["🎤", "출강"], "서울출장": ["🚄", "서울 출장"], "출장": ["🧳", "출장"],
+                 "해외출장": ["✈️", "해외 출장"], "워크샵": ["🏕", "워크샵"], "휴무": ["🌿", "휴무"], "휴가": ["🏖", "휴가"], "반짝휴무": ["🌿", "반짝휴무"] };
     function bossIc(r) { return (BOSS[r] || [""])[0]; }
     window.__CS_BOSSIC = bossIc;
     function bossOn(d) {
@@ -1281,7 +1281,7 @@
       var lab = isToday ? "👑 오늘 사장님" : "👑 이날 사장님";
       var html = r === null ? '<div class="bbtoday"><span class="bbk">👑 일요일 정기휴무</span></div>'
         : '<div class="bbtoday' + (away ? " away" : "") + '"><span class="bbk">' + lab + "</span><b>" + (r ? (tb ? tb[0] + " " : "") + esc(r) : "근무 없음") + "</b>" +
-          (tb ? '<span class="bbw">' + esc(tb[1]) + "</span>" : "") +
+          (tb && tb[1] !== r && tb[1].replace(" ", "") !== r.replace(" ", "") ? '<span class="bbw">' + esc(tb[1]) + "</span>" : "") +
           (away && isToday ? '<span class="bbh">급한 일은 📞 전화 · 💬 텔레그램</span>' : "") + "</div>";
       Array.prototype.forEach.call(bars, function (el) { el.innerHTML = html; });
     }
@@ -1494,7 +1494,7 @@
       var ap = document.createElement("aside"); ap.className = "dpanel"; ap.setAttribute("aria-live", "polite"); row.appendChild(ap);
       var Y = +ym.slice(0, 4), M = +ym.slice(5, 7), sel = null, base = {};
       function slotOf(md, n) { return ew.querySelector((n === "공지" ? '.pnote[data-d="' + md + '"]' : '.pslot[data-d="' + md + '"][data-n="' + n + '"]')); }
-      function tm(n, r) { var x = (TIMES[n] || {})[r]; return x && x[0] ? x[0] + "–" + x[1] : r && RCLS[r] === "away" ? "가게 밖" : r && !/휴/.test(r) ? "매장 상황 보며" : ""; }
+      function tm(n, r) { var x = (TIMES[n] || {})[r]; return x && x[0] ? x[0] + "–" + x[1] : r && RCLS[r] === "away" ? "" : r && !/휴/.test(r) ? "매장 상황 보며" : ""; }
       function hint() {
         ap.innerHTML = '<div class="dph"><b>그날 근무 조정</b><small>달력에서 날짜를 누르면 여기서 그날만 바꿀 수 있어요</small></div>' +
           '<p class="dphint">· 휴무 · 오픈 · 마감 · 출장 등을 고르고 <b>「이날 저장」</b><br>· 한 달을 한꺼번에 짤 때는 위 「✎ 근무표 수정하기」</p>';
