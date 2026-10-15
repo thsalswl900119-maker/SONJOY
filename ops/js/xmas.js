@@ -437,19 +437,58 @@
       for (var i = 0; i < first.getDay(); i++) h += '<div class="xcd0"></div>';
       for (var d = 1; d <= last; d++) {
         var s = cur + "-" + pad(m) + "-" + pad(d), dw = new Date(cur, m - 1, d).getDay(), its = by[s] || [];
-        h += '<div class="xcday' + (dw === 0 ? " sun" : "") + (s === t0 ? " now" : "") + (s.slice(5) === "12-25" ? " xday" : "") + (D.indexOf(s) >= 0 ? " prod" : "") + '"><span class="xcn">' + d + (s.slice(5) === "12-25" ? " 🎄" : D.indexOf(s) >= 0 ? " 🍰" : "") + (dw === 0 ? " <small>휴무</small>" : "") + "</span>" +
+        h += '<div class="xcday' + (dw === 0 ? " sun" : "") + (s === t0 ? " now" : "") + (s.slice(5) === "12-25" ? " xday" : "") + (D.indexOf(s) >= 0 ? " prod" : "") + '" data-d="' + s + '"><span class="xcn">' + d + (s.slice(5) === "12-25" ? " 🎄" : D.indexOf(s) >= 0 ? " 🍰" : "") + (dw === 0 ? " <small>휴무</small>" : "") + "</span>" +
           its.map(function (x) { var st = stat(x); return '<button type="button" class="xci ' + st.c + (x.m ? " must" : "") + '" data-id="' + x.id + '" title="' + ea2(x.t + (x.w ? " · 담당 " + x.w : "") + " · " + st.s) + '">' + (x.done ? "✔ " : "") + esc(x.t.replace(/^★\s*/, "").split(/ — | \(/)[0]) + "</button>"; }).join("") + "</div>";
       }
       h += "</div>";
     });
     el.innerHTML = h + "</div>";
   }
-  document.getElementById("xmCal").addEventListener("click", function (e) {
+  // 한 번 누르면 체크 · 두 번 누르면(더블클릭) 바로 고치는 칸 · 꾹 눌러(컴퓨터는 끌어서) 다른 날로 옮기기(10/15)
+  var xcEl = document.getElementById("xmCal"), xcT = null;
+  xcEl.addEventListener("click", function (e) {
     var b = e.target.closest(".xci"); if (!b) return;
-    var x = ckItems(cur).filter(function (z) { return z.id === b.dataset.id; })[0]; if (!x) return;
-    if (!confirm((x.done ? "체크를 풀까요?\n\n" : "했다고 체크할까요?\n\n") + mdw(x.d) + " " + x.t + (x.w ? "\n담당 " + x.w : ""))) return;
-    if (toggle(cur, x.id)) { drawPane(); drawTodo(); }
+    clearTimeout(xcT);
+    xcT = setTimeout(function () {
+      var x = ckItems(cur).filter(function (z) { return z.id === b.dataset.id; })[0]; if (!x) return;
+      if (!confirm((x.done ? "체크를 풀까요?\n\n" : "했다고 체크할까요?\n\n") + mdw(x.d) + " " + x.t + (x.w ? "\n담당 " + x.w : "") + "\n\n(고치려면 두 번 누르세요)")) return;
+      if (toggle(cur, x.id)) { drawPane(); drawTodo(); }
+    }, 300);
   });
+  xcEl.addEventListener("dblclick", function (e) { var b = e.target.closest(".xci"); if (!b) return; clearTimeout(xcT); e.preventDefault(); xEdit(b.dataset.id); });
+  if (window.__CS_DRAG) window.__CS_DRAG(xcEl, { chip: ".xci", cell: ".xcday", key: function (c) { return c.dataset.d; },
+    drop: function (chip, from, to) {
+      var id = chip.dataset.id; clearTimeout(xcT);
+      ckSave(cur, function (o) { if (o.ck[id]) { o.ck[id].d = to; o.ck[id].mv = (me() || "") + " " + stampNow(); } });
+      drawPane(true); drawTodo();
+      if (window.__CS_TOAST) window.__CS_TOAST("✅ " + mdw(to) + "로 옮겼어요");
+    } });
+  // 고치는 칸(작은 창) — 날짜 · 할 일 · 담당 · 체크
+  function xEdit(id) {
+    var x = ckItems(cur).filter(function (z) { return z.id === id; })[0]; if (!x) return;
+    var old = document.getElementById("xmEdBox"); if (old) old.remove();
+    var bx = document.createElement("div"); bx.id = "xmEdBox"; bx.className = "xmedm"; bx.setAttribute("role", "dialog"); bx.setAttribute("aria-label", "체크 항목 고치기");
+    bx.innerHTML = '<div class="xmedc"><div class="xmedh"><b>✏ 체크 항목 고치기</b><button type="button" class="xmedx" aria-label="닫기">✕</button></div>' +
+      '<label><span>날짜</span><input type="date" class="xed-d" value="' + esc(x.d) + '"></label>' +
+      '<label><span>할 일</span><textarea class="xed-t" rows="3"></textarea></label>' +
+      '<label><span>담당</span><input type="text" class="xed-w" placeholder="예: 정항아 · 박혜빈"></label>' +
+      '<div class="xmedb"><button type="button" class="xed-s">✔ 저장</button><button type="button" class="xed-k">' + (x.done ? "↩ 체크 풀기" : "☑ 했어요 체크") + '</button><button type="button" class="xed-c">취소</button></div>' +
+      '<p class="xmedn">' + (x.done ? "✔ " + esc(stat(x).s) + " · " : "") + '빼려면 ✅ 체크리스트 화면의 ✕</p></div>';
+    document.body.appendChild(bx);
+    var q = function (s) { return bx.querySelector(s); };
+    q(".xed-t").value = x.t || ""; q(".xed-w").value = x.w || "";
+    function close() { bx.remove(); }
+    q(".xmedx").onclick = close; q(".xed-c").onclick = close;
+    bx.addEventListener("click", function (e) { if (e.target === bx) close(); });
+    q(".xed-s").onclick = function () {
+      var d = q(".xed-d").value, tt = q(".xed-t").value.trim(), w = q(".xed-w").value.trim();
+      if (!tt) { alert("할 일이 비었어요"); return; }
+      ckSave(cur, function (o) { if (o.ck[id]) { if (d) o.ck[id].d = d; o.ck[id].t = tt; o.ck[id].w = w; } });
+      close(); drawPane(true); drawTodo(); if (window.__CS_TOAST) window.__CS_TOAST("✅ 고쳤어요");
+    };
+    q(".xed-k").onclick = function () { if (toggle(cur, id)) { close(); drawPane(true); drawTodo(); } };
+    setTimeout(function () { q(".xed-t").focus(); }, 30);
+  }
 
   // ── 📋 한눈에
   function drawSum(el) {

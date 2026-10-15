@@ -882,6 +882,34 @@
     function today() { var d = new Date(); return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
     function esc(v) { return String(v == null ? "" : v).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
     function ym() { return monEl.value || today().slice(0, 7); }
+    // 끌어서 옮기기(10/15 · 사장님 「상자를 눌러 드래그하면 옮겨지게」 · js/drag.js) — 놓은 날짜로 옮기고 moved · edit를 남긴다
+    //   두 번 누르면(더블클릭) 그 메모를 바로 고치는 칸이 열린다
+    function moveNote(from, i, to) {
+      var all = load(), list = all[from] || [], n = list[i]; if (!n) { render(); return null; }
+      list.splice(i, 1); if (!list.length) delete all[from];
+      n.moved = (n.moved ? n.moved + "→" : "") + from.slice(5); n.edit = me() + " " + today().slice(5);
+      (all[to] || (all[to] = [])).push(n);
+      save(all); render(); if (sel) open(sel === from ? to : sel);
+      if (window.__CS_TOAST) window.__CS_TOAST("✅ 「" + String(n.t).slice(0, 20) + "」 → " + (+to.slice(5, 7)) + "/" + (+to.slice(8)) + "로 옮겼어요");
+      return n;
+    }
+    if (window.__CS_DRAG) window.__CS_DRAG(cal, { chip: ".mcn.mcdrag", cell: ".mccell", key: function (c) { return c.dataset.d; },
+      drop: function (chip, from, to) { moveNote(from, +chip.dataset.ni, to); } });
+    // 상자를 한 번 누르면(0.3초 뒤) 그 날 메모 열기 · 두 번 누르면 그 메모를 바로 고치기
+    //   (한 번 누르자마자 열면 입력칸으로 화면이 움직여 두 번째 누름이 빗나간다)
+    var tapT = null, tapK = "";
+    cal.addEventListener("click", function (e) {
+      var ch = e.target.closest(".mcn.mcdrag"); if (!ch) return;
+      e.stopPropagation();
+      var d = ch.closest(".mccell").dataset.d, ni = ch.dataset.ni, k = d + "#" + ni;
+      if (tapT && tapK === k) {
+        clearTimeout(tapT); tapT = null; open(d);
+        setTimeout(function () { var b = listEl.querySelector('.mcitem[data-i="' + ni + '"] .e'); if (b) { b.click(); var r = listEl.querySelector(".mcediting"); if (r) r.scrollIntoView({ block: "center", behavior: "smooth" }); } }, 30);
+        return;
+      }
+      clearTimeout(tapT); tapK = k;
+      tapT = setTimeout(function () { tapT = null; open(d); }, 300);
+    }, true);
     function render() {
       var y = +ym().slice(0, 4), m = +ym().slice(5, 7), all = load(), t = today();
       var first = new Date(y, m - 1, 1), lead = (first.getDay() + 6) % 7, nd = new Date(y, m, 0).getDate();
@@ -894,7 +922,7 @@
         h += '<div class="mccell' + (wd === 6 ? " sun" : wd === 5 ? " sat" : "") + (date === t ? " today" : "") + (date === sel ? " on" : "") + (hol ? " hol" : "") +
           '" data-d="' + date + '"><span class="mcd">' + d + (hol ? '<i class="mchol">' + esc(hol) + "</i>" : "") + "</span>" +
           vfor(date).map(function (v) { var sc = vkind(v) === "sched"; return '<span class="mcn ' + (sc ? "sch " : "vac ") + (COL[v.who] || "") + '" title="' + esc(v.memo || "") + '">' + (sc ? "📅 " : "🏖 ") + esc(vlabel(v)) + "</span>"; }).join("") +
-          notes.filter(function (n) { return n.imp; }).concat(notes.filter(function (n) { return !n.imp; })).slice(0, 4).map(function (n) { return '<span class="mcn ' + (COL[n.by] || "") + (n.imp ? " imp" : "") + '">' + (n.imp ? "⭐ " : "") + esc(n.t) + "</span>"; }).join("") +
+          notes.map(function (n, i) { return { n: n, i: i }; }).filter(function (x) { return x.n.imp; }).concat(notes.map(function (n, i) { return { n: n, i: i }; }).filter(function (x) { return !x.n.imp; })).slice(0, 4).map(function (x) { var n = x.n; return '<span class="mcn mcdrag ' + (COL[n.by] || "") + (n.imp ? " imp" : "") + '" data-ni="' + x.i + '" title="끌어서 다른 날로 옮기기">' + (n.imp ? "⭐ " : "") + esc(n.t) + "</span>"; }).join("") +
           (notes.length > 4 ? '<span class="mcmore">+' + (notes.length - 4) + "개 더 · 눌러서 보기</span>" : "") +
           (notes.length ? "" : '<span class="mcplus">+</span>') + "</div>";
       }

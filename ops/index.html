@@ -3340,7 +3340,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-209</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-210</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -4012,15 +4012,16 @@ input,select,textarea{border-radius:var(--r3)!important}
 </footer>
 </div>
 
-<script src="js/chrome.js?v=v0924-209"></script>
+<script src="js/chrome.js?v=v0924-210"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/sync.js?v=v0924-209"></script>
-<script src="js/holidays.js?v=v0924-209"></script>
-<script src="js/sched.js?v=v0924-209"></script>
-<script src="js/app.js?v=v0924-209"></script>
+<script src="js/drag.js?v=v0924-210"></script>
+<script src="js/sync.js?v=v0924-210"></script>
+<script src="js/holidays.js?v=v0924-210"></script>
+<script src="js/sched.js?v=v0924-210"></script>
+<script src="js/app.js?v=v0924-210"></script>
 
 <style>
 /* 재고 · 발주 */
@@ -4500,8 +4501,27 @@ nav.stabs .stab.prog[aria-selected="true"]{color:var(--open)!important;border-bo
 #tp2 .tblock.tbtaste .tbnote{background:#FFF8EC;color:#5A3A1E;font-size:14px}
 #tp2 .tblock.tbtaste .titem .ttitle{font-size:16.5px;font-weight:900}
 #tp2 .tblock.tbtaste .titem.big .ttop::before{content:"계절 · 달";background:#7E2A1A}
+/* 달력 끌어 옮기기 · 알림(10/15 · js/drag.js) */
+.mcn.mcdrag,.xci,.ycev:not(.c-log){cursor:grab;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.csdragging{opacity:.35}
+.csghost{position:fixed;z-index:10000;pointer-events:none;margin:0;box-shadow:0 8px 22px rgba(40,25,10,.35);transform:rotate(-2deg);opacity:.95;max-width:220px;cursor:grabbing}
+.csdragon .mccell,.csdragon .xcday,.csdragon .yccell{transition:background .1s}
+.csdrop{background:#FFF0C8!important;outline:2.5px dashed var(--open);outline-offset:-3px}
+#csToast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);background:#2F2418;color:#FFF6E6;font-weight:800;font-size:15px;padding:11px 18px;border-radius:999px;box-shadow:0 6px 18px rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:.2s;z-index:10001;max-width:90vw;text-align:center}
+#csToast.on{opacity:1;transform:translate(-50%,0)}
+/* 크리스마스 체크 항목 고치는 작은 창 */
+.xmedm{position:fixed;inset:0;z-index:9999;background:rgba(30,22,14,.5);display:flex;align-items:center;justify-content:center;padding:16px}
+.xmedc{background:#FFFCF6;width:100%;max-width:460px;border:2px solid var(--open);border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:10px}
+.xmedh{display:flex;justify-content:space-between;align-items:center}.xmedh b{font-size:18px}
+.xmedx{font:inherit;font-size:18px;background:none;border:0;cursor:pointer}
+.xmedc label{display:flex;flex-direction:column;gap:4px;font-size:14px;font-weight:800;color:var(--ink2)}
+.xmedc input,.xmedc textarea{font:inherit;font-size:16px;padding:8px 10px;border:1.5px solid var(--rule2);border-radius:8px;background:#fff;color:var(--ink)}
+.xmedb{display:flex;flex-wrap:wrap;gap:8px}
+.xmedb button{font:inherit;font-weight:800;font-size:15px;min-height:42px;padding:8px 16px;border-radius:999px;border:1.5px solid var(--rule2);background:#fff;color:var(--ink);cursor:pointer}
+.xmedb .xed-s{background:#2E7D32;border-color:#2E7D32;color:#fff}
+.xmedn{margin:0;font-size:13.5px;color:var(--ink2)}
 </style>
-<script src="js/stock.js?v=v0924-209"></script>
+<script src="js/stock.js?v=v0924-210"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -4567,11 +4587,11 @@ nav.stabs .stab.prog[aria-selected="true"]{color:var(--open)!important;border-bo
   window.addEventListener("cs:remote", function () { setTimeout(mark, 400); });
 })();
 </script>
-<script src="js/presence.js?v=v0924-209"></script>
-<script src="js/weekrep.js?v=v0924-209"></script>
-<script src="js/recipe.js?v=v0924-209"></script>
-<script src="js/bench.js?v=v0924-209"></script>
-<script src="js/monthlog.js?v=v0924-209"></script>
-<script src="js/xmas.js?v=v0924-209"></script>
-<script src="js/tg.js?v=v0924-209"></script>
+<script src="js/presence.js?v=v0924-210"></script>
+<script src="js/weekrep.js?v=v0924-210"></script>
+<script src="js/recipe.js?v=v0924-210"></script>
+<script src="js/bench.js?v=v0924-210"></script>
+<script src="js/monthlog.js?v=v0924-210"></script>
+<script src="js/xmas.js?v=v0924-210"></script>
+<script src="js/tg.js?v=v0924-210"></script>
 </body></html>

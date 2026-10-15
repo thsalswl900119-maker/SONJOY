@@ -2747,6 +2747,30 @@
       save(); drawYear(); drawTabs(); drawMonth(); closeEdit();
     });
 
+    // 끌어서 다른 날로 옮기기(10/15 · js/drag.js) — 같은 달 안에서. 일지 메모(n:)는 메모 달력 날짜도 같이 옮김 · 마감 일지(l:)는 못 옮김
+    if (window.__CS_DRAG) window.__CS_DRAG(wrap, { chip: ".ycev:not(.c-log)", cell: ".yccell", key: function (c) { return c.dataset.d; },
+      drop: function (chip, from, to) {
+        var id = String(chip.dataset.id), d = +to, m = cur, yr = yearOf(m);
+        if (id.indexOf("l:") === 0) return;
+        if (id.indexOf("n:") === 0) {
+          var pp = id.split(":"), fd = pp[1], i = +pp[2], all = {};
+          try { all = JSON.parse(localStorage.getItem("cafesui.daynotes") || "{}") || {}; } catch (e) {}
+          var lst = all[fd] || [], nn = lst[i]; if (!nn) return;
+          var td = yr + "-" + String(m).padStart(2, "0") + "-" + String(d).padStart(2, "0");
+          lst.splice(i, 1); if (!lst.length) delete all[fd];
+          nn.moved = (nn.moved ? nn.moved + "→" : "") + fd.slice(5); nn.edit = (localStorage.getItem("cafesui.me") || "") + " " + td.slice(5);
+          (all[td] || (all[td] = [])).push(nn);
+          try { localStorage.setItem("cafesui.daynotes", JSON.stringify(all)); } catch (e) {}
+          if (window.__CS_MC_RENDER) window.__CS_MC_RENDER();
+        } else {
+          var e = list().filter(function (x) { return String(x.id) === id; })[0]; if (!e) return;
+          if (id.indexOf("u") === 0) st.adds = st.adds.map(function (x) { return String(x.id) === id ? { id: x.id, m: x.m, d: d, t: x.t, a: x.a, c: x.c } : x; });
+          else st.edits[id] = { m: e.m, d: d, t: e.t, a: e.a, c: e.c };
+          save();
+        }
+        drawYear(); drawTabs(); drawMonth();
+        if (window.__CS_TOAST) window.__CS_TOAST("✅ " + m + "/" + d + "로 옮겼어요");
+      } });
     drawYear(); drawTabs(); drawMonth();
     window.__CS_ANNUAL_REFRESH = function () { drawYear(); drawTabs(); drawMonth(); };
   })();
