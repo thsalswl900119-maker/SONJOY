@@ -1501,7 +1501,7 @@
         sel = md; base = {};
         read.querySelectorAll(".cell.dsel").forEach(function (c) { c.classList.remove("dsel"); });
         var cell = read.querySelector('.cell[data-d="' + M + "/" + d + '"]'); if (cell) cell.classList.add("dsel");
-        var h = '<div class="dph"><b>' + M + "월 " + d + "일 " + WDN0[dt.getDay()] + '</b><button type="button" class="dpx" aria-label="닫기">✕</button>' +
+        var h = '<div class="dph"><button type="button" class="dpnav" data-dir="-1" aria-label="앞 날">◀</button><b>' + M + "월 " + d + "일 " + WDN0[dt.getDay()] + '</b><button type="button" class="dpnav" data-dir="1" aria-label="다음 날">▶</button><button type="button" class="dpx" aria-label="닫기">✕</button>' +
           '<small>' + (saved ? "저장된 근무표" : (panel.classList.contains("plan") ? "아직 안 짠 날" : "로테이션대로 · 아직 고친 적 없음")) + ' · 고르고 「이날 저장」</small></div>';
         NAMES.concat(["공지"]).forEach(function (n) {
           var s = slotOf(md, n); if (!s) return;
@@ -1514,6 +1514,14 @@
         ap.innerHTML = h; ap.classList.add("open");
         ap.querySelectorAll(".dpr").forEach(function (r) { var s = r.querySelector(".dps"); s.value = base[r.dataset.n]; paintR(r); });
       }
+      // 영업하는 날(정기휴무 칸 빼고)만 앞뒤로 넘긴다
+      function openDays() { return Array.prototype.map.call(read.querySelectorAll(".cell[data-d]:not(.closed)"), function (c) { return c.dataset.d.replace("/", "-"); }); }
+      function stepDay(md, dir) { var L = openDays(), i = L.indexOf(md); if (i < 0) return L[0]; return L[i + dir] || null; }
+      function firstDay() {
+        var now = new Date(), L = openDays(), td = M + "-" + now.getDate();
+        if (now.getFullYear() === Y && now.getMonth() + 1 === M && L.indexOf(td) >= 0) return td;
+        return L[0];
+      }
       function paintR(r) {
         var s = r.querySelector(".dps"), n = r.dataset.n, v = s.value, t = r.querySelector(".dpt");
         r.classList.toggle("off", /휴무|휴가/.test(v)); r.classList.toggle("chg", v !== base[n]);
@@ -1521,7 +1529,9 @@
       }
       ap.addEventListener("change", function (e) { var r = e.target.closest(".dpr"); if (r) paintR(r); });
       ap.addEventListener("click", function (e) {
-        if (e.target.closest(".dpx")) { sel = null; read.querySelectorAll(".cell.dsel").forEach(function (c) { c.classList.remove("dsel"); }); hint(); return; }
+        var nv = e.target.closest(".dpnav");
+        if (nv && sel) { var nd = stepDay(sel, +nv.dataset.dir); if (nd) show(nd); return; }
+        if (e.target.closest(".dpx")) { sel = null; read.querySelectorAll(".cell.dsel").forEach(function (c) { c.classList.remove("dsel"); }); if (window.innerWidth >= 1100) show(firstDay()); else hint(); return; }
         if (e.target.closest(".dpreset")) { if (sel) show(sel); return; }
         if (!e.target.closest(".dpsave") || !sel) return;
         var cur = load(ym), fresh = !cur[sel], md = sel, n0 = 0;
@@ -1540,14 +1550,16 @@
       });
       read.addEventListener("click", function (e) {
         var c = e.target.closest(".cell"); if (!c || c.classList.contains("closed") || c.classList.contains("pickable")) return;
-        if (document.querySelector(".reqbar .rname[aria-pressed=\"true\"]")) return;   // 휴무 신청 고르는 중
+        if (panel.querySelector(".reqbar .rname[aria-pressed=\"true\"]")) return;   // 이 달 휴무 신청 고르는 중
         var p = String(c.dataset.d || "").split("/"); if (p.length < 2) return;
         show(p[0] + "-" + p[1]);
         if (window.innerWidth < 1100) ap.scrollIntoView({ block: "nearest", behavior: "smooth" });
       });
       window.addEventListener("cs:remote", function (e) { var ks = (e.detail && e.detail.keys) || []; if (ks.indexOf(keyOf(ym)) >= 0 && sel && !ap.contains(document.activeElement)) show(sel); });
       var now = new Date();
-      if (window.innerWidth >= 1100 && now.getFullYear() === Y && now.getMonth() + 1 === M && now.getDay() !== 0) show(M + "-" + now.getDate()); else hint();
+      if (window.innerWidth >= 1100 && firstDay()) show(firstDay()); else hint();
+      // 다른 달 단추로 이 달을 열 때도 비어 있지 않게
+      panel.addEventListener("cs:shown", function () { if (!sel && window.innerWidth >= 1100 && firstDay()) show(firstDay()); });
     }
     function bindSched(root) {
       root.querySelectorAll(".mpanel").forEach(function (panel) {
