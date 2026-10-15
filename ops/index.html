@@ -3340,7 +3340,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-206</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-207</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -3542,8 +3542,9 @@ input,select,textarea{border-radius:var(--r3)!important}
     <div class="mcedit" id="mcEdit" hidden>
       <div class="mceh"><b id="mcTitle"></b><button type="button" class="daynav" id="mcClose">닫기</button></div>
       <div id="mcList"></div>
+      <div class="mcmsg" id="mcMsg" aria-live="polite"></div>
       <div class="mcadd"><input type="text" id="mcText" class="dinp" placeholder="예) 15시 한판 케이크 예약 · 김OO 010-1234 / 오늘 배달 3건 예정"><label class="mcimpl"><input type="checkbox" id="mcImp" onchange="this.parentNode.classList.toggle('on',this.checked)">⭐ 매우 중요</label><button type="button" class="skbtn prim" id="mcAdd">추가</button></div>
-      <p class="tnote" style="margin:6px 0 0">Enter로도 추가됩니다 · 적은 사람 색으로 표시됩니다</p>
+      <p class="tnote" style="margin:6px 0 0">Enter로도 추가됩니다 · 적은 사람 색으로 표시됩니다 · <b>잘못 적었으면 「✏ 고치기」로 내용 · 날짜를 바꿀 수 있어요</b> (날짜를 바꾸면 그 날로 옮겨집니다)</p>
     </div>
   </div>
   
@@ -4011,15 +4012,15 @@ input,select,textarea{border-radius:var(--r3)!important}
 </footer>
 </div>
 
-<script src="js/chrome.js?v=v0924-206"></script>
+<script src="js/chrome.js?v=v0924-207"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/sync.js?v=v0924-206"></script>
-<script src="js/holidays.js?v=v0924-206"></script>
-<script src="js/sched.js?v=v0924-206"></script>
-<script src="js/app.js?v=v0924-206"></script>
+<script src="js/sync.js?v=v0924-207"></script>
+<script src="js/holidays.js?v=v0924-207"></script>
+<script src="js/sched.js?v=v0924-207"></script>
+<script src="js/app.js?v=v0924-207"></script>
 
 <style>
 /* 재고 · 발주 */
@@ -4391,8 +4392,27 @@ small.optt{font-size:12px;color:var(--ink2)}
 .twd{font-size:13px}
 /* 근무표 — 사장님 일정처럼 긴 이름은 칸 안에서 줄바꿈(잘리지 않게) */
 #tp1 .sh .rl{white-space:normal;overflow-wrap:anywhere}
+/* 메모 달력 고치기(10/15 · 직원 「잘못 적으면 수정이 안 된다」) — 단추를 손가락 크기로 · 날짜 · 내용 · ⭐ 한 번에 고치는 칸 */
+#tp4 .mcitem{grid-template-columns:1fr auto;row-gap:6px}
+#tp4 .mcitem small{grid-column:1/-1;order:2;white-space:normal;font-size:12.5px;color:var(--ink2)}
+#tp4 .mcitem .mcbtns{gap:6px;flex-wrap:wrap;justify-content:flex-end}
+#tp4 .mcitem .st,#tp4 .mcitem .e,#tp4 .mcitem .x,#tp4 .mcitem .s,#tp4 .mcitem .c{font-size:14px;min-height:38px;padding:6px 12px;border-radius:999px;font-weight:700}
+#tp4 .mcitem .e{color:#fff;background:var(--open);border:1px solid var(--open)}
+#tp4 .mcitem .x{color:var(--off);border:1px solid var(--off);background:#fff}
+#tp4 .mcitem.mcediting{display:block;background:#FFF8EC;border:2px solid var(--open);border-radius:10px;padding:12px;margin:6px 0}
+#tp4 .mcef{display:grid;grid-template-columns:auto 1fr;gap:10px 12px;align-items:start}
+#tp4 .mcefl{display:flex;flex-direction:column;gap:4px;font-size:13.5px;font-weight:800;color:var(--ink2)}
+#tp4 .mcefl input,#tp4 .mcefl textarea{font-size:16px;font-family:var(--sans);width:100%}
+#tp4 .mcefl textarea{min-height:64px;resize:vertical}
+#tp4 .mcefimp,#tp4 .mcefnote,#tp4 .mcef .mcbtns{grid-column:1/-1}
+#tp4 .mcefimp{display:inline-flex;align-items:center;gap:6px;width:max-content;font-size:14px;font-weight:700;padding:6px 12px;border:1px dashed var(--rule2);border-radius:999px;cursor:pointer}
+#tp4 .mcefimp.on{background:#FFE36E;color:#B3261E;border:1px solid #E0B400}
+#tp4 .mcefnote{margin:0;font-size:13.5px;color:var(--ink2);background:#F3F8FD;border-left:4px solid var(--close);padding:6px 10px}
+#tp4 .mcef .s{color:#fff;background:#2E7D32;border:1px solid #2E7D32}
+#tp4 .mcmsg{min-height:1.3em;font-size:14px;font-weight:800;color:#2E7D32;margin:4px 0}
+@media (max-width:640px){#tp4 .mcef{grid-template-columns:1fr}#tp4 .mcitem{grid-template-columns:1fr}#tp4 .mcitem .mcbtns{justify-content:flex-start}}
 </style>
-<script src="js/stock.js?v=v0924-206"></script>
+<script src="js/stock.js?v=v0924-207"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -4445,11 +4465,11 @@ small.optt{font-size:12px;color:var(--ink2)}
   window.addEventListener("cs:me", function () { setTimeout(sync, 50); });
 })();
 </script>
-<script src="js/presence.js?v=v0924-206"></script>
-<script src="js/weekrep.js?v=v0924-206"></script>
-<script src="js/recipe.js?v=v0924-206"></script>
-<script src="js/bench.js?v=v0924-206"></script>
-<script src="js/monthlog.js?v=v0924-206"></script>
-<script src="js/xmas.js?v=v0924-206"></script>
-<script src="js/tg.js?v=v0924-206"></script>
+<script src="js/presence.js?v=v0924-207"></script>
+<script src="js/weekrep.js?v=v0924-207"></script>
+<script src="js/recipe.js?v=v0924-207"></script>
+<script src="js/bench.js?v=v0924-207"></script>
+<script src="js/monthlog.js?v=v0924-207"></script>
+<script src="js/xmas.js?v=v0924-207"></script>
+<script src="js/tg.js?v=v0924-207"></script>
 </body></html>

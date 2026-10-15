@@ -975,7 +975,7 @@
       titleEl.textContent = (+p[1]) + "월 " + (+p[2]) + "일 (" + wd + ") 메모";
       var notes = (load()[date] || []);
       listEl.innerHTML = notes.length ? notes.map(function (n, i) {
-        return '<div class="mcitem' + (n.imp ? " imp" : "") + '" data-i="' + i + '"><span class="t ' + (COL[n.by] || "") + '">' + (n.imp ? "⭐ " : "") + esc(n.t) + "</span><small>" + esc(n.by || "") + (n.at ? " · " + esc(n.at) : "") +
+        return '<div class="mcitem' + (n.imp ? " imp" : "") + '" data-i="' + i + '"><span class="t ' + (COL[n.by] || "") + '">' + (n.imp ? "⭐ " : "") + esc(n.t) + "</span><small>" + esc(n.by || "") + (n.at ? " · " + esc(n.at) : "") + (n.edit ? " · ✏ " + esc(n.edit) + " 고침" : "") + (n.moved ? " · " + esc(n.moved) + "에서 옮김" : "") +
           '</small><span class="mcbtns"><button type="button" class="st' + (n.imp ? " on" : "") + '" data-i="' + i + '" aria-pressed="' + !!n.imp + '">⭐ 매우 중요</button><button type="button" class="e" data-i="' + i + '">고치기</button><button type="button" class="x" data-i="' + i + '">지우기</button></span></div>';
       }).join("") : '<div class="mcnone">아직 적은 게 없습니다</div>';
       listEl.querySelectorAll(".st").forEach(function (b) {
@@ -987,27 +987,54 @@
       });
       listEl.querySelectorAll(".x").forEach(function (b) {
         b.addEventListener("click", function () {
+          var all0 = load(), n0 = (all0[date] || [])[+b.dataset.i]; if (!n0) return;
+          if (!confirm("「" + String(n0.t || "").slice(0, 40) + "」 메모를 지울까요?")) return;
           var all = load(); (all[date] || []).splice(+b.dataset.i, 1);
           if (!all[date] || !all[date].length) delete all[date];
           save(all); render(); open(date);
         });
       });
-      // 고치기 — 그 줄이 입력칸으로 바뀌고, Enter 또는 저장으로 반영
+      // 고치기 — 그 줄이 「날짜 · 글 · ⭐」 칸으로 바뀐다. 날짜를 바꾸면 그 날로 옮긴다 (10/15 · 직원 「잘못 적으면 수정이 안 된다」)
+      //   열 때 모습과 똑같은 줄을 찾아 바꾼다 — 그 사이 다른 기기가 고쳤으면 저장하지 않고 다시 연다
       listEl.querySelectorAll(".e").forEach(function (b) {
         b.addEventListener("click", function () {
           var i = +b.dataset.i, row = b.closest(".mcitem"), cur = (load()[date] || [])[i];
           if (!cur) return;
-          row.innerHTML = '<input type="text" class="dinp mcei" value="' + esc(cur.t).replace(/"/g, "&quot;") + '">' +
-            '<span class="mcbtns"><button type="button" class="s">저장</button><button type="button" class="c">취소</button></span>';
-          var inp = row.querySelector(".mcei"); inp.focus(); inp.select();
+          var snap = JSON.stringify(cur);
+          row.classList.add("mcediting");
+          row.innerHTML = '<div class="mcef">' +
+            '<label class="mcefl"><span>날짜</span><input type="date" class="dinp mced" value="' + date + '"></label>' +
+            '<label class="mcefl mceft"><span>내용</span><textarea class="dinp mcei" rows="2"></textarea></label>' +
+            '<label class="mcefimp' + (cur.imp ? " on" : "") + '"><input type="checkbox" class="mceimp"' + (cur.imp ? " checked" : "") + '> ⭐ 매우 중요</label>' +
+            (cur.rv ? '<p class="mcefnote">📅 예약 메모입니다 — 날짜를 옮기면 달력은 바뀌지만, 인계사항 줄까지 같이 고치려면 일지 「📅 예약 넣기」 목록의 「✏ 고치기」를 쓰세요</p>' : "") +
+            '<span class="mcbtns"><button type="button" class="s">✔ 저장</button><button type="button" class="c">취소</button></span></div>';
+          var inp = row.querySelector(".mcei"), dEl = row.querySelector(".mced"), impEl = row.querySelector(".mceimp");
+          inp.value = cur.t || "";
+          impEl.addEventListener("change", function () { impEl.parentNode.classList.toggle("on", impEl.checked); });
+          inp.focus(); try { inp.setSelectionRange(inp.value.length, inp.value.length); } catch (er) {}
           function commit() {
-            var t = (inp.value || "").trim(); if (!t) { open(date); return; }
-            var all = load(); if (all[date] && all[date][i]) { all[date][i].t = t; all[date][i].edit = me() + " " + today().slice(5); }
-            save(all); render(); open(date);
+            var txt = (inp.value || "").replace(/\s+$/, "").trim(), nd = dEl.value || date;
+            if (!txt) { alert("내용이 비었어요 · 지우려면 「지우기」를 눌러 주세요"); inp.focus(); return; }
+            var all = load(), list = all[date] || [], k = -1;
+            for (var j = 0; j < list.length; j++) { if (JSON.stringify(list[j]) === snap) { k = j; break; } }
+            if (k < 0) { alert("그 사이에 다른 기기에서 이 메모가 바뀌었어요 · 다시 열어서 고쳐 주세요"); open(date); return; }
+            var n = list[k];
+            n.t = txt; if (impEl.checked) n.imp = true; else delete n.imp;
+            n.edit = me() + " " + today().slice(5);
+            if (nd !== date) {
+              list.splice(k, 1); if (!list.length) delete all[date];
+              n.moved = (n.moved ? n.moved + "→" : "") + date.slice(5);
+              (all[nd] || (all[nd] = [])).push(n);
+            }
+            save(all);
+            if (nd.slice(0, 7) !== ym()) monEl.value = nd.slice(0, 7);
+            render(); open(nd);
+            var msg = document.getElementById("mcMsg");
+            if (msg) { msg.textContent = nd !== date ? "✅ " + (+nd.slice(5, 7)) + "/" + (+nd.slice(8)) + "로 옮겼어요" : "✅ 고쳤어요"; clearTimeout(msg._t); msg._t = setTimeout(function () { msg.textContent = ""; }, 3000); }
           }
           row.querySelector(".s").addEventListener("click", commit);
           row.querySelector(".c").addEventListener("click", function () { open(date); });
-          inp.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); commit(); } if (e.key === "Escape") open(date); });
+          inp.addEventListener("keydown", function (e) { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); commit(); } if (e.key === "Escape") open(date); });
         });
       });
       edit.hidden = false; render();
