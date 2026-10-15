@@ -1250,7 +1250,7 @@
           (hol ? hol.outerHTML : "") + (wsDay ? '<div class="bizt wsoff">🏕 워크샵 · 영업 쉼</div>' : (bz ? bz.outerHTML : "")) +
           (day["공지"] ? '<div class="allnote">📣 ' + esc(day["공지"]) + "</div>" : "") +
           offs.map(function (o) {
-            return '<div class="offrow"><span class="offmark">' + esc(o.r) + "</span>" +
+            return '<div class="offrow" data-n="' + esc(o.n) + '"><span class="offmark">' + esc(o.r) + "</span>" +
               '<span class="offwho">' + esc(o.n) + "</span></div>";
           }).join("") +
           rows.map(function (r) {
@@ -4726,6 +4726,8 @@
         c.classList.toggle("pickable", act && !!who);
         c.classList.toggle("picked", !!(act && who && by[c.dataset.d] && by[c.dataset.d].some(function (x) { return x.n === who; })));
         Array.prototype.forEach.call(c.querySelectorAll(".pickmark"), function (m) { m.remove(); });
+        // 신청한 날 이미 휴무로 짜였으면 「휴무 박혜빈님」 줄은 빼고 신청 딱지 하나만(10/15 사장님 「하나만 적어」)
+        Array.prototype.forEach.call(c.querySelectorAll(".offrow[data-n]"), function (r) { r.hidden = (by[c.dataset.d] || []).some(function (x) { return x.n === r.dataset.n; }); });
         (by[c.dataset.d] || []).forEach(function (x) {
           // 칸 안엔 짧게 「휴무/신청:박혜빈」 — 사유는 달력 위 상자에(10/15 사장님)
           var m = document.createElement("span"); m.className = "pickmark";
@@ -5010,13 +5012,8 @@
   //   짜는 달(다음 달)마다 새로 체크 · cafesui.mgrchk.<YYYY-MM> = { 항목: { by, at } } · 매니저(정항아) · 사장님만 체크
   (function () {
     var ITEMS = [
-      ["s1", "다음 달 근무표는 <mark>전달 2째주까지</mark> 다 짜기", "휴무 신청을 먼저 받고 → 「🛠 로테이션 채우기」 → 날짜를 눌러 오른쪽 칸에서 고치기"],
-      ["s2", "날마다 <mark>오픈할 사람 · 마감할 사람</mark>이 있는지", "근무표 「✏ 근무표 수정하기」를 눌러 나오는 점검 딱지가 「빠진 곳 없습니다」인지 확인"],
-      ["s3", "<mark>같은 자리(오픈 · 마감 · 미들)에 두 명</mark> 넣지 않기", "한 날에 오픈 두 명이면 한 명은 마감으로"],
-      ["s4", "토요일은 <mark>「토요일」 근무</mark>로 (평일 근무 섞지 않기)", "토요일 영업 10:30–17:00 · 토요일 근무 09:00–18:00"],
-      ["s5", "<mark>사장님 일정</mark>(출강 · 출장 · 공부 · 수업 준비) 먼저 확인하고 짜기", "사장님이 가게에 없는 날은 매장 근무 인원을 꼭 다시 보기"],
-      ["s6", "휴무 신청 · 대타 · 바뀐 근무는 <mark>단톡방에 바로 공지</mark>", "근무표가 바뀌면 출퇴근 칸도 같이 바뀝니다 — 말로만 바꾸지 않기"],
-      ["s7", "워크샵 가는 날은 <mark>가게 영업을 쉰다</mark> — 미리 다 알리기", "근무표 그날 공지 「워크샵」(달력에 「🏕 워크샵 · 영업 쉼」) · 네이버 · 배민 · 쿠팡 임시 휴무 등록 · 매장 안내문 · 인스타 공지 · 그날 예약 안 받기"]
+      // 10/15 사장님 「작게 · 1번만」 — 나머지(오픈 · 마감 · 두 명 · 토요일 · 워크샵)는 근무표 점검 딱지가 알려 줌
+      ["s1", "다음 달 근무표는 <mark>전달 2째주까지</mark> 다 짜기", "휴무 신청 먼저 받고 → 「✏ 근무표 수정하기」 → 로테이션대로 채우기 → 날짜 눌러 오른쪽에서 고치기"]
     ];
     var EDIT = ["정항아", "사장님"];
     function me() { try { return localStorage.getItem("cafesui.me") || ""; } catch (e) { return ""; } }
@@ -5029,13 +5026,10 @@
       var box = document.getElementById("mgSchedChk"); if (!box) return;
       var o = rd(), ym = planYm(), m = +ym.slice(5, 7), can = EDIT.indexOf(me()) >= 0;
       var done = ITEMS.filter(function (x) { return o[x[0]]; }).length;
-      box.innerHTML = '<div class="tnotice mgsc"><div class="tnhead">📌 중요 공지 · ' + m + '월 근무표 짤 때 꼭 체크 <span class="mgscn' + (done === ITEMS.length ? " ok" : "") + '">' + done + " / " + ITEMS.length + "</span></div><ul>" +
-        ITEMS.map(function (x) {
-          var c = o[x[0]];
-          return '<li class="' + (c ? "dn" : "") + '"><label class="mgscl"><input type="checkbox" data-k="' + x[0] + '"' + (c ? " checked" : "") + (can ? "" : " disabled") + '><b>' + x[1] + "</b></label><span>" + x[2] +
-            (c ? ' <em class="mgscby">✔ ' + nim(c.by) + " " + c.at + "</em>" : "") + "</span></li>";
-        }).join("") + "</ul>" +
-        '<div class="mgscf"><button type="button" class="mgscgo">🗓 ' + m + '월 근무표 열기</button><small>' + (can ? "체크한 사람 · 시간이 남습니다 · 달이 바뀌면 다음 달 목록으로 새로 시작" : "정항아님 · 사장님이 체크합니다") + "</small></div></div>";
+      var x = ITEMS[0], c = o[x[0]];
+      box.innerHTML = '<div class="mgsc mgsc1' + (c ? " dn" : "") + '"><label class="mgscl"><input type="checkbox" data-k="' + x[0] + '"' + (c ? " checked" : "") + (can ? "" : " disabled") + '>' +
+        '<span><b>📌 ' + m + "월 근무표 · " + x[1] + "</b><small>" + x[2] + (c ? ' <em class="mgscby">✔ ' + nim(c.by) + " " + c.at + "</em>" : "") + "</small></span></label>" +
+        '<button type="button" class="mgscgo">🗓 ' + m + "월 근무표</button></div>";
     }
     document.addEventListener("change", function (e) {
       var cb = e.target.closest && e.target.closest("#mgSchedChk input[data-k]"); if (!cb) return;
