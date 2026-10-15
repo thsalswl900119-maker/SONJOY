@@ -1661,6 +1661,105 @@
     window.__CS_BINDSCHED = bindSched;
   })();
 
+  // 📣 근무표 맨 위 공지 — 지금 받는 달 · 마감일은 날짜에 맞춰 저절로 바뀜(10/15 사장님 「담달 스케줄 신청은 전달 10일까지」)
+  (function () {
+    var el = document.getElementById("schDue"); if (!el) return;
+    function paint() {
+      var d = new Date(), add = d.getDate() <= 10 ? 1 : 2;
+      var t = new Date(d.getFullYear(), d.getMonth() + add, 1), dl = new Date(t.getFullYear(), t.getMonth() - 1, 10);
+      el.textContent = "👉 지금 받는 신청: " + (t.getMonth() + 1) + "월 스케줄 — " + (dl.getMonth() + 1) + "/" + dl.getDate() + "까지" + (add === 1 && d.getDate() >= 8 ? " · 마감 " + (10 - d.getDate() ? (10 - d.getDate()) + "일 전" : "오늘") : "");
+    }
+    paint(); document.addEventListener("visibilitychange", function () { if (!document.hidden) paint(); });
+  })();
+
+  // 📨 근무표 텔레그램 공유 — 보이는 달력(#rc<달>) 그대로 한 장 그림으로(10/15 사장님 「캘린더 전체가 캡처되어 올라가게」)
+  //   칸 글은 화면에서 읽고, 사람 줄 색은 화면 띠 색(border-left) 그대로 · 아래에 휴무 신청 목록
+  window.__CS_SCHED_IMG = function (ym) {
+    return new Promise(function (res, rej) {
+      var rc = document.getElementById("rc" + ym); if (!rc) { rej(new Error("근무표가 없습니다")); return; }
+      var FONT = "'Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',sans-serif";
+      var kids = Array.prototype.filter.call(rc.children, function (e) { return !e.classList.contains("wd"); });
+      var weeks = []; for (var i = 0; i < kids.length; i += 7) weeks.push(kids.slice(i, i + 7));
+      var vis = function (e) { return e && !e.hidden && e.offsetParent !== null; };
+      var tx = function (e) { return (e.textContent || "").replace(/\s+/g, " ").trim(); };
+      function linesOf(c) {
+        if (!c || !c.classList.contains("cell")) return null;
+        var o = { d: tx(c.querySelector(".dnum")), sun: c.classList.contains("sun"), sat: c.classList.contains("sat"), L: [] };
+        if (c.classList.contains("closed")) { o.closed = true; o.L.push({ t: "정기휴무", c: "#8C7B6B" }); return o; }
+        Array.prototype.forEach.call(c.children, function (e) {
+          var k = e.classList;
+          if (k.contains("dnum") || k.contains("bizt") || !vis(e)) return;
+          if (k.contains("pickmark")) o.L.push({ t: tx(e), c: "#B3261E", b: 1, bg: "#FCE6E1" });
+          else if (k.contains("hol")) o.L.push({ t: tx(e), c: "#B3261E" });
+          else if (k.contains("wsall")) { o.ws = true; o.L.push({ t: "🏕 전체 워크샵", c: "#fff", b: 1, bg: "#4A3B2C" }, { t: "영업 쉼", c: "#fff", b: 1, bg: "#B3261E" }); var g = e.querySelector("small"); if (g) { var gs = tx(g).split(" · "); for (var q = 0; q < gs.length; q += 2) o.L.push({ t: gs.slice(q, q + 2).join(" · "), c: "#5C4F43" }); } }
+          else if (k.contains("wsallo")) o.L.push({ t: tx(e), c: "#8C7B6B" });
+          else if (k.contains("allnote")) o.L.push({ t: tx(e), c: "#8A4A00", b: 1 });
+          else if (k.contains("offrow")) o.L.push({ t: "휴무 " + tx(e.querySelector(".offwho") || e), c: "#9A4D35", b: 1 });
+          else if (k.contains("sh")) {
+            var col = getComputedStyle(e).borderLeftColor || "#8F5A22";
+            var who = tx(e.querySelector(".who") || e), rl = tx(e.querySelector(".rl") || { textContent: "" }), tm = e.querySelector(".tm");
+            o.L.push({ t: who + " " + rl, c: "#2A2522", b: 1, bar: col });
+            if (tm && vis(tm) && /\d/.test(tx(tm))) o.L.push({ t: tx(tm), c: "#5C4F43", bar: col, sm: 1 });
+          }
+        });
+        return o;
+      }
+      var W = 1800, PAD = 36, LH = 30, HEADH = 44, CW = [0.62, 1, 1, 1, 1, 1, 1], SUMW = CW.reduce(function (a, b) { return a + b; }, 0);
+      var colX = [], x0 = PAD, unit = (W - PAD * 2) / SUMW;
+      CW.forEach(function (w) { colX.push([x0, w * unit]); x0 += w * unit; });
+      var grid = weeks.map(function (wk) { return wk.map(linesOf); });
+      var rowH = grid.map(function (wk) { return 40 + Math.max(1, Math.max.apply(null, wk.map(function (o) { return o ? o.L.length : 0; }))) * LH + 10; });
+      var mp = rc.closest(".mpanel"), sub = mp && mp.querySelector(".msub");
+      var subT = sub ? Array.prototype.filter.call(sub.childNodes, function (n) { return !(n.tagName === "BUTTON"); }).map(function (n) { return n.textContent; }).join("").replace(/\s+/g, " ").replace(/날짜를 누르면 오른쪽에서 고칩니다/, "").replace(/[ ·]+$/, "").trim() : "";
+      var rq = document.getElementById("rqt" + ym), rqL = rq && !rq.hidden ? Array.prototype.map.call(rq.querySelectorAll("li"), tx) : [];
+      var TOP = PAD + 60 + 40 + 16, H = TOP + HEADH + rowH.reduce(function (a, b) { return a + b; }, 0) + (rqL.length ? 30 + 40 + Math.ceil(rqL.length / 3) * 34 : 0) + PAD + 30;
+      var cv = document.createElement("canvas"), S = 1.5; cv.width = W * S; cv.height = H * S;
+      var cx = cv.getContext("2d"); cx.scale(S, S);
+      cx.fillStyle = "#FFFCF6"; cx.fillRect(0, 0, W, H);
+      var p = ym.split("-");
+      cx.fillStyle = "#4A3B2C"; cx.font = "900 44px " + FONT; cx.fillText("🗓 " + p[0] + "년 " + (+p[1]) + "월 근무표", PAD, PAD + 44);
+      cx.fillStyle = "#5C4F43"; cx.font = "600 24px " + FONT; cx.fillText(subT.replace(/^\d{4}년 \d{1,2}월 · /, ""), PAD, PAD + 90);
+      var y = TOP;
+      ["일", "월", "화", "수", "목", "금", "토"].forEach(function (d, k) {
+        cx.fillStyle = "#F2E9DA"; cx.fillRect(colX[k][0], y, colX[k][1], HEADH);
+        cx.fillStyle = k === 0 ? "#B3261E" : k === 6 ? "#1B5FC1" : "#4A3B2C"; cx.font = "800 24px " + FONT; cx.textAlign = "center";
+        cx.fillText(d, colX[k][0] + colX[k][1] / 2, y + 31); cx.textAlign = "left";
+      });
+      y += HEADH;
+      function fit(t, max, font) { cx.font = font; if (cx.measureText(t).width <= max) return t; while (t.length > 1 && cx.measureText(t + "…").width > max) t = t.slice(0, -1); return t + "…"; }
+      grid.forEach(function (wk, r) {
+        var h = rowH[r];
+        wk.forEach(function (o, k) {
+          var X = colX[k][0], CWk = colX[k][1];
+          cx.fillStyle = !o ? "#F7F2EA" : o.closed ? "#F2ECE3" : o.ws ? "#EFE6DA" : "#FFFFFF"; cx.fillRect(X, y, CWk, h);
+          cx.strokeStyle = "#D9CDB8"; cx.lineWidth = 1; cx.strokeRect(X + 0.5, y + 0.5, CWk - 1, h - 1);
+          if (!o) return;
+          cx.fillStyle = o.sun ? "#B3261E" : o.sat ? "#1B5FC1" : "#2A2522"; cx.font = "900 24px " + FONT; cx.fillText(o.d, X + 10, y + 30);
+          var ly = y + 40;
+          o.L.forEach(function (l) {
+            var f = (l.b ? "800 " : "600 ") + (l.sm ? "18px " : "20px ") + FONT, ix = X + 10 + (l.bar ? 10 : 0), mx = CWk - 20 - (l.bar ? 10 : 0);
+            if (l.bg) { cx.fillStyle = l.bg; cx.fillRect(X + 6, ly + 2, CWk - 12, LH - 4); }
+            if (l.bar) { cx.fillStyle = l.bar; cx.fillRect(X + 8, ly + 2, 5, LH - 4); }
+            cx.fillStyle = l.c; cx.fillText(fit(l.t, mx, f), ix, ly + 22);
+            ly += LH;
+          });
+        });
+        y += h;
+      });
+      if (rqL.length) {
+        y += 30; cx.fillStyle = "#B3261E"; cx.font = "900 26px " + FONT; cx.fillText("🙋 휴무 신청 " + rqL.length + "건", PAD, y + 26); y += 40;
+        cx.font = "700 21px " + FONT; cx.fillStyle = "#2A2522";
+        rqL.forEach(function (t, i) { cx.fillText(fit(t, (W - PAD * 2) / 3 - 20, "700 21px " + FONT), PAD + (i % 3) * (W - PAD * 2) / 3, y + 24 + Math.floor(i / 3) * 34); });
+      }
+      cx.font = "600 18px " + FONT; cx.fillStyle = "#8C7B6B"; cx.textAlign = "right";
+      cx.fillText("카페스이 · 근무표 " + new Date().toLocaleString("ko-KR", { hour12: false }), W - PAD, H - 18);
+      cv.toBlob(function (blob) {
+        if (!blob) { rej(new Error("그림을 못 만들었습니다")); return; }
+        res({ blob: blob, name: "근무표_" + ym + ".png", cap: "🗓 " + p[0] + "년 " + (+p[1]) + "월 근무표" + (subT ? "\n" + subT : "") + (rqL.length ? "\n🙋 휴무 신청 — " + rqL.join(" / ") : "") });
+      }, "image/png");
+    });
+  };
+
   // 퇴근 — 본인 칸의 버튼 한 번. 시각은 시스템이 넣는다.
   (function () {
     var SCHED = window.__CS_SCHED || {};
@@ -5027,7 +5126,7 @@
       var o = rd(), ym = planYm(), m = +ym.slice(5, 7), can = EDIT.indexOf(me()) >= 0;
       var done = ITEMS.filter(function (x) { return o[x[0]]; }).length;
       var x = ITEMS[0], c = o[x[0]];
-      box.innerHTML = '<div class="mgsc mgsc1' + (c ? " dn" : "") + '"><label class="mgscl"><input type="checkbox" data-k="' + x[0] + '"' + (c ? " checked" : "") + (can ? "" : " disabled") + '>' +
+      box.innerHTML = '<div class="mgsc mgsc1' + (c ? " dn" : "") + '"><b class="mgsct">📌 중요공지 (근무관련)</b><label class="mgscl"><input type="checkbox" data-k="' + x[0] + '"' + (c ? " checked" : "") + (can ? "" : " disabled") + '>' +
         '<span><b>📌 ' + m + "월 근무표 · " + x[1] + "</b><small>" + x[2] + (c ? ' <em class="mgscby">✔ ' + nim(c.by) + " " + c.at + "</em>" : "") + "</small></span></label>" +
         '<button type="button" class="mgscgo">🗓 ' + m + "월 근무표</button></div>";
     }

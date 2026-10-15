@@ -240,7 +240,8 @@
       '<div class="msub">' + m.year + "년 " + m.month + "월 · 영업 <b class=\"bizn\" data-n=\"" + biz + "\">" + biz +
       "</b>일 · 정기휴무 " + rest + "일<span class=\"wsn\"></span>" + note +
       '<button type="button" class="editbtn" data-k="' + key +
-      '" aria-pressed="false">✎ 근무표 수정하기</button></div>' +
+      '" aria-pressed="false">✎ 근무표 수정하기</button>' +
+      '<button type="button" class="tgbtn schtg" data-tg="sched" data-ym="' + key + '">📨 텔레그램 공유</button></div>' +
       '<div class="cal" id="rc' + key + '">' + WDHEAD + readCal(m) + "</div>" + editwrap +
       reqbar + "</div>";   // 휴무 신청은 달력 아래 — 달력이 한 화면에 먼저 보이게
   }

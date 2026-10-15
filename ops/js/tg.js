@@ -66,6 +66,7 @@
     wr: { label: "매니저 주간 보고", photo: "wrCopy", cap: function () { var l = document.getElementById("wrLabel"); return "📋 매니저 주간 보고 " + (l ? l.textContent : ""); } },
     log: { label: "운영일지", text: function () { return window.__CS_LOG_TEXT ? window.__CS_LOG_TEXT() : ""; } },
     td: { label: "오늘 할 일 결과", text: function () { return window.__CS_TD_TEXT ? window.__CS_TD_TEXT() : ""; } },
+    sched: { label: "근무표", img: function (btn) { return window.__CS_SCHED_IMG ? window.__CS_SCHED_IMG(btn.dataset.ym) : Promise.reject(new Error("근무표가 없습니다")); } },
     bn: { label: "벤치마킹 정리", text: function () { return window.__CS_BN_TEXT ? window.__CS_BN_TEXT() : ""; } }
   };
   function flash(btn, s, ms) {
@@ -86,6 +87,7 @@
       var t = K.text(); if (!t || !String(t).trim()) { flash(btn, "아직 쓴 내용이 없습니다", 2500); return; }
       sendText(t).then(ok, bad); return;
     }
+    if (K.img) { K.img(btn).then(function (r) { return sendPhoto(r.blob, r.cap, r.name); }).then(ok, bad); return; }   // 근무표 — 달력 전체를 그림으로
     var src = document.getElementById(K.photo); if (!src) { bad(); return; }
     var to = setTimeout(function () { if (pending) { pending = null; bad(new Error("그림을 못 만들었습니다")); } }, 8000);
     pending = function (blob, name) { clearTimeout(to); sendPhoto(blob, K.cap(), name).then(ok, bad); };
