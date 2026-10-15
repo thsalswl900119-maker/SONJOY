@@ -3340,7 +3340,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-216</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-217</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -4012,16 +4012,16 @@ input,select,textarea{border-radius:var(--r3)!important}
 </footer>
 </div>
 
-<script src="js/chrome.js?v=v0924-216"></script>
+<script src="js/chrome.js?v=v0924-217"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/drag.js?v=v0924-216"></script>
-<script src="js/sync.js?v=v0924-216"></script>
-<script src="js/holidays.js?v=v0924-216"></script>
-<script src="js/sched.js?v=v0924-216"></script>
-<script src="js/app.js?v=v0924-216"></script>
+<script src="js/drag.js?v=v0924-217"></script>
+<script src="js/sync.js?v=v0924-217"></script>
+<script src="js/holidays.js?v=v0924-217"></script>
+<script src="js/sched.js?v=v0924-217"></script>
+<script src="js/app.js?v=v0924-217"></script>
 
 <style>
 /* 재고 · 발주 */
@@ -4588,8 +4588,20 @@ nav.stabs .stab.prog[aria-selected="true"]{color:var(--open)!important;border-bo
 #tp1 .wsall small{font-size:12.5px;color:#E8D9C0;line-height:1.5;margin-top:2px}
 #tp1 .wsallo{margin-top:6px;font-size:12.5px;color:var(--ink2);text-align:center}
 #tp1 .msub .planning.done{color:#2E7D32}
+
+/* 휴무 신청 — 칸엔 「휴무/신청:이름」 · 내용은 달력 위 상자(10/15) */
+#tp1 .cal .cell .pickmark{white-space:nowrap;font-size:12.5px;padding:2px 8px}
+.reqtop{margin:6px 0 10px;padding:10px 14px;background:#FFF6F2;border:1.5px solid #E7B9AE;border-radius:12px;font-size:15px;color:var(--ink)}
+.reqtop .rqth{display:block;color:#8E1B14;font-size:15.5px;margin-bottom:4px}
+.reqtop ul{margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:6px 18px}
+.reqtop li{line-height:1.5}
+.reqtop .rqd{font-weight:800}
+.reqtop .rqn{font-weight:800;color:#8E1B14}
+.reqtop .rqw{color:var(--ink2)}
+#tp1 .mtab .mdot.done{color:#2E7D32}
+#tp1 .mtab[aria-selected="true"] .mdot.done{color:#BFE5B5}
 </style>
-<script src="js/stock.js?v=v0924-216"></script>
+<script src="js/stock.js?v=v0924-217"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -4655,11 +4667,11 @@ nav.stabs .stab.prog[aria-selected="true"]{color:var(--open)!important;border-bo
   window.addEventListener("cs:remote", function () { setTimeout(mark, 400); });
 })();
 </script>
-<script src="js/presence.js?v=v0924-216"></script>
-<script src="js/weekrep.js?v=v0924-216"></script>
-<script src="js/recipe.js?v=v0924-216"></script>
-<script src="js/bench.js?v=v0924-216"></script>
-<script src="js/monthlog.js?v=v0924-216"></script>
-<script src="js/xmas.js?v=v0924-216"></script>
-<script src="js/tg.js?v=v0924-216"></script>
+<script src="js/presence.js?v=v0924-217"></script>
+<script src="js/weekrep.js?v=v0924-217"></script>
+<script src="js/recipe.js?v=v0924-217"></script>
+<script src="js/bench.js?v=v0924-217"></script>
+<script src="js/monthlog.js?v=v0924-217"></script>
+<script src="js/xmas.js?v=v0924-217"></script>
+<script src="js/tg.js?v=v0924-217"></script>
 </body></html>

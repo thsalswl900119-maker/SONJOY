@@ -1266,6 +1266,13 @@
         c.innerHTML = html;
       });
       if (window.__CS_REQMARK && window.__CS_REQMARK[ym]) window.__CS_REQMARK[ym]();
+      // 영업일 수에서 워크샵 날(영업 쉼)을 뺀다(10/15 사장님 「영업일이 틀렸다 · 워크샵도 쉬는 건데」)
+      var mp = read.closest(".mpanel"), bn = mp && mp.querySelector(".msub .bizn"), wn = mp && mp.querySelector(".msub .wsn");
+      if (bn) {
+        var wsN = read.querySelectorAll(".cell.wsday:not(.closed)").length;
+        bn.textContent = (parseInt(bn.dataset.n, 10) || 0) - wsN;
+        if (wn) wn.textContent = wsN ? " · 🏕 워크샵 " + wsN + "일(영업 쉼)" : "";
+      }
       // 짜는 달 머리 글 — 저장된 날 수로(10/15 사장님 「이것도 바뀌고」: 다 짰는데 「아직 안 짠 달」로 나오던 것)
       var pl = read.closest(".mpanel"), pb = pl && pl.querySelector(".msub .planning");
       if (pb && pl.classList.contains("plan")) {
@@ -1273,6 +1280,9 @@
         read.querySelectorAll(".cell[data-d]:not(.closed)").forEach(function (c) { if (saved[String(c.dataset.d).replace("/", "-")]) sv++; });
         pb.textContent = !sv ? "아직 안 짠 달 — 매니저가 짭니다" : sv >= bizN ? "✅ 다 짠 달 · 날짜를 누르면 오른쪽에서 고칩니다" : "짜는 중 · " + sv + " / " + bizN + "일 짬";
         pb.classList.toggle("done", sv >= bizN && sv > 0);
+        // 달 단추의 「짜는 중」도 같이(10/15 사장님 「이거 안 바뀌었다 · 딱 맞게」)
+        var md = document.querySelector('.mtab[data-m="cm' + ym + '"] .mdot');
+        if (md) { md.textContent = sv >= bizN && sv > 0 ? "✅ 다 짬" : !sv ? "짤 달" : "짜는 중 " + sv + "/" + bizN; md.classList.toggle("done", sv >= bizN && sv > 0); }
       }
       paintBoss();
     }
@@ -1573,7 +1583,8 @@
         w.hidden = !msg.length;
       }
       ap.addEventListener("change", function (e) { var r = e.target.closest(".dpr"); if (r) paintR(r); });
-      (window.__CS_DAYPANEL = window.__CS_DAYPANEL || {})[ym] = function () { if (sel) show(sel); };
+      var dpf = function () { if (sel) show(sel); }; dpf.open = function () { var d = sel || firstDay(); if (d) show(d); };
+      (window.__CS_DAYPANEL = window.__CS_DAYPANEL || {})[ym] = dpf;
       ap.addEventListener("click", function (e) {
         var nv = e.target.closest(".dpnav");
         if (nv && sel) { var nd = stepDay(sel, +nv.dataset.dir); if (nd) show(nd); return; }
@@ -1625,10 +1636,18 @@
         function setOpen(on) {
           wrap.hidden = !on;
           b.setAttribute("aria-pressed", String(on));
-          b.textContent = on ? "✓ 도구 닫기" : "🛠 로테이션 채우기 · 점검";
+          b.textContent = on ? "✓ 수정 끝" : "✏ 근무표 수정하기";
           if (on && wrap.__csCheck) wrap.__csCheck();
+          // 수정하기를 누르면 오른쪽 칸도 바로 열어 둔다(컴퓨터) — 「날짜 누르면 오른쪽에서」
+          if (on && window.__CS_DAYPANEL && window.__CS_DAYPANEL[ym] && window.__CS_DAYPANEL[ym].open) window.__CS_DAYPANEL[ym].open();
         }
-        b.textContent = "🛠 로테이션 채우기 · 점검";
+        // 10/15 사장님 「근무표 수정하기로 해야 하는 거 아님? 저게 왜 있는지 모르겠음」 — 이름은 수정하기 · 열면 무엇을 하는 곳인지 한 줄
+        b.textContent = "✏ 근무표 수정하기";
+        if (wrap && !wrap.querySelector(".phelp")) {
+          var hp = document.createElement("p"); hp.className = "phelp";
+          hp.innerHTML = "<b>하루씩 고치기</b> = 달력에서 날짜를 누르면 오른쪽 칸에서 사람마다 근무를 바꾸고 저장 · <b>한 번에</b> = 「로테이션대로 채우기」(빈 달을 순서대로 채움) · 「근무표 복사」(단톡방에 붙여 넣기) · 아래 점검 딱지(오픈 · 마감 빠진 날)";
+          wrap.insertBefore(hp, wrap.firstChild);
+        }
         wrap.__csClose = function () { setOpen(false); };
         b.addEventListener("click", function () {
           var on = wrap.hidden;
@@ -4708,12 +4727,29 @@
         c.classList.toggle("picked", !!(act && who && by[c.dataset.d] && by[c.dataset.d].some(function (x) { return x.n === who; })));
         Array.prototype.forEach.call(c.querySelectorAll(".pickmark"), function (m) { m.remove(); });
         (by[c.dataset.d] || []).forEach(function (x) {
+          // 칸 안엔 짧게 「휴무/신청:박혜빈」 — 사유는 달력 위 상자에(10/15 사장님)
           var m = document.createElement("span"); m.className = "pickmark";
-          m.textContent = "🙋 " + (x.n === "사장님" ? "사장님" : x.n.slice(1)) + " 휴무 신청" + (x.w ? " · " + x.w : "");
+          m.textContent = "휴무/신청:" + x.n; if (x.w) m.title = x.w;
           var dn = c.querySelector(".dnum"); c.insertBefore(m, dn ? dn.nextSibling : c.firstChild);
         });
       });
+      topBox();
     }
+    // 달력 위 「휴무 신청」 상자 — 날짜순 · 누가 · 사유
+    function topBox() {
+      var rc = document.getElementById("rc" + month); if (!rc) return;
+      var at = rc.closest(".calrow") || rc, box = document.getElementById("rqt" + month);
+      if (!box) { box = document.createElement("div"); box.id = "rqt" + month; box.className = "reqtop"; }
+      if (box.nextSibling !== at || box.parentNode !== at.parentNode) at.parentNode.insertBefore(box, at);
+      var o = rd(), rows = [];
+      Object.keys(o).forEach(function (n) { (o[n].days || []).forEach(function (d) { rows.push({ d: d, n: n, w: (o[n].why || {})[d] || "" }); }); });
+      rows.sort(function (a, b) { return parseInt(a.d.split("/")[1], 10) - parseInt(b.d.split("/")[1], 10) || (a.n < b.n ? -1 : 1); });
+      box.hidden = !rows.length;
+      box.innerHTML = rows.length ? '<b class="rqth">🙋 휴무 신청 ' + rows.length + '건</b><ul>' + rows.map(function (x) {
+        return '<li><span class="rqd">' + label(x.d) + '</span> <span class="rqn">휴무/신청:' + esc(x.n) + '</span>' + (x.w ? ' <span class="rqw">— ' + esc(x.w) + "</span>" : "") + "</li>";
+      }).join("") + "</ul>" : "";
+    }
+    function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
     (window.__CS_REQMARK = window.__CS_REQMARK || {})[month] = function () { marks(); };
     function listAll() {
       var o = rd(); return Object.keys(o).filter(function (n) { return (o[n].days || []).length; }).map(function (n) {
@@ -4725,7 +4761,7 @@
       marks();
       var all = listAll();
       if (!act || !who) {
-        pickEl.textContent = (all.length ? "휴무 신청 — " + all.join(" / ") + " · " : "") + "이름을 누르면 달력에서 쉬고 싶은 날을 고를 수 있어요";
+        pickEl.textContent = (all.length ? "휴무 신청 " + all.length + "명 — 달력 위 상자에 있어요 · " : "") + "이름을 누르면 달력에서 쉬고 싶은 날을 고를 수 있어요";
         pickEl.className = "reqpick" + (all.length ? " has" : "");
       } else {
         var r = mine();
@@ -4975,7 +5011,7 @@
   (function () {
     var ITEMS = [
       ["s1", "다음 달 근무표는 <mark>전달 2째주까지</mark> 다 짜기", "휴무 신청을 먼저 받고 → 「🛠 로테이션 채우기」 → 날짜를 눌러 오른쪽 칸에서 고치기"],
-      ["s2", "날마다 <mark>오픈할 사람 · 마감할 사람</mark>이 있는지", "근무표 「🛠 로테이션 채우기 · 점검」의 점검 딱지가 「빠진 곳 없습니다」인지 확인"],
+      ["s2", "날마다 <mark>오픈할 사람 · 마감할 사람</mark>이 있는지", "근무표 「✏ 근무표 수정하기」를 눌러 나오는 점검 딱지가 「빠진 곳 없습니다」인지 확인"],
       ["s3", "<mark>같은 자리(오픈 · 마감 · 미들)에 두 명</mark> 넣지 않기", "한 날에 오픈 두 명이면 한 명은 마감으로"],
       ["s4", "토요일은 <mark>「토요일」 근무</mark>로 (평일 근무 섞지 않기)", "토요일 영업 10:30–17:00 · 토요일 근무 09:00–18:00"],
       ["s5", "<mark>사장님 일정</mark>(출강 · 출장 · 공부 · 수업 준비) 먼저 확인하고 짜기", "사장님이 가게에 없는 날은 매장 근무 인원을 꼭 다시 보기"],

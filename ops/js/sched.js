@@ -237,8 +237,8 @@
       '<div class="cal">' + WDHEAD + editCal(m) + "</div></div>";
     return '<div class="mpanel' + (isPlan ? " plan" : "") + '" id="' + id + '" hidden' +
       ' data-plan="' + key + '">' +
-      '<div class="msub">' + m.year + "년 " + m.month + "월 · 영업 " + biz +
-      "일 · 정기휴무 " + rest + "일" + note +
+      '<div class="msub">' + m.year + "년 " + m.month + "월 · 영업 <b class=\"bizn\" data-n=\"" + biz + "\">" + biz +
+      "</b>일 · 정기휴무 " + rest + "일<span class=\"wsn\"></span>" + note +
       '<button type="button" class="editbtn" data-k="' + key +
       '" aria-pressed="false">✎ 근무표 수정하기</button></div>' +
       '<div class="cal" id="rc' + key + '">' + WDHEAD + readCal(m) + "</div>" + editwrap +
