@@ -1476,12 +1476,86 @@
       });
     }
 
+    // 📋 그날 근무 조정 — 달력 오른쪽 칸(10/15 · 사장님 「오른쪽에 직원들 근무 조정할 수 있게」 · 사진처럼)
+    //   날짜를 누르면 그날 직원별 근무를 고르고 「이날 저장」. 그날 처음 저장이면 그날 전체, 아니면 바꾼 사람만 —
+    //   다른 컴퓨터가 고친 칸을 덮지 않게(근무표 「바꾼 칸만」 저장 규칙 그대로). 고칠 수 있는 근무 종류는 「근무표 수정하기」 칸과 같다.
+    var WDN0 = ["일", "월", "화", "수", "목", "금", "토"], WCOL0 = { "정항아": "p1", "박혜빈": "p2", "이해선": "p3", "사장님": "p4" };
+    function dayPanel(ym, panel) {
+      var read = document.getElementById("rc" + ym), ew = document.getElementById("ew" + ym);
+      if (!read || !ew || read.parentNode.classList.contains("calrow")) return;
+      var row = document.createElement("div"); row.className = "calrow";
+      read.parentNode.insertBefore(row, read); row.appendChild(read);
+      var ap = document.createElement("aside"); ap.className = "dpanel"; ap.setAttribute("aria-live", "polite"); row.appendChild(ap);
+      var Y = +ym.slice(0, 4), M = +ym.slice(5, 7), sel = null, base = {};
+      function slotOf(md, n) { return ew.querySelector((n === "공지" ? '.pnote[data-d="' + md + '"]' : '.pslot[data-d="' + md + '"][data-n="' + n + '"]')); }
+      function tm(n, r) { var x = (TIMES[n] || {})[r]; return x && x[0] ? x[0] + "–" + x[1] : r && RCLS[r] === "away" ? "가게 밖" : r && !/휴/.test(r) ? "매장 상황 보며" : ""; }
+      function hint() {
+        ap.innerHTML = '<div class="dph"><b>그날 근무 조정</b><small>달력에서 날짜를 누르면 여기서 그날만 바꿀 수 있어요</small></div>' +
+          '<p class="dphint">· 휴무 · 오픈 · 마감 · 출장 등을 고르고 <b>「이날 저장」</b><br>· 한 달을 한꺼번에 짤 때는 위 「✎ 근무표 수정하기」</p>';
+        ap.classList.remove("open");
+      }
+      function show(md) {
+        var d = +md.split("-")[1], dt = new Date(Y, M - 1, d), saved = load(ym)[md];
+        // 아직 저장 안 한 날은 달력에 보이는 로테이션 근무를 바탕으로(짜는 달은 빈 칸) — 저장할 때 그날 전체가 들어간다
+        var src = saved || (panel.classList.contains("plan") ? {} : (draftOf(ym)[md] || {}));
+        sel = md; base = {};
+        read.querySelectorAll(".cell.dsel").forEach(function (c) { c.classList.remove("dsel"); });
+        var cell = read.querySelector('.cell[data-d="' + M + "/" + d + '"]'); if (cell) cell.classList.add("dsel");
+        var h = '<div class="dph"><b>' + M + "월 " + d + "일 " + WDN0[dt.getDay()] + '</b><button type="button" class="dpx" aria-label="닫기">✕</button>' +
+          '<small>' + (saved ? "저장된 근무표" : (panel.classList.contains("plan") ? "아직 안 짠 날" : "로테이션대로 · 아직 고친 적 없음")) + ' · 고르고 「이날 저장」</small></div>';
+        NAMES.concat(["공지"]).forEach(function (n) {
+          var s = slotOf(md, n); if (!s) return;
+          var v = src[n] || ""; base[n] = v;
+          h += '<div class="dpr' + (n === "공지" ? " note" : "") + '" data-n="' + n + '"><span class="dpn ' + (WCOL0[n] || "") + '"><i></i>' + (n === "공지" ? "📣 그날 공지" : n === "사장님" ? "사장님" : n + "님") + "</span>" +
+            '<select class="dps" aria-label="' + n + ' 근무">' + s.innerHTML + "</select>" +
+            (n === "공지" ? "" : '<span class="dpt">' + esc(tm(n, v)) + "</span>") + "</div>";
+        });
+        h += '<div class="dpb"><button type="button" class="dpsave">이날 저장</button><button type="button" class="dpreset">되돌리기</button></div><p class="dpmsg"></p>';
+        ap.innerHTML = h; ap.classList.add("open");
+        ap.querySelectorAll(".dpr").forEach(function (r) { var s = r.querySelector(".dps"); s.value = base[r.dataset.n]; paintR(r); });
+      }
+      function paintR(r) {
+        var s = r.querySelector(".dps"), n = r.dataset.n, v = s.value, t = r.querySelector(".dpt");
+        r.classList.toggle("off", /휴무|휴가/.test(v)); r.classList.toggle("chg", v !== base[n]);
+        if (t) t.textContent = tm(n, v);
+      }
+      ap.addEventListener("change", function (e) { var r = e.target.closest(".dpr"); if (r) paintR(r); });
+      ap.addEventListener("click", function (e) {
+        if (e.target.closest(".dpx")) { sel = null; read.querySelectorAll(".cell.dsel").forEach(function (c) { c.classList.remove("dsel"); }); hint(); return; }
+        if (e.target.closest(".dpreset")) { if (sel) show(sel); return; }
+        if (!e.target.closest(".dpsave") || !sel) return;
+        var cur = load(ym), fresh = !cur[sel], md = sel, n0 = 0;
+        ap.querySelectorAll(".dpr").forEach(function (r) {
+          var n = r.dataset.n, v = r.querySelector(".dps").value;
+          if (!fresh && v === base[n]) return;
+          n0++;
+          if (v) (cur[md] || (cur[md] = {}))[n] = v;
+          else if (cur[md]) { delete cur[md][n]; if (!Object.keys(cur[md]).length) delete cur[md]; }
+          var s = slotOf(md, n); if (s) { s.value = v; if (n === "공지") s.classList.toggle("set", !!v); else { s.classList.toggle("off", /휴무|휴가/.test(v)); s.classList.toggle("set", !!v && v !== "휴무"); } }
+        });
+        if (!n0) { ap.querySelector(".dpmsg").textContent = "바꾼 게 없어요"; return; }
+        store(ym, cur); repaint(ym); show(md);
+        if (window.__CS_TOAST) window.__CS_TOAST("✅ " + M + "/" + md.split("-")[1] + " 근무를 저장했어요");
+        ap.querySelector(".dpmsg").textContent = "저장했습니다 · 달력에 반영됐습니다";
+      });
+      read.addEventListener("click", function (e) {
+        var c = e.target.closest(".cell"); if (!c || c.classList.contains("closed") || c.classList.contains("pickable")) return;
+        if (document.querySelector(".reqbar .rname[aria-pressed=\"true\"]")) return;   // 휴무 신청 고르는 중
+        var p = String(c.dataset.d || "").split("/"); if (p.length < 2) return;
+        show(p[0] + "-" + p[1]);
+        if (window.innerWidth < 1100) ap.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      });
+      window.addEventListener("cs:remote", function (e) { var ks = (e.detail && e.detail.keys) || []; if (ks.indexOf(keyOf(ym)) >= 0 && sel && !ap.contains(document.activeElement)) show(sel); });
+      var now = new Date();
+      if (window.innerWidth >= 1100 && now.getFullYear() === Y && now.getMonth() + 1 === M && now.getDay() !== 0) show(M + "-" + now.getDate()); else hint();
+    }
     function bindSched(root) {
       root.querySelectorAll(".mpanel").forEach(function (panel) {
         var ym = panel.dataset.plan;
         var wrap = document.getElementById("ew" + ym);
         if (wrap) bind(ym, wrap, panel);
         repaint(ym);
+        if (wrap) dayPanel(ym, panel);
       });
       root.querySelectorAll(".editbtn").forEach(function (b) {
         var ym = b.dataset.k;
@@ -1490,7 +1564,7 @@
         var isPlan = !!b.closest(".mpanel.plan");
         function setOpen(on) {
           wrap.hidden = !on;
-          if (read) read.hidden = on;
+          if (read) { read.hidden = on; if (read.parentNode.classList.contains("calrow")) read.parentNode.hidden = on; }
           b.setAttribute("aria-pressed", String(on));
           b.textContent = on ? "✓ 다 했어요 (저장하고 닫기)" : "✎ 근무표 수정하기";
         }

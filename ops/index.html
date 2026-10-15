@@ -3340,7 +3340,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-210</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-211</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -4012,16 +4012,16 @@ input,select,textarea{border-radius:var(--r3)!important}
 </footer>
 </div>
 
-<script src="js/chrome.js?v=v0924-210"></script>
+<script src="js/chrome.js?v=v0924-211"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/drag.js?v=v0924-210"></script>
-<script src="js/sync.js?v=v0924-210"></script>
-<script src="js/holidays.js?v=v0924-210"></script>
-<script src="js/sched.js?v=v0924-210"></script>
-<script src="js/app.js?v=v0924-210"></script>
+<script src="js/drag.js?v=v0924-211"></script>
+<script src="js/sync.js?v=v0924-211"></script>
+<script src="js/holidays.js?v=v0924-211"></script>
+<script src="js/sched.js?v=v0924-211"></script>
+<script src="js/app.js?v=v0924-211"></script>
 
 <style>
 /* 재고 · 발주 */
@@ -4520,8 +4520,37 @@ nav.stabs .stab.prog[aria-selected="true"]{color:var(--open)!important;border-bo
 .xmedb button{font:inherit;font-weight:800;font-size:15px;min-height:42px;padding:8px 16px;border-radius:999px;border:1.5px solid var(--rule2);background:#fff;color:var(--ink);cursor:pointer}
 .xmedb .xed-s{background:#2E7D32;border-color:#2E7D32;color:#fff}
 .xmedn{margin:0;font-size:13.5px;color:var(--ink2)}
+/* 근무표 오른쪽 「그날 근무 조정」(10/15 · app.js dayPanel) — 컴퓨터는 달력 오른쪽에 붙어 따라옴 · 휴대폰은 날짜를 누르면 아래에서 올라옴 */
+#tp1 .calrow{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}
+#tp1 .calrow>.cal{min-width:0}
+#tp1 .dpanel{position:sticky;top:14px;background:#FFFDF8;border:1px solid #E3DACA;border-radius:12px;padding:16px 16px 14px;box-shadow:0 2px 0 rgba(120,90,50,.06)}
+#tp1 .dph{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;padding-bottom:10px;margin-bottom:6px;border-bottom:1px solid #EEE7D9}
+#tp1 .dph b{font-family:var(--serif);font-size:22px;color:var(--ink)}
+#tp1 .dph small{flex-basis:100%;font-size:13.5px;color:var(--ink2)}
+#tp1 .dpx{margin-left:auto;font:inherit;font-size:16px;background:none;border:0;cursor:pointer;color:var(--ink2);padding:2px 6px}
+#tp1 .dphint{font-size:14px;color:var(--ink2);line-height:1.7;margin:6px 0 0}
+#tp1 .dpr{display:grid;grid-template-columns:1fr auto;align-items:center;gap:4px 10px;padding:9px 0;border-bottom:1px solid #F1EBDF}
+#tp1 .dpn{display:flex;align-items:center;gap:7px;font-weight:800;font-size:15px;color:var(--ink)}
+#tp1 .dpn i{width:10px;height:10px;border-radius:3px;background:var(--rule2);flex:none}
+#tp1 .dpn.p1 i{background:#C45A00}#tp1 .dpn.p2 i{background:#1B5FC1}#tp1 .dpn.p3 i{background:#8E3BB0}#tp1 .dpn.p4 i{background:#2E7D32}
+#tp1 .dps{font:inherit;font-size:16px;min-height:40px;padding:6px 10px;border:1.5px solid var(--rule2);border-radius:8px;background:#fff;color:var(--ink);max-width:170px}
+#tp1 .dpt{grid-column:1/-1;font-size:13px;color:var(--ink2);font-family:var(--mono);text-align:right}
+#tp1 .dpr.off .dps{background:#F7EDE8;color:var(--off)}
+#tp1 .dpr.chg .dps{border-color:var(--open);box-shadow:0 0 0 2px #F3DEC0}
+#tp1 .dpr.note{border-bottom:0}
+#tp1 .dpb{display:flex;gap:8px;margin-top:12px}
+#tp1 .dpsave{flex:1;font:inherit;font-weight:900;font-size:16px;min-height:46px;border:0;border-radius:10px;background:var(--nv,#4A3B2C);color:#fff;cursor:pointer}
+#tp1 .dpreset{font:inherit;font-weight:700;font-size:14px;min-height:46px;padding:0 14px;border:1.5px solid var(--rule2);border-radius:10px;background:#fff;color:var(--ink2);cursor:pointer}
+#tp1 .dpmsg{min-height:1.2em;margin:8px 0 0;font-size:14px;font-weight:800;color:#2E7D32}
+#tp1 .cal .cell:not(.closed){cursor:pointer}
+#tp1 .cal .cell.dsel{outline:3px solid var(--nvacc,#E0A458)!important;outline-offset:-3px;background:#FFF8EA}
+@media (max-width:1099px){
+  #tp1 .calrow{grid-template-columns:1fr}
+  #tp1 .dpanel{display:none}
+  #tp1 .dpanel.open{display:block;position:fixed;left:0;right:0;bottom:0;top:auto;z-index:80;max-height:78vh;overflow:auto;border-radius:18px 18px 0 0;box-shadow:0 -8px 28px rgba(40,25,10,.28);padding:16px 16px calc(16px + env(safe-area-inset-bottom))}
+}
 </style>
-<script src="js/stock.js?v=v0924-210"></script>
+<script src="js/stock.js?v=v0924-211"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -4587,11 +4616,11 @@ nav.stabs .stab.prog[aria-selected="true"]{color:var(--open)!important;border-bo
   window.addEventListener("cs:remote", function () { setTimeout(mark, 400); });
 })();
 </script>
-<script src="js/presence.js?v=v0924-210"></script>
-<script src="js/weekrep.js?v=v0924-210"></script>
-<script src="js/recipe.js?v=v0924-210"></script>
-<script src="js/bench.js?v=v0924-210"></script>
-<script src="js/monthlog.js?v=v0924-210"></script>
-<script src="js/xmas.js?v=v0924-210"></script>
-<script src="js/tg.js?v=v0924-210"></script>
+<script src="js/presence.js?v=v0924-211"></script>
+<script src="js/weekrep.js?v=v0924-211"></script>
+<script src="js/recipe.js?v=v0924-211"></script>
+<script src="js/bench.js?v=v0924-211"></script>
+<script src="js/monthlog.js?v=v0924-211"></script>
+<script src="js/xmas.js?v=v0924-211"></script>
+<script src="js/tg.js?v=v0924-211"></script>
 </body></html>
