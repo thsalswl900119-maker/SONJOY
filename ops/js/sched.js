@@ -101,11 +101,8 @@
     window.__CS_SHIFT_T = T;   // 사람 · 근무별 예정 출퇴근 (일지 「일찍 · 늦게 간 사람」이 씀)
     var CL = { "오픈": "open", "마감": "close", "미들": "mid", "전일": "full", "토요일": "full" };
     var AWAY = { "휴무": 1, "휴가": 1, "반짝휴무": 1, "출장": 1, "공부": 1, "출강": 1, "서울출장": 1, "사무실 근무": 1, "수업 준비": 1, "해외출장": 1, "워크샵": 1 };
-    try {
-      for (var i = 0; i < localStorage.length; i++) {
-        var k = localStorage.key(i);
-        if (k.indexOf("cafesui.sched.") !== 0) continue;
-        var ym = k.slice(14), data = JSON.parse(localStorage.getItem(k) || "{}");
+    // 한 달 저장값을 출퇴근 · 오늘 근무용 표(__CS_SCHED)에 넣는다 — 고친 뒤에도 다시 불러 새로고침 없이 반영(10/15 점검)
+    function applyMonth(ym, data) {
         Object.keys(data).forEach(function (md) {
           var day = md.split("-")[1];
           var date = ym + "-" + String(day).padStart(2, "0");
@@ -120,8 +117,21 @@
           });
           if (list.length) window.__CS_SCHED[date] = list; else delete window.__CS_SCHED[date];
         });
+    }
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (k.indexOf("cafesui.sched.") !== 0) continue;
+        applyMonth(k.slice(14), JSON.parse(localStorage.getItem(k) || "{}"));
       }
     } catch (e) {}
+    window.__CS_SCHED_REFRESH = function (ym) {
+      try { applyMonth(ym, JSON.parse(localStorage.getItem("cafesui.sched." + ym) || "{}")); } catch (e) {}
+      if (window.__CS_ATT_RENDER) try { window.__CS_ATT_RENDER(); } catch (e) {}
+    };
+    window.addEventListener("cs:remote", function (e) {
+      ((e.detail && e.detail.keys) || []).forEach(function (k) { if (k.indexOf("cafesui.sched.") === 0) window.__CS_SCHED_REFRESH(k.slice(14)); });
+    });
   })();
 
   function readCal(m) {

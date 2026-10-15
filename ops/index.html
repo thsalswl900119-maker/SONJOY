@@ -3340,7 +3340,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-214</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-215</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -4012,16 +4012,16 @@ input,select,textarea{border-radius:var(--r3)!important}
 </footer>
 </div>
 
-<script src="js/chrome.js?v=v0924-214"></script>
+<script src="js/chrome.js?v=v0924-215"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/drag.js?v=v0924-214"></script>
-<script src="js/sync.js?v=v0924-214"></script>
-<script src="js/holidays.js?v=v0924-214"></script>
-<script src="js/sched.js?v=v0924-214"></script>
-<script src="js/app.js?v=v0924-214"></script>
+<script src="js/drag.js?v=v0924-215"></script>
+<script src="js/sync.js?v=v0924-215"></script>
+<script src="js/holidays.js?v=v0924-215"></script>
+<script src="js/sched.js?v=v0924-215"></script>
+<script src="js/app.js?v=v0924-215"></script>
 
 <style>
 /* 재고 · 발주 */
@@ -4559,8 +4559,29 @@ nav.stabs .stab.prog[aria-selected="true"]{color:var(--open)!important;border-bo
 #tp1 .editwrap>.cal{display:none!important}
 #tp1 .editwrap{margin:0 0 12px;padding:12px 14px;border:1.5px dashed var(--rule2);border-radius:12px;background:#FFFBF2}
 #tp1 .editwrap .pbar .psave{display:none}
+#tp1 .dpwarn{margin:12px 0 0;padding:9px 12px;border-radius:8px;background:#FCE6E1;color:#8E1B14;font-size:14px;font-weight:800;line-height:1.55}
+/* 📌 관리자 중요 공지 · 근무표 짤 때 꼭 체크(10/15) */
+#mgSchedChk .mgsc{margin:0 0 18px}
+#mgSchedChk .tnhead{display:flex;align-items:center;gap:10px}
+#mgSchedChk .mgscn{margin-left:auto;font-size:14px;font-weight:900;background:#B3261E;color:#fff;border-radius:999px;padding:3px 11px}
+#mgSchedChk .mgscn.ok{background:#2E7D32}
+#mgSchedChk li{display:flex;flex-direction:column;gap:2px}
+#mgSchedChk .mgscl{display:flex;align-items:flex-start;gap:10px;cursor:pointer}
+#mgSchedChk .mgscl input{width:22px;height:22px;flex:none;margin:2px 0 0;accent-color:#2E7D32}
+#mgSchedChk li>span{padding-left:32px}
+#mgSchedChk li.dn{background:#F1F7EF}
+#mgSchedChk li.dn b{color:#3B5A36}
+#mgSchedChk .mgscby{font-style:normal;font-weight:800;color:#2E7D32;font-size:13px;white-space:nowrap}
+#mgSchedChk .mgscf{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-top:10px}
+#mgSchedChk .mgscgo{font:inherit;font-weight:900;font-size:15px;min-height:42px;padding:8px 16px;border:0;border-radius:999px;background:var(--nv,#4A3B2C);color:#fff;cursor:pointer}
+#mgSchedChk .mgscf small{font-size:13.5px;color:var(--ink2)}
+#tp1 .bizt.wsoff{display:inline-block;background:#4A3B2C;color:#fff;font-weight:900;font-size:12.5px;padding:2px 8px;border-radius:6px;margin:2px 0}
+#tp1 .cal .cell.wsday{background:#F6F0E4}
+/* 휴무 신청 고른 날 — 테두리 없이 작은 딱지만(10/15 사장님 「휴무 신청해도 테두리선 안 되게」) */
+#tp1 .cal .cell.picked{box-shadow:none!important;outline:none!important;border-color:#EEE7D9!important}
+#tp1 .cal .cell .pickmark{display:inline-block;align-self:flex-start;font-size:12.5px;font-weight:800;color:#8E1B14;background:#FCE6E1;border-radius:999px;padding:2px 8px;margin:2px 0;border:0}
 </style>
-<script src="js/stock.js?v=v0924-214"></script>
+<script src="js/stock.js?v=v0924-215"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -4626,11 +4647,11 @@ nav.stabs .stab.prog[aria-selected="true"]{color:var(--open)!important;border-bo
   window.addEventListener("cs:remote", function () { setTimeout(mark, 400); });
 })();
 </script>
-<script src="js/presence.js?v=v0924-214"></script>
-<script src="js/weekrep.js?v=v0924-214"></script>
-<script src="js/recipe.js?v=v0924-214"></script>
-<script src="js/bench.js?v=v0924-214"></script>
-<script src="js/monthlog.js?v=v0924-214"></script>
-<script src="js/xmas.js?v=v0924-214"></script>
-<script src="js/tg.js?v=v0924-214"></script>
+<script src="js/presence.js?v=v0924-215"></script>
+<script src="js/weekrep.js?v=v0924-215"></script>
+<script src="js/recipe.js?v=v0924-215"></script>
+<script src="js/bench.js?v=v0924-215"></script>
+<script src="js/monthlog.js?v=v0924-215"></script>
+<script src="js/xmas.js?v=v0924-215"></script>
+<script src="js/tg.js?v=v0924-215"></script>
 </body></html>

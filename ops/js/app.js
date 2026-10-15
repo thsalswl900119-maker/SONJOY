@@ -1235,8 +1235,11 @@
           return (RORDER[x.r] || 9) - (RORDER[y.r] || 9);
         });
         var hol = c.querySelector(".hol"), bz = c.querySelector(".bizt");
+        // 워크샵 가는 날은 가게 영업을 쉰다(10/15 사장님) — 공지 「워크샵」이거나 다 같이 워크샵이면 「영업 쉼」
+        var wsDay = day["공지"] === "워크샵" || (NAMES.every(function (n) { return !day[n] || day[n] === "워크샵" || /휴무|휴가/.test(day[n]); }) && NAMES.some(function (n) { return day[n] === "워크샵"; }));
+        c.classList.toggle("wsday", !!wsDay);
         var html = '<div class="dnum">' + c.querySelector(".dnum").textContent + "</div>" +
-          (hol ? hol.outerHTML : "") + (bz ? bz.outerHTML : "") +
+          (hol ? hol.outerHTML : "") + (wsDay ? '<div class="bizt wsoff">🏕 워크샵 · 영업 쉼</div>' : (bz ? bz.outerHTML : "")) +
           (day["공지"] ? '<div class="allnote">📣 ' + esc(day["공지"]) + "</div>" : "") +
           offs.map(function (o) {
             return '<div class="offrow"><span class="offmark">' + esc(o.r) + "</span>" +
@@ -1308,8 +1311,9 @@
         });
         var w = cell.querySelector(".pwarn");
         if (!filled) { blank += 1; if (w) w.textContent = ""; return; }
-        var hasOpen = roles["오픈"] || roles["전일"] || roles["전일(케이크+사무실근무)"];
-        var hasClose = roles["마감"] || roles["전일"] || roles["전일(케이크+사무실근무)"];
+        // 토요일 근무(09:00–18:00)는 문 여는 사람 · 닫는 사람을 같이 맡는다 — 토요일에 「오픈 · 마감 없음」이 잘못 뜨던 것 고침(10/15)
+        var hasOpen = roles["오픈"] || roles["전일"] || roles["전일(케이크+사무실근무)"] || roles["토요일"];
+        var hasClose = roles["마감"] || roles["전일"] || roles["전일(케이크+사무실근무)"] || roles["토요일"];
         if (roles["워크샵"] && !hasOpen && !hasClose) { if (w) w.textContent = "워크샵"; return; }   // 다 같이 워크샵 가는 날은 오픈 · 마감 경고 안 함
         if (!hasOpen) { noOpen += 1; warn.push("오픈 없음"); }
         if (!hasClose) { noClose += 1; warn.push("마감 없음"); }
@@ -1354,6 +1358,7 @@
           else if (cur[d]) { delete cur[d][n]; if (!Object.keys(cur[d]).length) delete cur[d]; }
         });
         store(ym, cur);
+        if (window.__CS_SCHED_REFRESH) window.__CS_SCHED_REFRESH(ym);
         lastSave = { t: Date.now(), vals: vals };
         touched = {}; all = false;
         repaint(ym);
@@ -1516,7 +1521,7 @@
             '<select class="dps" aria-label="' + n + ' 근무">' + s.innerHTML + "</select>" +
             (n === "공지" ? "" : '<span class="dpt">' + esc(tm(n, v)) + "</span>") + "</div>";
         });
-        h += '<div class="dpb"><button type="button" class="dpsave">이날 저장</button><button type="button" class="dpreset">되돌리기</button></div><p class="dpmsg"></p>';
+        h += '<div class="dpwarn" hidden></div><div class="dpb"><button type="button" class="dpsave">이날 저장</button><button type="button" class="dpreset">되돌리기</button></div><p class="dpmsg"></p>';
         ap.innerHTML = h; ap.classList.add("open");
         ap.querySelectorAll(".dpr").forEach(function (r) { var s = r.querySelector(".dps"); s.value = base[r.dataset.n]; paintR(r); });
       }
@@ -1532,6 +1537,23 @@
         var s = r.querySelector(".dps"), n = r.dataset.n, v = s.value, t = r.querySelector(".dpt");
         r.classList.toggle("off", /휴무|휴가/.test(v)); r.classList.toggle("chg", v !== base[n]);
         if (t) t.textContent = tm(n, v);
+        dayWarn();
+      }
+      // 그날 점검 — 저장 전에 빈 자리 · 겹침을 바로 보여 준다(저장은 막지 않음)
+      function dayWarn() {
+        var w = ap.querySelector(".dpwarn"); if (!w) return;
+        var roles = {}, any = 0;
+        ap.querySelectorAll(".dpr:not(.note)").forEach(function (r) { var v = r.querySelector(".dps").value; if (!v || /휴무|휴가/.test(v) || RCLS[v] === "away") return; any++; roles[v] = (roles[v] || 0) + 1; });
+        var op = roles["오픈"] || roles["전일"] || roles["전일(케이크+사무실근무)"] || roles["토요일"];
+        var cl = roles["마감"] || roles["전일"] || roles["전일(케이크+사무실근무)"] || roles["토요일"];
+        var msg = [];
+        if (roles["워크샵"] && !op && !cl) msg = [];
+        else if (any) { if (!op) msg.push("오픈할 사람이 없어요"); if (!cl) msg.push("마감할 사람이 없어요"); }
+        ["오픈", "마감", "미들"].forEach(function (k) { if (roles[k] > 1) msg.push(k + "이 두 명이에요"); });
+        var dd = sel ? new Date(Y, M - 1, +sel.split("-")[1]).getDay() : -1;
+        if (dd === 6 && (roles["오픈"] || roles["마감"] || roles["미들"]) && !roles["토요일"]) msg.push("토요일인데 평일 근무(오픈 · 마감 · 미들)로 되어 있어요");
+        w.innerHTML = msg.length ? "⚠ " + msg.map(esc).join("<br>⚠ ") : "";
+        w.hidden = !msg.length;
       }
       ap.addEventListener("change", function (e) { var r = e.target.closest(".dpr"); if (r) paintR(r); });
       (window.__CS_DAYPANEL = window.__CS_DAYPANEL || {})[ym] = function () { if (sel) show(sel); };
@@ -1551,7 +1573,7 @@
           var s = slotOf(md, n); if (s) { s.value = v; if (n === "공지") s.classList.toggle("set", !!v); else { s.classList.toggle("off", /휴무|휴가/.test(v)); s.classList.toggle("set", !!v && v !== "휴무"); } }
         });
         if (!n0) { ap.querySelector(".dpmsg").textContent = "바꾼 게 없어요"; return; }
-        store(ym, cur); repaint(ym); show(md); if (ew.__csCheck) ew.__csCheck();
+        store(ym, cur); if (window.__CS_SCHED_REFRESH) window.__CS_SCHED_REFRESH(ym); repaint(ym); show(md); if (ew.__csCheck) ew.__csCheck();
         if (window.__CS_TOAST) window.__CS_TOAST("✅ " + M + "/" + md.split("-")[1] + " 근무를 저장했어요");
         ap.querySelector(".dpmsg").textContent = "저장했습니다 · 달력에 반영됐습니다";
       });
@@ -1629,6 +1651,7 @@
              "-" + String(d.getDate()).padStart(2, "0");
     }
 
+    window.__CS_ATT_RENDER = function () { render(); };   // 근무표를 고치면 출퇴근 칸도 바로(10/15)
     function render() {
       var d = dateEl.value || todayStr();
       var plan = SCHED[d];
@@ -4638,6 +4661,9 @@
     var msgEl = bar.querySelector(".reqmsg");
     var KEY = "cafesui.off." + month;
     var who = null, picked = [], reasons = {};
+    // 고르는 중(act)은 이 화면에서만 — 예전엔 이름이 저장돼 모든 기기에서 계속 「고르는 중」이라, 날짜를 누르면
+    // 휴무 신청 날(빨간 테두리)이 되고 오른쪽 「그날 근무 조정」 칸이 안 열렸다(10/15 사장님 「왜 선이 그어졌는지」)
+    var act = false;
 
     try {
       var raw = localStorage.getItem(KEY);
@@ -4658,11 +4684,11 @@
     }
     function render() {
       names.forEach(function (n) {
-        n.setAttribute("aria-pressed", String(n.dataset.n === who));
+        n.setAttribute("aria-pressed", String(act && n.dataset.n === who));
       });
       cells.forEach(function (c) {
-        c.classList.toggle("pickable", !!who);
-        var on = picked.indexOf(c.dataset.d) >= 0;
+        c.classList.toggle("pickable", act && !!who);
+        var on = act && picked.indexOf(c.dataset.d) >= 0;   // 빨간 테두리는 고르는 중에만
         c.classList.toggle("picked", on);
         var mark = c.querySelector(".pickmark");
         if (on && !mark) {
@@ -4679,8 +4705,11 @@
       picked.sort(function (a, b) {
         return parseInt(a.split("/")[1], 10) - parseInt(b.split("/")[1], 10);
       });
-      if (!who) {
-        pickEl.textContent = "먼저 이름을 골라주세요";
+      if (!act && who && picked.length) {
+        pickEl.textContent = who + (who === "사장님" ? "" : "님") + " 휴무 신청 " + picked.length + "일 — " + picked.map(function (d) { return label(d) + (reasons[d] ? " (" + reasons[d] + ")" : ""); }).join(", ") + " · 고치려면 이름을 누르세요";
+        pickEl.className = "reqpick has";
+      } else if (!act || !who) {
+        pickEl.textContent = "이름을 누르면 달력에서 쉬고 싶은 날을 고를 수 있어요 (고르는 동안은 날짜를 눌러도 근무 조정 칸이 안 열림)";
         pickEl.className = "reqpick";
       } else if (!picked.length) {
         pickEl.textContent = who + (who === "사장님" ? "" : "님") + " — 달력에서 쉬고 싶은 날을 누르세요";
@@ -4725,14 +4754,15 @@
 
     names.forEach(function (n) {
       n.addEventListener("click", function () {
-        who = (who === n.dataset.n) ? null : n.dataset.n;
+        if (act && who === n.dataset.n) act = false;   // 다시 누르면 고르기 끝
+        else { who = n.dataset.n; act = true; }
         persist(); render();
       });
     });
     cells.forEach(function (c) {
       c.addEventListener("click", function (e) {
-        if (!who) { msgEl.textContent = "이름을 먼저 골라주세요"; return; }
-        if (e.target.closest(".sh, .offrow, .prow")) return;
+        if (!act || !who) return;   // 고르는 중이 아니면 날짜 누름은 「그날 근무 조정」 칸이 받는다
+        if (e.target.closest(".prow, select")) return;   // 고르는 중엔 칸 어디를 눌러도 신청/취소
         var d = c.dataset.d, i = picked.indexOf(d);
         // 한 번 누르면 신청, 다시 누르면 취소. 사유는 아래 칸에 적는다.
         if (i < 0) picked.push(d);
@@ -4952,6 +4982,56 @@
     });
     var pn = document.getElementById("tp15");
     if (pn && window.MutationObserver) new MutationObserver(function () { if (pn.querySelector(".mgedit")) apply(); }).observe(pn, { childList: true });
+  })();
+
+  // 📌 관리자 탭 중요 공지 — 근무표 짤 때 꼭 체크(10/15 · 사장님 「관리자 메뉴에 중요 공지로 · 잊지 않게 체크하는 걸로」)
+  //   짜는 달(다음 달)마다 새로 체크 · cafesui.mgrchk.<YYYY-MM> = { 항목: { by, at } } · 매니저(정항아) · 사장님만 체크
+  (function () {
+    var ITEMS = [
+      ["s1", "다음 달 근무표는 <mark>전달 2째주까지</mark> 다 짜기", "휴무 신청을 먼저 받고 → 「🛠 로테이션 채우기」 → 날짜를 눌러 오른쪽 칸에서 고치기"],
+      ["s2", "날마다 <mark>오픈할 사람 · 마감할 사람</mark>이 있는지", "근무표 「🛠 로테이션 채우기 · 점검」의 점검 딱지가 「빠진 곳 없습니다」인지 확인"],
+      ["s3", "<mark>같은 자리(오픈 · 마감 · 미들)에 두 명</mark> 넣지 않기", "한 날에 오픈 두 명이면 한 명은 마감으로"],
+      ["s4", "토요일은 <mark>「토요일」 근무</mark>로 (평일 근무 섞지 않기)", "토요일 영업 10:30–17:00 · 토요일 근무 09:00–18:00"],
+      ["s5", "<mark>사장님 일정</mark>(출강 · 출장 · 공부 · 수업 준비) 먼저 확인하고 짜기", "사장님이 가게에 없는 날은 매장 근무 인원을 꼭 다시 보기"],
+      ["s6", "휴무 신청 · 대타 · 바뀐 근무는 <mark>단톡방에 바로 공지</mark>", "근무표가 바뀌면 출퇴근 칸도 같이 바뀝니다 — 말로만 바꾸지 않기"],
+      ["s7", "워크샵 가는 날은 <mark>가게 영업을 쉰다</mark> — 미리 다 알리기", "근무표 그날 공지 「워크샵」(달력에 「🏕 워크샵 · 영업 쉼」) · 네이버 · 배민 · 쿠팡 임시 휴무 등록 · 매장 안내문 · 인스타 공지 · 그날 예약 안 받기"]
+    ];
+    var EDIT = ["정항아", "사장님"];
+    function me() { try { return localStorage.getItem("cafesui.me") || ""; } catch (e) { return ""; } }
+    function nim(n) { return n === "사장님" ? n : n + "님"; }
+    function planYm() { var d = new Date(), n = new Date(d.getFullYear(), d.getMonth() + 1, 1); return n.getFullYear() + "-" + String(n.getMonth() + 1).padStart(2, "0"); }
+    function K() { return "cafesui.mgrchk." + planYm(); }
+    function rd() { try { return JSON.parse(localStorage.getItem(K()) || "{}") || {}; } catch (e) { return {}; } }
+    function stamp() { var d = new Date(); return (d.getMonth() + 1) + "/" + d.getDate() + " " + String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0"); }
+    function draw() {
+      var box = document.getElementById("mgSchedChk"); if (!box) return;
+      var o = rd(), ym = planYm(), m = +ym.slice(5, 7), can = EDIT.indexOf(me()) >= 0;
+      var done = ITEMS.filter(function (x) { return o[x[0]]; }).length;
+      box.innerHTML = '<div class="tnotice mgsc"><div class="tnhead">📌 중요 공지 · ' + m + '월 근무표 짤 때 꼭 체크 <span class="mgscn' + (done === ITEMS.length ? " ok" : "") + '">' + done + " / " + ITEMS.length + "</span></div><ul>" +
+        ITEMS.map(function (x) {
+          var c = o[x[0]];
+          return '<li class="' + (c ? "dn" : "") + '"><label class="mgscl"><input type="checkbox" data-k="' + x[0] + '"' + (c ? " checked" : "") + (can ? "" : " disabled") + '><b>' + x[1] + "</b></label><span>" + x[2] +
+            (c ? ' <em class="mgscby">✔ ' + nim(c.by) + " " + c.at + "</em>" : "") + "</span></li>";
+        }).join("") + "</ul>" +
+        '<div class="mgscf"><button type="button" class="mgscgo">🗓 ' + m + '월 근무표 열기</button><small>' + (can ? "체크한 사람 · 시간이 남습니다 · 달이 바뀌면 다음 달 목록으로 새로 시작" : "정항아님 · 사장님이 체크합니다") + "</small></div></div>";
+    }
+    document.addEventListener("change", function (e) {
+      var cb = e.target.closest && e.target.closest("#mgSchedChk input[data-k]"); if (!cb) return;
+      var w = me(); if (EDIT.indexOf(w) < 0) { cb.checked = !cb.checked; return; }
+      var o = rd(); if (cb.checked) o[cb.dataset.k] = { by: w, at: stamp() }; else delete o[cb.dataset.k];
+      try { localStorage.setItem(K(), JSON.stringify(o)); } catch (er) {}
+      draw();
+    });
+    document.addEventListener("click", function (e) {
+      if (!(e.target.closest && e.target.closest("#mgSchedChk .mgscgo"))) return;
+      var tb = document.querySelector('.tab[data-p="tp1"]'); if (tb) tb.click();
+      setTimeout(function () { var mt = document.querySelector('#tp1 .mtab[data-m="cm' + planYm() + '"]'); if (mt) mt.click(); window.scrollTo({ top: 0, behavior: "smooth" }); }, 120);
+    });
+    var pn2 = document.getElementById("tp15");
+    if (pn2 && window.MutationObserver) new MutationObserver(function () { if (document.getElementById("mgSchedChk") && !document.querySelector("#mgSchedChk .mgsc")) draw(); }).observe(pn2, { childList: true, subtree: true });
+    window.addEventListener("cs:remote", function (e) { if (((e.detail && e.detail.keys) || []).indexOf(K()) >= 0) draw(); });
+    window.addEventListener("cs:me", draw);
+    draw();
     window.addEventListener("cs:remote", function (e) { if (((e.detail && e.detail.keys) || []).indexOf(KEY) >= 0) apply(); });
   })();
 
