@@ -1415,6 +1415,7 @@
         if (wrap.__csClose) wrap.__csClose();
       }
       wrap.__csCommit = commit;
+      wrap.__csCheck = function () { check(panel, wrap); };
       (window.__CS_SAVERS = window.__CS_SAVERS || []).push(function () { if (dirty) commit(); });
       slots.forEach(function (el) {
         el.addEventListener("change", function () {
@@ -1431,16 +1432,20 @@
       var variant = -1;
       var fill = wrap.querySelector(".pfill");
       if (fill) fill.addEventListener("click", function () {
+        var hasSaved = Object.keys(load(ym)).length;
+        if (!confirm("로테이션 " + ((variant + 1) % 5 + 1) + "안으로 이 달 전체를 채울까요?" + (hasSaved ? "\n\n⚠ 이미 정해 둔 근무도 로테이션대로 바뀝니다 (📣 공지는 그대로)" : "") + "\n\n채운 뒤 날짜를 눌러 오른쪽 칸에서 하나씩 고치면 됩니다")) return;
         variant = (variant + 1) % 5;
         var keep = {}; notes.forEach(function (el) { if (el.value) keep[el.dataset.d] = el.value; });
         var dr = window.__CS_DRAFT ? window.__CS_DRAFT(ym, variant) : {};
         Object.keys(keep).forEach(function (d) { (dr[d] || (dr[d] = {}))["공지"] = keep[d]; });
-        apply(dr); all = true; mark(true);
+        apply(dr); all = true; save(); mark(false);
         fill.textContent = "로테이션 " + (variant + 1) + "안 · 다시 누르면 다른 안";
-        if (msg) msg.textContent = "로테이션 " + (variant + 1) + "안으로 채웠습니다 (5가지 중) · 휴무 신청 보고 고친 뒤 저장을 누르세요";
+        if (msg) msg.textContent = "로테이션 " + (variant + 1) + "안으로 채우고 저장했습니다 · 휴무 신청 보고 날짜를 눌러 오른쪽에서 고치세요";
+        if (window.__CS_DAYPANEL && window.__CS_DAYPANEL[ym]) window.__CS_DAYPANEL[ym]();
       });
       var clear = wrap.querySelector(".pclear");
       if (clear) clear.addEventListener("click", function () {
+        if (!confirm("이 달 근무표를 전부 지울까요?\n\n저장된 근무가 모두 지워지고 되돌릴 수 없습니다")) return;
         store(ym, {});
         apply(wrap.classList.contains("planmode") ? {} : draftOf(ym));
         location.reload();
@@ -1485,6 +1490,7 @@
       if (!read || !ew || read.parentNode.classList.contains("calrow")) return;
       var row = document.createElement("div"); row.className = "calrow";
       read.parentNode.insertBefore(row, read); row.appendChild(read);
+      row.parentNode.insertBefore(ew, row);   // 도구 줄은 달력 위에
       var ap = document.createElement("aside"); ap.className = "dpanel"; ap.setAttribute("aria-live", "polite"); row.appendChild(ap);
       var Y = +ym.slice(0, 4), M = +ym.slice(5, 7), sel = null, base = {};
       function slotOf(md, n) { return ew.querySelector((n === "공지" ? '.pnote[data-d="' + md + '"]' : '.pslot[data-d="' + md + '"][data-n="' + n + '"]')); }
@@ -1528,6 +1534,7 @@
         if (t) t.textContent = tm(n, v);
       }
       ap.addEventListener("change", function (e) { var r = e.target.closest(".dpr"); if (r) paintR(r); });
+      (window.__CS_DAYPANEL = window.__CS_DAYPANEL || {})[ym] = function () { if (sel) show(sel); };
       ap.addEventListener("click", function (e) {
         var nv = e.target.closest(".dpnav");
         if (nv && sel) { var nd = stepDay(sel, +nv.dataset.dir); if (nd) show(nd); return; }
@@ -1544,7 +1551,7 @@
           var s = slotOf(md, n); if (s) { s.value = v; if (n === "공지") s.classList.toggle("set", !!v); else { s.classList.toggle("off", /휴무|휴가/.test(v)); s.classList.toggle("set", !!v && v !== "휴무"); } }
         });
         if (!n0) { ap.querySelector(".dpmsg").textContent = "바꾼 게 없어요"; return; }
-        store(ym, cur); repaint(ym); show(md);
+        store(ym, cur); repaint(ym); show(md); if (ew.__csCheck) ew.__csCheck();
         if (window.__CS_TOAST) window.__CS_TOAST("✅ " + M + "/" + md.split("-")[1] + " 근무를 저장했어요");
         ap.querySelector(".dpmsg").textContent = "저장했습니다 · 달력에 반영됐습니다";
       });
@@ -1574,12 +1581,14 @@
         var wrap = document.getElementById("ew" + ym);
         var read = document.getElementById("rc" + ym);
         var isPlan = !!b.closest(".mpanel.plan");
+        // 10/15 사장님 「이렇게(한 달 칸) 말고 오른쪽에서」 — 한 달 칸은 안 보이고 위에 도구 줄(로테이션 채우기 · 복사 · 점검)만 · 달력과 오른쪽 칸은 그대로
         function setOpen(on) {
           wrap.hidden = !on;
-          if (read) { read.hidden = on; if (read.parentNode.classList.contains("calrow")) read.parentNode.hidden = on; }
           b.setAttribute("aria-pressed", String(on));
-          b.textContent = on ? "✓ 다 했어요 (저장하고 닫기)" : "✎ 근무표 수정하기";
+          b.textContent = on ? "✓ 도구 닫기" : "🛠 로테이션 채우기 · 점검";
+          if (on && wrap.__csCheck) wrap.__csCheck();
         }
+        b.textContent = "🛠 로테이션 채우기 · 점검";
         wrap.__csClose = function () { setOpen(false); };
         b.addEventListener("click", function () {
           var on = wrap.hidden;
