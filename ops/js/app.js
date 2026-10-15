@@ -1674,7 +1674,47 @@
 
   // 📨 근무표 텔레그램 공유 — 보이는 달력(#rc<달>) 그대로 한 장 그림으로(10/15 사장님 「캘린더 전체가 캡처되어 올라가게」)
   //   칸 글은 화면에서 읽고, 사람 줄 색은 화면 띠 색(border-left) 그대로 · 아래에 휴무 신청 목록
+  // 10/15 사장님 「근무표 그대로 올라가게」 — 화면에 보이는 달을 그대로 찍는다(html2canvas · js/vendor 에 둠 · 처음 쓸 때만 불러옴)
+  //   찍을 땐 넓은 화면(1600px) 모양으로 · 오른쪽 칸 · 도구 줄 · 단추는 빼고 · 맨 위에 「N월 근무표」 제목. 못 찍으면 아래 그림 그리기(drawImg)로
+  function loadH2C() {
+    if (window.html2canvas) return Promise.resolve();
+    return new Promise(function (res, rej) {
+      var s = document.createElement("script"); s.src = "js/vendor/html2canvas.min.js";
+      s.onload = function () { res(); }; s.onerror = function () { rej(new Error("그림 도구를 못 불러왔어요")); };
+      document.head.appendChild(s);
+    });
+  }
   window.__CS_SCHED_IMG = function (ym) {
+    var mp = document.getElementById("rc" + ym), panel = mp && mp.closest(".mpanel");
+    if (!panel || !panel.offsetParent) return drawImg(ym);
+    var p = ym.split("-"), title = "🗓 " + p[0] + "년 " + (+p[1]) + "월 근무표";
+    return loadH2C().then(function () {
+      return window.html2canvas(panel, {
+        scale: 1.5, backgroundColor: "#FFFCF6", windowWidth: 1600, useCORS: true, logging: false,
+        onclone: function (doc) {
+          var m = doc.getElementById(panel.id); if (!m) return;
+          var st = doc.createElement("style");
+          st.textContent = "*{content-visibility:visible!important;animation:none!important;transition:none!important}" +
+            "#" + panel.id + "{width:1560px!important;max-width:none!important;padding:22px 26px 18px!important;margin:0!important;background:#FFFCF6!important;display:block!important}" +
+            "#" + panel.id + " .calrow{display:block!important}#" + panel.id + " .cal{width:100%!important}";
+          doc.head.appendChild(st);
+          Array.prototype.forEach.call(m.querySelectorAll(".dpanel,.editwrap,.reqbar,.editbtn,.schtg,.dpclose"), function (e) { e.remove(); });
+          var pl = m.querySelector(".msub .planning"); if (pl) pl.textContent = pl.textContent.replace(/ · 날짜를 누르면 오른쪽에서 고칩니다/, "");
+          var h = doc.createElement("div"); h.textContent = title;
+          h.style.cssText = "font:900 34px 'Noto Sans KR',sans-serif;color:#4A3B2C;margin:0 0 8px";
+          m.insertBefore(h, m.firstChild);
+          var f = doc.createElement("div"); f.textContent = "카페스이 · 근무표 " + new Date().toLocaleString("ko-KR", { hour12: false });
+          f.style.cssText = "font:600 15px sans-serif;color:#736350;text-align:right;margin-top:10px";
+          m.appendChild(f);
+        }
+      });
+    }).then(function (cv) {
+      return new Promise(function (res, rej) {
+        cv.toBlob(function (blob) { if (!blob) { rej(new Error("그림을 못 만들었습니다")); return; } drawImg(ym, true).then(function (o) { res({ blob: blob, name: o.name, cap: o.cap }); }, function () { res({ blob: blob, name: "근무표_" + ym + ".png", cap: title }); }); }, "image/png");
+      });
+    }).catch(function () { return drawImg(ym); });
+  };
+  var drawImg = function (ym, capOnly) {
     return new Promise(function (res, rej) {
       var rc = document.getElementById("rc" + ym); if (!rc) { rej(new Error("근무표가 없습니다")); return; }
       var FONT = "'Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',sans-serif";
@@ -1712,6 +1752,7 @@
       var mp = rc.closest(".mpanel"), sub = mp && mp.querySelector(".msub");
       var subT = sub ? Array.prototype.filter.call(sub.childNodes, function (n) { return !(n.tagName === "BUTTON"); }).map(function (n) { return n.textContent; }).join("").replace(/\s+/g, " ").replace(/날짜를 누르면 오른쪽에서 고칩니다/, "").replace(/[ ·]+$/, "").trim() : "";
       var rq = document.getElementById("rqt" + ym), rqL = rq && !rq.hidden ? Array.prototype.map.call(rq.querySelectorAll("li"), tx) : [];
+      if (capOnly) { var p0 = ym.split("-"); res({ name: "근무표_" + ym + ".png", cap: "🗓 " + p0[0] + "년 " + (+p0[1]) + "월 근무표" + (subT ? "\n" + subT : "") + (rqL.length ? "\n🙋 휴무 신청 — " + rqL.join(" / ") : "") }); return; }
       var TOP = PAD + 60 + 40 + 16, H = TOP + HEADH + rowH.reduce(function (a, b) { return a + b; }, 0) + (rqL.length ? 30 + 40 + Math.ceil(rqL.length / 3) * 34 : 0) + PAD + 30;
       var cv = document.createElement("canvas"), S = 1.5; cv.width = W * S; cv.height = H * S;
       var cx = cv.getContext("2d"); cx.scale(S, S);
