@@ -3340,7 +3340,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-220</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-221</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -4013,16 +4013,17 @@ input,select,textarea{border-radius:var(--r3)!important}
 </footer>
 </div>
 
-<script src="js/chrome.js?v=v0924-220"></script>
+<script src="js/chrome.js?v=v0924-221"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/drag.js?v=v0924-220"></script>
-<script src="js/sync.js?v=v0924-220"></script>
-<script src="js/holidays.js?v=v0924-220"></script>
-<script src="js/sched.js?v=v0924-220"></script>
-<script src="js/app.js?v=v0924-220"></script>
+<script src="js/drag.js?v=v0924-221"></script>
+<script src="js/sync.js?v=v0924-221"></script>
+<script src="js/holidays.js?v=v0924-221"></script>
+<script src="js/sched.js?v=v0924-221"></script>
+<script src="js/app.js?v=v0924-221"></script>
+<script src="js/fruit.js?v=v0924-221"></script>
 
 <style>
 /* 재고 · 발주 */
@@ -4613,8 +4614,55 @@ nav.stabs .stab.prog[aria-selected="true"]{color:var(--open)!important;border-bo
 #tp1 .msub .schtg{margin-left:6px;font-size:14px;min-height:38px;padding:6px 14px}
 #tp1 .schnote{margin:4px 0 14px}
 #tp1 .schnote #schDue{display:block;font-style:normal;font-weight:800;color:#B3261E;margin-top:2px}
+/* 🍓 과일 달력 그림 · 과일 색(10/15 · js/fruit.js) */
+#tp7 .fnowbox{background:var(--surface);border:1.5px solid var(--rule);border-radius:14px;padding:14px 16px 12px;margin:0 0 14px}
+#tp7 .fnowh{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;margin-bottom:10px}
+#tp7 .fnowh b{font-size:19px;color:var(--ink)}
+#tp7 .fnowh span{font-size:14px;color:var(--ink2)}
+#tp7 .fcards{display:flex;flex-wrap:wrap;gap:10px}
+#tp7 .fcard{font:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:96px;padding:10px 10px 8px;border-radius:14px;border:2px solid var(--fcol);background:var(--ftint);color:#2A2522}
+#tp7 .fcard:hover{transform:translateY(-1px);box-shadow:0 3px 10px rgba(74,59,44,.15)}
+#tp7 .fcard .fcico{width:52px;height:52px}
+#tp7 .fcard b{font-size:15.5px;font-weight:800;color:#2A2522}
+#tp7 .fcard i{font-style:normal;font-size:12.5px;font-weight:800;color:#fff;background:#6E5A44;border-radius:999px;padding:1px 8px}
+#tp7 .fcard.fpeak i{background:#B3261E}
+#tp7 .fcard.fend i{background:#7A4A1E}
+#tp7 .fcard.fsoon{background:var(--surface);border-style:dashed}
+#tp7 .fcard.fsoon i{background:#456270}
+#tp7 .flegend{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:12px;font-size:13.5px;color:var(--ink2)}
+#tp7 .flegend span{display:inline-flex;align-items:center;gap:6px}
+#tp7 .lg{display:inline-block;width:22px;height:14px;border-radius:4px}
+#tp7 .lg.pk{background:#D93A3A}#tp7 .lg.on{background:#F7C9C6}#tp7 .lg.nw{border:2.5px solid #4A3B2C;background:transparent}
+#tp7 .fbtn.fhasico{display:grid;grid-template-columns:50px 1fr;column-gap:12px;align-items:start}
+#tp7 .fbtn.fhasico>*:not(.fico){grid-column:2}
+#tp7 .fbtn .fico{grid-row:1/span 3;width:50px;height:50px;align-self:center;background:var(--ftint);border-radius:50%;padding:4px}
+#tp7 .fn1{font-size:16.5px;font-weight:800}
+#tp7 .fxrow .fn2{color:#5C4F43}
+#tp7 .fxrow .fc{opacity:1!important;background:transparent}
+#tp7 .fxrow .fc.on{background:var(--ftint)}
+#tp7 .fxrow .fc.on.peak{background:var(--fcol)}
+#tp7 .ftable tbody tr.fxrow:nth-child(4n+1) .fc:not(.on){background:#FBF8F2}
+#tp7 .ftable .fc.fnow{box-shadow:inset 3px 0 0 #4A3B2C,inset -3px 0 0 #4A3B2C}
+#tp7 .ftable th.fm.fnow{background:#4A3B2C;color:#fff;font-weight:900}
+#tp7 .ftable .fc{height:44px}
+#tp7 .vm.now{outline:2.5px solid #4A3B2C;outline-offset:-2px;font-weight:900}
+@media (max-width:640px){
+  #tp7 .ftwrap{overflow:visible;border:0;background:none}
+  #tp7 .ftable{min-width:0;display:block}
+  #tp7 .ftable thead{display:none}
+  #tp7 .ftable tbody{display:block}
+  #tp7 .ftable tr.fxrow{display:grid;grid-template-columns:repeat(12,1fr);background:var(--surface);border:1px solid var(--rule);border-radius:12px;overflow:hidden;margin:0 0 10px}
+  #tp7 .ftable tr.fxrow>th{grid-column:1/-1;width:auto;border-right:0}
+  #tp7 .ftable tr.fxrow>td.fc{height:30px;position:relative;border-bottom:0}
+  #tp7 .ftable tr.fxrow>td.fc::after{content:attr(data-m);position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700;color:#5C4F43}
+  #tp7 .ftable tr.fxrow>td.fc.peak::after{color:#fff}
+  #tp7 .ftable tr.fdrow{display:block}
+  #tp7 .ftable tr.fdrow>td{display:block}
+  #tp7 .fcard{min-width:84px;padding:8px 8px 6px}
+  #tp7 .fcard .fcico{width:44px;height:44px}
+}
 </style>
-<script src="js/stock.js?v=v0924-220"></script>
+<script src="js/stock.js?v=v0924-221"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -4680,11 +4728,11 @@ nav.stabs .stab.prog[aria-selected="true"]{color:var(--open)!important;border-bo
   window.addEventListener("cs:remote", function () { setTimeout(mark, 400); });
 })();
 </script>
-<script src="js/presence.js?v=v0924-220"></script>
-<script src="js/weekrep.js?v=v0924-220"></script>
-<script src="js/recipe.js?v=v0924-220"></script>
-<script src="js/bench.js?v=v0924-220"></script>
-<script src="js/monthlog.js?v=v0924-220"></script>
-<script src="js/xmas.js?v=v0924-220"></script>
-<script src="js/tg.js?v=v0924-220"></script>
+<script src="js/presence.js?v=v0924-221"></script>
+<script src="js/weekrep.js?v=v0924-221"></script>
+<script src="js/recipe.js?v=v0924-221"></script>
+<script src="js/bench.js?v=v0924-221"></script>
+<script src="js/monthlog.js?v=v0924-221"></script>
+<script src="js/xmas.js?v=v0924-221"></script>
+<script src="js/tg.js?v=v0924-221"></script>
 </body></html>
