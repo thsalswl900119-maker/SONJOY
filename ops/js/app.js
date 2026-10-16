@@ -4259,7 +4259,12 @@
       requestAnimationFrame(function () {
         if (!ov.isConnected) return;
         var cs = getComputedStyle(el);
-        ["fontFamily", "fontSize", "fontWeight", "lineHeight", "letterSpacing", "paddingTop", "paddingRight", "paddingBottom", "paddingLeft", "borderTopWidth", "borderRightWidth", "borderBottomWidth", "borderLeftWidth", "textIndent", "wordSpacing"].forEach(function (p) { ov.style[p] = cs[p]; });
+        // 줄바꿈 방식까지 칸과 똑같이 — 10/16 사고: 가독성 3차(body word-break:keep-all)로 칸은 띄어쓰기에서, 겹친 글은 글자 중간에서 줄이 바뀌어
+        // 보이는 글과 실제 커서 자리가 어긋났고, 누른 곳과 다른 데가 지워졌음(「사과 깎으시는거 동영상」 → 「사 과 … 깎으시는상」)
+        ["fontFamily", "fontSize", "fontWeight", "fontStyle", "fontStretch", "fontVariant", "fontFeatureSettings", "fontKerning", "lineHeight", "letterSpacing", "paddingTop", "paddingRight", "paddingBottom", "paddingLeft", "borderTopWidth", "borderRightWidth", "borderBottomWidth", "borderLeftWidth", "textIndent", "wordSpacing", "wordBreak", "overflowWrap", "whiteSpace", "lineBreak", "hyphens", "tabSize", "textTransform", "direction"].forEach(function (p) { ov.style[p] = cs[p]; });
+        // 칸에 세로 막대(스크롤바)가 있으면 그만큼 글 폭이 좁다 — 겹친 글도 똑같이 좁힌다
+        var sb = el.offsetWidth - el.clientWidth - (parseFloat(cs.borderLeftWidth) || 0) - (parseFloat(cs.borderRightWidth) || 0);
+        if (sb > 0) ov.style.paddingRight = ((parseFloat(cs.paddingRight) || 0) + sb) + "px";
         ov.style.top = el.offsetTop + "px"; ov.style.left = el.offsetLeft + "px";
         ov.style.width = el.offsetWidth + "px"; ov.style.height = el.offsetHeight + "px";
         ov.scrollTop = el.scrollTop;
@@ -4700,14 +4705,14 @@
           lb.forEach(function (nn) { if (nn && distinct.indexOf(nn) < 0) distinct.push(nn); });
           if (distinct.length > 1) {
             var shLines = shown.split("<br>"), plLines = plain.split(NL), srcLines = v.split(NL);
-            if (shLines.length === srcLines.length) shown = shLines.map(function (h, i) { var nn = lb[i] || ""; return '<span class="wl ' + (WCLR[nn] ? "w" + WCLR[nn] : "") + (rpHL && nn === "사장님" && srcLines[i].trim() ? " rpownl" : "") + '">' + (rpHL && nn === "사장님" && srcLines[i].trim() ? "👑 " : "") + h + "</span>"; }).join("");
+            if (shLines.length === srcLines.length) shown = shLines.map(function (h, i) { var nn = lb[i] || ""; return '<span class="wl ' + (WCLR[nn] ? "w" + WCLR[nn] : "") + (rpHL && nn === "사장님" && srcLines[i].trim() ? " rpownl" : "") + '">' + "" + h + "</span>"; }).join("");
             plain = plLines.map(function (x, i) { var nn = lb[i] || ""; return x.trim() ? x + (nn ? " (" + nn + ")" : "") : x; }).join(NL);
           } else if (cls !== " boss" && !/^lf14[0-4]$/.test(el.dataset.k) && (distinct.length ? distinct[0] === "사장님" : rpBy[el.dataset.k] === "사장님")) {
             // 사장님 혼자 쓴 칸은 형광 없이 사장님 글자색으로 (10/14) — 형광은 덧붙임에만
             shown = '<span class="wl ' + (WCLR["사장님"] ? "w" + WCLR["사장님"] : "") + '">' + shown + "</span>";
             plain = "〔사장님〕 " + plain;
           }
-          shown = shown.split(S1).join(rpHL ? '<span class="rpown">👑 ' : '<span class="rpownp">').split(S2).join("</span>");
+          shown = shown.split(S1).join(rpHL ? '<span class="rpown">' : '<span class="rpownp">').split(S2).join("</span>");
           plain = plain.split(S1).join("〔사장님: ").split(S2).join("〕");
           var ih = '<div class="rpitem' + cls + '"><b>' + esc(name) + "</b><span>" + shown + "</span></div>";
           var it = "· " + name + ": " + plain.split(NL).map(function (x) { return x.trim(); }).filter(Boolean).join(" / ");
