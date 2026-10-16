@@ -4162,7 +4162,8 @@
     function hlToday() { return (dateEl.value || today()) === today(); }
     function paintLines(el, lineBy, first, own) {
       lineBy = lineBy || [];
-      var HL = hlToday(); if (!HL) own = [];
+      // 지난 날짜도 사장님 덧붙임은 사장님 색(초록 · 형광 없이)으로 — 10/16 사장님 「내가 추가하는 사항은 글자색이 안 바뀐다」(예전엔 직원 색 그대로였음)
+      var HL = hlToday();
       var names = []; lineBy.forEach(function (n) { if (n && names.indexOf(n) < 0) names.push(n); });
       var ov = el.nextElementSibling && el.nextElementSibling.classList.contains("lgov") ? el.nextElementSibling : null;
       var lines = el.value.split(String.fromCharCode(10));
@@ -4172,7 +4173,7 @@
       // 노란 형광 · 빨간 글씨는 직원이 쓴 칸에 사장님이 덧붙인 글에만
       var allBoss = false;
       // 한 줄 칸(input)은 글자마다 색을 못 칠하니, 사장님이 덧붙인 게 있으면 칸 전체를 노란 형광 테두리로 (아래 「👑 사장님 덧붙임」에 크게)
-      el.classList.toggle("ownin", el.tagName !== "TEXTAREA" && !!el.value.trim() && (anyOwn || allBoss || (HL && lineBy[0] === "사장님" && first && first !== "사장님")));
+      el.classList.toggle("ownin", el.tagName !== "TEXTAREA" && !!el.value.trim() && ((HL && anyOwn) || allBoss || (HL && lineBy[0] === "사장님" && first && first !== "사장님")));
       if (el.tagName !== "TEXTAREA" || (names.length < 2 && !anyOwn && !allBoss)) {
         if (ov) ov.remove();
         el.classList.remove("ovon");
@@ -4187,7 +4188,7 @@
       // 사장님이 덧붙인 곳은 노란 형광 + 빨간 글씨 (다른 사람이 쓴 칸 안에서만)
       ov.innerHTML = lines.map(function (ln, i) {
         var n = lineBy[i] || first || "", whole = HL && n === "사장님" && (names.length > 1 || allBoss) && ln.trim();
-        var body = whole ? '<span class="own">' + esc(ln) + "</span>" : ownHtml(ln, marks[i], esc);
+        var body = whole ? '<span class="own">' + esc(ln) + "</span>" : ownHtml(ln, marks[i], esc, HL ? "own" : "ownp");
         return '<span class="' + (WCLR[n] ? "w" + WCLR[n] : "") + '">' + (body || " ") + "</span>";
       }).join(String.fromCharCode(10)) + " ";
       placeOv(el, ov);
@@ -4240,12 +4241,12 @@
       }
       return out;
     }
-    function ownHtml(ln, m, fmt) {
-      var out = "", st = 0;
+    function ownHtml(ln, m, fmt, cls) {
+      var out = "", st = 0; cls = cls || "own";
       for (var i = 0; i <= ln.length; i++) {
         if (i === ln.length || (i > 0 && !!m[i] !== !!m[i - 1])) {
           var part = ln.slice(st, i);
-          if (part) out += m[st] ? '<span class="own">' + fmt(part) + "</span>" : fmt(part);
+          if (part) out += m[st] ? '<span class="' + cls + '">' + fmt(part) + "</span>" : fmt(part);
           st = i;
         }
       }
@@ -4657,7 +4658,7 @@
       // 묶음별로 만들어 두고, 정한 순서로 붙인다
       var secH = {}, secT = {}, rpBl = {}, rpOw = {};
       var rpBy = {}; try { var rpO = JSON.parse(localStorage.getItem(keyFor()) || "{}") || {}; rpBl = rpO.bl || {}; rpOw = rpO.ow || {}; rpBy = rpO.by || {}; } catch (e) {}
-      var rpHL = hlToday(); if (!rpHL) rpOw = {};   // 지난 날짜 보고서는 사장님 형광 없이
+      var rpHL = hlToday();   // 지난 날짜 보고서는 사장님 형광 없이 사장님 색(초록)만
       var S1 = String.fromCharCode(1), S2 = String.fromCharCode(2);
       // 맨 위에 먼저 볼 것: 사장님 지시사항 → 인계사항 → 직원들에게 알릴 것 → 폐기 · 파손 → 매출 → 매장 흐름
       var TOPK = ["lf185", "lf180", "lf181", "lf162", "lf163", "lf166", "lf183", "lf184", "lf154"], topH = {}, topT = {};
@@ -4704,7 +4705,7 @@
             shown = '<span class="wl ' + (WCLR["사장님"] ? "w" + WCLR["사장님"] : "") + '">' + shown + "</span>";
             plain = "〔사장님〕 " + plain;
           }
-          shown = shown.split(S1).join('<span class="rpown">👑 ').split(S2).join("</span>");
+          shown = shown.split(S1).join(rpHL ? '<span class="rpown">👑 ' : '<span class="rpownp">').split(S2).join("</span>");
           plain = plain.split(S1).join("〔사장님: ").split(S2).join("〕");
           var ih = '<div class="rpitem' + cls + '"><b>' + esc(name) + "</b><span>" + shown + "</span></div>";
           var it = "· " + name + ": " + plain.split(NL).map(function (x) { return x.trim(); }).filter(Boolean).join(" / ");
