@@ -241,7 +241,7 @@
       "</b>일 · 정기휴무 " + rest + "일<span class=\"wsn\"></span>" + note +
       '<button type="button" class="editbtn" data-k="' + key +
       '" aria-pressed="false">✎ 근무표 수정하기</button>' +
-      '<button type="button" class="tgbtn schtg" data-tg="sched" data-ym="' + key + '">📨 텔레그램 공유</button></div>' +
+      '<button type="button" class="tgbtn schtg" data-tg="sched" data-ym="' + key + '">📸 텔레그램방에 캡쳐해서 올리기</button></div>' +
       '<div class="cal" id="rc' + key + '">' + WDHEAD + readCal(m) + "</div>" + editwrap +
       reqbar + "</div>";   // 휴무 신청은 달력 아래 — 달력이 한 화면에 먼저 보이게
   }

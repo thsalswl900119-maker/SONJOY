@@ -74,8 +74,27 @@
     btn.textContent = s; clearTimeout(btn._t);
     if (ms) btn._t = setTimeout(function () { btn.innerHTML = L; btn.disabled = false; }, ms);
   }
+  // 봇 연결 안 된 기기 — 그림을 만들어 휴대폰은 공유 창(텔레그램 고르기), 컴퓨터는 그림 복사 + 파일 저장(텔레그램에 붙여 넣기 · Ctrl+V)
+  function giveBlob(blob, name, title, btn) {
+    var file = null; try { file = new File([blob], name, { type: "image/png" }); } catch (e) {}
+    var dl = function () { var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); setTimeout(function () { a.remove(); }, 2000); };
+    var touch = window.matchMedia && window.matchMedia("(pointer:coarse)").matches;
+    if (touch && file && navigator.canShare && navigator.canShare({ files: [file] })) {
+      return navigator.share({ files: [file], title: title }).then(function () { flash(btn, "✅ 공유 창에서 텔레그램을 골랐으면 끝", 4000); }, function () { flash(btn, "공유를 닫았습니다", 2500); });
+    }
+    dl();
+    if (navigator.clipboard && window.ClipboardItem) {
+      return navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]).then(function () { flash(btn, "✅ 캡쳐 복사됨 · 텔레그램방에서 붙여넣기(Ctrl+V) · 파일도 저장됨", 6000); }, function () { flash(btn, "✅ 캡쳐 파일 저장됨 · 텔레그램방에 올려 주세요", 6000); });
+    }
+    flash(btn, "✅ 캡쳐 파일 저장됨 · 텔레그램방에 올려 주세요", 6000); return Promise.resolve();
+  }
   function send(kind, btn) {
     var K = KINDS[kind]; if (!K) return;
+    if (!ready() && K.img) {   // 근무표 — 봇이 없어도 캡쳐는 바로
+      if (btn.disabled) return; btn.disabled = true; flash(btn, "캡쳐 만드는 중…");
+      K.img(btn).then(function (r) { return giveBlob(r.blob, r.name, "근무표", btn); }).catch(function (e) { flash(btn, "❌ 캡쳐를 못 만들었어요 — " + (e && e.message || ""), 5000); });
+      return;
+    }
     if (!ready()) { setup(true); return; }
     if (btn.disabled) return;
     var c = get();
@@ -101,8 +120,8 @@
     var on = ready(), c = get();
     document.querySelectorAll("[data-tg]").forEach(function (b) {
       if (b.disabled) return;
-      b.classList.toggle("off", !on);
-      b.title = on ? "텔레그램 「" + (c.n || "단톡방") + "」으로 바로 보냅니다" : "이 기기는 아직 텔레그램에 연결 안 됨 — 누르면 연결 방법";
+      b.classList.toggle("off", !on && b.dataset.tg !== "sched");   // 근무표 캡쳐는 연결 없이도 됨
+      b.title = on ? "텔레그램 「" + (c.n || "단톡방") + "」으로 바로 보냅니다" : b.dataset.tg === "sched" ? "근무표를 한 장으로 캡쳐해서 복사 · 저장합니다 — 텔레그램방에 붙여 넣으세요" : "이 기기는 아직 텔레그램에 연결 안 됨 — 누르면 연결 방법";
     });
     var s = document.getElementById("tgState");
     var h = on ? "✅ 이 기기는 <b>" + esc(c.n || "단톡방") + "</b>에 연결됨" : "⚪ 이 기기는 아직 연결 안 됨";
