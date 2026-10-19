@@ -110,7 +110,7 @@
           dv.innerHTML = '<p>없으면 발주 넣어야 하는 디자인 재료를 자유롭게 적어 두세요. 예) 인쇄물(스티커 · 명함 · 브로셔 · 안내 카드) · 리본끈 · 생일 픽 · 케이크 토퍼 · 식용 꽃 · 초 · 스프링클 · 프린트 시트. 적은 건 다음 날에도 그대로 넘어가고 보고에도 같이 나갑니다.</p>' +
             '<textarea class="dinp" rows="4" placeholder="예) 스티커 인쇄물 반 남음 → 발주 · 리본끈 골드 없음 · 생일 픽 10개 · 토퍼 HAPPY BIRTHDAY 3개"></textarea>';
           var ta = dv.querySelector("textarea"); ta.value = stock[DESIGN_KEY] == null ? "" : stock[DESIGN_KEY];
-          ta.addEventListener("input", function () { stock[DESIGN_KEY] = ta.value; queueSave(); });
+          ta.addEventListener("input", function () { stock[DESIGN_KEY] = ta.value; queueSave(); clearTimeout(ta._rc); ta._rc = setTimeout(renderChecks, 300); });
           wrap.appendChild(dv); box.appendChild(d); return;
         }
         list.forEach(function (it) {
@@ -238,6 +238,22 @@
       });
     }
     function lines() { return ordEl.value.split(NL).map(function (l) { return l.trim(); }).filter(Boolean); }
+    // 🎨 디자인 재료 칸에 적은 줄도 발주 목록에(10/19 사장님 「여기에 쓰면 발주 목록에 안 뜨는데 뜨게」) — 칸 글은 그대로 두고 목록에만 「🎨 …」로
+    //   디자인 칸은 다음 날로 그대로 넘어가므로, 지난 7일 안에 「주문함」 체크한 줄은 주문 완료로 이어서 보인다
+    var DPRE = "🎨 ";
+    function designLines() {
+      return String(stock[DESIGN_KEY] || "").split(NL).map(function (l) { return l.trim(); })
+        .filter(function (l) { return l && !NOLINE.test(l); }).map(function (l) { return DPRE + l; });
+    }
+    function allLines() { var a = lines(); designLines().forEach(function (l) { if (a.indexOf(l) < 0) a.push(l); }); return a; }
+    function prevDone(l) {
+      if (l.indexOf(DPRE) !== 0 || !cur) return null;
+      var lim = new Date(cur + "T00:00:00"); lim.setDate(lim.getDate() - 7); lim = ymd(lim);
+      var ds = allDates().filter(function (x) { return x < cur && x >= lim; }).sort().reverse();
+      for (var i = 0; i < ds.length; i++) { var c = ((load(ds[i]) || {}).orderChecks || {})[l]; if (c && c.ordered) { var cc = {}; for (var k in c) cc[k] = c[k]; cc.from = cc.from || ds[i]; return cc; } }
+      return null;
+    }
+    function chk(l) { return checks[l] || prevDone(l) || {}; }
     function paintNone() {
       var v = $("#sk_noOrder").value, cb = $("#skNone"), lb = $("#skNoneL");
       cb.checked = !!v; lb.classList.toggle("on", !!v);
@@ -246,17 +262,17 @@
 
     // 발주 확인 — 사장·매니저가 "확인 → 주문함" 순서로 체크. 직원은 상태만 본다
     function renderChecks() {
-      var box = $("#skChecks"), ls = lines();
+      var box = $("#skChecks"), ls = allLines();
       // 위 숫자: 대기 · 확인 · 주문 완료 (10/14 — 한눈에)
       var nW = 0, nO = 0, nD = 0;
-      ls.forEach(function (l) { var c = checks[l] || {}; if (c.ordered) nD++; else if (c.ok) nO++; else nW++; });
+      ls.forEach(function (l) { var c = chk(l); if (c.ordered) nD++; else if (c.ok) nO++; else nW++; });
       $("#skOrdN").innerHTML = ls.length ? (nW ? '<em class="w">대기 ' + nW + "</em>" : "") + (nO ? '<em class="o">확인 ' + nO + "</em>" : "") + (nD ? '<em class="d">주문 완료 ' + nD + "</em>" : "") : "";
       var ed = $("#skEdit"); if (ed && !ls.length) ed.open = true;   // 줄이 없으면 적는 칸을 펼쳐 둔다
       if (!ls.length) { box.innerHTML = ""; return; }
       var mgr = isMgr();
       box.innerHTML = '<ul class="skoc">' + ls.map(function (l) {
-        var c = checks[l] || {};
-        return '<li class="' + (c.ordered ? "dn" : c.ok ? "ok" : "wait") + '"><span class="ic">' + (c.ordered ? "✅" : c.ok ? "☑" : "🛒") + '</span><span class="t">' + esc(l) + "<small>" +
+        var c = chk(l), dz = l.indexOf(DPRE) === 0 && lines().indexOf(l) < 0;
+        return '<li class="' + (c.ordered ? "dn" : c.ok ? "ok" : "wait") + (dz ? " dz" : "") + '"><span class="ic">' + (c.ordered ? "✅" : c.ok ? "☑" : "🛒") + '</span><span class="t">' + esc(l) + (dz ? ' <em class="skdz">디자인 재료</em>' : "") + "<small>" +
           (c.from ? c.from.slice(5) + "부터 · " : "") +
           (c.ok ? "확인 " + esc(c.by) + " " + esc(c.at) : "") +
           (c.ordered ? " · 주문 완료 " + esc(c.oBy) + " " + esc(c.oAt) : "") + "</small></span>" +
@@ -485,7 +501,7 @@
     // 왼쪽 한 장 보고서 — 적는 대로 바로 정리된다 (보내기 글과 같은 내용)
     function renderReport() {
       var box = $("#skReport"); if (!box || !cur) return;
-      var o = read(), n = needs(), ls = lines();
+      var o = read(), n = needs(), ls = allLines();
       var v = function (k) { return $("#sk_" + k).value.trim(); };
       var grp = function (g) {
         return allItems().filter(function (it) { return it[0] === g && stock[it[1]] !== "" && stock[it[1]] != null; })
@@ -535,7 +551,7 @@
         return allItems().filter(function (it) { return it[0] === g && stock[it[1]] !== "" && stock[it[1]] != null; })
           .map(function (it) { return it[1] + " " + stock[it[1]] + it[2]; }).join(", ") || "-";
       };
-      var ord = lines().map(function (l) { var c = checks[l] || {}; return (c.ordered ? "✅ " : c.ok ? "☑ " : "⬜ ") + l; }).join(NL);
+      var ord = allLines().map(function (l) { var c = chk(l); return (c.ordered ? "✅ " : c.ok ? "☑ " : "⬜ ") + l; }).join(NL);
       var t = ["[발주·재고 체크] " + o.date + " (" + dow(o.date) + ") " + (o.by || ""),
         "■ 발주 넣을 것 (⬜대기 ☑확인 ✅주문완료)", ord || (o.noOrder ? "✅ 오늘 발주 넣을 것 없음 (확인 " + o.noOrder + ")" : "-"),
         n.length ? "(발주점 이하: " + n.join(", ") + ")" : "",
@@ -548,7 +564,7 @@
         "■ 우유·원두·휘핑: " + grp("bar"),
         "■ 부재료: " + grp("sub"),
         stock["포장 메모"] ? "■ 포장 메모: " + String(stock["포장 메모"]).replace(/\n+/g, " / ") : "",
-        stock[DESIGN_KEY] ? "■ 디자인 재료: " + String(stock[DESIGN_KEY]).replace(/\n+/g, " / ") : ""].filter(function (x) { return x !== ""; }).join(NL);
+        ""].filter(function (x) { return x !== ""; }).join(NL);
       return t;
     }
     window.__CS_SK_TEXT = function () { return cur ? buildText() : ""; };
