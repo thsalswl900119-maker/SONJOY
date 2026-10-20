@@ -3350,7 +3350,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-232</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-233</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -4023,18 +4023,18 @@ input,select,textarea{border-radius:var(--r3)!important}
 </footer>
 </div>
 
-<script src="js/chrome.js?v=v0924-232"></script>
+<script src="js/chrome.js?v=v0924-233"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/drag.js?v=v0924-232"></script>
-<script src="js/sync.js?v=v0924-232"></script>
-<script src="js/holidays.js?v=v0924-232"></script>
-<script src="js/sched.js?v=v0924-232"></script>
-<script src="js/app.js?v=v0924-232"></script>
-<script src="js/fruit.js?v=v0924-232"></script>
-<script src="js/mobile.js?v=v0924-232"></script>
+<script src="js/drag.js?v=v0924-233"></script>
+<script src="js/sync.js?v=v0924-233"></script>
+<script src="js/holidays.js?v=v0924-233"></script>
+<script src="js/sched.js?v=v0924-233"></script>
+<script src="js/app.js?v=v0924-233"></script>
+<script src="js/fruit.js?v=v0924-233"></script>
+<script src="js/mobile.js?v=v0924-233"></script>
 
 <style>
 /* 재고 · 발주 */
@@ -4710,9 +4710,13 @@ html.mob{scroll-padding-top:64px;scroll-padding-bottom:84px}
 html.mob #csToast,html.mob .preswarn{bottom:calc(84px + env(safe-area-inset-bottom))}
 html.mob.mkbd .mbar{display:none}
 html.mob.mkbd body{padding-bottom:16px}
+.cshome{cursor:pointer;-webkit-tap-highlight-color:transparent}
+html.mob .mtlogo{padding:6px;margin:-6px}
+.cshome:hover{opacity:.85}
+.cshome:focus-visible{outline:2px solid var(--nvacc,#E0A458);outline-offset:3px;border-radius:8px}
 @media print{.mtop,.mbar,.mobback{display:none!important}}
 </style>
-<script src="js/stock.js?v=v0924-232"></script>
+<script src="js/stock.js?v=v0924-233"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -4766,6 +4770,23 @@ html.mob.mkbd body{padding-bottom:16px}
 })();
 </script>
 <script>
+// 🏠 카페스이 로고 누르면 처음 화면(출퇴근)으로 · 맨 위로(10/20 사장님) — 왼쪽 메뉴 머리(로고 · 카페스이) · 위 머리 · 휴대폰 위 줄 로고
+(function () {
+  var SEL = "#sideNav .sdhead, header .hbrand, #mTop .mtlogo";
+  function home() {
+    var t = document.querySelector('#sideNav .tab[data-p="tp0"]');
+    if (t && t.getAttribute("aria-selected") !== "true") t.click();
+    document.documentElement.classList.remove("mnavopen");
+    setTimeout(function () { window.scrollTo(0, 0); }, 30);
+  }
+  window.__CS_HOME = home;
+  function mark() { document.querySelectorAll(SEL).forEach(function (el) { if (el.dataset.home) return; el.dataset.home = "1"; el.classList.add("cshome"); el.setAttribute("role", "button"); el.setAttribute("tabindex", "0"); el.setAttribute("title", "처음 화면(출퇴근)으로"); el.setAttribute("aria-label", "처음 화면(출퇴근)으로"); }); }
+  document.addEventListener("click", function (e) { if (e.target.closest && e.target.closest(SEL)) { e.preventDefault(); home(); } });
+  document.addEventListener("keydown", function (e) { if ((e.key === "Enter" || e.key === " ") && e.target.closest && e.target.closest(SEL)) { e.preventDefault(); home(); } });
+  mark(); setTimeout(mark, 800);
+})();
+</script>
+<script>
 // 근무표 달력 — 오늘 칸에 굵은 테두리(디자인 4차)
 (function () {
   function mark() {
@@ -4778,11 +4799,11 @@ html.mob.mkbd body{padding-bottom:16px}
   window.addEventListener("cs:remote", function () { setTimeout(mark, 400); });
 })();
 </script>
-<script src="js/presence.js?v=v0924-232"></script>
-<script src="js/weekrep.js?v=v0924-232"></script>
-<script src="js/recipe.js?v=v0924-232"></script>
-<script src="js/bench.js?v=v0924-232"></script>
-<script src="js/monthlog.js?v=v0924-232"></script>
-<script src="js/xmas.js?v=v0924-232"></script>
-<script src="js/tg.js?v=v0924-232"></script>
+<script src="js/presence.js?v=v0924-233"></script>
+<script src="js/weekrep.js?v=v0924-233"></script>
+<script src="js/recipe.js?v=v0924-233"></script>
+<script src="js/bench.js?v=v0924-233"></script>
+<script src="js/monthlog.js?v=v0924-233"></script>
+<script src="js/xmas.js?v=v0924-233"></script>
+<script src="js/tg.js?v=v0924-233"></script>
 </body></html>
