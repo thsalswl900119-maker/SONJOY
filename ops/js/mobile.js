@@ -96,6 +96,10 @@
     if (last !== null && last !== p) { openNav(false); window.scrollTo(0, 0); }
     last = p;
   }
+  // 글 쓰는 동안(자판이 올라온 동안)은 아래 메뉴를 숨긴다 — 칸을 가리지 않게
+  function typing(el) { return el && (el.isContentEditable || /^(TEXTAREA|SELECT)$/.test(el.tagName) || (el.tagName === "INPUT" && !/^(checkbox|radio|button|submit|file|range|color)$/i.test(el.type || ""))); }
+  document.addEventListener("focusin", function (e) { if (typing(e.target)) root.classList.add("mkbd"); });
+  document.addEventListener("focusout", function () { setTimeout(function () { if (!typing(document.activeElement)) root.classList.remove("mkbd"); }, 120); });
   new MutationObserver(paint).observe(nav, { attributes: true, attributeFilter: ["aria-selected"], subtree: true });
   paint();
 })();
