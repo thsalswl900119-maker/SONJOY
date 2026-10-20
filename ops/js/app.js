@@ -1177,13 +1177,13 @@
   // 근무표 — 어느 달이든 고칠 수 있다. 고친 것은 읽기 달력에도 바로 반영된다.
   (function () {
 
-    var TIMES = {"정항아":{"토요일":["09:00","18:00"],"오픈":["08:30","17:30"],"마감":["10:00","19:30"]},"박혜빈":{"토요일":["09:00","18:00"],"오픈":["08:30","18:00"],"마감":["10:00","19:30"]},"이해선":{"토요일":["09:00","18:00"],"미들":["09:30","16:30"],"전일":["08:30","19:30"]},"사장님":{"토요일":["09:00","18:00"],"전일(케이크+사무실근무)":["08:30","19:30"],"오픈":["08:30","17:30"],"마감":["10:00","19:30"],"반죽":[null,null]}};
+    var TIMES = {"정항아":{"토요일":["09:00","18:00"],"오픈":["08:30","17:30"],"마감":["10:00","19:30"],"마감(둘이서)":["09:30","19:30"]},"박혜빈":{"토요일":["09:00","18:00"],"오픈":["08:30","18:00"],"마감":["10:00","19:30"],"마감(둘이서)":["09:30","19:30"]},"이해선":{"토요일":["09:00","18:00"],"미들":["09:30","16:30"],"전일":["08:30","19:30"],"마감(둘이서)":["09:30","19:30"]},"사장님":{"토요일":["09:00","18:00"],"전일(케이크+사무실근무)":["08:30","19:30"],"오픈":["08:30","17:30"],"마감":["10:00","19:30"],"반죽":[null,null]}};
     var NAMES = ["정항아", "박혜빈", "이해선", "사장님"];
     var NL = String.fromCharCode(10);
-    var RCLS = { "오픈": "open", "마감": "close", "미들": "mid",
+    var RCLS = { "오픈": "open", "마감": "close", "마감(둘이서)": "close", "미들": "mid",
                  "전일": "full", "토요일": "full", "전일(케이크+사무실근무)": "own", "반죽": "own",
                  "공부": "away", "출강": "away", "서울출장": "away", "출장": "away", "사무실 근무": "away", "수업 준비": "away", "해외출장": "away", "워크샵": "away", "세미나": "away" };
-    var RORDER = { "오픈": 0, "반죽": 1, "미들": 2, "전일": 2, "토요일": 2, "전일(케이크+사무실근무)": 3, "마감": 4,
+    var RORDER = { "오픈": 0, "반죽": 1, "미들": 2, "전일": 2, "토요일": 2, "전일(케이크+사무실근무)": 3, "마감": 4, "마감(둘이서)": 4,
                    "공부": 5, "출강": 5, "서울출장": 5, "출장": 5, "사무실 근무": 5, "수업 준비": 5, "해외출장": 5, "워크샵": 5, "세미나": 5 };
 
     function keyOf(ym) { return "cafesui.sched." + ym; }
@@ -1340,7 +1340,7 @@
         if (!filled) { blank += 1; if (w) w.textContent = ""; return; }
         // 토요일 근무(09:00–18:00)는 문 여는 사람 · 닫는 사람을 같이 맡는다 — 토요일에 「오픈 · 마감 없음」이 잘못 뜨던 것 고침(10/15)
         var hasOpen = roles["오픈"] || roles["전일"] || roles["전일(케이크+사무실근무)"] || roles["토요일"];
-        var hasClose = roles["마감"] || roles["전일"] || roles["전일(케이크+사무실근무)"] || roles["토요일"];
+        var hasClose = roles["마감"] || roles["마감(둘이서)"] || roles["전일"] || roles["전일(케이크+사무실근무)"] || roles["토요일"];
         if (roles["워크샵"] && !hasOpen && !hasClose) { if (w) w.textContent = "워크샵"; return; }   // 다 같이 워크샵 가는 날은 오픈 · 마감 경고 안 함
         if (!hasOpen) { noOpen += 1; warn.push("오픈 없음"); }
         if (!hasClose) { noClose += 1; warn.push("마감 없음"); }
@@ -1572,13 +1572,13 @@
         var roles = {}, any = 0;
         ap.querySelectorAll(".dpr:not(.note)").forEach(function (r) { var v = r.querySelector(".dps").value; if (!v || /휴무|휴가/.test(v) || RCLS[v] === "away") return; any++; roles[v] = (roles[v] || 0) + 1; });
         var op = roles["오픈"] || roles["전일"] || roles["전일(케이크+사무실근무)"] || roles["토요일"];
-        var cl = roles["마감"] || roles["전일"] || roles["전일(케이크+사무실근무)"] || roles["토요일"];
+        var cl = roles["마감"] || roles["마감(둘이서)"] || roles["전일"] || roles["전일(케이크+사무실근무)"] || roles["토요일"];
         var msg = [];
         if (roles["워크샵"] && !op && !cl) msg = [];
         else if (any) { if (!op) msg.push("오픈할 사람이 없어요"); if (!cl) msg.push("마감할 사람이 없어요"); }
         ["오픈", "마감", "미들"].forEach(function (k) { if (roles[k] > 1) msg.push(k + "이 두 명이에요"); });
         var dd = sel ? new Date(Y, M - 1, +sel.split("-")[1]).getDay() : -1;
-        if (dd === 6 && (roles["오픈"] || roles["마감"] || roles["미들"]) && !roles["토요일"]) msg.push("토요일인데 평일 근무(오픈 · 마감 · 미들)로 되어 있어요");
+        if (dd === 6 && (roles["오픈"] || roles["마감"] || roles["마감(둘이서)"] || roles["미들"]) && !roles["토요일"]) msg.push("토요일인데 평일 근무(오픈 · 마감 · 미들)로 되어 있어요");
         w.innerHTML = msg.length ? "⚠ " + msg.map(esc).join("<br>⚠ ") : "";
         w.hidden = !msg.length;
       }
@@ -1809,7 +1809,7 @@
     var msgEl = document.getElementById("atMsg");
     if (!dateEl || !listEl) return;
     var COL = { "정항아": "p1", "박혜빈": "p2", "이해선": "p3", "사장님": "p4" };
-    var ROLES = ["오픈", "미들", "마감", "전일", "전일(케이크+사무실근무)", "반죽 근무"];
+    var ROLES = ["오픈", "미들", "마감", "마감(둘이서)", "전일", "전일(케이크+사무실근무)", "반죽 근무"];
     function keyOf(d) { return "cafesui.att." + d; }
     function load(d) {
       try { var raw = localStorage.getItem(keyOf(d)); return raw ? (JSON.parse(raw) || {}) : {}; }
