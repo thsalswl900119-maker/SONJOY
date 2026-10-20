@@ -187,6 +187,22 @@ label.ck.on span{color:var(--grey);text-decoration:line-through}
 .tlist .row{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--line);margin:0}
 .tlist .row .info{flex:1}.tlist .row b{font-size:15px}.tlist .row small{display:block;font-size:12px;color:var(--grey)}
 #toast{display:none}
+/* 실습 타이머 */
+#tmr{position:fixed;left:0;right:0;top:0;z-index:40;background:#3E3024;color:#fff;padding:14px 16px calc(14px + env(safe-area-inset-top,0px));box-shadow:0 6px 20px rgba(0,0,0,.25)}
+#tmr .in{max-width:720px;margin:0 auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+#tmr .tmD{font-family:var(--head);font-size:64px;line-height:1;letter-spacing:.02em;font-variant-numeric:tabular-nums;min-width:200px;color:#FBE7DD}
+#tmr.done .tmD{color:#FFD0C2;animation:tmBlink 1s steps(2) infinite}
+@keyframes tmBlink{50%{opacity:.25}}
+#tmr .tmL{font-size:13px;color:#D9A08C;font-family:var(--head)}
+#tmr .tmBar{height:8px;background:rgba(255,255,255,.18);border-radius:99px;overflow:hidden;flex:1 1 100%}
+#tmr .tmBar i{display:block;height:100%;background:#C67F68;width:0;transition:width 1s linear}
+#tmr button{background:#C67F68;color:#fff;border:0;border-radius:10px;padding:10px 14px;font-family:var(--head);font-size:15px;cursor:pointer}
+#tmr button.g{background:transparent;border:1px solid #D9A08C;color:#FBE7DD}
+#tmr .tmP{display:flex;gap:6px;flex-wrap:wrap}
+#tmr .tmP button{padding:6px 10px;font-size:13px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25)}
+#tmr .tmP button.on{background:#C67F68;border-color:#C67F68}
+body.tmOn .bar{top:calc(var(--tmh,120px) + env(safe-area-inset-top,0px))}
+.tmBtn{background:#3E3024!important;color:#FBE7DD!important;border:0!important}
 @media print{.bar,.days,.foot,.dayBtns,.homebtn,#screenEnter,#screenTeacher,.nopr{display:none!important}.wrap{padding:0}.book,.rc{break-inside:avoid}body{background:#fff}}
 </style>
 <script>
@@ -303,6 +319,12 @@ var BASES=__BASES__, DRINKS=__DRINKS__, CUP=__CUP__, FONTS=__FONTS__, PRESF=__PR
 
 </div>
 
+<div id="tmr" class="hidden"><div class="in">
+  <div><div class="tmL" id="tmL">실습 타이머</div><div class="tmD" id="tmD">15:00</div></div>
+  <button type="button" id="tmGo">▶ 시작</button><button type="button" class="g" id="tmReset">↺ 다시</button><button type="button" class="g" id="tmPlus">+1분</button><button type="button" class="g" id="tmClose">닫기</button>
+  <div class="tmP" id="tmP"></div>
+  <div class="tmBar"><i id="tmI"></i></div>
+</div></div>
 <div class="foot hidden" id="foot"><div class="in">
   <a class="btn" id="btnSend" href="#" target="_blank" rel="noopener">📤 강사에게 보내기</a>
   <button class="btn ghost" id="btnCopy" type="button">복사</button>
@@ -385,7 +407,7 @@ function render(){
     var h='<div class="dayhead"><span class="chip soft">DAY '+d.n+'</span><h2>'+esc(d.title)+'</h2><p>'+esc(d.goal)+'</p><div class="sched">'+d.sched.map(function(s,i){return '<div class="srow" data-go="'+(i+1)+'"><b>'+(i+1)+'교시</b><span>'+esc(s)+'</span><i>열기 ›</i></div>'}).join('')+'</div>'+
       '<div class="progress"><span class="progText">5교시 중 0교시 작성</span><div class="track"><div class="fill"></div></div></div><div class="dayBtns"><button type="button" class="fillDay">예시 답 채우기</button><button type="button" class="clearDay">이 날 답 지우기</button></div></div>';
     if(d.n>1)h+='<div class="recap" id="recap'+d.n+'"></div>';
-    d.periods.forEach(function(p){h+='<div class="card period d'+d.n+'p" data-p="'+p.n+'"><div class="ph"><div class="num">'+p.n+'</div><div><h3>'+esc(p.title)+'</h3><div class="time">'+p.n+'교시 · '+esc(p.time)+'</div></div><span class="pstat">아직</span></div><div class="quote">“'+esc(p.quote)+'”</div><div class="pbody">'+p.steps.map(stepHtml).join('')+jpHtml(p)+
+    d.periods.forEach(function(p){h+='<div class="card period d'+d.n+'p" data-p="'+p.n+'"><div class="ph"><div class="num">'+p.n+'</div><div><h3>'+esc(p.title)+'</h3><div class="time">'+p.n+'교시 · '+esc(p.time)+'</div></div><span class="pstat">아직</span></div><div class="quote">“'+esc(p.quote)+'”</div><div class="pbody">'+(p.prac?'<div class="links nopr" style="margin-top:4px"><button type="button" class="tmBtn" data-min="'+p.prac+'" data-l="'+d.n+'일차 '+p.n+'교시 실습">⏱ 실습 타이머 '+p.prac+'분</button></div>':'')+p.steps.map(stepHtml).join('')+jpHtml(p)+
       '<div class="links nopr" style="justify-content:flex-end"><button type="button" class="sub nextP">'+(p.n<5?'다음 교시 →':(d.n<3?'컨셉북 보기 →':'발표 준비 →'))+'</button></div></div></div>';});
     pn.innerHTML=h;P.appendChild(pn);
     $$('.srow',pn).forEach(function(r){r.addEventListener('click',function(){var p=$('.period[data-p="'+r.getAttribute('data-go')+'"]',pn);openPeriod(p,true);});});
@@ -673,6 +695,23 @@ function tRender(){var books=tload(),keys=Object.keys(books).sort(function(x,y){
     var o=document.createElement('button');o.className='btn sm';o.type='button';o.textContent='컨셉북';o.addEventListener('click',function(){startTeacherView(b)});var x=document.createElement('button');x.className='btn ghost sm';x.type='button';x.textContent='빼기';x.addEventListener('click',function(){if(!confirm2(b.n+' 님을 목록에서 뺄까요?'))return;var o2=tload();delete o2[k];tsave(o2);tRender();});r.appendChild(o);r.appendChild(x);box.appendChild(r);});}
 function startTeacherView(b){teacherView=true;saveState=state;saveKey=KEY;KEY=null;state={name:b.n,code:b.c,day:4,a:b.a};show('screenDay');$('#whoName').textContent=b.n+' (강사 보기)';$('#whoCode').textContent=b.c;loadFields();showDay(4);refresh();}
 function endTeacherView(){teacherView=false;state=saveState||{name:'',code:'',day:1,a:{}};KEY=saveKey;show('screenTeacher');}
+
+/* ───── 실습 타이머 ───── */
+var TM={total:900,left:900,run:false,iv:null,ac:null,end:0};
+function tmFmt(s){s=Math.max(0,Math.round(s));return ('0'+Math.floor(s/60)).slice(-2)+':'+('0'+(s%60)).slice(-2);}
+function tmDraw(){$('#tmD').textContent=tmFmt(TM.left);$('#tmI').style.width=(TM.total?100-TM.left/TM.total*100:0)+'%';$('#tmGo').textContent=TM.run?'⏸ 멈춤':(TM.left<TM.total&&TM.left>0?'▶ 계속':'▶ 시작');$('#tmr').classList.toggle('done',TM.left<=0);
+  document.body.style.setProperty('--tmh',$('#tmr').offsetHeight+'px');}
+function tmBeep(n){try{if(!TM.ac)TM.ac=new (window.AudioContext||window.webkitAudioContext)();var ac=TM.ac;for(var i=0;i<n;i++){var o=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.value=880;g.gain.value=0.001;o.connect(g);g.connect(ac.destination);var t=ac.currentTime+i*0.35;o.start(t);g.gain.exponentialRampToValueAtTime(0.4,t+0.02);g.gain.exponentialRampToValueAtTime(0.001,t+0.3);o.stop(t+0.32);}}catch(e){}}
+function tmTick(){if(!TM.run)return;TM.left=Math.max(0,(TM.end-Date.now())/1000);tmDraw();if(TM.left<=0){TM.run=false;clearInterval(TM.iv);tmBeep(3);toast('실습 시간이 끝났습니다.');tmDraw();}}
+function tmSet(min,label){TM.total=min*60;TM.left=TM.total;TM.run=false;clearInterval(TM.iv);if(label)$('#tmL').textContent=label+' · '+min+'분';$$('#tmP button').forEach(function(b){b.classList.toggle('on',+b.getAttribute('data-m')===min)});tmDraw();}
+function tmOpen(min,label){$('#tmr').classList.remove('hidden');document.body.classList.add('tmOn');tmSet(min,label);try{if(!TM.ac)TM.ac=new (window.AudioContext||window.webkitAudioContext)();if(TM.ac.state==='suspended')TM.ac.resume();}catch(e){}window.scrollTo({top:0,behavior:'smooth'});}
+function tmStart(){if(TM.left<=0)TM.left=TM.total;TM.end=Date.now()+TM.left*1000;TM.run=true;clearInterval(TM.iv);TM.iv=setInterval(tmTick,250);tmDraw();}
+[5,10,15,20,30,40].forEach(function(m){var b=document.createElement('button');b.type='button';b.setAttribute('data-m',m);b.textContent=m+'분';b.addEventListener('click',function(){tmSet(m,$('#tmL').textContent.split(' · ')[0]);});$('#tmP').appendChild(b);});
+$('#tmGo').addEventListener('click',function(){if(TM.run){TM.run=false;clearInterval(TM.iv);tmDraw();}else tmStart();});
+$('#tmReset').addEventListener('click',function(){TM.left=TM.total;TM.run=false;clearInterval(TM.iv);tmDraw();});
+$('#tmPlus').addEventListener('click',function(){TM.total+=60;TM.left+=60;if(TM.run)TM.end+=60000;tmDraw();});
+$('#tmClose').addEventListener('click',function(){TM.run=false;clearInterval(TM.iv);$('#tmr').classList.add('hidden');document.body.classList.remove('tmOn');});
+document.addEventListener('click',function(e){var b=e.target.closest('.tmBtn');if(b){tmOpen(+b.getAttribute('data-min'),b.getAttribute('data-l'));}});
 
 /* ───── 시작 ───── */
 render();
