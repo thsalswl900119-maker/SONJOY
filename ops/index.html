@@ -1,4 +1,14 @@
 <!doctype html><html data-theme="light"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<script>
+// 📱 휴대폰 모드 판단(10/20) — 휴대폰이면 html.mob · 그 기기에서 「💻 컴퓨터 화면으로」 고르면 html.mobpc(화면 폭 1280) · 나머지는 js/mobile.js
+(function () { var r = document.documentElement, ua = navigator.userAgent || "", m = "", sw = Math.min(screen.width || 0, screen.height || 0);
+  try { m = localStorage.getItem("cafesui.ui.viewmode") || ""; } catch (e) {}
+  var coarse = window.matchMedia && matchMedia("(pointer:coarse)").matches;
+  var phone = /iPhone|iPod|Android.+Mobile|Windows Phone|Mobile.+Firefox/i.test(ua) || ((/Android/i.test(ua) || coarse) && sw > 0 && sw < 600);
+  if (!phone) return;
+  if (m === "pc") { r.classList.add("mobpc"); var v = document.querySelector("meta[name=viewport]"); if (v) v.setAttribute("content", "width=1280"); return; }
+  r.classList.add("mob"); })();
+</script>
 <title>카페스이 근무·운영 배정표</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -3340,7 +3350,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-230</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-231</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -4013,17 +4023,18 @@ input,select,textarea{border-radius:var(--r3)!important}
 </footer>
 </div>
 
-<script src="js/chrome.js?v=v0924-230"></script>
+<script src="js/chrome.js?v=v0924-231"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/drag.js?v=v0924-230"></script>
-<script src="js/sync.js?v=v0924-230"></script>
-<script src="js/holidays.js?v=v0924-230"></script>
-<script src="js/sched.js?v=v0924-230"></script>
-<script src="js/app.js?v=v0924-230"></script>
-<script src="js/fruit.js?v=v0924-230"></script>
+<script src="js/drag.js?v=v0924-231"></script>
+<script src="js/sync.js?v=v0924-231"></script>
+<script src="js/holidays.js?v=v0924-231"></script>
+<script src="js/sched.js?v=v0924-231"></script>
+<script src="js/app.js?v=v0924-231"></script>
+<script src="js/fruit.js?v=v0924-231"></script>
+<script src="js/mobile.js?v=v0924-231"></script>
 
 <style>
 /* 재고 · 발주 */
@@ -4669,8 +4680,35 @@ nav.stabs .stab.prog[aria-selected="true"]{color:var(--open)!important;border-bo
 /* 발주 목록 — 디자인 재료 칸에서 온 줄(10/19) */
 .skoc li .skdz{font-style:normal;font-size:12.5px;font-weight:800;color:#6B3FA0;background:#F1E9FA;border-radius:999px;padding:1px 8px;margin-left:4px;white-space:nowrap}
 .legend .lcnote{color:var(--ink);font-weight:800}
+
+/* 📱 휴대폰 모드(10/20 · js/mobile.js) — 휴대폰은 짧은 위 줄 + 아래 고정 메뉴, 큰 머리 · 문구 · 저장 상자 · 메뉴 상자는 숨김 */
+.mtop,.mbar,.mobback{display:none}
+html.mob header,html.mob .tagline,html.mob .storefront,html.mob #saveBar,html.mob #sideNav{display:none!important}
+html.mob body{padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+html.mob .mtop{display:flex;align-items:center;gap:8px;position:sticky;top:0;z-index:44;padding:8px 12px;background:var(--surface);border-bottom:1px solid var(--rule2);box-shadow:0 2px 8px rgba(60,40,20,.08)}
+html.mob .mtlogo img{width:30px;height:auto;display:block}
+html.mob .mttitle{flex:1;min-width:0;font-size:18px;font-weight:900;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html.mob .mtstate{font-size:13px;font-weight:800;color:var(--mid);white-space:nowrap}
+html.mob .mtsave{font:inherit;font-size:14px;font-weight:800;padding:7px 12px;border-radius:10px;border:0;background:var(--mid);color:#fff;white-space:nowrap}
+html.mob .wrap{padding-top:6px}
+html.mob .mbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:45;background:#4A3B2C;padding:4px 2px calc(4px + env(safe-area-inset-bottom));box-shadow:0 -2px 10px rgba(0,0,0,.18)}
+html.mob .mbt{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0 5px;border:0;background:none;color:#F3EADB;font:inherit;font-size:12.5px;font-weight:700;border-radius:10px;-webkit-tap-highlight-color:transparent}
+html.mob .mbt .ti{display:block;width:24px;height:24px}
+html.mob .mbt .ti svg{width:24px;height:24px;display:block}
+html.mob .mbt.on{background:rgba(255,255,255,.14);color:#FFD9A0}
+html.mob .mbt.on span:last-child{font-weight:900}
+html.mob.mnavopen #sideNav{display:block!important;position:fixed;top:0;left:0;right:0;bottom:calc(66px + env(safe-area-inset-bottom));z-index:46;margin:0;border-radius:0;overflow:auto;-webkit-overflow-scrolling:touch;max-height:none}
+html.mob.mnavopen body{overflow:hidden}
+.mnavhead,.mnavfoot{display:none}
+html.mob .mnavhead{display:flex;align-items:center;justify-content:space-between;padding:12px 14px 6px;color:#F3EADB;font-size:18px}
+html.mob .mnavx{font:inherit;font-size:20px;width:42px;height:42px;border-radius:50%;border:1px solid rgba(243,234,219,.5);background:none;color:#F3EADB}
+html.mob .mnavfoot{display:block;padding:14px 14px 22px;border-top:1px solid rgba(243,234,219,.25);margin-top:10px}
+html.mob .mpc{font:inherit;font-size:15px;font-weight:800;width:100%;padding:12px;border-radius:12px;border:1.5px solid #F3EADB;background:none;color:#F3EADB}
+html.mob .mnavfoot small{display:block;margin-top:6px;font-size:13px;color:#E6D8C2;text-align:center}
+html.mobpc .mobback{display:block;position:fixed;right:24px;bottom:24px;z-index:120;font:inherit;font-size:44px;font-weight:900;padding:20px 36px;border-radius:60px;border:0;background:#4A3B2C;color:#FFF3DE;box-shadow:0 6px 24px rgba(0,0,0,.3)}
+@media print{.mtop,.mbar,.mobback{display:none!important}}
 </style>
-<script src="js/stock.js?v=v0924-230"></script>
+<script src="js/stock.js?v=v0924-231"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -4736,11 +4774,11 @@ nav.stabs .stab.prog[aria-selected="true"]{color:var(--open)!important;border-bo
   window.addEventListener("cs:remote", function () { setTimeout(mark, 400); });
 })();
 </script>
-<script src="js/presence.js?v=v0924-230"></script>
-<script src="js/weekrep.js?v=v0924-230"></script>
-<script src="js/recipe.js?v=v0924-230"></script>
-<script src="js/bench.js?v=v0924-230"></script>
-<script src="js/monthlog.js?v=v0924-230"></script>
-<script src="js/xmas.js?v=v0924-230"></script>
-<script src="js/tg.js?v=v0924-230"></script>
+<script src="js/presence.js?v=v0924-231"></script>
+<script src="js/weekrep.js?v=v0924-231"></script>
+<script src="js/recipe.js?v=v0924-231"></script>
+<script src="js/bench.js?v=v0924-231"></script>
+<script src="js/monthlog.js?v=v0924-231"></script>
+<script src="js/xmas.js?v=v0924-231"></script>
+<script src="js/tg.js?v=v0924-231"></script>
 </body></html>
