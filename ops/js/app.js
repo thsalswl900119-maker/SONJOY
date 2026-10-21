@@ -406,7 +406,7 @@
             var lab = b.closest(".titem"); if (!lab || lab.hidden) return;
             var title = (lab.querySelector(".ttitle") || {}).textContent || "";
             var v = doneOf(b);
-            if (opt) { if (v) doneAll.push({ t: title, w: typeof v === "string" ? v : "" }); return; }
+            if (opt || lab.classList.contains("topt")) { if (v) doneAll.push({ t: title, w: typeof v === "string" ? v : "" }); return; }   // 줄 하나만 「한 날만」(topt · 10/21 맛 점검 합침)
             tot += 1;
             if (v) { doneN += 1; doneAll.push({ t: title, w: typeof v === "string" ? v : "" }); } else un.push(title);
           });
