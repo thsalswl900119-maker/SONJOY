@@ -163,14 +163,14 @@
     var L = ckItems(cur), done = L.filter(function (x) { return x.done; }).length, late = L.filter(function (x) { return !x.done && x.d && x.d < today(); }).length;
     var n = dd(cur + "-12-25", today());
     ckD.innerHTML = (n > 0 ? "크리스마스까지 <b>D-" + n + "</b>" : n === 0 ? "<b>오늘 크리스마스</b>" : cur + " 크리스마스 지남") + " · 체크 " + done + " / " + L.length + (late ? ' · <em>⚠ 밀린 것 ' + late + "개</em>" : "");
-    ckEl.innerHTML = L.map(function (x) {
+    ckEl.innerHTML = '<button type="button" class="skbtn xmckadd xmckadd0">＋ 할 일 추가 (날짜 · 할 일 · 담당)</button>' + L.map(function (x) {
       var s = stat(x);
       return '<div class="xck ' + s.c + (x.m ? " must" : "") + '" data-id="' + x.id + '"><button type="button" class="xcb" aria-pressed="' + !!x.done + '" aria-label="' + esc(x.t) + ' 완료"></button>' +
         '<input type="date" class="xcd" value="' + esc(x.d) + '" aria-label="날짜">' +
         '<textarea class="xct" rows="1" aria-label="할 일">' + esc(x.t) + '</textarea>' +
         '<input type="text" class="xcw" value="' + esc(x.w).replace(/"/g, "&quot;") + '" placeholder="담당" aria-label="담당">' +
         '<span class="xcs">' + (x.m ? '<em class="xmust">꼭</em>' : "") + esc(s.s) + '</span><button type="button" class="xcx" title="목록에서 빼기" aria-label="빼기">✕</button></div>';
-    }).join("") + '<button type="button" class="skbtn" id="xmCkAdd">＋ 체크 항목 추가</button>';
+    }).join("") + '<button type="button" class="skbtn xmckadd" id="xmCkAdd">＋ 할 일 추가</button>';
     Array.prototype.forEach.call(ckEl.querySelectorAll(".xct"), grow2);
   }
   var ckPend = false;
@@ -178,10 +178,8 @@
   if (ckEl) {
     ckEl.addEventListener("click", function (e) {
       var row = e.target.closest(".xck"), id = row && row.dataset.id;
-      if (e.target.closest("#xmCkAdd")) {
-        var nid = "u" + Date.now().toString(36), t0 = today();
-        ckSave(cur, function (o) { o.ck[nid] = { d: t0.slice(0, 4) == String(cur) ? t0 : dOf(cur, 30), t: "", w: "", n: 50 }; });
-        drawCk(); drawTodo(); var nt = ckEl.querySelector('.xck[data-id="' + nid + '"] .xct'); if (nt) nt.focus(); return;
+      if (e.target.closest(".xmckadd")) {   // 캘린더와 같은 작은 창으로 넣기(10/21) — 날짜를 고르고 넣으면 그 날짜 자리에 들어감
+        var t0 = today(); xEdit(null, t0.slice(0, 4) == String(cur) ? t0 : dOf(cur, 30), true); return;
       }
       if (!id) return;
       if (e.target.closest(".xcb")) { if (toggle(cur, id)) { drawCk(); drawTodo(); } return; }
@@ -429,7 +427,7 @@
     L.forEach(function (x) { (by[x.d] = by[x.d] || []).push(x); });
     var months = [9, 10, 11, 12].filter(function (m) { return m >= 10 || L.some(function (x) { return +x.d.slice(5, 7) === m && x.d.slice(0, 4) == String(cur); }); });
     var done = L.filter(function (x) { return x.done; }).length;
-    var h = '<div class="xmbox"><div class="xmbh"><b>🗓 ' + cur + ' 크리스마스 준비 캘린더</b><span>✅ 체크리스트가 날짜 칸에 들어갑니다 · 칸 안 항목을 누르면 체크 · 날짜 · 글은 ✅ 체크리스트에서 고침 · 🍰 = 생산 날 · 체크 ' + done + " / " + L.length + '</span></div>' +
+    var h = '<div class="xmbox"><div class="xmbh"><b>🗓 ' + cur + ' 크리스마스 준비 캘린더</b><span>✅ 체크리스트가 날짜 칸에 들어갑니다 · <b>빈 곳(＋)을 누르면 그 날 할 일 넣기</b> · <b>항목을 누르면 고치기 · 체크</b> · 끌어서 다른 날로 옮기기 · 🍰 = 생산 날 · 체크 ' + done + " / " + L.length + '</span></div>' +
       '<div class="xmlegend"><i class="lg late"></i>밀림 <i class="lg today"></i>오늘까지 <i class="lg must"></i>꼭 <i class="lg done"></i>함</div>';
     months.forEach(function (m) {
       var first = new Date(cur, m - 1, 1), last = new Date(cur, m, 0).getDate();
@@ -437,25 +435,21 @@
       for (var i = 0; i < first.getDay(); i++) h += '<div class="xcd0"></div>';
       for (var d = 1; d <= last; d++) {
         var s = cur + "-" + pad(m) + "-" + pad(d), dw = new Date(cur, m - 1, d).getDay(), its = by[s] || [];
-        h += '<div class="xcday' + (dw === 0 ? " sun" : "") + (s === t0 ? " now" : "") + (s.slice(5) === "12-25" ? " xday" : "") + (D.indexOf(s) >= 0 ? " prod" : "") + '" data-d="' + s + '"><span class="xcn">' + d + (s.slice(5) === "12-25" ? " 🎄" : D.indexOf(s) >= 0 ? " 🍰" : "") + (dw === 0 ? " <small>휴무</small>" : "") + "</span>" +
+        h += '<div class="xcday' + (dw === 0 ? " sun" : "") + (s === t0 ? " now" : "") + (s.slice(5) === "12-25" ? " xday" : "") + (D.indexOf(s) >= 0 ? " prod" : "") + '" data-d="' + s + '"><span class="xcn">' + d + (s.slice(5) === "12-25" ? " 🎄" : D.indexOf(s) >= 0 ? " 🍰" : "") + (dw === 0 ? " <small>휴무</small>" : "") + "</span>" + '<button type="button" class="xcadd" aria-label="' + m + "월 " + d + '일 할 일 넣기" title="이 날 할 일 넣기">＋</button>' +
           its.map(function (x) { var st = stat(x); return '<button type="button" class="xci ' + st.c + (x.m ? " must" : "") + '" data-id="' + x.id + '" title="' + ea2(x.t + (x.w ? " · 담당 " + x.w : "") + " · " + st.s) + '">' + (x.done ? "✔ " : "") + esc(x.t.replace(/^★\s*/, "").split(/ — | \(/)[0]) + "</button>"; }).join("") + "</div>";
       }
       h += "</div>";
     });
     el.innerHTML = h + "</div>";
   }
-  // 한 번 누르면 체크 · 두 번 누르면(더블클릭) 바로 고치는 칸 · 꾹 눌러(컴퓨터는 끌어서) 다른 날로 옮기기(10/15)
+  // 항목을 누르면 고치는 칸(날짜 · 할 일 · 담당 · 체크 · 빼기) · 빈 곳(＋)을 누르면 그 날 새 할 일 넣기 · 꾹 눌러(컴퓨터는 끌어서) 다른 날로 옮기기 (10/21 사장님 「캘린더에 직접 입력 · 수정」)
   var xcEl = document.getElementById("xmCal"), xcT = null;
   xcEl.addEventListener("click", function (e) {
-    var b = e.target.closest(".xci"); if (!b) return;
-    clearTimeout(xcT);
-    xcT = setTimeout(function () {
-      var x = ckItems(cur).filter(function (z) { return z.id === b.dataset.id; })[0]; if (!x) return;
-      if (!confirm((x.done ? "체크를 풀까요?\n\n" : "했다고 체크할까요?\n\n") + mdw(x.d) + " " + x.t + (x.w ? "\n담당 " + x.w : "") + "\n\n(고치려면 두 번 누르세요)")) return;
-      if (toggle(cur, x.id)) { drawPane(); drawTodo(); }
-    }, 300);
+    var b = e.target.closest(".xci");
+    if (b) { clearTimeout(xcT); xEdit(b.dataset.id); return; }
+    var c = e.target.closest(".xcday"); if (!c || !c.dataset.d) return;
+    xEdit(null, c.dataset.d);
   });
-  xcEl.addEventListener("dblclick", function (e) { var b = e.target.closest(".xci"); if (!b) return; clearTimeout(xcT); e.preventDefault(); xEdit(b.dataset.id); });
   if (window.__CS_DRAG) window.__CS_DRAG(xcEl, { chip: ".xci", cell: ".xcday", key: function (c) { return c.dataset.d; },
     drop: function (chip, from, to) {
       var id = chip.dataset.id; clearTimeout(xcT);
@@ -464,16 +458,17 @@
       if (window.__CS_TOAST) window.__CS_TOAST("✅ " + mdw(to) + "로 옮겼어요");
     } });
   // 고치는 칸(작은 창) — 날짜 · 할 일 · 담당 · 체크
-  function xEdit(id) {
-    var x = ckItems(cur).filter(function (z) { return z.id === id; })[0]; if (!x) return;
+  function xEdit(id, newD, fromList) {
+    var isNew = !id, x = isNew ? { d: newD, t: "", w: "", done: null } : ckItems(cur).filter(function (z) { return z.id === id; })[0]; if (!x) return;
     var old = document.getElementById("xmEdBox"); if (old) old.remove();
-    var bx = document.createElement("div"); bx.id = "xmEdBox"; bx.className = "xmedm"; bx.setAttribute("role", "dialog"); bx.setAttribute("aria-label", "체크 항목 고치기");
-    bx.innerHTML = '<div class="xmedc"><div class="xmedh"><b>✏ 체크 항목 고치기</b><button type="button" class="xmedx" aria-label="닫기">✕</button></div>' +
+    var bx = document.createElement("div"); bx.id = "xmEdBox"; bx.className = "xmedm"; bx.setAttribute("role", "dialog"); bx.setAttribute("aria-label", isNew ? "할 일 넣기" : "체크 항목 고치기");
+    bx.innerHTML = '<div class="xmedc"><div class="xmedh"><b>' + (isNew ? (fromList ? "＋ 할 일 추가 · 날짜를 골라 주세요" : "＋ " + mdw(newD) + " 할 일 넣기") : "✏ 체크 항목 고치기") + '</b><button type="button" class="xmedx" aria-label="닫기">✕</button></div>' +
       '<label><span>날짜</span><input type="date" class="xed-d" value="' + esc(x.d) + '"></label>' +
       '<label><span>할 일</span><textarea class="xed-t" rows="3"></textarea></label>' +
       '<label><span>담당</span><input type="text" class="xed-w" placeholder="예: 정항아 · 박혜빈"></label>' +
-      '<div class="xmedb"><button type="button" class="xed-s">✔ 저장</button><button type="button" class="xed-k">' + (x.done ? "↩ 체크 풀기" : "☑ 했어요 체크") + '</button><button type="button" class="xed-c">취소</button></div>' +
-      '<p class="xmedn">' + (x.done ? "✔ " + esc(stat(x).s) + " · " : "") + '빼려면 ✅ 체크리스트 화면의 ✕</p></div>';
+      '<label class="xed-mrow"><input type="checkbox" class="xed-m"' + (x.m ? " checked" : "") + '> <span>꼭 해야 하는 것 (빨갛게 · 7일 전부터 오늘 할 일에)</span></label>' +
+      '<div class="xmedb"><button type="button" class="xed-s">' + (isNew ? "＋ 넣기" : "✔ 저장") + '</button>' + (isNew ? "" : '<button type="button" class="xed-k">' + (x.done ? "↩ 체크 풀기" : "☑ 했어요 체크") + '</button>') + '<button type="button" class="xed-c">취소</button>' + (isNew ? "" : '<button type="button" class="xed-x">🗑 빼기</button>') + '</div>' +
+      (isNew ? "" : '<p class="xmedn">' + (x.done ? "✔ " + esc(stat(x).s) : "꾹 눌러(컴퓨터는 끌어서) 다른 날로 옮길 수도 있어요") + '</p>') + '</div>';
     document.body.appendChild(bx);
     var q = function (s) { return bx.querySelector(s); };
     q(".xed-t").value = x.t || ""; q(".xed-w").value = x.w || "";
@@ -482,11 +477,24 @@
     bx.addEventListener("click", function (e) { if (e.target === bx) close(); });
     q(".xed-s").onclick = function () {
       var d = q(".xed-d").value, tt = q(".xed-t").value.trim(), w = q(".xed-w").value.trim();
+      var mm = q(".xed-m").checked;
       if (!tt) { alert("할 일이 비었어요"); return; }
-      ckSave(cur, function (o) { if (o.ck[id]) { if (d) o.ck[id].d = d; o.ck[id].t = tt; o.ck[id].w = w; } });
-      close(); drawPane(true); drawTodo(); if (window.__CS_TOAST) window.__CS_TOAST("✅ 고쳤어요");
+      if (!d) { alert("날짜를 골라 주세요"); return; }
+      if (isNew) {
+        var nid = "u" + Date.now().toString(36);
+        ckSave(cur, function (o) { o.ck[nid] = { d: d, t: tt, w: w, n: 50, add: (me() || "") + " " + stampNow() }; if (mm) o.ck[nid].m = 1; });
+      } else ckSave(cur, function (o) { if (o.ck[id]) { o.ck[id].d = d; o.ck[id].t = tt; o.ck[id].w = w; if (mm) o.ck[id].m = 1; else delete o.ck[id].m; o.ck[id].ed = (me() || "") + " " + stampNow(); } });
+      close(); drawPane(true); drawTodo(); if (typeof drawCk === "function") drawCk();
+      if (window.__CS_TOAST) window.__CS_TOAST(isNew ? "✅ " + mdw(d) + "에 넣었어요" : "✅ 고쳤어요");
     };
-    q(".xed-k").onclick = function () { if (toggle(cur, id)) { close(); drawPane(true); drawTodo(); } };
+    if (!isNew) {
+      q(".xed-k").onclick = function () { if (toggle(cur, id)) { close(); drawPane(true); drawTodo(); } };
+      q(".xed-x").onclick = function () {
+        if (!confirm("「" + (x.t || "이 항목") + "」 을(를) 목록에서 뺄까요?")) return;
+        ckSave(cur, function (o) { if (o.ck[id]) o.ck[id].del = me() || "1"; });
+        close(); drawPane(true); drawTodo(); if (typeof drawCk === "function") drawCk();
+      };
+    }
     setTimeout(function () { q(".xed-t").focus(); }, 30);
   }
 
