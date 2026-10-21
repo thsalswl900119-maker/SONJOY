@@ -349,7 +349,7 @@
     L.forEach(function (x) { cost += N(x.c); pcost += N(x.pc); if (x.od) od++; if (x.ind) ind++; });
     var h = '<div class="xmbox"><div class="xmbh"><b>🧾 ' + cur + ' 재료 · 부자재 준비</b><span>품목마다 수량 · 주문처 · 금액 · 메모를 적고, 주문하면 「주문함」, 들어오면 「입고」를 누르세요 · 흐린 글씨는 작년 숫자</span></div>' +
       '<div class="xmgoaltop"><div class="xmkpi"><span>품목</span><b>' + L.length + '개</b></div><div class="xmkpi"><span>주문함</span><b>' + od + ' / ' + L.length + '</b></div><div class="xmkpi"><span>입고</span><b>' + ind + ' / ' + L.length + '</b></div><div class="xmkpi"><span>금액 합</span><b>' + won(cost) + '</b><em>' + (pcost ? "작년 " + won(pcost) : "") + '</em></div></div>';
-    if (!L.length) h += '<p class="xmempty">아직 목록이 없습니다 · 아래 「작년 목록 불러오기」를 누르면 작년 품목 · 주문처 · 메모가 들어옵니다 (수량 · 금액은 비워 두고 작년 숫자는 흐린 글씨로)</p>';
+    if (!L.length) h += '<p class="xmempty">아직 목록이 없습니다 · 아래 「작년 목록 불러오기」를 누르면 작년 품목 · 주문처 · 메모가 들어옵니다 (작년 수량 · 금액이 칸에 들어가니 올해 맞게 고치세요)</p>';
     MK.forEach(function (k) {
       var G = L.filter(function (x) { return (x.k || "기타") === k; }); if (!G.length) return;
       h += '<h4 class="xmgh">' + k + ' <small>' + G.length + '개</small></h4><div class="xmmat">' + G.map(function (x) {
@@ -379,7 +379,7 @@
         var have = {}; rows(load(cur).mat).forEach(function (x) { have[String(x.n).replace(/\s/g, "")] = 1; });
         var add = P.filter(function (x) { return x.n && !have[String(x.n).replace(/\s/g, "")]; });
         if (!add.length) { alert("작년 품목이 이미 다 들어 있습니다"); return; }
-        matEdit(cur, function (m) { var n0 = Object.keys(m).length; add.forEach(function (x, i) { m["p" + (n0 + i)] = { k: x.k || "기타", n: x.n, s: x.s || "", m: x.m || "", pq: x.pq || x.q || "", pc: x.pc || x.c || "", q: "", c: "", o: n0 + i }; }); });
+        matEdit(cur, function (m) { var n0 = Object.keys(m).length; add.forEach(function (x, i) { m["p" + (n0 + i)] = { k: x.k || "기타", n: x.n, s: x.s || "", m: x.m || "", pq: x.pq || x.q || "", pc: x.pc || x.c || "", q: String(x.pq || x.q || "").replace(/^0$/, ""), c: String(x.pc || x.c || "").replace(/^0$/, ""), o: n0 + i /* 10/21 사장님 「있는 것에서 수정」 — 작년 수량 · 금액을 칸에 넣어 두고 고침 */ }; }); });
         drawPane(); return;
       }
       if (!id) return;
