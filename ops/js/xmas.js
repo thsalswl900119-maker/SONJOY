@@ -227,7 +227,14 @@
     Array.prototype.forEach.call(nav.querySelectorAll(".xmn"), function (b) { b.setAttribute("aria-selected", String(b.dataset.x === k)); });
     panes.forEach(function (p) { p.hidden = p.dataset.x !== k; });
     drawPane(); if (k === "meet") setTimeout(function () { ins.forEach(grow); }, 0);
+    setTimeout(regrow, 0);
   }
+  // 숨겨진 채 그려진 칸은 높이를 못 재서 글이 잘림 — 보일 때 다시 맞춘다(10/21 재료 이름 · 메모 잘림)
+  function regrow() { Array.prototype.forEach.call(sec.querySelectorAll("#xmMat textarea, #xmCk textarea.xct"), function (t) { if (t.offsetParent) grow2(t); }); }
+  document.addEventListener("click", function (e) { if (e.target.closest && e.target.closest('.tab[data-p="tp18"], .mbt[data-p="tp18"]')) setTimeout(regrow, 60); });
+  window.addEventListener("resize", function () { clearTimeout(regrow.t); regrow.t = setTimeout(regrow, 200); });
+  // 품목 이름 칸은 한 줄 글 — 엔터는 줄바꿈 대신 칸 나가기(저장)
+  sec.addEventListener("keydown", function (e) { if (e.key === "Enter" && e.target.classList && e.target.classList.contains("xmn2")) { e.preventDefault(); e.target.blur(); } });
   nav.addEventListener("click", function (e) { var b = e.target.closest(".xmn"); if (b) showTab(b.dataset.x); });
   function paneEl(k) { return document.getElementById({ sum: "xmSum", cal: "xmCal", goal: "xmGoal", mat: "xmMat", prod: "xmProd", hist: "xmHist", rep: "xmRep" }[k]); }
   function busy(el) { var a = document.activeElement; return el && a && el.contains(a) && (/INPUT|TEXTAREA|SELECT/.test(a.tagName) || a.isContentEditable); }
@@ -347,7 +354,7 @@
       var G = L.filter(function (x) { return (x.k || "기타") === k; }); if (!G.length) return;
       h += '<h4 class="xmgh">' + k + ' <small>' + G.length + '개</small></h4><div class="xmmat">' + G.map(function (x) {
         return '<div class="xmm' + (x.ind ? " in" : x.od ? " od" : "") + '" data-id="' + x._id + '">' +
-          '<div class="xmmh"><input type="text" class="xmi xmn2" data-f="n" value="' + ea2(x.n) + '" placeholder="품목"><select class="xmi" data-f="k">' + MK.map(function (z) { return "<option" + (z === (x.k || "기타") ? " selected" : "") + ">" + z + "</option>"; }).join("") + '</select><button type="button" class="xcx" data-a="mdel" aria-label="빼기">✕</button></div>' +
+          '<div class="xmmh"><textarea class="xmi xmn2" data-f="n" rows="1" placeholder="품목">' + esc(x.n || "") + '</textarea><select class="xmi" data-f="k">' + MK.map(function (z) { return "<option" + (z === (x.k || "기타") ? " selected" : "") + ">" + z + "</option>"; }).join("") + '</select><button type="button" class="xcx" data-a="mdel" aria-label="빼기">✕</button></div>' +
           '<div class="xmmg"><label>수량<input type="text" class="xmi" data-f="q" value="' + ea2(x.q) + '" placeholder="' + ea2(x.pq ? "작년 " + x.pq : "") + '"></label><label>금액(원)<input type="text" inputmode="numeric" class="xmi" data-f="c" value="' + ea2(x.c) + '" placeholder="' + ea2(x.pc ? "작년 " + N(x.pc).toLocaleString("ko-KR") : "") + '"></label><label class="w">주문처<input type="text" class="xmi" data-f="s" value="' + ea2(x.s) + '"></label></div>' +
           '<label class="xmmm">메모<textarea class="xmi" data-f="m" rows="1">' + esc(x.m || "") + '</textarea></label>' +
           '<div class="xmmb"><button type="button" class="xmst" data-a="od" aria-pressed="' + !!x.od + '">' + (x.od ? "✔ 주문함 · " + esc(nim(x.od.by)) + " " + esc(x.od.at) : "주문함") + '</button><button type="button" class="xmst" data-a="ind" aria-pressed="' + !!x.ind + '">' + (x.ind ? "✔ 입고 · " + esc(nim(x.ind.by)) + " " + esc(x.ind.at) : "입고") + "</button></div></div>";

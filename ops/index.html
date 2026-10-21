@@ -2153,6 +2153,8 @@ body.rcliveon{padding-bottom:120px}
 #xmasSec .xmm input,#xmasSec .xmm select,#xmasSec .xmm textarea{font:inherit;font-size:16px;padding:6px 8px;border:1px solid var(--rule2);border-radius:8px;background:var(--surface);color:var(--ink);box-sizing:border-box;width:100%}
 #xmasSec .xmm textarea{resize:none;overflow:hidden;line-height:1.5;min-height:40px}
 #xmasSec .xmmh{display:grid;grid-template-columns:minmax(0,1fr) 112px 40px;gap:6px;align-items:center}#xmasSec .xmmh .xmn2{font-weight:800}#xmasSec .xmmh select{width:112px}
+/* 재료 이름 한 번에 다 보이게(10/21) — 이름은 위 한 줄 전체 · 글 길이만큼 늘어남, 종류 · ✕는 아래 */
+#xmasSec .xmm .xmmh{grid-template-columns:minmax(0,1fr) 40px;grid-template-areas:"n n" "k x"}#xmasSec .xmm .xmmh .xmn2{grid-area:n;font-size:16.5px;line-height:1.4;word-break:keep-all;overflow-wrap:anywhere}#xmasSec .xmm .xmmh select{grid-area:k;width:100%}#xmasSec .xmm .xmmh .xcx{grid-area:x}
 #xmasSec .xmmg{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:6px 0}#xmasSec .xmmg label,#xmasSec .xmmm{display:flex;flex-direction:column;gap:2px;font-size:13px;font-weight:700;color:#625646}#xmasSec .xmmg label.w{grid-column:1/-1}
 #xmasSec .xmmb{display:flex;gap:6px;margin-top:6px}
 #xmasSec .xmst{font:inherit;font-size:14px;font-weight:800;flex:1;min-height:40px;border:1px solid var(--rule2);border-radius:8px;background:var(--surface);color:#2A2522;cursor:pointer}
@@ -3351,7 +3353,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-234</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-235</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -4024,18 +4026,18 @@ input,select,textarea{border-radius:var(--r3)!important}
 </footer>
 </div>
 
-<script src="js/chrome.js?v=v0924-234"></script>
+<script src="js/chrome.js?v=v0924-235"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/drag.js?v=v0924-234"></script>
-<script src="js/sync.js?v=v0924-234"></script>
-<script src="js/holidays.js?v=v0924-234"></script>
-<script src="js/sched.js?v=v0924-234"></script>
-<script src="js/app.js?v=v0924-234"></script>
-<script src="js/fruit.js?v=v0924-234"></script>
-<script src="js/mobile.js?v=v0924-234"></script>
+<script src="js/drag.js?v=v0924-235"></script>
+<script src="js/sync.js?v=v0924-235"></script>
+<script src="js/holidays.js?v=v0924-235"></script>
+<script src="js/sched.js?v=v0924-235"></script>
+<script src="js/app.js?v=v0924-235"></script>
+<script src="js/fruit.js?v=v0924-235"></script>
+<script src="js/mobile.js?v=v0924-235"></script>
 
 <style>
 /* 재고 · 발주 */
@@ -4726,7 +4728,7 @@ html.mob .mtlogo{padding:6px;margin:-6px}
 .cshome:focus-visible{outline:2px solid var(--nvacc,#E0A458);outline-offset:3px;border-radius:8px}
 @media print{.mtop,.mbar,.mobback{display:none!important}}
 </style>
-<script src="js/stock.js?v=v0924-234"></script>
+<script src="js/stock.js?v=v0924-235"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -4809,11 +4811,11 @@ html.mob .mtlogo{padding:6px;margin:-6px}
   window.addEventListener("cs:remote", function () { setTimeout(mark, 400); });
 })();
 </script>
-<script src="js/presence.js?v=v0924-234"></script>
-<script src="js/weekrep.js?v=v0924-234"></script>
-<script src="js/recipe.js?v=v0924-234"></script>
-<script src="js/bench.js?v=v0924-234"></script>
-<script src="js/monthlog.js?v=v0924-234"></script>
-<script src="js/xmas.js?v=v0924-234"></script>
-<script src="js/tg.js?v=v0924-234"></script>
+<script src="js/presence.js?v=v0924-235"></script>
+<script src="js/weekrep.js?v=v0924-235"></script>
+<script src="js/recipe.js?v=v0924-235"></script>
+<script src="js/bench.js?v=v0924-235"></script>
+<script src="js/monthlog.js?v=v0924-235"></script>
+<script src="js/xmas.js?v=v0924-235"></script>
+<script src="js/tg.js?v=v0924-235"></script>
 </body></html>
