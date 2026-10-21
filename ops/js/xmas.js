@@ -259,7 +259,18 @@
   }
   sec.addEventListener("focusout", function () { setTimeout(function () { var el = paneEl(TAB); if (pend[TAB] && !busy(el)) drawPane(); }, 60); });
   function xsave(y, fn) { var o = load(y); fn(o); o.savedAt = stampNow(); o.who = me() || o.who; try { localStorage.setItem(PRE + y, JSON.stringify(o)); } catch (e) {} }
-  function won(n) { n = +n || 0; return n ? n.toLocaleString("ko-KR") + "원" : "—"; }
+  function won(n) { n = N(n); return n ? n.toLocaleString("ko-KR") + "원" : "—"; }
+  // 💰 돈 칸은 무조건 천 원 단위 쉼표(10/21 사장님) — 보일 때 398,640 · 저장은 숫자만(글이 섞이면 그대로)
+  function money(v) { var t = String(v == null ? "" : v).trim(); return /^[\d,]+$/.test(t) && /\d/.test(t) ? Number(t.replace(/,/g, "")).toLocaleString("ko-KR") : t; }
+  function moneyRaw(v) { var t = String(v == null ? "" : v).trim(); return /^[\d,]+$/.test(t) ? t.replace(/,/g, "") : t; }
+  sec.addEventListener("input", function (e) {
+    var el = e.target; if (!el.classList || !el.classList.contains("money")) return;
+    var v = el.value, pos = el.selectionStart == null ? v.length : el.selectionStart, dig = v.slice(0, pos).replace(/[^\d]/g, "").length;
+    if (!/^[\d,]*$/.test(v)) return;   // 글이 섞이면 손대지 않음
+    var f = money(v); if (f === v) return; el.value = f;
+    var i = 0, n = 0; while (i < f.length && n < dig) { if (/\d/.test(f[i])) n++; i++; }
+    try { el.setSelectionRange(i, i); } catch (er) {}
+  }, true);
   function N(v) { var n = parseFloat(String(v == null ? "" : v).replace(/[^0-9.\-]/g, "")); return isNaN(n) ? 0 : n; }
   function ea2(v) { return esc(v).replace(/"/g, "&quot;"); }
   function nid(p) { return p + Date.now().toString(36) + Math.random().toString(36).slice(2, 4); }
@@ -293,7 +304,7 @@
       '<div class="xmtw"><table class="xmt goalt"><thead><tr><th>종류</th><th>품목</th><th>단가(원)</th><th>목표 개수</th><th>예상 매출</th><th></th></tr></thead><tbody>' +
       rows(g.it).map(function (x) {
         return '<tr data-id="' + x._id + '"><td data-l="종류"><select class="xgi" data-f="k">' + KINDS.map(function (k) { return "<option" + (k === x.k ? " selected" : "") + ">" + k + "</option>"; }).join("") + '</select></td>' +
-          '<td data-l="품목" class="gn"><input type="text" class="xgi" data-f="n" value="' + ea2(x.n) + '"></td><td data-l="단가(원)"><input type="text" inputmode="numeric" class="xgi num" data-f="p" value="' + ea2(x.p) + '"></td>' +
+          '<td data-l="품목" class="gn"><input type="text" class="xgi" data-f="n" value="' + ea2(x.n) + '"></td><td data-l="단가(원)"><input type="text" inputmode="numeric" class="xgi num money" data-f="p" value="' + ea2(money(x.p)) + '"></td>' +
           '<td data-l="목표 개수"><input type="text" inputmode="numeric" class="xgi num" data-f="t" value="' + ea2(x.t) + '"></td><td data-l="예상 매출" class="num">' + won(N(x.p) * N(x.t)) + '</td><td class="gx"><button type="button" class="xcx" data-a="gdel" aria-label="빼기">✕</button></td></tr>';
       }).join("") + '</tbody><tfoot><tr><th colspan="3">합계</th><th class="num">' + (cakes + s.slice) + '</th><th class="num">' + won(s.money) + '</th><th></th></tr></tfoot></table></div>' +
       '<button type="button" class="skbtn" data-a="gadd">＋ 품목 추가</button>' +
@@ -323,7 +334,7 @@
     el.addEventListener("change", function (e) {
       var t2 = e.target, tr = t2.closest("tr");
       if (t2.classList.contains("xg")) { var f = t2.dataset.g, v = t2.value; goalEdit(cur, function (g) { g[f] = v; }); }
-      else if (t2.classList.contains("xgi")) { var id = tr.dataset.id, ff = t2.dataset.f, vv = t2.value.trim(); goalEdit(cur, function (g) { if (g.it[id]) g.it[id][ff] = vv; }); }
+      else if (t2.classList.contains("xgi")) { var id = tr.dataset.id, ff = t2.dataset.f, vv = t2.classList.contains("money") ? moneyRaw(t2.value) : t2.value.trim(); goalEdit(cur, function (g) { if (g.it[id]) g.it[id][ff] = vv; }); }
       else if (t2.classList.contains("xper")) { var r = tr.dataset.r, i = +t2.dataset.i, v3 = t2.value.trim(); xsave(cur, function (o) { o.per = o.per || JSON.parse(JSON.stringify(PER0)); o.per[r] = o.per[r] || PER0[r].slice(); o.per[r][i] = v3; }); }
       else if (t2.classList.contains("xslice")) { var v4 = t2.value.trim(); xsave(cur, function (o) { o.slicePan = v4; }); }
       else return;
@@ -355,7 +366,7 @@
       h += '<h4 class="xmgh">' + k + ' <small>' + G.length + '개</small></h4><div class="xmmat">' + G.map(function (x) {
         return '<div class="xmm' + (x.ind ? " in" : x.od ? " od" : "") + '" data-id="' + x._id + '">' +
           '<div class="xmmh"><textarea class="xmi xmn2" data-f="n" rows="1" placeholder="품목">' + esc(x.n || "") + '</textarea><select class="xmi" data-f="k">' + MK.map(function (z) { return "<option" + (z === (x.k || "기타") ? " selected" : "") + ">" + z + "</option>"; }).join("") + '</select><button type="button" class="xcx" data-a="mdel" aria-label="빼기">✕</button></div>' +
-          '<div class="xmmg"><label>수량<input type="text" class="xmi" data-f="q" value="' + ea2(x.q) + '" placeholder="' + ea2(x.pq ? "작년 " + x.pq : "") + '"></label><label>금액(원)<input type="text" inputmode="numeric" class="xmi" data-f="c" value="' + ea2(x.c) + '" placeholder="' + ea2(x.pc ? "작년 " + N(x.pc).toLocaleString("ko-KR") : "") + '"></label><label class="w">주문처<input type="text" class="xmi" data-f="s" value="' + ea2(x.s) + '"></label></div>' +
+          '<div class="xmmg"><label>수량<input type="text" class="xmi" data-f="q" value="' + ea2(x.q) + '" placeholder="' + ea2(x.pq ? "작년 " + x.pq : "") + '"></label><label>금액(원)<input type="text" inputmode="numeric" class="xmi money" data-f="c" value="' + ea2(money(x.c)) + '" placeholder="' + ea2(x.pc ? "작년 " + N(x.pc).toLocaleString("ko-KR") : "") + '"></label><label class="w">주문처<input type="text" class="xmi" data-f="s" value="' + ea2(x.s) + '"></label></div>' +
           '<label class="xmmm">메모<textarea class="xmi" data-f="m" rows="1">' + esc(x.m || "") + '</textarea></label>' +
           '<div class="xmmb"><button type="button" class="xmst" data-a="od" aria-pressed="' + !!x.od + '">' + (x.od ? "✔ 주문함 · " + esc(nim(x.od.by)) + " " + esc(x.od.at) : "주문함") + '</button><button type="button" class="xmst" data-a="ind" aria-pressed="' + !!x.ind + '">' + (x.ind ? "✔ 입고 · " + esc(nim(x.ind.by)) + " " + esc(x.ind.at) : "입고") + "</button></div></div>";
       }).join("") + "</div>";
@@ -368,7 +379,7 @@
     el.addEventListener("input", function (e) { if (e.target.tagName === "TEXTAREA") grow2(e.target); });
     el.addEventListener("change", function (e) {
       var t2 = e.target; if (!t2.classList.contains("xmi")) return;
-      var id = t2.closest(".xmm").dataset.id, f = t2.dataset.f, v = t2.value.trim();
+      var id = t2.closest(".xmm").dataset.id, f = t2.dataset.f, v = t2.classList.contains("money") ? moneyRaw(t2.value) : t2.value.trim();
       matEdit(cur, function (m) { if (m[id]) m[id][f] = v; }); setTimeout(function () { drawPane(true); }, 0);
     });
     el.addEventListener("click", function (e) {
