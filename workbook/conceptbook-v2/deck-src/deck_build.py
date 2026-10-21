@@ -34,7 +34,7 @@ html,body{margin:0;height:100%%;background:#2b2320;overflow:hidden;font-family:'
 #stage{position:absolute;left:50%%;top:50%%;width:1920px;height:1080px;transform-origin:0 0}
 section{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;box-sizing:border-box;display:none;background:#fff}
 section:not(.on){display:none!important}
-section>*{position:absolute}
+section>*{position:absolute}section *{box-sizing:border-box}
 section p,section h1,section h2,section h3{margin:0}
 section ul,section ol{margin:0;padding-left:1.2em}
 iframe.emb{border:0;background:transparent}

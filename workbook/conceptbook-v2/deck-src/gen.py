@@ -47,7 +47,7 @@ def emb_bars(rows, unit='', maxv=None, hl=None, fs=30):
     data=json.dumps(rows,ensure_ascii=False)
     css='.r{display:flex;align-items:center;gap:16px;height:%dpx}.n{width:26%%;font-size:%dpx;font-weight:700;text-align:right;color:%s}.t{flex:1;height:60%%;background:%s;position:relative}.b{height:100%%;width:0;background:%s}.b.h{background:%s}.v{width:14%%;font-size:%dpx;font-weight:800;color:%s;font-variant-numeric:tabular-nums}.wrap{display:flex;flex-direction:column;justify-content:space-around;height:100%%}'%(100//len(rows)*0+int(100/len(rows)),fs,INK,PANEL,CORALL,CORAL,fs+8,CORALD)
     body='<div class="wrap" id="w"></div>'
-    js='var D=%s,MX=%s,HL=%s,U=%s;var W=document.getElementById("w");W.innerHTML=D.map(function(r,i){return "<div class=r style=\\"height:"+(100/D.length)+"%%\\"><div class=n>"+r[0]+"</div><div class=t><div class=\\"b"+(i===HL?" h":"")+"\\" id=b"+i+"></div></div><div class=v id=v"+i+"></div></div>"}).join("");loop(function(p){D.forEach(function(r,i){var q=Math.max(0,Math.min(1,(p*1.25)-i*0.08));document.getElementById("b"+i).style.width=(r[1]/MX*100*q)+"%%";document.getElementById("v"+i).textContent=(r[2]||"")+(Math.round(r[1]*q*10)/10).toLocaleString()+U})});'%(data,mx,json.dumps(hl),json.dumps(unit))
+    js='var D=%s,MX=%s,HL=%s,U=%s;var W=document.getElementById("w");W.innerHTML=D.map(function(r,i){return "<div class=r style=\\"height:"+(100/D.length)+"%%\\"><div class=n>"+r[0]+"</div><div class=t><div class=\\"b"+(i===HL?" h":"")+"\\" id=b"+i+"></div></div><div class=v id=v"+i+"></div></div>"}).join("");var K=1+D.length*0.08;loop(function(p){D.forEach(function(r,i){var q=Math.max(0,Math.min(1,(p*K)-i*0.08));document.getElementById("b"+i).style.width=(r[1]/MX*100*q)+"%%";var v=r[1]*q;v=Number.isInteger(r[1])?Math.round(v):Math.round(v*10)/10;document.getElementById("v"+i).textContent=(r[2]||"")+v.toLocaleString()+U})});'%(data,mx,json.dumps(hl),json.dumps(unit))
     return emb_loop(css,body,js)
 
 def emb_countup(value, unit, label, sub='', fs=190):
@@ -95,7 +95,7 @@ def emb_flow(steps):
     return emb_loop(css,body,js)
 
 def emb_pointer():
-    css='.p{position:absolute;left:0;top:50%;width:90px;height:60px;animation:m 1.1s ease-in-out infinite}@keyframes m{0%,100%{transform:translate(0,-50%)}50%{transform:translate(26px,-50%)}}'
+    css='.p{position:absolute;left:0;top:50%;width:64px;height:60px;animation:m 1.1s ease-in-out infinite}@keyframes m{0%,100%{transform:translate(0,-50%)}50%{transform:translate(22px,-50%)}}'
     body='<svg class="p" viewBox="0 0 90 60"><path d="M4 30 L60 30 M60 30 L42 12 M60 30 L42 48" fill="none" stroke="#C67F68" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><circle cx="78" cy="30" r="8" fill="#A85A45"/></svg>'
     return emb_loop(css,body,'')
 
@@ -142,7 +142,7 @@ frame('cover',b+LOGO_BIG,'강의안 · DAY 1–3 통합',None,'첫 인사. 듣�
 
 # agenda
 items=[{'num':'DAY 1','h':'컨셉과 메뉴','s':'오프닝 · 컨셉 3요소 · 손님 동선과 경쟁점 3곳 · 메뉴 10개를 4개로 → 컨셉북 1장'},{'num':'DAY 2','h':'원가 & 손익관리','s':'베이스 5종 · 음료 10종 · 한 잔 원가 · 가격 배수 · 손익분기 → 컨셉북 2장','k':1},{'num':'DAY 3','h':'브랜드와 SNS','s':'이름 10→3→1 · 톤앤매너 · 플레이스·인스타·블로그 · 첫 30일 → 컨셉북 3장 + 발표'}]
-b=emb(89,250,1740,440,emb_stagger(items))
+b=emb(89,250,1740,440,emb_stagger(items,big=44,small=30))
 b+='<div style="position:absolute;left:89px;top:730px;width:1740px;height:150px;background:%s;border-radius:14px;padding:30px 40px;display:flex;flex-direction:row;align-items:center;gap:40px"><p style="font-family:%s;font-size:34px;color:%s;line-height:1.2;width:420px">매 교시 같은 순서</p><p style="font-size:30px;line-height:1.5;color:%s"><b>강의 → 실습(타이머) → 강사 피드백</b> · 워크북에 적고 「강사에게 보내기」 · <b>아이패드 또는 노트북 필참(3일 모두)</b> · 3일차는 AI 툴 미리 로그인</p></div>'%(PANEL,HEAD,CORALD,INK)
 frame('agenda',b,'과정 안내','3일 15교시가 끝나면 컨셉북 3장과 2분 발표가 남는다','하루의 결과물이 컨셉북 한 장씩. 3일 뒤 세 장이 내 가게 설명서가 된다.','fade','출처: 부산 청년잡 성장프로젝트 Track 3 세부 운영 계획안 (2026.10)')
 
@@ -185,18 +185,65 @@ items=[{'num':'4.7원/g','h':'레몬 1kg','s':'레몬 500 + 설탕 450 + 꿀 50 
 b=emb(89,250,1740,380,emb_stagger(items,big=30,small=22))
 b+=emb(89,660,1740,220,emb_bars([['베이스 없이',5,''],['베이스 있으면',1,'']],'분',5.5,1,34))
 frame('d2p1',b,'1교시 · 13:00–13:50','베이스 5종을 미리 만들면 한 잔이 5분에서 1분이 된다','베이스는 간단히. 재료 비율·보관·1g 원가만 짚고, 만드는 법 전체는 워크북 레시피 탭.','fade','대량 준비 · 한 번에 2~3배로 만들어 소분 → 냉장 1주일치 · 나머지 냉동 · 라벨에 만든 날 · 단가는 2026년 9월 도매가 참고값')
+import importlib.util as _iu
+_sp=_iu.spec_from_file_location('cur','/home/user/SONJOY/workbook/conceptbook-v2/src/cur.py');cur=_iu.module_from_spec(_sp);_sp.loader.exec_module(cur)
+def _num(x): return ('%g'%x) if isinstance(x,(int,float)) else str(x)
+def rcard(w,name,meta,ings,steps,tip,extra=''):
+    big=w>=500
+    fs=(27,25,26,23) if big else (25,24,24,22)   # 재료 · 순서 · 제목보조 · 팁
+    h='<div style="width:%dpx;background:%s;border-radius:16px;padding:26px 28px;border:1px solid #EADBC8;display:flex;flex-direction:column;gap:12px">'%(w,PANEL2)
+    h+='<p style="font-family:%s;font-size:%dpx;line-height:1.15;color:%s">%s</p>'%(HEAD,40 if big else 36,CORALD,e(name))
+    h+='<p style="font-size:%dpx;line-height:1.4;color:%s">%s</p>'%(fs[2]-2,GREY,e(meta))
+    h+='<div style="background:%s;border-radius:12px;padding:12px 16px;display:flex;flex-direction:column;gap:4px">'%PANEL
+    for n,q,u in ings: h+='<div style="display:flex;flex-direction:row;justify-content:space-between;gap:12px"><p style="font-size:%dpx;line-height:1.4;color:%s">%s</p><p style="font-size:%dpx;line-height:1.4;color:%s;white-space:nowrap"><b>%s%s</b></p></div>'%(fs[0],INK,e(n),fs[0],CORALD,_num(q),e(u))
+    h+='</div><ol style="padding-left:30px;font-size:%dpx;line-height:1.45;color:%s">'%(fs[1],INK)
+    for st in steps: h+='<li>%s</li>'%e(st)
+    h+='</ol>'
+    if tip: h+='<p style="font-size:%dpx;line-height:1.45;color:%s">💡 %s</p>'%(fs[3],GREY,e(tip))
+    return h+extra+'</div>'
+def bslide(sid,bases,title,foot):
+    w=(1740-20*(len(bases)-1))//len(bases)
+    b='<div style="position:absolute;left:89px;top:240px;width:1740px;display:flex;flex-direction:row;gap:20px;align-items:start">'
+    for name,tot,keep,ings,steps,per,tip in bases:
+        pc=sum(q*p for _,q,_,p in ings)/tot
+        b+=rcard(w,name,'완성 %dg · %s · 1g %.1f원 · 한 잔 %dg = %d원'%(tot,keep,pc,per,round(pc*per)),[(n,q,u) for n,q,u,_ in ings],steps,tip)
+    b+='</div>'
+    frame(sid,b,'1교시 · 베이스 레시피',title,'워크북 레시피 탭과 같은 내용. 재료 비율과 보관만 짚고 넘어간다.','fade',foot)
+BS=cur.BASES
+bslide('d2b1',BS[:3],'레몬 · 생강 · 홍차 베이스 — 재료 비율과 순서','워크북 「레시피」 탭 · 베이스 5종 · 단가는 2026년 9월 도매가 참고값')
+bslide('d2b2',BS[3:],'마살라티 · 히비스커스 베이스','워크북 「레시피」 탭 · 베이스 5종 · 단가는 2026년 9월 도매가 참고값')
 practice('d2p1x','실습 · 1교시','베이스 5종 중 내 가게에 쓸 것을 고르고 한 줄 메모한다',5,['베이스 카드 5장 · 재료 비율 · 보관 기간 확인','「베이스 메모」 · 오늘 들은 것 중 기억할 한 줄','내 시그니처 디저트와 어울리는 베이스 1~2개 표시'],'5분 · 짧게 · 시연 사이에','메모 한 줄만 받는다. 길게 쓰지 않게.')
 rows=[['흑임자 라떼',1398,''],['버터크림 라떼',1578,''],['오렌지 비앙코',1194,''],['리얼 초콜릿',1836,''],['리얼 고구마 라떼',1181,''],['마살라 차이',1080,''],['홍차 밀크티',963,''],['펜넬 레몬차',597,''],['진저 레몬티',608,''],['히비스커스 에이드',740,'']]
 b=emb(89,250,1140,620,emb_bars(rows,'원',2000,3,26))
 b+='<div style="position:absolute;left:1270px;top:250px;width:560px;height:620px;background:%s;border-radius:14px;padding:30px 32px;display:flex;flex-direction:column;gap:14px;border:1px solid #EADBC8"><h3 style="font-family:%s;font-size:30px;font-weight:400;color:%s;line-height:1.2">한 잔 원가 · 재료비 + 컵 · 로스 3%%</h3><p style="font-size:24px;line-height:1.5;color:%s">① 커피 · 흑임자 라떼 · 버터크림 라떼 · 오렌지 비앙코<br>② 논커피 · 리얼 초콜릿 · 리얼 고구마 라떼<br>③ 티 · 마살라 차이 · 홍차 밀크티 · 펜넬 레몬차 · 진저 레몬티<br>④ 에이드 · 히비스커스 에이드</p><p style="font-size:24px;line-height:1.5;color:%s"><b>베이스를 쓰는 다섯 잔은 재료 수가 2~3개뿐</b> · 진저 레몬티 = 생강 베이스 30g + 레몬 베이스 30g + 물</p><p style="font-size:24px;line-height:1.5;color:%s">제일 비싼 잔은 비싸게 받을 이유가 있고, 제일 싼 잔은 세트의 짝이 된다</p></div>'%(PANEL2,HEAD,CORALD,INK,INK,GREY)
 frame('d2p2',b,'2교시 · 14:00–14:50','베이스 5개에서 음료 10잔이 나온다','시연하면서 각 잔의 원가를 말로 붙인다.','fade','출처: 워크북 레시피 탭 · 레시피 카드 10장(컵 ml · 얼음 g · 재료 g·ml · HOT/ICE · 순서 · 팁)')
+def dcost(d):
+    c=0
+    for n,q,u,p in d[5]:
+        if isinstance(p,str) and p.startswith('base:'):
+            bb=BS[int(p[5:])]; p=sum(q2*p2 for _,q2,_,p2 in bb[3])/bb[1]
+        c+=q*p
+    return c+cur.CUP[d[2]]
+def dslide(sid,ds,chip,title,foot):
+    w=(1740-16*(len(ds)-1))//len(ds)
+    b='<div style="position:absolute;left:89px;top:240px;width:1740px;display:flex;flex-direction:row;gap:16px;align-items:start">'
+    for d in ds:
+        name,cat,tmp,cup,ice,ings,steps,tip=d
+        meta='%s · %s · 컵 %dml%s · 재료+컵 %s원'%(cat,tmp,cup,(' · 얼음 %dg'%ice if ice else ''),format(round(dcost(d)),','))
+        b+=rcard(w,name,meta,[(n,q,u) for n,q,u,_ in ings],steps,tip)
+    b+='</div>'
+    frame(sid,b,chip,title,'레시피 카드 그대로. 시연하며 재료 g·ml를 손으로 짚는다.','fade',foot)
+DR=cur.DRINKS
+dslide('d2r1',[d for d in DR if d[1]=='커피'],'2교시 · 레시피 카드 ①','커피 3잔 — 흑임자 라떼 · 버터크림 라떼 · 오렌지 비앙코','워크북 「레시피」 탭 레시피 카드 10장 · 컵 ml · 얼음 g · 재료 g·ml · HOT/ICE')
+dslide('d2r2',[d for d in DR if d[1] in ('논커피','에이드')],'2교시 · 레시피 카드 ②','논커피 2잔 + 에이드 1잔','워크북 「레시피」 탭 · 리얼 초콜릿 · 리얼 고구마 라떼 · 히비스커스 에이드')
+dslide('d2r3',[d for d in DR if d[1]=='티'],'2교시 · 레시피 카드 ③','티 4잔 — 베이스 하나로 1분 안에','워크북 「레시피」 탭 · 마살라 차이 · 홍차 밀크티 · 펜넬 레몬차 · 진저 레몬티')
 practice('d2p2x','실습 · 2교시','10잔 중 내 가게에 넣을 음료 2개와 이유를 적는다',10,['레시피 카드 10장 · HOT/ICE · 컵 · 재료 확인','「내 가게에 넣고 싶은 음료 2개와 이유」','기준 · 컨셉 · 타깃 · 시그니처 디저트와 어울리는가'],'맛있어서가 아니라 「우리 손님이 그 순간에 찾을 것」','이유에 타깃이 들어갔는지 본다.')
 b=emb(89,250,1740,500,emb_waterfall())
 b+='<div style="position:absolute;left:89px;top:780px;width:1740px;height:110px;background:%s;border-radius:14px;padding:24px 40px;display:flex;flex-direction:row;align-items:center;gap:40px"><p style="font-family:%s;font-size:32px;color:%s;line-height:1.2">한 잔 원가 = (재료비 + 컵·포장비) × (1 + 로스율)</p><p style="font-size:26px;line-height:1.4;color:%s">월세·인건비는 아직 안 뺐다 → 4교시 손익분기</p></div>'%(PANEL,HEAD,CORALD,GREY)
 frame('d2p3',b,'3교시 · 15:00–15:50','원가 2천 원에 6천 원을 받아도 남는 돈은 2,505원이다','숫자를 하나씩 띄우며 뺀다. 「4천 원 남는다」가 2,505원이 되는 순간에 멈춘다. 로스는 재료비+포장비의 10%.','fade','워크북 3교시 「오해 깨기」 계산기 · 숫자를 바꾸면 바로 다시 계산된다')
 practice('d2p3x','실습 · 3교시','음료 10잔에 판매가를 넣고 내 메뉴 음료를 고른다',20,['음료 원가표 · 로스율 3% · 판매가 → 원가율 색 확인','「내 메뉴」 체크 2~4잔 · 평균 원가율 20~25% 안인가','디저트 4개 · 재료비는 「재료비 자동 계산기」에 그램 입력','포장비 · 로스율 넣으면 1개 원가 자동'],'원가율 기준 · 음료 20~25% · 디저트 30~35%','로스율 0인 사람과 포장비 빠진 사람을 잡는다.')
 b=emb(89,250,1040,420,emb_bars([['음료',5,'×'],['디저트 · 구움과자',3.3,'×'],['케이크 · 생크림류',3,'×'],['선물세트 · 홀케이크',3,'×']],'',5.5,0,30))
-b+='<p style="position:absolute;left:89px;top:690px;width:1040px;font-size:26px;line-height:1.4;color:%s">음료 ×4~5 · 디저트 ×3~3.3 · 케이크 ×2.8~3 · 세트 ×2.5~3 · <b>최소 3배</b> · 3배 아래면 월세·인건비를 못 낸다</p>'%INK
+b+='<p style="position:absolute;left:89px;top:690px;width:1040px;font-size:26px;line-height:1.4;color:%s">음료 ×4~5 · 디저트 ×3~3.3 · 케이크 ×2.8~3 · 세트 ×2.5~3 · <b>최소 3배</b></p>'%INK
 b+='<div style="position:absolute;left:1170px;top:250px;width:660px;display:flex;flex-direction:column;gap:12px">'
 for h,s in [('경쟁가','경쟁점 3곳 ±15% 안이면 안전'),('지불의사','손님 10명에게 물으면 답이 나온다'),('끝자리','4,800은 싸 보이고 5,000은 선물 느낌'),('구성','세트는 낱개 합보다 500~1,000원 싸게')]:
     b+='<div style="background:%s;border-radius:12px;padding:18px 24px;border:1px solid #EADBC8"><p style="font-size:27px;line-height:1.4;color:%s"><b>%s</b> · %s</p></div>'%(PANEL2,INK,e(h),e(s))
@@ -216,7 +263,7 @@ jpslide('d2jp',2,'数えた人だけが、残る。','카조에타 히토다케�
 
 # DAY 3
 divider('d3','DAY 3 · 11/4 WED','브랜드와 SNS','이름 · 톤앤매너 · 매출이 오르는 SNS · 그리고 발표',['브랜드 이름과 한 문장','톤앤매너 · 무드보드','플레이스 · 인스타 · 블로그','SNS 첫 30일 + 소개글','컨셉북 발표 · 총정리'],'마지막 날. 오후 5시 발표.')
-b=emb(89,250,700,560,emb_funnel(['컨셉북을 넣고 AI 후보 10개','기준 5가지 체크로 3개','네이버 · 인스타 검색으로 확인','가게 이름 1개 + 브랜드 한 문장']))
+b=emb(89,250,700,560,emb_funnel(['컨셉북 넣고 AI 후보 10개','기준 5가지로 3개','검색으로 겹침 확인','이름 1개 + 한 문장']))
 b+='<div style="position:absolute;left:840px;top:250px;width:990px;display:flex;flex-direction:column;gap:12px">'
 for i,(h,s) in enumerate([('기억','한 번 듣고 다음 날 말할 수 있는가'),('발음','전화로 말해도 안 틀리는가'),('검색','네이버에 쳤을 때 묻히지 않는가'),('의미','컨셉 한 줄과 이어지는가'),('확장성','2호점 · 선물 상자에 붙여도 어색하지 않은가')]):
     b+='<div style="background:%s;border-radius:12px;padding:16px 24px;display:flex;flex-direction:row;align-items:center;gap:20px;border:1px solid #EADBC8"><p style="width:52px;height:52px;border-radius:50%%;background:%s;color:#fff;font-family:%s;font-size:26px;line-height:52px;text-align:center">%d</p><p style="font-size:28px;line-height:1.3;color:%s"><b>%s</b> · %s</p></div>'%(PANEL2,CORAL,HEAD,i+1,INK,e(h),e(s))
@@ -248,7 +295,7 @@ for t in ['워크북 · 컨셉북 탭에서 「전체 복사」로 보관','체�
 b+='</div>'
 frame('end',b+LOGO_BIG,'감사합니다',None,'마무리. 워크북 링크는 수업 뒤에도 열린다고 안내한다.','fade')
 
-ORDER=['cover','agenda','workbook','d1','d1p1','d1p1x','d1p2','d1p2x','d1p3','d1p3x','d1p4','d1p4x','d1p5x','d1jp','d2','d2p1','d2p1x','d2p2','d2p2x','d2p3','d2p3x','d2p4a','d2p4b','d2p4x','d2p5x','d2jp','d3','d3p1','d3p1x','d3p2','d3p2x','d3p3','d3p3x','d3p4x','d3p5','d3jp','end']
+ORDER=['cover','agenda','workbook','d1','d1p1','d1p1x','d1p2','d1p2x','d1p3','d1p3x','d1p4','d1p4x','d1p5x','d1jp','d2','d2p1','d2b1','d2b2','d2p1x','d2p2','d2r1','d2r2','d2r3','d2p2x','d2p3','d2p3x','d2p4a','d2p4b','d2p4x','d2p5x','d2jp','d3','d3p1','d3p1x','d3p2','d3p2x','d3p3','d3p3x','d3p4x','d3p5','d3jp','end']
 deck={"v":4,"createdOnFiles":{"v":1,"at":"2026-10-20T09:00:00Z"},"lists":"css","title":"은밀한 창업 노트 강의안","order":ORDER,
  "sections":{"intro":{"description":"3일 과정과 워크북 사용법을 소개한다.","start":"cover"},"day1":{"description":"1일차 · 컨셉 한 줄과 메뉴 4개를 정한다.","start":"d1"},"day2":{"description":"2일차 · 베이스와 음료 10종으로 원가·가격·손익분기를 계산한다.","start":"d2"},"day3":{"description":"3일차 · 이름·톤앤매너·SNS 30일 계획을 세우고 발표한다.","start":"d3"}},
  "faces":{"do-hyeon":{"family":"Do Hyeon","href":"https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap"},"nanum-gothic":{"family":"Nanum Gothic","href":"https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap"}},
