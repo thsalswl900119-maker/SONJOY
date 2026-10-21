@@ -220,6 +220,7 @@ var BASES=__BASES__, DRINKS=__DRINKS__, CUP=__CUP__, FONTS=__FONTS__, PRESF=__PR
 <!-- 화면 A. 입장 -->
 <div id="screenEnter">
   <div class="top">
+    <img class="logo" src="__LOGO__" alt="카페스이 로고" style="width:150px;height:auto;display:block;margin:6px auto 2px">
     <div><span class="chip" id="orgChip"></span> <span class="chip soft" id="verChip"></span></div>
     <h1 id="mainTitle"></h1>
     <p id="mainSub"></p>
@@ -241,7 +242,7 @@ var BASES=__BASES__, DRINKS=__DRINKS__, CUP=__CUP__, FONTS=__FONTS__, PRESF=__PR
 <!-- 화면 B. 워크북 -->
 <div id="screenDay" class="hidden">
   <div class="bar">
-    <div class="who"><span id="whoName">—</span><small id="whoCode"></small></div>
+    <div class="who" style="display:flex;align-items:center;gap:8px"><img class="logo" src="__LOGO__" alt="카페스이 로고" style="width:34px;height:auto;display:block"><span><span id="whoName">—</span><small id="whoCode"></small></span></div>
     <div style="display:flex;align-items:center;gap:8px"><div class="saved" id="saved"><i></i><span>아직 안 씀</span></div><button type="button" class="homebtn" id="btnSave">저장</button><button type="button" class="homebtn" id="btnHome">홈</button><button type="button" class="homebtn" id="btnOut">나가기</button></div>
   </div>
   <div class="days" id="dayTabs"></div>
@@ -286,7 +287,7 @@ var BASES=__BASES__, DRINKS=__DRINKS__, CUP=__CUP__, FONTS=__FONTS__, PRESF=__PR
 
 <!-- 화면 C. 강사 -->
 <div id="screenTeacher" class="hidden">
-  <div class="top"><span class="chip">강사 화면</span><h1>받은 컨셉북</h1><p>강사 6자리 숫자를 넣으면 제출 목록을 열 수 있습니다.</p></div>
+  <div class="top"><img class="logo" src="__LOGO__" alt="카페스이 로고" style="width:110px;height:auto;display:block;margin:6px auto 2px"><span class="chip">강사 화면</span><h1>받은 컨셉북</h1><p>강사 6자리 숫자를 넣으면 제출 목록을 열 수 있습니다.</p></div>
   <div class="card" id="tLogin">
     <label for="tPin" style="display:block;font-family:var(--head);color:var(--corald);font-size:14px;margin-bottom:6px">강사 6자리 숫자</label>
     <input id="tPin" type="password" inputmode="numeric" maxlength="6" placeholder="숫자 6자리" style="width:100%;padding:13px 14px;border:1.5px solid var(--corall);border-radius:10px;background:#fff;font-size:22px;text-align:center;letter-spacing:.2em">
@@ -473,8 +474,8 @@ W.book1={html:function(){return '<h4>컨셉 정의서 미리보기 (자동)</h4>
   refresh:function(el){$('#b1line',el).textContent=conceptLine();var h='<tr><th>구분</th><th>메뉴</th><th>기준 점수</th></tr>';var r=rankedMenus();for(var i=1;i<=4;i++){var n=v('menu'+i);var sc=r.filter(function(x){return x.n===n})[0];h+='<tr><td>'+(i===1?'시그니처':'서브 '+(i-1))+'</td><td>'+(n?esc(n):'<span class="e">아직</span>')+'</td><td>'+(sc?sc.s+'/5':'—')+'</td></tr>';}$('#b1menu',el).innerHTML=h;}};
 W.myth={html:function(){return '<h4>오해 깨기 · 「원가 2천 원, 6천 원에 팔면 4천 원 남는다」</h4><div class="g g3"><div><label>재료 원가 (원)</label><input data-k="q_cost" inputmode="decimal" placeholder="2000"></div><div><label>판매가 (원)</label><input data-k="q_price" inputmode="decimal" placeholder="6000"></div><div><label>카드 수수료 (%)</label><input data-k="q_fee" inputmode="decimal" placeholder="1.5"></div><div><label>컵·포장비 (원)</label><input data-k="q_pack" inputmode="decimal" placeholder="600"></div><div><label>로스율 (%)</label><input data-k="q_loss" inputmode="decimal" placeholder="10"></div></div><div class="res" id="mythRes">숫자를 넣으면 실제로 남는 돈이 나옵니다.</div>';},
   refresh:function(el){var c=num('q_cost'),p=num('q_price');if(c==null||!p){$('#mythRes',el).textContent='숫자를 넣으면 실제로 남는 돈이 나옵니다.';return;}
-    var vat=p-p/1.1,fee=p*nz('q_fee')/100,pack=nz('q_pack'),loss=c*nz('q_loss')/100,left=p-vat-fee-c-pack-loss;
-    $('#mythRes',el).innerHTML='<b>겉보기 이익</b> '+won(p-c)+' → <b>실제 남는 돈</b> <span class="'+(left<p*0.3?'bad':'ok')+'">'+won(left)+'</span> ('+pct(left/p*100)+')<br><small>판매가 '+won(p)+' − 부가세 '+won(vat)+' − 카드수수료 '+won(fee)+' − 재료 '+won(c)+' − 컵·포장 '+won(pack)+' − 로스 '+won(loss)+'<br>여기서 월세·인건비·공과금은 아직 안 뺀 것입니다. 그건 4교시 손익분기에서 봅니다.</small>';}};
+    var vat=p-p/1.1,fee=p*nz('q_fee')/100,pack=nz('q_pack'),loss=(c+pack)*nz('q_loss')/100,left=p-vat-fee-c-pack-loss;
+    $('#mythRes',el).innerHTML='<b>겉보기 이익</b> '+won(p-c)+' → <b>실제 남는 돈</b> <span class="'+(left<p*0.3?'bad':'ok')+'">'+won(left)+'</span> ('+pct(left/p*100)+')<br><small>판매가 '+won(p)+' − 부가세 '+won(vat)+' − 카드수수료 '+won(fee)+' − 재료 '+won(c)+' − 컵·포장 '+won(pack)+' − 로스(재료+포장의 '+nz('q_loss')+'%) '+won(loss)+'<br>여기서 월세·인건비·공과금은 아직 안 뺀 것입니다. 그건 4교시 손익분기에서 봅니다.</small>';}};
 W.bases={html:function(){var h='<h4>베이스 5종 · 한 줄 요약</h4>';BASES.forEach(function(b,i){h+='<div class="mcard"><div class="mh"><span>'+esc(b[0])+' <small>'+b[1]+'g · '+esc(b[2])+'</small></span><small>1g <b id="bu'+i+'" style="color:var(--corald)"></b> · 한 잔 '+b[5]+'g</small></div><div style="font-size:14.5px"><b>재료</b> '+b[3].map(function(x){return esc(x[0])+' '+x[1]+x[2]}).join(' + ')+'</div><div style="font-size:14px;margin-top:4px;color:var(--ink)"><b>만드는 법</b> '+esc(b[4].join(' → '))+'</div><div style="font-size:13px;margin-top:4px;color:var(--grey)">💡 '+esc(b[6])+'</div></div>';});return h+'<div class="cap">재료별 금액표와 순서는 「레시피」 탭에 있습니다. 단가는 2026년 9월 도매가 참고값입니다.</div>';},
   refresh:function(el){BASES.forEach(function(b,i){$('#bu'+i,el).textContent=(Math.round(baseUnit(i)*100)/100)+'원';});}};
 function drinkCardHtml(i,full){var d=DRINKS[i];var h='<h4>'+esc(d[0])+' <span class="tag">'+esc(d[1])+'</span><span class="tag '+(d[2]==='ICE'?'ice':'hot')+'">'+d[2]+'</span></h4><div class="meta">컵 '+d[3]+'ml'+(d[4]?' · 얼음 '+d[4]+'g':'')+'</div><div class="tw"><table><tr><th>재료</th><th>양</th><th>금액</th></tr>'+d[5].map(function(x){return '<tr><td>'+esc(x[0])+'</td><td>'+x[1]+x[2]+'</td><td>'+won(x[1]*ingPrice(x))+'</td></tr>'}).join('')+'</table></div><ol>'+d[6].map(function(x){return '<li>'+esc(x)+'</li>'}).join('')+'</ol>';
