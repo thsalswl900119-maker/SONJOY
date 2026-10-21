@@ -134,14 +134,10 @@ def divider(sid, part, title, sub, items, note):
 
 # ─────────────────────────── 슬라이드 ───────────────────────────
 # cover
-b='<div data-build-in="rise 1" style="position:absolute;left:194px;top:250px;width:1532px;height:520px;background:%s;border-radius:26px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:40px">'%CORAL
+b='<div data-build-in="rise 1" style="position:absolute;left:194px;top:280px;width:1532px;height:520px;background:%s;border-radius:26px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:40px">'%CORAL
 b+='<p style="font-family:%s;font-size:28px;color:%s;letter-spacing:4px;line-height:1.2">2026 부산 청년잡(JOB) 성장프로젝트 · TRACK 3</p>'%(HEAD,LIT)
 b+='<h1 style="font-family:%s;font-size:92px;font-weight:400;color:%s;line-height:1.15;text-align:center">9년 차 카페 사장이<br>처음 공개하는 은밀한 창업 노트</h1>'%(HEAD,WHITE)
 b+='<p style="font-size:32px;color:%s;line-height:1.4;text-align:center">3일 만에 완성하는 나만의 컨셉북 · 컨셉 · 숫자 · 브랜드</p></div>'%LIT2
-b+='<div data-build-in="fade 2" style="position:absolute;left:194px;top:810px;width:1532px;display:flex;flex-direction:row;gap:14px">'
-for t in ['11/2(월) ~ 11/4(수) · 13:00–18:00','부산청년잡성장카페 서부산점 · 603호','카페스이 · 스이노키친 대표 손민지']:
-    b+='<div style="flex:1;background:%s;border-radius:12px;padding:20px;border:1px solid #EADBC8;text-align:center"><p style="font-size:26px;line-height:1.3;color:%s">%s</p></div>'%(PANEL2,INK,e(t))
-b+='</div>'
 frame('cover',b+LOGO_BIG,'강의안 · DAY 1–3 통합',None,'첫 인사. 듣고 끝나는 특강이 아니라 고쳐서 완성하는 실습. 마지막 날 각자 2분씩 자기 가게를 발표한다.','fade')
 
 # agenda
