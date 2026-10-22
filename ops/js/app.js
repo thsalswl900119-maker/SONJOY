@@ -343,6 +343,20 @@
     saveOne(o);
     Array.prototype.forEach.call(document.querySelectorAll('.box[data-k="' + o + '"]'), function (x) { if (!pastBox(x)) paint(x); });
   }
+  // 이번 주(월~오늘) 오늘 할 일에서 체크한 요일 청소를 매주 청소 표의 빈 칸에 채움 — 이 기능 전에 한 체크 · 다른 기기(옛 버전)에서 한 체크도 (빈 칸만 · 지우지 않음)
+  function linkFill() {
+    var wk = weekKey(), p = wk.split("-"), d0 = new Date(+p[0], +p[1] - 1, +p[2]), dn = dayKey(), ch = 0;
+    for (var i = 0; i < 6; i++) {
+      var d = new Date(d0); d.setDate(d0.getDate() + i);
+      var dk = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+      if (dk > dn) break;
+      var rec = read("cafesui.todo." + dk) || {};
+      Object.keys(LINK).forEach(function (t) { var w = LINK[t]; if (rec[t] && !state.done[w]) { state.done[w] = rec[t]; saveOne(w); ch = 1; } });
+    }
+    if (ch) Object.keys(RLINK).forEach(function (w) { Array.prototype.forEach.call(document.querySelectorAll('.box[data-k="' + w + '"]'), paint); });
+  }
+  window.addEventListener("cs:remote", function (e) { var ks = (e.detail && e.detail.keys) || []; if (ks.some(function (k) { return k.indexOf("cafesui.todo.") === 0 || k.indexOf("cafesui.week.") === 0; })) setTimeout(linkFill, 300); });
+  setTimeout(linkFill, 1500);
   boxes.forEach(bindBox);
   window.__CS_BIND_BOX = bindBox;
   // 다른 기기에서 체크하면 이 화면에도 바로 (새로고침 없이)
@@ -867,7 +881,8 @@
       // 월말회의
       h = "";
       by("cafesui.meeting.").sort().reverse().forEach(function (k) { var o = J(k) || {}, b = rows(o, /^_/); if (b) h += "<h3>" + k.slice(16).replace("-", "년 ") + "월 회의</h3>" + b; });
-      var mt = J("cafesui.mtable"); if (mt) { var mb = rows(mt); if (mb) h += "<h3>채널별 · 품목별 비교표</h3>" + mb; }
+      by("cafesui.mtable.").sort().reverse().forEach(function (k) { var mb = rows(J(k) || {}); if (mb) h += "<h3>" + k.slice(15).replace("-", "년 ") + "월 채널별 · 품목별 비교표</h3>" + mb; });
+      var mt = J("cafesui.mtable"); if (mt) { var mb = rows(mt); if (mb) h += "<h3>(예전 한 장짜리) 채널별 · 품목별 비교표</h3>" + mb; }
       sec("월말회의", h);
       // 제과제빵
       h = "";
@@ -3117,10 +3132,11 @@
   (function () {
     var cins = Array.prototype.slice.call(document.querySelectorAll(".cin"));
     if (!cins.length) return;
-    var KEY = "cafesui.mtable";
-    var st = {};
-    try { var raw = localStorage.getItem(KEY); if (raw) st = JSON.parse(raw) || {}; }
-    catch (e) {}
+    // 달마다 따로 (10/22 사장님 「10월인데 9월 매출이 그대로 · 가져오기 전에 값이 비워져 있게」) — cafesui.mtable.<YYYY-MM> · 위 「달」(#mtMonth)을 따라감.
+    // 예전 한 장짜리 cafesui.mtable(9월 회의 때 표)은 지우지 않고 그대로 둠 — 9월 몫은 cafesui.mtable.2026-09 로 옮겨 놓음.
+    var mEl = document.getElementById("mtMonth");
+    function ymNow() { if (mEl && mEl.value) return mEl.value; var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0"); }
+    var KEY = "cafesui.mtable." + ymNow();
 
     function num(v) {
       var n = parseFloat(String(v).replace(/,/g, ""));
@@ -3183,16 +3199,38 @@
         td.className = "cdiff" + (d === 0 ? "" : good ? " up" : " down");
       });
     }
+    // 저장은 이 화면에서 고친 칸만 최신 저장값에 얹음 (다른 기기가 넣은 칸 · _fix 같은 기록은 그대로)
+    var touched = {};
     function save() {
       var o = {};
-      cins.forEach(function (el) { if (el.value !== "") o[el.dataset.k] = el.value; });
+      try { o = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { o = {}; }
+      cins.forEach(function (el) {
+        var k = el.dataset.k, auto = el.readOnly || el.dataset.total;
+        if (!touched[k] && !auto) return;
+        if (el.value !== "") o[k] = el.value; else if (touched[k]) delete o[k];
+      });
       try { localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) {}
     }
+    function load() {
+      KEY = "cafesui.mtable." + ymNow(); touched = {};
+      var st = {};
+      try { st = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) {}
+      cins.forEach(function (el) { el.value = st[el.dataset.k] !== undefined ? st[el.dataset.k] : ""; el.classList.remove("filled"); });
+      recalc();
+      var fx = document.getElementById("mtFix");
+      if (fx) { fx.hidden = !st._fix; fx.textContent = st._fix ? "📝 " + st._fix : ""; }
+    }
     cins.forEach(function (el) {
-      if (st[el.dataset.k] !== undefined) el.value = st[el.dataset.k];
-      el.addEventListener("input", function () { recalc(); save(); });
+      el.addEventListener("input", function () { touched[el.dataset.k] = true; recalc(); save(); });
     });
-    recalc();
+    if (mEl) mEl.addEventListener("change", function () { setTimeout(load, 0); });
+    window.addEventListener("cs:remote", function (e) {
+      var ks = (e.detail && e.detail.keys) || [];
+      if (ks.indexOf(KEY) < 0) return;
+      var a = document.activeElement; if (a && a.classList && a.classList.contains("cin")) return;
+      load();
+    });
+    setTimeout(load, 0);
   })();
 
   // 월말회의 · 매니저 평가 서식 — 저장하고 복사

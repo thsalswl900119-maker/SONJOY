@@ -83,6 +83,7 @@
     });
     if (wl.length) put.ag341 = wl.join(NL + NL);
     if (hide.length) put.ag343 = hide.length + "건" + NL + hide.join(NL);
+    var Q = qcSum(ym); if (Q) { put.ag360 = Q.a; if (Q.b) put.ag361 = Q.b; }
     var filled = [], skipped = [];
     Object.keys(put).forEach(function (fk) {
       var el = document.querySelector('#mtForm .fin[data-k="' + fk + '"]'); if (!el) return;
@@ -107,13 +108,29 @@
         .forEach(function (w) { w = String(w || "").replace(/님$/, "").trim(); if (/^(정항아|박혜빈|이해선)$/.test(w)) staff[w] = 1; });
     });
     var nStaff = Object.keys(staff).length;
-    [["cn25", opDays ? String(opDays) : "", "영업일수"],
+    // 매출 = 손익 파일에서 옮긴 cafesui.sales (10/22 · 매출만) — 이번 달 · 작년 같은 달 채널별 금액 · 영업일수
+    var SA = J("cafesui.sales") || {}, sNow = SA[ym], ly = (+ym.slice(0, 4) - 1) + ym.slice(4), sLy = SA[ly], mLy = J("cafesui.mtable." + ly) || {};
+    var C = function (n) { return n ? Math.round(n).toLocaleString("ko-KR") : ""; };
+    var SL = [];
+    [[sNow, "n"], [sLy, "y"]].forEach(function (z) {
+      var o = z[0], c = z[1], w = c === "n" ? "" : "작년 ";
+      if (!o) return;
+      SL.push(["c" + c + "1", C(o.pos), w + "포스"], ["c" + c + "2", C(o.bm), w + "배민"], ["c" + c + "7", o.dl ? "" : C(o.cp), w + "쿠팡"], ["c" + c + "3", C(o.nv), w + "네이버"], ["c" + c + "4", C(o.parcel), w + "택배"], ["c" + c + "25", o.days ? String(o.days) : "", w + "영업일수"]);
+    });
+    // 작년 품목 · 직원 수 · 유입은 작년 같은 달 비교표에 「이번 달」로 적어 둔 게 있으면
+    ["8", "10", "11", "12", "13", "14", "20", "21", "22", "23", "24", "26"].forEach(function (n) { if (mLy["cn" + n]) SL.push(["cy" + n, mLy["cn" + n], "작년 " + n]); });
+    var memo2 = [];
+    if (sNow && sNow.dl) memo2.push("이번 달 배민 = 배민+쿠팡 합친 금액");
+    if (sLy && sLy.dl) memo2.push("작년 배민 = 배민+쿠팡 합친 금액");
+    if (memo2.length) SL.push(["cm2", memo2.join(" · "), "배민 메모"]);
+    if (sNow && sNow.note) SL.push(["cm1", "파일: " + sNow.note, "포스 메모"]); else if (sLy && sLy.note) SL.push(["cm1", "작년 파일: " + sLy.note, "포스 메모"]);
+    SL.concat([["cn25", sNow && sNow.days ? "" : (opDays ? String(opDays) : ""), "영업일수"],
      ["cm5", sales.length ? "일지 합계 " + won(tot) + " (매출 적힌 " + sales.length + "일 · 일지 " + opDays + "일)" : "", "총합계(일지 합계)"],
      ["cn8", nStaff ? String(nStaff) : "", "직원 수"]].concat(IT.map(function (x) {
       return [x[0], iany[x[0]] ? isum[x[0]].toLocaleString("ko-KR") : "", x[2]];
-    })).forEach(function (x) {
+    }))).forEach(function (x) {
       var el = document.querySelector('.cin[data-k="' + x[0] + '"]'); if (!el || !x[1]) return;
-      if (el.value.trim()) { if (el.value.replace(/,/g, "") !== x[1].replace(/,/g, "")) skipped.push({ el: el, v: x[1], n: "표 · " + x[2] }); return; }
+      if (el.value.trim()) { if (/^cm/.test(x[0])) return; if (el.value.replace(/,/g, "") !== x[1].replace(/,/g, "")) skipped.push({ el: el, v: x[1], n: "표 · " + x[2] }); return; }
       el.value = x[1]; el.classList.add("filled"); el.dispatchEvent(new Event("input", { bubbles: true })); filled.push(x[2]);
     });
     IT.forEach(function (x) {   // 무엇을 센 숫자인지 메모에 (비어 있을 때만)
@@ -121,9 +138,38 @@
       if (m && iany[x[0]] && !m.value.trim()) { m.value = /cn1[34]/.test(x[0]) ? "일지 판매 합계" : "일지 생산 합계"; m.dispatchEvent(new Event("input", { bubbles: true })); }
     });
     lastSkipped = skipped;
+    var dn = new Date(), ymn = dn.getFullYear() + "-" + String(dn.getMonth() + 1).padStart(2, "0");
+    filled.notice = (ym >= ymn ? "⚠ " + (+ym.slice(5)) + "월이 아직 안 끝났어요 — 지금 숫자는 오늘까지 · 말일 지나고 한 번 더 누르면 바뀐 칸을 보여 드려요. " : "") +
+      (sNow ? "" : "매출 파일에 " + (+ym.slice(5)) + "월이 아직 없어요(사장님이 파일 주시면 넣음). ") + (sLy ? "" : "작년 " + (+ym.slice(5)) + "월 매출 없음. ");
     return filled;
   }
   var lastSkipped = [];
+  // 맛 · 당도 체크 한 달 정리 (qc.js · cafesui.qc.<해>) — 직원별 몇 주 했는지 · 특이사항 · ⚠ 이상
+  function qcSum(ym) {
+    var o = J("cafesui.qc." + ym.slice(0, 4)) || {}, L = Object.keys(o).map(function (k) { return o[k]; }).filter(function (x) { return x && String(x.d || "").indexOf(ym) === 0; });
+    L.sort(function (a, b) { return (a.d + a.at) < (b.d + b.at) ? -1 : 1; });
+    var p = ym.split("-"), y = +p[0], m = +p[1] - 1, today = new Date(); today.setHours(0, 0, 0, 0);
+    var last = new Date(y, m + 1, 0); if (last > today) last = today;
+    var wk = [], d = new Date(y, m, 1); d.setDate(d.getDate() - ((d.getDay() + 6) % 7));
+    for (; d <= last; d.setDate(d.getDate() + 7)) wk.push(new Date(d));
+    if (!wk.length) return null;
+    function wOf(s) { var q = s.split("-"), x = new Date(+q[0], +q[1] - 1, +q[2]); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return x.getTime(); }
+    var md = function (s) { var q = s.split("-"); return (+q[1]) + "/" + (+q[2]); };
+    var REQ = ["정항아", "박혜빈"], who = {};
+    L.forEach(function (x) { if (x.who) (who[x.who] = who[x.who] || []).push(x); });
+    Object.keys(who).forEach(function (n) { if (REQ.indexOf(n) < 0 && n !== "사장님") REQ.push(n); });
+    var a = REQ.map(function (n) {
+      var r = who[n] || [], ws = {}; r.forEach(function (x) { ws[wOf(x.d)] = 1; });
+      var nw = wk.filter(function (w) { return ws[w.getTime()]; }).length, miss = wk.filter(function (w) { return !ws[w.getTime()]; }).map(function (w) { return md(w.getFullYear() + "-" + (w.getMonth() + 1) + "-" + w.getDate()) + "주"; });
+      return n + "님 " + nw + "/" + wk.length + "주 (기록 " + r.length + "건)" + (miss.length ? " — 빠진 주: " + miss.join(", ") : " ✔");
+    }).join(NL);
+    var ok = L.filter(function (x) { return x.ok && !x.nt; }).length, nt = L.filter(function (x) { return x.nt; }).length, bad = L.filter(function (x) { return !x.ok; });
+    a += NL + "이 달 기록 " + L.length + "건 · 👍 " + ok + " · 📝 특이사항 " + nt + " · ⚠ 이상 " + bad.length + (bad.length ? " (조치 " + bad.filter(function (x) { return x.fix; }).length + ")" : "");
+    var b = L.filter(function (x) { return x.nt || !x.ok || (x.m && x.m !== "이상무"); }).map(function (x) {
+      return md(x.d) + " " + (x.ok ? (x.nt ? "📝" : "👍") : "⚠") + " " + (x.who ? x.who + "님 " : "") + (x.it && x.it !== "케이크 · 과일 당도" ? "[" + x.it + "] " : "") + (x.m || "") + (x.fix ? " → 조치: " + (x.fix.m || "확인") + " (" + x.fix.by + ")" : (!x.ok ? " → 아직 조치 안 됨" : ""));
+    }).join(NL);
+    return { a: a, b: b };
+  }
   // 이미 적힌 칸도 일지 기준으로 다시 — 누르면 바뀔 칸을 보여 주고 확인 · 바로 전 내용은 이 기기에 남겨 「원래대로」로 되돌린다
   function refillUI(ym, msg) {
     var wrap = document.getElementById("mtRefill");
@@ -163,7 +209,8 @@
       box.value = t; box.hidden = false;
       var n = (t.match(/^===== /gm) || []).length;
       var got = fill ? autoFill(ym) : null;
-      var extra = got && got.length ? " · 월말회의 빈 칸 " + got.length + "개를 일지로 자동 채움 (" + got.join(", ") + ")" : (fill ? " · 빈 칸은 없음" + (lastSkipped.length ? " (이미 적힌 칸 " + lastSkipped.length + "개는 그대로 둠)" : "") : "");
+      var extra = got && got.length ? " · 빈 칸 " + got.length + "개를 매출 파일 · 일지 · 당도 체크로 채움 (" + got.join(", ") + ")" : (fill ? " · 빈 칸은 없음" + (lastSkipped.length ? " (이미 적힌 칸 " + lastSkipped.length + "개는 그대로 둠)" : "") : "");
+      if (got && got.notice) extra += " · " + got.notice;
       if (fill) refillUI(ym, msg);
       var ok = function () { msg.textContent = (+ym.slice(5)) + "월 일지 " + n + "일치를 복사했습니다" + extra; };
       var fb = function () { box.focus(); box.select(); try { document.execCommand("copy"); ok(); } catch (e) { msg.textContent = "아래 글을 길게 눌러 전체 선택 → 복사하세요"; } };
