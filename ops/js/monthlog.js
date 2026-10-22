@@ -132,7 +132,12 @@
       });
       var ks = Object.keys(it).sort(function (a, b) { return it[b].length - it[a].length; });
       if (!ks.length) return "";
-      return "품절 · 소진 " + n + "번 (일지 「첫 주문 · 소진」 기준)" + NL + ks.map(function (k) { return "· " + k + " " + it[k].length + "번 — " + it[k].join(" · "); }).join(NL);
+      // (제안) 사장님 「이렇게 제안 주는 거 좋다」(10/22) — 낮 1시 전에 떨어진 품목 · 세 번 이상 품절
+      var am = ks.map(function (k) { return [k, it[k].map(function (x) { var t = / (\d{1,2}):(\d{2})$/.exec(x); if (!t) return ""; var h = +t[1]; if (h <= 8) h += 12; return h < 13 ? t[1] + ":" + t[2] : ""; }).filter(Boolean)]; }).filter(function (x) { return x[1].length; });
+      var tips = am.slice(0, 2).map(function (x) { return "(제안) " + x[0] + "는 낮 1시 전(" + x[1].join(" · ") + ")에 떨어진 날이 있음 → 생산 1~2개 늘려 보기"; });
+      var often = ks.filter(function (k) { return it[k].length >= 3 && !am.some(function (x) { return x[0] === k; }); });
+      if (often.length) tips.push("(제안) " + often.join(" · ") + " — 한 달에 3번 이상 품절 → 생산량 늘리거나 품절 시각 보고 굽는 시간 앞당기기");
+      return "품절 · 소진 " + n + "번 (일지 「첫 주문 · 소진」 기준)" + NL + ks.map(function (k) { return "· " + k + " " + it[k].length + "번 — " + it[k].join(" · "); }).join(NL) + (tips.length ? NL + tips.join(NL) : "");
     }
     function clean(x) { return String(x).replace(/\*\*|__/g, "").replace(/^\s*[★⭐!！]\s*/, "").trim(); }
     function oneL(x) { return String(x).split(NL).map(clean).filter(Boolean).join(" · "); }
@@ -143,6 +148,8 @@
       var avg = ["월", "화", "수", "목", "금", "토"].filter(function (w) { return wdN[w]; }).map(function (w) { return w + " " + Math.round(wdSum[w] / wdN[w] / 10000 * 10) / 10 + "만"; }).join(" · ");
       put.ag304 = by.slice(0, 3).map(function (x, i) { return (i + 1) + "위 " + x[0] + "(" + x[1] + ") " + won(x[2]); }).join(NL) + NL + "요일 평균: " + avg;
       put.ag305 = by.slice(-2).reverse().map(function (x) { return x[0] + "(" + x[1] + ") " + won(x[2]); }).join(NL);
+      var wk = ["월", "화", "수", "목", "금", "토"].filter(function (w) { return wdN[w] >= 2; }).sort(function (a, b) { return wdSum[a] / wdN[a] - wdSum[b] / wdN[b]; })[0];
+      if (wk) put.ag305 += NL + "(제안) " + wk + "요일이 가장 약함 (평균 " + Math.round(wdSum[wk] / wdN[wk] / 10000 * 10) / 10 + "만) → " + wk + "요일 생산량 줄이기 · " + wk + "요일 한정 혜택(세트 · 리뷰 이벤트) 검토";
     }
     // 요약해서 넣기 (10/22 사장님 「월말회의는 내용을 요약해서 기재」) — 원문은 일지에 그대로 · 여기는 한 줄씩 짧게 + 집계
     var SO = soldSum(sold); if (SO) put.ag306 = SO;
@@ -150,6 +157,11 @@
       var ch = {}; comp.forEach(function (x) { var c = chan(x); ch[c] = (ch[c] || 0) + 1; });
       put.ag320 = comp.length + "건 (" + Object.keys(ch).sort(function (a, b) { return ch[b] - ch[a]; }).map(function (c) { return c + " " + ch[c]; }).join(" · ") + ")";
       put.ag321 = comp.map(function (x) { var sp = x.indexOf(" "); return "· " + x.slice(0, sp) + " [" + chan(x) + "] " + short(x.slice(sp + 1), 48); }).join(NL);
+      var miss = comp.filter(function (x) { return /누락|빠[졌짐]|안 나감|만 나가/.test(x); }), ctips = [];
+      if (miss.length >= 2) ctips.push("(제안) 누락이 " + miss.length + "번 (" + miss.map(function (x) { return x.slice(0, x.indexOf(" ")); }).join(" · ") + ") — 봉투 닫기 전 영수증 줄마다 체크 · 바쁠 땐 한 사람이 끝까지 맡기");
+      var topc = Object.keys(ch).sort(function (a, b) { return ch[b] - ch[a]; })[0];
+      if (topc && topc !== "기타" && ch[topc] * 2 > comp.length && comp.length >= 3) ctips.push("(제안) 컴플레인 절반 이상이 " + topc + " (" + ch[topc] + "건) — " + topc + " 주문 나가기 전 확인 순서 다시 정하기");
+      if (ctips.length) put.ag321 += NL + ctips.join(NL);
     }
     if (brk.length) put.ag340 = brk.map(function (x) { var sp = x.indexOf(" "); return "· " + x.slice(0, sp) + " " + short(x.slice(sp + 1), 40); }).join(NL);
     // 폐기 · 서비스 · 직원 금액 = 가격표(cafesui.price) 판매가 × 수량 (10/22 사장님 「가격표 참고해서 알아서 매번」)
@@ -163,6 +175,8 @@
       var top = kwTop(L);
       wl.push(c[1] + " " + L.length + "건" + (WV[c[0]] ? " · 약 " + won(WV[c[0]]) : "") + (top ? " — 많이 나온 것: " + top : "") + NL + L.map(function (x) { var sp = x.indexOf(" "); return "· " + x.slice(0, sp) + " " + short(x.slice(sp + 1), 36); }).join(NL));
     });
+    var lost = W["폐기"].concat(W["서비스"], W["직원"]), lt = kwTop(lost).split(" · ")[0];
+    if (lt) { var lm = /^(.+) (\d+)번$/.exec(lt); if (lm && +lm[2] >= 3) wl.push("(제안) " + lm[1] + ((function (w) { var c = w.charCodeAt(w.length - 1) - 0xAC00; return c >= 0 && c < 11172 && c % 28 ? "이" : "가"; })(lm[1])) + " 폐기 · 서비스 · 직원으로 " + lm[2] + "번 나감 → 생산량 줄이거나 시즌 마무리 날짜 정하기"); }
     if (wl.length) put.ag341 = wl.join(NL + NL);
     if (hide.length) put.ag343 = hide.length + "건" + NL + hide.map(function (x) { var sp = x.indexOf(" "); return "· " + x.slice(0, sp) + " " + short(x.slice(sp + 1), 40); }).join(NL);
     var Q = qcSum(ym); if (Q) { put.ag360 = Q.a; if (Q.b) put.ag361 = Q.b; }
