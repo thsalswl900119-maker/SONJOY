@@ -327,7 +327,21 @@
       else state.done[k] = me || 1;
       paint(b);
       saveOne(k);
+      linkSync(k);
     });
+  }
+  // 오늘 할 일의 요일 청소 ↔ 청소·정비 「매주 청소」 표 같이 체크 (10/22 사장님 「청소 파트에 같이 체크될 수 있게」)
+  // 체크는 언제 눌러도 같이 · 풀기는 그 요일에만 같이 (다른 날 실수로 푼 게 이번 주 기록을 지우지 않게)
+  var LINK = { t202: "w32", t204: "w33", t200: "w30", t203: "w34", t201: "w31", t205: "w35" }, LWD = { w32: 1, w33: 2, w30: 3, w34: 4, w31: 5, w35: 5 }, RLINK = {};
+  Object.keys(LINK).forEach(function (t) { RLINK[LINK[t]] = t; });
+  function linkSync(k) {
+    var o = LINK[k] || RLINK[k]; if (!o) return;
+    var w = LINK[k] ? o : k, today = new Date().getDay() === LWD[w];
+    if (!!state.done[o] === !!state.done[k]) return;
+    if (state.done[k]) { if (RLINK[k] && !today) return; state.done[o] = state.done[k]; }
+    else { if (!today) return; delete state.done[o]; }
+    saveOne(o);
+    Array.prototype.forEach.call(document.querySelectorAll('.box[data-k="' + o + '"]'), function (x) { if (!pastBox(x)) paint(x); });
   }
   boxes.forEach(bindBox);
   window.__CS_BIND_BOX = bindBox;
