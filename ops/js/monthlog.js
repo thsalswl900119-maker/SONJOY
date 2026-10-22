@@ -155,8 +155,8 @@
     var SO = soldSum(sold); if (SO) put.ag306 = SO;
     if (comp.length) {
       var ch = {}; comp.forEach(function (x) { var c = chan(x); ch[c] = (ch[c] || 0) + 1; });
-      put.ag320 = comp.length + "건 (" + Object.keys(ch).sort(function (a, b) { return ch[b] - ch[a]; }).map(function (c) { return c + " " + ch[c]; }).join(" · ") + ")";
-      put.ag321 = comp.map(function (x) { var sp = x.indexOf(" "); return "· " + x.slice(0, sp) + " [" + chan(x) + "] " + short(x.slice(sp + 1), 48); }).join(NL);
+      put.ag320 = String(comp.length);   // 숫자 칸(numfmt) — 글을 넣으면 숫자가 붙어 버림
+      put.ag321 = comp.length + "건 = " + Object.keys(ch).sort(function (a, b) { return ch[b] - ch[a]; }).map(function (c) { return c + " " + ch[c]; }).join(" · ") + " (일지 「컴플레인」 칸 기준)" + NL + comp.map(function (x) { var sp = x.indexOf(" "); return "· " + x.slice(0, sp) + " [" + chan(x) + "] " + short(x.slice(sp + 1), 48); }).join(NL);
       var miss = comp.filter(function (x) { return /누락|빠[졌짐]|안 나감|만 나가/.test(x); }), ctips = [];
       if (miss.length >= 2) ctips.push("(제안) 누락이 " + miss.length + "번 (" + miss.map(function (x) { return x.slice(0, x.indexOf(" ")); }).join(" · ") + ") — 봉투 닫기 전 영수증 줄마다 체크 · 바쁠 땐 한 사람이 끝까지 맡기");
       var topc = Object.keys(ch).sort(function (a, b) { return ch[b] - ch[a]; })[0];

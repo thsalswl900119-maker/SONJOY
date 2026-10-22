@@ -3102,6 +3102,8 @@
   // 숫자는 천 단위로 끊어서 보여준다 (1000 -> 1,000)
   (function () {
     function group(v) {
+      // 글이 섞인 값(「9건 (배민 6 · 현장 2)」 · 「500원 (9/5) + …」)은 숫자만 뽑아 붙이지 않고 그대로 (10/22 — 9건이 9,621로 바뀐 사고)
+      if (/[^0-9.,\s원건개명일-]/.test(String(v)) || /\d\D+\d/.test(String(v).replace(/,/g, "").trim())) return String(v);
       var raw = String(v).replace(/[^0-9.-]/g, "");
       if (raw === "" || raw === "-" || isNaN(parseFloat(raw))) return raw;
       var p = raw.split(".");
