@@ -49,7 +49,7 @@
   function autoFill(ym) {
     var keys = [];
     for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (k.indexOf("cafesui.log." + ym + "-") === 0) keys.push(k); }
-    keys.sort(); if (!keys.length) return 0;
+    keys.sort();   // 일지가 없는 달도 매출 · 생산량 파일 숫자는 가져옴
     var sales = [], sold = [], comp = [], brk = [], hide = [], W = { "폐기": [], "서비스": [], "직원": [], "테스트": [], "기타": [] }, wdSum = {}, wdN = {};
     keys.forEach(function (k) {
       var f = (J(k) || {}).f || {}, d = k.slice(12), p = d.split("-"), dt = new Date(+p[0], +p[1] - 1, +p[2]), md = (+p[1]) + "/" + (+p[2]), wd = WD[dt.getDay()];
@@ -72,6 +72,34 @@
       var cut = -1; [",", "(", " - ", "→", "ㅜ", "ㅠ", "!", "."].forEach(function (c) { var i = t.indexOf(c); if (i >= 10 && (cut < 0 || i < cut)) cut = i; });
       if (cut > 0 && cut <= n) t = t.slice(0, cut);
       return t.length > n ? t.slice(0, n).trim() + "…" : t.trim();
+    }
+    // 가격표에서 품목 판매가 찾기 — 일지 줄임말(샤요 · 초밤 · 멜 · 망 …) → 가격표 이름
+    var PR = (J("cafesui.price") || {}).it || {}, PL = Object.keys(PR).map(function (k) { return PR[k]; }).filter(function (x) { return x && !x.del && +x.p > 0 && String(x.c || "").indexOf("⏸") < 0; }).sort(function (a, b) { return (a.o || 0) - (b.o || 0); });
+    var PA = [["샤인머스캣 요거트", /샤요|샤인/g, "조각 케이크", /샤인/], ["초코보늬밤", /초밤|보늬밤/g, "조각 케이크", /보늬밤/], ["밤 타르트", /밤\s*타르트|밤타/g, "에그타르트", /밤 타르트/],
+      ["초코 타르트", /초코\s*타르트/g, "에그타르트", /초코 타르트/], ["망고 케이크", /망고(?!\s*타르트)|망(?=\s*\d)/g, "조각 케이크", /망고/], ["메론", /멜론|메론|멜(?=\s*(조각)?\s*\d)/g, "조각 케이크", /메론|멜론/],
+      ["티라미수", /티라미수/g, "조각 케이크", /^티라미수/], ["치즈 타르트", /치즈/g, "에그타르트", /치즈/], ["옥수수 타르트", /옥수수/g, "에그타르트", /옥수수/], ["인절미 타르트", /인절미/g, "에그타르트", /인절미/],
+      ["감자파이", /감자/g, "디저트", /감자/], ["에그타르트", /에타|에그타르트|기본(?=\s*\d)/g, "에그타르트", /^스이 에그타르트$/], ["라떼", /라떼/g, "", /라떼/], ["아메리카노", /아아|아메리카노/g, "", /아메리카노/], ["케이크", /케이크/g, "조각 케이크", null]];
+    function priceOf(a) {
+      if (!a[3]) { var cs = PL.filter(function (x) { return x.c === a[2]; }); return cs.length ? Math.round(cs.reduce(function (t, x) { return t + +x.p; }, 0) / cs.length / 100) * 100 : 0; }
+      var f = PL.filter(function (x) { return (!a[2] || x.c === a[2]) && a[3].test(x.n); })[0]; return f ? +f.p : 0;
+    }
+    // 한 줄에서 「품목 + 붙은 숫자」만 셈 · 구매 · 주문 얘기(감자3,기본3 구매해 가신 손님)와 「4구 · 2세트 · 2잔」은 뺌
+    function lineWon(t) {
+      var used = [], won0 = 0, hit = 0;
+      PA.forEach(function (a) {
+        a[1].lastIndex = 0; var m;
+        while ((m = a[1].exec(t))) {
+          var st = m.index, en = st + m[0].length;
+          if (used.some(function (u) { return st < u[1] && en > u[0]; })) continue;
+          var q = /^\s*(조각|타르트|케이크)?\s*(\d+)\s*(개|조각)?/.exec(t.slice(en)); if (!q) continue;
+          var after = t.slice(en + q[0].length, en + q[0].length + 10);
+          if (/^\s*(구|세트|박스|판|잔)/.test(after) || /구매|사신|사가|주문/.test(after)) { used.push([st, en + q[0].length]); continue; }
+          if (a[0] === "케이크" && used.some(function (u) { return Math.abs(u[0] - st) < 12; })) continue;
+          used.push([st, en + q[0].length]); hit++;
+          won0 += priceOf(a) * +q[2];
+        }
+      });
+      return { won: won0, miss: !hit };
     }
     function chan(x) {   // 글에서 먼저 나온 채널 (「현장에서 … 네이버 예약 보고」 → 현장)
       var best = "기타", bi = 1e9;
@@ -124,11 +152,16 @@
       put.ag321 = comp.map(function (x) { var sp = x.indexOf(" "); return "· " + x.slice(0, sp) + " [" + chan(x) + "] " + short(x.slice(sp + 1), 48); }).join(NL);
     }
     if (brk.length) put.ag340 = brk.map(function (x) { var sp = x.indexOf(" "); return "· " + x.slice(0, sp) + " " + short(x.slice(sp + 1), 40); }).join(NL);
+    // 폐기 · 서비스 · 직원 금액 = 가격표(cafesui.price) 판매가 × 수량 (10/22 사장님 「가격표 참고해서 알아서 매번」)
+    var WV = {}, wTot = 0, wMiss = 0;
+    Object.keys(W).forEach(function (c) { var v = 0; W[c].forEach(function (x) { var r = lineWon(x.slice(x.indexOf(" ") + 1)); v += r.won; if (r.miss) wMiss++; }); WV[c] = v; wTot += v; });
     var wl = [];
+    if (wTot) wl.push("판매가 기준 합계 약 " + won(wTot) + " (" + [["폐기", "폐기"], ["서비스", "서비스"], ["직원", "직원 · 가족"], ["테스트", "테스트"], ["기타", "분류 안 된 것"]].filter(function (c) { return WV[c[0]]; }).map(function (c) { return c[1] + " " + won(WV[c[0]]); }).join(" · ") + ")" + NL + "└ 가격표 판매가 × 적힌 수량으로 자동 계산" + (wMiss ? " · 수량 · 품목을 못 읽은 줄 " + wMiss + "개는 빠짐" : ""));
+    if (wTot) put.ag344 = wTot.toLocaleString("ko-KR");
     [["폐기", "【폐기 · 버린 것】"], ["서비스", "【서비스 · 손님 · 거래처에 나간 것】"], ["직원", "【직원 · 가족 가져감】"], ["테스트", "【테스트】"], ["기타", "【분류 안 된 것】"]].forEach(function (c) {
       var L = W[c[0]]; if (!L.length) return;
       var top = kwTop(L);
-      wl.push(c[1] + " " + L.length + "건" + (top ? " — 많이 나온 것: " + top : "") + NL + L.map(function (x) { var sp = x.indexOf(" "); return "· " + x.slice(0, sp) + " " + short(x.slice(sp + 1), 36); }).join(NL));
+      wl.push(c[1] + " " + L.length + "건" + (WV[c[0]] ? " · 약 " + won(WV[c[0]]) : "") + (top ? " — 많이 나온 것: " + top : "") + NL + L.map(function (x) { var sp = x.indexOf(" "); return "· " + x.slice(0, sp) + " " + short(x.slice(sp + 1), 36); }).join(NL));
     });
     if (wl.length) put.ag341 = wl.join(NL + NL);
     if (hide.length) put.ag343 = hide.length + "건" + NL + hide.map(function (x) { var sp = x.indexOf(" "); return "· " + x.slice(0, sp) + " " + short(x.slice(sp + 1), 40); }).join(NL);
@@ -167,6 +200,10 @@
       SL.push(["c" + c + "1", C(o.pos), w + "포스"], ["c" + c + "2", C(o.bm), w + "배민"], ["c" + c + "7", o.dl ? "" : C(o.cp), w + "쿠팡"], ["c" + c + "3", C(o.nv), w + "네이버"], ["c" + c + "4", C(o.parcel), w + "택배"], ["c" + c + "25", o.days ? String(o.days) : "", w + "영업일수"]);
     });
     // 작년 품목 · 직원 수 · 유입은 작년 같은 달 비교표에 「이번 달」로 적어 둔 게 있으면
+    // 생산량 = 생산량 파일에서 옮긴 cafesui.prod (2023-03 ~ 2026-05) — 작년 칸 · 이번 달 일지가 없을 때 이번 달 칸
+    var PD = J("cafesui.prod") || {}, PM = [["10", "egg", "에그타르트"], ["11", "slice", "조각케이크"], ["12", "whole", "홀케이크"], ["13", "star", "별조각"], ["14", "bingsu", "빙수"]];
+    if (PD[ly]) PM.forEach(function (x) { if (PD[ly][x[1]] != null) SL.push(["cy" + x[0], C(PD[ly][x[1]]) || "0", "작년 " + x[2]]); });
+    if (PD[ym]) PM.forEach(function (x) { if (PD[ym][x[1]] != null && !iany["cn" + x[0]]) SL.push(["cn" + x[0], C(PD[ym][x[1]]) || "0", x[2] + "(생산량 파일)"]); });
     ["8", "10", "11", "12", "13", "14", "20", "21", "22", "23", "24", "26"].forEach(function (n) { if (mLy["cn" + n]) SL.push(["cy" + n, mLy["cn" + n], "작년 " + n]); });
     var memo2 = [];
     if (sNow && sNow.dl) memo2.push("이번 달 배민 = 배민+쿠팡 합친 금액");
@@ -197,6 +234,7 @@
   function qcSum(ym) {
     var o = J("cafesui.qc." + ym.slice(0, 4)) || {}, L = Object.keys(o).map(function (k) { return o[k]; }).filter(function (x) { return x && String(x.d || "").indexOf(ym) === 0; });
     L.sort(function (a, b) { return (a.d + a.at) < (b.d + b.at) ? -1 : 1; });
+    if (!L.length && ym < "2026-10") return null;   // 당도 체크는 2026-10부터 (그 전 달은 비워 둠)
     var p = ym.split("-"), y = +p[0], m = +p[1] - 1, today = new Date(); today.setHours(0, 0, 0, 0);
     var last = new Date(y, m + 1, 0); if (last > today) last = today;
     var wk = [], d = new Date(y, m, 1); d.setDate(d.getDate() - ((d.getDay() + 6) % 7));
@@ -254,7 +292,13 @@
     btn.addEventListener("click", function () {
       var ym = monthOf() || (function () { var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0"); })();
       var t = build(ym);
-      if (!t) { msg.textContent = ym + " 일지가 없습니다"; box.hidden = true; return; }
+      if (!t) {
+        box.hidden = true;
+        if (!fill) { msg.textContent = ym + " 일지가 없습니다"; return; }
+        var g0 = autoFill(ym); refillUI(ym, msg);
+        msg.textContent = (+ym.slice(5)) + "월 일지는 없어요" + (g0 && g0.length ? " · 빈 칸 " + g0.length + "개를 매출 · 생산량 파일로 채움 (" + g0.join(", ") + ")" : " · 채울 빈 칸 없음") + (g0 && g0.notice ? " · " + g0.notice : "");
+        return;
+      }
       box.value = t; box.hidden = false;
       var n = (t.match(/^===== /gm) || []).length;
       var got = fill ? autoFill(ym) : null;
