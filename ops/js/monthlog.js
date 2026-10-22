@@ -59,11 +59,53 @@
       if (String(f.lf166 || "").trim()) String(f.lf166).split(NL).map(clean).filter(Boolean).forEach(function (x) { brk.push(md + " " + x); });
       [f.lf162, f.lf163 ? "[서비스] " + f.lf163 : ""].forEach(function (v) {
         String(v || "").split(NL).map(function (x) { return x.trim(); }).filter(Boolean).forEach(function (x) {
-          var m = x.match(/^\[(폐기|서비스|직원|테스트)\]\s*/); W[m ? m[1] : "기타"].push(md + " " + clean(m ? x.slice(m[0].length) : x));
+          // [폐기] · 「폐기 -」 · 「서비스:」 모두 · [사장님] 가져감은 직원 · 가족 · 꼬리표 없으면 글에 「서비스 · 폐기」가 있는지로
+          var m = x.match(/^\[?(폐기|서비스|직원|테스트|사장님)\]?\s*[-:：]?\s*/), c = m ? (m[1] === "사장님" ? "직원" : m[1]) : /서비스/.test(x) ? "서비스" : /폐기/.test(x) ? "폐기" : /챙겨\s*갔|가져\s*갔|가져감/.test(x) ? "직원" : "기타";
+          W[c].push(md + " " + clean(m ? x.slice(m[0].length) : x));
         });
       });
       Object.keys(f).forEach(function (fk) { String(f[fk] || "").split(/\n| · |\//).forEach(function (x) { if (/숨김/.test(x) && /안 ?돼|안 ?되|누락|못/.test(x)) hide.push(md + " " + clean(x)); }); });
     });
+    // 한 줄 요약: 시각 · 주문번호 빼고 첫 마디(쉼표 · 괄호 · 줄표 앞)까지, 길면 자름
+    function short(x, n) {
+      var t = clean(x).replace(/^\s*\d{1,2}\s*시\s*(\d{1,2}\s*분)?\s*(에|쯤)?\s*/, "").replace(/\s*주문번호\s*/g, " ").replace(/\s+/g, " ").trim();
+      var cut = -1; [",", "(", " - ", "→", "ㅜ", "ㅠ", "!", "."].forEach(function (c) { var i = t.indexOf(c); if (i >= 10 && (cut < 0 || i < cut)) cut = i; });
+      if (cut > 0 && cut <= n) t = t.slice(0, cut);
+      return t.length > n ? t.slice(0, n).trim() + "…" : t.trim();
+    }
+    function chan(x) {   // 글에서 먼저 나온 채널 (「현장에서 … 네이버 예약 보고」 → 현장)
+      var best = "기타", bi = 1e9;
+      [["배민", /배민/], ["쿠팡", /쿠팡/], ["네이버", /네이버/], ["현장", /현장|홀손님|매장에서/], ["전화", /전화/]].forEach(function (c) { var i = x.search(c[1]); if (i >= 0 && i < bi) { bi = i; best = c[0]; } });
+      return best;
+    }
+    var KW = [["샤인머스캣 요거트", /샤요|샤인/], ["망고", /망고|(^|\s)망\d?/], ["멜론", /멜론|메론|(^|\s)멜/], ["초코보늬밤", /초밤|보늬밤/], ["티라미수", /티라미수/], ["치즈타르트", /치즈/], ["옥수수타르트", /옥수수/], ["인절미타르트", /인절미/], ["감자파이", /감자/], ["밤타르트", /밤\s*타르트|밤타/], ["에그타르트", /에타|에그|기본\d/], ["음료", /라떼|아아|아메|에이드|음료/]];
+    function kwTop(L) {
+      var c = {}; L.forEach(function (x) { KW.forEach(function (k) { if (k[1].test(x)) c[k[0]] = (c[k[0]] || 0) + 1; }); });
+      return Object.keys(c).sort(function (a, b) { return c[b] - c[a]; }).slice(0, 3).map(function (k) { return k + " " + c[k] + "번"; }).join(" · ");
+    }
+    // 품절 · 소진: 일지 「첫 주문 · 소진」(lf152)에서 품목별로 몇 번 · 언제
+    function soldSum(L) {
+      var it = {}, n = 0;
+      L.forEach(function (x) {
+        var sp = x.indexOf(" "), md = x.slice(0, sp);
+        x.slice(sp + 1).split(/\/|·/).forEach(function (seg) {
+          var at0 = seg.search(/소진|품절/); if (at0 < 0) return;
+          // 소진 바로 앞 시각 뒤부터 소진 앞까지가 품목 (「10시 37분 쿠팡 주문, 12시 30분 초코타르트 품절」 → 초코타르트)
+          var TR = /(\d{1,2})\s*시\s*(\d{1,2})?\s*분?\s*(에|쯤)?|(\d{1,2}):(\d{2})\s*분?\s*(에|쯤)?/g, mm, last = null;
+          while ((mm = TR.exec(seg)) && mm.index < at0) last = mm;
+          var at = last ? (last[1] || last[4]) + ":" + ("0" + (last[2] || last[5] || "0")).slice(-2) : "";
+          var from = last ? last.index + last[0].length : 0, body = seg.slice(from, at0);
+          if (!last) { var cm = body.lastIndexOf(","); }
+          body.split(/,|，/).map(function (q) { return q.trim(); }).filter(Boolean).forEach(function (nm) {
+            nm = nm.replace(/\s+/g, "").replace(/^감자$/, "감자파이").replace(/^(밤|초코|치즈|옥수수|인절미|앙버터|말차)$/, "$1타르트").replace(/타르트$/, " 타르트");
+            (it[nm] = it[nm] || []).push(md + (at ? " " + at : "")); n++;
+          });
+        });
+      });
+      var ks = Object.keys(it).sort(function (a, b) { return it[b].length - it[a].length; });
+      if (!ks.length) return "";
+      return "품절 · 소진 " + n + "번 (일지 「첫 주문 · 소진」 기준)" + NL + ks.map(function (k) { return "· " + k + " " + it[k].length + "번 — " + it[k].join(" · "); }).join(NL);
+    }
     function clean(x) { return String(x).replace(/\*\*|__/g, "").replace(/^\s*[★⭐!！]\s*/, "").trim(); }
     function oneL(x) { return String(x).split(NL).map(clean).filter(Boolean).join(" · "); }
     var won = function (n) { return n.toLocaleString("ko-KR") + "원"; };
@@ -74,15 +116,22 @@
       put.ag304 = by.slice(0, 3).map(function (x, i) { return (i + 1) + "위 " + x[0] + "(" + x[1] + ") " + won(x[2]); }).join(NL) + NL + "요일 평균: " + avg;
       put.ag305 = by.slice(-2).reverse().map(function (x) { return x[0] + "(" + x[1] + ") " + won(x[2]); }).join(NL);
     }
-    if (sold.length) put.ag306 = sold.join(NL);
-    if (comp.length) { put.ag320 = comp.length + "건"; put.ag321 = comp.join(NL); }
-    if (brk.length) put.ag340 = brk.join(NL);
+    // 요약해서 넣기 (10/22 사장님 「월말회의는 내용을 요약해서 기재」) — 원문은 일지에 그대로 · 여기는 한 줄씩 짧게 + 집계
+    var SO = soldSum(sold); if (SO) put.ag306 = SO;
+    if (comp.length) {
+      var ch = {}; comp.forEach(function (x) { var c = chan(x); ch[c] = (ch[c] || 0) + 1; });
+      put.ag320 = comp.length + "건 (" + Object.keys(ch).sort(function (a, b) { return ch[b] - ch[a]; }).map(function (c) { return c + " " + ch[c]; }).join(" · ") + ")";
+      put.ag321 = comp.map(function (x) { var sp = x.indexOf(" "); return "· " + x.slice(0, sp) + " [" + chan(x) + "] " + short(x.slice(sp + 1), 48); }).join(NL);
+    }
+    if (brk.length) put.ag340 = brk.map(function (x) { var sp = x.indexOf(" "); return "· " + x.slice(0, sp) + " " + short(x.slice(sp + 1), 40); }).join(NL);
     var wl = [];
     [["폐기", "【폐기 · 버린 것】"], ["서비스", "【서비스 · 손님 · 거래처에 나간 것】"], ["직원", "【직원 · 가족 가져감】"], ["테스트", "【테스트】"], ["기타", "【분류 안 된 것】"]].forEach(function (c) {
-      if (W[c[0]].length) wl.push(c[1] + " " + W[c[0]].length + "건" + NL + W[c[0]].map(function (x) { return "· " + x; }).join(NL));
+      var L = W[c[0]]; if (!L.length) return;
+      var top = kwTop(L);
+      wl.push(c[1] + " " + L.length + "건" + (top ? " — 많이 나온 것: " + top : "") + NL + L.map(function (x) { var sp = x.indexOf(" "); return "· " + x.slice(0, sp) + " " + short(x.slice(sp + 1), 36); }).join(NL));
     });
     if (wl.length) put.ag341 = wl.join(NL + NL);
-    if (hide.length) put.ag343 = hide.length + "건" + NL + hide.join(NL);
+    if (hide.length) put.ag343 = hide.length + "건" + NL + hide.map(function (x) { var sp = x.indexOf(" "); return "· " + x.slice(0, sp) + " " + short(x.slice(sp + 1), 40); }).join(NL);
     var Q = qcSum(ym); if (Q) { put.ag360 = Q.a; if (Q.b) put.ag361 = Q.b; }
     var filled = [], skipped = [];
     Object.keys(put).forEach(function (fk) {
