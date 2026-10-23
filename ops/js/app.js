@@ -3842,10 +3842,13 @@
     // ↩ 되돌리기 — 저장하기 바로 전 모습을 이 기기에 남겨 두고(글 쓰는 한 묶음마다 1개 · 날짜별 최대 30개), 누르면 한 단계씩 되돌린다
     var UNDO_PRE = "cafesui.ui.undo.", undoLast = {};
     function undoList(k) { try { return JSON.parse(localStorage.getItem(UNDO_PRE + k.slice(12)) || "[]") || []; } catch (e) { return []; } }
+    // 10/23 고침: 예전엔 6초 안에 이어 쓰면 기다리는 시계를 계속 늦춰서, 쉬지 않고 쓰면 「바로 전 모습」이 수십 분 전 모습이 됐음
+    // (18:37 그걸 되돌려 그 뒤 쓴 칸 7개가 지워짐) → 이제 마지막으로 담은 때부터 6초가 지나면 무조건 새로 담는다 (되돌려도 몇 초 전으로만)
     function undoPush(k, old) {
-      var now = Date.now(); if (undoLast[k] && now - undoLast[k] < 6000) { undoLast[k] = now; return; }
+      var now = Date.now(); if (undoLast[k] && now - undoLast[k] < 6000) return;
       undoLast[k] = now;
-      var ls = undoList(k), snap = JSON.stringify(old || {});
+      old = Object.assign({}, old || {}); old._at = now;
+      var ls = undoList(k), snap = JSON.stringify(old);
       if (ls.length && ls[ls.length - 1] === snap) return;
       ls.push(snap); if (ls.length > 30) ls.shift();
       try { localStorage.setItem(UNDO_PRE + k.slice(12), JSON.stringify(ls)); } catch (e) {}
@@ -3860,7 +3863,6 @@
       b.addEventListener("click", function () {
         // 10/23 사고: 쉬지 않고 이어 쓰면 「바로 전 모습」이 수십 분 전 모습이라, 누르면 그 뒤에 쓴 칸이 통째로 지워졌음(18:37 혜빈님 글 7칸).
         // 단추는 숨기고(되돌리기 기록은 「🛟 빈 칸에 되살리기」 후보로만 씀) 되살리기는 「🕘 저장 기록」(서버 기록 · 덧붙이기만)으로
-        if (b.hidden) return;
         var k = keyFor(), ls = undoList(k); if (!ls.length) return;
         var prev = JSON.parse(ls[ls.length - 1] || "{}"), cur = {}; try { cur = JSON.parse(localStorage.getItem(k) || "{}") || {}; } catch (e) {}
         var pf = prev.f || {}, cf = cur.f || {}, names = [];
@@ -3869,7 +3871,8 @@
           var el = document.querySelector('.lgin[data-k="' + fk + '"]'); names.push(el ? (el.getAttribute("aria-label") || fk).replace(/<[^>]*>.*$/, "").trim() : fk);
         });
         if (!names.length) { ls.pop(); try { localStorage.setItem(UNDO_PRE + k.slice(12), JSON.stringify(ls)); } catch (e) {} undoBtnPaint(); msgEl.textContent = "되돌릴 게 없습니다"; return; }
-        if (!confirm("이 칸들을 바로 전 모습으로 되돌릴까요?\n\n· " + names.join("\n· "))) return;
+        var ago = prev._at ? Math.round((Date.now() - prev._at) / 1000) : null, agoT = ago == null ? "바로 전" : ago < 90 ? ago + "초 전" : Math.round(ago / 60) + "분 전";
+        if (!confirm("이 칸들을 " + agoT + " 모습으로 되돌릴까요?\n\n· " + names.join("\n· ") + (ago != null && ago > 300 ? "\n\n⚠ 5분 넘게 전 모습이에요 — 그 뒤에 쓴 글이 이 칸들에서 빠집니다" : ""))) return;
         ls.pop(); try { localStorage.setItem(UNDO_PRE + k.slice(12), JSON.stringify(ls)); } catch (e) {}
         // 바뀐 칸만 되돌린다 (다른 칸은 지금 그대로)
         var out = cur; out.f = out.f || {}; out.by = out.by || {}; out.bl = out.bl || {}; out.ow = out.ow || {};
@@ -4474,7 +4477,7 @@
       undoPush(keyFor(), old);
       var out = { who: whoEl.value, f: f, by: by, bl: bl };
       if (Object.keys(ow).length) out.ow = ow;
-      if (prev.__savedAt) out.savedAt = prev.__savedAt;
+      { var st0 = new Date(); out.savedAt = String(st0.getHours()).padStart(2, "0") + ":" + String(st0.getMinutes()).padStart(2, "0"); }   /* 「일지 저장」 단추를 없앴으니(10/23 사장님) 저장 시각은 쓸 때마다 */
       try { localStorage.setItem(keyFor(), JSON.stringify(out)); }
       catch (e) {}
       // 이 기기에서 마지막으로 저장한 모습 — 다른 기기가 덮어써도 여기서 되살린다 (이 기기에만 · 최근 10일치)

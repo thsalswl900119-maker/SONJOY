@@ -171,7 +171,7 @@
       try { var pp = db.enablePersistence && db.enablePersistence({ synchronizeTabs: true }); if (pp && pp.catch) pp.catch(function () {}); } catch (e) {}
     } catch (e) { setStatus("err", e.message); return; }
 
-    var busy = {}, held = {};
+    var busy = {}, held = {}, bootPush = {};
     // 일지 저장 기록 (10/23 사장님 「1번」 — 지워져도 되살릴 수 있게) — 서버 ops/「hist.log.<날짜>」 한 문서에 쌓는다.
     // 이름이 cafesui. 로 시작하지 않아 기기 저장소에는 안 들어감(기기 꽉 참 사고 방지) · 서버 규칙상 v · by · t 모양만.
     // 기록 하나 = {at, who, dev, ch: 바뀐 칸 글, rm: 없어진 칸, was: 짧아지거나 지워진 칸의 바로 전 글} · 90초에 한 번(지워지면 바로)
@@ -219,14 +219,14 @@
         return tx.get(ref).then(function (doc) {
           var cur = doc.exists ? (doc.data() || {}).v : null;
           var out = mergeVal(bs, v, cur == null ? null : cur);
-          if (k.indexOf("cafesui.log.") === 0) out = guardLog(out, cur);
+          if (k.indexOf("cafesui.log.") === 0 && bootPush[k]) out = guardLog(out, cur);   /* 일지 지킴은 「켤 때 못 보낸 옛 값을 올리는」 경우에만 — 사람이 칸에서 지우고 고친 건 그대로 받는다 (10/23: 지킴이 일부러 줄인 글까지 되돌려 글이 두 번 붙고 고친 글이 사라졌음) */
           tx.set(ref, { v: out, by: dev, t: firebase.firestore.FieldValue.serverTimestamp() });
           return out;
         });
       });
       p.then(function (out) {
         inflight--; busy[k] = 0;
-        remote[k] = out; sent[k] = out;
+        remote[k] = out; sent[k] = out; delete bootPush[k];
         try { histRec(k, out); } catch (eh) {}
         if (!(k in pending)) {
           clearDirty(k);
@@ -368,9 +368,9 @@
           // 항아님 기기가 보내는 동안 도착한 「방금 쓴 칸이 없는」 값이 기기 저장을 덮고, 다음 칸을 쓰면 방금 쓴 칸이 지워졌음.
           // 보내기가 끝나면 서버의 최신 값(내 글 + 다른 기기 글 합친 것)을 다시 읽어 넣는다
           if (busy[k]) { held[k] = 1; return; }
-          if (first && dirtyBoot[k] && local !== d.v) { if (!(k in bootBase)) baseOf[k] = null; pending[k] = local; return; }
+          if (first && dirtyBoot[k] && local !== d.v) { if (!(k in bootBase)) baseOf[k] = null; pending[k] = local; bootPush[k] = 1; return; }
           // 10/6 사고 되살리기(한 번만): 그날 저장이 서버로 못 갔다 — 이 기기에만 남은 10/6 · 10/7 글을 서버 값에 「빈 칸 채우기 · 글 합치기」로 올린다
-          if (first && rescue && local !== null && local !== d.v && RESCUE.test(k) && objOf(local) && objOf(d.v)) { baseOf[k] = null; pending[k] = local; markDirty(k); return; }   // 지난번에 못 보낸 저장 — 서버 값에 이 기기에서 바꾼 칸만 얹어 올린다 (base 모르면 빈 칸만 채움)
+          if (first && rescue && local !== null && local !== d.v && RESCUE.test(k) && objOf(local) && objOf(d.v)) { baseOf[k] = null; pending[k] = local; bootPush[k] = 1; markDirty(k); return; }   // 지난번에 못 보낸 저장 — 서버 값에 이 기기에서 바꾼 칸만 얹어 올린다 (base 모르면 빈 칸만 채움)
           if (!first && d.by === dev && (k in sent) && d.v !== sent[k]) return;   // 내가 전에 보낸 게 늦게 돌아온 것 (지금 값이 더 새것)
           if (local !== d.v) { if (!safeSet(k, d.v)) return; changed = true; changedKeys.push(k); }
         } catch (e1) {} }); } finally { applying = false; }   // 한 칸이 실패해도 멈추지 않는다 (예전엔 여기서 멈춰 그 뒤 저장이 서버로 안 갔음)
@@ -392,7 +392,7 @@
             if (LOCAL_ONLY.test(k3) || (k3 in pending)) return;
             var lv = null; try { lv = localStorage.getItem(k3); } catch (e) {}
             if (lv === null && !(k3 in remote)) { clearDirty(k3); return; }
-            if (lv !== remote[k3]) pending[k3] = lv; else clearDirty(k3);
+            if (lv !== remote[k3]) { pending[k3] = lv; bootPush[k3] = 1; } else clearDirty(k3);
           });
           Object.keys(pending).forEach(flush);
         }
@@ -418,7 +418,7 @@
         Object.keys(o).forEach(function (k) {
           if (k in pending) return;
           var lv = null; try { lv = localStorage.getItem(k); } catch (e) {}
-          if (lv !== remote[k]) pending[k] = lv;
+          if (lv !== remote[k]) { pending[k] = lv; bootPush[k] = 1; }
         });
         if (Object.keys(pending).length) flushNow(); else setStatus(state.s, state.msg);
       }, 30000);
