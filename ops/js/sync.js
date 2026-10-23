@@ -32,6 +32,8 @@
     try { for (var bi = 0; bi < localStorage.length; bi++) { var bk = localStorage.key(bi); if (bk.indexOf("cafesui.") === 0 && !LOCAL_ONLY.test(bk)) boot[bk] = localStorage.getItem(bk); } } catch (e) {}
     var RESCUE = /^cafesui\.(log|todo|stock|att)\.2026-10-0[67]$|^cafesui\.(daynotes|weekrep\.2026-10-05|clean\.2026-10)$/;
     var rescue = false; try { rescue = !localStorage.getItem("cafesui.ui.fix1006") && Date.now() < new Date(2026, 9, 10).getTime(); } catch (e) {}
+    // 10/23 v0924-249 사고: sync.js 문법 오류로 몇 분 동안 서버 저장이 멈춤 — 그 사이 이 기기에만 남은 글을 한 번만 서버 값에 「빈 칸 채우기 · 글 합치기」로 올린다
+    if (!rescue) try { if (!localStorage.getItem("cafesui.ui.fix1023") && Date.now() < new Date(2026, 9, 27).getTime()) { rescue = true; RESCUE = /^cafesui\.(log|todo|stock|att)\.2026-10-23$|^cafesui\.(week\.2026-10-19|clean\.2026-10|qc\.2026)$/; } } catch (e) {}
     var dirtyBoot = {};   // 지난번에 못 보낸 저장 — 이건 서버보다 이 기기가 맞다
     try { dirtyBoot = JSON.parse(localStorage.getItem("cafesui.ui.dirty") || "{}") || {}; } catch (e) {}
     var state = { s: "off", msg: "" };
@@ -167,7 +169,7 @@
       var bs = last || {};
       Object.keys(f).forEach(function (x) { if (bs[x] !== f[x]) ch[x] = f[x]; });
       Object.keys(bs).forEach(function (x) { if (!(x in f)) rm.push(x); });
-      if (prev) Object.keys(prev).forEach(function (x) { var pv = String(prev[x] || ""), nv = String(f[x] || ""); if (pv.trim() && nv.indexOf(pv) < 0 && (!nv.trim() || pv.length - nv.length >= 8)) { was[x] = pv; shrink = true; }   // 오타 몇 글자 지운 건 빼고 · 칸이 비었거나 8자 넘게 줄었을 때 });
+      if (prev) Object.keys(prev).forEach(function (x) { var pv = String(prev[x] || ""), nv = String(f[x] || ""); if (pv.trim() && nv.indexOf(pv) < 0 && (!nv.trim() || pv.length - nv.length >= 8)) { was[x] = pv; shrink = true; }   /* 오타 몇 글자 지운 건 빼고 · 칸이 비었거나 8자 넘게 줄었을 때 */ });
       if (!Object.keys(ch).length && !rm.length && !shrink) return;
       if (!shrink && last && now - (histT[k] || 0) < 90000) return;
       histLast[k] = f; histT[k] = now;
@@ -356,7 +358,7 @@
           if (!first && d.by === dev && (k in sent) && d.v !== sent[k]) return;   // 내가 전에 보낸 게 늦게 돌아온 것 (지금 값이 더 새것)
           if (local !== d.v) { if (!safeSet(k, d.v)) return; changed = true; changedKeys.push(k); }
         } catch (e1) {} }); } finally { applying = false; }   // 한 칸이 실패해도 멈추지 않는다 (예전엔 여기서 멈춰 그 뒤 저장이 서버로 안 갔음)
-        if (first && rescue) { rescue = false; try { origSet.call(localStorage, "cafesui.ui.fix1006", "1"); } catch (e) {} }
+        if (first && rescue) { rescue = false; try { origSet.call(localStorage, "cafesui.ui.fix1006", "1"); origSet.call(localStorage, "cafesui.ui.fix1023", "1"); } catch (e) {} }
         if (first) {
           first = false; ready = true;
           // 서버에 없는 이 기기 내용은 올린다 (캐시가 아니라 서버에서 온 첫 응답일 때만)
