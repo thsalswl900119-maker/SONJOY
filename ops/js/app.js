@@ -3841,7 +3841,14 @@
     }
     // ↩ 되돌리기 — 저장하기 바로 전 모습을 이 기기에 남겨 두고(글 쓰는 한 묶음마다 1개 · 날짜별 최대 30개), 누르면 한 단계씩 되돌린다
     var UNDO_PRE = "cafesui.ui.undo.", undoLast = {};
-    function undoList(k) { try { return JSON.parse(localStorage.getItem(UNDO_PRE + k.slice(12)) || "[]") || []; } catch (e) { return []; } }
+    // 10/23 19:21 사고: 예전 판에서 담긴 「시각 없는 옛 모습」(17:35)이 기록에 남아 있다가, v255에서 단추가 다시 보이자 누른 순간 일지가 또 17:35로 돌아감
+    // → 시각(_at)이 없거나 5분 넘은 모습은 버린다 (되돌리기는 정말 몇 분 안 것만)
+    function undoList(k) {
+      var a = []; try { a = JSON.parse(localStorage.getItem(UNDO_PRE + k.slice(12)) || "[]") || []; } catch (e) { return []; }
+      var lim = Date.now() - 300000, b = a.filter(function (j) { try { var o = JSON.parse(j) || {}; return o._at && o._at > lim; } catch (e) { return false; } });
+      if (b.length !== a.length) try { localStorage.setItem(UNDO_PRE + k.slice(12), JSON.stringify(b)); } catch (e) {}
+      return b;
+    }
     // 10/23 고침: 예전엔 6초 안에 이어 쓰면 기다리는 시계를 계속 늦춰서, 쉬지 않고 쓰면 「바로 전 모습」이 수십 분 전 모습이 됐음
     // (18:37 그걸 되돌려 그 뒤 쓴 칸 7개가 지워짐) → 이제 마지막으로 담은 때부터 6초가 지나면 무조건 새로 담는다 (되돌려도 몇 초 전으로만)
     function undoPush(k, old) {

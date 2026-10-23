@@ -121,6 +121,12 @@
       });
       return ch ? JSON.stringify(o) : out;
     }
+    function wipeCount(out, cur) {
+      var o = objOf(out), c = objOf(cur); if (!o || !c || !c.f) return 0;
+      var of = o.f || {}, n = 0;
+      Object.keys(c.f).forEach(function (x) { var sv = String(c.f[x] == null ? "" : c.f[x]), mv = String(of[x] == null ? "" : of[x]); if (sv.trim() && mv !== sv && (!mv.trim() || (sv.length - mv.length >= 30 && sv.indexOf(mv) >= 0))) n++; });
+      return n;
+    }
     function dirtyCount() { return Object.keys(dirtyGet()).length; }
     function setStatus(s, msg) {
       state.s = s; state.msg = msg || "";
@@ -219,7 +225,7 @@
         return tx.get(ref).then(function (doc) {
           var cur = doc.exists ? (doc.data() || {}).v : null;
           var out = mergeVal(bs, v, cur == null ? null : cur);
-          if (k.indexOf("cafesui.log.") === 0 && bootPush[k]) out = guardLog(out, cur);   /* 일지 지킴은 「켤 때 못 보낸 옛 값을 올리는」 경우에만 — 사람이 칸에서 지우고 고친 건 그대로 받는다 (10/23: 지킴이 일부러 줄인 글까지 되돌려 글이 두 번 붙고 고친 글이 사라졌음) */
+          if (k.indexOf("cafesui.log.") === 0 && (bootPush[k] || wipeCount(out, cur) >= 2)) out = guardLog(out, cur);   /* 한 번 저장에 글 있는 칸이 2개 넘게 비거나 크게 줄면 사람이 친 게 아니라 옛 모습이 덮는 것(10/23 세 번) — 서버 글을 지킨다 */   /* 일지 지킴은 「켤 때 못 보낸 옛 값을 올리는」 경우에만 — 사람이 칸에서 지우고 고친 건 그대로 받는다 (10/23: 지킴이 일부러 줄인 글까지 되돌려 글이 두 번 붙고 고친 글이 사라졌음) */
           tx.set(ref, { v: out, by: dev, t: firebase.firestore.FieldValue.serverTimestamp() });
           return out;
         });
