@@ -778,7 +778,7 @@
       var lg = by("cafesui.log.").sort().reverse(), h = "";
       lg.forEach(function (k) {
         var o = J(k) || {}, f = o.f || {}, d = k.slice(12);
-        var ORDER = ["lf143", "lf140", "lf141", "lf142", "lf144", "lf101", "lf102", "lf103", "lf104", "lf105", "lf106", "lf120", "lf123", "lf121", "lf122", "lf124", "lf125", "lf110", "lf185", "lf180", "lf181", "lf190", "lf183", "lf184", "lf154", "lf150", "lf151", "lf152", "lf153", "lf160", "lf161", "lf162", "lf163", "lf164", "lf170", "lf171", "lf172", "lf182"];
+        var ORDER = ["lf143", "lf140", "lf141", "lf142", "lf144", "lf101", "lf102", "lf103", "lf104", "lf105", "lf106", "lf120", "lf123", "lf121", "lf122", "lf124", "lf110", "lf185", "lf180", "lf181", "lf190", "lf183", "lf184", "lf154", "lf150", "lf151", "lf152", "lf153", "lf160", "lf161", "lf162", "lf163", "lf164", "lf170", "lf171", "lf172", "lf182"];
         var seen = {}, b = "";
         ORDER.concat(Object.keys(f)).forEach(function (fk) {
           if (seen[fk]) return; seen[fk] = 1;
@@ -3828,18 +3828,10 @@
         paintLines(el, bl0[el.dataset.k], by[el.dataset.k], ow0[el.dataset.k]);
         tagAuthors(el, bl0[el.dataset.k], ow0[el.dataset.k], by[el.dataset.k]);
       });
-      legacy163(); wdPaint();
+      legacy163();
       undoBtnPaint(); mePaint();
       var n = inputs.filter(function (el) { return el.value.trim(); }).length;
       msgEl.textContent = n ? n + "개 항목 작성됨" : "";
-    }
-    // 매주 정한 요일에만 보이는 칸(data-wd="3" = 수요일 · 10/23 사장님 「망고 (목.금.토) 사용량 · 수요일만」) — 그 일지 날짜의 요일로 · 글이 적혀 있으면 늘 보임
-    function wdPaint() {
-      var wd = String(new Date((dateEl.value || today()) + "T12:00:00").getDay());
-      document.querySelectorAll("#tp4 .lgwd[data-wd]").forEach(function (box) {
-        var has = Array.prototype.some.call(box.querySelectorAll(".lgin"), function (el) { return el.value.trim(); });
-        box.hidden = !has && String(box.dataset.wd).split(",").indexOf(wd) < 0;
-      });
     }
     // 지금 이 이름으로 저장된다는 걸 버튼 옆에 크게 — 공용 컴퓨터에 남은 다른 사람 이름으로 쓰는 사고 방지
     function mePaint() {

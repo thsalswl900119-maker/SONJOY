@@ -10,7 +10,7 @@
 
     var MGR = ["정항아", "사장님"];
     var PRE = "cafesui.stock.";
-    var FIELDS = ["prod", "fruitUseA", "fruitUseB", "fruitUseC", "creamUse", "fruitOrder", "creamPlan", "report", "noOrder"];
+    var FIELDS = ["prod", "fruitUseA", "fruitUseB", "fruitUseC", "creamUse", "fruitOrder", "creamPlan", "report", "noOrder", "mangoWed"];   // mangoWed: 매주 수요일 망고 (목.금.토) 계산 — 오늘 할 일 칸과 같은 값(mango.js)
     // 과일 사용 — 과일 이름 · 수량 · 단위 4줄 (10/12 · 사장님). 예전 칸(fruitUseA/B/C = 알/병/통 합계)도 합계에 같이 더한다(「이름 없음」)
     var FU = [1, 2, 3, 4];
     FU.forEach(function (i) { FIELDS.push("fu" + i + "n", "fu" + i + "q", "fu" + i + "u"); });
@@ -420,6 +420,7 @@
       paintNone(); renderGroups(); renderChecks(); renderList(); renderWeek(); renderReport();
       base = cp(read());
       if (load(d)) carryOpen(d);
+      if (window.__CS_MANGO_PAINT) window.__CS_MANGO_PAINT();
     }
     // 다른 기기에서 지금 보는 날짜가 바뀌면: 쓰는 중이 아니면 새로 연다 (쓰는 중이면 저장할 때 합쳐진다)
     window.addEventListener("cs:remote", function (e) {
@@ -744,6 +745,15 @@
     $("#skMonth").value = today().slice(0, 7);
     renderRef(); renderSeason();
     open(today());
+    // 🥭 수요일 망고 칸 — 오늘 할 일 칸에서 적어도 재고의 그 날 기록 한 곳에 저장 (mango.js)
+    window.__CS_SK_CUR = function () { return cur; };
+    window.__CS_SK_MANGO = function (d, v) {
+      var back = cur;
+      if (cur !== d) open(d);
+      var el = $("#sk_mangoWed"); if (el.value === v) { if (back !== d) open(back); return; }
+      el.value = v; saveNow();
+      if (back !== d) open(back);
+    };
     // 켜 둔 채 날짜가 바뀌면 오늘로 넘어간다 (오늘을 보고 있을 때만 · 쓰는 중이면 다 쓴 뒤에)
     var dayNow = today();
     function rollDay() {
