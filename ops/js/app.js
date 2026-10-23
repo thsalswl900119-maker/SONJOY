@@ -4396,7 +4396,10 @@
       var oldBy = (old && old.by) || {};
       inputs.forEach(function (el) {
         var k = el.dataset.k;
-        if (el.value === (base[k] || "") && (oldF[k] || "") !== el.value) {
+        // 10/23 사고 막기: 기기에 남은 값이 화면 글의 「옛 모습」(비었거나 화면 글 안에 그대로 들어 있음)이면 늦게 온 옛 값이 덮은 것 —
+        // 다른 기기가 고친 게 아니므로 화면 글을 지킨다 (예전엔 여기서 방금 쓴 칸을 비워 버렸음)
+        var ovk = String(oldF[k] || ""), stale = el.value === (base[k] || "") && ovk !== el.value && el.value.trim() && (!ovk.trim() || el.value.indexOf(ovk) >= 0);
+        if (!stale && el.value === (base[k] || "") && (oldF[k] || "") !== el.value) {
           // 이 화면에서는 안 건드렸는데 다른 기기에서 바뀐 칸 — 서버 내용 그대로 두고 화면만 새로 채운다
           if (oldF[k]) { f[k] = oldF[k]; by[k] = oldBy[k] || ""; if (oldBl[k]) bl[k] = oldBl[k]; if (oldOw[k]) ow[k] = oldOw[k]; }
           if (document.activeElement !== el) {

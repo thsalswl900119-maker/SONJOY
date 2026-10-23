@@ -154,7 +154,7 @@
       try { var pp = db.enablePersistence && db.enablePersistence({ synchronizeTabs: true }); if (pp && pp.catch) pp.catch(function () {}); } catch (e) {}
     } catch (e) { setStatus("err", e.message); return; }
 
-    var busy = {};
+    var busy = {}, held = {};
     function flush(k) {
       if (!ready) return;                       // 연결되면 한꺼번에 보낸다
       if (!(k in pending)) return;
@@ -188,7 +188,19 @@
             applying = true; safeSet(k, out); applying = false;
             try { window.dispatchEvent(new CustomEvent("cs:remote", { detail: { keys: [k] } })); } catch (e) {}
           }
-        } else { baseOf[k] = v; baseSave(); flush(k); }   // 그 사이 또 고친 것 — 방금 보낸 값을 기준으로 이어서
+          if (held[k]) {   // 보내는 동안 다른 기기 값이 왔었다 — 지금 서버 값을 다시 읽어 (그 사이 이 기기가 또 안 고쳤으면) 넣는다
+            delete held[k];
+            ref.get().then(function (doc) {
+              if ((k in pending) || busy[k] || !doc.exists) return;
+              var dv = (doc.data() || {}).v, lv2 = null; try { lv2 = localStorage.getItem(k); } catch (e) {}
+              remote[k] = dv; sent[k] = dv;
+              if (dv != null && lv2 === out && dv !== out) {
+                applying = true; safeSet(k, dv); applying = false;
+                try { window.dispatchEvent(new CustomEvent("cs:remote", { detail: { keys: [k] } })); } catch (e) {}
+              }
+            }).catch(function () {});
+          }
+        } else { delete held[k]; baseOf[k] = v; baseSave(); flush(k); }   // 그 사이 또 고친 것 — 방금 보낸 값을 기준으로 이어서 (다음 보내기가 서버 최신 값과 합침)
         setStatus("on");
       }).catch(function (e) {
         inflight--; busy[k] = 0;
@@ -304,6 +316,10 @@
             delete pending[k]; clearTimeout(timers[k]); clearDirty(k);
           }
           if (k in pending) return;                                   // 지금 이 기기가 고치는 중
+          // 보내는 중(트랜잭션)에 온 다른 기기 값은 기기에 덮지 않는다 — 10/23 사고: 사장님 기기가 같은 일지를 쓰는 사이,
+          // 항아님 기기가 보내는 동안 도착한 「방금 쓴 칸이 없는」 값이 기기 저장을 덮고, 다음 칸을 쓰면 방금 쓴 칸이 지워졌음.
+          // 보내기가 끝나면 서버의 최신 값(내 글 + 다른 기기 글 합친 것)을 다시 읽어 넣는다
+          if (busy[k]) { held[k] = 1; return; }
           if (first && dirtyBoot[k] && local !== d.v) { if (!(k in bootBase)) baseOf[k] = null; pending[k] = local; return; }
           // 10/6 사고 되살리기(한 번만): 그날 저장이 서버로 못 갔다 — 이 기기에만 남은 10/6 · 10/7 글을 서버 값에 「빈 칸 채우기 · 글 합치기」로 올린다
           if (first && rescue && local !== null && local !== d.v && RESCUE.test(k) && objOf(local) && objOf(d.v)) { baseOf[k] = null; pending[k] = local; markDirty(k); return; }   // 지난번에 못 보낸 저장 — 서버 값에 이 기기에서 바꾼 칸만 얹어 올린다 (base 모르면 빈 칸만 채움)
