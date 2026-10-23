@@ -3852,12 +3852,15 @@
       undoBtnPaint();
     }
     function undoBtnPaint() {
-      var b = document.getElementById("lgUndo"); if (!b) return;
+      var b = document.getElementById("lgUndo"); if (!b || b.hidden) return;
       var n = undoList(keyFor()).length; b.disabled = !n; b.textContent = n ? "↩ 되돌리기 (" + n + ")" : "↩ 되돌리기";
     }
     (function () {
       var b = document.getElementById("lgUndo"); if (!b) return;
       b.addEventListener("click", function () {
+        // 10/23 사고: 쉬지 않고 이어 쓰면 「바로 전 모습」이 수십 분 전 모습이라, 누르면 그 뒤에 쓴 칸이 통째로 지워졌음(18:37 혜빈님 글 7칸).
+        // 단추는 숨기고(되돌리기 기록은 「🛟 빈 칸에 되살리기」 후보로만 씀) 되살리기는 「🕘 저장 기록」(서버 기록 · 덧붙이기만)으로
+        if (b.hidden) return;
         var k = keyFor(), ls = undoList(k); if (!ls.length) return;
         var prev = JSON.parse(ls[ls.length - 1] || "{}"), cur = {}; try { cur = JSON.parse(localStorage.getItem(k) || "{}") || {}; } catch (e) {}
         var pf = prev.f || {}, cf = cur.f || {}, names = [];
