@@ -106,6 +106,21 @@
       return JSON.stringify(merge3(b, m, t, ""));
     }
     window.__CS_MERGE = mergeVal;
+    // 일지 지킴(10/23 사고 — 가게 컴퓨터에 남은 1시간 전 모습이 저장할 때마다 서버 글을 지움): 서버에 있는 칸을 비우거나,
+    // 서버 글의 앞부분만 남기고 30자 넘게 잘라 내는 저장은 받지 않고 서버 글을 그대로 둔다 (지운 글은 「🕘 저장 기록」으로도 남음)
+    function guardLog(out, cur) {
+      var o = objOf(out), c = objOf(cur); if (!o || !c || !c.f) return out;
+      var of = o.f || (o.f = {}), cf = c.f, ch = false;
+      Object.keys(cf).forEach(function (x) {
+        var sv = String(cf[x] == null ? "" : cf[x]), mv = String(of[x] == null ? "" : of[x]);
+        if (!sv.trim() || mv === sv) return;
+        var cut = !mv.trim() || (sv.length - mv.length >= 30 && sv.indexOf(mv) >= 0);
+        if (!cut) return;
+        of[x] = sv; ch = true;
+        ["by", "bl", "ow"].forEach(function (y) { if (c[y] && c[y][x] != null) { o[y] = o[y] || {}; o[y][x] = c[y][x]; } });
+      });
+      return ch ? JSON.stringify(o) : out;
+    }
     function dirtyCount() { return Object.keys(dirtyGet()).length; }
     function setStatus(s, msg) {
       state.s = s; state.msg = msg || "";
@@ -204,6 +219,7 @@
         return tx.get(ref).then(function (doc) {
           var cur = doc.exists ? (doc.data() || {}).v : null;
           var out = mergeVal(bs, v, cur == null ? null : cur);
+          if (k.indexOf("cafesui.log.") === 0) out = guardLog(out, cur);
           tx.set(ref, { v: out, by: dev, t: firebase.firestore.FieldValue.serverTimestamp() });
           return out;
         });

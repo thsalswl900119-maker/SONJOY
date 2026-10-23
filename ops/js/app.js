@@ -4207,6 +4207,19 @@
     var growRT = null;
     window.addEventListener("resize", function () { clearTimeout(growRT); growRT = setTimeout(growAll, 250); });
     function afterLoad() { rescuePaint(); growAll(); }
+    // 다른 기기(또는 서버 되살리기)로 일지가 바뀌면 — 이 화면에서 안 건드린 칸은 바로 새 글로 바꿔 보여 줌 (10/23: 옛 화면이 남아 있다가 저장 때 옛 글이 다시 올라가던 것)
+    window.addEventListener("cs:remote", function (e) {
+      var ks = (e.detail && e.detail.keys) || []; if (ks.indexOf(keyFor()) < 0) return;
+      var o = {}; try { o = JSON.parse(localStorage.getItem(keyFor()) || "{}") || {}; } catch (er) {}
+      var f = o.f || {}, ch = false;
+      inputs.forEach(function (el) {
+        var k = el.dataset.k, nv = f[k] || "";
+        if (document.activeElement === el || el.value === nv || el.value !== (base[k] || "")) return;
+        el.value = nv; base[k] = nv; el.classList.toggle("filled", !!nv.trim());
+        paintLines(el, (o.bl || {})[k], (o.by || {})[k], (o.ow || {})[k]); tagAuthors(el, (o.bl || {})[k], (o.ow || {})[k], (o.by || {})[k]); ch = true;
+      });
+      if (ch) { legacy163(); setTimeout(afterLoad, 50); }
+    });
     document.addEventListener("cs:log-loaded", function () { setTimeout(afterLoad, 0); });
     window.addEventListener("cs:remote", function () { setTimeout(afterLoad, 300); });
     setTimeout(afterLoad, 1500); growAll();
