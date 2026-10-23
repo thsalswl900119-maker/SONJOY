@@ -155,6 +155,35 @@
     } catch (e) { setStatus("err", e.message); return; }
 
     var busy = {}, held = {};
+    // 일지 저장 기록 (10/23 사장님 「1번」 — 지워져도 되살릴 수 있게) — 서버 ops/「hist.log.<날짜>」 한 문서에 쌓는다.
+    // 이름이 cafesui. 로 시작하지 않아 기기 저장소에는 안 들어감(기기 꽉 참 사고 방지) · 서버 규칙상 v · by · t 모양만.
+    // 기록 하나 = {at, who, dev, ch: 바뀐 칸 글, rm: 없어진 칸, was: 짧아지거나 지워진 칸의 바로 전 글} · 90초에 한 번(지워지면 바로)
+    var histLast = {}, histPrev = {}, histT = {};
+    function histRec(k, out) {
+      if (k.indexOf("cafesui.log.") !== 0 || out == null) return;
+      var o = objOf(out); if (!o) return;
+      var f = o.f || {}, prev = histPrev[k], last = histLast[k], now = Date.now(), ch = {}, was = {}, rm = [], shrink = false;
+      histPrev[k] = f;
+      var bs = last || {};
+      Object.keys(f).forEach(function (x) { if (bs[x] !== f[x]) ch[x] = f[x]; });
+      Object.keys(bs).forEach(function (x) { if (!(x in f)) rm.push(x); });
+      if (prev) Object.keys(prev).forEach(function (x) { var pv = String(prev[x] || ""), nv = String(f[x] || ""); if (pv.trim() && nv.indexOf(pv) < 0 && (!nv.trim() || pv.length - nv.length >= 8)) { was[x] = pv; shrink = true; }   // 오타 몇 글자 지운 건 빼고 · 칸이 비었거나 8자 넘게 줄었을 때 });
+      if (!Object.keys(ch).length && !rm.length && !shrink) return;
+      if (!shrink && last && now - (histT[k] || 0) < 90000) return;
+      histLast[k] = f; histT[k] = now;
+      var me = ""; try { me = localStorage.getItem("cafesui.me") || ""; } catch (e) {}
+      var e = { at: now, who: me, dev: dev, ch: ch }; if (rm.length) e.rm = rm; if (shrink) e.was = was; if (!last) e.full = 1;
+      var ref = col.doc("hist.log." + k.slice(12));
+      db.runTransaction(function (tx) {
+        return tx.get(ref).then(function (doc) {
+          var a = []; try { a = JSON.parse((doc.exists && (doc.data() || {}).v) || "[]") || []; } catch (e2) { a = []; }
+          a.push(e); var sv = JSON.stringify(a);
+          while (sv.length > 700000 && a.length > 1) { a.shift(); sv = JSON.stringify(a); }
+          tx.set(ref, { v: sv, by: dev, t: firebase.firestore.FieldValue.serverTimestamp() });
+        });
+      }).catch(function () {});
+    }
+    window.__CS_HIST = function (date) { return col.doc("hist.log." + date).get().then(function (d) { try { return JSON.parse((d.exists && (d.data() || {}).v) || "[]") || []; } catch (e) { return []; } }); };
     function flush(k) {
       if (!ready) return;                       // 연결되면 한꺼번에 보낸다
       if (!(k in pending)) return;
@@ -180,6 +209,7 @@
       p.then(function (out) {
         inflight--; busy[k] = 0;
         remote[k] = out; sent[k] = out;
+        try { histRec(k, out); } catch (eh) {}
         if (!(k in pending)) {
           clearDirty(k);
           // 서버에 있던 다른 기기 글까지 합쳐졌다 — 이 기기에도 넣고 화면에 알린다
