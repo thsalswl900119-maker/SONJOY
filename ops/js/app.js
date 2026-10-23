@@ -5253,7 +5253,6 @@
     window.addEventListener("cs:remote", function (e) { if (((e.detail && e.detail.keys) || []).indexOf(K()) >= 0) draw(); });
     window.addEventListener("cs:me", draw);
     draw();
-    window.addEventListener("cs:remote", function (e) { if (((e.detail && e.detail.keys) || []).indexOf(KEY) >= 0) apply(); });
   })();
 
   // 매니저 주간 보고는 관리자 탭 안에만 — 탭 내용을 불러오면 맨 위 원칙 상자 아래 자리(#mgWrSlot)로 옮긴다
