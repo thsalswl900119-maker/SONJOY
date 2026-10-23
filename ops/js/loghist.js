@@ -44,6 +44,32 @@
     if (!window.__CS_HIST) { box.innerHTML = '<div class="lhh"><b>🕘 저장 기록</b><button type="button" class="lhx">닫기</button></div><p class="lhnone">서버에 연결된 뒤에 볼 수 있어요</p>'; return; }
     window.__CS_HIST(openD).then(function (a) { list = (a || []).sort(function (x, y) { return x.at - y.at; }); draw(); }, function () { box.innerHTML = '<p class="lhnone">기록을 못 불러왔어요 — 잠시 뒤 다시 눌러 주세요</p>'; });
   }
+  // 지워진 글 자동 알림(10/23 사장님 「다시는 이런 일이 일어나지 않게」) — 일지를 열 때 · 2분마다 · 다른 기기 변경 때 그날 기록을 읽어,
+  // 지금 칸에 없는 「지워진 글」이 있으면 일지 맨 위에 빨간 띠 + 「🕘 보고 되살리기」 (기록 패널을 연 것과 같음)
+  var band = null, lastChk = 0;
+  function lostOf(a) {
+    var n = 0;
+    (a || []).forEach(function (e) { Object.keys(e.was || {}).forEach(function (k) { var el = field(k), t = e.was[k]; if (t && el && el.value.indexOf(t) < 0 && !(t.split("/").every(function (s) { s = s.trim(); return s.length < 6 || el.value.indexOf(s) >= 0; }))) n++; }); });
+    return n;
+  }
+  function check(force) {
+    var tp = document.getElementById("tp4"); if (!tp || tp.hidden || !window.__CS_HIST) return;
+    if (!force && Date.now() - lastChk < 60000) return; lastChk = Date.now();
+    var d = day();
+    window.__CS_HIST(d).then(function (a) {
+      if (d !== day()) return;
+      var n = lostOf(a);
+      if (!n) { if (band) { band.remove(); band = null; } return; }
+      if (!band) { band = document.createElement("div"); band.className = "lhband"; band.setAttribute("role", "alert"); var bar = btn.closest(".lgact"); bar.parentNode.insertBefore(band, bar); }
+      band.innerHTML = "⚠ <b>이 날 일지에서 지워진 글 " + n + "개가 지금 칸에 없어요</b> — 일부러 지운 게 아니면 되살려 주세요 <button type=\"button\">🕘 보고 되살리기</button>";
+      band.querySelector("button").onclick = function () { list = a.sort(function (x, y) { return x.at - y.at; }); openD = d; box.hidden = false; draw(); box.scrollIntoView({ block: "start", behavior: "smooth" }); };
+    }, function () {});
+  }
+  document.addEventListener("click", function (e) { if (e.target.closest && e.target.closest('.tab[data-p="tp4"]')) setTimeout(function () { check(true); }, 800); });
+  dateEl.addEventListener("change", function () { setTimeout(function () { check(true); }, 300); });
+  ["lgPrev", "lgNext", "lgToday"].forEach(function (id) { var b2 = document.getElementById(id); if (b2) b2.addEventListener("click", function () { setTimeout(function () { check(true); }, 300); }); });
+  window.addEventListener("cs:remote", function (e) { var ks = (e.detail && e.detail.keys) || []; if (ks.some(function (k) { return k.indexOf("cafesui.log.") === 0; })) setTimeout(function () { check(false); }, 1500); });
+  setInterval(function () { check(true); }, 120000); setTimeout(function () { check(true); }, 4000);
   btn.addEventListener("click", function () { if (!box.hidden && openD === day()) { box.hidden = true; return; } load(); });
   dateEl.addEventListener("change", function () { if (!box.hidden) load(); });
   ["lgPrev", "lgNext", "lgToday"].forEach(function (id) { var b = document.getElementById(id); if (b) b.addEventListener("click", function () { if (!box.hidden) setTimeout(load, 50); }); });
@@ -57,6 +83,7 @@
     var add = el.value.trim() ? el.value.replace(/\s+$/, "") + NL + t : t;
     if (!confirm("「" + label(k) + "」 칸에 이 글을 " + (el.value.trim() ? "아래 줄에 덧붙일까요?" : "넣을까요?") + NL + NL + cut(t, 200))) return;
     el.value = add; el.dispatchEvent(new Event("input", { bubbles: true }));
+    setTimeout(function () { check(true); }, 2500);
     el.scrollIntoView({ block: "center", behavior: "smooth" });
     toast("↺ 되살렸어요 — 「" + label(k) + "」");
     setTimeout(draw, 300);
