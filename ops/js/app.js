@@ -873,8 +873,8 @@
       h = "";
       by("cafesui.review.").sort().reverse().forEach(function (k) {
         var o = J(k) || {}, parts = k.slice(15).split("."), ym = parts[0], who = parts[1] || "";
-        var checks = Object.keys(o).filter(function (x) { return /^k\d+$/.test(x) && o[x]; });
-        var b = rows(o, /^(k\d+|_by|_rank|_level)$/);
+        var checks = Object.keys(o).filter(function (x) { return /^(k\d+|p\d+[mb]?)$/.test(x) && o[x]; });
+        var b = rows(o, /^(k\d+|p\d+[mb]?|_by|_rank|_level)$/);
         if (!checks.length && !b) return;
         h += "<h3>" + ym.replace("-", "년 ") + "월" + (who ? " · " + E(who) : "") + (o._level ? " · " + E(o._level) : "") + "</h3>" + b;
         if (checks.length) h += "<p><b>체크한 항목 " + checks.length + "개</b></p><ul>" + checks.map(function (x) { return "<li>" + E(L(x)) + "</li>"; }).join("") + "</ul>";
@@ -1101,10 +1101,10 @@
       setTimeout(function () { st2.hidden = true; st1.hidden = false; }, 900);
     });
 
-    // 월말 평가는 대상자 본인과 사장님만
+    // 월말 평가는 대상자 본인과 사장님만 (10/27 박혜빈님 예비 매니저 평가 — 이름 고르기는 아래 rvWho에서 사람마다 줄임)
     var me = get("cafesui.me");
     if (me) {
-      var allowed = [BOSS, "정항아"];
+      var allowed = [BOSS, "정항아", "박혜빈"];
       if (allowed.indexOf(me) < 0) {
         document.querySelectorAll(".tab").forEach(function (t) {
           if (t.textContent.indexOf("월말 평가") < 0) return;
@@ -3264,13 +3264,42 @@
     function applyLevel() {
       if (!levelBox || !box) return;
       if (rankEl && rankEl.value !== level) rankEl.value = level;
-      box.querySelectorAll(".rvsec.lv-jj").forEach(function (sec) { sec.hidden = (level !== "점장"); });
-      box.querySelectorAll(".rvsec.lv-mg").forEach(function (sec) { sec.hidden = (level === "점장"); });
+      var pre = level === "예비매니저";
+      box.querySelectorAll(".rvsec").forEach(function (sec) {
+        var c = sec.classList;
+        sec.hidden = c.contains("lv-pre") ? !pre : c.contains("lv-jj") ? level !== "점장" : c.contains("lv-mg") ? level !== "매니저" : pre;
+      });
+      form.querySelectorAll(".fsec.lv-pre").forEach(function (sec) { sec.hidden = !pre; });
       var note = document.getElementById("rvLevelNote");
       if (note) note.textContent = level === "점장" ? "점장: 공통 1~7번 + 점장 항목 9~15번(손익 · 인력 · 매장 점검 · 청소 정비 · CS · 제품 · 청결)으로 평가합니다"
-                                                 : "매니저: 공통 1~7번 + 8번 「매니저 역할」로 평가합니다 · 직급을 점장으로 고르면 9~15번 점장 항목으로 바뀝니다";
+                                 : pre ? "예비 매니저: 짧은 평가표 6묶음 21개 · 본인 · 매니저 · 사장님이 각자 자기 칸에 체크합니다 (등급은 사장님 칸 기준 · 사장님 칸이 비면 매니저 칸)"
+                                 : "매니저: 공통 1~7번 + 8번 「매니저 역할」로 평가합니다 · 직급을 점장으로 고르면 9~15번 점장 항목으로 바뀝니다";
+      lockCols();
       paintLast();
     }
+    // 예비 매니저 평가표 — 본인 · 매니저 · 사장님 칸을 각자만 체크 (사장님은 모든 칸)
+    function canCol(col) {
+      var me = meNow();
+      if (me === "사장님") return true;
+      if (col === "s") return !!me && !!whoEl && me === whoEl.value;
+      if (col === "m") return me === "정항아" && (!whoEl || whoEl.value !== "정항아");
+      return false;
+    }
+    function lockCols() {
+      cks.forEach(function (c) {
+        if (!c.dataset.col) return;
+        var ok = canCol(c.dataset.col);
+        c.disabled = !ok;
+        c.title = ok ? "" : ({ s: "본인만 체크합니다", m: "매니저(정항아님)가 체크합니다", b: "사장님이 체크합니다" })[c.dataset.col];
+      });
+    }
+    var COLN = { s: "본인", m: "매니저", b: "사장님" };
+    function colPct(secs, col) {   // secs: [{ks:[base keys]}] · data 또는 화면 체크
+      var sum = 0, any = 0;
+      secs.forEach(function (o) { var hit = o.hit[col]; any += hit; sum += hit / o.n; });
+      return any ? Math.round(sum / secs.length * 100) : null;
+    }
+    function finalCol(pcts) { return pcts.b != null ? "b" : pcts.m != null ? "m" : pcts.s != null ? "s" : null; }
     // 지난달에 적은 「아쉬웠던 것 · 다음 달 기대 · 사장님 피드백」을 위에 띄운다 — 달라졌는지 보면서 체크하라고
     function paintLast() {
       var el = document.getElementById("rvLast"); if (!el || !gradeBox) return;
@@ -3298,17 +3327,28 @@
       SECMAP = [];
       box.querySelectorAll(".rvsec").forEach(function (sec) {
         var ks = Array.prototype.map.call(sec.querySelectorAll(".rck"), function (c) { return c.dataset.k; });
-        if (ks.length) SECMAP.push({ ks: ks, jj: sec.classList.contains("lv-jj"), mg: sec.classList.contains("lv-mg") });
+        if (sec.classList.contains("lv-pre")) ks = Array.prototype.filter.call(sec.querySelectorAll('.rck[data-col="s"]'), function () { return true; }).map(function (c) { return c.dataset.k; });
+        if (ks.length) SECMAP.push({ ks: ks, jj: sec.classList.contains("lv-jj"), mg: sec.classList.contains("lv-mg"), pre: sec.classList.contains("lv-pre") });
       });
       return SECMAP;
     }
     function gradeOfData(data) {
       var m = secMap(); if (!m || !data) return null;
-      var jj = (data._level || "매니저") === "점장";
+      var lv = data._level || "매니저", jj = lv === "점장";
+      if (lv === "예비매니저") {
+        var ps = m.filter(function (o) { return o.pre; }).map(function (o) {
+          return { n: o.ks.length, hit: { s: o.ks.filter(function (k) { return data[k]; }).length, m: o.ks.filter(function (k) { return data[k + "m"]; }).length, b: o.ks.filter(function (k) { return data[k + "b"]; }).length } };
+        });
+        var pc = { s: colPct(ps, "s"), m: colPct(ps, "m"), b: colPct(ps, "b") }, fc = finalCol(pc);
+        if (!fc) return null;
+        var gp = letterOf(pc[fc]);
+        return { pct: pc[fc], letter: gp[0], rate: 0, pre: true, cols: pc, fc: fc };
+      }
       var on = 0, sum = 0, n = 0;
       m.forEach(function (o) {
+        if (o.pre) return;
         if (o.jj && !jj) return;
-        if (o.mg && jj) return;
+        if (o.mg && lv !== "매니저") return;
         var hit = o.ks.filter(function (k) { return data[k]; }).length; on += hit; sum += hit / o.ks.length; n++;
       });
       if (!on) return null;
@@ -3354,6 +3394,7 @@
     function paintPeriods() {
       var el = document.getElementById("rvPeriods"); if (!el || !gradeBox) return;
       if (!whoEl || !whoEl.value) { el.innerHTML = '<div class="rvbcard"><div class="rvbsub">이름을 고르면 설날·추석 상여 등급이 달별로 모여 보입니다</div></div>'; return; }
+      if (level === "예비매니저") { el.innerHTML = '<div class="rvbcard"><div class="rvbsub">예비 매니저는 상여 모아보기 대신 달마다 본인 · 매니저 · 사장님 평가를 비교해 봅니다</div></div>'; return; }
       var cur = mEl.value || thisMonth();
       var now = periodOf(cur), prev = prevPeriod(now);
       var FROM = 2027;   // 상여 모아보기는 2027년 설날 지급분부터
@@ -3365,6 +3406,21 @@
     }
     function gradeInfo() {
       if (!box) return null;
+      if (level === "예비매니저") {
+        var ps = [];
+        box.querySelectorAll(".rvsec.lv-pre").forEach(function (sec) {
+          var h = { s: 0, m: 0, b: 0 }, n = sec.querySelectorAll('.rck[data-col="s"]').length;
+          sec.querySelectorAll(".rck[data-col]").forEach(function (c) { if (c.checked) h[c.dataset.col]++; });
+          var ttl = (sec.querySelector(".rvsh").childNodes[1] || {}).textContent || "";
+          ps.push({ t: ttl, n: n, hit: h });
+        });
+        var pc = { s: colPct(ps, "s"), m: colPct(ps, "m"), b: colPct(ps, "b") }, fc = finalCol(pc);
+        var secs2 = ps.map(function (x) { var c = fc || "s"; return { t: x.t, hit: x.hit[c], all: x.n, pct: Math.round(x.hit[c] / x.n * 100) }; });
+        var tot = ps.reduce(function (a, x) { return a + x.n; }, 0), on2 = fc ? ps.reduce(function (a, x) { return a + x.hit[fc]; }, 0) : 0;
+        if (!fc) return { on: 0, total: tot, pct: 0, letter: null, rate: 0, secs: secs2, pre: true, cols: pc, fc: null };
+        var g0 = letterOf(pc[fc]);
+        return { on: on2, total: tot, pct: pc[fc], letter: g0[0], rate: 0, secs: secs2, pre: true, cols: pc, fc: fc };
+      }
       var secs = [], total = 0, on = 0;
       box.querySelectorAll(".rvsec").forEach(function (sec) {
         if (sec.hidden) return;
@@ -3390,6 +3446,11 @@
       L.textContent = g.letter || "–";
       P.innerHTML = g.letter ? "체크 비율 평균 <b>" + g.pct + "%</b><br>" + g.on + " / " + g.total + " 체크" : "아래를 체크하면<br>등급이 매겨집니다";
       R.textContent = g.letter ? (g.rate ? "기본급의 " + g.rate + "%" : "없음 (D등급)") : "–";
+      if (g.pre) {
+        P.innerHTML = (g.letter ? "<b>" + COLN[g.fc] + " 평가 기준 " + g.pct + "%</b><br>" : "아래를 체크하면 등급이 매겨집니다<br>") +
+          ["s", "m", "b"].map(function (c) { return COLN[c] + " " + (g.cols[c] == null ? "–" : g.cols[c] + "%"); }).join(" · ");
+        R.textContent = "예비 매니저 · 지급은 사장님이 정합니다";
+      }
       paintPeriods();
       B.innerHTML = g.secs.map(function (x) {
         return '<div class="rvgbar"><span>' + esc(x.t) + "</span><em>" + x.pct + "%</em><i><b style=\"width:" + x.pct + '%"></b></i></div>';
@@ -3418,7 +3479,7 @@
         el.checked = !!data[el.dataset.k];
         el.closest("tr").classList.toggle("done", el.checked);
       });
-      if (levelBox) { level = data._level || ((data._rank || "").indexOf("점장") >= 0 ? "점장" : "매니저"); applyLevel(); }
+      if (levelBox) { level = data._level || ((data._rank || "").indexOf("점장") >= 0 ? "점장" : (whoEl && whoEl.value === "박혜빈") ? "예비매니저" : "매니저"); applyLevel(); }
       else if (rankEl) rankEl.value = data._rank || "";
       count();
     }
@@ -3526,8 +3587,21 @@
       var vis = cksOn();
       var on = vis.filter(function (el) { return el.checked; }).length;
       if (cntEl) cntEl.textContent = on + " / " + vis.length;
+      if (level === "예비매니저" && cntEl) {
+        var cc = { s: 0, m: 0, b: 0 }, nn = 0;
+        vis.forEach(function (c) { if (c.dataset.col === "s") nn++; if (c.checked && c.dataset.col) cc[c.dataset.col]++; });
+        cntEl.textContent = "본인 " + cc.s + " · 매니저 " + cc.m + " · 사장님 " + cc.b + " / " + nn;
+      }
       if (box) box.querySelectorAll(".rvcnt").forEach(function (e) {
         var sec = e.dataset.s;
+        var preS = cks.filter(function (c) { return c.dataset.s === sec && c.dataset.col; });
+        if (preS.length) {
+          var h3 = { s: 0, m: 0, b: 0 }; preS.forEach(function (c) { if (c.checked) h3[c.dataset.col]++; });
+          var n3 = preS.length / 3;
+          e.textContent = "본인 " + h3.s + " · 매니저 " + h3.m + " · 사장님 " + h3.b + " / " + n3;
+          e.classList.toggle("full", h3.b === n3);
+          return;
+        }
         var all = cks.filter(function (c) { return c.dataset.s === sec; });
         var hit = all.filter(function (c) { return c.checked; }).length;
         e.textContent = hit + " / " + all.length;
@@ -3652,6 +3726,21 @@
         var rows = "", sum = [], miss = [];
         box.querySelectorAll(".rvsec").forEach(function (sec) {
           if (sec.hidden) return;
+          if (sec.classList.contains("lv-pre")) {
+            var h4 = { s: 0, m: 0, b: 0 }, n4 = 0, gi = gradeInfo(), fc4 = (gi && gi.fc) || "s";
+            sec.querySelectorAll("tbody tr").forEach(function (tr) {
+              n4++;
+              tr.querySelectorAll(".rck").forEach(function (c) { if (c.checked) h4[c.dataset.col]++; });
+              var f = tr.querySelector('.rck[data-col="' + fc4 + '"]'); if (f && !f.checked) miss.push(tr.querySelector(".rq").textContent);
+            });
+            if (!h4.s && !h4.m && !h4.b) return;
+            any = true;
+            var t4 = sec.querySelector(".rvsh").firstChild.nextSibling.textContent.trim();
+            var v4 = "본인 " + h4.s + " · 매니저 " + h4.m + " · 사장님 " + h4.b + " / " + n4;
+            rows += "<tr><th>" + esc(t4) + "</th><td>" + v4 + "</td></tr>";
+            sum.push(t4 + " " + v4);
+            return;
+          }
           var all = Array.prototype.slice.call(sec.querySelectorAll(".rck"));
           var hit = all.filter(function (c) { return c.checked; }).length;
           if (!hit) return;
@@ -3668,8 +3757,9 @@
         });
         if (rows) {
           var vis2 = cksOn();
+          if (level === "예비매니저") vis2 = vis2.filter(function (c) { var gi2 = gradeInfo(); return c.dataset.col === ((gi2 && gi2.fc) || "s"); });
           var on = vis2.filter(function (c) { return c.checked; }).length;
-          html += '<div class="rpsec"><h4>체크 결과' + (levelBox ? " (" + level + "급)" : "") + " · " + on + " / " + vis2.length +
+          html += '<div class="rpsec"><h4>체크 결과' + (levelBox ? " (" + (level === "예비매니저" ? "예비 매니저" : level + "급") + ")" : "") + " · " + on + " / " + vis2.length +
                   '</h4><table class="rpnums">' + rows + "</table>";
           if (miss.length) {
             html += '<div class="rpitem"><b>아직 못 지킨 것 ' + miss.length + '가지</b>' +
@@ -3677,7 +3767,7 @@
           }
           html += "</div>";
           text.push("");
-          text.push("[체크 결과" + (levelBox ? " · " + level + "급" : "") + "] " + on + " / " + vis2.length);
+          text.push("[체크 결과" + (levelBox ? " · " + (level === "예비매니저" ? "예비 매니저" : level + "급") : "") + "] " + on + " / " + vis2.length);
           text.push(sum.join(" · "));
           if (miss.length) {
             text.push("못 지킨 것: " + miss.join(" / "));
@@ -3686,7 +3776,8 @@
           if (g && g.letter) {
             var gl = g.letter + "등급 (체크 비율 평균 " + g.pct + "%) → 성과급 " + (g.rate ? "기본급의 " + g.rate + "%" : "없음");
             var pdn = periodOf(when); gl += " · " + pdn.name + " " + pdn.year + " 지급분에 포함";
-            html += '<div class="rpsec"><h4>성과급 등급</h4><div class="rpitem"><b>' + esc(gl) + "</b>" +
+            if (g.pre) gl = g.letter + "등급 (" + COLN[g.fc] + " 평가 기준 " + g.pct + "%) · " + ["s", "m", "b"].map(function (c) { return COLN[c] + " " + (g.cols[c] == null ? "–" : g.cols[c] + "%"); }).join(" · ") + " · 지급은 사장님이 정함";
+            html += '<div class="rpsec"><h4>' + (g.pre ? "등급 (본인 · 매니저 · 사장님)" : "성과급 등급") + '</h4><div class="rpitem"><b>' + esc(gl) + "</b>" +
                     "<span>자동 계산 · 최종 등급은 월말 면담에서 사장님이 확정</span></div></div>";
             text.push("[성과급 등급] " + gl + " (자동 계산 · 면담에서 확정)");
           }
@@ -3745,7 +3836,7 @@
       });
     });
     if (rankEl) rankEl.addEventListener("input", function () { save(); report(); });
-    if (levelBox) rankEl.addEventListener("change", function () { level = rankEl.value === "점장" ? "점장" : "매니저"; applyLevel(); save(); report(); });
+    if (levelBox) rankEl.addEventListener("change", function () { level = rankEl.value === "점장" || rankEl.value === "예비매니저" ? rankEl.value : "매니저"; applyLevel(); save(); report(); });
 
     document.getElementById(clearId).addEventListener("click", function () {
       if (!window.confirm("이 평가지의 체크와 글을 전부 지웁니다. 정말 지울까요?")) return;
@@ -3779,6 +3870,16 @@
   bindForm("rvMonth", "rvForm", "rvMsg", "rvCopy", "rvClear",
            "cafesui.review", "월말 성과 체크", "rvWho", "rvReport", null,
            "rvChecks", "rvCount", "rvRank");
+  // 월말 평가는 본인 · 평가하는 매니저 · 사장님만 (10/27 사장님 「그 직원만 볼 수 있게」)
+  //   사장님 = 모두 · 정항아님 = 본인 + 박혜빈님(예비 매니저 평가) · 박혜빈님 = 본인만 · 그 밖의 사람은 탭을 숨김
+  (function () {
+    var who = document.getElementById("rvWho"); if (!who) return;
+    var me = meNow(), SEE = { "사장님": null, "정항아": ["정항아", "박혜빈"], "박혜빈": ["박혜빈"] };
+    if (!(me in SEE)) { document.querySelectorAll('.tab[data-p="tp8"]').forEach(function (b) { b.hidden = true; }); return; }
+    var allow = SEE[me]; if (!allow) return;
+    Array.prototype.slice.call(who.options).forEach(function (o) { if (o.value && allow.indexOf(o.value) < 0) o.remove(); });
+    if (!who.value) { who.value = me; who.dispatchEvent(new Event("change")); }
+  })();
 
   // 마감 일지 — 채우고 복사해서 텔레그램으로
   (function () {
