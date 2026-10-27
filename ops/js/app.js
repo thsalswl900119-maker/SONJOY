@@ -3871,6 +3871,25 @@
   bindForm("rvMonth", "rvForm", "rvMsg", "rvCopy", "rvClear",
            "cafesui.review", "월말 성과 체크", "rvWho", "rvReport", null,
            "rvChecks", "rvCount", "rvRank");
+  // 📸 제품 사진 공유(t509 · 주 1~2번 · 각자) — 이번 주(월~토) 누가 몇 번 체크했는지 줄 아래에 (10/27 사장님)
+  (function () {
+    var el = document.getElementById("phWeek"); if (!el) return;
+    var PEOPLE = ["정항아", "박혜빈", "이해선"];
+    function pad(n) { return (n < 10 ? "0" : "") + n; }
+    function paint() {
+      var now = new Date(), mon = new Date(now.getFullYear(), now.getMonth(), now.getDate() - ((now.getDay() + 6) % 7)), cnt = {};
+      for (var i = 0; i < 6; i++) {
+        var d = new Date(mon.getFullYear(), mon.getMonth(), mon.getDate() + i); if (d > now) break;
+        var o = {}; try { o = JSON.parse(localStorage.getItem("cafesui.todo." + d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate())) || "{}") || {}; } catch (e) {}
+        var v = o.t509; if (!v) continue; var n = typeof v === "string" ? v : "이름 없음"; cnt[n] = (cnt[n] || 0) + 1;
+      }
+      var names = PEOPLE.slice(); Object.keys(cnt).forEach(function (n) { if (names.indexOf(n) < 0) names.push(n); });
+      el.innerHTML = "이번 주 " + names.map(function (n) { var c = cnt[n] || 0; return '<b class="' + (c ? "ok" : "") + '">' + n + (n === "사장님" || n === "이름 없음" ? "" : "님") + " " + c + "번</b>"; }).join("");
+    }
+    paint();
+    document.addEventListener("click", function (e) { if (e.target.closest && e.target.closest('#tp2 .box, .tab[data-p="tp2"]')) setTimeout(paint, 300); }, true);
+    window.addEventListener("cs:remote", function () { setTimeout(paint, 400); });
+  })();
   // 월말 평가는 본인 · 평가하는 매니저 · 사장님만 (10/27 사장님 「그 직원만 볼 수 있게」)
   //   사장님 = 모두 · 정항아님 = 본인 + 박혜빈님(예비 매니저 평가) · 박혜빈님 = 본인만 · 그 밖의 사람은 탭을 숨김
   (function () {
