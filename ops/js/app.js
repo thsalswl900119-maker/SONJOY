@@ -500,6 +500,23 @@
     }
   })();
 
+  // 제빙기 = 2주차 토요일 · 그라인더 = 4주차 토요일 (10/27 사장님 「무조건 기본값」) — 이번 달 그 날짜를 칸 옆 · 맨 위 상자에
+  (function () {
+    var WD = "일월화수목금토";
+    function nthSat(y, m, n) { var d = new Date(y, m, 1); var first = (6 - d.getDay() + 7) % 7 + 1; return new Date(y, m, first + (n - 1) * 7); }
+    function paint() {
+      var now = new Date(), t0 = new Date(now.getFullYear(), now.getMonth(), now.getDate()), parts = [];
+      document.querySelectorAll("#tp3 em.zsat[data-nth]").forEach(function (el) {
+        var d = nthSat(now.getFullYear(), now.getMonth(), +el.dataset.nth), past = d < t0, same = +d === +t0;
+        el.textContent = (same ? "오늘 " : "이번 달 ") + (d.getMonth() + 1) + "/" + d.getDate() + "(" + WD[d.getDay()] + ")" + (past ? " 지남" : "");
+        el.classList.toggle("past", past);
+      });
+      var a = nthSat(now.getFullYear(), now.getMonth(), 2), b = nthSat(now.getFullYear(), now.getMonth(), 4), note = document.getElementById("zSatNote");
+      if (note) note.textContent = "이번 달: 제빙기 " + (a.getMonth() + 1) + "/" + a.getDate() + "(토) · 그라인더 " + (b.getMonth() + 1) + "/" + b.getDate() + "(토)";
+    }
+    paint(); setInterval(paint, 3600000);
+  })();
+
   // 청소 배정표 달 넘겨 보기 — 지난달은 그 달 담당 · 완료 체크를 그대로 보여 준다 (보기만 · 고칠 수 없음)
   (function () {
     var first = document.querySelector('.ztable-wrap:not(.weekly) .box[data-k^="z"]');
