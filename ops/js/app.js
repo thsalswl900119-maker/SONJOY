@@ -3270,9 +3270,10 @@
         sec.hidden = c.contains("lv-pre") ? !pre : c.contains("lv-jj") ? level !== "점장" : c.contains("lv-mg") ? level !== "매니저" : pre;
       });
       form.querySelectorAll(".fsec.lv-pre").forEach(function (sec) { sec.hidden = !pre; });
+      form.querySelectorAll(".fsec.boss").forEach(function (sec) { sec.hidden = pre; });   /* 예비 매니저는 매니저 확인까지만 (10/27 사장님 「사장님은 빼줘」) */
       var note = document.getElementById("rvLevelNote");
       if (note) note.textContent = level === "점장" ? "점장: 공통 1~7번 + 점장 항목 9~15번(손익 · 인력 · 매장 점검 · 청소 정비 · CS · 제품 · 청결)으로 평가합니다"
-                                 : pre ? "예비 매니저: 짧은 평가표 6묶음 21개 · 본인 · 매니저 · 사장님이 각자 자기 칸에 체크합니다 (등급은 사장님 칸 기준 · 사장님 칸이 비면 매니저 칸)"
+                                 : pre ? "예비 매니저: 짧은 평가표 6묶음 21개 · 본인이 체크하고 매니저(정항아님)가 확인합니다 (등급은 매니저 확인 기준 · 확인 전엔 본인 체크)"
                                  : "매니저: 공통 1~7번 + 8번 「매니저 역할」로 평가합니다 · 직급을 점장으로 고르면 9~15번 점장 항목으로 바뀝니다";
       lockCols();
       paintLast();
@@ -3290,16 +3291,16 @@
         if (!c.dataset.col) return;
         var ok = canCol(c.dataset.col);
         c.disabled = !ok;
-        c.title = ok ? "" : ({ s: "본인만 체크합니다", m: "매니저(정항아님)가 체크합니다", b: "사장님이 체크합니다" })[c.dataset.col];
+        c.title = ok ? "" : ({ s: "본인만 체크합니다", m: "매니저(정항아님)가 확인합니다" })[c.dataset.col];
       });
     }
-    var COLN = { s: "본인", m: "매니저", b: "사장님" };
+    var COLN = { s: "본인", m: "매니저 확인" };
     function colPct(secs, col) {   // secs: [{ks:[base keys]}] · data 또는 화면 체크
       var sum = 0, any = 0;
       secs.forEach(function (o) { var hit = o.hit[col]; any += hit; sum += hit / o.n; });
       return any ? Math.round(sum / secs.length * 100) : null;
     }
-    function finalCol(pcts) { return pcts.b != null ? "b" : pcts.m != null ? "m" : pcts.s != null ? "s" : null; }
+    function finalCol(pcts) { return pcts.m != null ? "m" : pcts.s != null ? "s" : null; }
     // 지난달에 적은 「아쉬웠던 것 · 다음 달 기대 · 사장님 피드백」을 위에 띄운다 — 달라졌는지 보면서 체크하라고
     function paintLast() {
       var el = document.getElementById("rvLast"); if (!el || !gradeBox) return;
@@ -3394,7 +3395,7 @@
     function paintPeriods() {
       var el = document.getElementById("rvPeriods"); if (!el || !gradeBox) return;
       if (!whoEl || !whoEl.value) { el.innerHTML = '<div class="rvbcard"><div class="rvbsub">이름을 고르면 설날·추석 상여 등급이 달별로 모여 보입니다</div></div>'; return; }
-      if (level === "예비매니저") { el.innerHTML = '<div class="rvbcard"><div class="rvbsub">예비 매니저는 상여 모아보기 대신 달마다 본인 · 매니저 · 사장님 평가를 비교해 봅니다</div></div>'; return; }
+      if (level === "예비매니저") { el.innerHTML = '<div class="rvbcard"><div class="rvbsub">예비 매니저는 상여 모아보기 대신 달마다 본인 체크와 매니저 확인을 비교해 봅니다</div></div>'; return; }
       var cur = mEl.value || thisMonth();
       var now = periodOf(cur), prev = prevPeriod(now);
       var FROM = 2027;   // 상여 모아보기는 2027년 설날 지급분부터
@@ -3447,8 +3448,8 @@
       P.innerHTML = g.letter ? "체크 비율 평균 <b>" + g.pct + "%</b><br>" + g.on + " / " + g.total + " 체크" : "아래를 체크하면<br>등급이 매겨집니다";
       R.textContent = g.letter ? (g.rate ? "기본급의 " + g.rate + "%" : "없음 (D등급)") : "–";
       if (g.pre) {
-        P.innerHTML = (g.letter ? "<b>" + COLN[g.fc] + " 평가 기준 " + g.pct + "%</b><br>" : "아래를 체크하면 등급이 매겨집니다<br>") +
-          ["s", "m", "b"].map(function (c) { return COLN[c] + " " + (g.cols[c] == null ? "–" : g.cols[c] + "%"); }).join(" · ");
+        P.innerHTML = (g.letter ? "<b>" + COLN[g.fc] + " 기준 " + g.pct + "%</b><br>" : "아래를 체크하면 등급이 매겨집니다<br>") +
+          ["s", "m"].map(function (c) { return COLN[c] + " " + (g.cols[c] == null ? "–" : g.cols[c] + "%"); }).join(" · ");
         R.textContent = "예비 매니저 · 지급은 사장님이 정합니다";
       }
       paintPeriods();
@@ -3590,16 +3591,16 @@
       if (level === "예비매니저" && cntEl) {
         var cc = { s: 0, m: 0, b: 0 }, nn = 0;
         vis.forEach(function (c) { if (c.dataset.col === "s") nn++; if (c.checked && c.dataset.col) cc[c.dataset.col]++; });
-        cntEl.textContent = "본인 " + cc.s + " · 매니저 " + cc.m + " · 사장님 " + cc.b + " / " + nn;
+        cntEl.textContent = "본인 " + cc.s + " · 매니저 확인 " + cc.m + " / " + nn;
       }
       if (box) box.querySelectorAll(".rvcnt").forEach(function (e) {
         var sec = e.dataset.s;
         var preS = cks.filter(function (c) { return c.dataset.s === sec && c.dataset.col; });
         if (preS.length) {
           var h3 = { s: 0, m: 0, b: 0 }; preS.forEach(function (c) { if (c.checked) h3[c.dataset.col]++; });
-          var n3 = preS.length / 3;
-          e.textContent = "본인 " + h3.s + " · 매니저 " + h3.m + " · 사장님 " + h3.b + " / " + n3;
-          e.classList.toggle("full", h3.b === n3);
+          var n3 = preS.length / 2;
+          e.textContent = "본인 " + h3.s + " · 매니저 확인 " + h3.m + " / " + n3;
+          e.classList.toggle("full", h3.m === n3);
           return;
         }
         var all = cks.filter(function (c) { return c.dataset.s === sec; });
@@ -3733,10 +3734,10 @@
               tr.querySelectorAll(".rck").forEach(function (c) { if (c.checked) h4[c.dataset.col]++; });
               var f = tr.querySelector('.rck[data-col="' + fc4 + '"]'); if (f && !f.checked) miss.push(tr.querySelector(".rq").textContent);
             });
-            if (!h4.s && !h4.m && !h4.b) return;
+            if (!h4.s && !h4.m) return;
             any = true;
             var t4 = sec.querySelector(".rvsh").firstChild.nextSibling.textContent.trim();
-            var v4 = "본인 " + h4.s + " · 매니저 " + h4.m + " · 사장님 " + h4.b + " / " + n4;
+            var v4 = "본인 " + h4.s + " · 매니저 확인 " + h4.m + " / " + n4;
             rows += "<tr><th>" + esc(t4) + "</th><td>" + v4 + "</td></tr>";
             sum.push(t4 + " " + v4);
             return;
@@ -3776,8 +3777,8 @@
           if (g && g.letter) {
             var gl = g.letter + "등급 (체크 비율 평균 " + g.pct + "%) → 성과급 " + (g.rate ? "기본급의 " + g.rate + "%" : "없음");
             var pdn = periodOf(when); gl += " · " + pdn.name + " " + pdn.year + " 지급분에 포함";
-            if (g.pre) gl = g.letter + "등급 (" + COLN[g.fc] + " 평가 기준 " + g.pct + "%) · " + ["s", "m", "b"].map(function (c) { return COLN[c] + " " + (g.cols[c] == null ? "–" : g.cols[c] + "%"); }).join(" · ") + " · 지급은 사장님이 정함";
-            html += '<div class="rpsec"><h4>' + (g.pre ? "등급 (본인 · 매니저 · 사장님)" : "성과급 등급") + '</h4><div class="rpitem"><b>' + esc(gl) + "</b>" +
+            if (g.pre) gl = g.letter + "등급 (" + COLN[g.fc] + " 기준 " + g.pct + "%) · " + ["s", "m"].map(function (c) { return COLN[c] + " " + (g.cols[c] == null ? "–" : g.cols[c] + "%"); }).join(" · ") + " · 지급은 사장님이 정함";
+            html += '<div class="rpsec"><h4>' + (g.pre ? "등급 (본인 · 매니저 확인)" : "성과급 등급") + '</h4><div class="rpitem"><b>' + esc(gl) + "</b>" +
                     "<span>자동 계산 · 최종 등급은 월말 면담에서 사장님이 확정</span></div></div>";
             text.push("[성과급 등급] " + gl + " (자동 계산 · 면담에서 확정)");
           }
