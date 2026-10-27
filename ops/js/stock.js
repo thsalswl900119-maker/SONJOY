@@ -936,6 +936,12 @@
       clearTimeout(tapT); tapK = k;
       tapT = setTimeout(function () { tapT = null; open(d); }, 300);
     }, true);
+    // 고정 일정(10/27 사장님 「캘린더에도 아예 2주차 4주차 고정값」) — 그 달 2번째 토요일 제빙기 청소 · 4번째 토요일 그라인더 청소 (저장 안 함 · 늘 보임)
+    function fixedOf(date) {
+      var p = date.split("-"), dt = new Date(+p[0], +p[1] - 1, +p[2]); if (dt.getDay() !== 6) return [];
+      var nth = Math.ceil(+p[2] / 7);
+      return nth === 2 ? [["🧊 제빙기 청소", "매달 2주차 토요일 (고정)"]] : nth === 4 ? [["☕ 그라인더 청소", "매달 4주차 토요일 (고정)"]] : [];
+    }
     function render() {
       var y = +ym().slice(0, 4), m = +ym().slice(5, 7), all = load(), t = today();
       var first = new Date(y, m - 1, 1), lead = first.getDay(), nd = new Date(y, m, 0).getDate();   // 일요일부터(10/15)
@@ -947,6 +953,7 @@
         var hol = (window.__CS_HOL || {})[date];
         h += '<div class="mccell' + (wd === 6 ? " sun" : wd === 5 ? " sat" : "") + (date === t ? " today" : "") + (date === sel ? " on" : "") + (hol ? " hol" : "") +
           '" data-d="' + date + '"><span class="mcd">' + d + (hol ? '<i class="mchol">' + esc(hol) + "</i>" : "") + "</span>" +
+          fixedOf(date).map(function (f) { return '<span class="mcn mcfix" title="' + esc(f[1]) + '">' + esc(f[0]) + "</span>"; }).join("") +
           vfor(date).map(function (v) { var sc = vkind(v) === "sched"; return '<span class="mcn ' + (sc ? "sch " : "vac ") + (COL[v.who] || "") + '" title="' + esc(v.memo || "") + '">' + (sc ? "📅 " : "🏖 ") + esc(vlabel(v)) + "</span>"; }).join("") +
           notes.map(function (n, i) { return { n: n, i: i }; }).filter(function (x) { return x.n.imp; }).concat(notes.map(function (n, i) { return { n: n, i: i }; }).filter(function (x) { return !x.n.imp; })).slice(0, 4).map(function (x) { var n = x.n; return '<span class="mcn mcdrag ' + (COL[n.by] || "") + (n.imp ? " imp" : "") + '" data-ni="' + x.i + '" title="끌어서 다른 날로 옮기기">' + (n.imp ? "⭐ " : "") + esc(n.t) + "</span>"; }).join("") +
           (notes.length > 4 ? '<span class="mcmore">+' + (notes.length - 4) + "개 더 · 눌러서 보기</span>" : "") +
@@ -1027,11 +1034,11 @@
       sel = date;
       var p = date.split("-"), wd = WD[(new Date(+p[0], +p[1] - 1, +p[2]).getDay() + 6) % 7];
       titleEl.textContent = (+p[1]) + "월 " + (+p[2]) + "일 (" + wd + ") 메모";
-      var notes = (load()[date] || []);
-      listEl.innerHTML = notes.length ? notes.map(function (n, i) {
+      var notes = (load()[date] || []), fx = fixedOf(date).map(function (f) { return '<div class="mcitem mcfixi"><span class="t">' + esc(f[0]) + "</span><small>" + esc(f[1]) + " · 청소·정비 고정 일정</small></div>"; }).join("");
+      listEl.innerHTML = fx + (notes.length ? notes.map(function (n, i) {
         return '<div class="mcitem' + (n.imp ? " imp" : "") + '" data-i="' + i + '"><span class="t ' + (COL[n.by] || "") + '">' + (n.imp ? "⭐ " : "") + esc(n.t) + "</span><small>" + esc(n.by || "") + (n.at ? " · " + esc(n.at) : "") + (n.edit ? " · ✏ " + esc(n.edit) + " 고침" : "") + (n.moved ? " · " + esc(n.moved) + "에서 옮김" : "") +
           '</small><span class="mcbtns"><button type="button" class="st' + (n.imp ? " on" : "") + '" data-i="' + i + '" aria-pressed="' + !!n.imp + '">⭐ 매우 중요</button><button type="button" class="e" data-i="' + i + '">고치기</button><button type="button" class="x" data-i="' + i + '">지우기</button></span></div>';
-      }).join("") : '<div class="mcnone">아직 적은 게 없습니다</div>';
+      }).join("") : (fx ? "" : '<div class="mcnone">아직 적은 게 없습니다</div>'));
       listEl.querySelectorAll(".st").forEach(function (b) {
         b.addEventListener("click", function () {
           var all = load(), n = (all[date] || [])[+b.dataset.i]; if (!n) return;
