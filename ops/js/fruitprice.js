@@ -101,13 +101,17 @@
     // 과일 × 달 평균 (최근 12달)
     var used = rows.filter(function (r) { return months.some(function (ym) { return (byF[r.id] || []).some(function (x) { return ymOf(x.d) === ym; }); }); });
     if (used.length) {
-      h += '<h4 class="fph">📈 최근 12달 평균 단가 <small>칸 = 그 달 평균 단가(원 · 박스 · 통 1개 값) · 빨강 = 한도선 넘음 · 빈 칸 = 기록 없음</small></h4><div class="ztable-wrap"><table class="skref fpmx"><thead><tr><th>과일</th>' +
+      h += '<h4 class="fph">📈 최근 12달 평균 단가 <small>칸 = 그 달 평균 단가(원 · 박스 · 통 1개 값) · <mark>▲ 노란 형광</mark> = 그 과일이 가장 비쌌던 달 · 빨강 = 그 달 평균이 한도선(평균값) 넘음 · 빈 칸 = 기록 없음</small></h4><div class="ztable-wrap"><table class="skref fpmx"><thead><tr><th>과일</th>' +
         months.map(function (ym) { return "<th>" + (ym.slice(5) === "01" ? ym.slice(2, 4) + "년 " : "") + (+ym.slice(5)) + "월</th>"; }).join("") + "</tr></thead><tbody>";
+      // 10/28 사장님 「각 월 중에 최고가에 하이라이트」 — 과일마다 가장 비쌌던 달(평균 기준)에 노란 형광 · 한도선이 평균값이 되면서 빨강은 「그 달 평균이 한도선 넘음」
       used.forEach(function (r) {
-        h += "<tr><td><b>" + esc(r.n) + "</b></td>" + months.map(function (ym) {
-          var xs = (byF[r.id] || []).filter(function (x) { return ymOf(x.d) === ym; }); if (!xs.length) return "<td></td>";
-          var st = stat(xs), cap = capOf(r.id, ym);
-          return '<td class="' + (cap && st.hi > cap ? "over" : "") + '" title="최저 ' + won(st.lo) + " · 최고 " + won(st.hi) + '">' + (Math.round(st.avg / 100) * 100).toLocaleString("ko-KR") + "</td>";
+        var cells = months.map(function (ym) { var xs = (byF[r.id] || []).filter(function (x) { return ymOf(x.d) === ym; }); return xs.length ? stat(xs) : null; });
+        var top = 0; cells.forEach(function (st) { if (st && Math.round(st.avg / 100) > top) top = Math.round(st.avg / 100); });
+        var nOn = cells.filter(function (st) { return st && Math.round(st.avg / 100) !== top; }).length + 1;   // 모든 달 값이 같으면 표시 안 함
+        h += "<tr><td><b>" + esc(r.n) + "</b></td>" + months.map(function (ym, i) {
+          var st = cells[i]; if (!st) return "<td></td>";
+          var cap = capOf(r.id, ym), isTop = nOn > 1 && Math.round(st.avg / 100) === top;
+          return '<td class="' + (cap && st.avg > cap ? "over" : "") + (isTop ? " top" : "") + '" title="최저 ' + won(st.lo) + " · 최고 " + won(st.hi) + '">' + (isTop ? "<mark>▲ " : "") + (Math.round(st.avg / 100) * 100).toLocaleString("ko-KR") + (isTop ? "</mark>" : "") + "</td>";
         }).join("") + "</tr>";
       });
       h += "</tbody></table></div>";
