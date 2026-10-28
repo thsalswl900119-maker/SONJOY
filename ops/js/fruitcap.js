@@ -10,9 +10,9 @@
   // 처음 값 = 손익(회계) 파일 주석 2023-05 ~ 2026-10 (엄궁 · 월드마켓 · 칠성상회 · 쿠팡 · 네이버 구매 메모) + 크리스마스 재료 파일 (10/28 정리)
   //  u 주문 단위 · pk 포장 기본(1박스에 몇 개 · 몇 g) · lo/hi 기록 최저 · 최고 · cap 한도선(제안) · mc 달별 한도선 · mh 달별 값
   var CAP0 = [
-    { id: "f1", main: 1, n: "딸기", u: "500g 1통(팩)", pk: "1통 500g (1kg 팩도 있음) · 알 크기 1~4호 — 케이크는 4호(길이 4cm · 한 알 11~13g) · 설향 · 금실", use: "한판 560g", mo: "11,12,1,2,3,4,5",
-      lo: 2500, hi: 21000, cap: 16000, mc: { 11: 18000, 12: 11000, 1: 10000, 2: 9000, 3: 6000, 4: 5500, 5: 4000 },
-      mh: "11월 11,000~21,000 (첫 출하 · 2024-11-10 엄궁 21,000 「겁나 비싸게」) · 12월 6,000~13,500 (크리스마스 23~24일 13,500) · 1월 4,500~10,500 · 2월 3,800~9,000 · 3월 2,500~6,000 · 4월 2,250~5,500 · 5월 2,500~3,800",
+    { id: "f1", main: 1, n: "딸기", u: "500g 1통(팩)", pk: "1통 500g (1kg 팩도 있음) · 알 크기 1~4호 — 케이크는 4호(길이 4cm · 한 알 11~13g) · 설향 · 금실", use: "한판 560g", mo: "10,11,12,1,2,3,4,5",
+      lo: 2500, hi: 24000, cap: 16000, mc: { 10: 24000, 11: 18000, 12: 11000, 1: 10000, 2: 9000, 3: 6000, 4: 5500, 5: 4000 },
+      mh: "10월 첫 출하 18,000 (2025-10-30 · 5kg 10통) ~ 24,000 (2026-10-28 · 칠성 「현재 1통에 24,000원(500g)」) · 11월 11,000~21,000 (첫 출하 · 2024-11-10 엄궁 21,000 「겁나 비싸게」) · 12월 6,000~13,500 (크리스마스 23~24일 13,500) · 1월 4,500~10,500 · 2월 3,800~9,000 · 3월 2,500~6,000 · 4월 2,250~5,500 · 5월 2,500~3,800",
       m: "2026 칠성: 1월 7,500~10,500 · 2월 5,500~9,000 · 3월 5,500 · 4월 5,500 · 12월 크리스마스 직전은 비싸짐(2025-12-23 · 24 13,500)" },
     { id: "f2", main: 1, n: "태국망고 (골드망고)", u: "1박스", pk: "1박스 12수 · 14수 · 16수 (박스에 12~16개 · 10수 · 18수도 있음) · 골드망고 14수", use: "한판 12수짜리 3.5개", mo: "1,2,3,4,5,6,7,8,9,10,11,12",
       lo: 28000, hi: 62000, cap: 58000, mc: {},
@@ -95,7 +95,7 @@
     Object.keys(st).forEach(function (k) { if (!GONE[k] && !CAP0.some(function (x) { return x.id === k; })) { var r = Object.assign({}, st[k]); r.id = k; if (r.o == null) r.o = 100; out.push(r); } });
     return out.filter(function (r) { return !r.del; }).sort(function (a, b) { return a.o - b.o; });
   }
-  function recs(r) { return Object.keys(r.rec || {}).map(function (k) { return r.rec[k]; }).filter(function (x) { return x && N(x.p); }).sort(function (a, b) { return String(a.d).localeCompare(String(b.d)); }); }
+  function recs(r) { return Object.keys(r.rec || {}).map(function (k) { return r.rec[k]; }).filter(function (x) { return x && !x.del && N(x.p); }).sort(function (a, b) { return String(a.d).localeCompare(String(b.d)); }); }
   // 최저 · 최고 = 처음 값 + 적은 값들
   function range(r) {
     var ps = recs(r).map(function (x) { return N(x.p); }); if (window.__CS_FP_LINES) window.__CS_FP_LINES(r.id).forEach(function (x) { if (x.src !== "값 적기") ps.push(N(x.p)); }); if (N(r.lo)) ps.push(N(r.lo)); if (N(r.hi)) ps.push(N(r.hi));
@@ -115,7 +115,7 @@
       '<div class="fcr1"><b class="fcnm">' + (r.main ? "⭐ " : "") + esc(r.n) + "</b>" + (on ? '<span class="fctag">지금 철</span>' : "") + '<span class="fcu">' + esc(r.u) + "</span></div>" +
       '<div class="fcr2"><span class="fcv"><i>최저</i><b>' + (rg[0] ? won(rg[0]) : "기록 없음") + '</b></span><span class="fcv"><i>최고</i><b>' + (rg[1] ? won(rg[1]) : "기록 없음") + "</b></span>" +
       '<span class="fcv cap"><i>🚫 이번 달 한도선</i><b>' + (cap ? won(cap) : "정하기") + "</b></span>" +
-      '<button type="button" class="fcadd">＋ 값 적기</button></div>';
+      '<button type="button" class="fcadd" title="금액만 써 주세요 ex) 24,000">＋ 값 적기</button></div>';
     if (last) h += '<div class="fclast' + (cap && N(last.p) > cap ? " over" : "") + '">최근 ' + esc(String(last.d).slice(5).replace("-", "/")) + " " + won(last.p) + (last.who ? " · " + esc(last.who) + (/님$/.test(last.who) ? "" : "님") : "") + (cap && N(last.p) > cap ? " · ⚠ 한도선 넘음" : "") + "</div>";
     if (DONE && DONE.id === r.id) h += '<div class="fcdone">✔ 적었어요 · 📝 오늘 일지 「거래처」 칸에도 넣었어요 <button type="button" class="fcboss">📨 사장님께 텔레그램 개인톡 보고</button></div>';
     h += '<details class="fcmore"><summary>📦 포장 기본 · 📅 달별 값 · 근거</summary>' +
@@ -217,11 +217,14 @@
     if (t.closest(".fcnew")) { var nid = "u" + Date.now().toString(36); save(function (o) { o.it[nid] = { n: "새 과일", u: "", use: "", mo: "", lo: "", hi: "", cap: "", m: "", o: 200, add: me() + " " + stamp() }; }); return; }
     var host = t.closest("[data-id]"); if (!host) return; var id = host.dataset.id, r = rows().filter(function (x) { return x.id === id; })[0]; if (!r) return;
     if (t.closest(".fcdel")) { if (confirm("「" + r.n + "」 줄을 뺄까요? (기록은 남아요)")) put(id, "del", 1); return; }
-    if (t.closest(".fcboss")) { if (DONE && DONE.id === id) tellBoss(DONE.text); return; }
+    if (t.closest(".fcboss")) { if (DONE && DONE.id === id) { if (window.__CS_TG && window.__CS_TG.share) window.__CS_TG.share(DONE.text, t.closest(".fcboss")); else tellBoss(DONE.text); } return; }
     if (t.closest(".fcadd")) {
       var cap = capOf(r);
-      var v = prompt(r.n + " · " + r.u + "\n이번에 주문한 값(원)을 적어 주세요" + (cap ? "\n이번 달 한도선: " + won(cap) : ""), ""); if (v == null) return;
-      var p = N(v); if (!p) { alert("숫자로 적어 주세요 (예: 55000)"); return; }
+      var v = prompt(r.n + " · " + r.u + "\n값 적기 (금액만 써 주세요) ex) 24,000" + (cap ? "\n이번 달 한도선: " + won(cap) : ""), ""); if (v == null) return;
+      v = String(v).trim().replace(/\s*원$/, "");
+      var p = N(v);
+      // 10/28 사고: 「10/28 24,000」을 적어 102,824,000원이 됨 — 금액 말고 다른 글자(날짜 · 개수)가 섞이면 다시 묻기
+      if (!p || !/^[\d,]+$/.test(v) || p > 1000000) { alert("금액만 써 주세요 ex) 24,000\n(날짜 · 개수 · 글자는 빼고 숫자와 쉼표만)"); return; }
       if (cap && p > cap && !confirm("⚠ 한도선 " + won(cap) + "보다 " + won(p - cap) + " 비싸요.\n사장님께 먼저 확인하셨나요? (확인 = 그래도 적기)")) return;
       var rid = "r" + Date.now().toString(36);
       save(function (o) { var b = o.it[id] || {}; b.rec = b.rec || {}; b.rec[rid] = { d: today(), p: p, who: me(), at: stamp() }; o.it[id] = b; });

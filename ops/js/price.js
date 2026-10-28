@@ -4,7 +4,7 @@
 // 저장: cafesui.price = { it: { id: { c 분류, n 이름, p 가격(숫자만), m 메모, o 순서, ed "누가 언제", del } }, at, by }
 (function () {
   var box = document.getElementById("prBox"); if (!box) return;
-  var KEY = "cafesui.price", EDIT = ["사장님", "정항아"], CATS0 = ["에그타르트", "에그타르트 세트", "조각 케이크", "케이크 (홀)", "디저트", "선물 · 세트", "커피", "음료", "빙수", "추가 · 굿즈", "포장", "기타"];
+  var KEY = "cafesui.price", EDIT = ["사장님", "정항아"], CATS0 = ["에그타르트", "에그타르트 세트", "조각 케이크", "케이크 (홀)", "🎄 크리스마스 케이크 (한정)", "디저트", "선물 · 세트", "커피", "음료", "빙수", "추가 · 굿즈", "포장", "기타"];
   var q = "", cat = "", editing = false;
   function me() { try { return localStorage.getItem("cafesui.me") || ""; } catch (e) { return ""; } }
   function can() { return EDIT.indexOf(me()) >= 0; }

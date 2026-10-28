@@ -85,6 +85,7 @@
       var txt = "⚠ [품질 이상] " + it + " — " + m + "\n" + nim(w) + " · " + md(ymd(d)) + " " + at + "\n사장님 · 매니저님 확인 부탁드려요 (오늘 할 일 맨 위 빨간 띠)";
       var T = window.__CS_TG;
       if (T && T.ready && T.ready()) T.sendText(txt).then(function () { toast("⚠ 기록하고 텔레그램에 보냈어요"); }, function () { toast("⚠ 기록했어요 · 텔레그램은 직접 알려 주세요"); });
+      else if (T && T.share) { T.share(txt); toast("⚠ 기록했어요 — 공유 창(또는 복사된 글)으로 텔레그램 단톡방에 바로 알려 주세요"); }
       else toast("⚠ 기록했어요 — 텔레그램 단톡방에도 바로 알려 주세요");
     } else toast("👍 " + it + " 기록했어요");
   }

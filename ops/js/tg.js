@@ -1,4 +1,6 @@
-// 텔레그램 바로 보내기 (10/14) — 보고(발주·재고 그림 · 일지 · 오늘 할 일 진행사항 · 주간 보고 · 벤치마킹)를
+// 텔레그램 보내기 — 10/28부터 챗봇 없이(사장님 「텔레그램 보내기를 개인톡 단추처럼 전부 · 챗봇 쓰지 말고」):
+//   휴대폰 = 공유 창(텔레그램 → 보낼 방 고르기) · 컴퓨터 = 글 복사 + 텔레그램 보내기 창 / 그림은 복사 + 파일 저장. 아래 봇 코드는 NOBOT으로 꺼 둠(되살릴 때 NOBOT=false).
+// (예전) 텔레그램 바로 보내기 (10/14) — 보고(발주·재고 그림 · 일지 · 오늘 할 일 진행사항 · 주간 보고 · 벤치마킹)를
 // 복사 · 저장 없이 매장 단톡방으로 바로 보낸다. 텔레그램 봇(BotFather)으로 보낸다.
 // ⚠ 봇 열쇠(토큰)는 저장소 · 서버에 절대 안 둔다(둘 다 공개) — 기기마다 cafesui.ui.tg 에만(서버 · 백업 안 감).
 //    다른 기기는 사장님이 만든 「연결 링크」(#tgset=…)를 한 번 열면 연결된다(주소 # 뒤는 서버로 안 감).
@@ -9,7 +11,8 @@
   function put(o) { try { if (o) localStorage.setItem(KEY, JSON.stringify(o)); else localStorage.removeItem(KEY); } catch (e) {} paintAll(); }
   function me() { try { return localStorage.getItem("cafesui.me") || ""; } catch (e) { return ""; } }
   function nim(n) { return !n ? "" : n === "사장님" ? n : n + "님"; }
-  function ready() { var o = get(); return !!(o && o.t && o.c); }
+  var NOBOT = true;
+  function ready() { var o = get(); return !NOBOT && !!(o && o.t && o.c); }
   function esc(v) { return String(v == null ? "" : v).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
 
   // 연결 링크로 들어온 경우 — 저장하고 주소에서 지운다
@@ -88,28 +91,53 @@
     }
     flash(btn, "✅ 캡쳐 파일 저장됨 · 텔레그램방에 올려 주세요", 6000); return Promise.resolve();
   }
-  function send(kind, btn) {
-    var K = KINDS[kind]; if (!K) return;
-    if (!ready() && K.img) {   // 근무표 — 봇이 없어도 캡쳐는 바로
-      if (btn.disabled) return; btn.disabled = true; flash(btn, "캡쳐 만드는 중…");
-      K.img(btn).then(function (r) { return giveBlob(r.blob, r.name, "근무표", btn); }).catch(function (e) { flash(btn, "❌ 캡쳐를 못 만들었어요 — " + (e && e.message || ""), 5000); });
-      return;
+  var touch = function () { return (window.matchMedia && window.matchMedia("(pointer:coarse)").matches) || /iPhone|iPad|Android|Mobile/i.test(navigator.userAgent || ""); };
+  function copyText(t) {
+    var ok = false; try { var ta = document.createElement("textarea"); ta.value = t; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0"; document.body.appendChild(ta); ta.select(); ok = document.execCommand("copy"); ta.remove(); } catch (e) {}
+    if (!ok && navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(t); ok = true; }
+    return ok;
+  }
+  // 글 — 휴대폰은 공유 창, 컴퓨터는 복사 + 텔레그램 보내기 창 (사장님 개인톡 단추와 같은 방식)
+  function shareText(t, btn) {
+    if (touch() && navigator.share) {
+      return navigator.share({ text: t }).then(function () { if (btn) flash(btn, "✅ 공유 창에서 텔레그램 → 방을 고르면 끝", 4000); }, function () { if (btn) flash(btn, "공유를 닫았습니다", 2500); });
     }
-    if (!ready()) { setup(true); return; }
-    if (btn.disabled) return;
-    var c = get();
-    if (!confirm("텔레그램 「" + (c.n || "단톡방") + "」으로 " + K.label + "를 보낼까요?")) return;
-    btn.disabled = true; flash(btn, "보내는 중…");
-    var ok = function () { flash(btn, "✅ 텔레그램으로 보냈습니다", 3500); };
-    var bad = function (e) { flash(btn, "❌ 못 보냈어요 — " + (e && e.message ? e.message : "인터넷 확인"), 6000); };
+    var ok = copyText(t);
+    window.open("https://t.me/share/url?url=" + encodeURIComponent(t.length > 3500 ? t.slice(0, 3500) + "…(나머지는 붙여넣기)" : t), "_blank", "noopener");
+    if (btn) flash(btn, ok ? "✅ 글 복사됨 · 텔레그램에서 방을 골라 보내기 (안 되면 Ctrl+V)" : "텔레그램에서 방을 골라 보내 주세요", 6000);
+    return Promise.resolve();
+  }
+  // 그림(+글) — 휴대폰은 공유 창(그림과 글 같이), 컴퓨터는 그림 복사 + 파일 저장, 글은 옆 「📋 보고 글 복사」
+  function giveShot(blob, name, title, btn, cap) {
+    var file = null; try { file = new File([blob], name, { type: "image/png" }); } catch (e) {}
+    if (touch() && file && navigator.canShare && navigator.canShare({ files: [file] })) {
+      var data = { files: [file], title: title }; if (cap) data.text = cap;
+      return navigator.share(data).then(function () { flash(btn, "✅ 공유 창에서 텔레그램 → 방을 고르면 끝", 4000); }, function (e) {
+        if (e && e.name === "AbortError") { flash(btn, "공유를 닫았습니다", 2500); return; }
+        return giveBlob(blob, name, title, btn);
+      });
+    }
+    return giveBlob(blob, name, title, btn).then(function () {
+      if (!cap) return;
+      var old = btn.parentNode && btn.parentNode.querySelector(".tgcapbox"); if (old) old.remove();
+      var bx = document.createElement("span"); bx.className = "tgcapbox";
+      bx.innerHTML = '그림을 붙여 넣은 다음 → <button type="button">📋 보고 글 복사</button>';
+      bx.querySelector("button").onclick = function () { var ok = copyText(cap); this.textContent = ok ? "✅ 글 복사됨 · Ctrl+V" : "복사가 안 됩니다"; };
+      btn.insertAdjacentElement("afterend", bx); setTimeout(function () { bx.remove(); }, 60000);
+    });
+  }
+  function send(kind, btn) {
+    var K = KINDS[kind]; if (!K || btn.disabled) return;
     if (K.text) {
       var t = K.text(); if (!t || !String(t).trim()) { flash(btn, "아직 쓴 내용이 없습니다", 2500); return; }
-      sendText(t).then(ok, bad); return;
+      shareText(String(t).trim() + "\n\n" + foot(), btn); return;
     }
-    if (K.img) { K.img(btn).then(function (r) { return sendPhoto(r.blob, r.cap, r.name); }).then(ok, bad); return; }   // 근무표 — 달력 전체를 그림으로
+    btn.disabled = true; flash(btn, "그림 만드는 중…");
+    var bad = function (e) { flash(btn, "❌ 그림을 못 만들었어요 — " + (e && e.message || ""), 5000); };
+    if (K.img) { K.img(btn).then(function (r) { return giveShot(r.blob, r.name, K.label, btn, r.cap || ""); }).catch(bad); return; }
     var src = document.getElementById(K.photo); if (!src) { bad(); return; }
-    var to = setTimeout(function () { if (pending) { pending = null; bad(new Error("그림을 못 만들었습니다")); } }, 8000);
-    pending = function (blob, name) { clearTimeout(to); sendPhoto(blob, K.cap(), name).then(ok, bad); };
+    var to = setTimeout(function () { if (pending) { pending = null; bad(new Error("시간 초과")); } }, 8000);
+    pending = function (blob, name) { clearTimeout(to); var cap = K.cap ? K.cap() : ""; giveShot(blob, name, K.label, btn, cap ? cap + "\n\n" + foot() : ""); };
     src.click();
   }
   document.addEventListener("click", function (e) {
@@ -117,15 +145,14 @@
     e.preventDefault(); send(b.dataset.tg, b);
   });
   function paintAll() {
-    var on = ready(), c = get();
     document.querySelectorAll("[data-tg]").forEach(function (b) {
       if (b.disabled) return;
-      b.classList.toggle("off", !on && b.dataset.tg !== "sched");   // 근무표 캡쳐는 연결 없이도 됨
-      b.title = on ? "텔레그램 「" + (c.n || "단톡방") + "」으로 바로 보냅니다" : b.dataset.tg === "sched" ? "근무표를 한 장으로 캡쳐해서 복사 · 저장합니다 — 텔레그램방에 붙여 넣으세요" : "이 기기는 아직 텔레그램에 연결 안 됨 — 누르면 연결 방법";
+      b.classList.remove("off");
+      b.title = "챗봇 없이 — 휴대폰은 공유 창에서 텔레그램 방을 고르고, 컴퓨터는 복사해서 텔레그램에 붙여 넣습니다";
     });
-    var s = document.getElementById("tgState");
-    var h = on ? "✅ 이 기기는 <b>" + esc(c.n || "단톡방") + "</b>에 연결됨" : "⚪ 이 기기는 아직 연결 안 됨";
+    var s = document.getElementById("tgState"), h = "챗봇 없이 보내요 — 휴대폰은 공유 창 · 컴퓨터는 복사 + 텔레그램 창";
     if (s && s.innerHTML !== h) s.innerHTML = h;
+    var su = document.getElementById("tgSetup"); if (su && NOBOT) su.hidden = true;
   }
 
   // 연결 화면 — 사장님 · 정항아님만 고칠 수 있다 (다른 사람은 안내만)
@@ -197,7 +224,7 @@
     $(".tgoff").onclick = function () { if (!confirm("이 기기의 텔레그램 연결을 끊을까요? (다른 기기는 그대로)")) return; put(null); box.remove(); box = null; };
   }
 
-  window.__CS_TG = { ready: ready, sendText: sendText, sendPhoto: sendPhoto, take: take, setup: setup, paint: paintAll };
+  window.__CS_TG = { ready: ready, sendText: sendText, sendPhoto: sendPhoto, take: take, setup: setup, paint: paintAll, share: shareText };
   document.addEventListener("click", function (e) { if (e.target.closest && e.target.closest("#tgSetup")) { e.preventDefault(); setup(false); } });
   window.addEventListener("cs:me", paintAll);
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", paintAll); else paintAll();
