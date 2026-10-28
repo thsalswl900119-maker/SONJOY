@@ -87,10 +87,10 @@
     if (b.getAttribute("aria-expanded") !== "true") b.click();
     b.scrollIntoView({ behavior: "smooth", block: "start" });
   });
-  // 재고·발주 「📒 발주 기준표」 탭 안 세 파트(발주 기준표 · 과일 달력 · 과일 한도선) — 처음엔 「🍓 과일」 탭 두 파트(10/28 · 사장님 「과일 달력을 재고 발주 과일 부분 안에 파트를 두 개로」)
+  // 재고·발주 「🍓 과일」 탭(발주 기준표 옆) 안 두 파트(과일 한도선 · 단가 / 과일 달력) — 왼쪽 메뉴 「과일」은 숨김(10/28 사장님 「옆에 과일은 없애고 발주에 같이」)(10/28 · 사장님 「과일 달력을 재고 발주 과일 부분 안에 파트를 두 개로」)
   //  🗓 과일 달력 = tabs/tp7.html 첫 묶음(달력)을 그대로 불러와 보여 줌 — 과일 탭과 id가 겹치지 않게 sk 붙임
   (function () {
-    var sk2 = document.getElementById("sk1"), cal = document.getElementById("skFcal"); if (!sk2 || !cal) return;
+    var sk2 = document.getElementById("sk2"), cal = document.getElementById("skFcal"); if (!sk2 || !cal) return;
     var KEY = "cafesui.ui.skfpart", loaded = false;
     function loadCal() {
       if (loaded) return; loaded = true;
@@ -109,11 +109,14 @@
       if (k === "cal" && !sk2.hidden) loadCal();
     }
     // 「🍓 과일」 탭을 처음 열 때 달력을 불러옴 (첫 화면 가볍게)
-    document.addEventListener("click", function (e) { if (e.target.closest && e.target.closest('.sktab[data-c="sk1"]')) setTimeout(function () { if (!sk2.hidden && !sk2.querySelector('.skfpane[data-fp="cal"]').hidden) loadCal(); }, 30); });
+    document.addEventListener("click", function (e) { if (e.target.closest && e.target.closest('.sktab[data-c="sk2"]')) setTimeout(function () { if (!sk2.hidden && !sk2.querySelector('.skfpane[data-fp="cal"]').hidden) loadCal(); }, 30); });
     sk2.addEventListener("click", function (e) { var b = e.target.closest && e.target.closest(".skfp"); if (b) show(b.dataset.fp); });
-    var k0 = "ref"; try { k0 = localStorage.getItem(KEY) || "ref"; } catch (e) {}
-    show(k0 === "cap" || k0 === "cal" ? k0 : "ref");
+    var k0 = "cap"; try { k0 = localStorage.getItem(KEY) || "cap"; } catch (e) {}
+    show(k0 === "cal" ? "cal" : "cap");
     window.__CS_SKFPART = show;
+    // 예전 주소(#tp7 · 과일 탭)로 들어오면 재고·발주 「🍓 과일 시즌」으로
+    window.__CS_GO_FRUIT = function (k) { var t = document.querySelector('.tab[data-p="tp12"]'), st = document.querySelector('#tp12 .sktab[data-c="sk2"]'); if (t) t.click(); if (st) st.click(); show(k || "cal"); };
+    if (/^#tp7$/.test(location.hash)) setTimeout(function () { window.__CS_GO_FRUIT("cal"); }, 300);
   })();
   var pn = document.getElementById("tp7"); if (!pn) return;
   init(pn);
