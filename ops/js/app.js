@@ -4835,6 +4835,14 @@
 
     // 쓰는 대로 오른쪽에 한 장짜리 보고서로 정리한다
     var repEl = document.getElementById("lgReport");
+    // 좁은 화면 — 「📄 보고서 보기」 누르면 보고서로 (넓은 화면은 오른쪽에 늘 보임 · 10/28 듀얼 화면)
+    (function () { var go = document.getElementById("lgRpGo"); if (go && repEl) go.addEventListener("click", function () { var pn = repEl.closest(".rppane") || repEl; pn.scrollIntoView({ behavior: "smooth", block: "start" }); }); })();
+    // 위에 붙어 있는 저장 줄(#saveBar) 높이만큼 보고서를 내려서 붙임 — 저장 줄에 보고서 머리가 가리지 않게
+    (function () {
+      var sb = document.getElementById("saveBar"); if (!sb) return;
+      function fit() { var h = getComputedStyle(sb).position === "sticky" && sb.offsetParent ? sb.offsetHeight : 0; document.documentElement.style.setProperty("--csSbH", h + "px"); }
+      fit(); if (window.ResizeObserver) new ResizeObserver(fit).observe(sb); window.addEventListener("resize", fit);
+    })();
     var WDN = ["일", "월", "화", "수", "목", "금", "토"];
     function esc(v) {
       return String(v).replace(/&/g, "&amp;").replace(/</g, "&lt;")
