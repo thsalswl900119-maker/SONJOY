@@ -1846,7 +1846,7 @@ table.zt tr:last-child td{border-bottom:0}
 .chromeov .costay{border:0;color:#888;font-weight:600}
 .chromebar .cbx{border:0;background:transparent;color:#fff;font-size:18px;cursor:pointer;padding:4px 6px}
 /* ── 가독성 점검(10/9 · v0924-177): 드물게 쓰는 탭의 작은 글씨(12~13px)를 읽기 좋은 크기로 · 줄 간격 · 단어 단위 줄바꿈 ── */
-#tp3,#tp5,#tp6,#tp7,#tp8,#tp9,#tp11,#tp14,#tp15,#tp17,#tp18{word-break:keep-all;overflow-wrap:anywhere}
+#tp3,#tp5,#tp6,:is(#tp7,#skFcal),#tp8,#tp9,#tp11,#tp14,#tp15,#tp17,#tp18{word-break:keep-all;overflow-wrap:anywhere}
 .tnote{font-size:14px!important;line-height:1.65}
 .shead .sub{font-size:13.5px}
 /* 입력 칸 — 아이폰은 16px보다 작으면 누를 때마다 화면이 확대된다 */
@@ -1873,9 +1873,9 @@ table.zt tr:last-child td{border-bottom:0}
 #tp6 span.hact,#tp6 span.iact{font-size:14px;line-height:1.55}
 #tp6 .yychip,#tp6 .ycev{font-size:13px}
 /* 과일 */
-#tp7 .gbody{font-size:15px;line-height:1.7}
-#tp7 .fnotice{font-size:14px}
-#tp7 .fbtn .fn2,#tp7 .fbtn .fn3{font-size:13.5px}
+:is(#tp7,#skFcal) .gbody{font-size:15px;line-height:1.7}
+:is(#tp7,#skFcal) .fnotice{font-size:14px}
+:is(#tp7,#skFcal) .fbtn .fn2,:is(#tp7,#skFcal) .fbtn .fn3{font-size:13.5px}
 /* 월말 평가 */
 #tp8 td.rq{font-size:15px;line-height:1.6}
 #tp8 td,#tp8 th{font-size:14px}
@@ -1900,12 +1900,12 @@ table.zt tr:last-child td{border-bottom:0}
 #tp17 small{font-size:12.5px}#tp17 .bnrow span{font-size:14px}#tp17 .bnfoot,#tp17 .bnx{font-size:13px}#tp17 .bnavg{font-size:13.5px}
 #tp17 .bntable{font-size:14px}#tp17 .bnnote{font-size:14.5px}
 /* ── 가독성 2차(10/9 · v0924-179 · 사장님 「워크샵 여전히 안 보인다」): 흐린 회색 글씨(대비 3:1)를 진하게 · 남은 12~13px 글씨 · 제목 크게 ── */
-:is(#tp3,#tp5,#tp6,#tp7,#tp8,#tp9,#tp11,#tp13,#tp14,#tp15,#tp17,#tp18){--muted:#625646;--open:#97510F}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) :is(#tp3,#tp5,#tp6,#tp7,#tp8,#tp9,#tp11,#tp13,#tp14,#tp15,#tp17,#tp18){--muted:#BDB098;--open:#E2A45C}}
-:root[data-theme="dark"] :is(#tp3,#tp5,#tp6,#tp7,#tp8,#tp9,#tp11,#tp13,#tp14,#tp15,#tp17,#tp18){--muted:#BDB098;--open:#E2A45C}
-:is(#tp3,#tp5,#tp6,#tp7,#tp8,#tp9,#tp11,#tp13,#tp14,#tp15,#tp17,#tp18) .subhead{font-size:21px;margin:42px 0 14px;padding-bottom:8px;border-bottom:2px solid var(--ink2)}
-:is(#tp3,#tp5,#tp6,#tp7,#tp8,#tp9,#tp11,#tp13,#tp14,#tp15,#tp17,#tp18) .shead span.sub{font-size:15px}:is(#tp3,#tp5,#tp6,#tp7,#tp8,#tp9,#tp11,#tp13,#tp14,#tp15,#tp17,#tp18) .shead .en{font-size:12.5px}
-:is(#tp3,#tp5,#tp6,#tp7,#tp8,#tp9,#tp11,#tp13,#tp14,#tp15,#tp17,#tp18) .tnote{font-size:15px!important;color:var(--ink2)}
+:is(#tp3,#tp5,#tp6,:is(#tp7,#skFcal),#tp8,#tp9,#tp11,#tp13,#tp14,#tp15,#tp17,#tp18){--muted:#625646;--open:#97510F}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) :is(#tp3,#tp5,#tp6,:is(#tp7,#skFcal),#tp8,#tp9,#tp11,#tp13,#tp14,#tp15,#tp17,#tp18){--muted:#BDB098;--open:#E2A45C}}
+:root[data-theme="dark"] :is(#tp3,#tp5,#tp6,:is(#tp7,#skFcal),#tp8,#tp9,#tp11,#tp13,#tp14,#tp15,#tp17,#tp18){--muted:#BDB098;--open:#E2A45C}
+:is(#tp3,#tp5,#tp6,:is(#tp7,#skFcal),#tp8,#tp9,#tp11,#tp13,#tp14,#tp15,#tp17,#tp18) .subhead{font-size:21px;margin:42px 0 14px;padding-bottom:8px;border-bottom:2px solid var(--ink2)}
+:is(#tp3,#tp5,#tp6,:is(#tp7,#skFcal),#tp8,#tp9,#tp11,#tp13,#tp14,#tp15,#tp17,#tp18) .shead span.sub{font-size:15px}:is(#tp3,#tp5,#tp6,:is(#tp7,#skFcal),#tp8,#tp9,#tp11,#tp13,#tp14,#tp15,#tp17,#tp18) .shead .en{font-size:12.5px}
+:is(#tp3,#tp5,#tp6,:is(#tp7,#skFcal),#tp8,#tp9,#tp11,#tp13,#tp14,#tp15,#tp17,#tp18) .tnote{font-size:15px!important;color:var(--ink2)}
 /* 워크샵 — 상자 제목 · 칸 이름 · 설명 */
 #tp9 .lgdate,#tp9 .lgmsg{font-size:15px}
 #tp9 .wph{font-size:14.5px}#tp9 .wph b{font-size:15px}#tp9 .wpt{font-size:17.5px;line-height:1.45}#tp9 .wpm{font-size:15px}#tp9 .wpn{font-size:14.5px;line-height:1.6}#tp9 .wpgo{font-size:14.5px}
@@ -3378,7 +3378,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-270</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-271</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -3488,7 +3488,7 @@ input,select,textarea{border-radius:var(--r3)!important}
   <div class="shead"><h2>재고 · 발주</h2>
     <span class="sub">새 날은 빈 칸 · 흐린 글씨는 전날 숫자 · 세어서 적으면 자동 저장 · 주황색은 발주 넣을 때</span></div>
   <div class="tnotice" id="orderRule"><div class="tnhead">📦 발주 규칙 · 꼭 지키기</div><ul><li><b>빨간날이 있는 주간에는 <mark>4~5일 전에 무조건 재고 · 발주 체크</mark> 다 하기</b><span>예) 추석 연휴가 9/24~9/26이라면 9/18~9/21까지는 꼭 발주 + 재고 체크</span></li><li><b><mark>인쇄물 · 포장재료 · 주재료 전부</mark> 빠짐없이</b><span>자주 안 시키는 것까지 목록을 보면서 하나씩 확인</span></li></ul></div>
-  <nav class="sktabs" role="tablist" aria-label="재고 화면"><button type="button" class="sktab" data-c="sk0" aria-selected="true">📦 발주·재고 체크</button><button type="button" class="sktab" data-c="sk1" aria-selected="false">📒 발주 기준표</button><button type="button" class="sktab" data-c="sk2" aria-selected="false">🍓 과일 시즌</button></nav>
+  <nav class="sktabs" role="tablist" aria-label="재고 화면"><button type="button" class="sktab" data-c="sk0" aria-selected="true">📦 발주·재고 체크</button><button type="button" class="sktab" data-c="sk1" aria-selected="false">📒 발주 기준표</button></nav>
   <div id="sk0">
     <div class="skbar lgdate lgdatebig">
       <span class="lgcap">날짜</span>
@@ -3547,14 +3547,22 @@ input,select,textarea{border-radius:var(--r3)!important}
     </div>
   </div>
   <div id="sk1" hidden>
+    <nav class="skfnav" role="tablist" aria-label="발주 기준"><button type="button" class="skfp" data-fp="ref" aria-selected="true">📒 발주 기준표</button><button type="button" class="skfp" data-fp="cal" aria-selected="false">🗓 과일 달력</button><button type="button" class="skfp" data-fp="cap" aria-selected="false">💰 과일 한도선 · 단가</button></nav>
+    <div class="skfpane" data-fp="ref">
     <p class="tip" style="font-size:12px;color:var(--muted);margin:0 0 8px">노션 「재료 재고 관리」 기준. 네이버 주문 거래처를 모르겠으면 네이버페이 결제내역에서 검색해서 재구매. 연휴 전에는 미리미리 주문.</p>
     <input type="search" id="skRefQ" class="sksearch" placeholder="품목 · 거래처 검색">
     <div id="skRef"></div>
-  </div>
-  <div id="sk2" hidden>
-    <p class="tip" style="font-size:12px;color:var(--muted);margin:0 0 8px">과일은 거의 다 망고 사장님(010-3748-9994)께 주문. 복숭아는 미스터돌 병조림, 6~8월, 반박스 남을 때 꼭 주문. 과일은 재고 + 제품 선별이 중요하므로 입고 시 잘 체크.</p>
+    </div>
+    <div class="skfpane" data-fp="cal">
+      <div class="skfcal" id="skFcal"><div class="lazyload">불러오는 중…</div></div>
+      <h4 class="skfh">🍰 한판 기준 중량 (시기별)</h4>
     <div class="ztable-wrap"><table class="skref" style="min-width:420px"><thead><tr><th>시기</th><th>종류</th><th>중량 (한판 기준)</th></tr></thead><tbody id="skSeason"></tbody></table></div>
-    <div class="fcbox" id="skCap"></div>
+    </div>
+    <div class="skfpane" data-fp="cap" hidden>
+    <p class="tip" style="font-size:12px;color:var(--muted);margin:0 0 8px">과일은 거의 다 망고 사장님(010-3748-9994)께 주문. 복숭아는 미스터돌 병조림, 6~8월, 반박스 남을 때 꼭 주문. 과일은 재고 + 제품 선별이 중요하므로 입고 시 잘 체크.</p>
+      <div class="fcbox" id="skCap"></div>
+      <div class="fcbox fpbox" id="skPrice"></div>
+    </div>
   </div>
 </section></div>
 <div class="panel" id="tp4" role="tabpanel" hidden><section>
@@ -4083,20 +4091,20 @@ input,select,textarea{border-radius:var(--r3)!important}
 </footer>
 </div>
 
-<script src="js/chrome.js?v=v0924-270"></script>
+<script src="js/chrome.js?v=v0924-271"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/drag.js?v=v0924-270"></script>
-<script src="js/sync.js?v=v0924-270"></script>
-<script src="js/holidays.js?v=v0924-270"></script>
-<script src="js/sched.js?v=v0924-270"></script>
-<script src="js/app.js?v=v0924-270"></script>
-<script src="js/fruit.js?v=v0924-270"></script>
-<script src="js/mobile.js?v=v0924-270"></script>
-<script src="js/qc.js?v=v0924-270"></script>
-<script src="js/loghist.js?v=v0924-270"></script>
+<script src="js/drag.js?v=v0924-271"></script>
+<script src="js/sync.js?v=v0924-271"></script>
+<script src="js/holidays.js?v=v0924-271"></script>
+<script src="js/sched.js?v=v0924-271"></script>
+<script src="js/app.js?v=v0924-271"></script>
+<script src="js/fruit.js?v=v0924-271"></script>
+<script src="js/mobile.js?v=v0924-271"></script>
+<script src="js/qc.js?v=v0924-271"></script>
+<script src="js/loghist.js?v=v0924-271"></script>
 <script>/* 같은 기기에 시스템 창(탭)이 두 개 이상 — 10/23 사고(가게 컴퓨터 창 여러 개에서 같은 일지를 써서 글이 세 번 겹치고 지워짐) 막기 */
 (function(){if(!window.BroadcastChannel)return;var id=Math.random().toString(36).slice(2),bc=new BroadcastChannel("cafesui.tabs"),seen={},band=null;
 function paint(){var now=Date.now(),n=Object.keys(seen).filter(function(k){return now-seen[k]<40000;}).length;
@@ -4105,7 +4113,7 @@ else if(!n&&band){band.remove();band=null;}}
 bc.onmessage=function(e){var d=e.data||{};if(!d.id||d.id===id)return;seen[d.id]=Date.now();if(d.t==="hi")bc.postMessage({t:"here",id:id});if(d.t==="bye")delete seen[d.id];paint();};
 bc.postMessage({t:"hi",id:id});setInterval(function(){bc.postMessage({t:"here",id:id});paint();},15000);
 window.addEventListener("pagehide",function(){try{bc.postMessage({t:"bye",id:id});}catch(e){}});})();</script>
-<script src="js/price.js?v=v0924-270"></script>
+<script src="js/price.js?v=v0924-271"></script>
 <!-- csonly:start -->
 <script>
 // 🔥 카페스이 모토 — 모든 화면 맨 위에(10/21 사장님 「모토처럼 매 섹션에 다 넣어줘」 · 문구 그대로) · 나중에 불러오는 탭이 내용을 바꿔도 다시 붙임
@@ -4359,7 +4367,7 @@ window.addEventListener("pagehide",function(){try{bc.postMessage({t:"bye",id:id}
    ③ 설명 줄은 진한 회색(--ink2) · 단어 단위 줄바꿈
    ══════════════════════════════════════════════════════════ */
 :root{--muted:#736350;--open:#8F5A22;--mid:#56703F;--close:#456270;--off:#9A4D35;--alert:#9E4430}
-:is(#tp3,#tp5,#tp6,#tp7,#tp8,#tp9,#tp11,#tp13,#tp14,#tp15,#tp17,#tp18){--muted:#736350;--open:#8F5A22}
+:is(#tp3,#tp5,#tp6,:is(#tp7,#skFcal),#tp8,#tp9,#tp11,#tp13,#tp14,#tp15,#tp17,#tp18){--muted:#736350;--open:#8F5A22}
 body{word-break:keep-all;overflow-wrap:anywhere}
 /* 공통 */
 .shead .en{font-size:13px;color:var(--muted)}
@@ -4430,9 +4438,9 @@ small.optt{font-size:12px;color:var(--ink2)}
 #tp10 .csflow-a{color:var(--muted)}
 #tp10 .cslead,#tp10 .shead .sub{color:var(--ink2)}
 /* 과일 */
-#tp7 th.fm{font-size:13.5px}
-#tp7 .lf2{font-size:13.5px}
-#tp7 .fall{font-size:12px}
+:is(#tp7,#skFcal) th.fm{font-size:13.5px}
+:is(#tp7,#skFcal) .lf2{font-size:13.5px}
+:is(#tp7,#skFcal) .fall{font-size:12px}
 /* 월말 회의 · 평가 */
 #tp5 .secbar .wsmini{font-size:13px}
 #tp5 .secbar .mkto,#tp5 .secbar .mkto b{font-size:13px}
@@ -4556,7 +4564,7 @@ nav.side .tab.daily .ti{color:#C9DDA4}
 .shead h2{font-size:31px;font-weight:700;padding-left:0;letter-spacing:-.01em;line-height:1.2}
 .shead h2::before{display:none!important}
 .shead .en{display:none}
-.shead .sub,.shead span.sub,:is(#tp3,#tp5,#tp6,#tp7,#tp8,#tp9,#tp11,#tp13,#tp14,#tp15,#tp17,#tp18) .shead span.sub{flex-basis:100%;font-size:15px;color:var(--ink2);line-height:1.55}
+.shead .sub,.shead span.sub,:is(#tp3,#tp5,#tp6,:is(#tp7,#skFcal),#tp8,#tp9,#tp11,#tp13,#tp14,#tp15,#tp17,#tp18) .shead span.sub{flex-basis:100%;font-size:15px;color:var(--ink2);line-height:1.55}
 @media (max-width:640px){.shead h2{font-size:25px}}
 /* 하위 탭 — 밑줄 탭(사진처럼) */
 nav.stabs,nav.sktabs,nav.cstabs,nav.xmnav{display:flex;flex-wrap:wrap;gap:2px 6px;background:none!important;border:0!important;border-bottom:1px solid var(--rule2)!important;border-radius:0!important;padding:0;margin:0 0 18px;box-shadow:none}
@@ -4718,51 +4726,51 @@ nav.stabs .stab.prog[aria-selected="true"]{color:var(--open)!important;border-bo
 #tp1 .schnote{margin:4px 0 14px}
 #tp1 .schnote #schDue{display:block;font-style:normal;font-weight:800;color:#B3261E;margin-top:2px}
 /* 🍓 과일 달력 그림 · 과일 색(10/15 · js/fruit.js) */
-#tp7 .fnowbox{background:var(--surface);border:1.5px solid var(--rule);border-radius:14px;padding:14px 16px 12px;margin:0 0 14px}
-#tp7 .fnowh{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;margin-bottom:10px}
-#tp7 .fnowh b{font-size:19px;color:var(--ink)}
-#tp7 .fnowh span{font-size:14px;color:var(--ink2)}
-#tp7 .fcards{display:flex;flex-wrap:wrap;gap:10px}
-#tp7 .fcard{font:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:96px;padding:10px 10px 8px;border-radius:14px;border:2px solid var(--fcol);background:var(--ftint);color:#2A2522}
-#tp7 .fcard:hover{transform:translateY(-1px);box-shadow:0 3px 10px rgba(74,59,44,.15)}
-#tp7 .fcard .fcico{width:52px;height:52px}
-#tp7 .fcard b{font-size:15.5px;font-weight:800;color:#2A2522}
-#tp7 .fcard i{font-style:normal;font-size:12.5px;font-weight:800;color:#fff;background:#6E5A44;border-radius:999px;padding:1px 8px}
-#tp7 .fcard.fpeak i{background:#B3261E}
-#tp7 .fcard.fend i{background:#7A4A1E}
-#tp7 .fcard.fsoon{background:var(--surface);border-style:dashed}
-#tp7 .fcard.fsoon i{background:#456270}
-#tp7 .flegend{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:12px;font-size:13.5px;color:var(--ink2)}
-#tp7 .flegend span{display:inline-flex;align-items:center;gap:6px}
-#tp7 .lg{display:inline-block;width:22px;height:14px;border-radius:4px}
-#tp7 .lg.pk{background:#D93A3A}#tp7 .lg.on{background:#F7C9C6}#tp7 .lg.nw{border:2.5px solid #4A3B2C;background:transparent}
-#tp7 .fbtn.fhasico{display:grid;grid-template-columns:50px 1fr;column-gap:12px;align-items:start}
-#tp7 .fbtn.fhasico>*:not(.fico){grid-column:2}
-#tp7 .fbtn .fico{grid-row:1/span 3;width:50px;height:50px;align-self:center;background:var(--ftint);border-radius:50%;padding:4px}
-#tp7 .fn1{font-size:16.5px;font-weight:800}
-#tp7 .fxrow .fn2{color:#5C4F43}
-#tp7 .fxrow .fc{opacity:1!important;background:transparent}
-#tp7 .fxrow .fc.on{background:var(--ftint)}
-#tp7 .fxrow .fc.on.peak{background:var(--fcol)}
-#tp7 .ftable tbody tr.fxrow:nth-child(4n+1) .fc:not(.on){background:#FBF8F2}
-#tp7 .ftable .fc.fnow{box-shadow:inset 3px 0 0 #4A3B2C,inset -3px 0 0 #4A3B2C}
-#tp7 .ftable th.fm.fnow{background:#4A3B2C;color:#fff;font-weight:900}
-#tp7 .ftable .fc{height:44px}
-#tp7 .vm.now{outline:2.5px solid #4A3B2C;outline-offset:-2px;font-weight:900}
+:is(#tp7,#skFcal) .fnowbox{background:var(--surface);border:1.5px solid var(--rule);border-radius:14px;padding:14px 16px 12px;margin:0 0 14px}
+:is(#tp7,#skFcal) .fnowh{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;margin-bottom:10px}
+:is(#tp7,#skFcal) .fnowh b{font-size:19px;color:var(--ink)}
+:is(#tp7,#skFcal) .fnowh span{font-size:14px;color:var(--ink2)}
+:is(#tp7,#skFcal) .fcards{display:flex;flex-wrap:wrap;gap:10px}
+:is(#tp7,#skFcal) .fcard{font:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:96px;padding:10px 10px 8px;border-radius:14px;border:2px solid var(--fcol);background:var(--ftint);color:#2A2522}
+:is(#tp7,#skFcal) .fcard:hover{transform:translateY(-1px);box-shadow:0 3px 10px rgba(74,59,44,.15)}
+:is(#tp7,#skFcal) .fcard .fcico{width:52px;height:52px}
+:is(#tp7,#skFcal) .fcard b{font-size:15.5px;font-weight:800;color:#2A2522}
+:is(#tp7,#skFcal) .fcard i{font-style:normal;font-size:12.5px;font-weight:800;color:#fff;background:#6E5A44;border-radius:999px;padding:1px 8px}
+:is(#tp7,#skFcal) .fcard.fpeak i{background:#B3261E}
+:is(#tp7,#skFcal) .fcard.fend i{background:#7A4A1E}
+:is(#tp7,#skFcal) .fcard.fsoon{background:var(--surface);border-style:dashed}
+:is(#tp7,#skFcal) .fcard.fsoon i{background:#456270}
+:is(#tp7,#skFcal) .flegend{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:12px;font-size:13.5px;color:var(--ink2)}
+:is(#tp7,#skFcal) .flegend span{display:inline-flex;align-items:center;gap:6px}
+:is(#tp7,#skFcal) .lg{display:inline-block;width:22px;height:14px;border-radius:4px}
+:is(#tp7,#skFcal) .lg.pk{background:#D93A3A}:is(#tp7,#skFcal) .lg.on{background:#F7C9C6}:is(#tp7,#skFcal) .lg.nw{border:2.5px solid #4A3B2C;background:transparent}
+:is(#tp7,#skFcal) .fbtn.fhasico{display:grid;grid-template-columns:50px 1fr;column-gap:12px;align-items:start}
+:is(#tp7,#skFcal) .fbtn.fhasico>*:not(.fico){grid-column:2}
+:is(#tp7,#skFcal) .fbtn .fico{grid-row:1/span 3;width:50px;height:50px;align-self:center;background:var(--ftint);border-radius:50%;padding:4px}
+:is(#tp7,#skFcal) .fn1{font-size:16.5px;font-weight:800}
+:is(#tp7,#skFcal) .fxrow .fn2{color:#5C4F43}
+:is(#tp7,#skFcal) .fxrow .fc{opacity:1!important;background:transparent}
+:is(#tp7,#skFcal) .fxrow .fc.on{background:var(--ftint)}
+:is(#tp7,#skFcal) .fxrow .fc.on.peak{background:var(--fcol)}
+:is(#tp7,#skFcal) .ftable tbody tr.fxrow:nth-child(4n+1) .fc:not(.on){background:#FBF8F2}
+:is(#tp7,#skFcal) .ftable .fc.fnow{box-shadow:inset 3px 0 0 #4A3B2C,inset -3px 0 0 #4A3B2C}
+:is(#tp7,#skFcal) .ftable th.fm.fnow{background:#4A3B2C;color:#fff;font-weight:900}
+:is(#tp7,#skFcal) .ftable .fc{height:44px}
+:is(#tp7,#skFcal) .vm.now{outline:2.5px solid #4A3B2C;outline-offset:-2px;font-weight:900}
 @media (max-width:640px){
-  #tp7 .ftwrap{overflow:visible;border:0;background:none}
-  #tp7 .ftable{min-width:0;display:block}
-  #tp7 .ftable thead{display:none}
-  #tp7 .ftable tbody{display:block}
-  #tp7 .ftable tr.fxrow{display:grid;grid-template-columns:repeat(12,1fr);background:var(--surface);border:1px solid var(--rule);border-radius:12px;overflow:hidden;margin:0 0 10px}
-  #tp7 .ftable tr.fxrow>th{grid-column:1/-1;width:auto;border-right:0}
-  #tp7 .ftable tr.fxrow>td.fc{height:30px;position:relative;border-bottom:0}
-  #tp7 .ftable tr.fxrow>td.fc::after{content:attr(data-m);position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700;color:#5C4F43}
-  #tp7 .ftable tr.fxrow>td.fc.peak::after{color:#fff}
-  #tp7 .ftable tr.fdrow{display:block}
-  #tp7 .ftable tr.fdrow>td{display:block}
-  #tp7 .fcard{min-width:84px;padding:8px 8px 6px}
-  #tp7 .fcard .fcico{width:44px;height:44px}
+  :is(#tp7,#skFcal) .ftwrap{overflow:visible;border:0;background:none}
+  :is(#tp7,#skFcal) .ftable{min-width:0;display:block}
+  :is(#tp7,#skFcal) .ftable thead{display:none}
+  :is(#tp7,#skFcal) .ftable tbody{display:block}
+  :is(#tp7,#skFcal) .ftable tr.fxrow{display:grid;grid-template-columns:repeat(12,1fr);background:var(--surface);border:1px solid var(--rule);border-radius:12px;overflow:hidden;margin:0 0 10px}
+  :is(#tp7,#skFcal) .ftable tr.fxrow>th{grid-column:1/-1;width:auto;border-right:0}
+  :is(#tp7,#skFcal) .ftable tr.fxrow>td.fc{height:30px;position:relative;border-bottom:0}
+  :is(#tp7,#skFcal) .ftable tr.fxrow>td.fc::after{content:attr(data-m);position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700;color:#5C4F43}
+  :is(#tp7,#skFcal) .ftable tr.fxrow>td.fc.peak::after{color:#fff}
+  :is(#tp7,#skFcal) .ftable tr.fdrow{display:block}
+  :is(#tp7,#skFcal) .ftable tr.fdrow>td{display:block}
+  :is(#tp7,#skFcal) .fcard{min-width:84px;padding:8px 8px 6px}
+  :is(#tp7,#skFcal) .fcard .fcico{width:44px;height:44px}
 }
 /* 지난 날짜 일지 — 사장님 덧붙임은 형광 없이 사장님 초록(10/16) */
 .lgov .ownp{color:var(--p4)!important;font-weight:700}
@@ -5078,10 +5086,80 @@ html.mob #tp4 .rppane{scroll-margin-top:64px}
   .fcbox .fctab tr:not(.fced) td.fcp+td.fcp::before{content:"최고가 "}
   .fcbox .fctab tr:not(.fced) td.fccap::before{content:"🚫 한도선 ";font-size:12.5px}
 }
+
+/* 🍓 재고·발주 과일 — 두 파트(과일 달력 · 주문 한도선 · 단가)(10/28) */
+.skfnav{display:flex;gap:8px;margin:2px 0 14px;flex-wrap:wrap}
+.skfnav .skfp{font:inherit;font-size:16px;font-weight:800;padding:9px 18px;border-radius:999px;border:2px solid var(--rule2);background:var(--surface);color:var(--ink);cursor:pointer}
+.skfnav .skfp[aria-selected="true"]{background:#4A3B2C;border-color:#4A3B2C;color:#fff}
+#skFcal .shead{display:none}
+.skfh{font-size:17px;margin:22px 0 8px;color:var(--ink)}
+
+/* 💰 과일 한도선 카드 · ⭐ 메인 과일 · 옆 창 · 단가 통계 (10/28 · 사장님 「가독성 · 메인 과일 하이라이트 · 어사이드」) */
+.fcbox .fcrule{margin:0 0 14px}
+.fcbox .fch .fcaside-open,.fcbox .fch .fcedit{font-size:14px;font-weight:800;padding:7px 12px;border-radius:8px;border:1px solid var(--rule2);background:var(--bg);color:var(--ink);cursor:pointer}
+.fcgh{font-size:17px;font-weight:900;color:var(--ink);margin:16px 2px 8px}.fcgh small{font-size:13px;font-weight:700;color:var(--ink2);margin-left:6px}
+.fcl{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:10px}
+.fcr{background:var(--surface);border:1px solid var(--rule2);border-left:5px solid #CBBBA4;border-radius:12px;padding:12px 14px 10px}
+.fcr.main{background:#FFF8DC;border-color:#E9C46A;border-left-color:#D99A00;box-shadow:0 1px 0 #E9C46A}
+.fcr .fcr1{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px}
+.fcr .fcnm{font-size:18px;font-weight:900;color:var(--ink)}
+.fcr.main .fcnm{color:#5A3A00}
+.fcr .fctag{font-size:12.5px;font-weight:800;color:#fff;background:#2F6B3A;border-radius:999px;padding:1px 8px}
+.fcr .fcu{font-size:14px;color:var(--ink2);margin-left:auto}
+.fcr .fcr2{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:8px}
+.fcr .fcv{display:flex;flex-direction:column;min-width:78px}
+.fcr .fcv i{font-style:normal;font-size:12.5px;color:var(--ink2);font-weight:700}
+.fcr .fcv b{font-size:16px;color:var(--ink);font-variant-numeric:tabular-nums}
+.fcr .fcv.cap{background:#FDECEA;border:1px solid #E7A39B;border-radius:8px;padding:3px 9px}
+.fcr .fcv.cap i{color:#7A1A12}.fcr .fcv.cap b{color:#9B1C14;font-size:17px}
+.fcr .fcadd{margin:0 0 0 auto;display:inline-block;font-size:13.5px;font-weight:800;padding:6px 12px;border-radius:999px;border:1.5px solid #B3261E;color:#B3261E;background:#fff;cursor:pointer}
+.fcr .fclast{margin-top:6px;font-size:13.5px;font-weight:800;color:var(--ink)}
+.fcr .fclast.over{color:#B3261E}
+.fcr .fcdone{margin-top:8px;padding:8px 10px;border-radius:8px;background:#E3F1DA;border:1px solid #9CC58A;font-size:14px;font-weight:700;color:#2F5A1F;line-height:1.6}
+.fcr .fcboss{margin-top:4px;font-size:14px;font-weight:800;padding:6px 12px;border-radius:8px;border:0;background:#229ED9;color:#fff;cursor:pointer}
+.fcr .fcmore{margin-top:6px}
+.fcr .fcmore summary{cursor:pointer;font-size:13.5px;font-weight:700;color:var(--ink2)}
+.fcr .fcmore p{margin:6px 0 0;font-size:14px;line-height:1.6;color:var(--ink)}
+.fcbox .fcmain{display:flex;align-items:center;gap:4px;margin-top:4px;font-size:13.5px;font-weight:700}
+.fcaside-mini{font-size:13px;font-weight:800;padding:3px 10px;border-radius:999px;border:1px solid #B3261E;background:#fff;color:#B3261E;cursor:pointer;margin-left:6px;vertical-align:middle}
+.mlab .fcaside-mini{display:inline-block;margin:4px 0 0}
+/* 옆 창 */
+.fcaside{position:fixed;top:0;right:0;bottom:0;width:min(420px,100vw);z-index:60;background:var(--bg);border-left:2px solid #4A3B2C;box-shadow:-6px 0 24px rgba(40,30,20,.18);display:flex;flex-direction:column}
+.fcaside[hidden]{display:none!important}
+.fcaside .fcah{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px;padding:12px 14px;background:#4A3B2C;color:#fff}
+.fcaside .fcah b{font-size:18px}.fcaside .fcah span{font-size:13.5px;opacity:.9}
+.fcaside .fcaclose{margin-left:auto;font-size:18px;border:0;background:none;color:#fff;cursor:pointer;padding:2px 6px}
+.fcaside .fcab{flex:1;overflow:auto;padding:10px 12px 40px;overscroll-behavior:contain}
+.fcaside .fcarule{margin:0 0 6px;padding:8px 10px;border:2px solid #B3261E;border-radius:10px;background:#FFF5F3;font-size:14px;color:#7A1A12;line-height:1.55}
+.fcaside .fcl{grid-template-columns:1fr}
+.fcaside .fcarest{margin-top:12px}.fcaside .fcarest summary{cursor:pointer;font-size:15px;font-weight:800;color:var(--ink)}
+@media (min-width:1300px){html.fcaside-on .wrap{margin-right:430px}}
+html.mob .fcaside{top:auto;height:78vh;width:100vw;border-left:0;border-top:2px solid #4A3B2C;border-radius:16px 16px 0 0;z-index:48}
+/* 단가 통계 */
+.fpbox{margin-top:16px;border-color:#4A3B2C}
+.fpbox .fch b{color:#4A3B2C}
+.fpbox .fpwarn{margin:0 0 10px;padding:8px 12px;border-radius:8px;background:#FFF3C4;border:1px solid #E9C46A;font-size:14.5px;font-weight:800;color:#5A3A00}
+.fpbox .fpmh{display:flex;align-items:center;gap:10px;margin:6px 0 8px}
+.fpbox .fpmh b{font-size:18px}.fpbox .fpmh span{font-size:14px;color:var(--ink2)}
+.fpbox .fpnav{font-size:15px;padding:4px 10px;border-radius:8px;border:1px solid var(--rule2);background:var(--surface);cursor:pointer}
+.fpbox .fptab{min-width:620px;font-size:14px}.fpbox .fptab td,.fpbox .fptab th{white-space:nowrap}
+.fpbox .fptab tr.over td{background:#FDECEA}.fpbox .fptab tr.dup td{opacity:.55}
+.fpbox .fph{font-size:16px;margin:16px 0 6px}.fpbox .fph small{font-size:13px;font-weight:400;color:var(--ink2);margin-left:6px}
+.fpbox .fpmx{min-width:900px;font-size:13.5px}.fpbox .fpmx td{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.fpbox .fpmx td.over{background:#FDECEA;color:#9B1C14;font-weight:800}
+.fpbox .fppaste{margin-top:14px;border:1px dashed var(--rule2);border-radius:10px;padding:10px 12px}
+.fpbox .fppaste summary{cursor:pointer;font-size:15px;font-weight:800}
+.fpbox .fppaste p{font-size:14px;color:var(--ink2);line-height:1.6}
+.fpbox .fppaste textarea{width:100%;box-sizing:border-box;font-size:16px;padding:8px;border:1px solid var(--rule2);border-radius:8px;background:var(--bg);color:var(--ink)}
+.fpbox .fpact{display:flex;gap:8px;align-items:center;margin:8px 0}
+.fpbox .fpact button{font-size:14px;font-weight:800;padding:7px 14px;border-radius:8px;border:1px solid var(--rule2);background:var(--surface);cursor:pointer}
+.fpbox .fpact .fpsave{background:#2F6B3A;color:#fff;border-color:#2F6B3A}
+@media (max-width:640px){.fcl{grid-template-columns:1fr}.fcr .fcu{margin-left:0;flex-basis:100%}}
 </style>
-<script src="js/stock.js?v=v0924-270"></script>
-<script src="js/mango.js?v=v0924-270"></script>
-<script src="js/fruitcap.js?v=v0924-270"></script>
+<script src="js/stock.js?v=v0924-271"></script>
+<script src="js/mango.js?v=v0924-271"></script>
+<script src="js/fruitcap.js?v=v0924-271"></script>
+<script src="js/fruitprice.js?v=v0924-271"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -5164,15 +5242,15 @@ html.mob #tp4 .rppane{scroll-margin-top:64px}
   window.addEventListener("cs:remote", function () { setTimeout(mark, 400); });
 })();
 </script>
-<script src="js/presence.js?v=v0924-270"></script>
-<script src="js/weekrep.js?v=v0924-270"></script>
-<script src="js/recipe.js?v=v0924-270"></script>
-<script src="js/bench.js?v=v0924-270"></script>
+<script src="js/presence.js?v=v0924-271"></script>
+<script src="js/weekrep.js?v=v0924-271"></script>
+<script src="js/recipe.js?v=v0924-271"></script>
+<script src="js/bench.js?v=v0924-271"></script>
 <script>/* 월말회의 「잘한 것」 한 칸으로 (10/22 사장님 「합쳐줘」) — 예전 ② ③ 칸은 글이 있는 달만 보임 */
 (function(){function p(){document.querySelectorAll("#mtForm .frow.mtold").forEach(function(r){var t=r.querySelector(".fin");r.hidden=!(t&&t.value.trim());});}
 var m=document.getElementById("mtMonth");if(m)m.addEventListener("change",function(){setTimeout(p,80);});
 window.addEventListener("cs:remote",function(){setTimeout(p,400);});document.addEventListener("click",function(e){if(e.target.closest('.tab[data-p="tp5"]'))setTimeout(p,80);});setTimeout(p,600);})();</script>
-<script src="js/monthlog.js?v=v0924-270"></script>
-<script src="js/xmas.js?v=v0924-270"></script>
-<script src="js/tg.js?v=v0924-270"></script>
+<script src="js/monthlog.js?v=v0924-271"></script>
+<script src="js/xmas.js?v=v0924-271"></script>
+<script src="js/tg.js?v=v0924-271"></script>
 </body></html>

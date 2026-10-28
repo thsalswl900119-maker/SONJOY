@@ -81,11 +81,40 @@
   }
   // 카드를 누르면 그 과일 줄을 펴고 그리로
   document.addEventListener("click", function (e) {
-    var c = e.target.closest && e.target.closest("#tp7 .fcard"); if (!c) return;
-    var b = document.querySelector('#tp7 .fbtn[aria-controls="' + c.dataset.go + '"]'); if (!b) return;
+    var c = e.target.closest && e.target.closest("#tp7 .fcard, #skFcal .fcard"); if (!c) return;
+    var host = c.closest("#tp7, #skFcal");
+    var b = host.querySelector('.fbtn[aria-controls="' + c.dataset.go + '"]'); if (!b) return;
     if (b.getAttribute("aria-expanded") !== "true") b.click();
     b.scrollIntoView({ behavior: "smooth", block: "start" });
   });
+  // 재고·발주 「📒 발주 기준표」 탭 안 세 파트(발주 기준표 · 과일 달력 · 과일 한도선) — 처음엔 「🍓 과일」 탭 두 파트(10/28 · 사장님 「과일 달력을 재고 발주 과일 부분 안에 파트를 두 개로」)
+  //  🗓 과일 달력 = tabs/tp7.html 첫 묶음(달력)을 그대로 불러와 보여 줌 — 과일 탭과 id가 겹치지 않게 sk 붙임
+  (function () {
+    var sk2 = document.getElementById("sk1"), cal = document.getElementById("skFcal"); if (!sk2 || !cal) return;
+    var KEY = "cafesui.ui.skfpart", loaded = false;
+    function loadCal() {
+      if (loaded) return; loaded = true;
+      var v = ((document.getElementById("verTag") || {}).textContent || "").trim();
+      fetch("tabs/tp7.html?v=" + encodeURIComponent(v), { cache: "no-cache" }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); }).then(function (html) {
+        var first = html.split("</section>")[0] + "</section>";
+        first = first.replace(/id="(fr\d+)"/g, 'id="sk$1"').replace(/aria-controls="(fr\d+)"/g, 'aria-controls="sk$1"')
+          .replace(/id="vs(\d+)"/g, 'id="vsk$1"').replace(/id="fv(\d+)_/g, 'id="fvk$1_').replace(/data-f="(\d+)"/g, 'data-f="k$1"');
+        cal.innerHTML = first; init(cal);
+      }).catch(function () { loaded = false; cal.innerHTML = '<div class="lazyload">불러오지 못했습니다 · 인터넷 연결을 확인하고 다시 눌러 주세요</div>'; });
+    }
+    function show(k) {
+      try { localStorage.setItem(KEY, k); } catch (e) {}
+      Array.prototype.forEach.call(sk2.querySelectorAll(".skfp"), function (b) { b.setAttribute("aria-selected", String(b.dataset.fp === k)); });
+      Array.prototype.forEach.call(sk2.querySelectorAll(".skfpane"), function (p) { p.hidden = p.dataset.fp !== k; });
+      if (k === "cal" && !sk2.hidden) loadCal();
+    }
+    // 「🍓 과일」 탭을 처음 열 때 달력을 불러옴 (첫 화면 가볍게)
+    document.addEventListener("click", function (e) { if (e.target.closest && e.target.closest('.sktab[data-c="sk1"]')) setTimeout(function () { if (!sk2.hidden && !sk2.querySelector('.skfpane[data-fp="cal"]').hidden) loadCal(); }, 30); });
+    sk2.addEventListener("click", function (e) { var b = e.target.closest && e.target.closest(".skfp"); if (b) show(b.dataset.fp); });
+    var k0 = "ref"; try { k0 = localStorage.getItem(KEY) || "ref"; } catch (e) {}
+    show(k0 === "cap" || k0 === "cal" ? k0 : "ref");
+    window.__CS_SKFPART = show;
+  })();
   var pn = document.getElementById("tp7"); if (!pn) return;
   init(pn);
   if (window.MutationObserver) new MutationObserver(function () { init(pn); }).observe(pn, { childList: true });
