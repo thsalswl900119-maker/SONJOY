@@ -108,6 +108,8 @@
   function inSeason(r) { var m = new Date().getMonth() + 1; return String(r.mo || "").split(",").map(Number).indexOf(m) >= 0; }
   var EDIT = false, DONE = null;   // DONE: 방금 값 적은 과일 { id, text } — 카드 아래 「사장님께 개인톡」 단추
   var RULE = "과일값은 일지에도 쓰고 (거래처부분) /사장님에게 텔레그램으로 개인톡으로 보고하기";   // 사장님 문구 그대로 (10/28)
+  // 사장님 문구 그대로 (10/28 「과일주문 한도선」 · 과일값 보고 밑에) — 가운데 한 마디만 형광
+  var WHY_A = "여러분이 치밀하고 민감하게 ", WHY_B = "매번 가격을 체크", WHY_C = "해주시면 돈이 더 나가는 걸 막습니다( 그돈이 줄어야 여러분에게 더 돌려드릴수 있습니다)";
   function lastRec(r) { var rc = recs(r); return rc[rc.length - 1]; }
   function card(r) {
     var rg = range(r), last = lastRec(r), cap = capOf(r), on = inSeason(r);
@@ -131,6 +133,7 @@
   function draw() {
     var rs = rows(), ed = EDIT && canEdit();
     var h = '<div class="tnotice fcrule"><div class="tnhead">★ 과일값 보고</div><ul><li><b>' + esc(RULE) + "</b><span>「＋ 값 적기」(금액만 써 주세요 ex) 24,000)를 누르면 오늘 일지 거래처 칸에 한 줄이 들어가고, 「📨 사장님께 텔레그램 개인톡 보고」 단추가 나와요</span></li></ul></div>" +
+      '<div class="tnotice fcrule fcwhy"><div class="tnhead">★ 과일주문 한도선</div><ul><li><b>' + esc(WHY_A) + "<mark>" + esc(WHY_B) + "</mark>" + esc(WHY_C) + "</b></li></ul></div>" +
       '<div class="fch"><b>💰 과일 주문 한도선</b><span>한도선보다 비싸면 <mark>주문 전에 사장님께 먼저 확인</mark> · ⭐ = 메인 과일 · 「지금 철」 = 이번 달에 쓰는 과일</span>' +
       '<button type="button" class="fcaside-open">📋 옆에 열기</button>' + (canEdit() ? '<button type="button" class="fcedit">' + (ed ? "✔ 다 고쳤어요" : "✏ 한도선 고치기") + "</button>" : "") + "</div>";
     if (ed) {
