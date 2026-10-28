@@ -96,7 +96,9 @@
 
     // 재고 묶음
     function renderGroups() {
-      var box = $("#skGroups"); box.innerHTML = "";
+      var box = $("#skGroups"), capNow = document.getElementById("skCapNow");
+      if (capNow && box.contains(capNow)) box.parentNode.insertBefore(capNow, box);   // 다시 그릴 때 지워지지 않게 잠깐 밖으로
+      box.innerHTML = "";
       var items = allItems();
       Object.keys(GROUPS).forEach(function (g) {
         var list = items.filter(function (it) { return it[0] === g; });
@@ -213,6 +215,8 @@
         add.querySelectorAll("input").forEach(function (x) { x.addEventListener("keydown", function (e) { if (e.key === "Enter") doAdd(); }); });
         if (ADD_TOP) box.insertBefore(add, box.firstChild); else box.appendChild(add);
       }
+      // 10/28 사장님 「재고 부분에 과일 한도선 표를 과일 위에」 — 재고 세기 🥭 과일 묶음 바로 위
+      var fg = box.querySelector('.skgrp[data-g="fruit"]'); if (capNow && fg) box.insertBefore(capNow, fg);
       renderNeed();
     }
     function renderNeed() {
