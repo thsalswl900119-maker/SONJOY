@@ -60,9 +60,10 @@
   // 「＋ 값 적기」(한도선 표 rec)도 같이 셈
   function allLines() {
     var a = lines(), cap = null; try { cap = JSON.parse(localStorage.getItem("cafesui.fruitcap") || "{}").it || {}; } catch (e) {}
-    Object.keys(cap || {}).forEach(function (f) { var r = (cap[f] || {}).rec || {}; Object.keys(r).forEach(function (k) { if (r[k] && r[k].p) a.push({ d: r[k].d, f: f, n: "", q: 1, p: +r[k].p, src: "값 적기", by: r[k].who }); }); });
+    Object.keys(cap || {}).forEach(function (f) { var r = (cap[f] || {}).rec || {}; Object.keys(r).forEach(function (k) { if (r[k] && r[k].p && !r[k].del) a.push({ d: r[k].d, f: f, n: "", q: 1, p: +r[k].p, src: "값 적기", by: r[k].who }); }); });
     return a;
   }
+  window.__CS_FP_FID = fid;
   window.__CS_FP_LINES = function (f) { return allLines().filter(function (x) { return x.f === f; }); };
   function names() { return window.__CS_FCAP_ROWS ? window.__CS_FCAP_ROWS() : []; }
   function capOf(f, ym) { return window.__CS_FCAP ? window.__CS_FCAP(f, +ym.slice(5, 7)) : 0; }
@@ -100,13 +101,13 @@
     // 과일 × 달 평균 (최근 12달)
     var used = rows.filter(function (r) { return months.some(function (ym) { return (byF[r.id] || []).some(function (x) { return ymOf(x.d) === ym; }); }); });
     if (used.length) {
-      h += '<h4 class="fph">📈 최근 12달 평균 단가 <small>칸 = 그 달 평균 (박스 · 통 1개 값) · 빨강 = 한도선 넘음 · 빈 칸 = 기록 없음</small></h4><div class="ztable-wrap"><table class="skref fpmx"><thead><tr><th>과일</th>' +
+      h += '<h4 class="fph">📈 최근 12달 평균 단가 <small>칸 = 그 달 평균 단가(원 · 박스 · 통 1개 값) · 빨강 = 한도선 넘음 · 빈 칸 = 기록 없음</small></h4><div class="ztable-wrap"><table class="skref fpmx"><thead><tr><th>과일</th>' +
         months.map(function (ym) { return "<th>" + (ym.slice(5) === "01" ? ym.slice(2, 4) + "년 " : "") + (+ym.slice(5)) + "월</th>"; }).join("") + "</tr></thead><tbody>";
       used.forEach(function (r) {
         h += "<tr><td><b>" + esc(r.n) + "</b></td>" + months.map(function (ym) {
           var xs = (byF[r.id] || []).filter(function (x) { return ymOf(x.d) === ym; }); if (!xs.length) return "<td></td>";
           var st = stat(xs), cap = capOf(r.id, ym);
-          return '<td class="' + (cap && st.hi > cap ? "over" : "") + '" title="최저 ' + won(st.lo) + " · 최고 " + won(st.hi) + '">' + (Math.round(st.avg / 100) / 10).toLocaleString("ko-KR") + "천</td>";
+          return '<td class="' + (cap && st.hi > cap ? "over" : "") + '" title="최저 ' + won(st.lo) + " · 최고 " + won(st.hi) + '">' + (Math.round(st.avg / 100) * 100).toLocaleString("ko-KR") + "</td>";
         }).join("") + "</tr>";
       });
       h += "</tbody></table></div>";

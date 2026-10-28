@@ -154,11 +154,29 @@
     paintNow(); paintAside();
   }
   // 발주 화면 과일 칸 아래 — 지금 쓰는 과일의 한도선 한 줄
+  // 발주 화면 과일 칸 — 「주문하는 과일만」(10/28 사장님): 최근 3주 재고·발주 기록(발주 줄 · 과일 주문 · 과일 사용)과
+  //  최근 45일 단가 기록에 나온 과일만 · 하나도 없으면 지금 철 메인 과일
+  function orderedSet() {
+    var fid = window.__CS_FP_FID, set = {}, n = 0; if (!fid) return null;
+    var add = function (t) { t = String(t || "").trim(); if (!t || /냉동|퓨레/.test(t)) return; var f = fid(t); if (f && !set[f]) { set[f] = 1; n++; } };
+    var now = new Date();
+    for (var i = 0; i < 21; i++) {
+      var d = new Date(now.getTime() - i * 864e5), k = "cafesui.stock." + d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"), o = null;
+      try { o = JSON.parse(localStorage.getItem(k) || "null"); } catch (e) {}
+      if (!o) continue;
+      [o.orders, o.fruitOrder, o.fu1n, o.fu2n, o.fu3n, o.fu4n].join("\n").split(/\n|,|·|\/|\+/).forEach(add);
+    }
+    var since = new Date(now.getTime() - 45 * 864e5).toISOString().slice(0, 10);
+    if (window.__CS_FP_LINES) rows().forEach(function (r) { if (window.__CS_FP_LINES(r.id).some(function (x) { return String(x.d) >= since; })) { if (!set[r.id]) { set[r.id] = 1; n++; } } });
+    return n ? set : null;
+  }
   function paintNow() {
     var el = document.getElementById("skCapNow"); if (!el) return;
-    var xs = rows().filter(function (r) { return inSeason(r) && capOf(r); });
-    el.hidden = !xs.length;
-    el.innerHTML = '🚫 <b>과일 한도선</b> ' + xs.map(function (r) { return esc(r.n.split(" (")[0]) + " <b>" + won(capOf(r)) + "</b>"; }).join(" · ") + ' <span>— 넘으면 사장님께 먼저</span> <button type="button" class="fcaside-open fcaside-mini">📋 과일 가격표 옆에 열기</button>';
+    var set = orderedSet();
+    var xs = rows().filter(function (r) { return capOf(r) && (set ? set[r.id] : (r.main && inSeason(r))); });
+    el.hidden = !xs.length; if (!xs.length) return;
+    el.innerHTML = '<div class="sch"><b>🚫 과일 한도선</b><span>' + (set ? "요즘 주문하는 과일" : "지금 철 메인 과일") + ' · 넘으면 사장님께 먼저</span><button type="button" class="fcaside-open fcaside-mini">📋 과일 가격표 옆에 열기</button></div>' +
+      '<div class="scl">' + xs.map(function (r) { return '<div class="scc"><span>' + esc(r.n.split(" (")[0]) + "<i>" + esc(String(r.u).split(/ · | \(/)[0]) + "</i></span><b>" + won(capOf(r)) + "</b></div>"; }).join("") + "</div>";
   }
   // 📋 옆 창(aside) — 어느 화면에서든 열어 놓고 보면서 값 적기 (10/28 사장님 「가격표 보고 업데이트 · 어사이드로 열어서 확인」)
   var aside = document.createElement("aside"); aside.className = "fcaside"; aside.id = "fcAside"; aside.hidden = true; aside.setAttribute("aria-label", "과일 가격표");
