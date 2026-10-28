@@ -132,8 +132,8 @@
   }
   function draw() {
     var rs = rows(), ed = EDIT && canEdit();
-    var h = '<div class="tnotice fcrule"><div class="tnhead">★ 과일값 보고</div><ul><li><b>' + esc(RULE) + "</b><span>「＋ 값 적기」(금액만 써 주세요 ex) 24,000)를 누르면 오늘 일지 거래처 칸에 한 줄이 들어가고, 「📨 사장님께 텔레그램 개인톡 보고」 단추가 나와요</span></li></ul></div>" +
-      '<div class="tnotice fcrule fcwhy"><div class="tnhead">★ 과일주문 한도선</div><ul><li><b>' + esc(WHY_A) + "<mark>" + esc(WHY_B) + "</mark>" + esc(WHY_C) + "</b></li></ul></div>" +
+    var h = '<div class="tnotice fcrule"><div class="tnhead">★ 과일값 보고 · 과일주문 한도선</div><ul><li><b>' + esc(RULE) + "</b><span>「＋ 값 적기」(금액만 써 주세요 ex) 24,000)를 누르면 오늘 일지 거래처 칸에 한 줄이 들어가고, 「📨 사장님께 텔레그램 개인톡 보고」 단추가 나와요</span></li>" +
+      "<li><b>" + esc(WHY_A) + "<mark>" + esc(WHY_B) + "</mark>" + esc(WHY_C) + "</b></li></ul></div>" +
       '<div class="fch"><b>💰 과일 주문 한도선</b><span>한도선보다 비싸면 <mark>주문 전에 사장님께 먼저 확인</mark> · ⭐ = 메인 과일 · 「지금 철」 = 이번 달에 쓰는 과일</span>' +
       '<button type="button" class="fcaside-open">📋 옆에 열기</button>' + (canEdit() ? '<button type="button" class="fcedit">' + (ed ? "✔ 다 고쳤어요" : "✏ 한도선 고치기") + "</button>" : "") + "</div>";
     if (ed) {
