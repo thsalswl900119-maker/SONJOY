@@ -319,6 +319,7 @@
     // 저장된 표(재료 × 분량)는 옆으로 밀어 볼 수 있게 감싼다 (화면에서만)
     Array.prototype.forEach.call(bodyEl.querySelectorAll("table.rcmx"), function (tb) { if (!tb.parentNode.classList.contains("rcmxw")) { var w = document.createElement("div"); w.className = "rcmxw"; tb.parentNode.insertBefore(w, tb); w.appendChild(tb); } });
     Array.prototype.forEach.call(bodyEl.querySelectorAll(".rcmx td"), function (td) { if (td.textContent.trim().length > 12) td.classList.add("tx"); });
+    try { tidy(bodyEl); } catch (e) {}
     if (canEdit() && h != null) edButtons(false);
     find(q);
   }
@@ -327,6 +328,30 @@
   if (allBtn) allBtn.addEventListener("click", function () { bodyEl.querySelectorAll("details").forEach(function (d) { d.open = true; }); });
   if (noneBtn) noneBtn.addEventListener("click", function () { bodyEl.querySelectorAll("details").forEach(function (d) { d.open = false; }); bodyEl.scrollIntoView({ block: "start" }); });
   function jamData() { try { return JSON.parse(plain.jam || "{}") || {}; } catch (e) { return {}; } }
+  // 10/29 사장님 「케이크 레시피 가독성」 — 화면에서만 (저장 글은 그대로): 재료 | 양 두 칸 표는 글 폭만큼(rcmxw2),
+  //  「✅ N개 분량」 같은 짧은 제목 + 좁은 표가 2개 넘게 이어지면 옆으로 나란히 카드(rcgrid · rcblk)로
+  function tidy(root) {
+    Array.prototype.forEach.call(root.querySelectorAll(".rcmxw"), function (w) { var tb = w.querySelector("table"); var n = tb && tb.tHead ? tb.tHead.rows[0].cells.length : 0; if (n && n <= 2) w.classList.add("rcmxw2"); if (n && n <= 3) w.classList.add("rcnarrow"); });
+    function isHead(el) { return !!el && /^(P|H4|H5)$/.test(el.tagName) && el.textContent.trim().length <= 45 && /분량|배합|\d+\s*개|\(\s*\d+\s*g\s*\)|✅/.test(el.textContent); }
+    function isNote(el) { return !!el && el.tagName === "P" && el.textContent.trim().length <= 90 && /^[\s*(]*(\*|💡|ex\)|※)/.test(el.textContent.trim()); }
+    function isTab(el) { return !!el && el.classList && el.classList.contains("rcnarrow"); }
+    Array.prototype.forEach.call(root.querySelectorAll(".rcb"), function (rcb) {
+      var kids = Array.prototype.slice.call(rcb.children), runs = [], run = [];
+      function close() { if (run.length > 1) runs.push(run); run = []; }
+      for (var i = 0; i < kids.length; i++) {
+        var el = kids[i];
+        if (isTab(el)) { run.push({ h: isHead(kids[i - 1]) ? kids[i - 1] : null, t: el, n: [] }); continue; }
+        if (isHead(el) && isTab(kids[i + 1])) continue;                 // 다음 표의 제목
+        if (run.length && isNote(el)) { run[run.length - 1].n.push(el); continue; }   // 표 밑 짧은 메모는 그 카드 안으로
+        close();
+      }
+      close();
+      runs.forEach(function (r) {
+        var g = document.createElement("div"); g.className = "rcgrid"; rcb.insertBefore(g, r[0].h || r[0].t);
+        r.forEach(function (it) { var b = document.createElement("div"); b.className = "rcblk"; if (it.h) b.appendChild(it.h); b.appendChild(it.t); it.n.forEach(function (x) { x.classList.add("rcblkn"); b.appendChild(x); }); g.appendChild(b); });
+      });
+    });
+  }
   function drawJam() {
     var d = jamData(), order = (d._order || Object.keys(d)).filter(function (k) { return k.charAt(0) !== "_" && d[k]; });
     Object.keys(d).forEach(function (k) { if (k.charAt(0) !== "_" && order.indexOf(k) < 0) order.push(k); });
