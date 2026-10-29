@@ -3164,6 +3164,7 @@
       return isNaN(n) ? null : n;
     }
     function fmt(n) { return (n > 0 ? "+" : "") + n.toLocaleString("ko-KR"); }
+    var PERDAY = ["1", "2", "7", "3", "4", "5", "10", "11", "12", "13", "14"];   // 하루 평균으로 비교할 줄 (금액 · 개수)
 
     function recalc() {
       // 합계행 채우기
@@ -3213,12 +3214,41 @@
         var id = td.dataset.for;
         var a = num((document.querySelector('.cin[data-k="cy' + id + '"]') || {}).value);
         var b = num((document.querySelector('.cin[data-k="cn' + id + '"]') || {}).value);
-        if (a === null || b === null) { td.textContent = "—"; td.className = "cdiff"; return; }
+        // 작년에 쿠팡 칸이 없으면(배달이 배민+쿠팡 한 칸이던 달) 배민 줄은 이번 달도 배민+쿠팡으로 비교 (10/29 · 배민만 빼서 −로 보이던 것)
+        var merged = false;
+        if (id === "2" && b !== null) {
+          var cy7 = num((document.querySelector('.cin[data-k="cy7"]') || {}).value), cn7 = num((document.querySelector('.cin[data-k="cn7"]') || {}).value);
+          if (cy7 === null && cn7) { b += cn7; merged = true; }
+        }
+        if (a === null || b === null) { td.textContent = "—"; td.className = "cdiff"; td.title = ""; return; }
         var d = b - a;
-        td.textContent = d === 0 ? "0" : fmt(d);
+        // 10/29 사장님 「숫자가 반대 · 돈이 다 틀렸어」: 달이 안 끝나 영업일수가 다르면(예: 이번 달 19일 vs 작년 26일) 합계끼리 빼면 늘 「−」로 보임
+        //  → 금액 · 개수 줄은 하루 평균끼리 비교 (일 매출 · 직원당 · 영업일수 · 직원 수 · 유입 줄은 그대로)
+        var dy = num((document.querySelector('.cin[data-k="cy25"]') || {}).value), dn = num((document.querySelector('.cin[data-k="cn25"]') || {}).value);
+        if (dy && dn && dy !== dn && PERDAY.indexOf(id) >= 0) {
+          var pa = a / dy, pb = b / dn, pd = pb - pa, prod = +id >= 10;
+          var pr = prod ? Math.round(pd * 10) / 10 : Math.round(pd);
+          td.textContent = "하루 " + (pr === 0 ? "0" : (pr > 0 ? "+" : "") + pr.toLocaleString("ko-KR")) + (pa ? " (" + (pd >= 0 ? "+" : "") + Math.round(pd / pa * 1000) / 10 + "%)" : "");
+          td.title = "영업일수가 달라(작년 " + dy + "일 · 이번 달 " + dn + "일) 하루 평균으로 비교 — 작년 하루 " + (prod ? Math.round(pa * 10) / 10 : Math.round(pa)).toLocaleString("ko-KR") + " · 이번 달 하루 " + (prod ? Math.round(pb * 10) / 10 : Math.round(pb)).toLocaleString("ko-KR");
+          td.className = "cdiff perday" + (pr === 0 ? "" : pd > 0 ? " up" : " down");
+          if (merged) { td.textContent += " · 쿠팡 합침"; td.title += " · 작년 배민 칸에 쿠팡이 합쳐져 있어 이번 달도 배민+쿠팡으로 비교"; }
+          return;
+        }
+        td.title = "";
+        td.textContent = (d === 0 ? "0" : fmt(d)) + (merged ? " · 쿠팡 합침" : "");
+        if (merged) td.title = "작년 배민 칸에 쿠팡이 합쳐져 있어 이번 달도 배민+쿠팡으로 비교";
         var good = td.dataset.inv ? d < 0 : d > 0;   // 순위처럼 작을수록 좋은 줄은 색을 반대로
         td.className = "cdiff" + (d === 0 ? "" : good ? " up" : " down");
       });
+      // 영업일수가 다르면 표 위에 한 줄 안내
+      (function () {
+        var w = document.querySelector("#tp5 .cmpwrap"); if (!w) return;
+        var nt = document.getElementById("mtPerDay");
+        if (!nt) { nt = document.createElement("p"); nt.id = "mtPerDay"; nt.className = "mtperday"; w.parentNode.insertBefore(nt, w); }
+        var dy = num((document.querySelector('.cin[data-k="cy25"]') || {}).value), dn = num((document.querySelector('.cin[data-k="cn25"]') || {}).value);
+        nt.hidden = !(dy && dn && dy !== dn);
+        if (!nt.hidden) nt.textContent = "⚠ 영업일수가 달라요 (작년 " + dy + "일 · 이번 달 " + dn + "일) → 「차이」는 합계가 아니라 하루 평균으로 비교했어요";
+      })();
     }
     // 저장은 이 화면에서 고친 칸만 최신 저장값에 얹음 (다른 기기가 넣은 칸 · _fix 같은 기록은 그대로)
     var touched = {};
