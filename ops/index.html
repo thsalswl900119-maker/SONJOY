@@ -3378,7 +3378,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-285</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-286</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -4090,20 +4090,20 @@ input,select,textarea{border-radius:var(--r3)!important}
 </footer>
 </div>
 
-<script src="js/chrome.js?v=v0924-285"></script>
+<script src="js/chrome.js?v=v0924-286"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/drag.js?v=v0924-285"></script>
-<script src="js/sync.js?v=v0924-285"></script>
-<script src="js/holidays.js?v=v0924-285"></script>
-<script src="js/sched.js?v=v0924-285"></script>
-<script src="js/app.js?v=v0924-285"></script>
-<script src="js/fruit.js?v=v0924-285"></script>
-<script src="js/mobile.js?v=v0924-285"></script>
-<script src="js/qc.js?v=v0924-285"></script>
-<script src="js/loghist.js?v=v0924-285"></script>
+<script src="js/drag.js?v=v0924-286"></script>
+<script src="js/sync.js?v=v0924-286"></script>
+<script src="js/holidays.js?v=v0924-286"></script>
+<script src="js/sched.js?v=v0924-286"></script>
+<script src="js/app.js?v=v0924-286"></script>
+<script src="js/fruit.js?v=v0924-286"></script>
+<script src="js/mobile.js?v=v0924-286"></script>
+<script src="js/qc.js?v=v0924-286"></script>
+<script src="js/loghist.js?v=v0924-286"></script>
 <script>/* 같은 기기에 시스템 창(탭)이 두 개 이상 — 10/23 사고(가게 컴퓨터 창 여러 개에서 같은 일지를 써서 글이 세 번 겹치고 지워짐) 막기 */
 (function(){if(!window.BroadcastChannel)return;var id=Math.random().toString(36).slice(2),bc=new BroadcastChannel("cafesui.tabs"),seen={},band=null;
 function paint(){var now=Date.now(),n=Object.keys(seen).filter(function(k){return now-seen[k]<40000;}).length;
@@ -4112,7 +4112,7 @@ else if(!n&&band){band.remove();band=null;}}
 bc.onmessage=function(e){var d=e.data||{};if(!d.id||d.id===id)return;seen[d.id]=Date.now();if(d.t==="hi")bc.postMessage({t:"here",id:id});if(d.t==="bye")delete seen[d.id];paint();};
 bc.postMessage({t:"hi",id:id});setInterval(function(){bc.postMessage({t:"here",id:id});paint();},15000);
 window.addEventListener("pagehide",function(){try{bc.postMessage({t:"bye",id:id});}catch(e){}});})();</script>
-<script src="js/price.js?v=v0924-285"></script>
+<script src="js/price.js?v=v0924-286"></script>
 <!-- csonly:start -->
 <script>
 // 🔥 카페스이 모토 — 모든 화면 맨 위에(10/21 사장님 「모토처럼 매 섹션에 다 넣어줘」 · 문구 그대로) · 나중에 불러오는 탭이 내용을 바꿔도 다시 붙임
@@ -5159,12 +5159,11 @@ html.mob .fcaside{top:auto;height:78vh;width:100vw;border-left:0;border-top:2px 
 .fpbox .fpmx{min-width:900px;font-size:13.5px}.fpbox .fpmx td{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 #tp5 .mtperday{margin:8px 0;padding:8px 12px;border-radius:8px;background:#FFF4D6;border:1px solid #E8C770;color:#5A4300;font-weight:800;font-size:15px}
 /* 10/29 금액 칸이 좁아 「17,98…」처럼 잘려 보이던 것 — 작년 · 이번 달 칸은 숫자가 다 보이게 */
-#tp5 .ctable{min-width:860px;table-layout:fixed}
-#tp5 .ctable thead th:nth-child(5){width:210px}
-#tp5 .ctable th[scope="row"]{width:150px}
-#tp5 .ctable thead th:nth-child(2),#tp5 .ctable thead th:nth-child(3){width:150px}
-#tp5 .ctable thead th:nth-child(4){width:170px}
-#tp5 .ctable .cin.numfmt{font-size:15px;text-align:right;min-width:0}
+#tp5 .ctable{min-width:660px;table-layout:fixed}
+#tp5 .ctable th[scope="row"]{width:118px}
+#tp5 .ctable thead th:nth-child(2),#tp5 .ctable thead th:nth-child(3){width:118px}
+#tp5 .ctable thead th:nth-child(4){width:128px}
+#tp5 .ctable .cin.numfmt{font-size:14.5px;text-align:right;min-width:0;padding-left:4px;padding-right:5px}
 #tp5 .cdiff{width:auto;white-space:normal;word-break:keep-all;line-height:1.35}
 #tp5 .cdiff.perday{font-size:13.5px}
 .fpbox .fpmx td.over{background:#FDECEA;color:#9B1C14;font-weight:800}
@@ -5192,10 +5191,10 @@ html.mob .fcaside{top:auto;height:78vh;width:100vw;border-left:0;border-top:2px 
 .skcapnow .scc b{color:#9B1C14;font-size:16px;font-variant-numeric:tabular-nums;white-space:nowrap}
 .skcapnow .scc i{font-style:normal;font-size:12.5px;color:var(--ink2);display:block}
 </style>
-<script src="js/stock.js?v=v0924-285"></script>
-<script src="js/mango.js?v=v0924-285"></script>
-<script src="js/fruitcap.js?v=v0924-285"></script>
-<script src="js/fruitprice.js?v=v0924-285"></script>
+<script src="js/stock.js?v=v0924-286"></script>
+<script src="js/mango.js?v=v0924-286"></script>
+<script src="js/fruitcap.js?v=v0924-286"></script>
+<script src="js/fruitprice.js?v=v0924-286"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -5278,15 +5277,15 @@ html.mob .fcaside{top:auto;height:78vh;width:100vw;border-left:0;border-top:2px 
   window.addEventListener("cs:remote", function () { setTimeout(mark, 400); });
 })();
 </script>
-<script src="js/presence.js?v=v0924-285"></script>
-<script src="js/weekrep.js?v=v0924-285"></script>
-<script src="js/recipe.js?v=v0924-285"></script>
-<script src="js/bench.js?v=v0924-285"></script>
+<script src="js/presence.js?v=v0924-286"></script>
+<script src="js/weekrep.js?v=v0924-286"></script>
+<script src="js/recipe.js?v=v0924-286"></script>
+<script src="js/bench.js?v=v0924-286"></script>
 <script>/* 월말회의 「잘한 것」 한 칸으로 (10/22 사장님 「합쳐줘」) — 예전 ② ③ 칸은 글이 있는 달만 보임 */
 (function(){function p(){document.querySelectorAll("#mtForm .frow.mtold").forEach(function(r){var t=r.querySelector(".fin");r.hidden=!(t&&t.value.trim());});}
 var m=document.getElementById("mtMonth");if(m)m.addEventListener("change",function(){setTimeout(p,80);});
 window.addEventListener("cs:remote",function(){setTimeout(p,400);});document.addEventListener("click",function(e){if(e.target.closest('.tab[data-p="tp5"]'))setTimeout(p,80);});setTimeout(p,600);})();</script>
-<script src="js/monthlog.js?v=v0924-285"></script>
-<script src="js/xmas.js?v=v0924-285"></script>
-<script src="js/tg.js?v=v0924-285"></script>
+<script src="js/monthlog.js?v=v0924-286"></script>
+<script src="js/xmas.js?v=v0924-286"></script>
+<script src="js/tg.js?v=v0924-286"></script>
 </body></html>
