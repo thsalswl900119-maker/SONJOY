@@ -308,14 +308,14 @@
   }
   function goalRow(x) {
     return '<tr data-id="' + x._id + '"><td data-l="종류"><select class="xgi" data-f="k">' + KINDS.map(function (k) { return "<option" + (k === x.k ? " selected" : "") + ">" + k + "</option>"; }).join("") + '</select></td>' +
-      '<td data-l="품목" class="gn"><input type="text" class="xgi" data-f="n" value="' + ea2(x.n) + '"></td><td data-l="단가(원)"><input type="text" inputmode="numeric" class="xgi num money" data-f="p" value="' + ea2(money(x.p)) + '"></td>' +
+      '<td data-l="품목" class="gn"><input type="text" class="xgi" data-f="n" value="' + ea2(x.n) + '"></td><td data-l="단가(원)"><input type="text" inputmode="numeric" class="xgi num money" data-f="p" value="' + ea2(money(x.p)) + '">' + prHint(x) + '</td>' +
       '<td data-l="목표 개수"><input type="text" inputmode="numeric" class="xgi num" data-f="t" value="' + ea2(x.t) + '"></td><td data-l="예상 매출" class="num">' + won(N(x.p) * N(x.t)) + '</td><td class="gx"><button type="button" class="xcx" data-a="gdel" aria-label="빼기">✕</button></td></tr>';
   }
   function drawGoal(el) {
     var g = goalOf(cur), s = goalSum(g), tot = N(g.total), cakes = s.whole + s.mini, pk = N(g.peak), pp = peakPlan(cur, g);
     var F = gmd(g.from, "11/11"), T = gmd(g.to, "12/25"), PF = gmd(g.pf, "12/21"), PT = gmd(g.pt, "12/25");
     var XM = rows(g.it).filter(function (x) { return x.k !== "조각"; }), SL = rows(g.it).filter(function (x) { return x.k === "조각"; });
-    var h = '<div class="xmbox"><div class="xmbh"><b>🎯 ' + cur + ' 크리스마스 케이크 전사 목표</b><span>종류 상관없이 크리스마스 케이크(홀 · 중간 · 미니)만 — 기본 조각케이크는 아래에 따로 (전사 목표 · 예상 매출에 안 들어감)</span></div>' +
+    var h = '<div class="xmbox"><div class="xmbh"><b>🎯 ' + cur + ' 크리스마스 케이크 전사 목표</b><button type="button" class="skbtn xpaopen">💰 가격표 옆에 열기 (스마트플레이스)</button><span>종류 상관없이 크리스마스 케이크(홀 · 중간 · 미니)만 — 기본 조각케이크는 아래에 따로 (전사 목표 · 예상 매출에 안 들어감)</span></div>' +
       '<div class="xmgoal2">' +
       '<div class="xgcard all"><b>① 전체 기간 목표</b><div class="xgper"><input type="text" class="xg xgd" data-g="from" value="' + ea2(F) + '" aria-label="시작 날짜"> ~ <input type="text" class="xg xgd" data-g="to" value="' + ea2(T) + '" aria-label="끝 날짜"></div>' +
         '<label class="xgnum">총 <input type="text" inputmode="numeric" class="xg" data-g="total" value="' + ea2(g.total) + '" placeholder="300"> 개</label>' +
@@ -371,6 +371,57 @@
     });
   }
   goalEvents(document.getElementById("xmGoal"));
+  // ── 💰 가격표 옆 창 (10/30 · 사장님 「올해 크리스마스 케이크도 어사이드로 스마트플레이스 금액 확인해서 빠진 거 다 넣기」)
+  //    cafesui.price(POS 캡쳐 + 스마트플레이스 예약 상품 파일)에서 전사 목표 품목마다 맞는 값을 찾아 보여 주고, 단가가 비었거나 다르면 「← 넣기」.
+  var PRK = "cafesui.price";
+  function prItems() { var o = J(PRK) || {}, it = o.it || {}; return Object.keys(it).filter(function (k) { return it[k] && !it[k].del && N(it[k].p); }).map(function (k) { var x = it[k]; return { id: k, c: x.c || "", n: x.n || "", p: N(x.p), m: x.m || "" }; }); }
+  function flv(n) { n = String(n || ""); return /메론|멜론/.test(n) ? "melon" : /티라미수/.test(n) ? "tira" : /체리/.test(n) ? "cherry" : /무화과/.test(n) ? "fig" : /피스타/.test(n) ? "pista" : /말차/.test(n) ? "matcha" : /샤인/.test(n) ? "shine" : /망고/.test(n) ? "mango" : /보늬밤/.test(n) ? "bonui" : /초코/.test(n) ? "choco" : /딸기|생크림/.test(n) ? "straw" : "?"; }
+  function prMatch(x) {   // 전사 목표 품목 → 가격표 한 줄 (올해 크리스마스 → 작년 크리스마스 → 평소 상품 순)
+    var L = prItems(), f = flv(x.n), yy = String(cur).slice(2), XC = /크리스마스/;
+    function pick(arr) { return arr.filter(function (p) { return flv(p.n) === f; })[0]; }
+    if (x.k === "조각") return pick(L.filter(function (p) { return p.c === "조각 케이크"; }));
+    if (x.k === "미니") return pick(L.filter(function (p) { return XC.test(p.c) && /미니/.test(p.n) && p.n.indexOf(yy + "년") >= 0; })) || pick(L.filter(function (p) { return XC.test(p.c) && /미니/.test(p.n); }));
+    if (x.k === "홀") return pick(L.filter(function (p) { return XC.test(p.c) && !/미니/.test(p.n) && p.n.indexOf(yy + "년") >= 0; })) || pick(L.filter(function (p) { return XC.test(p.c) && !/미니/.test(p.n); }));
+    return null;
+  }
+  function prHint(x) {
+    var m = prMatch(x); if (!m) return '<span class="xprh none">가격표에 없음</span>';
+    var same = N(x.p) === m.p, last = !m.n.match(new RegExp(String(cur).slice(2) + "년")) && /크리스마스/.test(m.c);
+    return '<span class="xprh' + (same ? " ok" : "") + '" title="' + ea2(m.c + " · " + m.n) + '">' + (same ? "✔ " : "") + "가격표 " + m.p.toLocaleString("ko-KR") + "원" + (last ? " (작년)" : m.c === "조각 케이크" ? " (지금 POS)" : "") +
+      (same ? "" : ' <button type="button" class="xprput" data-p="' + m.p + '">← 넣기</button>') + "</span>";
+  }
+  var prA = document.createElement("aside"); prA.className = "fcaside xpaside"; prA.id = "xmPrAside"; prA.hidden = true; prA.setAttribute("aria-label", "가격표"); document.body.appendChild(prA);
+  var prQ = "", prCat = "xm";
+  var PRC = [["xm", "🎄 크리스마스", function (p) { return /크리스마스/.test(p.c); }], ["hole", "케이크 (홀)", function (p) { return p.c === "케이크 (홀)"; }], ["slice", "조각", function (p) { return p.c === "조각 케이크"; }], ["off", "⏸ 미노출", function (p) { return /미노출/.test(p.c); }], ["all", "전체", function () { return true; }]];
+  function prPaint() {
+    if (prA.hidden) return;
+    var L = prItems(), C = PRC.filter(function (c) { return c[0] === prCat; })[0] || PRC[0], q = prQ.trim();
+    var xs = L.filter(q ? function (p) { return (p.n + " " + p.c + " " + p.m).indexOf(q) >= 0; } : C[2]);
+    var yy2 = String(cur).slice(2) + "년"; xs.sort(function (a, b) { return (b.n.indexOf(yy2) >= 0) - (a.n.indexOf(yy2) >= 0); });
+    var g = goalOf(cur), miss = rows(g.it).filter(function (x) { var m = prMatch(x); return !N(x.p) || (m && m.p !== N(x.p)); });
+    var b = prA.querySelector(".fcab"), sy = b ? b.scrollTop : 0;
+    prA.innerHTML = '<div class="fcah"><b>💰 가격표</b><span>POS · 스마트플레이스 예약 상품 (가격표 탭과 같은 값)</span><button type="button" class="xpaclose" aria-label="닫기">✕</button></div>' +
+      '<div class="fcab"><input type="search" class="xpaq" placeholder="🔍 이름 찾기 (예: 미니 · 피스타치오)" value="' + ea2(prQ) + '">' +
+      '<div class="xpacats">' + PRC.map(function (c) { return '<button type="button" class="xpacat" data-c="' + c[0] + '" aria-pressed="' + (c[0] === prCat && !q) + '">' + c[1] + " <i>" + L.filter(c[2]).length + "</i></button>"; }).join("") + "</div>" +
+      (miss.length ? '<div class="xpamiss"><b>⚠ ' + cur + ' 전사 목표에서 단가가 비었거나 가격표와 다른 것 ' + miss.length + '개</b>' + miss.map(function (x) { return '<div data-id="' + x._id + '"><span>' + esc(x.n) + " <small>" + esc(x.k) + " · 지금 " + (N(x.p) ? N(x.p).toLocaleString("ko-KR") + "원" : "비어 있음") + "</small></span>" + prHint(x) + "</div>"; }).join("") + "</div>" : '<p class="xpaok">✔ ' + cur + " 전사 목표 단가가 가격표와 모두 같아요</p>") +
+      '<div class="xpal">' + (xs.length ? xs.map(function (p) { return '<div class="xpai"><span><b>' + esc(p.n) + "</b><small>" + esc(p.c) + (p.m ? " · " + esc(p.m.slice(0, 70)) : "") + "</small></span><em>" + p.p.toLocaleString("ko-KR") + "원</em></div>"; }).join("") : '<p class="xmempty">찾는 상품이 없어요</p>') + "</div>" +
+      '<p class="xmtiny">스마트플레이스 값은 10/22 받은 예약 상품 파일 기준 · 그 뒤 새로 올린 상품 · 바뀐 가격은 💰 가격표 탭 「📋 한 번에 붙여넣기」로 넣어 주세요</p></div>';
+    var b2 = prA.querySelector(".fcab"); if (b2) b2.scrollTop = sy;
+  }
+  function prOpen() { prA.hidden = false; document.documentElement.classList.add("fcaside-on"); prPaint(); }
+  function prClose() { prA.hidden = true; if (!document.querySelector(".fcaside:not([hidden])")) document.documentElement.classList.remove("fcaside-on"); }
+  function prPut(id, v) { goalEdit(cur, function (g) { var x = g.it[id]; if (!x) return; if (N(x.p) && N(x.p) !== N(v)) x.prev = x.p; x.p = String(v); x.ed = "가격표 " + stampNow() + (me() ? " · " + me() : ""); }); drawPane(true); prPaint(); }
+  document.addEventListener("click", function (e) {
+    if (!e.target.closest) return;
+    if (e.target.closest(".xpaopen")) { prOpen(); return; }
+    if (e.target.closest(".xpaclose")) { prClose(); return; }
+    var c = e.target.closest(".xpacat"); if (c) { prCat = c.dataset.c; prQ = ""; prPaint(); return; }
+    var pb = e.target.closest(".xprput"); if (pb) { var row = pb.closest("[data-id]"); if (row) prPut(row.dataset.id, pb.dataset.p); }
+  });
+  prA.addEventListener("input", function (e) { if (e.target.classList.contains("xpaq")) { prQ = e.target.value; clearTimeout(prPaint.t); prPaint.t = setTimeout(function () { prPaint(); var q = prA.querySelector(".xpaq"); if (q) { q.focus(); q.setSelectionRange(q.value.length, q.value.length); } }, 250); } });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !prA.hidden) prClose(); });
+  window.addEventListener("cs:remote", function (e) { var ks = (e.detail && e.detail.keys) || []; if (ks.indexOf(PRK) >= 0 || ks.indexOf(PRE + cur) >= 0) prPaint(); });
+
 
   // ── 🧾 재료 · 부자재 — o.mat = { id:{ k(분류), n(품목), q(수량), s(주문처), c(금액), m(메모), pq · pc(작년), od · ind({by,at}: 주문함 · 입고), o, del } }
   var MK = ["포장", "데코", "재료", "크림 · 과일", "기타"];
@@ -558,7 +609,7 @@
       "<div><span>피크 " + md(pa) + "~" + md(pb) + " 목표 → 계획</span><b>" + (g.peak ? esc(g.peak) : "—") + " → " + peak + '개</b><em class="' + (N(g.peak) && peak && peak !== N(g.peak) ? "off" : "") + '">' + py + "년 같은 날 " + pkRef + "개</em></div>" +
       "<div><span>12/1~17 예약</span><b>" + acc + "개</b><em>" + py + "년 " + pacc + "개</em></div></div>";
     el.innerHTML = '<div class="xmbox xplanbox"><div class="xmbh"><b>🗂 ' + y + ' 크리스마스 주간 계획표</b><span>' + py + '년 크리스마스 파일(생산 · 재료 · 일하는 스케줄 · 예약 속도 · 시간대)을 한 장에 · 칸마다 <b>작년 같은 날</b>이 회색으로 · 적는 즉시 저장 · 생산 숫자는 🍰 날짜별 생산과 같은 칸</span></div>' +
-      '<div class="xmbtns"><label class="xpchk"><input type="checkbox" id="xpRefChk"' + (PLREF ? " checked" : "") + "> " + py + '년 글 · 숫자 같이 보기</label><button type="button" class="skbtn" data-a="plwide">' + (document.documentElement.classList.contains("xmwide") ? "↩ 원래 폭으로" : "⛶ 넓게 보기 (메뉴 숨기기)") + '</button><button type="button" class="skbtn" data-a="plprint">🖨 인쇄 · PDF</button>' +
+      '<div class="xmbtns"><button type="button" class="skbtn xpaopen">💰 가격표 옆에 열기</button><label class="xpchk"><input type="checkbox" id="xpRefChk"' + (PLREF ? " checked" : "") + "> " + py + '년 글 · 숫자 같이 보기</label><button type="button" class="skbtn" data-a="plwide">' + (document.documentElement.classList.contains("xmwide") ? "↩ 원래 폭으로" : "⛶ 넓게 보기 (메뉴 숨기기)") + '</button><button type="button" class="skbtn" data-a="plprint">🖨 인쇄 · PDF</button>' +
       '<label class="xmnote xmshort">계획 날짜 (쉼표로)<input type="text" class="xpcols" value="' + ea2(C.map(md).join(", ")) + '"></label></div>' + top +
       '<h4 class="xmgh">① 날짜별 생산 계획 <small>홀 · 미니는 개 · 조각은 판 · 품목 · 목표는 🎯 전사 목표에서</small></h4>' + prod +
       '<h4 class="xmgh">② 3가지 대표 재료 <small>생산 계획 합계로 자동 계산</small></h4>' + mat +
