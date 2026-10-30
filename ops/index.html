@@ -3378,7 +3378,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-293</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-294</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -3840,14 +3840,30 @@ input,select,textarea{border-radius:var(--r3)!important}
     <span class="sub">해마다 크리스마스 준비 · 회의 결론 · 결과를 한 곳에 · 적는 즉시 저장되고 모든 기기에 같이 보입니다 · 작년 것을 보고 올해를 짜기</span></div>
   <div class="xmbar"><button type="button" class="daynav" id="xmPrev" aria-label="이전 해">◀</button><span class="xmyears" id="xmYears"></span><button type="button" class="daynav" id="xmNext" aria-label="다음 해">▶</button><button type="button" class="skbtn" id="xmCopy">📋 이 해 정리 복사</button></div>
   <div class="xmhead"><b id="xmTitle">🎄 크리스마스</b><span id="xmState"></span></div>
-  <nav class="xmnav" id="xmNav" role="tablist" aria-label="크리스마스 화면"><button type="button" class="xmn" data-x="sum" aria-selected="false">📋 한눈에</button><button type="button" class="xmn" data-x="item" aria-selected="false">🎁 상품 안내</button><button type="button" class="xmn xmnplan" data-x="plan" aria-selected="false">🗂 주간 계획표</button><button type="button" class="xmn" data-x="cal" aria-selected="false">🗓 준비 캘린더</button><button type="button" class="xmn" data-x="ck" aria-selected="false">✅ 체크리스트</button><button type="button" class="xmn" data-x="goal" aria-selected="false">🎯 전사 목표</button><button type="button" class="xmn" data-x="mat" aria-selected="false">🧾 재료 · 부자재</button><button type="button" class="xmn" data-x="prod" aria-selected="false">🍰 날짜별 생산</button><button type="button" class="xmn" data-x="meet" aria-selected="false">📝 회의 · 결론</button><button type="button" class="xmn" data-x="hist" aria-selected="false">📊 지난 해 기록</button><button type="button" class="xmn" data-x="rep" aria-selected="false">📄 보고서</button></nav>
+  <nav class="xmnav" id="xmNav" role="tablist" aria-label="크리스마스 화면"><button type="button" class="xmn" data-x="sum" aria-selected="false">📋 한눈에</button><button type="button" class="xmn" data-x="goal" aria-selected="false">🎯 목표 · 매출</button><button type="button" class="xmn" data-x="prod" aria-selected="false">🍰 생산 계획</button><button type="button" class="xmn" data-x="mat" aria-selected="false">🧾 재료 · 부자재</button><button type="button" class="xmn" data-x="ck" aria-selected="false">✅ 할 일 · 달력</button><button type="button" class="xmn" data-x="meet" aria-selected="false">🎁 상품 · 결정</button><button type="button" class="xmn" data-x="hist" aria-selected="false">📊 지난 해 · 보고서</button></nav>
   <div class="xmpane" data-x="sum" hidden>
   <div id="xmSum"></div>
 <!-- csonly:start -->
   <div class="tnotice" id="xmRule"><div class="tnhead">🎄 크리스마스 · 해마다 꼭 해야 하는 것</div><ul><li><b>9-10월쯤 <mark>크리스마스 케이크 디자인 회의</mark> 하기</b><span>꼭 해야 하는 것 · 체크리스트 「크리스마스 케이크 디자인 회의」</span></li><li><b>10월 말 11월 초에 <mark>무조건 크리스마스 분위기로 바꾸기</mark></b><span>꼭 해야 하는 것 · 데코 꺼내기 · 남은 데코 재고 파악 · 음악도 같이</span></li><li><b>딸기 첫 출하 되자마자 <mark>크리스마스 컨셉사진 찍기</mark></b><span>꼭 해야 하는 것 · 작년엔 딸기가 10/31쯤 나옴 · 체크리스트 날짜를 딸기 들어오는 날로 고치기</span></li><li><b>12월 크리스마스는 <mark>작년 생산량을 비교해서</mark> 계산해서 플랜을 짜기</b><span>아래에서 작년 칸(결과 · 생산량)을 먼저 보고 시작</span></li><li><b>11/25 쯤 <mark>예약 오픈 준비</mark> · 12/1 네이버 마케팅 메시지</b><span>예약 디데이 마감일 정해서 공지 (연간 운영 캘린더)</span></li><li><b>12/22~25 <mark>1년 중 가장 바쁜 나흘</mark></b><span>예약 픽업을 시간대별로 쪼개서 정리 · 인력 추가 · 딸기 · 생크림 · 시트 넉넉히 · 현장 판매분 남겨 두기</span></li><li><b>12월 크리스마스 작업 기간은 <mark>퇴근시간 예외</mark></b><span>평소엔 퇴근시간을 서로 존중 · 크리스마스 작업에는 예외 (월말회의록)</span></li><li><b>매장 음악은 <mark>크리스마스 팝송 OST</mark></b><span>크리스마스 시즌 동안 (시간대별 포지션 할 일)</span></li></ul></div>
 <!-- csonly:end -->
   </div>
-  <div class="xmpane" data-x="item" hidden>
+  <div class="xmpane" data-x="ck" hidden>
+  <div class="xmckv" id="xmCkV"><button type="button" data-v="cal" aria-pressed="true">🗓 달력으로 보기</button><button type="button" data-v="list" aria-pressed="false">📋 목록으로 보기</button></div>
+  <div id="xmCal"></div>
+  <div class="xmck" id="xmCkBox"><div class="xmckh"><b>✅ 날짜별 체크리스트</b><span id="xmCkD"></span><small>날짜 · 할 일 · 담당은 눌러서 고치면 바로 저장 · 날짜가 되면 「오늘 할 일」 맨 위에 체크할 때까지 뜹니다</small></div><div id="xmCk"></div></div>
+  </div>
+  <div class="xmpane" data-x="goal" hidden>
+  <div id="xmGoal"></div>
+  </div>
+  <div class="xmpane" data-x="mat" hidden>
+  <div id="xmMat"></div>
+  </div>
+  <div class="xmpane" data-x="prod" id="xmProdPane" hidden>
+  <div id="xmProd"></div>
+  <div id="xmPlan"></div>
+  </div>
+  <div class="xmpane" data-x="meet" hidden>
+  <h3 class="subhead">🎁 상품 안내 <small>손님께 안내하는 최종 상품 · 가격</small></h3>
 <!-- csonly:start -->
   <div class="xmgal xmitem" data-y="2026" hidden>
     <div class="xiHead"><span class="xiTag">한정수량 예약 주문 제품</span><h3>26년 카페스이 크리스마스 케이크 에디션</h3><p class="xiEn">CAFE SUI · CHRISTMAS CAKE EDITION 2026</p></div>
@@ -3867,26 +3883,7 @@ input,select,textarea{border-radius:var(--r3)!important}
   </div>
 <!-- csonly:end -->
   <p class="xinone">이 해는 아직 상품 안내가 없어요.</p>
-  </div>
-  <div class="xmpane" data-x="plan" hidden>
-  <div id="xmPlan"></div>
-  </div>
-  <div class="xmpane" data-x="cal" hidden>
-  <div id="xmCal"></div>
-  </div>
-  <div class="xmpane" data-x="ck" hidden>
-  <div class="xmck" id="xmCkBox"><div class="xmckh"><b>✅ 날짜별 체크리스트</b><span id="xmCkD"></span><small>날짜 · 할 일 · 담당은 눌러서 고치면 바로 저장 · 날짜가 되면 「오늘 할 일」 맨 위에 체크할 때까지 뜹니다</small></div><div id="xmCk"></div></div>
-  </div>
-  <div class="xmpane" data-x="goal" hidden>
-  <div id="xmGoal"></div>
-  </div>
-  <div class="xmpane" data-x="mat" hidden>
-  <div id="xmMat"></div>
-  </div>
-  <div class="xmpane" data-x="prod" hidden>
-  <div id="xmProd"></div>
-  </div>
-  <div class="xmpane" data-x="meet" hidden>
+  <h3 class="subhead">📝 회의 · 결정 <small>회의에서 정한 것 · 아직 정할 것 · 할 일 · 리스크 · 결과</small></h3>
   <div class="xmrows" id="xmRows"><label class="xmrow"><span>한눈에 결론<em>맛 · 목표 개수 · 사이즈 · 공통 구성</em></span><textarea class="xmin" rows="1" data-f="x1"></textarea></label><label class="xmrow"><span>라인업 · 가격 · 판매 방식<em>케이크마다 가격 · 예약/현장 · 서비스</em></span><textarea class="xmin" rows="1" data-f="x2"></textarea></label><label class="xmrow"><span>디자인 · 데코<em>전체 무드 · 맛별 데코 · 데코 후보</em></span><textarea class="xmin" rows="1" data-f="x3"></textarea></label><label class="xmrow"><span>패키지 · 종이 작업<em>상자 · 리본 · 엽서 · 붙이는 종이</em></span><textarea class="xmin" rows="1" data-f="x4"></textarea></label><label class="xmrow"><span>회의에서 나온 의견<em>누가 · 의견 → 반영</em></span><textarea class="xmin" rows="1" data-f="x5"></textarea></label><label class="xmrow"><span>일정 · 예약 · 생산량<em>회의 날 · 예약 시작/마감 · 날짜별 생산 · 픽업 시간대</em></span><textarea class="xmin" rows="1" data-f="x6"></textarea></label><label class="xmrow"><span>아직 정할 것</span><textarea class="xmin" rows="1" data-f="x7"></textarea></label><label class="xmrow"><span>할 일 · 담당<em>한 줄에 하나 · 「— 담당: 누구」</em></span><textarea class="xmin" rows="1" data-f="x8"></textarea></label><label class="xmrow"><span>리스크 · 체크포인트</span><textarea class="xmin" rows="1" data-f="x9"></textarea></label><label class="xmrow wide"><span>결과 · 잘된 것 · 아쉬운 것 → 내년에<em>크리스마스 끝나고 꼭 · 실제 판매 개수 · 남은 것 · 다음 해에 바꿀 것</em></span><textarea class="xmin" rows="1" data-f="x10"></textarea></label></div>
   <div class="xmfoot" id="xmFoot"></div>
 <!-- csonly:start -->
@@ -3896,9 +3893,7 @@ input,select,textarea{border-radius:var(--r3)!important}
   </div>
   <div class="xmpane" data-x="hist" hidden>
   <div id="xmHist"></div>
-  </div>
-  <div class="xmpane" data-x="rep" hidden>
-  <div id="xmRep"></div>
+  <details class="xmrepd" id="xmRepD"><summary>📄 보고서 만들기 <small>위 화면 내용을 한 장으로 · 인쇄 · PDF · 파일 · 글 복사</small></summary><div id="xmRep"></div></details>
   </div>
 </section></div><div class="panel" id="tp7" role="tabpanel" hidden data-lazy="tabs/tp7.html"><div class="lazyload">불러오는 중…</div></div><div class="panel" id="tp8" role="tabpanel" hidden><section>
   <div class="shead"><h2>매니저 월말 평가</h2><span class="en">monthly review</span>
@@ -4093,20 +4088,20 @@ input,select,textarea{border-radius:var(--r3)!important}
 </footer>
 </div>
 
-<script src="js/chrome.js?v=v0924-293"></script>
+<script src="js/chrome.js?v=v0924-294"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/drag.js?v=v0924-293"></script>
-<script src="js/sync.js?v=v0924-293"></script>
-<script src="js/holidays.js?v=v0924-293"></script>
-<script src="js/sched.js?v=v0924-293"></script>
-<script src="js/app.js?v=v0924-293"></script>
-<script src="js/fruit.js?v=v0924-293"></script>
-<script src="js/mobile.js?v=v0924-293"></script>
-<script src="js/qc.js?v=v0924-293"></script>
-<script src="js/loghist.js?v=v0924-293"></script>
+<script src="js/drag.js?v=v0924-294"></script>
+<script src="js/sync.js?v=v0924-294"></script>
+<script src="js/holidays.js?v=v0924-294"></script>
+<script src="js/sched.js?v=v0924-294"></script>
+<script src="js/app.js?v=v0924-294"></script>
+<script src="js/fruit.js?v=v0924-294"></script>
+<script src="js/mobile.js?v=v0924-294"></script>
+<script src="js/qc.js?v=v0924-294"></script>
+<script src="js/loghist.js?v=v0924-294"></script>
 <script>/* 같은 기기에 시스템 창(탭)이 두 개 이상 — 10/23 사고(가게 컴퓨터 창 여러 개에서 같은 일지를 써서 글이 세 번 겹치고 지워짐) 막기 */
 (function(){if(!window.BroadcastChannel)return;var id=Math.random().toString(36).slice(2),bc=new BroadcastChannel("cafesui.tabs"),seen={},band=null;
 function paint(){var now=Date.now(),n=Object.keys(seen).filter(function(k){return now-seen[k]<40000;}).length;
@@ -4115,7 +4110,7 @@ else if(!n&&band){band.remove();band=null;}}
 bc.onmessage=function(e){var d=e.data||{};if(!d.id||d.id===id)return;seen[d.id]=Date.now();if(d.t==="hi")bc.postMessage({t:"here",id:id});if(d.t==="bye")delete seen[d.id];paint();};
 bc.postMessage({t:"hi",id:id});setInterval(function(){bc.postMessage({t:"here",id:id});paint();},15000);
 window.addEventListener("pagehide",function(){try{bc.postMessage({t:"bye",id:id});}catch(e){}});})();</script>
-<script src="js/price.js?v=v0924-293"></script>
+<script src="js/price.js?v=v0924-294"></script>
 <!-- csonly:start -->
 <script>
 // 🔥 카페스이 모토 — 모든 화면 맨 위에(10/21 사장님 「모토처럼 매 섹션에 다 넣어줘」 · 문구 그대로) · 나중에 불러오는 탭이 내용을 바꿔도 다시 붙임
@@ -5255,10 +5250,10 @@ html.mob #xmasSec .xedbar.on{top:64px}
 html.xmwideon #sideNav{display:none!important}
 @media(min-width:1000px){html.xmwideon .wrap{margin-left:auto!important;margin-right:auto!important;max-width:none!important;padding-left:18px;padding-right:18px}}
 @media print{body.xmplprint *{visibility:hidden!important}
-body.xmplprint #xmPlan,body.xmplprint #xmPlan *{visibility:visible!important}
-body.xmplprint #xmPlan{position:absolute;left:0;top:0;width:100%}
-body.xmplprint #xmPlan .xmbtns,body.xmplprint #xmPlan .xcx,body.xmplprint #xmPlan [data-a="pladd"]{display:none!important}
-body.xmplprint #xmPlan .xmtw{overflow:visible}body.xmplprint #xmPlan .sticky{position:static}}
+body.xmplprint #xmProdPane,body.xmplprint #xmProdPane *{visibility:visible!important}
+body.xmplprint #xmProdPane{position:absolute;left:0;top:0;width:100%}
+body.xmplprint #xmProdPane .xmbtns,body.xmplprint #xmProdPane .xcx,body.xmplprint #xmProdPane [data-a],body.xmplprint #xmProdPane .xpsugbox{display:none!important}
+body.xmplprint #xmProdPane .xmtw{overflow:visible}body.xmplprint #xmProdPane .sticky{position:static}}
 /* 🎯 전사 목표 두 기간 · 조각 따로 (10/30) */
 #xmasSec .xmgoal2{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px;margin:8px 0 12px}
 #xmasSec .xgcard{border:2px solid #8E1B14;border-radius:12px;padding:10px 14px;background:#FFF6F3}
@@ -5308,7 +5303,7 @@ body.xmplprint #xmPlan .xmtw{overflow:visible}body.xmplprint #xmPlan .sticky{pos
 @media (max-width:640px){#xmasSec .xmt.goalt tr.xg25r{display:block;padding:0 10px 10px;margin:-10px 0 10px;border:1px solid var(--rule2);border-top:0;border-radius:0 0 10px 10px;background:#FFFCF6}#xmasSec .xmt.goalt tr.xg25r td{display:block;grid-area:auto;padding:0}}
 #xmasSec .xmt.prod .xpref,#xmasSec .xplan .xpref{display:block;margin-top:3px;font-size:12.5px;line-height:1.35;color:#736350;white-space:normal;word-break:keep-all;text-align:left}
 #xmasSec .xpref.xpcm{color:#7A4A12;max-height:5.6em;overflow:auto}
-#xmasSec .xphd{display:block;margin-top:2px;font-size:12.5px;font-weight:700;color:#8E1B14;white-space:normal;line-height:1.35;max-height:5.6em;overflow:auto;text-align:left}
+#xmasSec .xphd{display:block;margin-top:2px;font-size:12.5px;font-weight:700;color:#8E1B14;white-space:normal;line-height:1.35;max-height:4.1em;overflow:auto;text-align:left}
 /* 💡 생산 제안 (10/30 · xmas.js sugBox) */
 #xmasSec .xpsugbox{margin:8px 0 12px;border:2px solid #E0A458;border-radius:12px;background:#FFF8E8;padding:8px 12px}
 #xmasSec .xpsbh{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;margin-bottom:6px}#xmasSec .xpsbh b{font-size:16px;color:#7A4A12}#xmasSec .xpsbh span{flex:1 1 260px;font-size:13.5px;color:var(--ink2)}
@@ -5318,11 +5313,43 @@ body.xmplprint #xmPlan .xmtw{overflow:visible}body.xmplprint #xmPlan .sticky{pos
 #xmasSec .xpsug{display:block;margin-top:2px;font-size:12.5px;font-weight:800;color:#7A4A12;background:#FFEFC7;border-radius:6px;padding:1px 5px;white-space:normal;line-height:1.35;text-align:left}#xmasSec .xpsug.ap{background:#E3F1E3;color:#1F6B3A}
 #xmasSec .xpsg{display:block;margin-top:3px;font-size:12.5px;font-weight:800;color:#7A4A12;background:#FFEFC7;border-radius:6px;padding:1px 5px}#xmasSec .xpsg.ap{background:#E3F1E3;color:#1F6B3A}
 #xmasSec .xpsug.nt{background:#FDE3E0;color:#8E1B14}#xmasSec .xpsg1.nt .xpst b{color:#8E1B14}
+/* 🎄 크리스마스 다시 짬 (10/30 · 한눈에 카드 · 피드백 · 생산 계획 · 할 일 달력/목록 · 연결 단추) */
+#xmasSec .xmnav .xmn{font-size:16px}
+#xmasSec .xsumcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:10px;margin:6px 0 14px}
+#xmasSec .xsc{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;font:inherit;padding:12px 14px 14px;border:2px solid #E7D3B4;border-radius:14px;background:#FFFDF8;color:var(--ink);cursor:pointer;min-height:118px}
+#xmasSec .xsc:not([data-go]){cursor:default;background:#8E1B14;border-color:#8E1B14;color:#fff}#xmasSec .xsc:not([data-go]) .xsl,#xmasSec .xsc:not([data-go]) em{color:#FFE9E4}
+#xmasSec .xsc[data-go]:hover{border-color:#8E1B14;box-shadow:0 3px 10px rgba(80,40,10,.12)}
+#xmasSec .xsc .xsl{font-size:14.5px;font-weight:800;color:#7A4A12}
+#xmasSec .xsc b{font-size:28px;line-height:1.15;color:#8E1B14}#xmasSec .xsc:not([data-go]) b{color:#fff}
+#xmasSec .xsc em{font-style:normal;font-size:13.5px;color:var(--ink2);line-height:1.45}#xmasSec .xsc em b{font-size:inherit;color:inherit}
+#xmasSec .xsc.off{border-color:#B3261E;background:#FFF5F3}#xmasSec .xsc.off em{color:#9E2A1E;font-weight:700}
+#xmasSec .xsc{padding-bottom:28px}#xmasSec .xsc .xsgo{position:absolute;right:12px;bottom:8px;font-style:normal;font-size:12.5px;font-weight:800;color:#8E1B14}
+#xmasSec .xfb .xfbline{margin:2px 0 10px;font-size:14.5px}#xmasSec .xfb .xfbline b{color:#7A4A12;margin-right:6px}
+#xmasSec .xfbg{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:10px}
+#xmasSec .xfbc{border:1.5px solid #E7D3B4;border-radius:12px;background:#FFFCF6;padding:8px 12px 10px}
+#xmasSec .xfbh{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px}#xmasSec .xfbh b{font-size:16px;color:#5A3100}
+#xmasSec .xfbc ul{margin:0;padding-left:18px}#xmasSec .xfbc li{font-size:14px;line-height:1.5;margin:3px 0;color:var(--ink)}#xmasSec .xfbc li em{font-style:normal;font-weight:800;color:#7A4A12;margin-right:4px}
+#xmasSec .xfba{margin:8px 0 0;padding:7px 10px;border-radius:8px;background:#EEF6EE;color:#1F5A33;font-size:14px;font-weight:700;line-height:1.5}
+#xmasSec .xglink{font:inherit;font-size:13px;font-weight:800;padding:3px 9px;border-radius:999px;border:1px solid #B98A55;background:#fff;color:#7A4A12;cursor:pointer;white-space:nowrap}
+#xmasSec td .xglink{display:inline-block;margin-top:4px}
+#xmasSec .xpkpis button.xpk{display:block;text-align:left;font:inherit;background:#FFF8EC;border:1.5px solid #E7D3B4;border-radius:10px;padding:8px 12px;color:var(--ink);cursor:pointer}
+#xmasSec .xpkpis button.xpk:not([data-go]){cursor:default}#xmasSec .xpkpis button.xpk span{display:block;font-size:13.5px;color:var(--ink2)}#xmasSec .xpkpis button.xpk b{font-size:21px;color:#8E1B14}#xmasSec .xpkpis button.xpk em{display:block;font-style:normal;font-size:13px;color:var(--ink2)}
+#xmasSec .xpkpis button.xpk.off{border-color:#B3261E;background:#FFF5F3}#xmasSec .xpkpis button.xpk.off em{color:#9E2A1E;font-weight:800}
+#xmasSec .xmt.prod tr.xpg th{position:static;background:#14502B;color:#fff;font-size:14.5px;text-align:left;max-width:none}
+#xmasSec .xmt.prod tr.xpsum th,#xmasSec .xmt.prod tr.xpsum td{background:#FBF6EE;font-weight:800}
+#xmasSec .xmt.prod thead th.peak{background:#F6D9D4;color:#8E1B14}#xmasSec .xmt.prod thead th.now{outline:3px solid #E0A458;outline-offset:-3px}#xmasSec .xmt.prod thead th.sat{color:#1B5FC1}#xmasSec .xmt.prod thead th.sun{background:#ECE3D6}
+#xmasSec .xpck{display:block;margin-top:2px;font-size:12.5px;font-weight:700;color:#1F5A33;background:#E3F1E3;border-radius:6px;padding:1px 5px;white-space:normal;line-height:1.35;text-align:left}#xmasSec .xpck.done{color:#4E6B55;text-decoration:line-through}
+#xmasSec .xck25{display:block;flex-basis:100%;margin:2px 0 0 34px;font-size:13px;color:#7A4A12;line-height:1.4}
+#xmasSec .xtt .xck25{margin-left:0}
+#xmasSec .xmckv{display:flex;gap:6px;margin:4px 0 10px}#xmasSec .xmckv button{font:inherit;font-size:15px;font-weight:800;padding:7px 14px;border-radius:999px;border:1.5px solid #B98A55;background:#fff;color:#7A4A12;cursor:pointer}#xmasSec .xmckv button[aria-pressed="true"]{background:#8E1B14;border-color:#8E1B14;color:#fff}
+#xmasSec .xmrepd{margin-top:14px;border:1.5px solid #E7D3B4;border-radius:12px;padding:8px 12px;background:#FFFDF8}#xmasSec .xmrepd>summary{cursor:pointer;font-weight:900;font-size:17px;color:#5A3100}#xmasSec .xmrepd>summary small,#xmasSec .subhead small{font-size:13.5px;font-weight:600;color:var(--ink2);margin-left:6px}
+#xmasSec .xmpane[data-x="meet"]>.subhead:first-child{margin-top:4px}
+#xmasSec .xmt.prod thead th{vertical-align:top;min-width:96px}#xmasSec .xpref.xpcm{max-height:4.1em}
 </style>
-<script src="js/stock.js?v=v0924-293"></script>
-<script src="js/mango.js?v=v0924-293"></script>
-<script src="js/fruitcap.js?v=v0924-293"></script>
-<script src="js/fruitprice.js?v=v0924-293"></script>
+<script src="js/stock.js?v=v0924-294"></script>
+<script src="js/mango.js?v=v0924-294"></script>
+<script src="js/fruitcap.js?v=v0924-294"></script>
+<script src="js/fruitprice.js?v=v0924-294"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -5405,15 +5432,15 @@ body.xmplprint #xmPlan .xmtw{overflow:visible}body.xmplprint #xmPlan .sticky{pos
   window.addEventListener("cs:remote", function () { setTimeout(mark, 400); });
 })();
 </script>
-<script src="js/presence.js?v=v0924-293"></script>
-<script src="js/weekrep.js?v=v0924-293"></script>
-<script src="js/recipe.js?v=v0924-293"></script>
-<script src="js/bench.js?v=v0924-293"></script>
+<script src="js/presence.js?v=v0924-294"></script>
+<script src="js/weekrep.js?v=v0924-294"></script>
+<script src="js/recipe.js?v=v0924-294"></script>
+<script src="js/bench.js?v=v0924-294"></script>
 <script>/* 월말회의 「잘한 것」 한 칸으로 (10/22 사장님 「합쳐줘」) — 예전 ② ③ 칸은 글이 있는 달만 보임 */
 (function(){function p(){document.querySelectorAll("#mtForm .frow.mtold").forEach(function(r){var t=r.querySelector(".fin");r.hidden=!(t&&t.value.trim());});}
 var m=document.getElementById("mtMonth");if(m)m.addEventListener("change",function(){setTimeout(p,80);});
 window.addEventListener("cs:remote",function(){setTimeout(p,400);});document.addEventListener("click",function(e){if(e.target.closest('.tab[data-p="tp5"]'))setTimeout(p,80);});setTimeout(p,600);})();</script>
-<script src="js/monthlog.js?v=v0924-293"></script>
-<script src="js/xmas.js?v=v0924-293"></script>
-<script src="js/tg.js?v=v0924-293"></script>
+<script src="js/monthlog.js?v=v0924-294"></script>
+<script src="js/xmas.js?v=v0924-294"></script>
+<script src="js/tg.js?v=v0924-294"></script>
 </body></html>
