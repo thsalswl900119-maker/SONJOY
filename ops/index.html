@@ -3378,7 +3378,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-296</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-298</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -3950,7 +3950,7 @@ input,select,textarea{border-radius:var(--r3)!important}
   </div>
 </section></div><div class="panel" id="tp9" role="tabpanel" hidden><section>
   <div class="shead"><h2>워크샵</h2><span class="en">workshop</span>
-    <span class="sub">매년 11월 · 다 같이 떠나서 배워 옵니다</span></div>
+    <span class="sub">매년 11월 · 다 같이 떠나서 보고 · 먹고 · 느끼고 돌아옵니다</span></div>
   <div class="lgbar">
     <label class="lgdate">몇 년도 워크샵
       <input type="number" id="wsYear" class="dinp" min="2025" max="2040" step="1"></label>
@@ -3958,13 +3958,21 @@ input,select,textarea{border-radius:var(--r3)!important}
     <button type="button" class="bkmini" data-pre="ws" data-label="워크샵"><svg viewBox="0 0 24 24" class="bkmi" aria-hidden="true"><path d="M5 3h11l3 3v15H5z"/><path d="M8 3v6h7V3"/><path d="M8 13h8v8H8z"/></svg><span>워크샵 백업</span></button>
   </div>
 
-  <h3 class="subhead">지난 워크샵</h3>
+  <div class="wspres" id="wsPres" hidden></div>
+  <nav class="wssteps" id="wsNav" role="tablist" aria-label="워크샵 화면"></nav>
+  <div class="wspane" data-w="sum"><div id="wsHero"></div>
+  <h3 class="subhead">📮 지난 워크샵 <small class="bnsub">누르면 그 해 워크샵으로 넘어가요</small></h3>
   <div class="wpgrid"><button type="button" class="wpcard" data-y="2025"><div class="wph"><b>25.11</b>도쿄<em class="wpgo">눌러서 열기</em></div><div class="wpt">카페스이의 치즈케이크와 진정한 말차를 찾아서</div><div class="wpm">3명 · 3박 4일 (11/10~13)</div><div class="wpn">회비 1인 100,000엔 · 카페 지출 2,066,927원 · 3일 총 경비 290,767엔. 회의 4번.</div></button><button type="button" class="wpcard" data-y="2026"><div class="wph"><b>26.11</b>후쿠오카<em class="wpgo">눌러서 열기</em></div><div class="wpt">협력으로 만드는 진짜 오래 팔 수 있는 카페스이의 그것</div><div class="wpm">4명 · 2박 3일 (11/9~11)</div><div class="wpn">경비 아침·점심·저녁 각 10만원 + 교통비 = 총 80만원. 회의 3번 + 최종 점검.</div></button></div>
 
-  <h3 class="subhead">올해 워크샵</h3>
+  <div id="wsBnSlot"></div></div>
+  <div class="wspane" data-w="plan" hidden>
+  <h3 class="subhead">🧭 올해 워크샵 · 정하기 · 역할 · 준비물</h3>
   <div class="wsgrid"><div class="wssec"><div class="wssh">정하고 갈 것</div><div class="wsrows"><label class="wsrow"><span>컨셉 · 주제<em>올해 워크샵으로 무엇을 찾아올 것인가</em></span><textarea class="wsin wsgrow" rows="1" data-k="w1"></textarea></label><label class="wsrow"><span>가는 곳 · 날짜<em>예: 후쿠오카 26.11.9~11 (월~수)</em></span><textarea class="wsin wsgrow" rows="1" data-k="w2"></textarea></label><label class="wsrow"><span>인원 · 숙소<em>인원수와 숙소 주소</em></span><textarea class="wsin wsgrow" rows="1" data-k="w3"></textarea></label><label class="wsrow"><span>회비 · 경비<em>1인 회비와 아침·점심·저녁 경비 배분</em></span><textarea class="wsin wsgrow" rows="1" data-k="w4"></textarea></label><label class="wsrow"><span>비행기 편<em>가는 편 / 오는 편 시간</em></span><textarea class="wsin wsgrow" rows="1" data-k="w5"></textarea></label></div></div><div class="wssec"><div class="wssh">역할 나누기</div><div class="wsrows"><label class="wsrow"><span>스케줄 짜기</span><textarea class="wsin wsgrow" rows="1" data-k="w10"></textarea></label><label class="wsrow"><span>환전 및 회계</span><textarea class="wsin wsgrow" rows="1" data-k="w11"></textarea></label><label class="wsrow"><span>촬영</span><textarea class="wsin wsgrow" rows="1" data-k="w12"></textarea></label><label class="wsrow"><span>예약하기</span><textarea class="wsin wsgrow" rows="1" data-k="w13"></textarea></label><label class="wsrow"><span>타임키퍼 · 길찾기 · 이동</span><textarea class="wsin wsgrow" rows="1" data-k="w14"></textarea></label></div></div><div class="wssec"><div class="wssh">미리 준비할 것</div><div class="wsrows"><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w20"><span>예약한 것 전부 캡쳐해두기<em>항공권 · 숙소 · 식당 · 티켓</em></span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w21"><span>로밍하기</span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w22"><span>해외 사용 가능 카드<em>여권 명의자와 같아야 함</em></span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w23"><span>여행자보험 가입<em>인원수대로</em></span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w24"><span>비짓재팬 작성 + QR 준비<em>필수는 아니지만 해두면 편함</em></span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w25"><span>일본 교통카드 준비<em>아이폰에 교통카드 등록</em></span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w26"><span>환전하기</span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w27"><span>여권</span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w28"><span>개인 짐</span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w29"><span>멀티탭 · 돼지코</span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w30"><span>면세한 사람 체크</span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w31"><span>일정 최종 점검</span></label></div></div><div class="wssec warn"><div class="wssh">기내에 못 가져가는 것</div><div class="wsrows"><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w40"><span>액체류는 100ml 이하로</span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w41"><span>보조배터리는 기내로<em>부치면 안 됨</em></span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w42"><span>배터리 분리 안 되는 무선 고데기는 반입 불가</span></label><label class="wsrow chk"><input type="checkbox" class="wsin" data-k="w43"><span>컵 형태 곤약젤리는 한국으로 못 가져옴</span></label></div></div><div class="wssec"><div class="wssh">다녀와서</div><div class="wsrows"><label class="wsrow"><span>좋았던 것<em>숙소에서 마지막 밤에 다 같이</em></span><textarea class="wsin" data-k="w50" rows="2"></textarea></label><label class="wsrow"><span>아쉬웠던 점</span><textarea class="wsin" data-k="w51" rows="2"></textarea></label><label class="wsrow"><span>매장에 바로 적용할 것<em>맛 · 메뉴 · 패키지 · 응대 중에서</em></span><textarea class="wsin" data-k="w52" rows="2"></textarea></label><label class="wsrow"><span>다음 워크샵에 바꿀 것</span><textarea class="wsin" data-k="w53" rows="2"></textarea></label></div></div></div>
 
-  <h3 class="subhead">가고 싶은 곳 · 하고 싶은 것</h3>
+  </div>
+  <div class="wspane" data-w="wish" hidden>
+  <div id="wsWishTop"></div>
+  <h3 class="subhead">💭 가고 싶은 곳 · 하고 싶은 것</h3>
   <p class="tnote">회의 때 각자 다섯 개씩 적습니다. 다녀온 곳은 왼쪽을 체크하면 줄이 그어집니다. 사람별로 묶여 있고, 이름 줄을 누르면 접거나 펼 수 있습니다.</p>
   <div class="wlfoldbar"><button type="button" class="wsmini" id="wlFoldAll">전부 접기</button><button type="button" class="wsmini" id="wlOpenAll">전부 펼치기</button></div>
   <div class="ztable-wrap">
@@ -3977,7 +3985,9 @@ input,select,textarea{border-radius:var(--r3)!important}
   <div class="wsaddbar"><button type="button" class="wsadd" data-wish="1">＋ 줄 추가</button>
     <span class="wsaddnote">더 적을 게 있으면 눌러서 늘리세요</span></div>
 
-  <h3 class="subhead">회의</h3>
+  </div>
+  <div class="wspane" data-w="meet" hidden>
+  <h3 class="subhead">🗣 회의</h3>
   <p class="tnote">끝난 회의는 왼쪽 칸을 체크하면 줄이 그어집니다.</p>
   <div class="ztable-wrap">
     <table class="wstable mtg">
@@ -3996,11 +4006,16 @@ input,select,textarea{border-radius:var(--r3)!important}
     <details class="wsmt" id="wsMt3"><summary><b class="wsmtt"></b><span class="wsmtd"></span></summary><div class="wsmtb"><div class="wsmtnote"></div><label class="wsmtl">회의에서 정한 것 · 추가 메모<textarea class="wsin" data-k="mt3" rows="3"></textarea></label></div></details>
     <details class="wsmt" id="wsMt4"><summary><b class="wsmtt"></b><span class="wsmtd"></span></summary><div class="wsmtb"><div class="wsmtnote"></div><label class="wsmtl">회의에서 정한 것 · 추가 메모<textarea class="wsin" data-k="mt4" rows="3"></textarea></label></div></details>
   </div>
-  <h3 class="subhead">예약 · 참고 자료</h3>
+  </div>
+  <div class="wspane" data-w="file" hidden>
+  <div id="wsFiles"></div>
+  <h3 class="subhead">🎫 예약 · 참고 자료</h3>
   <p class="tnote">예약 기록 · 동선 · 경비 메모입니다. 「✏ 이 내용 고치기」로 바뀐 것을 바로 고치세요 (모든 기기에 같이 바뀝니다).</p>
-  <div class="wsrefbox" id="wsRef"></div>
+  <div class="wsrefwrap"><div class="wsrefbox" id="wsRef"></div></div>
 
-  <h3 class="subhead">일자별 일정</h3>
+  </div>
+  <div class="wspane" data-w="day" hidden>
+  <h3 class="subhead">🗓 일자별 일정</h3>
   <nav class="wsdtabs"><button type="button" class="wsdtab" data-d="wsd1" aria-selected="true">1일차</button><button type="button" class="wsdtab" data-d="wsd2" aria-selected="false">2일차</button><button type="button" class="wsdtab" data-d="wsd3" aria-selected="false">3일차</button><button type="button" class="wsdtab" data-d="wsd4" aria-selected="false" hidden title="올해는 2박 3일">4일차</button><button type="button" class="wsedit" id="wsEdit" aria-pressed="false">✎ 일정 수정하기</button><span class="wsdays">2박 3일</span><span class="wsedithint" id="wsEditHint">잘못 눌러 바뀌는 걸 막으려고 잠겨 있어요 · 고칠 땐 「일정 수정하기」</span></nav>
   <div class="rpwrap">
     <div class="rpmain"><div class="wsday" id="wsd1" data-day="1"><label class="wsdate">1일차 날짜<input type="date" class="wsin wsdin" data-k="d1date"></label><div class="ztable-wrap"><table class="wstable"><thead><tr><th class="c2">시간</th><th>일정</th><th>해야 할 일 + 메모</th></tr></thead><tbody><tr><td><input type="text" class="wsin tin" data-k="d1t1" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d1p1" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d1m1" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d1t2" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d1p2" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d1m2" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d1t3" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d1p3" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d1m3" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d1t4" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d1p4" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d1m4" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d1t5" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d1p5" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d1m5" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d1t6" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d1p6" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d1m6" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d1t7" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d1p7" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d1m7" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d1t8" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d1p8" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d1m8" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d1t9" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d1p9" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d1m9" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d1t10" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d1p10" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d1m10" placeholder="해야 할 일 · 메모"></td></tr></tbody></table></div><div class="wsaddbar"><button type="button" class="wsadd" data-day="1">＋ 줄 추가</button><span class="wsaddnote">일정이 더 있으면 눌러서 늘리세요</span></div></div><div class="wsday" id="wsd2" hidden data-day="2"><label class="wsdate">2일차 날짜<input type="date" class="wsin wsdin" data-k="d2date"></label><div class="ztable-wrap"><table class="wstable"><thead><tr><th class="c2">시간</th><th>일정</th><th>해야 할 일 + 메모</th></tr></thead><tbody><tr><td><input type="text" class="wsin tin" data-k="d2t1" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d2p1" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d2m1" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d2t2" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d2p2" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d2m2" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d2t3" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d2p3" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d2m3" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d2t4" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d2p4" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d2m4" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d2t5" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d2p5" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d2m5" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d2t6" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d2p6" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d2m6" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d2t7" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d2p7" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d2m7" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d2t8" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d2p8" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d2m8" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d2t9" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d2p9" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d2m9" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d2t10" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d2p10" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d2m10" placeholder="해야 할 일 · 메모"></td></tr></tbody></table></div><div class="wsaddbar"><button type="button" class="wsadd" data-day="2">＋ 줄 추가</button><span class="wsaddnote">일정이 더 있으면 눌러서 늘리세요</span></div></div><div class="wsday" id="wsd3" hidden data-day="3"><label class="wsdate">3일차 날짜<input type="date" class="wsin wsdin" data-k="d3date"></label><div class="ztable-wrap"><table class="wstable"><thead><tr><th class="c2">시간</th><th>일정</th><th>해야 할 일 + 메모</th></tr></thead><tbody><tr><td><input type="text" class="wsin tin" data-k="d3t1" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d3p1" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d3m1" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d3t2" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d3p2" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d3m2" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d3t3" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d3p3" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d3m3" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d3t4" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d3p4" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d3m4" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d3t5" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d3p5" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d3m5" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d3t6" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d3p6" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d3m6" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d3t7" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d3p7" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d3m7" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d3t8" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d3p8" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d3m8" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d3t9" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d3p9" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d3m9" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d3t10" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d3p10" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d3m10" placeholder="해야 할 일 · 메모"></td></tr></tbody></table></div><div class="wsaddbar"><button type="button" class="wsadd" data-day="3">＋ 줄 추가</button><span class="wsaddnote">일정이 더 있으면 눌러서 늘리세요</span></div></div><div class="wsday" id="wsd4" hidden data-day="4"><label class="wsdate">4일차 날짜<input type="date" class="wsin wsdin" data-k="d4date"></label><div class="ztable-wrap"><table class="wstable"><thead><tr><th class="c2">시간</th><th>일정</th><th>해야 할 일 + 메모</th></tr></thead><tbody><tr><td><input type="text" class="wsin tin" data-k="d4t1" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d4p1" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d4m1" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d4t2" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d4p2" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d4m2" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d4t3" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d4p3" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d4m3" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d4t4" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d4p4" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d4m4" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d4t5" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d4p5" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d4m5" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d4t6" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d4p6" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d4m6" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d4t7" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d4p7" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d4m7" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d4t8" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d4p8" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d4m8" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d4t9" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d4p9" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d4m9" placeholder="해야 할 일 · 메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="d4t10" placeholder="시간"></td><td><input type="text" class="wsin" data-k="d4p10" placeholder="어디에서 무엇을"></td><td><input type="text" class="wsin" data-k="d4m10" placeholder="해야 할 일 · 메모"></td></tr></tbody></table></div><div class="wsaddbar"><button type="button" class="wsadd" data-day="4">＋ 줄 추가</button><span class="wsaddnote">일정이 더 있으면 눌러서 늘리세요</span></div></div></div>
@@ -4010,16 +4025,19 @@ input,select,textarea{border-radius:var(--r3)!important}
     </aside>
   </div>
 
-  <h3 class="subhead">🔎 벤치마킹 요약 <small class="bnsub">평가 · 메모는 「벤치마킹」 탭에서 · 위 일자별 일정에 ⭐ 붙은 곳이 벤치마킹 가게로 들어갑니다</small></h3>
-  <div class="bnsum" id="bnSum"></div>
+  </div>
+  <div class="wsbnwrap"><h3 class="subhead">🔎 벤치마킹 요약 <small class="bnsub">평가 · 메모는 「벤치마킹」 탭에서 · 위 일자별 일정에 ⭐ 붙은 곳이 벤치마킹 가게로 들어갑니다</small></h3>
+  <div class="bnsum" id="bnSum"></div></div>
 
-  <h3 class="subhead">비용</h3>
+  <div class="wspane" data-w="cost" hidden>
+  <h3 class="subhead">💰 비용</h3>
   <div class="wscosts"><div class="wscost" data-cd="1"><div class="wscosth"><b>1일차 지출</b><span class="wsdayd" data-cd="1"></span></div><div class="ztable-wrap"><table class="wstable cost" data-cd="1"><thead><tr><th class="c2">시간</th><th>지출 목록</th><th class="c3">금액</th><th>메모</th><th class="wsdel"></th></tr></thead><tbody><tr><td><input type="text" class="wsin tin" data-k="c1d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c1n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c1a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c1m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c2d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c2n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c2a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c2m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c3d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c3n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c3a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c3m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c4d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c4n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c4a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c4m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c5d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c5n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c5a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c5m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c6d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c6n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c6a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c6m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c7d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c7n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c7a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c7m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c8d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c8n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c8a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c8m" placeholder="메모"></td></tr></tbody><tfoot><tr><th colspan="2">1일차 합계</th><td class="wstotal" data-cd="1">—</td><td></td><td></td></tr></tfoot></table></div><div class="wsaddbar"><button type="button" class="wsadd" data-cost="1">＋ 줄 추가</button><span class="wsaddnote">지출이 더 있으면 눌러서 늘리세요 · ☰ ▲▼로 줄을 옮기고 ✕로 지웁니다</span></div></div><div class="wscost" data-cd="2"><div class="wscosth"><b>2일차 지출</b><span class="wsdayd" data-cd="2"></span></div><div class="ztable-wrap"><table class="wstable cost" data-cd="2"><thead><tr><th class="c2">시간</th><th>지출 목록</th><th class="c3">금액</th><th>메모</th><th class="wsdel"></th></tr></thead><tbody><tr><td><input type="text" class="wsin tin" data-k="c2_1d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c2_1n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c2_1a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c2_1m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c2_2d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c2_2n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c2_2a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c2_2m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c2_3d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c2_3n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c2_3a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c2_3m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c2_4d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c2_4n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c2_4a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c2_4m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c2_5d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c2_5n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c2_5a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c2_5m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c2_6d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c2_6n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c2_6a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c2_6m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c2_7d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c2_7n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c2_7a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c2_7m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c2_8d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c2_8n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c2_8a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c2_8m" placeholder="메모"></td></tr></tbody><tfoot><tr><th colspan="2">2일차 합계</th><td class="wstotal" data-cd="2">—</td><td></td><td></td></tr></tfoot></table></div><div class="wsaddbar"><button type="button" class="wsadd" data-cost="2">＋ 줄 추가</button><span class="wsaddnote">지출이 더 있으면 눌러서 늘리세요 · ☰ ▲▼로 줄을 옮기고 ✕로 지웁니다</span></div></div><div class="wscost" data-cd="3"><div class="wscosth"><b>3일차 지출</b><span class="wsdayd" data-cd="3"></span></div><div class="ztable-wrap"><table class="wstable cost" data-cd="3"><thead><tr><th class="c2">시간</th><th>지출 목록</th><th class="c3">금액</th><th>메모</th><th class="wsdel"></th></tr></thead><tbody><tr><td><input type="text" class="wsin tin" data-k="c3_1d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c3_1n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c3_1a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c3_1m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c3_2d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c3_2n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c3_2a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c3_2m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c3_3d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c3_3n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c3_3a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c3_3m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c3_4d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c3_4n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c3_4a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c3_4m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c3_5d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c3_5n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c3_5a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c3_5m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c3_6d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c3_6n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c3_6a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c3_6m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c3_7d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c3_7n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c3_7a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c3_7m" placeholder="메모"></td></tr><tr><td><input type="text" class="wsin tin" data-k="c3_8d" placeholder="시간"></td><td><input type="text" class="wsin" data-k="c3_8n" placeholder="지출 목록"></td><td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="c3_8a" placeholder="금액"></td><td><input type="text" class="wsin" data-k="c3_8m" placeholder="메모"></td></tr></tbody><tfoot><tr><th colspan="2">3일차 합계</th><td class="wstotal" data-cd="3">—</td><td></td><td></td></tr></tfoot></table></div><div class="wsaddbar"><button type="button" class="wsadd" data-cost="3">＋ 줄 추가</button><span class="wsaddnote">지출이 더 있으면 눌러서 늘리세요 · ☰ ▲▼로 줄을 옮기고 ✕로 지웁니다</span></div></div>
   </div>
   <div class="wsgrand"><span>2박 3일 합계</span><b id="wsTotal">—</b><small>금액만 적으면 합계는 자동으로 더해집니다</small></div>
+</div>
 </section></div><div class="panel" id="tp17" role="tabpanel" hidden><section>
   <div class="shead"><h2>🔎 벤치마킹</h2><span class="en">benchmarking</span>
-    <span class="sub">워크샵 가게마다 직원별로 7항목 /10 · 메모 · 카페스이에 가져올 것 · 하루 정리 — 일지처럼 적는 즉시 저장</span></div>
+    <span class="sub">✈ 워크샵 때와 ☕ 평소(워크샵 아닐 때)를 나눠서 — 가게마다 사람별 7항목 /10 · 사진 · 메모 · ⭐ 카페스이에 가져올 것을 끝까지 챙기기 · 적는 즉시 저장</span></div>
   <div class="tnotice"><div class="tnhead">🔎 벤치마킹 원칙</div><ul><li><b>벤치마킹은 <mark>하루에 끝낸다 (5~6군데)</mark></b><span>가게마다 같은 7항목으로 점수를 매겨야 비교가 됩니다</span></li><li><b><mark>직원 관찰보다 손님 관찰</mark> 30분</b><span>무엇을 많이 사 가나 · 얼마나 머무나 · 무엇을 찍나</span></li><li><b>평점을 내봐야 <mark>내 자신을 돌아볼 수 있다</mark></b><span>장점을 볼 수 있는 눈이 부자가 되는 눈이다</span></li></ul></div>
   <div class="bnbox" id="bnBox"></div>
 </section></div><div class="panel" id="tp10" role="tabpanel" hidden data-lazy="tabs/tp10.html"><div class="lazyload">불러오는 중…</div></div><div class="panel" id="tp13" role="tabpanel" hidden><section>
@@ -4088,20 +4106,20 @@ input,select,textarea{border-radius:var(--r3)!important}
 </footer>
 </div>
 
-<script src="js/chrome.js?v=v0924-296"></script>
+<script src="js/chrome.js?v=v0924-298"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/drag.js?v=v0924-296"></script>
-<script src="js/sync.js?v=v0924-296"></script>
-<script src="js/holidays.js?v=v0924-296"></script>
-<script src="js/sched.js?v=v0924-296"></script>
-<script src="js/app.js?v=v0924-296"></script>
-<script src="js/fruit.js?v=v0924-296"></script>
-<script src="js/mobile.js?v=v0924-296"></script>
-<script src="js/qc.js?v=v0924-296"></script>
-<script src="js/loghist.js?v=v0924-296"></script>
+<script src="js/drag.js?v=v0924-298"></script>
+<script src="js/sync.js?v=v0924-298"></script>
+<script src="js/holidays.js?v=v0924-298"></script>
+<script src="js/sched.js?v=v0924-298"></script>
+<script src="js/app.js?v=v0924-298"></script>
+<script src="js/fruit.js?v=v0924-298"></script>
+<script src="js/mobile.js?v=v0924-298"></script>
+<script src="js/qc.js?v=v0924-298"></script>
+<script src="js/loghist.js?v=v0924-298"></script>
 <script>/* 같은 기기에 시스템 창(탭)이 두 개 이상 — 10/23 사고(가게 컴퓨터 창 여러 개에서 같은 일지를 써서 글이 세 번 겹치고 지워짐) 막기 */
 (function(){if(!window.BroadcastChannel)return;var id=Math.random().toString(36).slice(2),bc=new BroadcastChannel("cafesui.tabs"),seen={},band=null;
 function paint(){var now=Date.now(),n=Object.keys(seen).filter(function(k){return now-seen[k]<40000;}).length;
@@ -4110,7 +4128,7 @@ else if(!n&&band){band.remove();band=null;}}
 bc.onmessage=function(e){var d=e.data||{};if(!d.id||d.id===id)return;seen[d.id]=Date.now();if(d.t==="hi")bc.postMessage({t:"here",id:id});if(d.t==="bye")delete seen[d.id];paint();};
 bc.postMessage({t:"hi",id:id});setInterval(function(){bc.postMessage({t:"here",id:id});paint();},15000);
 window.addEventListener("pagehide",function(){try{bc.postMessage({t:"bye",id:id});}catch(e){}});})();</script>
-<script src="js/price.js?v=v0924-296"></script>
+<script src="js/price.js?v=v0924-298"></script>
 <!-- csonly:start -->
 <script>
 // 🔥 카페스이 모토 — 모든 화면 맨 위에(10/21 사장님 「모토처럼 매 섹션에 다 넣어줘」 · 문구 그대로) · 나중에 불러오는 탭이 내용을 바꿔도 다시 붙임
@@ -5460,11 +5478,195 @@ body.xmplprint #xmProdPane .xmtw{overflow:visible}body.xmplprint #xmProdPane .st
 #xmasSec .xig.anim .xgtl li,#xmasSec .xig.anim .xgk{animation:xgFade .55s ease both;animation-delay:calc(var(--i,0)*110ms)}
 @media (prefers-reduced-motion:reduce){#xmasSec .xig.anim *{animation:none!important}}
 @media print{.xgtip{display:none}#xmasSec .xig.anim *{animation:none!important}}
+/* ── 🏕 워크샵 다시 짬(10/30 · v0924-298) — 흐름 메뉴 · 탑승권 · 진행 고리 · 같이 보는 사람 ── */
+#tp9 .wssteps{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin:6px 0 16px}
+#tp9 .wsn{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:left;font:inherit;padding:10px 11px 9px;min-height:64px;border:1px solid #D9CBB4;border-radius:12px;background:#FFFDF9;color:#3A2E22;cursor:pointer}
+#tp9 .wsnl{font-size:15px;font-weight:800;word-break:keep-all}#tp9 .wsns{font-size:13px;font-weight:700;color:#5E5244}
+#tp9 .wsnn{display:inline-grid;place-items:center;width:20px;height:20px;margin-right:5px;border-radius:50%;background:#1F5F6B;color:#fff;font-style:normal;font-size:12.5px;font-weight:900;vertical-align:1px}
+#tp9 .wsn[aria-selected="true"]{background:#16394F;border-color:#16394F;box-shadow:0 3px 10px rgba(22,57,79,.25)}#tp9 .wsn[aria-selected="true"] .wsnl,#tp9 .wsn[aria-selected="true"] .wsns{color:#fff}#tp9 .wsn[aria-selected="true"] .wsnn{background:#fff;color:#16394F}
+#tp9 .wsn[data-w="sum"]{background:#F3EBDD}#tp9 .wsn[data-w="sum"][aria-selected="true"]{background:#8F5A22;border-color:#8F5A22}
+#tp9 .wsn.news::after{content:"새 글";position:absolute;top:-8px;right:6px;font-size:11.5px;font-weight:900;color:#fff;background:#C2412D;border-radius:999px;padding:1px 7px;animation:wsPulse 1.2s ease-in-out infinite}
+#tp9 .wsnwho{position:absolute;right:6px;bottom:6px;display:flex;gap:2px}#tp9 .wsnwho i{display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--c);color:#fff;font-style:normal;font-size:11.5px;font-weight:900;box-shadow:0 0 0 2px #FFFDF9;animation:wsPulse 1.6s ease-in-out infinite}
+@media (max-width:1100px){#tp9 .wssteps{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:640px){#tp9 .wssteps{display:flex;overflow-x:auto;scroll-snap-type:x proximity;padding:2px 2px 8px;-webkit-overflow-scrolling:touch}#tp9 .wsn{flex:0 0 132px;min-height:58px;padding:8px 9px;scroll-snap-align:start}}
+/* 같이 보는 사람 */
+#tp9 .wspres{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin:4px 0 8px;padding:9px 12px;border-radius:12px;background:#EEF4F6;border:1px solid #C8DCE2;font-size:14px}
+#tp9 .wspres>b{color:#16394F}#tp9 .wspres small{color:#4A5A62;font-size:13px}
+#tp9 .wspc{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:#fff;border:1px solid #D6E3E8;font-weight:800;color:#2A3A42}
+#tp9 .wspc i{width:9px;height:9px;border-radius:50%;background:var(--c);box-shadow:0 0 0 3px color-mix(in srgb,var(--c) 25%,transparent);animation:wsPulse 1.6s infinite}#tp9 .wspc em{font-style:normal;font-weight:600;color:#4A5A62;font-size:13px}#tp9 .wspc.away{opacity:.7}#tp9 .wspc.away i{animation:none;background:#9AA7AD}
+#tp9 .wsbusy{outline:2px solid var(--bc)!important;outline-offset:1px;background:color-mix(in srgb,var(--bc) 7%,#fff)!important}
+#tp9 .wsbusyb,#tp9 .wsjust{display:inline-block;margin:0 6px 3px 0;padding:2px 8px;border-radius:999px;background:var(--c);color:#fff;font-size:12.5px;font-weight:800;vertical-align:middle;animation:wsIn .3s ease both}
+#tp9 .wsjust{background:#FFE58A;color:#5A3B00;box-shadow:inset 0 0 0 1px var(--c)}
+#tp9 .wsflash{animation:wsFlash 2.6s ease both}
+@keyframes wsFlash{0%,40%{background:#FFF3B0;box-shadow:0 0 0 3px #F5C542}100%{box-shadow:0 0 0 0 transparent}}
+@keyframes wsPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+@keyframes wsIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+/* 탑승권 */
+#tp9 .wsh{display:flex;flex-direction:column;gap:14px;margin-bottom:6px}
+#tp9 .wsbp{display:grid;grid-template-columns:1fr 250px;border-radius:20px;overflow:hidden;color:#fff;box-shadow:0 10px 28px rgba(22,57,79,.25);background:linear-gradient(120deg,#0F2E44 0%,#1F5F6B 52%,#C77B3B 100%);background-size:200% 200%;animation:wsSky 14s ease-in-out infinite alternate;position:relative}
+@keyframes wsSky{from{background-position:0% 50%}to{background-position:100% 50%}}
+#tp9 .wsbp::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 85% 20%,rgba(255,230,170,.35),transparent 40%),radial-gradient(circle at 12% 90%,rgba(255,255,255,.12),transparent 35%);pointer-events:none}
+#tp9 .wsbpl{padding:20px 24px;position:relative}#tp9 .wsbpr{position:relative;padding:20px 18px;border-left:2px dashed rgba(255,255,255,.45);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:4px;background:rgba(0,0,0,.12)}
+#tp9 .wsbpr::before,#tp9 .wsbpr::after{content:"";position:absolute;left:-13px;width:24px;height:24px;border-radius:50%;background:var(--bg,#FBF8F2)}#tp9 .wsbpr::before{top:-12px}#tp9 .wsbpr::after{bottom:-12px}
+#tp9 .wsbpk{font-size:12.5px;font-weight:800;letter-spacing:.14em;opacity:.92}
+#tp9 .wsroute{display:grid;grid-template-columns:auto 1fr auto;align-items:end;gap:10px;margin:10px 0 6px}
+#tp9 .wsap b{display:block;font-size:30px;font-weight:900;line-height:1.05;letter-spacing:.02em}#tp9 .wsap small{font-size:14px;opacity:.95}#tp9 .wsap.to{text-align:right}#tp9 .wsap.to b{font-size:34px;color:#FFE3B0}
+#tp9 .wsfly{width:100%;height:64px;overflow:visible}#tp9 .wsfly .arc{fill:none;stroke:rgba(255,255,255,.7);stroke-width:2;stroke-dasharray:6 7;animation:wsDash 1.6s linear infinite}
+@keyframes wsDash{to{stroke-dashoffset:-26}}
+#tp9 .wsfly .pl{fill:#fff;offset-path:path("M8 60 Q150 -14 292 60");offset-rotate:auto;animation:wsFly 7s cubic-bezier(.45,.05,.55,.95) infinite}
+@keyframes wsFly{0%{offset-distance:0%;opacity:0}8%{opacity:1}92%{opacity:1}100%{offset-distance:100%;opacity:0}}
+#tp9 .wstheme{margin:6px 0 10px;font-size:22px;font-weight:900;line-height:1.35;color:#fff;font-family:"Gowun Batang",serif;text-shadow:0 1px 8px rgba(0,0,0,.25)}#tp9 .wstheme.none{font-size:15px;font-weight:700;opacity:.9}
+#tp9 .wscrew{display:flex;flex-wrap:wrap;align-items:center;gap:8px}#tp9 .wscrew em{font-style:normal;font-weight:800;font-size:14px;opacity:.95;margin-left:4px}
+#tp9 .wsav{display:inline-flex;align-items:center;gap:6px;padding:3px 10px 3px 3px;border-radius:999px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);font-weight:800;font-size:14px}
+#tp9 .wsav i{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--c);font-style:normal;font-weight:900;font-size:13.5px;box-shadow:0 0 0 2px #fff}
+#tp9 .wsdd{font-size:52px;font-weight:900;line-height:1;color:#FFE3B0;text-shadow:0 2px 12px rgba(0,0,0,.25)}
+#tp9 .wscd{font-size:14px;font-weight:700;opacity:.95}#tp9 .wscd b{font-size:17px;font-weight:900;font-variant-numeric:tabular-nums}
+#tp9 .wsfl{display:block;font-size:13px;opacity:.95;line-height:1.35;margin-top:4px;word-break:keep-all}
+#tp9 .wsh.past .wsbp{background:linear-gradient(120deg,#3B3530,#6E5B47 60%,#A88763);animation:none}
+/* 진행 고리 */
+#tp9 .wsrings{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+#tp9 .wsring{display:grid;grid-template-columns:76px 1fr;grid-template-areas:"r b" "r s" "x x";align-items:center;column-gap:10px;text-align:left;font:inherit;padding:10px 12px;border:1px solid #E2D6C2;border-radius:14px;background:#FFFDF9;cursor:pointer;color:#3A2E22}
+#tp9 .wsring:hover{border-color:#B9A27E;transform:translateY(-1px)}
+#tp9 .wsring svg{grid-area:r;width:76px;height:76px;transform:rotate(-90deg)}#tp9 .wsring .rb{fill:none;stroke:#EFE6D7;stroke-width:8}#tp9 .wsring .rf{fill:none;stroke-width:8;stroke-linecap:round}
+#tp9 .wsring b{grid-area:b;font-size:22px;font-weight:900;align-self:end}#tp9 .wsring span{grid-area:s;font-size:14px;font-weight:800;color:#3A2E22;align-self:start}#tp9 .wsring small{grid-area:x;font-size:13px;color:#5E5244;margin-top:4px;line-height:1.35}
+@media (max-width:1100px){#tp9 .wsrings{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:640px){#tp9 .wsrings{grid-template-columns:1fr 1fr}#tp9 .wsring{grid-template-columns:56px 1fr}#tp9 .wsring svg{width:56px;height:56px}#tp9 .wsring b{font-size:19px}}
+/* 가고 싶은 곳 흐르는 띠 */
+#tp9 .wsmarq{overflow:hidden;border-radius:14px;background:#FFF7EA;border:1px solid #EBD9BC;padding:10px 0;cursor:pointer;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+#tp9 .wsmq{display:flex;width:max-content;animation:wsMarq 40s linear infinite}#tp9 .wsmarq:hover .wsmq{animation-play-state:paused}
+#tp9 .wsmqi{display:flex;gap:8px;padding-right:8px}
+@keyframes wsMarq{to{transform:translateX(-50%)}}
+#tp9 .wsw{display:inline-flex;align-items:baseline;gap:5px;white-space:nowrap;padding:6px 12px;border-radius:999px;background:#fff;border:1px solid #E6D6BC;border-left:4px solid var(--c);font-size:14.5px;font-weight:800;color:#3A2E22}
+#tp9 .wsw small{font-size:12.5px;color:#5E5244;font-weight:700}#tp9 .wsw.done{background:#EEF6EF;color:#2E5A35}
+/* 사진 */
+#tp9 .wsphotos{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
+#tp9 .wsph{position:relative;aspect-ratio:1;border:0;padding:0;border-radius:12px;overflow:hidden;cursor:pointer;background:#EFE6D7;font:inherit}
+#tp9 .wsph img{width:100%;height:100%;object-fit:cover;animation:wsKen 9s ease-in-out infinite alternate;animation-delay:calc(var(--i)*-1.3s)}
+@keyframes wsKen{from{transform:scale(1)}to{transform:scale(1.12)}}
+#tp9 .wsph.more{display:grid;place-items:center;font-size:14px;font-weight:800;color:#3A2E22;background:#F6EEDD}
+/* 질문 */
+#tp9 .wsqs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+#tp9 .wsq{text-align:left;font:inherit;padding:12px 14px;border-radius:14px;background:#FFFDF9;border:1px solid #E2D6C2;border-top:4px solid #1F5F6B;color:#3A2E22}
+#tp9 .wsq span{font-size:13px;font-weight:800;color:#1F5F6B}#tp9 .wsq b{display:block;font-size:20px;font-weight:900;margin:2px 0}#tp9 .wsq p{margin:0;font-size:14.5px;line-height:1.45;color:#3A2E22}
+#tp9 .wsq.go{cursor:pointer;background:#16394F;border-color:#16394F;color:#fff}#tp9 .wsq.go span,#tp9 .wsq.go p{color:#E6EFF2}
+@media (max-width:900px){#tp9 .wsqs{grid-template-columns:1fr 1fr}#tp9 .wsbp{grid-template-columns:1fr}#tp9 .wsbpr{border-left:0;border-top:2px dashed rgba(255,255,255,.45);flex-direction:row;flex-wrap:wrap;gap:6px 14px;padding:14px 18px}#tp9 .wsbpr::before,#tp9 .wsbpr::after{display:none}#tp9 .wsdd{font-size:40px}}
+@media (max-width:640px){#tp9 .wsbpl{padding:16px}#tp9 .wsap b{font-size:20px}#tp9 .wsap.to b{font-size:24px}#tp9 .wstheme{font-size:18px}#tp9 .wsqs{grid-template-columns:1fr}}
+/* 움직임 — 처음 열 때만 */
+#tp9 .wsh.anim .wsbp{animation:wsIn .6s ease both,wsSky 14s ease-in-out infinite alternate}
+#tp9 .wsh.anim .wsring .rf{animation:wsRing 1.2s cubic-bezier(.2,.8,.2,1) both}
+@keyframes wsRing{from{stroke-dashoffset:190}to{stroke-dashoffset:var(--off)}}
+#tp9 .wsh.anim .wsring,#tp9 .wsh.anim .wsq,#tp9 .wsh.anim .wsav,#tp9 .wsh.anim .wsph{animation:wsIn .5s ease both}
+#tp9 .wsh.anim .wsrings .wsring:nth-child(2){animation-delay:.08s}#tp9 .wsh.anim .wsrings .wsring:nth-child(3){animation-delay:.16s}#tp9 .wsh.anim .wsrings .wsring:nth-child(4){animation-delay:.24s}#tp9 .wsh.anim .wsrings .wsring:nth-child(5){animation-delay:.32s}
+#tp9 .wsh.anim .wsq,#tp9 .wsh.anim .wsav{animation-delay:calc(var(--i)*90ms)}
+/* 가고 싶은 곳 사람별 카드 */
+#tp9 .wswcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin:4px 0 6px}
+#tp9 .wswc{border-radius:14px;background:#FFFDF9;border:1px solid #E2D6C2;border-top:5px solid var(--c);padding:10px 12px;animation:wsIn .4s ease both;animation-delay:calc(var(--i)*70ms)}
+#tp9 .wswc>b{font-size:16px;color:#3A2E22}#tp9 .wswc>b small{font-size:13px;color:#5E5244}
+#tp9 .wswc ul{margin:6px 0 0;padding-left:18px}#tp9 .wswc li{font-size:14.5px;line-height:1.45;margin:2px 0;color:#3A2E22}#tp9 .wswc li small{display:block;font-size:13px;color:#5E5244}#tp9 .wswc li.done{color:#2E5A35;text-decoration:line-through;text-decoration-color:#9BC0A2}
+/* 이전 · 다음 */
+#tp9 .wsnext{display:flex;justify-content:space-between;gap:10px;margin:22px 0 6px;padding-top:14px;border-top:1px dashed #D8CBB6}
+#tp9 .wsnb{font:inherit;font-size:15px;font-weight:800;min-height:46px;padding:8px 16px;border-radius:12px;cursor:pointer;border:1px solid #D8CBB6;background:#fff;color:#3A2E22}#tp9 .wsnb.nx{background:#16394F;border-color:#16394F;color:#fff}
+@media (max-width:640px){#tp9 .wsnext{flex-direction:column-reverse}#tp9 .wsnb{width:100%}}
+#tp9 .wspane>.subhead:first-child{margin-top:4px}
+@media print{#tp9 .wssteps,#tp9 .wspres,#tp9 .wsnext{display:none}#tp9 .wspane{display:block!important}}
+@media (prefers-reduced-motion:reduce){#tp9 *{animation:none!important}}
+/* 📎 파일 올리기 (files.js) */
+.cfbox{display:flex;flex-direction:column;gap:10px}.cfbox.cfover .cfdrop{border-color:#1F5F6B;background:#E8F2F4}
+.cfh{display:flex;align-items:baseline;gap:10px}.cfh b{font-size:21px;color:#3A2E22}.cfh span{font-size:14px;color:#5E5244}
+.cfdrop{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-align:center;padding:22px 14px;border:2px dashed #C9B48F;border-radius:14px;background:#FFFAF0;cursor:pointer;color:#3A2E22;transition:background .2s,border-color .2s}
+.cfdrop:hover{background:#FFF3DC;border-color:#A8864F}.cfdrop input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}
+.cfdrop .cfdi{font-size:28px;animation:wsPulse 2.4s ease-in-out infinite}.cfdrop b{font-size:16px}.cfdrop small{font-size:13.5px;color:#5E5244;line-height:1.4}
+.cfdrop.sm{flex-direction:row;gap:8px;padding:10px 12px}.cfdrop.sm .cfdi{font-size:20px}.cfdrop.sm b{font-size:14.5px}
+.cfflt{display:flex;flex-wrap:wrap;gap:6px}.cfflt button{font:inherit;font-size:14px;font-weight:700;min-height:36px;padding:5px 12px;border-radius:999px;border:1px solid #D8CBB6;background:#fff;color:#3A2E22;cursor:pointer}.cfflt button i{font-style:normal;color:#5E5244}.cfflt button[aria-pressed="true"]{background:#3A2E22;color:#fff;border-color:#3A2E22}.cfflt button[aria-pressed="true"] i{color:#EADFCB}
+.cfgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}.cfgrid.sm{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.cft{display:flex;flex-direction:column;border:1px solid #E2D6C2;border-radius:12px;overflow:hidden;background:#FFFDF9;animation:wsIn .35s ease both;animation-delay:calc(var(--i,0)*40ms)}
+.cfth{display:grid;place-items:center;aspect-ratio:4/3;border:0;padding:0;margin:0;background:#F3ECDF;cursor:pointer;overflow:hidden;font:inherit}.cfth img{width:100%;height:100%;object-fit:cover;transition:transform .4s}.cfth:hover img{transform:scale(1.06)}.cfic{font-size:38px}
+.cftb{display:flex;flex-direction:column;gap:4px;padding:8px}.cftb b{font-size:14px;color:#3A2E22;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.cftb small{font-size:12.5px;color:#5E5244}
+.cfm{font:inherit;font-size:14px;padding:5px 8px;border:1px solid #E6DCCB;border-radius:8px;background:#fff;color:#3A2E22;min-height:34px;width:100%;box-sizing:border-box}
+.cfrow{display:flex;gap:6px;align-items:center}.cfc{flex:1;font:inherit;font-size:13.5px;padding:4px 6px;min-height:34px;border:1px solid #E6DCCB;border-radius:8px;background:#fff;color:#3A2E22}.cfx{font:inherit;min-width:34px;min-height:34px;border:1px solid #E6DCCB;border-radius:8px;background:#fff;color:#8E1B14;cursor:pointer}
+.cft.up .cfth{cursor:default}.cfprog{display:block;width:80%;height:10px;border-radius:999px;background:#E6DCCB;overflow:hidden}.cfprog b{display:block;height:100%;background:#1F5F6B;transition:width .3s}
+.cfnone{grid-column:1/-1;margin:0;padding:10px;color:#5E5244;font-size:14px}
+.cfgone summary{cursor:pointer;font-size:13.5px;font-weight:700;color:#5E5244}.cfg1{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:5px 0;font-size:14px;color:#3A2E22}
+.cflb{position:fixed;inset:0;z-index:95;background:rgba(15,20,25,.86);display:grid;place-items:center;padding:16px}.cflb[hidden]{display:none}
+.cflbin{max-width:min(1200px,96vw);max-height:92vh;display:flex;flex-direction:column;gap:8px;align-items:center}
+.cflbin img{max-width:100%;max-height:80vh;border-radius:10px;box-shadow:0 10px 40px rgba(0,0,0,.5);animation:wsIn .3s ease both}.cflbin iframe{width:min(1000px,94vw);height:80vh;border:0;border-radius:10px;background:#fff}
+.cflbdoc{display:flex;flex-direction:column;align-items:center;gap:6px;padding:30px 40px;border-radius:14px;background:#fff;color:#3A2E22;font-size:16px}
+.cflbbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;color:#fff;font-size:14px}.cflbbar>span{max-width:60vw}
+.cflbbar a,.cflbbar button{font:inherit;font-size:14px;font-weight:800;min-height:40px;padding:6px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.1);color:#fff;text-decoration:none;cursor:pointer;display:inline-flex;align-items:center}
+.cflbload{color:#fff;font-size:16px}
+/* 🔎 벤치마킹 다시 짬 */
+#tp17 .bnmode{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:4px 0 14px}
+#tp17 .bnmode button{display:grid;grid-template-columns:auto 1fr;grid-template-areas:"i b" "i s";align-items:center;column-gap:12px;text-align:left;font:inherit;padding:14px 16px;border-radius:16px;border:2px solid #D9CBB4;background:#FFFDF9;color:#3A2E22;cursor:pointer;transition:transform .15s}
+#tp17 .bnmode button:hover{transform:translateY(-1px)}#tp17 .bnmode .bnmi{grid-area:i;font-size:34px}#tp17 .bnmode b{grid-area:b;font-size:18px;font-weight:900}#tp17 .bnmode small{grid-area:s;font-size:13.5px;color:#5E5244;line-height:1.4}
+#tp17 .bnmode button[data-m="ws"][aria-pressed="true"]{background:linear-gradient(120deg,#0F2E44,#1F5F6B);border-color:#16394F;color:#fff}
+#tp17 .bnmode button[data-m="loc"][aria-pressed="true"]{background:linear-gradient(120deg,#5A3A1E,#8F5A22);border-color:#5A3A1E;color:#fff}
+#tp17 .bnmode button[aria-pressed="true"] small{color:#F1E6D4}
+@media (max-width:640px){#tp17 .bnmode{grid-template-columns:1fr}}
+#tp17 .bnwrap{display:flex;flex-direction:column;gap:12px}
+#tp17 .bnhead{font-size:15px;color:#3A2E22}#tp17 .bnhead b{font-size:18px}#tp17 .bnhead small{color:#5E5244;font-size:13.5px}
+#tp17 .bntabs{display:flex;flex-wrap:wrap;gap:6px;margin:0}
+#tp17 .bntab,#tp17 .bnmon{display:flex;flex-direction:column;align-items:flex-start;font:inherit;padding:8px 14px;min-height:52px;border-radius:12px;border:1px solid #D9CBB4;background:#FFFDF9;color:#3A2E22;cursor:pointer}
+#tp17 .bntab b,#tp17 .bnmon b{font-size:15.5px}#tp17 .bntab small,#tp17 .bnmon small{font-size:12.5px;color:#5E5244}
+#tp17 .bntab[aria-selected="true"]{background:#16394F;border-color:#16394F;color:#fff}#tp17 .bnmon[aria-selected="true"]{background:#8F5A22;border-color:#8F5A22;color:#fff}
+#tp17 .bntab[aria-selected="true"] small,#tp17 .bnmon[aria-selected="true"] small{color:#E9EEF0}
+#tp17 .bnq{padding:12px 16px;border-radius:14px;background:#EEF4F6;border-left:5px solid #1F5F6B}#tp17 .bnq span{display:block;font-size:13px;font-weight:800;color:#1F5F6B}#tp17 .bnq b{font-size:19px;color:#16394F}
+#tp17 .bnme{font-size:14px;color:#4A3B2C;margin:0}
+/* 시상대 */
+#tp17 .bnpod{display:flex;align-items:flex-end;justify-content:center;gap:10px;height:200px;padding:10px 0 0}
+#tp17 .bnpc{flex:0 1 220px;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;text-align:center;gap:4px}
+#tp17 .bnpc b{font-size:15px;font-weight:900;color:#3A2E22;line-height:1.25;word-break:keep-all}#tp17 .bnpc em{font-style:normal;font-size:22px;font-weight:900;color:#8E1B14}#tp17 .bnpc em small{font-size:12.5px;color:#5E5244;font-weight:700}
+#tp17 .bnpc i{display:block;width:100%;height:calc(var(--h) - 70px);min-height:24px;border-radius:12px 12px 0 0;background:linear-gradient(180deg,#E0A458,#B37A3A);transform-origin:bottom;animation:bnUp .9s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i)*150ms)}
+#tp17 .bnpc.r1 i{background:linear-gradient(180deg,#F2C14E,#C99316)}#tp17 .bnpc.r2 i{background:linear-gradient(180deg,#D5D9DE,#9BA3AB)}#tp17 .bnpc.r3 i{background:linear-gradient(180deg,#E3A27A,#B06B3E)}
+@keyframes bnUp{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+#tp17 .bnrest{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 14px;margin:0;font-size:14px;color:#3A2E22}#tp17 .bnrest em{font-style:normal;font-weight:900;color:#8E1B14}
+/* 가게 카드 */
+#tp17 .bncard{border:1px solid #E2D6C2;border-radius:14px;background:#FFFDF9;overflow:hidden}
+#tp17 .bncard>summary{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;padding:12px 14px;cursor:pointer;list-style:none}#tp17 .bncard>summary::-webkit-details-marker{display:none}
+#tp17 .bncard[open]>summary{background:#F7F0E4;border-bottom:1px solid #E8DCC8}
+#tp17 .bnt{font-size:13px;font-weight:800;color:#fff;background:#1F5F6B;border-radius:999px;padding:2px 9px}
+#tp17 .bnsn{font-size:17px;color:#3A2E22}#tp17 .bnsn small{display:inline;margin-left:6px;font-size:13px;color:#5E5244;font-weight:700}
+#tp17 .bnavg{display:inline-flex;align-items:center;gap:6px;margin-left:auto;font-size:13.5px;color:#5E5244}#tp17 .bnavg b{font-size:20px;color:#8E1B14}#tp17 .bnavg.none{font-size:13.5px}
+#tp17 .bnab{display:inline-block;width:90px;height:8px;border-radius:999px;background:#EFE6D7;overflow:hidden}#tp17 .bnab u{display:block;height:100%;background:#C2412D;border-radius:999px}
+#tp17 .bnfc{font-size:13px;font-weight:800;color:#3A2E22;background:#F3ECDF;border-radius:999px;padding:2px 8px}
+#tp17 .bndone{font-size:13px;font-weight:800;color:#14502B;background:#DDF1E5;border-radius:999px;padding:2px 8px}
+#tp17 .bnedit{font-size:12.5px;font-weight:800;color:#fff;background:var(--c);border-radius:999px;padding:2px 9px;animation:wsPulse 1.6s ease-in-out infinite}
+#tp17 .bnbody{display:flex;flex-direction:column;gap:12px;padding:12px 14px}
+#tp17 .bnbars{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:4px 16px;padding:10px 12px;border-radius:12px;background:#F7F3EC}
+#tp17 .bnbh2{grid-column:1/-1;font-size:14px;font-weight:800;color:#3A2E22}
+#tp17 .bnbar{display:grid;grid-template-columns:110px 1fr 34px;align-items:center;gap:8px;font-size:14px;color:#3A2E22}#tp17 .bnbar i{display:block;height:10px;border-radius:999px;background:#E6DCCB;overflow:hidden}#tp17 .bnbar i u{display:block;height:100%;background:#1F5F6B;border-radius:999px;transform-origin:left;animation:bnRight .8s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i)*60ms)}#tp17 .bnbar b{text-align:right}
+@keyframes bnRight{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+#tp17 .bnmine{border-radius:12px;border:1px solid #E2D6C2;border-left:5px solid var(--c);padding:10px 12px;background:#fff}
+#tp17 .bnmh{font-size:15.5px;font-weight:900;color:var(--c);margin-bottom:6px}#tp17 .bnmh small{color:#5E5244;font-weight:600;font-size:13px}
+#tp17 .bngrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+#tp17 .bnit{display:grid;grid-template-columns:1fr 70px;grid-template-areas:"t s" "m m";gap:4px 8px;align-items:center;padding:8px;border-radius:10px;background:#FBF7F0}
+#tp17 .bnit span{grid-area:t;font-size:14.5px;font-weight:800;color:#3A2E22}#tp17 .bnit span small{display:block;font-size:12.5px;font-weight:600;color:#5E5244}
+#tp17 .bnit select{grid-area:s;font:inherit;font-size:16px;font-weight:900;min-height:40px;border-radius:8px;border:1px solid #D9CBB4;background:#fff;color:#3A2E22;text-align:center}
+#tp17 .bnmeter{grid-area:m;display:block;height:8px;border-radius:999px;background:#E6DCCB;overflow:hidden}#tp17 .bnmeter u{display:block;height:100%;background:var(--c);border-radius:999px;transition:width .4s}
+#tp17 .bntot{font-size:15px;color:#3A2E22;margin:8px 0}#tp17 .bntot b{font-size:20px;color:#8E1B14}
+#tp17 .bnrow{display:flex;flex-direction:column;gap:4px;margin-top:8px}#tp17 .bnrow span{font-size:14px;font-weight:800;color:#3A2E22}
+#tp17 .bnrow input,#tp17 .bnrow textarea,#tp17 .bnrfin{font:inherit;font-size:16px;padding:8px 10px;border:1px solid #D9CBB4;border-radius:10px;background:#fff;color:#3A2E22;width:100%;box-sizing:border-box}
+#tp17 .bnrow.take input{border-color:#E0A458;background:#FFF8EA}
+#tp17 .bnnote{border-left:4px solid var(--c);padding:6px 10px;margin:6px 0;background:#FBF7F0;border-radius:0 10px 10px 0;font-size:14.5px;color:#3A2E22}#tp17 .bnnote>b{color:var(--c)}#tp17 .bnnote p{margin:3px 0}#tp17 .bnnote .tk{font-weight:800}
+#tp17 .bnfoot{display:flex;justify-content:flex-end;align-items:center;gap:8px;font-size:13px;color:#5E5244}
+#tp17 .bnadd{display:flex;flex-wrap:wrap;gap:8px}#tp17 .bnadd input{flex:1 1 200px;font:inherit;font-size:16px;padding:8px 10px;min-height:44px;border:1px solid #D9CBB4;border-radius:10px;background:#fff;color:#3A2E22}#tp17 .bnadd.loc input[type=date]{flex:0 0 170px}
+#tp17 .bnrf{padding:12px 14px;border-radius:14px;background:#FFFDF9;border:1px solid #E2D6C2}#tp17 .bnrfh{font-size:15.5px;font-weight:900;color:#16394F;margin-bottom:6px}
+/* ⭐ 가져올 것 보드 */
+#tp17 .bnboard{padding:12px 14px;border-radius:16px;background:#FFF8EA;border:1px solid #EBD9BC}#tp17 .bnboard.empty p{margin:4px 0 0;font-size:14px;color:#4A3B2C}#tp17 .bnboard>b{font-size:16px;color:#3A2E22}
+#tp17 .bnbh{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;margin-bottom:8px}#tp17 .bnbh b{font-size:17px;color:#3A2E22}#tp17 .bnbh b small{font-size:13.5px;color:#5E5244}#tp17 .bnbh span{font-size:13.5px;color:#5E5244}
+#tp17 .bnbcols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+#tp17 .bnbc{border-radius:12px;background:#FFFDF9;border:1px solid #E8DCC8;padding:8px;min-height:80px}#tp17 .bnbc h5{margin:0 0 6px;font-size:15px;color:#3A2E22}#tp17 .bnbc h5 i{font-style:normal;color:#5E5244}
+#tp17 .bnbc.try{background:#F2F6FD}#tp17 .bnbc.done{background:#EEF6EF}
+#tp17 .bnbi{border-radius:10px;background:#fff;border:1px solid #E8DCC8;border-left:4px solid var(--c);padding:7px 9px;margin-bottom:6px;animation:wsIn .35s ease both;animation-delay:calc(var(--i)*50ms)}
+#tp17 .bnbi p{margin:0 0 3px;font-size:14.5px;font-weight:800;color:#3A2E22}#tp17 .bnbi small{font-size:12.5px;color:#5E5244}
+#tp17 .bnbbtn{display:flex;gap:6px;margin-top:5px}#tp17 .bnbbtn button{font:inherit;font-size:13px;font-weight:800;min-height:32px;padding:3px 10px;border-radius:8px;border:1px solid #D9CBB4;background:#fff;color:#3A2E22;cursor:pointer}#tp17 .bnbbtn button.nx{background:#1F5F6B;border-color:#1F5F6B;color:#fff}
+@media (max-width:760px){#tp17 .bnbcols{grid-template-columns:1fr}#tp17 .bnpod{height:170px}#tp17 .bnpc b{font-size:13.5px}#tp17 .bnavg{margin-left:0}}
+#tp17 .bnfiles:empty{display:none}
+@media (prefers-reduced-motion:reduce){#tp17 *{animation:none!important}}
 </style>
-<script src="js/stock.js?v=v0924-296"></script>
-<script src="js/mango.js?v=v0924-296"></script>
-<script src="js/fruitcap.js?v=v0924-296"></script>
-<script src="js/fruitprice.js?v=v0924-296"></script>
+<script src="js/stock.js?v=v0924-298"></script>
+<script src="js/mango.js?v=v0924-298"></script>
+<script src="js/fruitcap.js?v=v0924-298"></script>
+<script src="js/fruitprice.js?v=v0924-298"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -5547,15 +5749,17 @@ body.xmplprint #xmProdPane .xmtw{overflow:visible}body.xmplprint #xmProdPane .st
   window.addEventListener("cs:remote", function () { setTimeout(mark, 400); });
 })();
 </script>
-<script src="js/presence.js?v=v0924-296"></script>
-<script src="js/weekrep.js?v=v0924-296"></script>
-<script src="js/recipe.js?v=v0924-296"></script>
-<script src="js/bench.js?v=v0924-296"></script>
+<script src="js/presence.js?v=v0924-298"></script>
+<script src="js/weekrep.js?v=v0924-298"></script>
+<script src="js/recipe.js?v=v0924-298"></script>
+<script src="js/files.js?v=v0924-298"></script>
+<script src="js/bench.js?v=v0924-298"></script>
+<script src="js/wsui.js?v=v0924-298"></script>
 <script>/* 월말회의 「잘한 것」 한 칸으로 (10/22 사장님 「합쳐줘」) — 예전 ② ③ 칸은 글이 있는 달만 보임 */
 (function(){function p(){document.querySelectorAll("#mtForm .frow.mtold").forEach(function(r){var t=r.querySelector(".fin");r.hidden=!(t&&t.value.trim());});}
 var m=document.getElementById("mtMonth");if(m)m.addEventListener("change",function(){setTimeout(p,80);});
 window.addEventListener("cs:remote",function(){setTimeout(p,400);});document.addEventListener("click",function(e){if(e.target.closest('.tab[data-p="tp5"]'))setTimeout(p,80);});setTimeout(p,600);})();</script>
-<script src="js/monthlog.js?v=v0924-296"></script>
-<script src="js/xmas.js?v=v0924-296"></script>
-<script src="js/tg.js?v=v0924-296"></script>
+<script src="js/monthlog.js?v=v0924-298"></script>
+<script src="js/xmas.js?v=v0924-298"></script>
+<script src="js/tg.js?v=v0924-298"></script>
 </body></html>

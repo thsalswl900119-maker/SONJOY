@@ -201,11 +201,14 @@
         return tx.get(ref).then(function (doc) {
           var a = []; try { a = JSON.parse((doc.exists && (doc.data() || {}).v) || "[]") || []; } catch (e2) { a = []; }
           a.push(e); var sv = JSON.stringify(a);
-          while (sv.length > 700000 && a.length > 1) { a.shift(); sv = JSON.stringify(a); }
+          while (sv.length > 190000 && a.length > 1) { a.shift(); sv = JSON.stringify(a); }   /* 서버 규칙: 문서 하나 20만 자까지(firestore.rules) — 예전 70만 자로 두어 넘는 날은 기록이 조용히 실패했음 */
           tx.set(ref, { v: sv, by: dev, t: firebase.firestore.FieldValue.serverTimestamp() });
         });
       }).catch(function () {});
     }
+    // 📎 파일 올리기(10/30 · 워크샵 · 벤치마킹) — 서버 문서 하나 20만 자 제한이라 19만 자씩 나눠 「file.<id>.<번호>」에 · 이름이 cafesui.로 시작하지 않아 기기 저장소에는 안 들어감
+    window.__CS_FILEPUT = function (id, i, part) { return col.doc("file." + id + "." + i).set({ v: part, by: dev, t: firebase.firestore.FieldValue.serverTimestamp() }); };
+    window.__CS_FILEGET = function (id, i) { return col.doc("file." + id + "." + i).get().then(function (d) { return (d.exists && (d.data() || {}).v) || ""; }); };
     window.__CS_HIST = function (date) { return col.doc("hist.log." + date).get().then(function (d) { try { return JSON.parse((d.exists && (d.data() || {}).v) || "[]") || []; } catch (e) { return []; } }); };
     function flush(k) {
       if (!ready) return;                       // 연결되면 한꺼번에 보낸다

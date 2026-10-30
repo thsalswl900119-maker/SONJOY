@@ -17,6 +17,12 @@
     if (pid === "tp4") { var d = (document.getElementById("lgDate") || {}).value || ""; return { key: "cafesui.log." + d, label: "일지 " + md(d) }; }
     if (pid === "tp12") { var d2 = (document.getElementById("skDate") || {}).value || ""; return { key: "cafesui.stock." + d2, label: "재고·발주 " + md(d2) }; }
     if (pid === "tp1") { var mm = document.querySelector('#tp1 .mtab[aria-selected="true"], #tp1 [data-m][aria-selected="true"]'); return { key: "sched", label: "근무표" }; }
+    if (pid === "tp9" || pid === "tp17") {   // 워크샵 · 벤치마킹 — 어느 하위 화면 · 어느 칸을 쓰는지까지(10/30 「동시 접속해도 헷갈리지 않게」)
+      var sub = pid === "tp9" ? document.querySelector("#wsNav .wsn[aria-selected=\"true\"]") : document.querySelector("#bnMode [aria-pressed=\"true\"]");
+      var a = document.activeElement, fk = "", fl = "";
+      if (a && a.closest && a.closest("#" + pid)) { fk = (a.dataset && (a.dataset.k || (a.dataset.id && a.dataset.f ? a.dataset.id + "|" + a.dataset.f : "") || a.dataset.rf)) || ""; var lab = a.closest("label, tr, .bncard"); fl = lab ? (lab.querySelector("span, b, summary b") || lab).textContent.trim().slice(0, 24) : ""; }
+      return { key: pid, label: (pid === "tp9" ? "워크샵" : "벤치마킹") + (sub ? " · " + (sub.dataset.lab || sub.textContent.trim()) : ""), pane: sub ? (sub.dataset.w || sub.dataset.m || "") : "", fk: fk, fl: fl };
+    }
     return { key: pid, label: name };
   }
   function others() {
@@ -35,10 +41,10 @@
   function beat(force) {
     var who = me(); if (!who || !dev()) return;
     var active = Date.now() - lastIn < 90000;
-    var w = where(); var sig = who + "|" + w.key + "|" + (active ? 1 : 0);
+    var w = where(); var sig = who + "|" + w.key + "|" + (active ? 1 : 0) + "|" + (w.label || "") + "|" + (w.fk || "");
     if (!force && sig === lastSig && Date.now() - lastSent < BEAT) return;
     lastSig = sig; lastSent = Date.now();
-    try { localStorage.setItem("cafesui.presence." + dev(), JSON.stringify({ who: who, dev: dev(), key: w.key, label: w.label, on: active, t: Date.now() })); } catch (e) {}
+    try { localStorage.setItem("cafesui.presence." + dev(), JSON.stringify({ who: who, dev: dev(), key: w.key, label: w.label, pane: w.pane || "", fk: w.fk || "", fl: w.fl || "", on: active, t: Date.now() })); } catch (e) {}
   }
   function bye() { try { localStorage.setItem("cafesui.presence." + dev(), JSON.stringify({ who: me(), dev: dev(), key: "", label: "", on: false, t: Date.now() })); } catch (e) {} }
   // 화면 표시: 위 띠에 "지금 쓰는 사람", 같은 화면이면 아래 경고
@@ -60,7 +66,7 @@
     }
     var bar = document.getElementById("presWarn");
     if (bar) {
-      var same = list.filter(function (o) { return o.on && o.key && o.key === w.key && o.who !== me(); });
+      var same = (w.key === "tp9" || w.key === "tp17") ? [] : list.filter(function (o) { return o.on && o.key && o.key === w.key && o.who !== me(); });   /* 워크샵 · 벤치마킹은 칸마다 「○○님 쓰는 중」을 따로 보여 줌(내 칸만 저장) */
       if (bar.hidden !== !same.length) bar.hidden = !same.length;
       if (same.length) { var bt = "⚠ " + same.map(function (o) { return nim(o.who); }).join(" · ") + "도 지금 「" + w.label + "」 화면을 쓰고 있어요 — 같은 칸을 동시에 고치면 나중에 저장한 쪽만 남습니다. 서로 다른 칸만 적거나 잠깐 기다려 주세요."; if (bar.textContent !== bt) bar.textContent = bt; }
     }
@@ -73,8 +79,10 @@
     setTimeout(function () { beat(true); draw(); }, 2500);
     setInterval(tick, 5000);
   });
-  document.addEventListener("click", function (e) { if (e.target.closest(".tab, .daynav, .stab, .sktab")) setTimeout(function () { beat(true); draw(); }, 300); }, true);
+  document.addEventListener("click", function (e) { if (e.target.closest(".tab, .daynav, .stab, .sktab, .wsn, #bnMode button, .bntab, .bnmon")) setTimeout(function () { beat(true); draw(); }, 300); }, true);
   document.addEventListener("change", function (e) { if (e.target && (e.target.id === "lgDate" || e.target.id === "skDate")) setTimeout(function () { beat(true); draw(); }, 100); }, true);
+  document.addEventListener("focusin", function (e) { if (e.target && e.target.closest && e.target.closest("#tp9, #tp17")) setTimeout(function () { beat(false); }, 600); }, true);
+  window.__CS_PRES = function () { return others(); };
   window.addEventListener("cs:presence", draw);
   window.addEventListener("cs:remote", function () { setTimeout(draw, 200); });
   window.addEventListener("pagehide", bye);
