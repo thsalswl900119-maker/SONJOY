@@ -588,6 +588,12 @@
     return PERK.map(function (r) { var p = per[r[0]] || PER0[r[0]]; return { k: r[0], lab: r[1].split(" ")[0], n: Math.ceil((N(p[0]) * W + N(p[1]) * M + N(p[2]) * S) * 1.1 / r[2]), u: r[3] }; });
   }
   var MK2 = ["크림 · 과일", "재료", "포장", "데코", "기타"], MIC = { "크림 · 과일": "🍓", "재료": "🧈", "포장": "📦", "데코": "✨", "기타": "📎" }, MFLT = "all";
+  function buyMore(x) {   // 10/30 사장님 「지금 남은 것 · 미리 주문한 것」 — 필요 수량에서 빼고 더 사야 할 개수 (숫자일 때만)
+    var q = parseFloat(String(x.q || "").replace(/,/g, "")), hs = parseFloat(String(x.has || "").replace(/,/g, "")), pr = parseFloat(String(x.pre || "").replace(/,/g, "").replace(/^[^\d]*/, ""));
+    if (isNaN(q) || (isNaN(hs) && isNaN(pr))) return "";
+    var r = q - (isNaN(hs) ? 0 : hs) - (isNaN(pr) ? 0 : pr);
+    return '<small class="xmbuy' + (r > 0 ? " more" : " ok") + '">' + (r > 0 ? "→ 더 사야 " + r : "✔ 충분 (" + (r === 0 ? "딱 맞음" : "+" + (-r) + " 여유") + ")") + "</small>";
+  }
   function drawMat(el) {   // 🧾 재료 · 부자재 — 10/30 사장님 「위에 것(대표 재료)처럼 가로로」 · 분류별 표 · 줄마다 수량 · 금액 · 주문처 · 메모 · 주문함 · 입고
     var L = rows(load(cur).mat), cost = 0, od = 0, ind = 0, pcost = 0, nd = needOf(cur);
     L.forEach(function (x) { cost += N(x.c); pcost += N(x.pc); if (x.od) od++; if (x.ind) ind++; });
@@ -597,21 +603,22 @@
       '<div class="xmprog"><div class="xmpg"><span>📨 주문함</span><i><b style="width:' + pct(od) + '%"></b></i><em>' + od + " / " + L.length + " (" + pct(od) + '%)</em></div><div class="xmpg in"><span>📥 입고</span><i><b style="width:' + pct(ind) + '%"></b></i><em>' + ind + " / " + L.length + " (" + pct(ind) + '%)</em></div><div class="xmpg sum"><span>💰 금액 합</span><strong>' + won(cost) + "</strong><em>" + (pcost ? "작년 " + won(pcost) : "") + "</em></div></div>" +
       '<div class="xmflt" role="group" aria-label="보기">' + [["all", "전체 " + L.length], ["wait", "아직 주문 안 함 " + (L.length - od - L.filter(function (x) { return x.ind && !x.od; }).length)], ["od", "주문함 · 입고 전 " + L.filter(function (x) { return x.od && !x.ind; }).length], ["in", "입고 " + ind]].map(function (f) { return '<button type="button" data-a="mflt" data-v="' + f[0] + '" aria-pressed="' + (MFLT === f[0]) + '">' + f[1] + "</button>"; }).join("") + "</div>";
     if (!L.length) h += '<p class="xmempty">아직 목록이 없습니다 · 아래 「작년 목록 불러오기」를 누르면 작년 품목 · 주문처 · 메모가 들어옵니다 (작년 수량 · 금액이 칸에 들어가니 올해 맞게 고치세요)</p>';
-    h += '<div class="xmtw"><table class="xmt matt"><thead><tr><th class="mst">상태</th><th>품목</th><th class="mq">수량</th><th class="mc">금액(원)</th><th>주문처</th><th>메모</th><th class="mb">주문 · 입고</th><th class="mx"><span class="sr">빼기</span></th></tr></thead><tbody>';
+    h += '<div class="xmtw"><table class="xmt matt"><thead><tr><th class="mst">상태</th><th>품목</th><th class="mq">필요 수량</th><th class="mh">지금 남은 것</th><th class="mp">미리 주문한 것</th><th class="mc">금액(원)</th><th>메모</th><th class="mb">주문 · 입고</th><th class="mx"><span class="sr">빼기</span></th></tr></thead><tbody>';
     MK2.forEach(function (k) {
       var G = L.filter(function (x) { return (MK2.indexOf(x.k) < 0 ? "기타" : x.k) === k; }); if (!G.length && k === "기타") return;
       var gc = 0, go = 0, gi = 0; G.forEach(function (x) { gc += N(x.c); if (x.od) go++; if (x.ind) gi++; });
       var V = G.filter(function (x) { return MFLT === "all" || st(x) === MFLT; });
-      h += '<tr class="xmgrp"><th colspan="8"><span class="xmgt">' + MIC[k] + " " + k + '</span><small>' + G.length + "개 · 주문 " + go + " · 입고 " + gi + (gc ? " · " + won(gc) : "") + "</small>" +
+      h += '<tr class="xmgrp"><th colspan="9"><span class="xmgt">' + MIC[k] + " " + k + '</span><small>' + G.length + "개 · 주문 " + go + " · 입고 " + gi + (gc ? " · " + won(gc) : "") + "</small>" +
         (k === "크림 · 과일" ? '<span class="xmneed" title="🥛 위 대표 재료 표에서 계산한 필요량 (+10%)">필요 ' + nd.map(function (r) { return r.lab + " <b>" + r.n + r.u + "</b>"; }).join(" · ") + "</span>" : "") +
         '<button type="button" class="skbtn" data-a="madd" data-k="' + k + '">＋ ' + k + " 추가</button></th></tr>";
-      if (!V.length) { h += '<tr class="xmnone"><td colspan="8">' + (G.length ? "이 보기에 해당하는 품목이 없어요" : "아직 없어요 · 「＋ 추가」로 넣기") + "</td></tr>"; return; }
+      if (!V.length) { h += '<tr class="xmnone"><td colspan="9">' + (G.length ? "이 보기에 해당하는 품목이 없어요" : "아직 없어요 · 「＋ 추가」로 넣기") + "</td></tr>"; return; }
       V.forEach(function (x) {
         h += '<tr class="xmr ' + st(x) + '" data-id="' + x._id + '"><td class="mst"><span class="xmdot">' + (x.ind ? "입고" : x.od ? "주문함" : "대기") + '</span><select class="xmi xmk" data-f="k" aria-label="분류 바꾸기" title="분류 바꾸기">' + MK2.map(function (z) { return "<option" + (z === (MK2.indexOf(x.k) < 0 ? "기타" : x.k) ? " selected" : "") + ' value="' + z + '">' + MIC[z] + "</option>"; }).join("") + "</select></td>" +
-          '<td class="mn" data-l="품목"><textarea class="xmi xmn2" data-f="n" rows="1" placeholder="품목">' + esc(x.n || "") + "</textarea></td>" +
-          '<td class="mq" data-l="수량"><input type="text" class="xmi" data-f="q" value="' + ea2(x.q) + '" placeholder="수량">' + (x.pq && String(x.pq) !== String(x.q) ? '<small class="xpref">작년 ' + esc(x.pq) + "</small>" : "") + "</td>" +
+          '<td class="mn" data-l="품목"><textarea class="xmi xmn2" data-f="n" rows="1" placeholder="품목">' + esc(x.n || "") + '</textarea><input type="text" class="xmi xmsrc" data-f="s" value="' + ea2(x.s) + '" placeholder="주문처" aria-label="주문처"></td>' +
+          '<td class="mq" data-l="필요 수량"><input type="text" class="xmi" data-f="q" value="' + ea2(x.q) + '" placeholder="수량">' + (x.pq && String(x.pq) !== String(x.q) ? '<small class="xpref">작년 ' + esc(x.pq) + "</small>" : "") + buyMore(x) + "</td>" +
+          '<td class="mh" data-l="지금 남은 것"><input type="text" class="xmi" data-f="has" value="' + ea2(x.has || "") + '" placeholder="남은 개수">' + (x.hasAt ? '<small class="xpref">' + esc(x.hasAt) + "</small>" : "") + "</td>" +
+          '<td class="mp" data-l="미리 주문한 것"><textarea class="xmi" data-f="pre" rows="1" placeholder="예) 100개 · 11/3 주문 · 11/10 도착">' + esc(x.pre || "") + "</textarea>" + (x.preAt ? '<small class="xpref">' + esc(x.preAt) + "</small>" : "") + "</td>" +
           '<td class="mc" data-l="금액(원)"><input type="text" inputmode="numeric" class="xmi money num" data-f="c" value="' + ea2(money(x.c)) + '" placeholder="금액">' + (x.pc && N(x.pc) !== N(x.c) ? '<small class="xpref">작년 ' + N(x.pc).toLocaleString("ko-KR") + "</small>" : "") + "</td>" +
-          '<td class="ms" data-l="주문처"><input type="text" class="xmi" data-f="s" value="' + ea2(x.s) + '" placeholder="주문처"></td>' +
           '<td class="mm" data-l="메모"><textarea class="xmi" data-f="m" rows="1" placeholder="메모">' + esc(x.m || "") + "</textarea></td>" +
           '<td class="mb"><button type="button" class="xmst" data-a="od" aria-pressed="' + !!x.od + '">' + (x.od ? "✔ 주문함<small>" + esc(nim(x.od.by)) + " " + esc(x.od.at) + "</small>" : "주문함") + '</button><button type="button" class="xmst" data-a="ind" aria-pressed="' + !!x.ind + '">' + (x.ind ? "✔ 입고<small>" + esc(nim(x.ind.by)) + " " + esc(x.ind.at) + "</small>" : "입고") + "</button></td>" +
           '<td class="mx"><button type="button" class="xcx" data-a="mdel" aria-label="빼기">✕</button></td></tr>';
@@ -627,7 +634,7 @@
       var t2 = e.target; if (!t2.classList.contains("xmi")) return;
       var r = t2.closest("tr[data-id]"); if (!r) return;
       var id = r.dataset.id, f = t2.dataset.f, v = t2.classList.contains("money") ? moneyRaw(t2.value) : t2.value.trim();
-      matEdit(cur, function (m) { if (m[id]) m[id][f] = v; }); setTimeout(function () { drawPane(true); }, 0);
+      matEdit(cur, function (m) { if (!m[id]) return; m[id][f] = v; if (f === "has" || f === "pre") m[id][f + "At"] = v ? stampNow() + " · " + nim(me() || "") : ""; }); setTimeout(function () { drawPane(true); }, 0);
     });
     el.addEventListener("click", function (e) {
       var b = e.target.closest("[data-a]"); if (!b || !el.contains(b)) return; var a = b.dataset.a, card = b.closest("tr[data-id]"), id = card && card.dataset.id;
