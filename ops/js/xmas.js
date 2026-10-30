@@ -247,6 +247,33 @@
   // 품목 이름 칸은 한 줄 글 — 엔터는 줄바꿈 대신 칸 나가기(저장)
   sec.addEventListener("keydown", function (e) { if (e.key === "Enter" && e.target.classList && e.target.classList.contains("xmn2")) { e.preventDefault(); e.target.blur(); } });
   nav.addEventListener("click", function (e) { var b = e.target.closest(".xmn"); if (b) showTab(b.dataset.x); });
+  // 위 메뉴 = 준비 흐름 ① 목표 → ② 생산 → ③ 재료 → ④ 할 일 → ⑤ 상품 · 결정 · 버튼마다 지금 상태 한 줄 (10/30 사장님 「따로 노는 느낌 · 한눈에」)
+  function navStat() {
+    try {
+      var t0 = today(), n = dd(cur + "-12-25", t0), g = goalOf(cur), gs = goalSum(g), ps = prodSums(cur), mt = rows(load(cur).mat), L = ckItems(cur), f = load(cur).f || {};
+      var pc = ps.whole + ps.mini, tot = N(g.total) || (gs.whole + gs.mini), od = mt.filter(function (x) { return x.od; }).length, ind = mt.filter(function (x) { return x.ind; }).length;
+      var done = L.filter(function (x) { return x.done; }).length, late = L.filter(function (x) { return !x.done && x.d && x.d < t0; }).length;
+      var fn = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10"].filter(function (k) { return String(f[k] || "").trim(); }).length, hy = Object.keys(HIST()).sort();
+      var S = {
+        sum: [cur + "년 · " + (n > 0 ? "D-" + n : n === 0 ? "오늘" : "지남"), 0],
+        goal: ["목표 " + (tot || "—") + "개" + (g.peak ? " · 피크 " + g.peak : ""), !tot],
+        prod: ["계획 " + pc + " / " + (tot || "—") + "개", tot && pc < tot],
+        mat: [mt.length ? "주문 " + od + "/" + mt.length + " · 입고 " + ind : "목록 만들기", mt.length && od < mt.length],
+        ck: [(late ? "⚠ 밀림 " + late + " · " : "") + done + "/" + L.length + " 완료", late],
+        meet: ["결정 칸 " + fn + "/10", fn < 10],
+        hist: [hy.length ? hy[0] + "~" + hy[hy.length - 1] + " · " + hy.length + "년" : "", 0]
+      };
+      Array.prototype.forEach.call(nav.querySelectorAll(".xmn"), function (b) { var v = S[b.dataset.x], sm = b.querySelector(".xns"); if (!v || !sm) return; sm.textContent = v[0]; b.classList.toggle("todo", !!v[1]); });
+    } catch (e) {}
+  }
+  var STEPS = [["sum", "📋 한눈에"], ["goal", "① 🎯 목표 · 매출"], ["prod", "② 🍰 생산 계획"], ["mat", "③ 🧾 재료 · 부자재"], ["ck", "④ ✅ 할 일 · 달력"], ["meet", "⑤ 🎁 상품 · 결정"], ["hist", "📊 지난 해 · 보고서"]];
+  function nextBar(k) {   // 화면 맨 아래 「← 이전 · 다음 →」 — 목표 → 생산 → 재료 → 할 일 → 상품이 이어지게
+    var pane = sec.querySelector('.xmpane[data-x="' + k + '"]'); if (!pane) return;
+    var b = pane.querySelector(":scope > .xnext"); if (!b) { b = document.createElement("div"); b.className = "xnext"; }
+    pane.appendChild(b);
+    var i = STEPS.map(function (x) { return x[0]; }).indexOf(k), pv = STEPS[i - 1], nx = STEPS[i + 1];
+    b.innerHTML = (pv ? '<button type="button" class="xnb pv" data-go="' + pv[0] + '">← ' + pv[1] + "</button>" : "<span></span>") + (nx ? '<button type="button" class="xnb nx" data-go="' + nx[0] + '">다음 ' + nx[1] + " →</button>" : "");
+  }
   function paneEl(k) { return k === "hist" ? sec.querySelector('.xmpane[data-x="hist"]') : document.getElementById({ sum: "xmSum", goal: "xmGoal", mat: "xmMat", prod: "xmProdPane" }[k]); }
   function busy(el) { var a = document.activeElement; return el && a && el.contains(a) && (/INPUT|TEXTAREA|SELECT/.test(a.tagName) || a.isContentEditable); }
   var pend = {};
@@ -260,6 +287,7 @@
   }
   function drawPane(force) {
     var k = TAB, el = paneEl(k);
+    navStat(); nextBar(k);
     if (k === "ck") { drawCk(); if (xcEl && !(xcEl.contains(document.activeElement) && /INPUT|TEXTAREA/.test(document.activeElement.tagName))) drawCal(xcEl); ckView(); return; }
     if (!el) return;
     if (busy(el) && !(force === true && !document.activeElement.isContentEditable)) { pend[k] = 1; return; }
@@ -491,13 +519,14 @@
     function pick(arr) { return arr.filter(function (p) { return flv(p.n) === f; })[0]; }
     if (x.k === "조각") return pick(L.filter(function (p) { return p.c === "조각 케이크"; }));
     if (x.k === "미니") return pick(L.filter(function (p) { return XC.test(p.c) && /미니/.test(p.n) && p.n.indexOf(yy + "년") >= 0; })) || pick(L.filter(function (p) { return XC.test(p.c) && /미니/.test(p.n); }));
-    if (x.k === "홀") return pick(L.filter(function (p) { return XC.test(p.c) && !/미니/.test(p.n) && p.n.indexOf(yy + "년") >= 0; })) || pick(L.filter(function (p) { return XC.test(p.c) && !/미니/.test(p.n); }));
+    if (x.k === "중간" || /반짝/.test(x.n)) return pick(L.filter(function (p) { return XC.test(p.c) && /반짝|중간/.test(p.n) && p.n.indexOf(yy + "년") >= 0; })) || pick(L.filter(function (p) { return XC.test(p.c) && /반짝|중간/.test(p.n); })) || pick(L.filter(function (p) { return /반짝/.test(p.n) && !/미노출/.test(p.c); }));   // 10/30 반짝(중간) — 올해 크리스마스 반짝 → 평소 반짝
+    if (x.k === "홀") return pick(L.filter(function (p) { return XC.test(p.c) && !/미니|반짝|중간/.test(p.n) && p.n.indexOf(yy + "년") >= 0; })) || pick(L.filter(function (p) { return XC.test(p.c) && !/미니|반짝|중간/.test(p.n); }));
     return null;
   }
   function prHint(x) {
     var m = prMatch(x); if (!m) return '<span class="xprh none">가격표에 없음</span>';
     var same = N(x.p) === m.p, last = !m.n.match(new RegExp(String(cur).slice(2) + "년")) && /크리스마스/.test(m.c);
-    return '<span class="xprh' + (same ? " ok" : "") + '" title="' + ea2(m.c + " · " + m.n) + '">' + (same ? "✔ " : "") + "가격표 " + m.p.toLocaleString("ko-KR") + "원" + (last ? " (작년)" : m.c === "조각 케이크" ? " (지금 POS)" : "") +
+    return '<span class="xprh' + (same ? " ok" : "") + '" title="' + ea2(m.c + " · " + m.n) + '">' + (same ? "✔ " : "") + "가격표 " + m.p.toLocaleString("ko-KR") + "원" + (last ? " (작년)" : m.c === "조각 케이크" ? " (지금 POS)" : !/크리스마스/.test(m.c) ? " (평소 상품)" : "") +
       (same ? "" : ' <button type="button" class="xprput" data-p="' + m.p + '">← 넣기</button>') + "</span>";
   }
   var prA = document.createElement("aside"); prA.className = "fcaside xpaside"; prA.id = "xmPrAside"; prA.hidden = true; prA.setAttribute("aria-label", "가격표"); document.body.appendChild(prA);
@@ -554,23 +583,41 @@
       }).join("") + '</tbody></table></div>' + g25box("mat") +
       '<label class="xmnote xmshort">조각케이크 판 수 (생산 계획이 비었을 때 쓰는 목표)<input type="text" inputmode="numeric" class="xslice" value="' + ea2(o.slicePan || "") + '" placeholder="25년 실제 134판"></label></div>';
   }
-  function drawMat(el) {
-    var L = rows(load(cur).mat), cost = 0, od = 0, ind = 0, pcost = 0;
+  function needOf(y) {   // 대표 재료 필요량(+10%) — 재료 화면 크림 · 과일 줄 · 한눈에가 같이 씀
+    var o = load(y), per = o.per || PER0, ps = prodSums(y), gs = goalSum(goalOf(y)), W = ps.whole || gs.whole, M = ps.mini || gs.mini, S = ps.slice || N(o.slicePan);
+    return PERK.map(function (r) { var p = per[r[0]] || PER0[r[0]]; return { k: r[0], lab: r[1].split(" ")[0], n: Math.ceil((N(p[0]) * W + N(p[1]) * M + N(p[2]) * S) * 1.1 / r[2]), u: r[3] }; });
+  }
+  var MK2 = ["크림 · 과일", "재료", "포장", "데코", "기타"], MIC = { "크림 · 과일": "🍓", "재료": "🧈", "포장": "📦", "데코": "✨", "기타": "📎" }, MFLT = "all";
+  function drawMat(el) {   // 🧾 재료 · 부자재 — 10/30 사장님 「위에 것(대표 재료)처럼 가로로」 · 분류별 표 · 줄마다 수량 · 금액 · 주문처 · 메모 · 주문함 · 입고
+    var L = rows(load(cur).mat), cost = 0, od = 0, ind = 0, pcost = 0, nd = needOf(cur);
     L.forEach(function (x) { cost += N(x.c); pcost += N(x.pc); if (x.od) od++; if (x.ind) ind++; });
-    var h = mainMat() + '<div class="xmbox"><div class="xmbh"><b>🧾 ' + cur + ' 재료 · 부자재 준비</b><span>품목마다 수량 · 주문처 · 금액 · 메모를 적고, 주문하면 「주문함」, 들어오면 「입고」를 누르세요 · 흐린 글씨는 작년 숫자</span></div>' +
-      '<div class="xmgoaltop"><div class="xmkpi"><span>품목</span><b>' + L.length + '개</b></div><div class="xmkpi"><span>주문함</span><b>' + od + ' / ' + L.length + '</b></div><div class="xmkpi"><span>입고</span><b>' + ind + ' / ' + L.length + '</b></div><div class="xmkpi"><span>금액 합</span><b>' + won(cost) + '</b><em>' + (pcost ? "작년 " + won(pcost) : "") + '</em></div></div>';
+    function pct(a) { return L.length ? Math.round(a / L.length * 100) : 0; }
+    function st(x) { return x.ind ? "in" : x.od ? "od" : "wait"; }
+    var h = mainMat() + '<div class="xmbox xmlist"><div class="xmbh"><b>🧾 ' + cur + ' 재료 · 부자재 준비 목록</b><span>크림 · 과일 → 재료 → 포장 → 데코 순 · 칸을 눌러 바로 고치면 저장 · 주문하면 「주문함」, 들어오면 「입고」 · 회색 = 작년 숫자</span></div>' +
+      '<div class="xmprog"><div class="xmpg"><span>📨 주문함</span><i><b style="width:' + pct(od) + '%"></b></i><em>' + od + " / " + L.length + " (" + pct(od) + '%)</em></div><div class="xmpg in"><span>📥 입고</span><i><b style="width:' + pct(ind) + '%"></b></i><em>' + ind + " / " + L.length + " (" + pct(ind) + '%)</em></div><div class="xmpg sum"><span>💰 금액 합</span><strong>' + won(cost) + "</strong><em>" + (pcost ? "작년 " + won(pcost) : "") + "</em></div></div>" +
+      '<div class="xmflt" role="group" aria-label="보기">' + [["all", "전체 " + L.length], ["wait", "아직 주문 안 함 " + (L.length - od - L.filter(function (x) { return x.ind && !x.od; }).length)], ["od", "주문함 · 입고 전 " + L.filter(function (x) { return x.od && !x.ind; }).length], ["in", "입고 " + ind]].map(function (f) { return '<button type="button" data-a="mflt" data-v="' + f[0] + '" aria-pressed="' + (MFLT === f[0]) + '">' + f[1] + "</button>"; }).join("") + "</div>";
     if (!L.length) h += '<p class="xmempty">아직 목록이 없습니다 · 아래 「작년 목록 불러오기」를 누르면 작년 품목 · 주문처 · 메모가 들어옵니다 (작년 수량 · 금액이 칸에 들어가니 올해 맞게 고치세요)</p>';
-    MK.forEach(function (k) {
-      var G = L.filter(function (x) { return (x.k || "기타") === k; }); if (!G.length) return;
-      h += '<h4 class="xmgh">' + k + ' <small>' + G.length + '개</small></h4><div class="xmmat">' + G.map(function (x) {
-        return '<div class="xmm' + (x.ind ? " in" : x.od ? " od" : "") + '" data-id="' + x._id + '">' +
-          '<div class="xmmh"><textarea class="xmi xmn2" data-f="n" rows="1" placeholder="품목">' + esc(x.n || "") + '</textarea><select class="xmi" data-f="k">' + MK.map(function (z) { return "<option" + (z === (x.k || "기타") ? " selected" : "") + ">" + z + "</option>"; }).join("") + '</select><button type="button" class="xcx" data-a="mdel" aria-label="빼기">✕</button></div>' +
-          '<div class="xmmg"><label>수량<input type="text" class="xmi" data-f="q" value="' + ea2(x.q) + '" placeholder="' + ea2(x.pq ? "작년 " + x.pq : "") + '"></label><label>금액(원)<input type="text" inputmode="numeric" class="xmi money" data-f="c" value="' + ea2(money(x.c)) + '" placeholder="' + ea2(x.pc ? "작년 " + N(x.pc).toLocaleString("ko-KR") : "") + '"></label><label class="w">주문처<input type="text" class="xmi" data-f="s" value="' + ea2(x.s) + '"></label></div>' +
-          '<label class="xmmm">메모<textarea class="xmi" data-f="m" rows="1">' + esc(x.m || "") + '</textarea></label>' +
-          '<div class="xmmb"><button type="button" class="xmst" data-a="od" aria-pressed="' + !!x.od + '">' + (x.od ? "✔ 주문함 · " + esc(nim(x.od.by)) + " " + esc(x.od.at) : "주문함") + '</button><button type="button" class="xmst" data-a="ind" aria-pressed="' + !!x.ind + '">' + (x.ind ? "✔ 입고 · " + esc(nim(x.ind.by)) + " " + esc(x.ind.at) : "입고") + "</button></div></div>";
-      }).join("") + "</div>";
+    h += '<div class="xmtw"><table class="xmt matt"><thead><tr><th class="mst">상태</th><th>품목</th><th class="mq">수량</th><th class="mc">금액(원)</th><th>주문처</th><th>메모</th><th class="mb">주문 · 입고</th><th class="mx"><span class="sr">빼기</span></th></tr></thead><tbody>';
+    MK2.forEach(function (k) {
+      var G = L.filter(function (x) { return (MK2.indexOf(x.k) < 0 ? "기타" : x.k) === k; }); if (!G.length && k === "기타") return;
+      var gc = 0, go = 0, gi = 0; G.forEach(function (x) { gc += N(x.c); if (x.od) go++; if (x.ind) gi++; });
+      var V = G.filter(function (x) { return MFLT === "all" || st(x) === MFLT; });
+      h += '<tr class="xmgrp"><th colspan="8"><span class="xmgt">' + MIC[k] + " " + k + '</span><small>' + G.length + "개 · 주문 " + go + " · 입고 " + gi + (gc ? " · " + won(gc) : "") + "</small>" +
+        (k === "크림 · 과일" ? '<span class="xmneed" title="🥛 위 대표 재료 표에서 계산한 필요량 (+10%)">필요 ' + nd.map(function (r) { return r.lab + " <b>" + r.n + r.u + "</b>"; }).join(" · ") + "</span>" : "") +
+        '<button type="button" class="skbtn" data-a="madd" data-k="' + k + '">＋ ' + k + " 추가</button></th></tr>";
+      if (!V.length) { h += '<tr class="xmnone"><td colspan="8">' + (G.length ? "이 보기에 해당하는 품목이 없어요" : "아직 없어요 · 「＋ 추가」로 넣기") + "</td></tr>"; return; }
+      V.forEach(function (x) {
+        h += '<tr class="xmr ' + st(x) + '" data-id="' + x._id + '"><td class="mst"><span class="xmdot">' + (x.ind ? "입고" : x.od ? "주문함" : "대기") + '</span><select class="xmi xmk" data-f="k" aria-label="분류 바꾸기" title="분류 바꾸기">' + MK2.map(function (z) { return "<option" + (z === (MK2.indexOf(x.k) < 0 ? "기타" : x.k) ? " selected" : "") + ' value="' + z + '">' + MIC[z] + "</option>"; }).join("") + "</select></td>" +
+          '<td class="mn" data-l="품목"><textarea class="xmi xmn2" data-f="n" rows="1" placeholder="품목">' + esc(x.n || "") + "</textarea></td>" +
+          '<td class="mq" data-l="수량"><input type="text" class="xmi" data-f="q" value="' + ea2(x.q) + '" placeholder="수량">' + (x.pq && String(x.pq) !== String(x.q) ? '<small class="xpref">작년 ' + esc(x.pq) + "</small>" : "") + "</td>" +
+          '<td class="mc" data-l="금액(원)"><input type="text" inputmode="numeric" class="xmi money num" data-f="c" value="' + ea2(money(x.c)) + '" placeholder="금액">' + (x.pc && N(x.pc) !== N(x.c) ? '<small class="xpref">작년 ' + N(x.pc).toLocaleString("ko-KR") + "</small>" : "") + "</td>" +
+          '<td class="ms" data-l="주문처"><input type="text" class="xmi" data-f="s" value="' + ea2(x.s) + '" placeholder="주문처"></td>' +
+          '<td class="mm" data-l="메모"><textarea class="xmi" data-f="m" rows="1" placeholder="메모">' + esc(x.m || "") + "</textarea></td>" +
+          '<td class="mb"><button type="button" class="xmst" data-a="od" aria-pressed="' + !!x.od + '">' + (x.od ? "✔ 주문함<small>" + esc(nim(x.od.by)) + " " + esc(x.od.at) + "</small>" : "주문함") + '</button><button type="button" class="xmst" data-a="ind" aria-pressed="' + !!x.ind + '">' + (x.ind ? "✔ 입고<small>" + esc(nim(x.ind.by)) + " " + esc(x.ind.at) + "</small>" : "입고") + "</button></td>" +
+          '<td class="mx"><button type="button" class="xcx" data-a="mdel" aria-label="빼기">✕</button></td></tr>';
+      });
     });
-    h += '<div class="xmbtns"><button type="button" class="skbtn" data-a="madd">＋ 품목 추가</button><button type="button" class="skbtn" data-a="mload">↓ 작년 목록 불러오기 (없는 품목만)</button></div></div>';
+    h += '</tbody></table></div><div class="xmbtns"><button type="button" class="skbtn" data-a="madd">＋ 품목 추가</button><button type="button" class="skbtn" data-a="mload">↓ 작년 목록 불러오기 (없는 품목만)</button></div></div>';
     el.innerHTML = h;
     Array.prototype.forEach.call(el.querySelectorAll("textarea"), grow2);
   }
@@ -578,12 +625,14 @@
     el.addEventListener("input", function (e) { if (e.target.tagName === "TEXTAREA") grow2(e.target); });
     el.addEventListener("change", function (e) {
       var t2 = e.target; if (!t2.classList.contains("xmi")) return;
-      var id = t2.closest(".xmm").dataset.id, f = t2.dataset.f, v = t2.classList.contains("money") ? moneyRaw(t2.value) : t2.value.trim();
+      var r = t2.closest("tr[data-id]"); if (!r) return;
+      var id = r.dataset.id, f = t2.dataset.f, v = t2.classList.contains("money") ? moneyRaw(t2.value) : t2.value.trim();
       matEdit(cur, function (m) { if (m[id]) m[id][f] = v; }); setTimeout(function () { drawPane(true); }, 0);
     });
     el.addEventListener("click", function (e) {
-      var b = e.target.closest("[data-a]"); if (!b) return; var a = b.dataset.a, card = b.closest(".xmm"), id = card && card.dataset.id;
-      if (a === "madd") { var k = nid("m"); matEdit(cur, function (m) { m[k] = { k: "기타", n: "", o: Object.keys(m).length }; }); drawPane(); var i2 = el.querySelector('.xmm[data-id="' + k + '"] [data-f="n"]'); if (i2) i2.focus(); return; }
+      var b = e.target.closest("[data-a]"); if (!b || !el.contains(b)) return; var a = b.dataset.a, card = b.closest("tr[data-id]"), id = card && card.dataset.id;
+      if (a === "mflt") { MFLT = b.dataset.v; drawPane(); return; }
+      if (a === "madd") { var k = nid("m"), kk = b.dataset.k || "기타"; MFLT = "all"; matEdit(cur, function (m) { m[k] = { k: kk, n: "", o: Object.keys(m).length }; }); drawPane(); var i2 = el.querySelector('tr[data-id="' + k + '"] [data-f="n"]'); if (i2) i2.focus(); return; }
       if (a === "mload") {
         var P = prevMat(cur); if (!P.length) { alert("불러올 작년 목록이 없습니다"); return; }
         var have = {}; rows(load(cur).mat).forEach(function (x) { have[String(x.n).replace(/\s/g, "")] = 1; });
@@ -930,22 +979,22 @@
     var need = PERK.map(function (r) { var p = per[r[0]] || PER0[r[0]]; return r[1].split(" ")[0] + " " + Math.ceil((N(p[0]) * W + N(p[1]) * M + N(p[2]) * S2) * 1.1 / r[2]) + r[3]; });
     var pre = (o.plan || {}).pre || {}, preN = Object.keys(pre).reduce(function (a, k) { return a + N(pre[k]); }, 0);
     var sg = sugs(cur).filter(function (x) { return !x.nt && !x.ap && x.it; }).length;
-    function card(go, ic, lab, big, sub, off) { return '<button type="button" class="xsc' + (off ? " off" : "") + '"' + (go ? ' data-go="' + go + '"' : "") + '><span class="xsl">' + ic + " " + lab + '</span><b>' + big + "</b><em>" + sub + "</em>" + (go ? '<i class="xsgo">열기 →</i>' : "") + "</button>"; }
+    function card(go, ic, lab, big, sub, off, pr) { return '<button type="button" class="xsc' + (off ? " off" : "") + '"' + (go ? ' data-go="' + go + '"' : "") + '><span class="xsl">' + ic + " " + lab + '</span><b>' + big + "</b>" + (pr != null ? '<i class="xsbar"><u style="width:' + Math.max(0, Math.min(100, Math.round(pr * 100))) + '%"></u></i>' : "") + "<em>" + sub + "</em>" + (go ? '<i class="xsgo">열기 →</i>' : "") + "</button>"; }
     var h = '<div class="xsumcards">' +
       card("", "🎄", "크리스마스까지", n > 0 ? "D-" + n : n === 0 ? "오늘!" : "지남", cur + "-12-25" === t0 ? "메리 크리스마스" : "12/25(" + "일월화수목금토"[new Date(cur, 11, 25).getDay()] + ")") +
-      card("goal", "🎯", "크리스마스 케이크 목표", (g.total ? esc(g.total) : "—") + "개", gmd(g.from, "11/11") + "~" + gmd(g.to, "12/25") + (g.peak ? " · 그중 " + gmd(g.pf, "12/21") + "~" + gmd(g.pt, "12/25") + " <b>" + esc(g.peak) + "개</b>" : "") + "<br>예상 매출 " + won(s.money)) +
-      card("prod", "🍰", "생산 계획 (피크)", ps.peak + " / " + (g.peak ? esc(g.peak) : "—") + "개", "전체 " + (ps.whole + ps.mini) + "개 · 조각 " + ps.slice + "판" + (sg ? " · 💡 제안 " + sg + "개 남음" : ""), N(g.peak) && ps.peak !== N(g.peak)) +
-      card("mat", "🧾", "재료 · 부자재", (mt.length ? od + " / " + mt.length : "—"), (mt.length ? "주문함 · 입고 " + ind : "목록 만들기") + "<br>" + need.join(" · ")) +
-      card("ck", "✅", "할 일", done + " / " + L.length, late.length ? "⚠ 밀린 것 " + late.length + "개" : "밀린 것 없음", late.length) +
+      card("goal", "🎯", "크리스마스 케이크 목표", (g.total ? esc(g.total) : "—") + "개", gmd(g.from, "11/11") + "~" + gmd(g.to, "12/25") + (g.peak ? " · 그중 " + gmd(g.pf, "12/21") + "~" + gmd(g.pt, "12/25") + " <b>" + esc(g.peak) + "개</b>" : "") + "<br>예상 매출 " + won(s.money) + " · 생산 계획 " + (ps.whole + ps.mini) + "개", 0, N(g.total) ? (ps.whole + ps.mini) / N(g.total) : null) +
+      card("prod", "🍰", "생산 계획 (피크)", ps.peak + " / " + (g.peak ? esc(g.peak) : "—") + "개", "전체 " + (ps.whole + ps.mini) + "개 · 조각 " + ps.slice + "판" + (sg ? " · 💡 제안 " + sg + "개 남음" : ""), N(g.peak) && ps.peak !== N(g.peak), N(g.peak) ? ps.peak / N(g.peak) : null) +
+      card("mat", "🧾", "재료 · 부자재", (mt.length ? od + " / " + mt.length : "—"), (mt.length ? "주문함 · 입고 " + ind : "목록 만들기") + "<br>" + need.join(" · "), 0, mt.length ? od / mt.length : null) +
+      card("ck", "✅", "할 일", done + " / " + L.length, late.length ? "⚠ 밀린 것 " + late.length + "개" : "밀린 것 없음", late.length, L.length ? done / L.length : null) +
       card("prod", "📈", "12/1~17 예약", preN + "개", (function () { var T = pyH() && (pyH().tables || []).filter(function (t) { return /12\.1/.test(t.t); })[0], lr = T && T.r && T.r[T.r.length - 1]; return lr && !lr[0] && lr[1] ? py + "년 같은 기간 " + esc(lr[1]) + "개 · 매일 적기" : "매일 네이버 예약 개수 적기"; })()) + "</div>";
     h += '<div class="xmbox"><div class="xmbh"><b>' + (late.length ? "⚠ 밀린 것 · " : "") + '다음에 할 것</b><span>누르면 체크 · 💬 = 작년 같은 날 메모 · 전체는 ✅ 할 일 · 달력</span></div>' +
       late.concat(next).map(function (x) { var st = stat(x); return '<div class="xtr ' + st.c + (x.m ? " must" : "") + '" data-id="' + x.id + '"><button type="button" class="xcb" aria-pressed="' + !!x.done + '" aria-label="완료"></button><span class="xtt"><b>' + mdw(x.d) + "</b> " + esc(x.t) + (x.w ? " <i>· 담당 " + esc(x.w) + "</i>" : "") + dayCmHtml(x.d) + '</span><span class="xcs">' + (x.m ? '<em class="xmust">꼭</em>' : "") + esc(st.s) + "</span></div>"; }).join("") + "</div>";
     var FG = fbGroups(), fb = FB[py] || {};
     if (FG.length) {
-      h += '<div class="xmbox xfb"><div class="xmbh"><b>📒 ' + py + '년 피드백 → ' + cur + '년에</b><span>' + py + '년 크리스마스 파일 칸 주석 ' + (pyH().cm || []).length + '개를 묶음별로 · 아래 (제안)은 그걸 보고 올해 해 볼 것 · 묶음을 누르면 그 화면으로</span></div>' +
+      h += '<div class="xmbox xfb"><div class="xmbh"><b>📒 ' + py + '년 피드백 → ' + cur + '년에</b><span>' + py + '년 크리스마스 파일 칸 주석 ' + (pyH().cm || []).length + '개를 묶음별로 · 초록 (제안) = 올해 해 볼 것 · 주석 원문은 눌러서 펼치기 · 「열기 →」 = 그 화면으로</span></div>' +
         (pv.line ? '<p class="xfbline"><b>' + py + "년 한 줄</b> " + esc(pv.line) + "</p>" : "") +
         '<div class="xfbg">' + FG.map(function (G) {
-          return '<div class="xfbc"><div class="xfbh"><b>' + G.t + '</b><button type="button" class="xglink" data-go="' + G.go + '">열기 →</button></div><ul>' + G.L.map(function (c) { var lab = /합계/.test(c.row) || (isHead(c) && /합계/.test(c.h)) ? "합계" : /^\[/.test(c.row) ? "전체" : isHead(c) ? md2(c.h) : (md2(c.h) + " " + c.row.replace(/한케$/, "")); if (/매장 판매/.test(c.tb)) lab = md2(c.s) + " 매장"; if (/대표 재료/.test(c.tb)) lab = c.row; return "<li><em>" + esc(lab) + (/계획안/.test(c.s) ? " (계획)" : "") + "</em> " + cmTxt(c) + "</li>"; }).join("") + "</ul>" + (fb[G.k] ? '<p class="xfba">' + esc(fb[G.k]) + "</p>" : "") + "</div>";
+          return '<div class="xfbc"><div class="xfbh"><b>' + G.t + '</b><button type="button" class="xglink" data-go="' + G.go + '">열기 →</button></div>' + (fb[G.k] ? '<p class="xfba">' + esc(fb[G.k]) + "</p>" : "") + '<details class="xfbd"><summary>' + (cur - 1) + "년 주석 원문 " + G.L.length + "개 보기</summary><ul>" + G.L.map(function (c) { var lab = /합계/.test(c.row) || (isHead(c) && /합계/.test(c.h)) ? "합계" : /^\[/.test(c.row) ? "전체" : isHead(c) ? md2(c.h) : (md2(c.h) + " " + c.row.replace(/한케$/, "")); if (/매장 판매/.test(c.tb)) lab = md2(c.s) + " 매장"; if (/대표 재료/.test(c.tb)) lab = c.row; return "<li><em>" + esc(lab) + (/계획안/.test(c.s) ? " (계획)" : "") + "</em> " + cmTxt(c) + "</li>"; }).join("") + "</ul></details></div>";
         }).join("") + "</div></div>";
     }
     var f = load(cur).f || {};
@@ -971,10 +1020,68 @@
     var ks = Object.keys(obj).sort(), mx = Math.max.apply(null, ks.map(function (k) { return obj[k]; }).concat([1]));
     return '<div class="xmbars">' + ks.map(function (k) { return '<div class="xmbar1"><span>' + esc(k) + '</span><i style="width:' + Math.max(2, Math.round(obj[k] / mx * 100)) + '%"></i><b>' + obj[k] + (unit || "") + "</b></div>"; }).join("") + "</div>";
   }
+  // ── 📊 지난 해 — 인포그래픽 (10/30 사장님 「모션그래픽 · 인포그래픽으로 · 한눈에」) · 색: 홀 #C2412D · 미니 #4A63C9 (색약 점검 통과) · 숫자는 늘 글자로 같이
+  var HANIM = 0;
+  function lastNum(v) { var m = String(v || "").replace(/,/g, "").match(/\d+/g); return m ? +m[m.length - 1] : 0; }
+  function heat(t) { var a = [251, 228, 222], b = [142, 27, 20]; return "rgb(" + a.map(function (v, i) { return Math.round(v + (b[i] - v) * t); }).join(",") + ")"; }
   function drawHist(el) {
-    var H = HIST(), ys = Object.keys(H).sort().reverse();
+    var H = HIST(), ys = Object.keys(H).sort();
     if (!ys.length) { el.innerHTML = '<p class="xmempty">지난 해 기록을 불러오는 중입니다…</p>'; return; }
-    var h = '<div class="xmbox"><div class="xmbh"><b>📊 해마다 비교 (2021~)</b><span>사장님 크리스마스 파일에서 개수만 모음 · 손님 이름 · 연락처는 넣지 않음</span></div>' + compareTable() + "</div>";
+    var anim = Date.now() - HANIM > 15000; HANIM = Date.now();
+    var g = goalOf(cur), ps = prodSums(cur), gt = N(g.total);
+    // ① 해마다 크리스마스 케이크 (홀 + 미니) · 목표 선 · 올해는 계획(빗금) + 목표
+    var C = ys.map(function (y) { var s = H[y].sum || {}; return { y: y, w: N(s.whole), m: N(s.mini), goal: lastNum(s.goal), res: N(H[y].resTotal), money: N(s.money), cost: N(s.cost), now: 0 }; });
+    if (!H[cur]) C.push({ y: String(cur), w: ps.whole, m: ps.mini, goal: gt, res: 0, now: 1 });
+    var mx = Math.max.apply(null, C.map(function (c) { return Math.max(c.w + c.m, c.goal); }).concat([10])); mx = Math.ceil(mx / 50) * 50;
+    var first = C[0], lastR = C.filter(function (c) { return !c.now; }).slice(-1)[0], totRes = C.reduce(function (a, c) { return a + c.res; }, 0);
+    var peakD = null; ys.forEach(function (y) { Object.keys(H[y].res || {}).forEach(function (d) { var n = H[y].res[d].n; if (!peakD || n > peakD.n) peakD = { d: d, n: n }; }); });
+    function tile(lab, num, unit, sub, cls) { return '<div class="xgk' + (cls ? " " + cls : "") + '"><span>' + lab + '</span><b><em data-cnt="' + num + '">' + (anim ? 0 : num.toLocaleString("ko-KR")) + "</em>" + unit + "</b><small>" + sub + "</small></div>"; }
+    var h = '<div class="xig' + (anim ? " anim" : "") + '">' +
+      '<div class="xighero"><div class="xigt"><b>🎄 카페스이 크리스마스 ' + ys[0] + '~' + lastR.y + '</b><span>사장님 크리스마스 파일에서 개수만 모음 · 손님 이름 · 연락처는 넣지 않음</span></div><div class="xgks">' +
+      tile("5년 동안 예약 명단", totRes, "건", ys[0] + "~" + lastR.y + " 합", "") +
+      tile(lastR.y + "년 크리스마스 케이크", lastR.w + lastR.m, "개", "홀 " + lastR.w + " · 미니 " + lastR.m, "hl") +
+      tile("예약 " + first.y + " → " + lastR.y, lastR.res, "건", first.res + "건에서 " + (first.res ? "×" + (lastR.res / first.res).toFixed(1) : ""), "") +
+      (peakD ? tile("가장 바빴던 날", peakD.n, "건", mdw(peakD.d) + " · " + peakD.d.slice(0, 4), "") : "") +
+      (lastR.money ? tile(lastR.y + " 예상 매출", Math.round(lastR.money / 10000), "만 원", (lastR.cost ? "재료 · 부자재 " + Math.round(lastR.cost / 10000) + "만 원" : ""), "") : "") + "</div></div>";
+    // 차트 ①
+    h += '<div class="xigcard"><div class="xigh"><b>📈 해마다 크리스마스 케이크 (홀 + 미니)</b><span class="xlg"><i class="sw w"></i>홀 · 중간 <i class="sw m"></i>미니 <i class="sw g"></i>목표 (지난 해는 홀 목표) <i class="sw p"></i>' + cur + ' 계획</span></div><div class="xgcols" role="img" aria-label="해마다 크리스마스 케이크 개수">' +
+      C.map(function (c, i) {
+        var tot = c.w + c.m, tip = c.y + "년 · 홀 " + c.w + " · 미니 " + c.m + " = " + tot + "개" + (c.goal ? " · 목표 " + c.goal : "") + (c.res ? " · 예약 명단 " + c.res + "건" : "") + (c.now ? " (올해 생산 계획 칸 합)" : "");
+        return '<div class="xgcol' + (c.now ? " now" : "") + '" style="--i:' + i + '" data-tip="' + ea2(tip) + '" tabindex="0"><div class="xgbar"><b class="xgtot" style="bottom:calc(' + (tot / mx * 100) + '% + 2px)">' + (tot || (c.now ? "계획 0" : "—")) + "</b>" +
+          (c.goal ? '<s class="xggoal' + (c.goal < tot && tot - c.goal < mx * 0.12 ? " lo" : "") + '" style="bottom:' + (c.goal / mx * 100) + '%"><em>' + (c.now ? "목표 " : "홀 목표 ") + c.goal + "</em></s>" : "") +
+          '<i class="m" style="height:' + (c.m / mx * 100) + '%">' + (c.m >= mx * 0.08 ? "<u>" + c.m + "</u>" : "") + '</i><i class="w" style="height:' + (c.w / mx * 100) + '%">' + (c.w >= mx * 0.08 ? "<u>" + c.w + "</u>" : "") + "</i></div><span>" + c.y + (c.now ? "<small>계획</small>" : "") + "</span></div>";
+      }).join("") + '</div><p class="xgnote">' + (function () { var a = C.filter(function (c) { return c.goal && !c.now; }); return a.length ? "지난 해 목표는 홀 기준 — 홀 실제 / 목표: " + a.map(function (c) { return c.y + " " + c.w + "/" + c.goal + " (" + Math.round(c.w / c.goal * 100) + "%)"; }).join(" · ") : ""; })() + (gt ? " · <b>" + cur + " 목표 " + gt + "개 → 지금 계획 " + (ps.whole + ps.mini) + "개</b>" : "") + "</p></div>";
+    // 차트 ② 예약 몰리는 날 (해 × 날짜)
+    var dk = {}; ys.forEach(function (y) { Object.keys(H[y].res || {}).forEach(function (d) { dk[d.slice(5)] = 1; }); }); var DK = Object.keys(dk).sort(), hmx = 1;
+    ys.forEach(function (y) { Object.keys(H[y].res || {}).forEach(function (d) { hmx = Math.max(hmx, H[y].res[d].n); }); });
+    h += '<div class="xigcard"><div class="xigh"><b>🔥 예약이 몰리는 날</b><span>칸 숫자 = 그 날 픽업 예약 건수 · 진할수록 많음</span></div><div class="xgheat" style="--c:' + DK.length + '"><span></span>' + DK.map(function (k) { return "<span class=\"hd\">" + (+k.slice(0, 2)) + "/" + (+k.slice(3)) + "</span>"; }).join("") +
+      ys.filter(function (y) { return H[y].res && Object.keys(H[y].res).length; }).map(function (y, r) { var tot = 0; Object.keys(H[y].res).forEach(function (d) { tot += H[y].res[d].n; }); return '<span class="hy">' + y + "<small>" + tot + "건</small></span>" + DK.map(function (k, i) { var c = H[y].res[y + "-" + k], n = c ? c.n : 0, t = n / hmx; return '<i style="--i:' + (r * DK.length + i) + ";background:" + (n ? heat(0.12 + t * 0.88) : "#F4EFE6") + ";color:" + (t > 0.45 ? "#fff" : "#3A2E22") + '" data-tip="' + ea2(y + " " + mdw(y + "-" + k) + " · 예약 " + n + "건" + (tot ? " (" + Math.round(n / tot * 100) + "%)" : "")) + '" tabindex="0">' + (n || "") + "</i>"; }).join(""); }).join("") + '</div><p class="xgnote">' + (function () { var sh = ys.filter(function (y) { return H[y].res && (H[y].res[y + "-12-24"] || H[y].res[y + "-12-25"]); }).map(function (y) { var t = 0, p = 0; Object.keys(H[y].res).forEach(function (d) { t += H[y].res[d].n; if (/-12-2[45]$/.test(d)) p += H[y].res[d].n; }); return y + " " + Math.round(p / t * 100) + "%"; }); return sh.length ? "24 · 25일에 몰린 비율: " + sh.join(" · ") + " → 23일 이전 픽업을 늘리면 피크가 덜 막혀요 (제안)" : ""; })() + "</p></div>";
+    // 차트 ③ 픽업 시간대 (가장 최근 해) + ④ 품목 · 결제
+    var sy = ys.slice().reverse().filter(function (y) { return Object.keys(H[y].res || {}).some(function (d) { return H[y].res[d].slots; }); })[0];
+    if (sy) {
+      var sl = {}, it = {}, pay = {}; Object.keys(H[sy].res).forEach(function (d) { var r = H[sy].res[d]; Object.keys(r.slots || {}).forEach(function (s) { if (/^\d/.test(s)) sl[s] = (sl[s] || 0) + r.slots[s]; }); Object.keys(r.items || {}).forEach(function (s) { it[s] = (it[s] || 0) + r.items[s]; }); Object.keys(r.pay || {}).forEach(function (s) { pay[s] = (pay[s] || 0) + r.pay[s]; }); });
+      var SK = Object.keys(sl).sort(), smx = Math.max.apply(null, SK.map(function (k) { return sl[k]; }).concat([1])), top = SK.slice().sort(function (a, b) { return sl[b] - sl[a]; }).slice(0, 3);
+      h += '<div class="xigrow"><div class="xigcard"><div class="xigh"><b>⏰ ' + sy + ' 픽업 시간대</b><span>모든 날 합 · 진한 막대 = 가장 많은 3개 (' + top.join(" · ") + ")</span></div><div class=\"xgslot\">" + SK.map(function (k, i) { var t = top.indexOf(k) >= 0; return '<div class="xgs' + (t ? " top" : "") + '" style="--i:' + i + '" data-tip="' + ea2(sy + " · " + k + " 픽업 " + sl[k] + "건") + '" tabindex="0"><b>' + (t ? sl[k] : "") + '</b><i style="height:' + Math.max(3, sl[k] / smx * 100) + '%"></i><span>' + (/:00$/.test(k) ? (+k.slice(0, 2)) + "시" : "") + "</span></div>"; }).join("") + '</div><p class="xgnote">오후 ' + (function () { var pm = 0, all = 0; SK.forEach(function (k) { all += sl[k]; if (+k.slice(0, 2) >= 17) pm += sl[k]; }); return "5시 이후가 " + Math.round(pm / all * 100) + "% → 저녁 픽업 줄 · 포장 미리 준비 (제안)"; })() + "</p></div>";
+      function stack(obj, tt) { var K = Object.keys(obj).sort(function (a, b) { return obj[b] - obj[a]; }), t = K.reduce(function (a, k) { return a + obj[k]; }, 0), CL = ["#C2412D", "#4A63C9", "#26875A", "#8F5A22", "#7A6A58"]; if (!t) return ""; var K2 = K.slice(0, 4), etc = K.slice(4).reduce(function (a, k) { return a + obj[k]; }, 0); if (etc) { K2.push("그 밖"); obj = Object.assign({}, obj, { "그 밖": etc }); }
+        return '<h5>' + tt + ' <small>' + t + '건</small></h5><div class="xgstack">' + K2.map(function (k, i) { return '<i style="--i:' + i + ";width:" + (obj[k] / t * 100) + "%;background:" + CL[i] + '" data-tip="' + ea2(k + " " + obj[k] + "건 (" + Math.round(obj[k] / t * 100) + "%)") + '" tabindex="0"></i>'; }).join("") + '</div><div class="xgstl">' + K2.map(function (k, i) { return '<span><i class="sw" style="background:' + CL[i] + '"></i>' + esc(k) + " <b>" + Math.round(obj[k] / t * 100) + "%</b></span>"; }).join("") + "</div>"; }
+      h += '<div class="xigcard"><div class="xigh"><b>🧁 ' + sy + ' 무엇을 · 어떻게 예약했나</b><span>예약 명단 기준</span></div>' + stack(it, "품목") + stack(pay, "예약 · 결제 경로") + "</div></div>";
+    }
+    // ⑤ 해마다 배운 것 (타임라인)
+    h += '<div class="xigcard"><div class="xigh"><b>📝 해마다 배운 것</b><span>각 해 파일 · 주석에서 · 누르면 아래 「해마다 자세히」에서 전체</span></div><ol class="xgtl">' + ys.map(function (y, i) { var s = H[y].sum || {}, l = String(s.lesson || s.line || "").split("\n").filter(Boolean); return '<li style="--i:' + i + '"><b>' + y + '</b><span class="xgtlv">' + esc(s.line || "") + "</span><p>" + esc(l.slice(0, 2).join(" · ")) + "</p></li>"; }).join("") + "</ol></div>";
+    h += '<details class="xmbox xmdet"><summary>📋 표로 보기 · 해마다 비교</summary>' + compareTable() + "</details>";
+    h += '<details class="xmbox xmdet"><summary>🔎 해마다 자세히 (날짜 · 시간 · 품목 · 파일 표)</summary>' + histDetails(H) + "</details></div>";
+    el.innerHTML = h;
+    if (anim && !(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches)) Array.prototype.forEach.call(el.querySelectorAll("[data-cnt]"), function (e) { var to = +e.dataset.cnt, t0 = performance.now(); (function step(t) { var k = Math.min(1, (t - t0) / 1100), v = Math.round(to * (1 - Math.pow(1 - k, 3))); e.textContent = v.toLocaleString("ko-KR"); if (k < 1) requestAnimationFrame(step); })(t0); });
+    else Array.prototype.forEach.call(el.querySelectorAll("[data-cnt]"), function (e) { e.textContent = (+e.dataset.cnt).toLocaleString("ko-KR"); });
+  }
+  (function () {   // 막대 위에 손가락 · 마우스 → 숫자 말풍선
+    var tip = document.createElement("div"); tip.className = "xgtip"; tip.hidden = true; document.body.appendChild(tip);
+    function show(e) { var t = e.target.closest && e.target.closest("#xmasSec [data-tip]"); if (!t) { tip.hidden = true; return; } tip.textContent = t.dataset.tip; tip.hidden = false; var r = t.getBoundingClientRect(), w = tip.offsetWidth; tip.style.left = Math.max(8, Math.min(window.innerWidth - w - 8, r.left + r.width / 2 - w / 2)) + "px"; tip.style.top = Math.max(8, r.top - tip.offsetHeight - 8) + "px"; }
+    document.addEventListener("mouseover", show); document.addEventListener("focusin", show); document.addEventListener("click", show);
+    window.addEventListener("scroll", function () { tip.hidden = true; }, { passive: true });
+  })();
+  function histDetails(H) {
+    var ys = Object.keys(H).sort().reverse(), h = "";
     ys.forEach(function (y) {
       var Y = H[y], days = {}, slots = {}, items = {}, pay = {};
       Object.keys(Y.res || {}).forEach(function (d) { var r = Y.res[d]; days[mdw(d)] = r.n; Object.keys(r.slots || {}).forEach(function (s) { if (s !== "시간 미정") slots[s] = (slots[s] || 0) + r.slots[s]; }); Object.keys(r.items || {}).forEach(function (s) { items[s] = (items[s] || 0) + r.items[s]; }); Object.keys(r.pay || {}).forEach(function (s) { pay[s] = (pay[s] || 0) + r.pay[s]; }); });
@@ -988,7 +1095,7 @@
         (Y.notes ? '<p class="xmtop">' + esc(Y.notes.join(" · ")) + "</p>" : "") +
         (Y.tables || []).map(function (T) { return '<details class="xmsub"><summary>' + esc(T.s) + " · " + esc(T.t) + "</summary>" + tableHtml(T) + "</details>"; }).join("") + "</details>";
     });
-    el.innerHTML = h;
+    return h;
   }
 
   // ── 📄 보고서 — 위 화면들을 한 장으로 · 제목 · 머리말 · 각 묶음 제목 · 메모는 눌러서 고침(o.rep) · 묶음 넣고 빼기 설정 · 인쇄(PDF) · 파일 저장 · 글 복사
