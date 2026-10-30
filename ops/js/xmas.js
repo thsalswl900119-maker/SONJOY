@@ -75,8 +75,9 @@
     var n = ins.filter(function (el) { return el.value.trim(); }).length;
     stateEl.textContent = n ? n + " / " + ins.length + "칸 적힘" + (o.who ? " · 마지막 " + nim(o.who) : "") : "아직 안 적음 · 흐린 글씨는 작년 내용";
     footEl.textContent = o.savedAt ? "마지막 저장 " + o.savedAt + (o.who ? " · " + nim(o.who) : "") : "";
-    Array.prototype.forEach.call(sec.querySelectorAll(".xmgal"), function (g) { g.hidden = String(cur) !== g.dataset.y; });
-    drawYears(); drawAuto(); drawPane(); drawTodo();
+    applyEd();
+    Array.prototype.forEach.call(sec.querySelectorAll(".xmgal"), function (g) { if (!(EDING && EDING.el === g)) g.hidden = String(cur) !== g.dataset.y || !g.innerHTML.trim(); });
+    drawYears(); drawAuto(); drawPane(); drawTodo(); drawEdBars();
   }
 
   // ── ✅ 날짜별 체크리스트 — 크리스마스(12/25) 기준 D-날짜로 기본 목록이 들어가고, 날짜 · 할 일 · 담당은 고칠 수 있다.
@@ -626,6 +627,163 @@
     });
   })(document.getElementById("xmRep"));
 
+  // ── ✏ 고정 글 고치기(10/30 · 사장님 「크리스마스 부분 내가 수정할 수 있게」) — 🎁 상품 안내 · 「해마다 꼭 해야 하는 것」 · 회의 참고 사진 설명은
+  //    HTML에 박힌 처음 모습일 뿐 — 「✏ 이 내용 고치기」로 고치면 cafesui.xmas.edit = { 키: { h, by, at, old:[{h, by, at}] } }에 저장되어 그걸 보여 준다.
+  //    키: item<해> · rule · pic<해>. 고치기는 사장님 · 정항아님. 그림 주소는 img/… 만 남김 · 열 때 모습과 서버 글이 다르면 저장 안 함.
+  var EDK = "cafesui.xmas.edit", EDW = { "사장님": 1, "정항아": 1 }, ORIG = {}, EDING = null;
+  function edAll() { return J(EDK) || {}; }
+  function edOK() { return !!EDW[me()]; }
+  function edKey(el) { return el.id === "xmRule" ? "rule" : (el.classList.contains("xmitem") ? "item" : "pic") + el.dataset.y; }
+  function cleanEd(html) {
+    var d = document.createElement("div"); d.innerHTML = html;
+    Array.prototype.forEach.call(d.querySelectorAll("script,style,iframe,object,embed,link,meta,form,input,textarea,select,button"), function (x) { x.remove(); });
+    Array.prototype.forEach.call(d.querySelectorAll("*"), function (x) {
+      Array.prototype.slice.call(x.attributes).forEach(function (a) {
+        var n = a.name.toLowerCase();
+        if (/^on|^style$|^contenteditable$|^id$/.test(n)) x.removeAttribute(a.name);
+        else if ((n === "src" || n === "href") && !/^img\/[\w.\-]+$/.test(a.value)) x.removeAttribute(a.name);
+      });
+    });
+    return d.innerHTML.replace(/<br\s*\/?>(\s*<\/(p|li|b|span|em)>)/gi, "$1").trim();
+  }
+  function edPane(k) { return sec.querySelector('.xmpane[data-x="' + (k === "rule" ? "sum" : k.slice(0, 4) === "item" ? "item" : "meet") + '"]'); }
+  Array.prototype.forEach.call(sec.querySelectorAll("#xmRule, .xmgal[data-y]"), function (el) { ORIG[edKey(el)] = el.innerHTML; });
+  function edEl(k) {
+    if (k === "rule") return document.getElementById("xmRule");
+    var y = k.slice(4), cls = k.slice(0, 4) === "item" ? ".xmitem" : ".xmgal:not(.xmitem)";
+    return edPane(k).querySelector(cls + '[data-y="' + y + '"]');
+  }
+  function edMake(k) {   // 이 해 상품 안내가 HTML에 없으면 칸을 만든다 (.xinone 앞)
+    var el = edEl(k); if (el || k.slice(0, 4) !== "item") return el;
+    el = document.createElement("div"); el.className = "xmgal xmitem"; el.dataset.y = k.slice(4); el.hidden = true;
+    var p = edPane(k); p.insertBefore(el, p.querySelector(".xinone")); return el;
+  }
+  function edBase(k) { var s = edAll()[k]; return s && s.h != null ? s.h : (ORIG[k] != null ? ORIG[k] : ""); }
+  function applyEd() {
+    var A = edAll();
+    Object.keys(A).forEach(function (k) { if (k.slice(0, 4) === "item" && A[k] && A[k].h) edMake(k); });
+    Array.prototype.forEach.call(sec.querySelectorAll("#xmRule, .xmgal[data-y]"), function (el) {
+      var k = edKey(el); if (EDING && EDING.k === k) return;
+      var h = edBase(k); if (el.innerHTML !== h) el.innerHTML = h;
+    });
+  }
+  function edTargets() {
+    var L = [], r = document.getElementById("xmRule"); if (r) L.push("rule");
+    L.push("item" + cur); if (edEl("pic" + cur)) L.push("pic" + cur);
+    return L;
+  }
+  var EDNM = { rule: "「해마다 꼭 해야 하는 것」", item: "🎁 상품 안내", pic: "📷 회의 참고 사진 설명" };
+  function edName(k) { return EDNM[k] || EDNM[k.slice(0, 4)]; }
+  function latestItem() {   // 새 해 안내를 만들 때 바탕 — 가장 최근 해 안내
+    var ks = Object.keys(ORIG).concat(Object.keys(edAll())).filter(function (k) { return /^item\d{4}$/.test(k) && edBase(k); }).sort();
+    return ks.length ? edBase(ks[ks.length - 1]) : "";
+  }
+  function drawEdBars() {
+    Array.prototype.forEach.call(sec.querySelectorAll(".xedbar"), function (b) { if (!EDING || b.dataset.k !== EDING.k) b.remove(); });
+    if (!edOK()) return;
+    edTargets().forEach(function (k) {
+      if (EDING && EDING.k === k) return;
+      var el = edEl(k), s = edAll()[k], bar = document.createElement("div");
+      bar.className = "xedbar"; bar.dataset.k = k;
+      if (!el || !edBase(k)) {
+        if (k.slice(0, 4) !== "item") return;
+        bar.innerHTML = '<button type="button" class="skbtn prim" data-xe="new">＋ ' + cur + '년 상품 안내 만들기</button><small>가장 최근 해 안내를 그대로 복사해 와서 고치면 됩니다</small>';
+        var p = edPane(k); p.insertBefore(bar, p.querySelector(".xinone"));
+        return;
+      }
+      bar.innerHTML = '<button type="button" class="skbtn prim" data-xe="go">✏ ' + edName(k) + ' 고치기</button>' +
+        (s && s.at ? "<small>마지막 고침 " + esc(s.at) + " · " + esc(nim(s.by)) + "</small>" : "<small>처음 모습 그대로</small>") +
+        (s && s.old && s.old.length ? '<button type="button" class="skbtn" data-xe="old">📜 예전 모습 ' + s.old.length + "개</button>" : "");
+      el.parentNode.insertBefore(bar, el);
+    });
+  }
+  function edTools(k) {
+    var it = k.slice(0, 4) === "item";
+    return '<div class="xedtool"><b>✏ ' + edName(k) + " 고치는 중</b><span>글자를 눌러 바로 고치세요 · 엔터 = 새 줄 · 필요 없는 줄은 지우기</span></div>" +
+      '<div class="xedbtns"><button type="button" class="skbtn" data-xe="b"><b>굵게</b></button><button type="button" class="skbtn" data-xe="mk"><mark>형광</mark></button><button type="button" class="skbtn" data-xe="red"><span class="xedred">빨간 글씨</span></button>' +
+      (it ? '<button type="button" class="skbtn" data-xe="card">＋ 상품 카드</button><button type="button" class="skbtn" data-xe="del">🗑 누른 카드 빼기</button>' : "") +
+      '<button type="button" class="skbtn" data-xe="li">＋ 아래 줄</button><button type="button" class="skbtn" data-xe="orig">↺ 처음 모습으로</button>' +
+      '<button type="button" class="skbtn prim" data-xe="save">✔ 저장</button><button type="button" class="skbtn" data-xe="cancel">취소</button></div>';
+  }
+  function edOpen(k) {
+    if (EDING) edClose(false);
+    var el = edMake(k); if (!el) return;
+    if (!el.innerHTML.trim()) el.innerHTML = edBase(k) || latestItem();
+    EDING = { k: k, base: edBase(k), el: el, last: null };
+    el.hidden = false; el.contentEditable = "true"; el.classList.add("xedon");
+    Array.prototype.forEach.call(el.querySelectorAll("a"), function (a) { a.addEventListener("click", stopA); });
+    var bar = sec.querySelector('.xedbar[data-k="' + k + '"]');
+    if (!bar) { bar = document.createElement("div"); bar.className = "xedbar"; bar.dataset.k = k; el.parentNode.insertBefore(bar, el); }
+    bar.classList.add("on"); bar.innerHTML = edTools(k);
+    var none = edPane(k).querySelector(".xinone"); if (none) none.hidden = true;
+    el.focus();
+  }
+  function stopA(e) { if (EDING) e.preventDefault(); }
+  function edClose(redraw) {
+    if (!EDING) return; var el = EDING.el;
+    el.removeAttribute("contenteditable"); el.classList.remove("xedon");
+    var none = edPane(EDING.k).querySelector(".xinone"); if (none) none.hidden = false;
+    EDING = null; applyEd();
+    Array.prototype.forEach.call(sec.querySelectorAll(".xmgal"), function (g) { g.hidden = String(cur) !== g.dataset.y || !g.innerHTML.trim(); });
+    if (redraw !== false) drawEdBars();
+  }
+  function edSave() {
+    var E = EDING; if (!E) return;
+    if (edBase(E.k) !== E.base) { alert("고치는 사이 다른 기기에서 이 내용을 바꿨어요.\n지금 고친 글은 저장하지 않고 새 모습으로 다시 엽니다 — 한 번 더 고쳐 주세요."); edClose(); return; }
+    var h = cleanEd(E.el.innerHTML);
+    if (h === E.base) { edClose(); return; }
+    var A = edAll(), p = A[E.k], who = me();
+    A[E.k] = { h: h, by: who, at: stampNow(), old: [{ h: E.base, by: p ? p.by : "처음 모습", at: p ? p.at : "" }].concat((p && p.old) || []).slice(0, 10) };
+    try { localStorage.setItem(EDK, JSON.stringify(A)); } catch (e) { alert("저장하지 못했어요 — 다시 눌러 주세요"); return; }
+    edClose(); if (window.__CS_TOAST) window.__CS_TOAST("✔ " + edName(E.k) + " 저장됨");
+  }
+  function edOld(k) {
+    var s = edAll()[k]; if (!s || !s.old || !s.old.length) return;
+    var L = s.old.map(function (o, i) { return (i + 1) + ") " + (o.at || "처음") + " · " + nim(o.by); }).join("\n");
+    var n = prompt("되돌릴 모습 번호를 적어 주세요 (지금 모습은 예전 모습 맨 위로 남습니다)\n\n" + L, "1"); if (n == null) return;
+    var o = s.old[(+n || 0) - 1]; if (!o) { alert("번호를 다시 확인해 주세요"); return; }
+    var A = edAll(), p = A[k];
+    A[k] = { h: o.h, by: me(), at: stampNow() + " (되돌림)", old: [{ h: p.h, by: p.by, at: p.at }].concat(p.old || []).slice(0, 10) };
+    try { localStorage.setItem(EDK, JSON.stringify(A)); } catch (e) {}
+    applyEd(); drawEdBars();
+  }
+  function wrapSel(tag, cls) {
+    var s = window.getSelection(); if (!s || !s.rangeCount || s.isCollapsed) { alert("먼저 글자를 드래그해서 고른 뒤 눌러 주세요"); return; }
+    if (!EDING.el.contains(s.anchorNode)) return;
+    document.execCommand("insertHTML", false, "<" + tag + (cls ? ' class="' + cls + '"' : "") + ">" + esc(s.toString()) + "</" + tag + ">");
+  }
+  function selNode() { var s = window.getSelection(); var n = s && s.anchorNode; if (n && n.nodeType === 3) n = n.parentNode; return n && EDING && EDING.el.contains(n) ? n : (EDING && EDING.last); }
+  sec.addEventListener("click", function (e) {
+    var b = e.target.closest && e.target.closest(".xedbar [data-xe]");
+    if (!b) { if (EDING && EDING.el.contains(e.target)) EDING.last = e.target; return; }
+    var a = b.dataset.xe, k = b.closest(".xedbar").dataset.k;
+    if (a === "go") return edOpen(k);
+    if (a === "new") { var el = edMake(k); el.innerHTML = latestItem(); return edOpen(k); }
+    if (a === "old") return edOld(k);
+    if (!EDING) return;
+    if (a === "save") return edSave();
+    if (a === "cancel") { if (cleanEd(EDING.el.innerHTML) !== EDING.base && !confirm("고친 내용을 버릴까요?")) return; return edClose(); }
+    if (a === "orig") { var o = ORIG[EDING.k]; if (!o) { alert("처음 모습이 없는 내용이에요 (이 해에 새로 만든 안내)"); return; } if (confirm("처음 모습(HTML에 있던 글)으로 바꿀까요? 「✔ 저장」을 눌러야 저장됩니다")) EDING.el.innerHTML = o; return; }
+    if (a === "b") return document.execCommand("bold");
+    if (a === "mk") return wrapSel("mark");
+    if (a === "red") return wrapSel("span", "xedred");
+    var n = selNode();
+    if (a === "card") {
+      var cs = EDING.el.querySelectorAll(".xiCard"), src = (n && n.closest && n.closest(".xiCard")) || cs[cs.length - 1]; if (!src) return;
+      var c = src.cloneNode(true), no = c.querySelector(".xiNo"); if (no) no.textContent = ("0" + (cs.length + 1)).slice(-2);
+      src.parentNode.insertBefore(c, src.nextSibling); c.scrollIntoView({ block: "center" }); return;
+    }
+    if (a === "del") { var cd = n && n.closest && n.closest(".xiCard"); if (!cd) { alert("뺄 상품 카드 안의 글자를 먼저 눌러 주세요"); return; } if (confirm("이 상품 카드를 뺄까요? (「✔ 저장」을 눌러야 저장 · 「취소」하면 그대로)")) cd.remove(); return; }
+    if (a === "li") {
+      var li = n && n.closest && n.closest("li");
+      if (li) { var nl = document.createElement("li"); nl.innerHTML = li.querySelector("b") ? "<b>새 항목</b><span>설명</span>" : "새 줄"; li.parentNode.insertBefore(nl, li.nextSibling); return; }
+      var p = n && n.closest && n.closest("p, .xiBox, figcaption"); if (!p) { alert("줄을 더할 자리의 글자를 먼저 눌러 주세요"); return; }
+      var np = document.createElement("p"); np.textContent = "새 줄"; p.parentNode.insertBefore(np, p.nextSibling);
+    }
+  });
+  sec.addEventListener("paste", function (e) { if (!EDING || !EDING.el.contains(e.target)) return; e.preventDefault(); document.execCommand("insertText", false, (e.clipboardData || window.clipboardData).getData("text")); });
+  (window.__CS_SAVERS = window.__CS_SAVERS || []).push(function () { if (EDING && cleanEd(EDING.el.innerHTML) !== EDING.base) edSave(); });
+
   var touched = {};
   function save() {
     var keys = Object.keys(touched); if (!keys.length) return;
@@ -647,7 +805,7 @@
     el.addEventListener("blur", function () { clearTimeout(t); save(); touched = {}; render(); });
   });
   (window.__CS_SAVERS = window.__CS_SAVERS || []).push(function () { clearTimeout(t); save(); });
-  function go(y) { clearTimeout(t); save(); touched = {}; cur = y; render(); }
+  function go(y) { clearTimeout(t); save(); touched = {}; if (EDING) { if (cleanEd(EDING.el.innerHTML) !== EDING.base) edSave(); else edClose(false); } cur = y; render(); }
   yearsEl.addEventListener("click", function (e) { var b = e.target.closest(".xmy"); if (b) go(+b.dataset.y); });
   document.getElementById("xmPrev").addEventListener("click", function () { if (cur > years()[0]) go(cur - 1); });
   document.getElementById("xmNext").addEventListener("click", function () { if (cur < thisY + 1) go(cur + 1); });
