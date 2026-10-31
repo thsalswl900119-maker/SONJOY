@@ -1,5 +1,6 @@
 // 📎 파일 올리기 (10/30 · 사장님 「파일 같은 것도 직접 업로드할 수 있게」) — 워크샵 · 벤치마킹이 같이 씀
-// 목록: cafesui.files.<범위> = { id: { n 이름, ty 종류, sz 크기, by, at, parts 조각 수, cat 분류, m 메모, ref 붙은 곳, th 작은 그림, del } }
+// 목록: cafesui.files.<범위> = { id: { n 이름, ty 종류, sz 크기, by, at, parts 조각 수, cat 분류, m 메모, ref 붙은 곳, tk 작은 그림 있음, del } }
+// 작은 그림(260px)은 목록에 넣지 않고 서버 「file.<id>.th」에 따로 (10/31 사고: 목록에 넣었더니 사진 10장쯤에서 문서 하나 20만 자를 넘어 서버가 받지 않았음 — 예전 목록의 th는 켤 때 따로 옮김)
 // 내용: 서버 ops/「file.<id>.<번호>」 (문서 하나 20만 자 제한 → 19만 자씩) · sync.js __CS_FILEPUT / __CS_FILEGET
 // 서버가 공개 읽기 — 여권 · 신분증 · 카드 · 예약번호가 보이는 사진은 올리지 않는다(처음 올릴 때 한 번 묻는다).
 // 지우기는 del 표시만(조각은 남김 · 「빠진 파일 보기」에서 되살림).
@@ -12,7 +13,34 @@
   function stamp() { var d = new Date(); return (d.getMonth() + 1) + "/" + d.getDate() + " " + String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0"); }
   function K(scope) { return "cafesui.files." + scope; }
   function load(scope) { try { return JSON.parse(localStorage.getItem(K(scope)) || "{}") || {}; } catch (e) { return {}; } }
-  function patch(scope, id, fn) { var o = load(scope); o[id] = o[id] || {}; fn(o[id]); try { localStorage.setItem(K(scope), JSON.stringify(o)); } catch (e) { alert("기기 저장 공간이 꽉 찼습니다"); } }
+  function patch(scope, id, fn) { var o = load(scope); o[id] = o[id] || {}; fn(o[id]); var sv = JSON.stringify(o); if (sv.length > 190000) { alert("파일 목록이 너무 길어 서버에 못 올라가요 — 사장님께 알려 주세요"); return false; } try { localStorage.setItem(K(scope), sv); } catch (e) { alert("기기 저장 공간이 꽉 찼습니다"); return false; } return true; }
+  // 작은 그림 — 메모리에 두고, 없으면 서버 file.<id>.th 에서 받아 그 그림 칸(img[data-thid])에 넣음
+  var thc = {}, thWait = {};
+  function thumbOf(id, f) { return (f && f.th) || thc[id] || ""; }
+  function fillThumbs(el) {
+    Array.prototype.forEach.call((el || document).querySelectorAll("img[data-thid]"), function (im) {
+      var id = im.dataset.thid; if (im.getAttribute("src")) return;
+      if (thc[id]) { im.src = thc[id]; return; }
+      if (thWait[id] || !window.__CS_FILEGET) return; thWait[id] = 1;
+      window.__CS_FILEGET(id, "th").then(function (u) { delete thWait[id]; if (!u) return; thc[id] = u; Array.prototype.forEach.call(document.querySelectorAll('img[data-thid="' + id + '"]'), function (x) { if (!x.getAttribute("src")) x.src = u; }); }, function () { delete thWait[id]; });
+    });
+  }
+  // 예전 목록에 들어 있던 작은 그림(th)을 서버 file.<id>.th 로 옮기고 목록에서는 빼기 (옮긴 게 확인된 것만)
+  var migBusy = false;
+  function migrate() {
+    if (migBusy || !window.__CS_FILEPUT) return; var todo = [];
+    try { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (k && k.indexOf("cafesui.files.") === 0) { var o = JSON.parse(localStorage.getItem(k) || "{}") || {}; Object.keys(o).forEach(function (id) { if (o[id] && o[id].th) todo.push([k.slice(14), id, o[id].th]); }); } } } catch (e) { return; }
+    if (!todo.length) return; migBusy = true;
+    (function next() {
+      var t = todo.shift(); if (!t) { migBusy = false; drawAll(); return; }
+      thc[t[1]] = t[2];
+      window.__CS_FILEPUT(t[1], "th", t[2]).then(function () {
+        var o = load(t[0]); if (o[t[1]] && o[t[1]].th) { delete o[t[1]].th; o[t[1]].tk = 1; try { localStorage.setItem(K(t[0]), JSON.stringify(o)); } catch (e) {} }
+        next();
+      }, function () { migBusy = false; setTimeout(migrate, 30000); });
+    })();
+  }
+  setTimeout(function wait() { if (window.__CS_FILEPUT) migrate(); else setTimeout(wait, 1500); }, 1500);
   function list(scope, ref, withDel) { var o = load(scope); return Object.keys(o).filter(function (id) { var f = o[id]; return f && f.n && (withDel || !f.del) && (ref == null || (f.ref || "") === ref); }).map(function (id) { var f = o[id]; f._id = id; return f; }).sort(function (a, b) { return (b.ts || 0) - (a.ts || 0); }); }
   function size(n) { return n > 1048576 ? (n / 1048576).toFixed(1) + "MB" : Math.max(1, Math.round(n / 1024)) + "KB"; }
   function icon(f) { return /^image\//.test(f.ty) ? "🖼" : /pdf/.test(f.ty) ? "📕" : /sheet|excel|csv|numbers/.test(f.ty + f.n) ? "📊" : /word|document|pages/.test(f.ty + f.n) ? "📝" : /video/.test(f.ty) ? "🎞" : "📄"; }
@@ -54,9 +82,9 @@
           if (k >= parts.length) return Promise.resolve();
           return window.__CS_FILEPUT(id, k, parts[k]).then(function () { done++; job.p = done / parts.length; draw(m); return put(k + 1); });
         }
-        return put(0).then(function () {
+        return put(0).then(function () { return r.th ? window.__CS_FILEPUT(id, "th", r.th).then(function () { thc[id] = r.th; }) : null; }).then(function () {
           cache[id] = r.url;
-          patch(m.scope, id, function (f) { f.n = file.name; f.ty = r.ty; f.sz = Math.round(r.url.length * 0.75); f.parts = parts.length; f.by = me(); f.at = stamp(); f.ts = Date.now(); f.cat = m.cat0 || (img ? "photo" : "doc"); if (m.ref) f.ref = m.ref; if (r.th) f.th = r.th; if (r.w) { f.w = r.w; f.h = r.h; } });
+          patch(m.scope, id, function (f) { f.n = file.name; f.ty = r.ty; f.sz = Math.round(r.url.length * 0.75); f.parts = parts.length; f.by = me(); f.at = stamp(); f.ts = Date.now(); f.cat = m.cat0 || (img ? "photo" : "doc"); if (m.ref) f.ref = m.ref; if (r.th) f.tk = 1; if (r.w) { f.w = r.w; f.h = r.h; } });
         });
       }).catch(function (e) { alert("「" + file.name + "」을(를) 올리지 못했어요 · 인터넷을 확인하고 다시 해 주세요\n(" + ((e && e.message) || e) + ")"); })
         .then(function () { m.jobs = m.jobs.filter(function (j) { return j !== job; }); drawAll(); next(); });
@@ -96,12 +124,13 @@
     if (!m.compact || all.length > 3) h += '<div class="cfflt">' + [["all", "전체"]].concat(cats).map(function (c) { var n = c[0] === "all" ? all.length : all.filter(function (f) { return (f.cat || "doc") === c[0]; }).length; return '<button type="button" data-flt="' + c[0] + '" aria-pressed="' + (m.flt === c[0]) + '">' + c[1] + " <i>" + n + "</i></button>"; }).join("") + "</div>";
     h += '<div class="cfgrid' + (m.compact ? " sm" : "") + '">' + m.jobs.map(function (j) { return '<div class="cft up"><div class="cfth"><i class="cfprog"><b style="width:' + Math.round(j.p * 100) + '%"></b></i></div><div class="cftb"><b>' + esc(j.n) + "</b><small>올리는 중 " + Math.round(j.p * 100) + "%</small></div></div>"; }).join("") +
       L.map(function (f, i) {
-        return '<div class="cft" data-id="' + f._id + '" style="--i:' + i + '"><button type="button" class="cfth" data-open="' + f._id + '" aria-label="' + esc(f.n) + ' 열기">' + (f.th ? '<img src="' + f.th + '" alt="" loading="lazy">' : '<span class="cfic">' + icon(f) + "</span>") + "</button>" +
+        return '<div class="cft" data-id="' + f._id + '" style="--i:' + i + '"><button type="button" class="cfth" data-open="' + f._id + '" aria-label="' + esc(f.n) + ' 열기">' + (f.th || f.tk ? '<img data-thid="' + f._id + '"' + (thumbOf(f._id, f) ? ' src="' + thumbOf(f._id, f) + '"' : "") + ' alt="">' : '<span class="cfic">' + icon(f) + "</span>") + "</button>" +
           '<div class="cftb"><b title="' + esc(f.n) + '">' + esc(f.n) + "</b><small>" + esc(nim(f.by)) + " · " + esc(f.at || "") + " · " + size(f.sz || 0) + '</small><input type="text" class="cfm" data-id="' + f._id + '" value="' + esc(f.m || "") + '" placeholder="메모 (예: 3일차 점심 예약)">' +
           '<div class="cfrow"><select class="cfc" data-id="' + f._id + '" aria-label="분류">' + cats.map(function (c) { return '<option value="' + c[0] + '"' + ((f.cat || "doc") === c[0] ? " selected" : "") + ">" + c[1] + "</option>"; }).join("") + '</select><button type="button" class="cfx" data-del="' + f._id + '" aria-label="빼기">✕</button></div></div></div>';
       }).join("") + (!L.length && !m.jobs.length ? '<p class="cfnone">' + (all.length ? "이 분류에는 아직 없어요" : "아직 올린 파일이 없어요") + "</p>" : "") + "</div>" +
       (gone.length ? '<details class="cfgone"><summary>빠진 파일 ' + gone.length + "개 (지우지 않고 남겨 둠)</summary>" + gone.map(function (f) { return '<div class="cfg1"><span>' + icon(f) + " " + esc(f.n) + " <small>뺀 사람 " + esc(nim(f.delBy || "")) + "</small></span><button type=\"button\" class=\"skbtn\" data-back=\"" + f._id + '">↺ 되살리기</button></div>'; }).join("") + "</details>" : "");
     m.el.innerHTML = h;
+    fillThumbs(m.el);
   }
   function drawAll() { mounts.forEach(function (m) { if (!m.el.isConnected) return; draw(m); }); mounts = mounts.filter(function (m) { return m.el.isConnected || m.keep; }); }
   function mount(el, opt) {
@@ -130,6 +159,6 @@
     el.addEventListener("drop", function (e) { if (!e.dataTransfer || !e.dataTransfer.files.length) return; e.preventDefault(); upload(m, e.dataTransfer.files); });
     draw(m); return m;
   }
-  window.addEventListener("cs:remote", function (e) { var ks = (e.detail && e.detail.keys) || []; if (ks.some(function (k) { return k.indexOf("cafesui.files.") === 0; })) drawAll(); });
-  window.__CS_FILES = { mount: mount, list: list, view: view, drawAll: drawAll, size: size, getData: getData };
+  window.addEventListener("cs:remote", function (e) { var ks = (e.detail && e.detail.keys) || []; if (ks.some(function (k) { return k.indexOf("cafesui.files.") === 0; })) { drawAll(); setTimeout(migrate, 2000); } });
+  window.__CS_FILES = { mount: mount, list: list, view: view, drawAll: drawAll, size: size, getData: getData, thumbOf: thumbOf, fillThumbs: fillThumbs };
 })();

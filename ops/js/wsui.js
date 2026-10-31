@@ -90,7 +90,7 @@
     var now = Date.now(), A = anim && now - heroAt > 15000; heroAt = now;
     var past = f.d1 && f.d1 < new Date(new Date().setHours(0, 0, 0, 0)) && Math.round((new Date() - f.d1) / 86400000) > 4;
     var dates = f.days.filter(function (d, i) { return d && (i < 3 || f.perDay[i] > 0); }), dtxt = dates.length ? (dates[0].getMonth() + 1) + "/" + dates[0].getDate() + "(" + WD[dates[0].getDay()] + ")" + (dates.length > 1 ? " → " + (dates[dates.length - 1].getMonth() + 1) + "/" + dates[dates.length - 1].getDate() + "(" + WD[dates[dates.length - 1].getDay()] + ")" : "") : f.when;
-    var photos = f.files.filter(function (x) { return x.th; }).slice(0, 8);
+    var photos = f.files.filter(function (x) { return x.th || x.tk; }).slice(0, 8);
     var h = '<div class="wsh' + (A ? " anim" : "") + (past ? " past" : "") + '">' +
       '<div class="wsbp"><div class="wsbpl"><span class="wsbpk">CAFE SUI WORKSHOP ' + esc(f.y) + '</span>' +
         '<div class="wsroute"><div class="wsap"><b>BUSAN</b><small>김해</small></div><svg class="wsfly" viewBox="0 0 300 70" aria-hidden="true"><path id="wsArc" d="M8 60 Q150 -14 292 60" class="arc"/><g class="pl"><path d="M0 -6 L14 0 L0 6 L3 0 Z M4 -1 L-6 -9 L-3 -9 L9 -1 Z M4 1 L-6 9 L-3 9 L9 1 Z" /></g></svg><div class="wsap to"><b>' + esc(f.place) + "</b><small>" + esc(dtxt || "날짜 정하기") + "</small></div></div>" +
@@ -111,10 +111,11 @@
       h += '<div class="wsmarq" data-wgo="wish" role="button" tabindex="0" aria-label="가고 싶은 곳 보기"><div class="wsmq"><div class="wsmqi">' + chips + "</div><div class=\"wsmqi\" aria-hidden=\"true\">" + chips + "</div></div></div>";
     }
     // 사진
-    if (photos.length) h += '<div class="wsphotos">' + photos.map(function (x, i) { return '<button type="button" class="wsph" data-ph="' + x._id + '" style="--i:' + i + '"><img src="' + x.th + '" alt="' + esc(x.m || x.n) + '"></button>'; }).join("") + '<button type="button" class="wsph more" data-wgo="file">📎 사진 · 파일<br>' + f.files.length + "개 →</button></div>";
+    if (photos.length) h += '<div class="wsphotos">' + photos.map(function (x, i) { return '<button type="button" class="wsph" data-ph="' + x._id + '" style="--i:' + i + '"><img data-thid="' + x._id + '"' + (window.__CS_FILES.thumbOf(x._id, x) ? ' src="' + window.__CS_FILES.thumbOf(x._id, x) + '"' : "") + ' alt="' + esc(x.m || x.n) + '"></button>'; }).join("") + '<button type="button" class="wsph more" data-wgo="file">📎 사진 · 파일<br>' + f.files.length + "개 →</button></div>";
     // 이번 워크샵의 질문
     h += '<div class="wsqs">' + QS.map(function (q, i) { var d = f.days[i]; return '<div class="wsq" style="--i:' + i + '"><span>' + q[0] + (d ? " · " + (d.getMonth() + 1) + "/" + d.getDate() : "") + "</span><b>" + q[1] + "</b><p>" + q[2] + "</p></div>"; }).join("") + '<button type="button" class="wsq go" data-bngo="1"><span>🔎 벤치마킹</span><b>평가하러 가기</b><p>가게마다 7항목 /10 · 하루 정리</p></button></div>';
     hero.innerHTML = h;
+    if (window.__CS_FILES) window.__CS_FILES.fillThumbs(hero);
     tick();
     if (!tickT) tickT = setInterval(tick, 1000);
   }
