@@ -1981,7 +1981,7 @@
       bx.setAttribute("role", "dialog"); bx.setAttribute("aria-modal", "true");
       bx.innerHTML = '<div class="unhcard">' +
         '<div class="unhtop">🔓 퇴근 전 마지막 확인' + (sat ? ' · <b>토요일</b> (내일 휴무 — 안 풀면 월요일까지 주문이 막혀요)' : '') + '</div>' +
-        '<div class="unhq">진짜 하나도 안빠지고<br>네이버 +베민+쿠팡 주문 / 옵션<br><mark>진짜 숨김해제 했나요?</mark></div>' +
+        '<div class="unhq">진짜 하나도 안빠지고<br>네이버 +배민+쿠팡 주문 / 옵션<br><mark>진짜 숨김해제 했나요?</mark></div>' +
         '<div class="unhsub">' + String(who).replace(/[<>&]/g, "") + '님 · 앱을 열어서 품목 · 옵션까지 눈으로 다시 보고 눌러 주세요</div>' +
         '<div class="unhbtns"><button type="button" class="unhno">아직이요 — 지금 풀러 갈게요</button>' +
         '<button type="button" class="unhyes">✅ 네, 다 풀었어요 · 퇴근</button></div></div>';
