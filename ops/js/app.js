@@ -1907,7 +1907,7 @@
           return '<option' + (r === role ? " selected" : "") + ">" + r + "</option>";
         }).join("");
         var main = mine.out
-          ? '<div class="atdone"><b>' + role + '</b> · ' + mine.out + ' 퇴근</div>'
+          ? '<div class="atdone"><b>' + role + '</b> · ' + mine.out + ' 퇴근' + (mine.unhide ? '<small class="atunh">🔓 숨김 해제 확인 ' + mine.unhide + '</small>' : '') + '</div>'
           : '<button type="button" class="atbig off">퇴근</button>';
         card.innerHTML =
           '<div class="ath"><span class="atwho">' + sh.w + '</span>' +
@@ -1932,14 +1932,23 @@
 
         var big = card.querySelector(".atbig");
         if (big) big.addEventListener("click", function () {
-          var n = new Date();
-          var rec2 = load(dateEl.value || todayStr());
-          if (!rec2[sh.w]) rec2[sh.w] = {};
-          rec2[sh.w].role = sel.value;
-          rec2[sh.w].out = String(n.getHours()).padStart(2, "0") + ":" +
-                           String(n.getMinutes()).padStart(2, "0");
-          store(dateEl.value || todayStr(), rec2);
-          render();
+          var dd = dateEl.value || todayStr();
+          function hm() { var n = new Date(); return String(n.getHours()).padStart(2, "0") + ":" + String(n.getMinutes()).padStart(2, "0"); }
+          function doOut(ok) {
+            var rec2 = load(dd);
+            if (!rec2[sh.w]) rec2[sh.w] = {};
+            rec2[sh.w].role = sel.value;
+            rec2[sh.w].out = hm();
+            if (ok) rec2[sh.w].unhide = hm();   /* 숨김 해제 했다고 답한 시각 (11/1) */
+            store(dd, rec2);
+            render();
+          }
+          /* 퇴근 전 마지막 질문(11/1 · 사장님) — 마감 근무 · 토요일 · 남은 마지막 사람 */
+          var cur = load(dd);
+          var left = plan.filter(function (x) { return x.w !== sh.w && !(cur[x.w] || {}).out; }).length;
+          var ask = /마감/.test(sel.value) || wd0 === 6 || left === 0;
+          if (!ask) { doOut(false); return; }
+          unhideAsk(sh.w, wd0 === 6, function () { doOut(true); });
         });
 
         var fix = card.querySelector(".atfix");
@@ -1962,6 +1971,28 @@
         return (rec[sh.w] || {}).out; }).length;
       msgEl.textContent = done + " / " + plan.length + "명 퇴근 찍음";
       drawLog(); drawMonth();
+    }
+
+    /* 🔓 퇴근 전 마지막 질문 — 숨김 해제 (11/1 · 사장님 「체크는 하는데 실행이 안 되어 있어」 · 문구 그대로) */
+    function unhideAsk(who, sat, yes) {
+      var old = document.getElementById("unhAsk"); if (old) old.remove();
+      var bx = document.createElement("div");
+      bx.id = "unhAsk"; bx.className = "unhask" + (sat ? " sat" : "");
+      bx.setAttribute("role", "dialog"); bx.setAttribute("aria-modal", "true");
+      bx.innerHTML = '<div class="unhcard">' +
+        '<div class="unhtop">🔓 퇴근 전 마지막 확인' + (sat ? ' · <b>토요일</b> (내일 휴무 — 안 풀면 월요일까지 주문이 막혀요)' : '') + '</div>' +
+        '<div class="unhq">진짜 하나도 안빠지고<br>네이버 +베민+쿠팡 주문 / 옵션<br><mark>진짜 숨김해제 했나요?</mark></div>' +
+        '<div class="unhsub">' + String(who).replace(/[<>&]/g, "") + '님 · 앱을 열어서 품목 · 옵션까지 눈으로 다시 보고 눌러 주세요</div>' +
+        '<div class="unhbtns"><button type="button" class="unhno">아직이요 — 지금 풀러 갈게요</button>' +
+        '<button type="button" class="unhyes">✅ 네, 다 풀었어요 · 퇴근</button></div></div>';
+      document.body.appendChild(bx);
+      function close() { bx.remove(); document.removeEventListener("keydown", esc); }
+      function esc(e) { if (e.key === "Escape") close(); }
+      document.addEventListener("keydown", esc);
+      bx.querySelector(".unhno").addEventListener("click", close);
+      bx.addEventListener("click", function (e) { if (e.target === bx) close(); });
+      bx.querySelector(".unhyes").addEventListener("click", function () { close(); yes(); });
+      setTimeout(function () { var n = bx.querySelector(".unhno"); if (n) n.focus(); }, 30);
     }
 
     function put(who, field, val, quiet) {
