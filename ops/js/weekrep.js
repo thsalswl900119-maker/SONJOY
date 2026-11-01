@@ -37,11 +37,26 @@
     stateEl.textContent = n ? "작성됨 · " + n + "/" + ins.length + (o.who ? " · " + nim(o.who) : "") : "이번 주 아직 안 씀";
     stateEl.className = n ? "done" : "todo";
     footEl.textContent = o.savedAt ? "마지막 저장 " + o.savedAt + (o.who ? " · " + nim(o.who) : "") + " · 적는 즉시 저장되고 모든 기기에 같이 보입니다" : "적는 즉시 저장되고 모든 기기에 같이 보입니다";
+    var ck = o.ck || {}, nck = 0;
+    cks.forEach(function (b) { var r = ck[b.dataset.c]; if (r) nck++; b.setAttribute("aria-pressed", r ? "true" : "false"); b.querySelector(".wrckw").textContent = r ? "✔ " + nim(r.by) + " · " + r.at : ""; });
+    stateEl.textContent += " · 최종 확인 " + nck + "/" + cks.length;
+    if (nck < cks.length) stateEl.className = "todo";
     var sat = new Date().getDay() === 6;
     box.classList.toggle("satday", sat);
   }
   // 저장은 「이 화면에서 고친 칸」만 — 안 건드린 칸은 저장된(다른 기기가 쓴) 글 그대로 둔다 (주간 보고가 날아가지 않게)
   var touched = {};
+  /* ✅ 매니저 최종 확인 체크 (11/1) — o.ck[키] = { by, at } · 누른 칸만 최신 값에 얹음 */
+  var cks = Array.prototype.slice.call(box.querySelectorAll(".wrck"));
+  cks.forEach(function (b) {
+    b.addEventListener("click", function () {
+      var o = load(cur), k = b.dataset.c; o.ck = o.ck || {};
+      if (o.ck[k]) { if (!confirm("확인 체크를 풀까요?")) return; delete o.ck[k]; }
+      else { var d = new Date(); o.ck[k] = { by: me(), at: (d.getMonth() + 1) + "/" + d.getDate() + " " + pad(d.getHours()) + ":" + pad(d.getMinutes()) }; }
+      try { localStorage.setItem(PRE + cur, JSON.stringify(o)); } catch (e) {}
+      render();
+    });
+  });
   function save() {
     var o = load(cur); o.f = o.f || {}; o.by = o.by || {};
     var w = me(), any = false;
@@ -88,6 +103,9 @@
     rows.push({ gap: 16 });
     wrap(labelEl.textContent + (o.who ? " · " + nim(o.who) : ""), F_S, W - PAD * 2).forEach(function (x) { rows.push({ s: x, font: F_S, c: "#2A2522" }); });
     wrap(autoEl.textContent, F_A, W - PAD * 2).forEach(function (x) { rows.push({ s: x, font: F_A, c: "#8C7B6B" }); });
+    var ckd = o.ck || {};
+    rows.push({ gap: 18 });
+    cks.forEach(function (b) { var r = ckd[b.dataset.c]; wrap((r ? "☑ " : "☐ ") + b.querySelector(".wrckt").textContent + (r ? " — " + nim(r.by) + " " + r.at : " — 아직 안 함"), F_S, W - PAD * 2).forEach(function (x) { rows.push({ s: x, font: F_S, c: r ? "#2E7D32" : "#C62828" }); }); });
     var n = 0;
     box.querySelectorAll(".wrrow").forEach(function (r) {
       var el = r.querySelector(".wrin"), v = (f[el.dataset.f] || "").trim(); if (!v) return; n++;
