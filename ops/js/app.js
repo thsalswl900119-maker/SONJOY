@@ -5028,7 +5028,7 @@
       });
       Object.keys(secH).forEach(function (t) { if (!used[t]) { html += secH[t]; text = text.concat(secT[t]); } });
 
-      if (!any) html += '<div class="rpempty">오른쪽에 쓰기 시작하면' +
+      if (!any) html += '<div class="rpempty">일지 칸에 쓰기 시작하면' +
                         '<br>여기에 보고서로 정리됩니다</div>';
       if (repEl) repEl.innerHTML = html;
       return any ? text.join(NL) : "";
