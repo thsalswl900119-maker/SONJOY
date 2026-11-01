@@ -1944,10 +1944,7 @@
             render();
           }
           /* 퇴근 전 마지막 질문(11/1 · 사장님) — 마감 근무 · 토요일 · 남은 마지막 사람 */
-          var cur = load(dd);
-          var left = plan.filter(function (x) { return x.w !== sh.w && !(cur[x.w] || {}).out; }).length;
-          var ask = /마감/.test(sel.value) || wd0 === 6 || left === 0;
-          if (!ask) { doOut(false); return; }
+          /* 11/1 사장님 「퇴근하면 그 상자 안 뜨는데?」 — 누구든 퇴근 누르면 늘 묻는다 */
           unhideAsk(sh.w, wd0 === 6, function () { doOut(true); });
         });
 
