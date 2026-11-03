@@ -883,6 +883,8 @@
         return Promise.all(SECS.map(function (s) { return plain[s[0]] != null ? encr(k2, plain[s[0]]).then(function (o) { return [s[0], o]; }) : null; })).then(function (rs) {
           rs.forEach(function (r) { if (r) try { localStorage.setItem(PRE + r[0], JSON.stringify(r[1])); } catch (e) {} });
           if (histPlain != null) encr(k2, histPlain).then(function (o) { try { localStorage.setItem(PRE + "hist", JSON.stringify(o)); } catch (e) {} });
+          // 관리자 탭 🔐 계정 · 연락처 폴더(vault.js)도 같은 비밀번호라 같이 다시 잠근다
+          var vo = J(PRE + "vault"); if (vo && key) dec(key, vo).then(function (t) { return encr(k2, t); }).then(function (o) { try { localStorage.setItem(PRE + "vault", JSON.stringify(o)); } catch (e) {} }, function () {});
           try { localStorage.setItem(PRE + "meta", JSON.stringify(meta)); } catch (e) {}
           return C.exportKey("raw", k2).then(function (raw) { try { localStorage.setItem(KEYK, JSON.stringify({ s: meta.s, k: bu(raw) })); } catch (e) {} key = k2; alert("바꿨습니다 · 다른 기기는 새 비밀번호를 넣어야 열립니다"); });
         });
