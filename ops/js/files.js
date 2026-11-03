@@ -125,7 +125,7 @@
     h += '<div class="cfgrid' + (m.compact ? " sm" : "") + '">' + m.jobs.map(function (j) { return '<div class="cft up"><div class="cfth"><i class="cfprog"><b style="width:' + Math.round(j.p * 100) + '%"></b></i></div><div class="cftb"><b>' + esc(j.n) + "</b><small>올리는 중 " + Math.round(j.p * 100) + "%</small></div></div>"; }).join("") +
       L.map(function (f, i) {
         return '<div class="cft" data-id="' + f._id + '" style="--i:' + i + '"><button type="button" class="cfth" data-open="' + f._id + '" aria-label="' + esc(f.n) + ' 열기">' + (f.th || f.tk ? '<img data-thid="' + f._id + '"' + (thumbOf(f._id, f) ? ' src="' + thumbOf(f._id, f) + '"' : "") + ' alt="">' : '<span class="cfic">' + icon(f) + "</span>") + "</button>" +
-          '<div class="cftb"><b title="' + esc(f.n) + '">' + esc(f.n) + "</b><small>" + esc(nim(f.by)) + " · " + esc(f.at || "") + " · " + size(f.sz || 0) + '</small><input type="text" class="cfm" data-id="' + f._id + '" value="' + esc(f.m || "") + '" placeholder="메모 (예: 3일차 점심 예약)">' +
+          '<div class="cftb"><b title="' + esc(f.n) + '">' + esc(f.n) + "</b><small>" + esc(nim(f.by)) + " · " + esc(f.at || "") + " · " + size(f.sz || 0) + '</small><input type="text" class="cfm" data-id="' + f._id + '" value="' + esc(f.m || "") + '" placeholder="' + esc(m.memoPh || "메모 (예: 3일차 점심 예약)") + '">' +
           '<div class="cfrow"><select class="cfc" data-id="' + f._id + '" aria-label="분류">' + cats.map(function (c) { return '<option value="' + c[0] + '"' + ((f.cat || "doc") === c[0] ? " selected" : "") + ">" + c[1] + "</option>"; }).join("") + '</select><button type="button" class="cfx" data-del="' + f._id + '" aria-label="빼기">✕</button></div></div></div>';
       }).join("") + (!L.length && !m.jobs.length ? '<p class="cfnone">' + (all.length ? "이 분류에는 아직 없어요" : "아직 올린 파일이 없어요") + "</p>" : "") + "</div>" +
       (gone.length ? '<details class="cfgone"><summary>빠진 파일 ' + gone.length + "개 (지우지 않고 남겨 둠)</summary>" + gone.map(function (f) { return '<div class="cfg1"><span>' + icon(f) + " " + esc(f.n) + " <small>뺀 사람 " + esc(nim(f.delBy || "")) + "</small></span><button type=\"button\" class=\"skbtn\" data-back=\"" + f._id + '">↺ 되살리기</button></div>'; }).join("") + "</details>" : "");
@@ -136,7 +136,7 @@
   function mount(el, opt) {
     var old = mounts.filter(function (m) { return m.el === el; })[0];
     if (old) { old.scope = opt.scope; old.ref = opt.ref; old.title = opt.title; draw(old); return old; }
-    var m = { el: el, scope: opt.scope, ref: opt.ref, cats: opt.cats, title: opt.title, compact: opt.compact, accept: opt.accept, cat0: opt.cat0, keep: opt.keep, flt: "all", jobs: [] };
+    var m = { el: el, scope: opt.scope, ref: opt.ref, cats: opt.cats, title: opt.title, compact: opt.compact, accept: opt.accept, cat0: opt.cat0, keep: opt.keep, memoPh: opt.memoPh, flt: "all", jobs: [] };
     mounts.push(m);
     el.classList.add("cfbox");
     el.addEventListener("change", function (e) {

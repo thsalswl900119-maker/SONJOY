@@ -5492,6 +5492,12 @@
   (function () {
     var pn = document.getElementById("tp15"); if (!pn || !window.MutationObserver) return;
     function place() { var slot = document.getElementById("mgWrSlot"), w = document.getElementById("wrBox"); if (slot && w && w.parentNode !== slot) slot.appendChild(w); }
-    new MutationObserver(place).observe(document.getElementById("mgLazy") || pn, { childList: true });
-    place();
+    // 📎 관리자 참고 자료 폴더 (11/3 사장님 「회의 때나 관리자가 봐야 하는 자료 · 사진이나 그냥 파일도」) — files.js · cafesui.files.mgr
+    function mgFiles() {
+      var el = document.getElementById("mgFiles"); if (!el || el.__cfm || !window.__CS_FILES) return; el.__cfm = 1;
+      window.__CS_FILES.mount(el, { scope: "mgr", keep: true, title: "📎 참고 자료 폴더 <small class=\"mgfh\">회의 때 · 관리자가 봐야 하는 자료 — 사진 · PDF · 엑셀 · 한글 · 워드 무엇이든</small>", memoPh: "메모 (예: 11월 월말회의 자료 · 꼭 읽어 보기)",
+        cats: [["meet", "🗣 회의 자료"], ["mgr", "📋 관리 · 운영 자료"], ["photo", "📸 사진"], ["doc", "📄 문서 · 기타"]] });
+    }
+    new MutationObserver(function () { place(); mgFiles(); }).observe(document.getElementById("mgLazy") || pn, { childList: true });
+    place(); mgFiles();
   })();
