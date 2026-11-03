@@ -5498,6 +5498,33 @@
       window.__CS_FILES.mount(el, { scope: "mgr", keep: true, title: "📎 참고 자료 폴더 <small class=\"mgfh\">회의 때 · 관리자가 봐야 하는 자료 — 사진 · PDF · 엑셀 · 한글 · 워드 무엇이든</small>", memoPh: "메모 (예: 11월 월말회의 자료 · 꼭 읽어 보기)",
         cats: [["meet", "🗣 회의 자료"], ["mgr", "📋 관리 · 운영 자료"], ["photo", "📸 사진"], ["doc", "📄 문서 · 기타"]] });
     }
-    new MutationObserver(function () { place(); mgFiles(); }).observe(document.getElementById("mgLazy") || pn, { childList: true });
-    place(); mgFiles();
+    // 관리자 하위 탭 (11/3 사장님 「오늘 할 일처럼 · 참고 자료 폴더도」) — 주간 보고 · 보고 기준 · 역할 · 권한 · 참고 자료 · 계정
+    var MK = "cafesui.ui.mgpane";
+    function mgTabs() {
+      var nav = document.querySelector("#tp15 .mgtabs"); if (!nav) return;
+      var wr = document.getElementById("wrBox"), wb = nav.querySelector('.mgt[data-m="wr"]');
+      if (wb) wb.hidden = !wr || wr.hidden;
+      var cur = nav.querySelector('.mgt[aria-selected="true"]');
+      if (!nav.__mg) {
+        nav.__mg = 1;
+        var want = ""; try { want = localStorage.getItem(MK) || ""; } catch (e) {}
+        var b0 = want && nav.querySelector('.mgt[data-m="' + want + '"]');
+        if (!b0 || b0.hidden) b0 = (wb && !wb.hidden) ? wb : nav.querySelector('.mgt[data-m="rep"]');
+        cur = b0;
+        nav.addEventListener("click", function (e) {
+          var b = e.target.closest && e.target.closest(".mgt"); if (!b) return;
+          show(b); try { localStorage.setItem(MK, b.dataset.m); } catch (er) {}
+        });
+        if (wr && window.MutationObserver) new MutationObserver(function () { mgTabs(); }).observe(wr, { attributes: true, attributeFilter: ["hidden"] });
+      }
+      if (cur && cur.hidden) cur = nav.querySelector('.mgt[data-m="rep"]');
+      show(cur);
+      function show(b) {
+        if (!b) return;
+        Array.prototype.forEach.call(nav.querySelectorAll(".mgt"), function (o) { o.setAttribute("aria-selected", String(o === b)); });
+        Array.prototype.forEach.call(document.querySelectorAll("#tp15 .mgpane"), function (p) { p.hidden = p.dataset.m !== b.dataset.m; });
+      }
+    }
+    new MutationObserver(function () { place(); mgFiles(); mgTabs(); }).observe(document.getElementById("mgLazy") || pn, { childList: true });
+    place(); mgFiles(); mgTabs();
   })();
