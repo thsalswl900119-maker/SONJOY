@@ -1917,11 +1917,13 @@
             '<div class="atrow"><span>근무</span>' +
               '<select class="atsel">' + opts + '</select></div>' +
             main +
+            /* 일찍 · 늦게 간 사유 — 직원마다 늘 보이는 칸 (11/4 사장님) · 일지 근무 묶음 ⏱ 줄 「— 사유: …」로 같이 들어감 */
+            '<div class="atwhy"><div class="atwhyh"><b>📝 일찍 · 늦게 간 사유</b><span class="atdiff"></span></div>' +
+              '<textarea class="atmemo" rows="2" placeholder="예) 병원 예약으로 30분 일찍 · 마감 정리 늦어져 20분 더 · 대타"></textarea></div>' +
             '<button type="button" class="atedit">고치기</button>' +
             '<div class="atfix" hidden>' +
               '<div class="atrow"><span>퇴근</span>' +
                 '<input type="time" class="attime"></div>' +
-              '<input type="text" class="atmemo" placeholder="사유 · 대타 · 비고">' +
             '</div>' +
           '</div>';
 
@@ -1950,7 +1952,6 @@
 
         var fix = card.querySelector(".atfix");
         var edit = card.querySelector(".atedit");
-        if (mine.memo) fix.hidden = false;
         edit.textContent = fix.hidden ? "고치기" : "접기";
         edit.addEventListener("click", function () {
           fix.hidden = !fix.hidden;
@@ -1959,9 +1960,21 @@
         var t = card.querySelector(".attime");
         t.value = mine.out || "";
         t.addEventListener("change", function () { put(sh.w, "out", t.value); });
-        var memo = card.querySelector(".atmemo");
+        var memo = card.querySelector(".atmemo"), why = card.querySelector(".atwhy"), dfEl = card.querySelector(".atdiff");
         memo.value = mine.memo || "";
-        memo.addEventListener("input", function () { put(sh.w, "memo", memo.value, true); });
+        /* 예정 퇴근과 10분 넘게 차이 나면 「N분 일찍 · 늦게」를 보여 주고, 사유가 비었으면 빨간 테두리 */
+        (function () {
+          function mm(x) { var m = /(\d{1,2}):(\d{2})/.exec(x || ""); return m ? (+m[1]) * 60 + (+m[2]) : null; }
+          var tt = ((window.__CS_SHIFT_T || {})[sh.w] || {})[role], pe = tt ? tt[1] : sh.e, o = mm(mine.out), e = mm(pe), off = false;
+          if (o != null && e != null) {
+            var df = o - e; off = Math.abs(df) >= 10;
+            dfEl.textContent = off ? "예정 " + pe + " → " + Math.abs(df) + "분 " + (df < 0 ? "일찍" : "늦게") : "정시 퇴근";
+            dfEl.className = "atdiff" + (off ? " off" : " ok");
+          }
+          function need() { why.classList.toggle("need", off && !memo.value.trim()); }
+          need();
+          memo.addEventListener("input", function () { put(sh.w, "memo", memo.value, true); need(); });
+        })();
         listEl.appendChild(card);
       });
       var done = plan.filter(function (sh) {
