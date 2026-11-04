@@ -34,6 +34,7 @@
     if (k === "sum") drawHero(true);
     if (k === "file") mountFiles();
     if (k === "wish") drawWishTop();
+    if (k === "day" && typeof bdMode === "function") { bdForce = false; bdMode(); }
     setTimeout(regrow, 0);
     var sb = nav.querySelector('.wsn[aria-selected="true"]'); if (sb && nav.scrollWidth > nav.clientWidth + 4) nav.scrollLeft = Math.max(0, sb.offsetLeft - nav.offsetLeft - 8);
     if (scroll) nav.scrollIntoView({ block: "start", behavior: "smooth" });
@@ -187,9 +188,110 @@
       takeSnap(); refresh();
     }, 80);
   });
+
+  // ── 🗂 일정 보드 (11/4 · 사장님 「워크샵 일정이 보드로 안 보인다」) — 1~3일차를 나란히 · 줄마다 카드
+  //    글은 일자별 일정 표 칸(#wsdN tbody · app.js 저장)에서 바로 읽음 · 보기만 · 고칠 땐 「일정 수정하기」(표로 바뀜)
+  var dayPane = root.querySelector('.wspane[data-w="day"]'), rpw = dayPane && dayPane.querySelector(".rpwrap");
+  var BDK = "cafesui.ui.wsdview", bdPref = "board"; try { bdPref = localStorage.getItem(BDK) || "board"; } catch (e) {}
+  var bdBox = null, bdBar = null, bdForce = false;
+  function hm(t) { var m = String(t || "").match(/^\s*(\d{1,2})\s*[:.시]\s*(\d{2})?|^\s*(\d{1,2})\s*$/); if (!m) return null; var h = +(m[1] || m[3]), mi = +(m[2] || 0); return h > 29 || mi > 59 ? null : h * 60 + mi; }
+  function kindOf(t) {
+    if (/공항|이동|택시|버스|지하철|기차|신칸센|역\s|역$|역에|역으로|집결|출발|도착|락커/.test(t)) return ["move", "🚕"];
+    if (/숙소|호텔|료칸|체크인|체크아웃|취침|짐 풀/.test(t)) return ["stay", "🏨"];
+    if (/식사|점심|저녁|아침|브런치|이자카야|덮밥|스시|초밥|라멘|우동|야끼|야키|맛집|먹기/.test(t)) return ["food", "🍽"];
+    if (/카페|커피|COFFEE|Coffee|베이커리|빵|케이크|디저트|파이|타르트|푸딩|젤라또/.test(t)) return ["cafe", "☕"];
+    if (/쇼핑|돈키|오미야게|면세|백화점|마켓|지하상가/.test(t)) return ["shop", "🛍"];
+    if (/리뷰|회의|발표|정리|토론/.test(t)) return ["talk", "🗣"];
+    if (/자유/.test(t)) return ["free", "🎈"];
+    return ["etc", "📍"];
+  }
+  function dayRows(d) {
+    var day = document.getElementById("wsd" + d); if (!day) return [];
+    var out = [], last = null;
+    Array.prototype.forEach.call(day.querySelectorAll("tbody tr"), function (tr, ri) {
+      var c = tr.querySelectorAll("input"); if (c.length < 3) return;
+      var t = c[0].value.trim(), pl = c[1].value.trim(), mo = c[2].value.trim();
+      if (!pl && !mo) return;
+      var k = hm(t);
+      if (k != null && last != null && k < last && k < 720) k += 720;   // 12:30 다음 2:00 = 오후 2시
+      if (k != null) last = k;
+      out.push({ t: t, k: k != null ? k : last, own: k != null, pl: pl, mo: mo, ri: ri });
+    });
+    return out;
+  }
+  function tagsOf(x) {
+    var a = x.pl + " " + x.mo, h = "";
+    if (a.indexOf("⭐") >= 0) h += '<i class="bdt star">🔎 벤치마킹</i>';
+    if (/✅\s*예약/.test(a)) h += '<i class="bdt ok">✅ 예약함</i>';
+    else if (/예약\s*안\s*함|미리\s*예약|예약하기|예약 필요/.test(a)) h += '<i class="bdt need">⚠ 예약 필요</i>';
+    return h;
+  }
+  function drawBoard() {
+    if (!bdBox) return;
+    var now = new Date(), today = new Date(now.getFullYear(), now.getMonth(), now.getDate()), nm = now.getHours() * 60 + now.getMinutes();
+    var cols = [], tot = 0;
+    [1, 2, 3, 4].forEach(function (d) {
+      var tab = dayPane.querySelector('.wsdtab[data-d="wsd' + d + '"]'), rows = dayRows(d);
+      if (tab && tab.hidden && !rows.length) return;
+      if (!document.getElementById("wsd" + d)) return;
+      cols.push({ d: d, rows: rows, dt: pdate(v("d" + d + "date")) }); tot += rows.length;
+    });
+    var h = '<div class="bdcols" style="--n:' + cols.length + '">';
+    cols.forEach(function (c) {
+      var isToday = c.dt && c.dt.getTime() === today.getTime(), past = c.dt && c.dt < today;
+      var nowI = -1; if (isToday) c.rows.forEach(function (x, i) { if (x.k != null && x.k <= nm) nowI = i; });
+      var stars = c.rows.filter(function (x) { return (x.pl + x.mo).indexOf("⭐") >= 0; }).length;
+      var need = c.rows.filter(function (x) { return /예약\s*안\s*함|미리\s*예약|예약하기/.test(x.pl + x.mo) && !/✅\s*예약/.test(x.pl + x.mo); }).length;
+      var q = QS[c.d - 1];
+      h += '<section class="bdcol' + (isToday ? " today" : "") + (past ? " past" : "") + '"><div class="bdh"><div class="bdh1"><b>' + c.d + '일차</b>' +
+        (c.dt ? '<span>' + (c.dt.getMonth() + 1) + "/" + c.dt.getDate() + " (" + WD[c.dt.getDay()] + ")</span>" : '<span class="nodt">날짜 아직</span>') +
+        (isToday ? '<em class="bdtoday">오늘</em>' : "") + '</div>' +
+        (q ? '<div class="bdq"><i>' + q[1] + "</i>" + esc(q[2]) + "</div>" : "") +
+        '<div class="bdn">일정 ' + c.rows.length + "개" + (stars ? " · ⭐ " + stars + "곳" : "") + (need ? ' · <b class="bdneed">예약 필요 ' + need + "</b>" : "") + "</div></div>";
+      if (!c.rows.length) h += '<p class="bdempty">아직 일정이 없어요 · 「✎ 일정 수정하기」로 적어 주세요</p>';
+      else h += '<ol class="bdlist">' + c.rows.map(function (x, i) {
+        var kd = kindOf(x.pl + " " + x.mo), st = (x.pl + x.mo).indexOf("⭐") >= 0;
+        var cls = "bdc k-" + kd[0] + (st ? " star" : "") + (i === nowI ? " now" : "") + (isToday && nowI >= 0 && i < nowI ? " done" : "");
+        return '<li><button type="button" class="' + cls + '" data-bd="' + c.d + "|" + x.ri + '" title="누르면 표에서 이 줄을 보여 줘요">' +
+          '<span class="bdtm">' + (x.own ? esc(x.t) : "↳") + "</span>" +
+          '<span class="bdbody"><span class="bdpl"><i class="bdic" aria-hidden="true">' + kd[1] + "</i>" + esc(x.pl || "(일정 이름 없음)") + "</span>" +
+          (x.mo ? '<span class="bdmo">' + esc(x.mo) + "</span>" : "") + (tagsOf(x) ? '<span class="bdtags">' + tagsOf(x) + "</span>" : "") +
+          (i === nowI ? '<em class="bdnow">지금 여기</em>' : "") + "</span></button></li>";
+      }).join("") + "</ol>";
+      h += "</section>";
+    });
+    h += "</div>";
+    if (!tot) h = '<p class="bdempty big">아직 적힌 일정이 없어요 · 「✎ 일정 수정하기」를 눌러 표에 적으면 여기 보드로 나옵니다</p>' + h;
+    bdBox.innerHTML = h;
+  }
+  function bdMode() {
+    if (!dayPane || !bdBar) return;
+    var editing = !!document.querySelector("#wsEdit.on"), board = bdPref === "board" && !editing && !bdForce;
+    dayPane.classList.toggle("bdmode", board);
+    Array.prototype.forEach.call(bdBar.querySelectorAll(".bdv"), function (b) { b.setAttribute("aria-pressed", String((b.dataset.v === "board") === board)); });
+    if (board) drawBoard();
+  }
+  if (dayPane && rpw) {
+    bdBar = document.createElement("div"); bdBar.className = "bdbar";
+    bdBar.innerHTML = '<span class="bdvs" role="group" aria-label="일정 보기"><button type="button" class="bdv" data-v="board" aria-pressed="true">🗂 보드로 보기</button><button type="button" class="bdv" data-v="table" aria-pressed="false">📋 표 · 타임테이블</button></span><small class="bdhint">카드를 누르면 표에서 그 줄을 보여 줘요 · 고칠 땐 「✎ 일정 수정하기」</small>';
+    bdBox = document.createElement("div"); bdBox.className = "wsboard"; bdBox.id = "wsBoard";
+    var dt = dayPane.querySelector(".wsdtabs"); dayPane.insertBefore(bdBar, dt || rpw); dayPane.insertBefore(bdBox, rpw);
+    bdBar.addEventListener("click", function (e) { var b = e.target.closest(".bdv"); if (!b) return; bdPref = b.dataset.v; bdForce = false; try { localStorage.setItem(BDK, bdPref); } catch (x) {} bdMode(); });
+    bdBox.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-bd]"); if (!b) return;
+      var p = b.dataset.bd.split("|"), tab = dayPane.querySelector('.wsdtab[data-d="wsd' + p[0] + '"]');
+      bdForce = true; bdMode(); if (tab) tab.click();
+      setTimeout(function () { var day = document.getElementById("wsd" + p[0]), tr = day && day.querySelectorAll("tbody tr")[+p[1]]; if (!tr) return; tr.scrollIntoView({ block: "center", behavior: "smooth" }); tr.classList.remove("bdhit"); void tr.offsetWidth; tr.classList.add("bdhit"); setTimeout(function () { tr.classList.remove("bdhit"); }, 2600); }, 60);
+    });
+    var eb = document.getElementById("wsEdit");
+    if (eb && window.MutationObserver) new MutationObserver(function () { bdForce = false; bdMode(); }).observe(eb, { attributes: true, attributeFilter: ["class"] });
+    var bt = null; dayPane.addEventListener("input", function () { if (!dayPane.classList.contains("bdmode")) return; clearTimeout(bt); bt = setTimeout(drawBoard, 300); });
+    setInterval(function () { if (TAB === "day" && root.offsetParent !== null && dayPane.classList.contains("bdmode")) drawBoard(); }, 60000);
+    bdMode();
+  }
   // ── 다시 그리기 (글자 칠 때마다가 아니라 0.3초 모아서)
   var rt = null;
-  function refresh() { clearTimeout(rt); rt = setTimeout(function () { navStat(); if (TAB === "sum") drawHero(false); if (TAB === "wish") drawWishTop(); }, 300); }
+  function refresh() { clearTimeout(rt); rt = setTimeout(function () { navStat(); if (TAB === "sum") drawHero(false); if (TAB === "wish") drawWishTop(); if (TAB === "day") bdMode(); }, 300); }
   root.addEventListener("input", refresh); root.addEventListener("change", refresh);
   root.addEventListener("click", function (e) { if (e.target.closest(".wpcard")) setTimeout(function () { takeSnap(); mountFiles(); refresh(); if (TAB === "sum") drawHero(true); }, 120); });
   if (yearEl) yearEl.addEventListener("change", function () { setTimeout(function () { takeSnap(); mountFiles(); refresh(); drawHero(true); }, 120); });
