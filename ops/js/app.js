@@ -5047,45 +5047,6 @@
       return any ? text.join(NL) : "";
     }
     report();
-    // 🍰 생산량 조절 한 줄 넣기 (11/5 · 텔레그램 「망고 6개 깔고 안 깐 거 3개 남아서 생산량 1개로」를 일지에) — 품목 누르고 · 숫자 ± · 미리 보기 · 넣기
-    (function () {
-      var box = document.getElementById("pdAdd"), btn = document.getElementById("pdAddBtn"), ta = document.querySelector('#tp4 [data-k="lf196"]');
-      if (!box || !btn || !ta) return;
-      var itEl = box.querySelector(".pdit"), noneB = box.querySelector(".pdnone"), prev = document.getElementById("pdPrev"), pick = "";
-      function inp(p) { return box.querySelector('.pdn[data-p="' + p + '"]'); }
-      function num(p) { var e = inp(p); var v = e ? String(e.value).replace(/[^0-9]/g, "") : ""; return v === "" ? null : +v; }
-      function item() { return ((itEl.value || "").trim() || pick); }
-      function lineOf() {
-        var it = item(); if (!it) return "";
-        var c = num("c"), l = num("l"), m = noneB.getAttribute("aria-pressed") === "true" ? 0 : num("m"), parts = [it];
-        if (c != null) parts.push(c + "개 깔고");
-        if (l != null) parts.push((c != null ? "안 깐 거 " : "") + l + "개 남아서");
-        return parts.join(" ") + (m == null ? "" : m === 0 ? " 오늘 생산 안 함" : " 생산량 " + m + "개로");
-      }
-      function paint() {
-        var ln = lineOf();
-        prev.textContent = ln || "품목을 먼저 눌러 주세요"; prev.parentNode.classList.toggle("empty", !ln); btn.disabled = !ln;
-        Array.prototype.forEach.call(box.querySelectorAll(".pdchip"), function (c) { c.setAttribute("aria-pressed", String(!itEl.value.trim() && c.dataset.v === pick)); });
-      }
-      box.addEventListener("click", function (e) {
-        var c = e.target.closest(".pdchip"); if (c) { pick = pick === c.dataset.v ? "" : c.dataset.v; itEl.value = ""; paint(); return; }
-        var pm = e.target.closest(".pdpm");
-        if (pm) { var el = inp(pm.dataset.p), v = num(pm.dataset.p) || 0; v = Math.max(0, v + (+pm.dataset.d)); el.value = String(v); if (pm.dataset.p === "m") noneB.setAttribute("aria-pressed", "false"); paint(); return; }
-        if (e.target.closest(".pdnone")) { var on = noneB.getAttribute("aria-pressed") !== "true"; noneB.setAttribute("aria-pressed", String(on)); if (on) inp("m").value = ""; paint(); }
-      });
-      box.addEventListener("input", function (e) { if (e.target.dataset && e.target.dataset.p === "m" && e.target.value) noneB.setAttribute("aria-pressed", "false"); if (e.target === itEl && itEl.value.trim()) pick = ""; paint(); });
-      btn.addEventListener("click", function () {
-        var line = lineOf(); if (!line) return;
-        var cur = ta.value.replace(/\s+$/, "");
-        ta.focus(); ta.value = (cur ? cur + "\n" : "") + line;
-        ta.dispatchEvent(new Event("input", { bubbles: true }));
-        pick = ""; itEl.value = ""; noneB.setAttribute("aria-pressed", "false");
-        Array.prototype.forEach.call(box.querySelectorAll(".pdn"), function (e2) { e2.value = ""; });
-        paint(); if (window.__CS_TOAST) try { window.__CS_TOAST("생산량 조절에 한 줄 넣었어요"); } catch (x) {}
-      });
-      box.addEventListener("keydown", function (e) { if (e.key === "Enter" && e.target.tagName === "INPUT") { e.preventDefault(); if (!btn.disabled) btn.click(); } });
-      paint();
-    })();
     dateEl.addEventListener("change", report);
     whoEl.addEventListener("change", report);
     var repT = null; inputs.forEach(function (el) { el.addEventListener("input", function () { clearTimeout(repT); repT = setTimeout(report, 250); }); });
