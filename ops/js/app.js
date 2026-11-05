@@ -795,7 +795,7 @@
       var lg = by("cafesui.log.").sort().reverse(), h = "";
       lg.forEach(function (k) {
         var o = J(k) || {}, f = o.f || {}, d = k.slice(12);
-        var ORDER = ["lf143", "lf140", "lf141", "lf142", "lf144", "lf101", "lf102", "lf103", "lf104", "lf105", "lf106", "lf120", "lf123", "lf121", "lf122", "lf124", "lf110", "lf185", "lf180", "lf181", "lf190", "lf183", "lf184", "lf154", "lf150", "lf151", "lf152", "lf153", "lf160", "lf161", "lf162", "lf163", "lf164", "lf170", "lf171", "lf172", "lf182"];
+        var ORDER = ["lf143", "lf140", "lf141", "lf142", "lf144", "lf101", "lf102", "lf103", "lf104", "lf105", "lf106", "lf120", "lf123", "lf121", "lf122", "lf124", "lf111", "lf110", "lf195", "lf196", "lf185", "lf180", "lf181", "lf190", "lf183", "lf184", "lf154", "lf150", "lf151", "lf152", "lf153", "lf160", "lf161", "lf162", "lf163", "lf164", "lf170", "lf171", "lf172", "lf182"];
         var seen = {}, b = "";
         ORDER.concat(Object.keys(f)).forEach(function (fk) {
           if (seen[fk]) return; seen[fk] = 1;
@@ -5033,7 +5033,7 @@
         html += '<div class="rpsec rptop"><h4>📌 먼저 볼 것</h4>' + topHtml + "</div>";
         text = text.concat(["", "[먼저 볼 것]", TOPK.filter(function (k) { return topT[k]; }).map(function (k) { return topT[k]; }).join(NL)]);
       }
-      var ORDER = ["근무", "__num__", "전달", "매장", "생산 · 재고", "이슈"];
+      var ORDER = ["근무", "__num__", "🍰 조각케이크 · 생산량", "전달", "매장", "생산 · 재고", "이슈"];
       var used = {};
       ORDER.forEach(function (t) {
         if (t === "__num__") { html += numHtml; text = text.concat(numText); return; }
@@ -5047,6 +5047,26 @@
       return any ? text.join(NL) : "";
     }
     report();
+    // 🍰 생산량 조절 한 줄 넣기 (11/5 · 텔레그램 「망고 6개 깔고 안 깐 거 3개 남아서 생산량 1개로」를 일지에)
+    (function () {
+      var box = document.getElementById("pdAdd"), btn = document.getElementById("pdAddBtn"), ta = document.querySelector('#tp4 [data-k="lf196"]');
+      if (!box || !btn || !ta) return;
+      function num(p) { var e = box.querySelector('.pdn[data-p="' + p + '"]'); var v = e ? String(e.value).replace(/[^0-9]/g, "") : ""; return v === "" ? null : +v; }
+      btn.addEventListener("click", function () {
+        var itEl = box.querySelector(".pdit"), it = (itEl.value || "").trim(); if (!it) { itEl.focus(); return; }
+        var c = num("c"), l = num("l"), m = num("m"), parts = [it];
+        if (c != null) parts.push(c + "개 깔고");
+        if (l != null) parts.push((c != null ? "안 깐 거 " : "") + l + "개 남아서");
+        var line = parts.join(" ") + (m == null ? "" : m === 0 ? " 오늘 생산 안 함" : " 생산량 " + m + "개로");
+        if (m == null && c == null && l == null) line = it;
+        var cur = ta.value.replace(/\s+$/, "");
+        ta.focus(); ta.value = (cur ? cur + "\n" : "") + line;
+        ta.dispatchEvent(new Event("input", { bubbles: true }));
+        itEl.value = ""; Array.prototype.forEach.call(box.querySelectorAll(".pdn"), function (e) { e.value = ""; });
+        itEl.focus();
+      });
+      box.addEventListener("keydown", function (e) { if (e.key === "Enter" && e.target.tagName === "INPUT") { e.preventDefault(); btn.click(); } });
+    })();
     dateEl.addEventListener("change", report);
     whoEl.addEventListener("change", report);
     var repT = null; inputs.forEach(function (el) { el.addEventListener("input", function () { clearTimeout(repT); repT = setTimeout(report, 250); }); });
