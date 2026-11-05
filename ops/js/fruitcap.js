@@ -79,7 +79,8 @@
   ];
   // sz = 규격별 값 [규격, 값(회계 주석 날짜별), 메모] — 10/28 사장님 「1박스라고 하면 안 되지 · 수 · 송이 · kg로」 → 손익 파일 주석에서 규격이 적힌 줄만 다시 뽑음
   var SZ = {
-    f1: [["500g 1통(팩) · 4호", "1,900 ~ 24,000", "달마다 값이 크게 달라요 → 아래 「달별 값」 · 케이크는 4호(한 알 11~13g)"],
+    f1: [["500g 1통(팩) · 4호", "1,900 ~ 21,000", "달마다 값이 크게 달라요 → 아래 「달별 값」 · 케이크는 4호(한 알 11~13g)"],
+      ["칠성 1kg (2026 납품내역)", "22,000 ~ 23,000", "2026-10-28 23,000 · 10-29 겨울딸기 22,000 → 500g으로 치면 11,000~11,500"],
       ["1kg 팩 (밀양 딸기밭 4호)", "18,000 ~ 28,000", "2023-11 28,000 · 2023-12 18,000~20,000 → 500g으로 치면 9,000~14,000"],
       ["kg 단위 (엄궁 경매 5~24kg씩)", "kg당 6,500 ~ 17,000", "2023-11 14,000~17,000 · 2023-12 8,000~10,500 · 2024-01 6,500~7,700"]],
     f2: [["10수 (10개 · 알 가장 큼)", "34,000 ~ 45,000", "2023-07 엄궁 45,000 · 2025-06 34,000 (5박스 170,000)"],
@@ -188,6 +189,7 @@
   function draw() {
     var rs = rows(), ed = EDIT && canEdit();
     var h = '<div class="tnotice fcrule"><div class="tnhead">★ 과일값 보고 · 과일주문 한도선</div><ul><li><b>' + esc(RULE) + "</b><span>「＋ 값 적기」(금액만 써 주세요 ex) 24,000)를 누르면 오늘 일지 거래처 칸에 한 줄이 들어가고, 「📨 사장님께 텔레그램 개인톡 보고」 단추가 나와요</span></li>" +
+      "<li><b class=\"fcred\">🍓 딸기를 입력할때는 500g 인지 1kg 인지 같이적어주세요</b><span>칠성 딸기 값은 1kg 단위예요 (10월 납품내역 · 1kg 23,000원 = 500g 11,500원). 딸기 「＋ 값 적기」는 금액을 적은 뒤 1kg 값인지 500g 값인지 한 번 더 물어요</span></li>" +
       "<li><b>" + esc(WHY_A) + "<mark>" + esc(WHY_B) + "</mark>" + esc(WHY_C) + "</b></li></ul></div>" +
       '<div class="fch"><b>💰 과일 주문 한도선</b><span>한도선보다 비싸면 <mark>주문 전에 사장님께 먼저 확인</mark> · ⭐ = 메인 과일 · 「지금 철」 = 이번 달에 쓰는 과일</span>' +
       '<button type="button" class="fcaside-open">📋 옆에 열기</button>' + (canEdit() ? '<button type="button" class="fcedit">' + (ed ? "✔ 다 고쳤어요" : "✏ 한도선 고치기") + "</button>" : "") + "</div>";
@@ -302,19 +304,26 @@
       var p = N(v);
       // 10/28 사고: 「10/28 24,000」을 적어 102,824,000원이 됨 — 금액 말고 다른 글자(날짜 · 개수)가 섞이면 다시 묻기
       if (!p || !/^[\d,]+$/.test(v) || p > 1000000) { alert("금액만 써 주세요 ex) 24,000\n(날짜 · 개수 · 글자는 빼고 숫자와 쉼표만)"); return; }
+      // 11/5 사장님 「딸기를 입력할때는 500g 인지 1kg 인지 같이적어주세요」 — 칠성 딸기 값은 1kg 단위였음(10월 납품내역)
+      var gram = "";
+      if (id === "f1") {
+        var kgv = confirm("딸기를 입력할때는 500g 인지 1kg 인지 같이적어주세요\n\n" + won(p) + "은(는) 1kg 값인가요?\n확인 = 1kg 값 (칠성 납품내역은 1kg)\n취소 = 500g 1통 값");
+        if (kgv) { gram = "1kg " + won(p) + " = 500g " + won(Math.round(p / 2)); p = Math.round(p / 2); } else gram = "500g " + won(p);
+      }
       if (cap && p > cap && !confirm("⚠ 한도선 " + won(cap) + "보다 " + won(p - cap) + " 비싸요.\n사장님께 먼저 확인하셨나요? (확인 = 그래도 적기)")) return;
       // 10/28 사장님 「1박스라고 하면 안 되지」 — 규격이 여러 개면 몇 수 · 몇 kg인지 같이 (모르면 비워 둠)
       var ut = r.u, kz = "";
-      if (r.sz && r.sz.length > 1) {
+      if (gram) { kz = gram; ut = gram; }
+      else if (r.sz && r.sz.length > 1) {
         kz = prompt(r.n + " 규격을 적어 주세요 (예: " + r.sz.slice(0, 3).map(function (z) { return z[0].split(" (")[0]; }).join(" / ") + ")\n모르면 비워 두고 확인", "");
         kz = String(kz || "").trim().slice(0, 40); if (kz) ut = kz;
       }
       var rid = "r" + Date.now().toString(36);
       save(function (o) { var b = o.it[id] || {}; b.rec = b.rec || {}; b.rec[rid] = { d: today(), p: p, who: me(), at: stamp() }; if (kz) b.rec[rid].k = kz; o.it[id] = b; });
       var over = cap && p > cap ? " (한도선 " + won(cap) + " · ⚠ " + won(p - cap) + " 넘음)" : (cap ? " (한도선 " + won(cap) + " 안)" : "");
-      logAppend("🍓 과일값: " + r.n + " " + ut + " " + won(p) + over);
+      logAppend("🍓 과일값: " + r.n + " " + (gram || ut + " " + won(p)) + over);
       var d = new Date(), who = me();
-      DONE = { id: id, text: "[카페스이 과일값 보고] " + (d.getMonth() + 1) + "/" + d.getDate() + String.fromCharCode(10) + r.n + " " + ut + " " + won(p) + over + (who ? String.fromCharCode(10) + "— " + who + (/님$/.test(who) || who === "사장님" ? "" : "님") : "") };
+      DONE = { id: id, text: "[카페스이 과일값 보고] " + (d.getMonth() + 1) + "/" + d.getDate() + String.fromCharCode(10) + r.n + " " + (gram || ut + " " + won(p)) + over + (who ? String.fromCharCode(10) + "— " + who + (/님$/.test(who) || who === "사장님" ? "" : "님") : "") };
       draw();
       if (window.__CS_TOAST) window.__CS_TOAST(r.n + " " + won(p) + " 적었어요 · 일지 거래처에도 넣었어요");
     }
