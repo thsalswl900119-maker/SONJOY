@@ -82,6 +82,21 @@
   document.addEventListener("click", function (e) { if (e.target.closest(".tab, .daynav, .stab, .sktab, .wsn, #bnMode button, .bntab, .bnmon")) setTimeout(function () { beat(true); draw(); }, 300); }, true);
   document.addEventListener("change", function (e) { if (e.target && (e.target.id === "lgDate" || e.target.id === "skDate")) setTimeout(function () { beat(true); draw(); }, 100); }, true);
   document.addEventListener("focusin", function (e) { if (e.target && e.target.closest && e.target.closest("#tp9, #tp17")) setTimeout(function () { beat(false); }, 600); }, true);
+  // 11/7 워크샵 시뮬레이션 — 같은 칸을 두 사람이 동시에 쓰면 나중 저장만 남는다: 다른 분이 지금 그 칸을 쓰는 중이면 들어갈 때 한 번 묻는다
+  //  (워크샵 칸 .wsin · 벤치마킹 기념품 사실 칸 .bnom[data-lv=st] — 사람마다 따로인 평가 칸은 안 물음)
+  var askedAt = {};
+  document.addEventListener("focusin", function (e) {
+    var el = e.target; if (!el || !el.closest) return;
+    var shared = el.matches && (el.matches("#tp9 .wsin:not([type=checkbox]):not([readonly])") || el.matches('#tp17 .bnom[data-lv="st"]'));
+    if (!shared) return;
+    var fk = (el.dataset.k || (el.dataset.id && el.dataset.f ? el.dataset.id + "|" + el.dataset.f : "")) || ""; if (!fk) return;
+    var o = others().filter(function (x) { return x.on && x.fk === fk && x.who !== me() && Date.now() - (x.t || 0) < 60000; })[0];
+    if (!o || Date.now() - (askedAt[fk] || 0) < 60000) return;
+    askedAt[fk] = Date.now();
+    setTimeout(function () {
+      if (!window.confirm(nim(o.who) + "이 지금 이 칸을 쓰고 있어요.\n같이 쓰면 한 분 글이 덮일 수 있어요 (덮인 글은 화면 위 「덮인 글」 상자에 남아요).\n\n그래도 지금 쓸까요?")) el.blur();
+    }, 30);
+  }, true);
   window.__CS_PRES = function () { return others(); };
   window.addEventListener("cs:presence", draw);
   window.addEventListener("cs:remote", function () { setTimeout(draw, 200); });

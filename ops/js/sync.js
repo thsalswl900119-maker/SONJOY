@@ -78,8 +78,11 @@
       if (mv === undefined) return sv;            // 나는 지웠는데 다른 기기가 고쳤다 — 고친 걸 살린다
       if (sv === undefined) return mv;
       if (typeof mv === "string" && typeof sv === "string" && /(^|\.)f$/.test(path)) return joinText(mv, sv);
+      // 11/7 워크샵 시뮬레이션: 같은 칸을 두 기기가 동시에 고치면 나중 쪽 글만 남음 — 덮인 글을 _lost에 남겨 되살릴 수 있게(워크샵 · 벤치마킹)
+      if (LOSTREC && known && typeof sv === "string" && sv.trim().length > 1 && !/(^|\.)(_by|_lost|_at|at|by|ts|who|ed|fix|_ok)(\.|$)/.test(path + "." + x) && String(mv == null ? "" : mv).indexOf(sv) < 0) LOSTREC.push({ p: (path + "." + x).replace(/^\./, ""), t: sv });
       return known ? mv : sv;
     }
+    var LOSTREC = null;
     function merge3(b, m, s, path) {
       var out = {}, seen = {}, ks = Object.keys(m).concat(Object.keys(s), b ? Object.keys(b) : []);
       ks.forEach(function (x) {
@@ -210,6 +213,10 @@
     window.__CS_FILEPUT = function (id, i, part) { return col.doc("file." + id + "." + i).set({ v: part, by: dev, t: firebase.firestore.FieldValue.serverTimestamp() }); };
     window.__CS_FILEGET = function (id, i) { return col.doc("file." + id + "." + i).get().then(function (d) { return (d.exists && (d.data() || {}).v) || ""; }); };
     window.__CS_HIST = function (date) { return col.doc("hist.log." + date).get().then(function (d) { try { return JSON.parse((d.exists && (d.data() || {}).v) || "[]") || []; } catch (e) { return []; } }); };
+    var contN = {};
+    // 11/7 시뮬레이션: 보내기가 끝난 「뒤에」 그보다 옛날 서버 값이 늦게 도착해 방금 쓴 칸이 기기에서 사라지고, 다음 저장 때 서버에서도 지워졌음 —
+    // 워크샵 · 벤치마킹 문서는 저장마다 판 번호(_rev)를 1씩 올리고, 이미 본 판보다 낮은 번호는 받지 않는다 (같은 번호 · 번호 없는 값은 받음)
+    var REVK = /^cafesui\.(ws|bench)\./, revOf = function (v) { var o = v && objOf(v); return o && typeof o._rev === "number" ? o._rev : null; }, revK = {};
     function flush(k) {
       if (!ready) return;                       // 연결되면 한꺼번에 보낸다
       if (!(k in pending)) return;
@@ -227,14 +234,18 @@
       else p = db.runTransaction(function (tx) {
         return tx.get(ref).then(function (doc) {
           var cur = doc.exists ? (doc.data() || {}).v : null;
+          var lk = /^cafesui\.(ws|bench)\./.test(k); LOSTREC = lk ? [] : null;
           var out = mergeVal(bs, v, cur == null ? null : cur);
+          if (lk && LOSTREC.length) { var oo = objOf(out); if (oo) { var wme = ""; try { wme = localStorage.getItem("cafesui.me") || ""; } catch (e) {} oo._lost = (Array.isArray(oo._lost) ? oo._lost : []).concat(LOSTREC.map(function (r) { return { p: r.p, t: r.t, by: wme, at: Date.now() }; })).slice(-30); out = JSON.stringify(oo); } }
+          LOSTREC = null;
+          if (REVK.test(k)) { var ro = objOf(out); if (ro) { ro._rev = Math.max(revOf(cur) || 0, revK[k] || 0) + 1; out = JSON.stringify(ro); } }
           if (k.indexOf("cafesui.log.") === 0 && (bootPush[k] || wipeCount(out, cur) >= 2)) out = guardLog(out, cur);   /* 한 번 저장에 글 있는 칸이 2개 넘게 비거나 크게 줄면 사람이 친 게 아니라 옛 모습이 덮는 것(10/23 세 번) — 서버 글을 지킨다 */   /* 일지 지킴은 「켤 때 못 보낸 옛 값을 올리는」 경우에만 — 사람이 칸에서 지우고 고친 건 그대로 받는다 (10/23: 지킴이 일부러 줄인 글까지 되돌려 글이 두 번 붙고 고친 글이 사라졌음) */
           tx.set(ref, { v: out, by: dev, t: firebase.firestore.FieldValue.serverTimestamp() });
           return out;
         });
       });
       p.then(function (out) {
-        inflight--; busy[k] = 0;
+        inflight--; busy[k] = 0; contN[k] = 0; if (REVK.test(k)) { var r1 = revOf(out); if (r1 != null) revK[k] = Math.max(revK[k] || 0, r1); }
         remote[k] = out; sent[k] = out; delete bootPush[k];
         try { histRec(k, out); } catch (eh) {}
         if (!(k in pending)) {
@@ -250,6 +261,7 @@
             ref.get().then(function (doc) {
               if ((k in pending) || busy[k] || !doc.exists) return;
               var dv = (doc.data() || {}).v, lv2 = null; try { lv2 = localStorage.getItem(k); } catch (e) {}
+              if (REVK.test(k)) { var r2 = revOf(dv); if (r2 != null && revK[k] != null && r2 < revK[k]) return; if (r2 != null) revK[k] = r2; }
               remote[k] = dv; sent[k] = dv;
               if (dv != null && lv2 === out && dv !== out) {
                 applying = true; safeSet(k, dv); applying = false;
@@ -262,6 +274,10 @@
       }).catch(function (e) {
         inflight--; busy[k] = 0;
         if (!(k in pending)) pending[k] = v;    // 실패 — 다시 보낸다
+        // 11/7 시뮬레이션: 여럿이 같은 문서에 동시에 저장하면 서버가 5번 밀어내고(aborted) 8초 뒤에야 다시 보내 그동안 남의 화면에 안 보였음 — 경합은 빨간 표시 없이 곧바로(0.5~1.5초) 다시
+        var cont = e && (e.code === "aborted" || e.code === "failed-precondition");
+        if (cont && (contN[k] = (contN[k] || 0) + 1) <= 6) { setStatus("on"); clearTimeout(retryT[k]); retryT[k] = setTimeout(function () { flush(k); }, 500 + Math.random() * 1000); return; }
+        contN[k] = 0;
         setStatus("err", e.message);
         clearTimeout(retryT[k]); retryT[k] = setTimeout(function () { flush(k); }, 8000);
       });
@@ -282,13 +298,27 @@
     }
     var lastInput = 0;
     ["input", "change", "keydown", "pointerdown"].forEach(function (ev) { document.addEventListener(ev, function () { lastInput = Date.now(); }, true); });
-    function reloadSafely() {
+    // 새로 읽은 뒤 보던 화면으로 돌아오기 (11/7 — 새로고침되면 출퇴근 화면으로 튕기던 것)
+    function rememberTab() {
+      try { var p = document.querySelector(".wrap > .panel:not([hidden])"), ws = document.querySelector('#wsNav .wsn[aria-selected="true"]');
+        sessionStorage.setItem("cs.reTab", JSON.stringify({ p: p ? p.id : "", y: window.scrollY || 0, w: ws ? ws.dataset.w : "", at: Date.now() })); } catch (e) {}
+    }
+    window.addEventListener("load", function () {
+      var o = null; try { o = JSON.parse(sessionStorage.getItem("cs.reTab") || "null"); sessionStorage.removeItem("cs.reTab"); } catch (e) {}
+      if (!o || !o.p || Date.now() - (o.at || 0) > 60000 || o.p === "tp0") return;
+      setTimeout(function () { var t = document.querySelector('.tab[data-p="' + o.p + '"]'); if (t) t.click();
+        setTimeout(function () { if (o.w) { var b = document.querySelector('#wsNav .wsn[data-w="' + o.w + '"]'); if (b) b.click(); } window.scrollTo(0, o.y || 0); }, 250); }, 400);
+    });
+    function reloadSafely(auto) {
       // 새로 읽기 전에 이 기기에서 적은 것을 전부 보내고, 서버가 받았다고 할 때까지(최대 6초) 기다린다
       try { if (window.__CS_FLUSH) window.__CS_FLUSH(); } catch (e) {}
       flushNow();
       var t0 = Date.now();
       (function wait() {
-        if ((inflight === 0 && !Object.keys(pending).length) || Date.now() - t0 > 6000) { location.reload(); return; }
+        if ((inflight === 0 && !Object.keys(pending).length) || Date.now() - t0 > 6000) {
+          // 11/7 — 기다리는 사이 글을 쓰기 시작했거나 워크샵 · 벤치마킹으로 옮겼으면 새로고침하지 않고 띠만 (켜자마자 쓰던 글이 날아가던 것)
+          if (auto === true && (!idle() || onCalmTab())) { notifyChange(); return; }
+          rememberTab(); location.reload(); return; }
         setTimeout(wait, 150);
       })();
     }
@@ -303,7 +333,7 @@
       // 다른 컴퓨터에서 바뀐 게 있다 — 쓰는 중이 아니면 바로 새로 읽고, 쓰는 중이면 위에 버튼만 띄운다
       clearTimeout(noticeT);
       noticeT = setTimeout(function tick() {
-        if (idle() && !onCalmTab()) { reloadSafely(); return; }
+        if (idle() && !onCalmTab()) { reloadSafely(true); return; }
         var b = document.getElementById("newVer");
         if (b) { b.hidden = false; b.textContent = onCalmTab() ? "🔄 다른 기기에서 바뀐 내용이 있어요 — 눌러서 새로 읽기 (적던 것은 저장됩니다)" : "🔄 다른 컴퓨터에서 바뀐 내용이 있어요 — 손을 떼면 자동으로 새로 읽습니다 (적던 것은 저장됩니다)";
           b.onclick = reloadSafely; }
@@ -337,7 +367,7 @@
           try { if (window.__CS_FLUSH) window.__CS_FLUSH(); } catch (e) {}
           flushNow();
           var t0 = Date.now();
-          (function w() { if ((inflight === 0 && !Object.keys(pending).length) || Date.now() - t0 > 6000) location.replace(location.pathname + "?nv=" + m[1] + location.hash); else setTimeout(w, 150); })();
+          (function w() { if ((inflight === 0 && !Object.keys(pending).length) || Date.now() - t0 > 6000) { rememberTab(); location.replace(location.pathname + "?nv=" + m[1] + location.hash); } else setTimeout(w, 150); })();
         }
         warnBar("csWarnVer", "🔄 새 버전(v0924-" + m[1] + ")이 나왔습니다 — " + (tried === m[1] ? "<u>눌러서 새로 열기</u> (적던 것은 저장됩니다)" : "적던 것은 저장하고 곧 새로 엽니다 · <u>지금 새로 열기</u>"), "ver");
         var b = document.getElementById("csWarnVer"); if (b) b.addEventListener("click", go);
@@ -377,6 +407,7 @@
             if (local !== null) { origRem.call(localStorage, k); changed = true; changedKeys.push(k); }
             return;
           }
+          if (REVK.test(k)) { var r3 = revOf(d.v); if (r3 != null && revK[k] != null && r3 < revK[k]) return; if (r3 != null) revK[k] = r3; }   // 늦게 온 옛 판 — 받지 않는다
           remote[k] = d.v;
           if (first && !dirtyBoot[k] && (k in pending) && d.v !== boot[k]) {
             // 서버 값을 받기 전에 이 화면이 저장한 게 있는데, 서버는 그 사이 다른 컴퓨터가 고쳐 둔 상태 — 서버가 맞다.
