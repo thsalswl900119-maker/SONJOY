@@ -295,13 +295,17 @@
     window.__CS_RELOAD = reloadSafely;
     document.addEventListener("DOMContentLoaded", function () { var el = document.getElementById("syncState"); if (el) el.addEventListener("click", reloadSafely); });
     var noticeT = null;
+    // 11/7 워크샵 동시 접속 「튕김」 — 예전엔 다른 기기가 무엇이든 저장하면 손 뗀 기기는 4초 뒤 화면 전체를 새로 읽었음(맨 위로 · 하위 화면 · 펼친 카드 풀림 · 사진 다시 받기).
+    // 화면이 그 자리에서 새 값으로 바꿔 끼우는 키(LIVE)는 새로 읽지 않고, 워크샵 · 벤치마킹 화면을 보는 중엔 어떤 키든 자동 새로고침 안 함(띠만)
+    var LIVE = /^cafesui\.(ws|bench|files|log|stock|todo|week|att|sched|offreq|daynotes|weekrep|xmas|qc|price|fruitcap|fruitprice|recipe|mgrchk)\b/;
+    function onCalmTab() { return ["tp9", "tp17"].some(function (id) { var p = document.getElementById(id); return p && !p.hidden; }); }
     function notifyChange() {
       // 다른 컴퓨터에서 바뀐 게 있다 — 쓰는 중이 아니면 바로 새로 읽고, 쓰는 중이면 위에 버튼만 띄운다
       clearTimeout(noticeT);
       noticeT = setTimeout(function tick() {
-        if (idle()) { reloadSafely(); return; }
+        if (idle() && !onCalmTab()) { reloadSafely(); return; }
         var b = document.getElementById("newVer");
-        if (b) { b.hidden = false; b.textContent = "🔄 다른 컴퓨터에서 바뀐 내용이 있어요 — 손을 떼면 자동으로 새로 읽습니다 (적던 것은 저장됩니다)";
+        if (b) { b.hidden = false; b.textContent = onCalmTab() ? "🔄 다른 기기에서 바뀐 내용이 있어요 — 눌러서 새로 읽기 (적던 것은 저장됩니다)" : "🔄 다른 컴퓨터에서 바뀐 내용이 있어요 — 손을 떼면 자동으로 새로 읽습니다 (적던 것은 저장됩니다)";
           b.onclick = reloadSafely; }
         noticeT = setTimeout(tick, 5000);   // 쓰는 중이면 5초마다 다시 본다
       }, 1200);
@@ -345,7 +349,14 @@
 
     setStatus("wait");
     firebase.auth().signInAnonymously().then(function () {
-      col.onSnapshot({ includeMetadataChanges: false }, function (snap) {
+      // 11/7 — 받는 줄은 cafesui.* 문서만 (사진 조각 file.* 7MB · 일지 저장 기록 hist.* 는 필요할 때 따로 읽음) — 휴대폰이 열 때마다 사진까지 다 받던 것
+      var FP = firebase.firestore.FieldPath, q = col;
+      try { q = col.where(FP.documentId(), ">=", "cafesui.").where(FP.documentId(), "<", "cafesui.\uf8ff"); } catch (e) { q = col; }
+      var listen = function (src) { return src.onSnapshot({ includeMetadataChanges: false }, onSnap, function (e) {
+        if (src !== col && e && e.code !== "permission-denied") { listen(col); return; }   // 거르는 받기가 안 되면 예전처럼 전체로
+        setStatus("err", e.code === "permission-denied" ? "규칙(ops) 게시 필요" : e.message); }); };
+      listen(q);
+      function onSnap(snap) {
         var fromCache = !!(snap.metadata && snap.metadata.fromCache);
         var dirty = first ? dirtyGet() : null;
         var memKeys = [];
@@ -416,10 +427,10 @@
           if (dataKeys.length) {
             // 열려 있는 화면에 알려서, 쓰는 중인 칸만 빼고 새 내용으로 바꿔 끼운다 (예전 내용으로 덮어쓰는 사고 방지)
             try { window.dispatchEvent(new CustomEvent("cs:remote", { detail: { keys: dataKeys } })); } catch (e) {}
-            notifyChange();
+            if (dataKeys.some(function (k) { return !LIVE.test(k); })) notifyChange();
           }
         }
-      }, function (e) { setStatus("err", e.code === "permission-denied" ? "규칙(ops) 게시 필요" : e.message); });
+      }
       // 못 보낸 게 남아 있으면 30초마다 다시 시도한다
       setInterval(function () {
         if (!ready) return;

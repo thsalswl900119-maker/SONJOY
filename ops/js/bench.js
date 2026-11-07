@@ -119,7 +119,7 @@
         others.map(function (w) { var e = ev[w], t = total(e); return '<tr><td class="' + col(w) + '"><b>' + esc(nim(w)) + "</b></td>" + ITEMS.map(function (it) { return "<td>" + esc(e[it[0]] || "—") + "</td>"; }).join("") + "<td><b>" + (t ? t.t : "—") + "</b></td></tr>"; }).join("") + "</table></div>" +
         others.map(function (w) { var e = ev[w]; if (!(e.rep || e.memo || e.take)) return ""; return '<div class="bnnote" style="--c:' + hex(w) + '"><b>' + esc(nim(w)) + "</b>" + (e.rep ? "<p>🍰 " + esc(e.rep) + "</p>" : "") + (e.memo ? "<p>" + esc(e.memo).replace(/\n/g, "<br>") + "</p>" : "") + (e.take ? "<p class='tk'>⭐ " + esc(e.take) + "</p>" : "") + "</div>"; }).join("") + "</div>";
     }
-    h += '<div class="bnfiles" data-fid="' + id + '"></div>';
+    h += '<div class="bnfiles" data-fid="' + id + '" data-ftitle="📸 디저트 품목 · 가게 사진" data-fmemo="예) 딸기 쇼트케이크 680엔 · 크림이 가벼움"></div>';
     h += '<div class="bnfoot">' + (s.by && s.by !== "일정표" ? "추가 " + esc(nim(s.by)) + " · " : MODE === "ws" ? "워크샵 일정표에서 · " : "") + '<button type="button" class="bnx" data-id="' + id + '">이 가게 빼기</button></div></div></details>';
     return h;
   }
@@ -145,6 +145,8 @@
       F.map(function (f) { return '<label class="rvrow ' + f[0] + '"><span>' + f[1] + "<small>" + f[2] + '</small></span><input type="text" class="bnom" data-lv="rv" data-id="rv:' + rvKey() + '" data-f="' + f[0] + '" value="' + esc(mine[f[0]] || "") + '"></label>'; }).join("") + "</div>";
     var ws = Object.keys(rv).filter(function (w) { return rv[w] && (rv[w].best || rv[w].worst || rv[w].apply); });
     if (ws.length) h += '<div class="rvall"><div class="bnoh">👀 다 같이 보기 — 발표 ' + ws.length + "명</div><div class='rvcols'>" + ws.map(function (w) { var e = rv[w]; return '<div class="rvc" style="--c:' + hex(w) + '"><b>' + esc(nim(w)) + "</b>" + F.map(function (f) { return e[f[0]] ? '<p class="' + f[0] + '"><i>' + f[1].split(" ")[0] + "</i>" + esc(e[f[0]]) + "</p>" : ""; }).join("") + "</div>"; }).join("") + "</div></div>";
+    // 11/7 사장님 「디저트 품목 사진도 넣을 수 있게」 — 그날(그 달) 리뷰에 다 같이 올리는 디저트 사진 · 사진마다 메모에 이름 · 가게 · 가격
+    h += '<div class="rvph"><div class="bnfiles rvfiles" data-fid="rv:' + rvKey() + '" data-ftitle="📸 디저트 품목 사진 (다 같이 · 각자 올리기)" data-fmemo="예) 가게 이름 · 디저트 이름 · 가격 · 한 줄 느낌"></div></div>';
     return h + "</div>";
   }
   function compareHtml(o, ids) {   // 👀 같이 보기 — 기념품 × 사람 점수
@@ -232,7 +234,7 @@
     ids.forEach(function (id) { Object.keys(o.ev[id] || {}).forEach(function (w) { who[w] = 1; }); }); oids.forEach(function (id) { Object.keys(o.oe[id] || {}).forEach(function (w) { who[w] = 1; }); });
     var w2 = wsVal("w2"), place = (w2.split(/\s*·\s*/)[0] || "").replace(/\s*\d.*$/, "");
     return { mode: MODE, year: year(), day: day, month: month, key: newsKey(), label: MODE === "ws" ? dayLabel(day) : (month === "all" ? "전체" : (+month.slice(5)) + "월"), q: MODE === "ws" ? QS[day] : null, place: place, theme: wsVal("w1"),
-      dateStr: MODE === "ws" ? mdw(wsVal("d" + day + "date")) : "", stores: S, om: O, rf: rf, rv: RV, takes: takes(o).filter(function (x) { return ids.indexOf(x.id) >= 0; }).map(function (x) { return { t: x.t, w: x.w, c: hex(x.w), n: x.n, s: x.s }; }),
+      dateStr: MODE === "ws" ? mdw(wsVal("d" + day + "date")) : "", stores: S, om: O, rf: rf, rv: RV, rvph: photos("rv:" + rvKey()), takes: takes(o).filter(function (x) { return ids.indexOf(x.id) >= 0; }).map(function (x) { return { t: x.t, w: x.w, c: hex(x.w), n: x.n, s: x.s }; }),
       people: Object.keys(who), cover: o.nw[newsKey()] || {}, fscope: fscope(), canEdit: !!me(), color: hex };
   };
   window.__CS_BN_SETCOVER = function (k, f, v) { var o = load(); o.nw[k] = o.nw[k] || {}; if (String(v).trim() === "") delete o.nw[k][f]; else o.nw[k][f] = v; o.nw[k].by = me(); o.nw[k].at = stamp(); store(o); };
@@ -271,11 +273,11 @@
     }
     h += '<div class="bncopy"><button type="button" class="skbtn" id="bnCopy">📋 ' + (MODE === "ws" ? day + "일차" : "평소 벤치마킹") + ' 정리 복사</button><button type="button" class="skbtn tgbtn" data-tg="bn">📨 텔레그램으로 보내기</button><span id="bnCopyMsg"></span></div></div>';
     root.innerHTML = h;
-    Array.prototype.forEach.call(root.querySelectorAll(".bncard[open] .bnfiles"), mountF);
+    Array.prototype.forEach.call(root.querySelectorAll(".bncard[open] .bnfiles, .rvbox .bnfiles"), mountF);
     if (VIEW === "news") { var nb = document.getElementById("bnNews"); if (nb && window.__CS_BN_NEWS) window.__CS_BN_NEWS(nb); else if (nb) nb.innerHTML = '<p class="bnnone">카드뉴스를 불러오는 중…</p>'; }
     renderSum();
   }
-  function mountF(el) { if (window.__CS_FILES && el) window.__CS_FILES.mount(el, { scope: fscope(), ref: el.dataset.fid, compact: true, title: el.dataset.ftitle || "📎 사진 · 파일", cat0: "photo" }); }
+  function mountF(el) { if (window.__CS_FILES && el) window.__CS_FILES.mount(el, { scope: fscope(), ref: el.dataset.fid, compact: true, title: el.dataset.ftitle || "📎 사진 · 파일", cat0: "photo", memoPh: el.dataset.fmemo || "" }); }
   function renderSum() {   // 워크샵 탭 한눈에 — 날마다 가게 수 · 평가 수 · 1등 (워크샵 벤치마킹만)
     if (!sum) return; var o = loadK("cafesui.bench." + year());
     sum.innerHTML = '<div class="bnsumrow">' + [1, 2, 3].map(function (d) {

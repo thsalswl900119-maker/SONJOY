@@ -31,6 +31,7 @@
     var evO = D.om.filter(function (s) { return s.avg != null || s.cs.length || s.memos.length || s.ph.length; });
     var ranked = D.stores.filter(function (s) { return s.avg != null; }).sort(function (a, b) { return b.avg - a.avg; });
     var coverPh = null; (evS.concat(evO)).some(function (s) { if (s.ph.length) { coverPh = s.ph; return true; } return false; });
+    if (!coverPh && D.rvph && D.rvph.length) coverPh = D.rvph;
     var title = D.cover.tt || ((D.place || (D.mode === "ws" ? D.year + " 워크샵" : "카페 탐방")) + (D.mode === "ws" ? "에서 배운 것" : " 벤치마킹"));
     var sub = D.cover.sub || (D.q ? "“" + D.q[1] + "”" : "같은 7가지 기준으로 직원이 함께 매긴 카페 노트");
     S.push({ k: "cover", ph: coverPh, h: function (n, t, f) {
@@ -79,6 +80,15 @@
           '<div class="nwfoot"><span>CAFE SUI · ' + esc(tag) + "</span><span>" + pad(n) + " / " + pad(t) + "</span></div></div>";
       } });
     });
+    // 11/7 디저트 품목 사진 — 한 장에 4장씩 (사진 메모 = 이름 · 가게 · 가격)
+    var RP = D.rvph || [];
+    for (var pi = 0; pi < Math.min(RP.length, 12); pi += 4) (function (grp, no) {
+      S.push({ k: "dph" + no, h: function (n, t) {
+        return '<div class="nwsl dph"><div class="nwhd"><span class="nwkick dark">DESSERT · ' + esc(tag) + '</span><h2>오늘 먹어 본 디저트' + (RP.length > 4 ? " " + (no + 1) : "") + '</h2><p>사진 아래 한 줄 = 이름 · 가게 · 가격</p></div>' +
+          '<div class="nwdph n' + grp.length + '">' + grp.map(function (f) { return '<figure><div class="nwdpi">' + imgTag(f, "nwimg") + "</div><figcaption>" + esc(cut(f.m || "", 34)) + "<small>" + esc(nim(f.by)) + "</small></figcaption></figure>"; }).join("") + "</div>" +
+          '<div class="nwfoot"><span>CAFE SUI · BENCHMARKING</span><span>' + pad(n) + " / " + pad(t) + "</span></div></div>";
+      } });
+    })(RP.slice(pi, pi + 4), pi / 4);
     if (D.rv && D.rv.length) S.push({ k: "rv", h: function (n, t) {
       return '<div class="nwsl rv"><div class="nwhd"><span class="nwkick dark">DESSERT REVIEW · ' + esc(tag) + '</span><h2>다 같이 펼쳐 놓고, 디저트 리뷰</h2><p>각자 고른 BEST · 별로였던 것 · 카페스이에 가져올 것</p></div>' +
         '<div class="nwrv n' + Math.min(4, D.rv.length) + '">' + D.rv.slice(0, 4).map(function (r) { return '<div style="--c:' + r.c + '"><b>' + esc(nim(r.w)) + "</b>" + (r.best ? '<p><i>⭐</i>' + esc(cut(r.best, 40)) + "</p>" : "") + (r.worst ? '<p><i>👎</i>' + esc(cut(r.worst, 34)) + "</p>" : "") + (r.apply ? '<p class="ap"><i>✨</i>' + esc(cut(r.apply, 40)) + "</p>" : "") + "</div>"; }).join("") + "</div>" +
@@ -125,6 +135,7 @@
       });
       L.push("");
     }
+    if (D.rvph && D.rvph.length) { L.push("■ 오늘 먹어 본 디저트"); S.forEach(function (s, i) { if (/^dph/.test(s.k)) L.push("[사진 " + pad(i + 1) + " · 디저트 사진 카드]"); }); D.rvph.forEach(function (f) { if (f.m) L.push("· " + f.m); }); L.push(""); }
     if (D.rv && D.rv.length) { L.push("■ 다 같이 펼쳐 놓고, 디저트 리뷰"); if (no("rv")) L.push("[사진 " + pad(no("rv")) + " · 디저트 리뷰 카드]"); D.rv.forEach(function (r) { L.push("· " + nim(r.w) + (r.best ? " ⭐ " + r.best : "") + (r.worst ? " / 👎 " + r.worst : "") + (r.apply ? " / ✨ " + r.apply : "")); }); L.push(""); }
     var TK = D.takes.filter(function (x) { return x.t; });
     if (TK.length || D.rf.length) { L.push("■ 카페스이에 가져올 것"); if (no("end")) L.push("[사진 " + pad(no("end")) + " · 마무리 카드]"); TK.forEach(function (x) { L.push("✔ " + x.t); }); D.rf.forEach(function (x) { L.push("“" + x.t.replace(/\n+/g, " ") + "” — " + nim(x.w)); }); L.push(""); }
@@ -139,7 +150,7 @@
   }
   function loadFull(D, el) {   // 카드 안 사진을 원본 크기로 바꿔 끼움
     var F = window.__CS_FILES; if (!F) return Promise.resolve();
-    var all = {}; D.stores.concat(D.om).forEach(function (s) { s.ph.forEach(function (f) { all[f._id] = f; }); });
+    var all = {}; D.stores.concat(D.om).forEach(function (s) { s.ph.forEach(function (f) { all[f._id] = f; }); }); (D.rvph || []).forEach(function (f) { all[f._id] = f; });
     var ps = Array.prototype.map.call(el.querySelectorAll("img[data-full]"), function (im) {
       var id = im.dataset.full, f = all[id]; if (!f) return null;
       if (full[id]) { if (im.getAttribute("src") !== full[id]) im.src = full[id]; return null; }
