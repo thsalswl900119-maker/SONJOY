@@ -38,6 +38,21 @@
   function today() { var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
   function mdw(s) { var m = String(s || "").match(/^(\d{4})-(\d{2})-(\d{2})$/); if (!m) return ""; var d = new Date(+m[1], +m[2] - 1, +m[3]); return (+m[2]) + "/" + (+m[3]) + "(" + WD[d.getDay()] + ")"; }
   function total(e) { var t = 0, n = 0; ITEMS.forEach(function (it) { var v = parseFloat(e && e[it[0]]); if (!isNaN(v)) { t += v; n++; } }); return n ? { t: t, n: n } : null; }
+  // 11/8 · 워크샵 → 벤치마킹 바로 가기 (워크샵 머리 · 떠 있는 단추 · 한눈에 요약) — 워크샵 벤치마킹으로, 여행 당일이면 그날 일차로
+  function tripDay() { var t = today(); for (var d = 1; d <= 4; d++) if (wsVal("d" + d + "date") === t) return d; return 0; }
+  window.__CS_BN_TRIPDAY = tripDay;
+  window.__CS_BN_GO = function () {
+    MODE = "ws"; try { localStorage.setItem("cafesui.ui.bnmode", "ws"); } catch (e) {}
+    var td = tripDay(); if (td) day = td;
+    openSet = {}; animAt = 0;
+    var t = document.querySelector('.tab[data-p="tp17"]'); if (t) t.click();
+    window.scrollTo(0, 0); render();
+  };
+  function paintGo() { var sb = document.getElementById("wsBnGoSub"), fb = document.getElementById("wsBnFab"), td = tripDay();
+    if (sb) sb.textContent = td ? "오늘 " + td + "일차 가게 평가하기" : "가게 평가 · 디저트 리뷰 · 기념품";
+    if (fb) fb.textContent = td ? "🔎 오늘 " + td + "일차 벤치마킹" : "🔎 벤치마킹"; }
+  document.addEventListener("click", function (e) { if (e.target.closest && e.target.closest('.tab[data-p="tp9"]')) setTimeout(paintGo, 300); });
+  setInterval(paintGo, 60000); setTimeout(paintGo, 1500);
   function wsVal(k) { var el = document.querySelector('.wsin[data-k="' + k + '"]'); return el ? (el.value || "").trim() : ""; }
   function dayLabel(d) { var v = wsVal("d" + d + "date"); return d + "일차" + (v ? " · " + mdw(v) : ""); }
   function seedDay(o, d) {   // 워크샵 일정표에서 ⭐ 붙은 곳 → 가게 목록 (빈 날만 · 같은 id라 여러 기기가 동시에 깔아도 겹치지 않음)
@@ -286,7 +301,7 @@
       var r = rankOf(o, ids)[0];
       return '<div class="bnsumc"><b>' + esc(dayLabel(d)) + " · " + QS[d][0] + "</b><span>가게 " + ids.length + "곳 · 평가 " + n + "건</span>" + (r ? "<span>🏆 " + esc(o.st[r.id].n) + " <em>" + r.a.v.toFixed(1) + "</em></span>" : "<span class='none'>아직 평가 없음</span>") + "</div>";
     }).join("") + '</div><button type="button" class="skbtn prim" id="bnGo">🔎 벤치마킹 탭에서 평가 · 메모하기</button>';
-    var go = document.getElementById("bnGo"); if (go) go.onclick = function () { MODE = "ws"; try { localStorage.setItem("cafesui.ui.bnmode", "ws"); } catch (e) {} var t = document.querySelector('.tab[data-p="tp17"]'); if (t) { t.click(); window.scrollTo(0, 0); } render(); };
+    var go = document.getElementById("bnGo"); if (go) go.onclick = function () { window.__CS_BN_GO(); };
   }
   window.__CS_BN_TEXT = function () { return copyText(load()); };   // 📨 텔레그램 (tg.js)
   function copyText(o) {

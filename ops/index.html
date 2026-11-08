@@ -3381,7 +3381,7 @@ input,select,textarea{border-radius:var(--r3)!important}
 
 <div class="savebar" id="saveBar">
   <button type="button" class="saveall" id="saveAll">💾 저장</button>
-  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-331</i></span>
+  <span class="sv">적는 즉시 저장되지만, 나가기 전에 한 번 눌러 주세요 <i id="saveState">저장됨</i> <i id="syncState" class="syncst off" title="누르면 새로 읽습니다">☁</i> <i id="verTag" class="vertag" title="이 화면의 버전 · 컴퓨터마다 같아야 합니다">v0924-332</i></span>
   <span class="sep"></span>
   <span class="svlab">내 컴퓨터에 따로 저장</span>
   <span id="saveBtns"></span>
@@ -3959,11 +3959,13 @@ input,select,textarea{border-radius:var(--r3)!important}
     <label class="lgdate">몇 년도 워크샵
       <input type="number" id="wsYear" class="dinp" min="2025" max="2040" step="1"></label>
     <span class="lgmsg" id="wsMsg"></span>
+    <button type="button" class="wsbngo" id="wsBnGo" onclick="window.__CS_BN_GO&amp;&amp;window.__CS_BN_GO()">🔎 벤치마킹 바로 가기<small id="wsBnGoSub">가게 평가 · 디저트 리뷰 · 기념품</small></button>
     <button type="button" class="bkmini" data-pre="ws" data-label="워크샵"><svg viewBox="0 0 24 24" class="bkmi" aria-hidden="true"><path d="M5 3h11l3 3v15H5z"/><path d="M8 3v6h7V3"/><path d="M8 13h8v8H8z"/></svg><span>워크샵 백업</span></button>
   </div>
 
   <div class="wspres" id="wsPres" hidden></div>
   <nav class="wssteps" id="wsNav" role="tablist" aria-label="워크샵 화면"></nav>
+  <button type="button" class="wsbnfab" id="wsBnFab" onclick="window.__CS_BN_GO&amp;&amp;window.__CS_BN_GO()" aria-label="벤치마킹 바로 가기">🔎 벤치마킹</button>
   <div class="wspane" data-w="sum"><div id="wsHero"></div>
   <h3 class="subhead">📮 지난 워크샵 <small class="bnsub">누르면 그 해 워크샵으로 넘어가요</small></h3>
   <div class="wpgrid"><button type="button" class="wpcard" data-y="2025"><div class="wph"><b>25.11</b>도쿄<em class="wpgo">눌러서 열기</em></div><div class="wpt">카페스이의 치즈케이크와 진정한 말차를 찾아서</div><div class="wpm">3명 · 3박 4일 (11/10~13)</div><div class="wpn">회비 1인 100,000엔 · 카페 지출 2,066,927원 · 3일 총 경비 290,767엔. 회의 4번.</div></button><button type="button" class="wpcard" data-y="2026"><div class="wph"><b>26.11</b>후쿠오카<em class="wpgo">눌러서 열기</em></div><div class="wpt">협력으로 만드는 진짜 오래 팔 수 있는 카페스이의 그것</div><div class="wpm">4명 · 2박 3일 (11/9~11)</div><div class="wpn">경비 아침·점심·저녁 각 10만원 + 교통비 = 총 80만원. 회의 3번 + 최종 점검.</div></button></div>
@@ -4043,6 +4045,7 @@ input,select,textarea{border-radius:var(--r3)!important}
   <div class="shead"><h2>🔎 벤치마킹</h2><span class="en">benchmarking</span>
     <span class="sub">✈ 워크샵 때와 ☕ 평소(워크샵 아닐 때)를 나눠서 — 가게마다 사람별 7항목 /10 · 사진 · 메모 · ⭐ 카페스이에 가져올 것을 끝까지 챙기기 · 적는 즉시 저장</span></div>
   <div class="tnotice"><div class="tnhead">🔎 벤치마킹 원칙</div><ul><li><b>벤치마킹은 <mark>하루에 끝낸다 (5~6군데)</mark></b><span>가게마다 같은 7항목으로 점수를 매겨야 비교가 됩니다</span></li><li><b><mark>직원 관찰보다 손님 관찰</mark> 30분</b><span>무엇을 많이 사 가나 · 얼마나 머무나 · 무엇을 찍나</span></li><li><b>평점을 내봐야 <mark>내 자신을 돌아볼 수 있다</mark></b><span>장점을 볼 수 있는 눈이 부자가 되는 눈이다</span></li></ul></div>
+  <button type="button" class="wsbnback" id="bnWsBack" onclick="var t=document.querySelector('.tab[data-p=&quot;tp9&quot;]');if(t){t.click();window.scrollTo(0,0);}">← 워크샵으로 돌아가기</button>
   <div class="bnbox" id="bnBox"></div>
 </section></div><div class="panel" id="tp10" role="tabpanel" hidden data-lazy="tabs/tp10.html"><div class="lazyload">불러오는 중…</div></div><div class="panel" id="tp13" role="tabpanel" hidden><section>
   <div class="shead"><h2>제과제빵</h2><span class="en">baking</span>
@@ -4112,20 +4115,20 @@ input,select,textarea{border-radius:var(--r3)!important}
 </footer>
 </div>
 
-<script src="js/chrome.js?v=v0924-331"></script>
+<script src="js/chrome.js?v=v0924-332"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="js/drag.js?v=v0924-331"></script>
-<script src="js/sync.js?v=v0924-331"></script>
-<script src="js/holidays.js?v=v0924-331"></script>
-<script src="js/sched.js?v=v0924-331"></script>
-<script src="js/app.js?v=v0924-331"></script>
-<script src="js/fruit.js?v=v0924-331"></script>
-<script src="js/mobile.js?v=v0924-331"></script>
-<script src="js/qc.js?v=v0924-331"></script>
-<script src="js/loghist.js?v=v0924-331"></script>
+<script src="js/drag.js?v=v0924-332"></script>
+<script src="js/sync.js?v=v0924-332"></script>
+<script src="js/holidays.js?v=v0924-332"></script>
+<script src="js/sched.js?v=v0924-332"></script>
+<script src="js/app.js?v=v0924-332"></script>
+<script src="js/fruit.js?v=v0924-332"></script>
+<script src="js/mobile.js?v=v0924-332"></script>
+<script src="js/qc.js?v=v0924-332"></script>
+<script src="js/loghist.js?v=v0924-332"></script>
 <script>/* 같은 기기에 시스템 창(탭)이 두 개 이상 — 10/23 사고(가게 컴퓨터 창 여러 개에서 같은 일지를 써서 글이 세 번 겹치고 지워짐) 막기 */
 (function(){if(!window.BroadcastChannel)return;var id=Math.random().toString(36).slice(2),bc=new BroadcastChannel("cafesui.tabs"),seen={},band=null;
 function paint(){var now=Date.now(),n=Object.keys(seen).filter(function(k){return now-seen[k]<40000;}).length;
@@ -4134,7 +4137,7 @@ else if(!n&&band){band.remove();band=null;}}
 bc.onmessage=function(e){var d=e.data||{};if(!d.id||d.id===id)return;seen[d.id]=Date.now();if(d.t==="hi")bc.postMessage({t:"here",id:id});if(d.t==="bye")delete seen[d.id];paint();};
 bc.postMessage({t:"hi",id:id});setInterval(function(){bc.postMessage({t:"here",id:id});paint();},15000);
 window.addEventListener("pagehide",function(){try{bc.postMessage({t:"bye",id:id});}catch(e){}});})();</script>
-<script src="js/price.js?v=v0924-331"></script>
+<script src="js/price.js?v=v0924-332"></script>
 <!-- csonly:start -->
 <script>
 // 🔥 카페스이 모토 — 모든 화면 맨 위에(10/21 사장님 「모토처럼 매 섹션에 다 넣어줘」 · 문구 그대로) · 나중에 불러오는 탭이 내용을 바꿔도 다시 붙임
@@ -6102,11 +6105,22 @@ body.xmplprint #xmProdPane .xmtw{overflow:visible}body.xmplprint #xmProdPane .st
 .lostbox .lbb button{min-height:38px;font-size:14px;padding:6px 12px;border-radius:8px;border:1px solid #8F5A22;background:#fff;color:#5A3A16;font-weight:700;cursor:pointer}
 .lostbox .lbb button[data-a="put"]{background:#8F5A22;color:#fff}
 @media print{.lostbox{display:none!important}}
+
+/* 11/8 · 워크샵 → 벤치마킹 바로 가기 */
+#tp9 .wsbngo{display:inline-flex;flex-direction:column;align-items:flex-start;gap:2px;min-height:48px;padding:8px 16px;border:0;border-radius:12px;background:#8C1D18;color:#fff;font-size:16.5px;font-weight:800;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.18)}
+#tp9 .wsbngo small{font-size:13px;font-weight:600;color:#FFE9C7}
+#tp9 .wsbngo:hover{background:#6E1612}
+#tp9 .wsbngo:focus-visible,#tp9 .wsbnfab:focus-visible,#tp17 .wsbnback:focus-visible{outline:3px solid #E0A458;outline-offset:2px}
+#tp9 .wsbnfab{position:fixed;right:18px;bottom:22px;z-index:40;min-height:52px;padding:10px 18px;border:0;border-radius:999px;background:#8C1D18;color:#fff;font-size:16px;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.28)}
+html.mob #tp9 .wsbnfab{bottom:84px;right:12px}
+html.mkbd #tp9 .wsbnfab{display:none}
+#tp17 .wsbnback{margin:4px 0 10px;min-height:44px;padding:8px 14px;border:1px solid #8F5A22;border-radius:10px;background:#fff;color:#5A3A16;font-size:15px;font-weight:700;cursor:pointer}
+@media print{#tp9 .wsbnfab,#tp9 .wsbngo,#tp17 .wsbnback{display:none!important}}
 </style>
-<script src="js/stock.js?v=v0924-331"></script>
-<script src="js/mango.js?v=v0924-331"></script>
-<script src="js/fruitcap.js?v=v0924-331"></script>
-<script src="js/fruitprice.js?v=v0924-331"></script>
+<script src="js/stock.js?v=v0924-332"></script>
+<script src="js/mango.js?v=v0924-332"></script>
+<script src="js/fruitcap.js?v=v0924-332"></script>
+<script src="js/fruitprice.js?v=v0924-332"></script>
 <script>
   // 화면 표시 전용 — 직원 이름 뒤에 「님」을 붙인다. 저장되는 값(select value · data-n · localStorage)은 그대로.
   (function () {
@@ -6189,20 +6203,20 @@ body.xmplprint #xmProdPane .xmtw{overflow:visible}body.xmplprint #xmProdPane .st
   window.addEventListener("cs:remote", function () { setTimeout(mark, 400); });
 })();
 </script>
-<script src="js/presence.js?v=v0924-331"></script>
-<script src="js/weekrep.js?v=v0924-331"></script>
-<script src="js/recipe.js?v=v0924-331"></script>
-<script src="js/vault.js?v=v0924-331"></script>
-<script src="js/files.js?v=v0924-331"></script>
-<script src="js/bench.js?v=v0924-331"></script>
-<script src="js/bnnews.js?v=v0924-331"></script>
-<script src="js/wsui.js?v=v0924-331"></script>
-<script src="js/lostbox.js?v=v0924-331"></script>
+<script src="js/presence.js?v=v0924-332"></script>
+<script src="js/weekrep.js?v=v0924-332"></script>
+<script src="js/recipe.js?v=v0924-332"></script>
+<script src="js/vault.js?v=v0924-332"></script>
+<script src="js/files.js?v=v0924-332"></script>
+<script src="js/bench.js?v=v0924-332"></script>
+<script src="js/bnnews.js?v=v0924-332"></script>
+<script src="js/wsui.js?v=v0924-332"></script>
+<script src="js/lostbox.js?v=v0924-332"></script>
 <script>/* 월말회의 「잘한 것」 한 칸으로 (10/22 사장님 「합쳐줘」) — 예전 ② ③ 칸은 글이 있는 달만 보임 */
 (function(){function p(){document.querySelectorAll("#mtForm .frow.mtold").forEach(function(r){var t=r.querySelector(".fin");r.hidden=!(t&&t.value.trim());});}
 var m=document.getElementById("mtMonth");if(m)m.addEventListener("change",function(){setTimeout(p,80);});
 window.addEventListener("cs:remote",function(){setTimeout(p,400);});document.addEventListener("click",function(e){if(e.target.closest('.tab[data-p="tp5"]'))setTimeout(p,80);});setTimeout(p,600);})();</script>
-<script src="js/monthlog.js?v=v0924-331"></script>
-<script src="js/xmas.js?v=v0924-331"></script>
-<script src="js/tg.js?v=v0924-331"></script>
+<script src="js/monthlog.js?v=v0924-332"></script>
+<script src="js/xmas.js?v=v0924-332"></script>
+<script src="js/tg.js?v=v0924-332"></script>
 </body></html>
