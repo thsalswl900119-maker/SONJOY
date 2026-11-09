@@ -50,8 +50,11 @@
     var bootBase = {}; Object.keys(baseOf).forEach(function (k) { bootBase[k] = baseOf[k]; });
     function baseSave() { safeSet(BASEK, JSON.stringify(baseOf)); }
     function baseDel(k) { if (k in baseOf) { delete baseOf[k]; baseSave(); } }
-    function baseMark(k) {
+    function baseMark(k, prev) {
       if (k in baseOf) return;
+      // 11/9 — 기기 저장이 서버 값을 못 받은 채(받는 줄에서 건너뜀 · 기기 저장 꽉 참 등) 옛 글로 남아 있으면, 서버 값을 기준으로 삼는 순간
+      // 옛 글 전체가 「이 기기에서 고친 것」이 되어 남이 바꾼 칸을 되돌렸음(워크샵 벤치마킹 이름이 모모토세로 되돌아감) → 고치기 바로 전 이 기기 값을 기준으로
+      if (prev != null && objOf(prev)) { baseOf[k] = prev; if (String(prev).length < 200000) baseSave(); return; }
       baseOf[k] = (k in remote) ? (remote[k] == null ? "" : remote[k]) : (k in boot ? boot[k] : "");
       if (String(baseOf[k]).length < 200000) baseSave();
     }
@@ -152,10 +155,11 @@
       if (this === localStorage && MEMK.test(k)) { mem[k] = String(v); if (!applying) queue(k, String(v)); return; }
       if (this !== localStorage) return origSet.call(this, k, v);
       // 기기가 꽉 차도 서버로는 꼭 보낸다 (자리를 만들어 다시 시도 · 그래도 안 되면 서버에만)
+      var prevLocal = null; try { if (k.indexOf("cafesui.") === 0 && !(k in baseOf)) prevLocal = localStorage.getItem(k); } catch (e) {}
       var okLocal = safeSet(k, v);
       if (applying || k.indexOf("cafesui.") !== 0 || LOCAL_ONLY.test(k)) { if (!okLocal) throw new DOMException("기기 저장 공간이 꽉 찼습니다", "QuotaExceededError"); return; }
       if (!ready && boot[k] === String(v)) return;   // 아직 서버 값을 못 받았는데 열 때 값 그대로 다시 저장한 것 — 서버 값을 기다린다
-      baseMark(k); markDirty(k); queue(k, String(v));
+      baseMark(k, prevLocal); markDirty(k); queue(k, String(v));
     };
     Storage.prototype.removeItem = function (k) {
       origRem.call(this, k);
