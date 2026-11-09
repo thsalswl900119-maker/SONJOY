@@ -2165,6 +2165,32 @@
   })();
 
   // 워크샵 — 해마다 새로 쓴다
+  // 11/9 · 워크샵 지출 줄 읽기 — 금액 · 엔/원(출발 전)/잔액 · 쓴 곳 종류 · 카드/현금 (app.js total · wscost.js 같이 씀)
+  window.__CS_WSROW = function (tr) {
+    var v = function (s) { var el = tr.querySelector('.wsin[data-k$="' + s + '"]'); return el ? String(el.value || "").trim() : ""; };
+    var d = v("d"), n = v("n"), m = v("m"), raw = v("a").replace(/[,\s¥￥엔원₩]/g, "");
+    var a = raw === "" ? null : parseFloat(raw); if (a != null && isNaN(a)) a = null;
+    var nm = n + " " + m, cur = "yen";
+    if (/잔액|남은\s*돈/.test(d + " " + n) || /^(현재\s*)?남은\s*잔액|^잔액/.test(m)) cur = "bal";
+    else if (/원화|₩|한국\s*돈|\d\s*원(?![가-힣])/.test(nm + " " + v("a"))) cur = "krw";
+    else {
+      var md = /^(\d{1,2})\s*\/\s*(\d{1,2})/.exec(d), sd = document.querySelector('.wsdin[data-k="d1date"]');
+      var s0 = sd && /^(\d{4})-(\d{2})-(\d{2})/.exec(sd.value || "");
+      if (md && s0) {
+        var tm = +s0[2], mm = +md[1], dd = +md[2], before = mm < tm || (mm === tm && dd < +s0[3]);
+        if (mm - tm > 6) before = true;
+        if (tm - mm > 6) before = false;
+        if (before) cur = "krw";
+      }
+    }
+    var cat = /택시|버스|지하철|전철|기차|신칸센|교통|역에서|까지|항공|비행|공항|스이카|IC\s*카드|렌트|주유/.test(nm) ? "move"
+      : /저녁|점심|아침|브런치|식사|데판|우나기|라멘|스시|초밥|정식|야키|이자카야|모츠|규카츠|돈카츠|밥/.test(nm) ? "food"
+      : /오미야게|기념품|선물|쇼핑|드럭|돈키|마트|안대|잡화/.test(nm) ? "shop"
+      : /커피|카페|빵|케이크|디저트|간식|껌|샌드위치|계란|아이스|음료|주스|(^|\s)물(\s|$)|편의점/.test(nm) ? "snack"
+      : /보관|숙소비|호텔|에어비앤비|코인\s*락커|락커/.test(nm) ? "stay" : "etc";
+    var pay = /💳|충전\s*카드|카드/.test(m) ? "card" : /💴|현금/.test(m) ? "cash" : "";
+    return { a: a, cur: cur, cat: cat, pay: pay, d: d, n: n, m: m };
+  };
   (function () {
     var yearEl = document.getElementById("wsYear");
     if (!yearEl) return;
@@ -2676,16 +2702,19 @@
       if (msg) msg.textContent = n ? n + "개 작성됨" : "";
     }
     function total() {
-      var sum = 0, any = false;
+      // 11/9 · 「잔액」 줄은 지출이 아님 · 출발 전(원화) 줄은 엔과 따로 더함 (window.__CS_WSROW)
+      var sum = 0, any = false, kr = 0;
       document.querySelectorAll(".wstable.cost").forEach(function (t) {
-        var s2 = 0, a2 = false;
-        t.querySelectorAll(".wsin.cost").forEach(function (el) {
-          var v = parseFloat(String(el.value).replace(/,/g, ""));
-          if (!isNaN(v)) { s2 += v; a2 = true; sum += v; any = true; }
+        var s2 = 0, a2 = false, k2 = 0;
+        t.querySelectorAll("tbody tr").forEach(function (tr) {
+          var r = window.__CS_WSROW(tr); if (!r || r.a == null || r.cur === "bal") return;
+          if (r.cur === "krw") { k2 += r.a; kr += r.a; return; }
+          s2 += r.a; a2 = true; sum += r.a; any = true;
         });
-        var c = t.querySelector(".wstotal"); if (c) c.textContent = a2 ? s2.toLocaleString("ko-KR") : "—";
+        var c = t.querySelector(".wstotal"); if (c) c.textContent = (a2 ? s2.toLocaleString("ko-KR") : (k2 ? "" : "—")) + (k2 ? (a2 ? " + " : "") + "₩" + k2.toLocaleString("ko-KR") : "");
       });
-      totEl.textContent = any ? sum.toLocaleString("ko-KR") : "—";
+      totEl.textContent = (any ? sum.toLocaleString("ko-KR") : (kr ? "" : "—")) + (kr ? (any ? " + " : "") + "₩" + kr.toLocaleString("ko-KR") + " (출발 전)" : "");
+      try { window.dispatchEvent(new Event("cs:wscost")); } catch (e) {}
       // 일차별 날짜를 제목 옆에
       [1, 2, 3].forEach(function (d) {
         var di = document.querySelector('.wsdin[data-k="d' + d + 'date"]'), h = document.querySelector('.wsdayd[data-cd="' + d + '"]');
