@@ -2171,9 +2171,10 @@
     var d = v("d"), n = v("n"), m = v("m"), raw = v("a").replace(/[,\s¥￥엔원₩]/g, "");
     var a = raw === "" ? null : parseFloat(raw); if (a != null && isNaN(a)) a = null;
     var nm = n + " " + m, cur = "yen", u = v("u");
-    if (u === "원" && !/잔액|남은\s*돈/.test(d + " " + n)) cur = "krw";
-    else if (u === "엔" && !/잔액|남은\s*돈/.test(d + " " + n)) cur = "yen";
-    else if (/잔액|남은\s*돈/.test(d + " " + n) || /^(현재\s*)?남은\s*잔액|^잔액/.test(m)) cur = "bal";
+    if (/잔액|남은\s*돈/.test(d + " " + n) || /^(현재\s*)?남은\s*잔액|^잔액/.test(m)) cur = "bal";
+    else if (/나눠\s*주|나눠\s*줌|나눠준|돌려주|돌려준|분배/.test(d + " " + n)) cur = "give";
+    else if (u === "원") cur = "krw";
+    else if (u === "엔") cur = "yen";
     else if (/원화|₩|한국\s*돈|\d\s*원(?![가-힣])/.test(nm + " " + v("a"))) cur = "krw";
     else {
       var md = /^(\d{1,2})\s*\/\s*(\d{1,2})/.exec(d), sd = document.querySelector('.wsdin[data-k="d1date"]');
@@ -2213,9 +2214,11 @@
         var b = tr.querySelector(".wscurb"), h = tr.querySelector(".wscur"); if (!b || !h) return;
         var r = window.__CS_WSROW(tr), set = h.value === "엔" || h.value === "원";
         var krw = r && r.cur === "krw", bal = r && r.cur === "bal";
-        b.textContent = bal ? "잔액" : (krw ? "₩" : "¥");
+        var give = r && r.cur === "give";
+        b.textContent = bal ? "잔액" : give ? "나눔" : (krw ? "₩" : "¥");
+        b.classList.toggle("give", !!give);
         b.classList.toggle("krw", !!krw); b.classList.toggle("bal", !!bal); b.classList.toggle("auto", !set);
-        b.title = bal ? "잔액 줄 — 지출 합계에 안 들어가요" : (krw ? "원화(₩)" : "엔화(¥)") + (set ? " · 직접 고름" : " · 자동(날짜 · 글로 판단)") + " — 누르면 바꾸기";
+        b.title = give ? "나눠 준 돈 — 지출 합계엔 안 넣고 공금 잔액에서 빼요" : bal ? "잔액 줄 — 지출 합계에 안 들어가요" : (krw ? "원화(₩)" : "엔화(¥)") + (set ? " · 직접 고름" : " · 자동(날짜 · 글로 판단)") + " — 누르면 바꾸기";
       });
     }
     document.addEventListener("click", function (e) {
@@ -2735,13 +2738,14 @@
       // 11/9 · 「잔액」 줄은 지출이 아님 · 출발 전(원화) 줄은 엔과 따로 더함 (window.__CS_WSROW)
       var sum = 0, any = false, kr = 0;
       document.querySelectorAll(".wstable.cost").forEach(function (t) {
-        var s2 = 0, a2 = false, k2 = 0;
+        var s2 = 0, a2 = false, k2 = 0, g2 = 0;
         t.querySelectorAll("tbody tr").forEach(function (tr) {
           var r = window.__CS_WSROW(tr); if (!r || r.a == null || r.cur === "bal") return;
+          if (r.cur === "give") { g2 += r.a; return; }
           if (r.cur === "krw") { k2 += r.a; kr += r.a; return; }
           s2 += r.a; a2 = true; sum += r.a; any = true;
         });
-        var c = t.querySelector(".wstotal"); if (c) c.textContent = (a2 ? "¥" + s2.toLocaleString("ko-KR") : (k2 ? "" : "—")) + (k2 ? (a2 ? " + " : "") + "₩" + k2.toLocaleString("ko-KR") : "");
+        var c = t.querySelector(".wstotal"); if (c) c.textContent = (a2 ? "¥" + s2.toLocaleString("ko-KR") : (k2 ? "" : "—")) + (k2 ? (a2 ? " + " : "") + "₩" + k2.toLocaleString("ko-KR") : "") + (g2 ? " · 나눠 줌 ¥" + g2.toLocaleString("ko-KR") : "");
       });
       totEl.textContent = (any ? "¥" + sum.toLocaleString("ko-KR") : (kr ? "" : "—")) + (kr ? (any ? " + " : "") + "₩" + kr.toLocaleString("ko-KR") : "");
       paintCur();

@@ -25,10 +25,11 @@
     return Array.prototype.slice.call(t.querySelectorAll("tbody tr")).map(window.__CS_WSROW).filter(function (r) { return r && (r.a != null || r.n); });
   }
   function dayData(d) {
-    var R = rows(d), o = { d: d, yen: 0, card: 0, cash: 0, other: 0, krw: [], bal: [], cat: {}, items: {}, n: 0 };
+    var R = rows(d), o = { d: d, give: 0, gv: [], yen: 0, card: 0, cash: 0, other: 0, krw: [], bal: [], cat: {}, items: {}, n: 0 };
     R.forEach(function (r) {
       if (r.a == null) return;
       if (r.cur === "bal") { o.bal.push(r); return; }
+      if (r.cur === "give") { o.give += r.a; o.gv.push(r); return; }
       if (r.cur === "krw") { o.krw.push(r); return; }
       o.yen += r.a; o.n++;
       if (r.pay === "card") o.card += r.a; else if (r.pay === "cash") o.cash += r.a; else o.other += r.a;
@@ -55,7 +56,7 @@
       return '<span><i class="wgdot c-' + c[0] + '"></i>' + c[1] + " " + c[2] + ' <b>¥' + f(v) + '</b> ' + Math.round(v / all.yen * 100) + '%</span>';
     }).join("") + '</div>' + (krw.length ? '<div class="wgkrw">₩ 원화로 쓴 돈 (엔 합계에 안 넣음): ' + krw.map(function (r) { return esc(short(r.n || r.m)) + " ₩" + f(r.a); }).join(" · ") + '</div>' : '') + '</div>';
     h += '<div class="wgdays">' + D.map(function (o) {
-      if (!o.yen && !o.bal.length) return '<div class="wgday empty"><div class="wgdh"><b>' + o.d + '일차</b><span>' + esc(dayLabel(o.d)) + '</span></div><p class="wgnone">아직 적은 지출 없음</p></div>';
+      if (!o.yen && !o.bal.length && !o.give) return '<div class="wgday empty"><div class="wgdh"><b>' + o.d + '일차</b><span>' + esc(dayLabel(o.d)) + '</span></div><p class="wgnone">아직 적은 지출 없음</p></div>';
       var max = 0; CATS.forEach(function (c) { max = Math.max(max, o.cat[c[0]] || 0); });
       var paid = (o.card ? '<span class="wgpay card">💳 충전카드 ¥' + f(o.card) + '</span>' : '') + (o.cash ? '<span class="wgpay cash">💴 공금 현금 ¥' + f(o.cash) + '</span>' : '') + (o.other ? '<span class="wgpay">결제 안 적음 ¥' + f(o.other) + '</span>' : '');
       return '<div class="wgday"><div class="wgdh"><b>' + o.d + '일차</b><span>' + esc(dayLabel(o.d)) + '</span><em>¥' + f(o.yen) + '</em></div>' +
@@ -68,6 +69,7 @@
             '<ul class="wgit">' + it.map(function (r) { return '<li>' + payTag(r.pay) + '<span>' + esc(short(r.n || r.m || "(이름 없음)")) + '</span><b>' + f(r.a) + '</b></li>'; }).join("") + '</ul></div>';
         }).join("") +
         (o.krw.length ? '<p class="wgkrw">₩ 원화: ' + o.krw.map(function (r) { return esc(short(r.n || r.m)) + " ₩" + f(r.a); }).join(" · ") + '</p>' : '') +
+        (o.give ? '<p class="wgkrw">↩ 나눠 준 돈 ¥' + f(o.give) + ' (' + o.gv.map(function (r) { return esc(short(r.n)); }).join(' · ') + ') — 지출 합계엔 안 넣음</p>' : '') +
         (o.bal.length ? '<p class="wgbalrow">📌 이 표에 적힌 잔액 ' + o.bal.map(function (r) { return "¥" + f(r.a) + (r.m ? " (" + esc(short(r.m)) + ")" : ""); }).join(" · ") + ' — 지출 합계엔 안 넣었어요</p>' : '') +
         '</div>';
     }).join("") + '</div>';
@@ -80,43 +82,41 @@
     D.forEach(function (o) {
       var d = o.d, calc = document.querySelector('#wsBal .wsbalcalc[data-calc="' + d + '"]'), res = document.querySelector('#wsBal .wsbalres[data-res="' + d + '"]'), dd = document.querySelector('#wsBal .wsbaldd[data-bd="' + d + '"]');
       if (dd) dd.textContent = dayLabel(d);
-      var t = num("bal" + d + "t"), k = num("bal" + d + "k"), rp = num("bal" + d + "rp"), refund = rp && P ? rp * P : 0;
+      var t = num("bal" + d + "t"), k = num("bal" + d + "k"), rp = num("bal" + d + "rp"), refund = (rp && P ? rp * P : 0) + o.give;
       refundAll += refund;
       if (start == null) {
         if (calc) calc.innerHTML = '<p class="wbnote">맨 위 「시작 공금」을 적으면 장부상 남아야 할 돈이 계산돼요.</p>';
         if (res) res.innerHTML = "";
         return;
       }
-      var expect = start - o.yen, bookEnd = expect - refund;
+      // 11/9 사장님 「따로 나눠 주는 돈은 그 날 안에서 맞춰야」 — 나눠 준 돈은 그 날 시작에서 빼고, 세어 본 돈과 비교
+      var expect = start - refund - o.yen, bookEnd = expect;
       if (calc) calc.innerHTML =
         '<div class="wbl"><span>' + (d === 1 ? "시작 공금" : (d - 1) + "일차에서 넘어온 돈 (장부)") + '</span><b>¥' + f(start) + '</b></div>' +
+        (refund ? '<div class="wbl minus"><span>− 나눠 준 돈 (' + (rp && P ? '1인당 ¥' + f(rp) + ' × ' + P + '명' : '') + (rp && P && o.give ? ' + ' : '') + (o.give ? '지출 표 「나눔」 줄' : '') + ')</span><b>¥' + f(refund) + '</b></div>' : '') +
         '<div class="wbl minus"><span>− ' + d + '일차 엔 지출 (' + o.n + '건' + (o.card || o.cash ? ' · 💳 ' + f(o.card) + ' · 💴 ' + f(o.cash) : '') + ')</span><b>¥' + f(o.yen) + '</b></div>' +
-        '<div class="wbl eq"><span>= 장부대로라면 남아야 할 돈</span><b>¥' + f(expect) + '</b></div>';
+        '<div class="wbl eq"><span>= 장부대로라면 남아야 할 돈 (다음 날로)</span><b>¥' + f(expect) + '</b></div>';
       var h = "";
+      if (rp && !P) h += '<p class="wbnote">맨 위 「인원」을 적어 주세요 (1인당 × 인원으로 계산).</p>';
       if (t != null) {
         var diff = t - expect;
         h += '<div class="wbdiff ' + (Math.abs(diff) < 1 ? "ok" : "bad") + '">' + (Math.abs(diff) < 1 ? "✔ 장부와 딱 맞아요" : (diff < 0 ? "⚠ 실제 돈이 장부보다 ¥" + f(-diff) + " 적어요" : "⚠ 실제 돈이 장부보다 ¥" + f(diff) + " 많아요")) +
           '<small>세어 본 ¥' + f(t) + ' − 장부 ¥' + f(expect) + ' = ' + sg(diff) + (Math.abs(diff) >= 1 ? (diff < 0 ? " · 지출 표에 빠진 줄 · 금액 잘못 적은 줄 · 거스름돈을 확인해 보세요" : " · 두 번 적은 줄 · 아직 안 낸 돈이 있는지 확인해 보세요") : "") + '</small></div>';
         if (prevAct != null) {
-          var dayDiff = t - (prevAct - o.yen);
+          var dayDiff = t - (prevAct - refund - o.yen);
           if (Math.abs(dayDiff - diff) >= 1) h += '<p class="wbnote">그날만 따지면(전날 실제 남은 돈 ¥' + f(prevAct) + ' 에서 출발) ' + (Math.abs(dayDiff) < 1 ? "✔ 맞음" : sg(dayDiff) + "엔 차이") + '</p>';
         }
         if (k != null) h += '<p class="wbnote">그중 충전카드 ¥' + f(k) + ' · 현금은 ¥' + f(t - k) + ' 있어야 해요</p>';
-      } else h += '<p class="wbnote">위 「실제 남은 돈」에 세어 본 금액을 적으면 장부와 바로 맞춰 봐요.</p>';
-      o.bal.forEach(function (r) { var ref = d === 1 ? start : prevExp; h += '<p class="wbnote">📌 ' + d + '일차 지출 표에 적힌 잔액 ¥' + f(r.a) + (r.m ? ' (' + esc(r.m) + ')' : '') + (ref != null ? ' — ' + (d === 1 ? '시작 공금' : (d - 1) + '일차 장부(돌려주기 전)') + ' ¥' + f(ref) + '와 ' + sg(r.a - ref) : '') + ' · 지출 합계엔 안 넣었어요 (세어 본 돈은 「실제 남은 돈」 칸에)</p>'; });
-      if (refund) {
-        h += '<div class="wbl minus"><span>↩ 미리 돌려준 돈 (1인당 ¥' + f(rp) + ' × ' + P + '명)</span><b>¥' + f(refund) + '</b></div>' +
-          '<div class="wbl eq"><span>= 다음 날로 넘기는 돈 (장부)</span><b>¥' + f(bookEnd) + '</b></div>' +
-          (t != null ? '<div class="wbl"><span>실제로 남는 돈 (세어 본 돈 − 돌려준 돈)</span><b>¥' + f(t - refund) + '</b></div>' : '');
-      } else if (rp && !P) h += '<p class="wbnote">맨 위 「인원」을 적어 주세요 (1인당 × 인원으로 계산).</p>';
+      } else h += '<p class="wbnote">그 날 저녁 세어 본 돈(나눠 준 뒤 · 현금 + 충전카드)을 「실제 남은 돈」에 적으면 장부와 바로 맞춰 봐요.</p>';
+      o.bal.forEach(function (r) { h += '<p class="wbnote">📌 ' + d + '일차 지출 표에 적힌 잔액 ¥' + f(r.a) + (r.m ? ' (' + esc(r.m) + ')' : '') + ' — ' + (d === 1 ? '시작 공금' : (d - 1) + '일차 장부 마감') + ' ¥' + f(start) + '와 ' + (Math.abs(r.a - start) < 1 ? '✔ 같음' : sg(r.a - start)) + ' · 지출 합계엔 안 넣었어요</p>'; });
       if (res) res.innerHTML = h;
-      if (t != null) { prevAct = t - refund; lastAct = prevAct; }
+      if (t != null) { prevAct = t; lastAct = t; }
       lastBook = bookEnd; start = bookEnd; prevExp = expect;
     });
     if (sum) {
       if (f0 == null) { sum.innerHTML = ""; return; }
       var spent = D.reduce(function (a, o) { return a + o.yen; }, 0);
-      sum.innerHTML = '<span>엔 지출 합 <b>¥' + f(spent) + '</b></span>' + (refundAll ? '<span>돌려준 돈 <b>¥' + f(refundAll) + '</b></span>' : '') +
+      sum.innerHTML = '<span>엔 지출 합 <b>¥' + f(spent) + '</b></span>' + (refundAll ? '<span>나눠 준 돈 <b>¥' + f(refundAll) + '</b></span>' : '') +
         '<span>장부상 지금 남은 돈 <b>¥' + f(lastBook) + '</b></span>' + (lastAct != null ? '<span>실제 (마지막으로 센 날 기준) <b>¥' + f(lastAct) + '</b></span>' : '');
     }
   }
