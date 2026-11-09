@@ -2172,7 +2172,6 @@
     var a = raw === "" ? null : parseFloat(raw); if (a != null && isNaN(a)) a = null;
     var nm = n + " " + m, cur = "yen", u = v("u");
     if (/잔액|남은\s*돈/.test(d + " " + n) || /^(현재\s*)?남은\s*잔액|^잔액/.test(m)) cur = "bal";
-    else if (/나눠\s*주|나눠\s*줌|나눠준|돌려주|돌려준|분배/.test(d + " " + n)) cur = "give";
     else if (u === "원") cur = "krw";
     else if (u === "엔") cur = "yen";
     else if (/원화|₩|한국\s*돈|\d\s*원(?![가-힣])/.test(nm + " " + v("a"))) cur = "krw";
@@ -2186,7 +2185,9 @@
         if (before) cur = "krw";
       }
     }
-    var cat = /택시|버스|지하철|전철|기차|신칸센|교통|역에서|까지|항공|비행|공항|스이카|IC\s*카드|렌트|주유/.test(nm) ? "move"
+    // 11/9 사장님 「1/n 나누는 거는 2일차 지출로 그냥」 — 나눠 준 돈도 보통 지출(종류만 「1/n」)
+    var cat = /1\s*\/\s*n|인당|나눠\s*주|나눠\s*줌|나눠준|분배/i.test(nm) ? "split"
+      : /택시|버스|지하철|전철|기차|신칸센|교통|역에서|까지|항공|비행|공항|스이카|IC\s*카드|렌트|주유/.test(nm) ? "move"
       : /저녁|점심|아침|브런치|식사|데판|우나기|라멘|스시|초밥|정식|야키|이자카야|모츠|규카츠|돈카츠|밥/.test(nm) ? "food"
       : /오미야게|기념품|선물|쇼핑|드럭|돈키|마트|안대|잡화/.test(nm) ? "shop"
       : /커피|카페|빵|케이크|디저트|간식|껌|샌드위치|계란|아이스|음료|주스|(^|\s)물(\s|$)|편의점/.test(nm) ? "snack"
@@ -2214,11 +2215,9 @@
         var b = tr.querySelector(".wscurb"), h = tr.querySelector(".wscur"); if (!b || !h) return;
         var r = window.__CS_WSROW(tr), set = h.value === "엔" || h.value === "원";
         var krw = r && r.cur === "krw", bal = r && r.cur === "bal";
-        var give = r && r.cur === "give";
-        b.textContent = bal ? "잔액" : give ? "나눔" : (krw ? "₩" : "¥");
-        b.classList.toggle("give", !!give);
+        b.textContent = bal ? "잔액" : (krw ? "₩" : "¥");
         b.classList.toggle("krw", !!krw); b.classList.toggle("bal", !!bal); b.classList.toggle("auto", !set);
-        b.title = give ? "나눠 준 돈 — 지출 합계엔 안 넣고 공금 잔액에서 빼요" : bal ? "잔액 줄 — 지출 합계에 안 들어가요" : (krw ? "원화(₩)" : "엔화(¥)") + (set ? " · 직접 고름" : " · 자동(날짜 · 글로 판단)") + " — 누르면 바꾸기";
+        b.title = bal ? "잔액 줄 — 지출 합계에 안 들어가요" : (krw ? "원화(₩)" : "엔화(¥)") + (set ? " · 직접 고름" : " · 자동(날짜 · 글로 판단)") + " — 누르면 바꾸기";
       });
     }
     document.addEventListener("click", function (e) {
@@ -2738,14 +2737,13 @@
       // 11/9 · 「잔액」 줄은 지출이 아님 · 출발 전(원화) 줄은 엔과 따로 더함 (window.__CS_WSROW)
       var sum = 0, any = false, kr = 0;
       document.querySelectorAll(".wstable.cost").forEach(function (t) {
-        var s2 = 0, a2 = false, k2 = 0, g2 = 0;
+        var s2 = 0, a2 = false, k2 = 0;
         t.querySelectorAll("tbody tr").forEach(function (tr) {
           var r = window.__CS_WSROW(tr); if (!r || r.a == null || r.cur === "bal") return;
-          if (r.cur === "give") { g2 += r.a; return; }
           if (r.cur === "krw") { k2 += r.a; kr += r.a; return; }
           s2 += r.a; a2 = true; sum += r.a; any = true;
         });
-        var c = t.querySelector(".wstotal"); if (c) c.textContent = (a2 ? "¥" + s2.toLocaleString("ko-KR") : (k2 ? "" : "—")) + (k2 ? (a2 ? " + " : "") + "₩" + k2.toLocaleString("ko-KR") : "") + (g2 ? " · 나눠 줌 ¥" + g2.toLocaleString("ko-KR") : "");
+        var c = t.querySelector(".wstotal"); if (c) c.textContent = (a2 ? "¥" + s2.toLocaleString("ko-KR") : (k2 ? "" : "—")) + (k2 ? (a2 ? " + " : "") + "₩" + k2.toLocaleString("ko-KR") : "");
       });
       totEl.textContent = (any ? "¥" + sum.toLocaleString("ko-KR") : (kr ? "" : "—")) + (kr ? (any ? " + " : "") + "₩" + kr.toLocaleString("ko-KR") : "");
       paintCur();
