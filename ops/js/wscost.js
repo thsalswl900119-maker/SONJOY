@@ -45,7 +45,7 @@
     var all = { yen: 0, cat: {} }, krw = [];
     D.forEach(function (o) { all.yen += o.yen; CATS.forEach(function (c) { all.cat[c[0]] = (all.cat[c[0]] || 0) + (o.cat[c[0]] || 0); }); krw = krw.concat(o.krw); });
     if (!all.yen && !krw.length) { box.innerHTML = '<div class="wgempty">지출 표에 금액을 적으면 여기에 일차별로 「어디에 · 무엇을 · 얼마」가 한눈에 정리됩니다.</div>'; return; }
-    var h = '<div class="wgh">📊 일차별 한눈에 <span>지출 표에 적으면 저절로 정리돼요 · 종류는 이름으로 나눔(택시 → 교통 · 커피 · 빵 → 카페 · 간식 …) · 💳 충전카드 / 💴 공금 현금은 메모 기준</span></div>';
+    var h = '<div class="wgh">📊 일차별 한눈에 <span>지출 표에 적으면 저절로 정리돼요 · 금액 앞 ¥ / ₩ 단추로 엔 · 원을 나눠요(누르면 바뀜) · 종류는 이름으로 나눔(택시 → 교통 · 커피 · 빵 → 카페 · 간식 …) · 💳 충전카드 / 💴 공금 현금은 메모 기준</span></div>';
     // 전체 종류 띠
     h += '<div class="wgall"><b>2박 3일 엔 지출 ¥' + f(all.yen) + '</b><div class="wgbar">' + CATS.map(function (c) {
       var v = all.cat[c[0]] || 0; if (!v) return "";
@@ -53,7 +53,7 @@
     }).join("") + '</div><div class="wgleg">' + CATS.map(function (c) {
       var v = all.cat[c[0]] || 0; if (!v) return "";
       return '<span><i class="wgdot c-' + c[0] + '"></i>' + c[1] + " " + c[2] + ' <b>¥' + f(v) + '</b> ' + Math.round(v / all.yen * 100) + '%</span>';
-    }).join("") + '</div>' + (krw.length ? '<div class="wgkrw">✈ 출발 전 원화(엔 합계에 안 넣음): ' + krw.map(function (r) { return esc(short(r.n || r.m)) + " ₩" + f(r.a); }).join(" · ") + '</div>' : '') + '</div>';
+    }).join("") + '</div>' + (krw.length ? '<div class="wgkrw">₩ 원화로 쓴 돈 (엔 합계에 안 넣음): ' + krw.map(function (r) { return esc(short(r.n || r.m)) + " ₩" + f(r.a); }).join(" · ") + '</div>' : '') + '</div>';
     h += '<div class="wgdays">' + D.map(function (o) {
       if (!o.yen && !o.bal.length) return '<div class="wgday empty"><div class="wgdh"><b>' + o.d + '일차</b><span>' + esc(dayLabel(o.d)) + '</span></div><p class="wgnone">아직 적은 지출 없음</p></div>';
       var max = 0; CATS.forEach(function (c) { max = Math.max(max, o.cat[c[0]] || 0); });
@@ -67,7 +67,7 @@
             '<div class="wgcb"><i class="c-' + c[0] + '" style="width:' + Math.max(4, v / max * 100) + '%"></i></div>' +
             '<ul class="wgit">' + it.map(function (r) { return '<li>' + payTag(r.pay) + '<span>' + esc(short(r.n || r.m || "(이름 없음)")) + '</span><b>' + f(r.a) + '</b></li>'; }).join("") + '</ul></div>';
         }).join("") +
-        (o.krw.length ? '<p class="wgkrw">✈ 출발 전 원화: ' + o.krw.map(function (r) { return esc(short(r.n || r.m)) + " ₩" + f(r.a); }).join(" · ") + '</p>' : '') +
+        (o.krw.length ? '<p class="wgkrw">₩ 원화: ' + o.krw.map(function (r) { return esc(short(r.n || r.m)) + " ₩" + f(r.a); }).join(" · ") + '</p>' : '') +
         (o.bal.length ? '<p class="wgbalrow">📌 이 표에 적힌 잔액 ' + o.bal.map(function (r) { return "¥" + f(r.a) + (r.m ? " (" + esc(short(r.m)) + ")" : ""); }).join(" · ") + ' — 지출 합계엔 안 넣었어요</p>' : '') +
         '</div>';
     }).join("") + '</div>';

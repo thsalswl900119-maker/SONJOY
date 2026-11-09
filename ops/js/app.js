@@ -2170,8 +2170,10 @@
     var v = function (s) { var el = tr.querySelector('.wsin[data-k$="' + s + '"]'); return el ? String(el.value || "").trim() : ""; };
     var d = v("d"), n = v("n"), m = v("m"), raw = v("a").replace(/[,\s¥￥엔원₩]/g, "");
     var a = raw === "" ? null : parseFloat(raw); if (a != null && isNaN(a)) a = null;
-    var nm = n + " " + m, cur = "yen";
-    if (/잔액|남은\s*돈/.test(d + " " + n) || /^(현재\s*)?남은\s*잔액|^잔액/.test(m)) cur = "bal";
+    var nm = n + " " + m, cur = "yen", u = v("u");
+    if (u === "원" && !/잔액|남은\s*돈/.test(d + " " + n)) cur = "krw";
+    else if (u === "엔" && !/잔액|남은\s*돈/.test(d + " " + n)) cur = "yen";
+    else if (/잔액|남은\s*돈/.test(d + " " + n) || /^(현재\s*)?남은\s*잔액|^잔액/.test(m)) cur = "bal";
     else if (/원화|₩|한국\s*돈|\d\s*원(?![가-힣])/.test(nm + " " + v("a"))) cur = "krw";
     else {
       var md = /^(\d{1,2})\s*\/\s*(\d{1,2})/.exec(d), sd = document.querySelector('.wsdin[data-k="d1date"]');
@@ -2196,6 +2198,33 @@
     if (!yearEl) return;
     var msg = document.getElementById("wsMsg");
     var totEl = document.getElementById("wsTotal");
+    // 11/9 · 지출 줄마다 엔/원 고르기 — 숨은 칸(…u = "엔" · "원" · 비면 자동) + ¥/₩ 단추 (줄 옮기기 · 지우기는 input 순서로 같이 움직임)
+    function curCell(tr) {
+      if (tr.querySelector(".wscur")) return;
+      var a = tr.querySelector('.wsin.cost'); if (!a) return;
+      var k = a.dataset.k.replace(/a$/, "u");
+      var h = document.createElement("input"); h.type = "hidden"; h.className = "wsin wscur"; h.dataset.k = k;
+      var b = document.createElement("button"); b.type = "button"; b.className = "wscurb"; b.title = "눌러서 엔(¥) / 원(₩) 바꾸기"; b.textContent = "¥";
+      a.parentNode.insertBefore(b, a); a.parentNode.appendChild(h);
+    }
+    document.querySelectorAll(".wstable.cost tbody tr").forEach(curCell);
+    function paintCur() {
+      document.querySelectorAll(".wstable.cost tbody tr").forEach(function (tr) {
+        var b = tr.querySelector(".wscurb"), h = tr.querySelector(".wscur"); if (!b || !h) return;
+        var r = window.__CS_WSROW(tr), set = h.value === "엔" || h.value === "원";
+        var krw = r && r.cur === "krw", bal = r && r.cur === "bal";
+        b.textContent = bal ? "잔액" : (krw ? "₩" : "¥");
+        b.classList.toggle("krw", !!krw); b.classList.toggle("bal", !!bal); b.classList.toggle("auto", !set);
+        b.title = bal ? "잔액 줄 — 지출 합계에 안 들어가요" : (krw ? "원화(₩)" : "엔화(¥)") + (set ? " · 직접 고름" : " · 자동(날짜 · 글로 판단)") + " — 누르면 바꾸기";
+      });
+    }
+    document.addEventListener("click", function (e) {
+      var b = e.target.closest && e.target.closest(".wscurb"); if (!b) return;
+      var tr = b.closest("tr"), h = tr && tr.querySelector(".wscur"); if (!h) return;
+      var r = window.__CS_WSROW(tr), cur = r && r.cur === "krw" ? "원" : "엔";
+      h.value = cur === "원" ? "엔" : "원";
+      h.dispatchEvent(new Event("input", { bubbles: true }));
+    });
     var ins = Array.prototype.slice.call(document.querySelectorAll(".wsin"));
     function wire(el) {
       el.addEventListener(el.type === "checkbox" ? "change" : "input", function () {
@@ -2275,6 +2304,7 @@
         '<td><input type="text" class="wsin" data-k="' + pre + r + 'n" placeholder="지출 목록"></td>' +
         '<td><input type="text" inputmode="numeric" class="wsin numfmt cost" data-k="' + pre + r + 'a" placeholder="금액"></td>' +
         '<td><input type="text" class="wsin" data-k="' + pre + r + 'm" placeholder="메모"></td>';
+      curCell(tr);
       return tr;
     }
     function addDayRow(d) {
@@ -2481,7 +2511,7 @@
         while (body.querySelectorAll("tr").length < max) addDayRow(d);
       }
       [1, 2, 3].forEach(function (cd) {
-        var cmax = 0, re = cd === 1 ? /^c(\d+)[dnam]$/ : new RegExp("^c" + cd + "_(\\d+)[dnam]$");
+        var cmax = 0, re = cd === 1 ? /^c(\d+)[dnamu]$/ : new RegExp("^c" + cd + "_(\\d+)[dnamu]$");
         Object.keys(data).forEach(function (k) { var m = k.match(re); if (m) cmax = Math.max(cmax, +m[1]); });
         var cbody = document.querySelector('.wstable.cost[data-cd="' + cd + '"] tbody');
         while (cbody && cbody.querySelectorAll("tr").length < cmax) addCostRow(cd);
@@ -2711,9 +2741,10 @@
           if (r.cur === "krw") { k2 += r.a; kr += r.a; return; }
           s2 += r.a; a2 = true; sum += r.a; any = true;
         });
-        var c = t.querySelector(".wstotal"); if (c) c.textContent = (a2 ? s2.toLocaleString("ko-KR") : (k2 ? "" : "—")) + (k2 ? (a2 ? " + " : "") + "₩" + k2.toLocaleString("ko-KR") : "");
+        var c = t.querySelector(".wstotal"); if (c) c.textContent = (a2 ? "¥" + s2.toLocaleString("ko-KR") : (k2 ? "" : "—")) + (k2 ? (a2 ? " + " : "") + "₩" + k2.toLocaleString("ko-KR") : "");
       });
-      totEl.textContent = (any ? sum.toLocaleString("ko-KR") : (kr ? "" : "—")) + (kr ? (any ? " + " : "") + "₩" + kr.toLocaleString("ko-KR") + " (출발 전)" : "");
+      totEl.textContent = (any ? "¥" + sum.toLocaleString("ko-KR") : (kr ? "" : "—")) + (kr ? (any ? " + " : "") + "₩" + kr.toLocaleString("ko-KR") : "");
+      paintCur();
       try { window.dispatchEvent(new Event("cs:wscost")); } catch (e) {}
       // 일차별 날짜를 제목 옆에
       [1, 2, 3].forEach(function (d) {
