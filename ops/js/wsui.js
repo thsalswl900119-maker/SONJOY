@@ -8,7 +8,7 @@
   if (!root || !nav || !hero) return;
   var yearEl = document.getElementById("wsYear");
   var PEOPLE = [["사장님", "p4", "#2E7D32"], ["정항아", "p1", "#C45A00"], ["박혜빈", "p2", "#1B5FC1"], ["이해선", "p3", "#8E3BB0"]];
-  var PANES = [["sum", "🏕", "한눈에", ""], ["plan", "🧭", "정하기 · 준비", "1"], ["wish", "💭", "가고 싶은 곳", "2"], ["meet", "🗣", "회의", "3"], ["day", "🗓", "일정", "4"], ["file", "📎", "자료 · 파일", "5"], ["cost", "💰", "비용", "6"]];
+  var PANES = [["sum", "🏕", "한눈에", ""], ["plan", "🧭", "정하기 · 준비", "1"], ["wish", "💭", "가고 싶은 곳", "2"], ["meet", "🗣", "회의", "3"], ["day", "🗓", "일정", "4"], ["file", "📎", "자료 · 파일", "5"], ["cost", "💰", "비용", "6"], ["feel", "💌", "소감", "7"]];
   var QS = [["1일차", "발견", "나는 무엇을 좋다고 생각하는가?"], ["2일차", "분석", "잘되는 가게는 왜 잘되는가?"], ["3일차", "적용", "우리는 무엇을 지키고, 무엇을 바꾸고, 나는 무엇을 할 것인가?"]];
   var WD = ["일", "월", "화", "수", "목", "금", "토"];
   var panes = Array.prototype.slice.call(root.querySelectorAll(".wspane"));
@@ -34,6 +34,7 @@
     if (k === "sum") drawHero(true);
     if (k === "file") mountFiles();
     if (k === "wish") drawWishTop();
+    if (k === "feel" && window.__CS_WSFEEL) window.__CS_WSFEEL.paint();
     if (k === "day" && typeof bdMode === "function") { bdForce = false; bdMode(); }
     setTimeout(regrow, 0);
     var sb = nav.querySelector('.wsn[aria-selected="true"]'); if (sb && nav.scrollWidth > nav.clientWidth + 4) nav.scrollLeft = Math.max(0, sb.offsetLeft - nav.offsetLeft - 8);
@@ -76,7 +77,7 @@
   function navStat(f) {
     f = f || facts();
     var S = { sum: f.d1 ? dday(f.d1) : f.y + "년", plan: "준비물 " + f.prep.d + "/" + f.prep.n, wish: f.wish.length + "곳" + (f.wish.filter(function (x) { return x.c; }).length ? " · 다녀옴 " + f.wish.filter(function (x) { return x.c; }).length : ""),
-      meet: "회의 " + f.meet.filter(function (x) { return x.c; }).length + "/" + f.meet.length + " 끝", day: "일정 " + f.plan + "줄", file: "파일 " + f.files.length + "개", cost: f.cost && f.cost !== "—" ? f.cost + "원" : "금액 적기" };
+      meet: "회의 " + f.meet.filter(function (x) { return x.c; }).length + "/" + f.meet.length + " 끝", day: "일정 " + f.plan + "줄", file: "파일 " + f.files.length + "개", cost: f.cost && f.cost !== "—" ? f.cost + "원" : "금액 적기", feel: window.__CS_WSFEEL ? window.__CS_WSFEEL.stat() : "" };
     Array.prototype.forEach.call(nav.querySelectorAll(".wsn"), function (b) { var s = b.querySelector(".wsns"); if (s) s.textContent = S[b.dataset.w] || ""; });
   }
   function dday(d) { var t = new Date(); t.setHours(0, 0, 0, 0); var n = Math.round((d - t) / 86400000); return n > 0 ? "D-" + n : n === 0 ? "오늘 출발!" : "다녀옴"; }
