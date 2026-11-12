@@ -571,8 +571,8 @@
   }
   function mainMat() {   // 🥛 3가지 대표 재료 — 🍰 생산 계획 합(비면 🎯 목표 개수)으로 · 1개당 g 고치기 · 주문할 개수 · 구매처 · 작년 주석
     var o = load(cur), per = o.per || PER0, ps = prodSums(cur), g = goalOf(cur), gs = goalSum(g), pl = o.plan || {}, mq = pl.mq || {}, ms = pl.ms || {}, MT = prevT(/실제 작업량/, /대표 재료/);
-    var W = ps.whole || gs.whole, M = ps.mini || gs.mini, S = ps.slice || N(o.slicePan), src = function (a, lab) { return a ? "🍰 계획" : "🎯 목표"; };
-    return '<div class="xmbox"><div class="xmbh"><b>🥛 3가지 대표 재료 (생크림 · 휘핑 · 딸기)</b><span>' + '홀 · 중간 ' + W + "개(" + src(ps.whole) + ") · 미니 " + M + "개(" + src(ps.mini) + ") · 조각 " + S + "판(" + src(ps.slice) + ') — 생산 계획에 적은 종류는 계획, 아직 안 적은 종류는 목표 개수로 · 1개당 g은 눌러서 고침 · 넉넉히 +10%</span></div>' +
+    var mb = matBase(cur), W = mb.W, M = mb.M, S = mb.S;
+    return '<div class="xmbox"><div class="xmbh"><b>🥛 3가지 대표 재료 (생크림 · 휘핑 · 딸기)</b><span>🎯 목표 개수로 셈 — 홀 · 중간 ' + W + "개 · 미니 " + M + "개 · 조각 " + (S ? S + "판" : "0판 (조각 판 수 칸이 비어 있어 안 넣음)") + ' · 1개당 g은 눌러서 고침 · 넉넉히 +10%</span>' + mb.warn + '</div>' +
       '<div class="xmtw"><table class="xmt per"><thead><tr><th>재료</th><th>홀 1개당 g</th><th>미니 1개당 g</th><th>조각 1판당 g</th><th>필요</th><th>주문할 개수</th><th>구매처 · 메모</th></tr></thead><tbody>' +
       PERK.map(function (r) {
         var p = per[r[0]] || PER0[r[0]], need = N(p[0]) * W + N(p[1]) * M + N(p[2]) * S;
@@ -583,8 +583,14 @@
       }).join("") + '</tbody></table></div>' + g25box("mat") +
       '<label class="xmnote xmshort">조각케이크 판 수 (생산 계획이 비었을 때 쓰는 목표)<input type="text" inputmode="numeric" class="xslice" value="' + ea2(o.slicePan || "") + '" placeholder="25년 실제 134판"></label></div>';
   }
+  function matBase(y) {   // 11/12 사장님 「목표랑 안 맞아」 — 재료는 늘 🎯 목표 개수로 (예전: 생산 계획에 한 줄이라도 있으면 계획을 써서, 반쯤 남은 계획 · 뺀 품목과 섞였음) · 계획은 비교만
+    var o = load(y), ps = prodSums(y), gs = goalSum(goalOf(y)), w = [];
+    if (ps.whole && ps.whole !== gs.whole) w.push("홀 · 중간 " + ps.whole);
+    if (ps.mini && ps.mini !== gs.mini) w.push("미니 " + ps.mini);
+    return { W: gs.whole, M: gs.mini, S: N(o.slicePan), warn: w.length ? '<small class="xmwarn">⚠ 🍰 생산 계획 칸에 적힌 수(' + esc(w.join(" · ")) + ')가 목표와 달라요 — 재료는 목표로 셉니다</small>' : "" };
+  }
   function needOf(y) {   // 대표 재료 필요량(+10%) — 재료 화면 크림 · 과일 줄 · 한눈에가 같이 씀
-    var o = load(y), per = o.per || PER0, ps = prodSums(y), gs = goalSum(goalOf(y)), W = ps.whole || gs.whole, M = ps.mini || gs.mini, S = ps.slice || N(o.slicePan);
+    var o = load(y), per = o.per || PER0, mb = matBase(y), W = mb.W, M = mb.M, S = mb.S;
     return PERK.map(function (r) { var p = per[r[0]] || PER0[r[0]]; return { k: r[0], lab: r[1].split(" ")[0], n: Math.ceil((N(p[0]) * W + N(p[1]) * M + N(p[2]) * S) * 1.1 / r[2]), u: r[3] }; });
   }
   var MK2 = ["크림 · 과일", "재료", "포장", "데코", "기타"], MIC = { "크림 · 과일": "🍓", "재료": "🧈", "포장": "📦", "데코": "✨", "기타": "📎" }, MFLT = "all";
@@ -622,7 +628,7 @@
       V.forEach(function (x) {
         h += '<tr class="xmr ' + st(x) + '" data-id="' + x._id + '"><td class="mst"><span class="xmdot">' + (x.ind ? "입고" : x.od ? "주문함" : "대기") + '</span><select class="xmi xmk" data-f="k" aria-label="분류 바꾸기" title="분류 바꾸기">' + MK2.map(function (z) { return "<option" + (z === (MK2.indexOf(x.k) < 0 ? "기타" : x.k) ? " selected" : "") + ' value="' + z + '">' + MIC[z] + "</option>"; }).join("") + "</select></td>" +
           '<td class="mn" data-l="품목"><textarea class="xmi xmn2" data-f="n" rows="1" placeholder="품목">' + esc(x.n || "") + '</textarea><input type="text" class="xmi xmsrc" data-f="s" value="' + ea2(x.s) + '" placeholder="주문처" aria-label="주문처"></td>' +
-          '<td class="mq" data-l="필요 수량"><input type="text" class="xmi" data-f="q" value="' + ea2(x.q) + '" placeholder="수량">' + (x.pq && String(x.pq) !== String(x.q) ? '<small class="xpref">작년 ' + esc(x.pq) + "</small>" : "") + "</td>" +
+          '<td class="mq" data-l="필요 수량"><input type="text" class="xmi" data-f="q" value="' + ea2(x.q) + '" placeholder="수량">' + (x.pq && String(x.pq) !== String(x.q) ? '<small class="xpref">작년 ' + esc(x.pq) + "</small>" : "") + (x.qb ? '<small class="xqb" title="' + ea2(x.qb) + '">🎯 ' + esc(x.qb) + "</small>" : "") + "</td>" +
           '<td class="mh" data-l="지금 남은 것"><input type="text" class="xmi" data-f="has" value="' + ea2(x.has || "") + '" placeholder="남은 수">' + (x.hasAt ? '<small class="xpref" title="' + ea2(x.hasAt) + '">' + esc(x.hasAt) + "</small>" : "") + "</td>" +
           '<td class="mp" data-l="미리 주문한 것"><textarea class="xmi" data-f="pre" rows="1" placeholder="개수 · 날짜" title="예) 100개 · 11/3 주문 · 11/10 도착">' + esc(x.pre || "") + "</textarea>" + (x.preAt ? '<small class="xpref" title="' + ea2(x.preAt) + '">' + esc(x.preAt) + "</small>" : "") + "</td>" +
           '<td class="mr" data-l="더 살 것">' + buyMore(x, 1) + "</td>" +
@@ -990,7 +996,7 @@
     var L = ckItems(cur), t0 = today(), n = dd(cur + "-12-25", t0), done = L.filter(function (x) { return x.done; }).length, py = cur - 1;
     var late = L.filter(function (x) { return !x.done && x.d && x.d < t0; }), next = L.filter(function (x) { return !x.done && x.d >= t0; }).slice(0, 5);
     var g = goalOf(cur), s = goalSum(g), ps = prodSums(cur), mt = rows(load(cur).mat), od = mt.filter(function (x) { return x.od; }).length, ind = mt.filter(function (x) { return x.ind; }).length;
-    var pv = histRow(py), o = load(cur), per = o.per || PER0, W = ps.whole || s.whole, M = ps.mini || s.mini, S2 = ps.slice || N(o.slicePan);
+    var pv = histRow(py), o = load(cur), per = o.per || PER0, mb0 = matBase(cur), W = mb0.W, M = mb0.M, S2 = mb0.S;
     var need = PERK.map(function (r) { var p = per[r[0]] || PER0[r[0]]; return r[1].split(" ")[0] + " " + Math.ceil((N(p[0]) * W + N(p[1]) * M + N(p[2]) * S2) * 1.1 / r[2]) + r[3]; });
     var pre = (o.plan || {}).pre || {}, preN = Object.keys(pre).reduce(function (a, k) { return a + N(pre[k]); }, 0);
     var sg = sugs(cur).filter(function (x) { return !x.nt && !x.ap && x.it; }).length;
