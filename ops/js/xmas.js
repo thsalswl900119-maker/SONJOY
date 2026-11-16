@@ -684,21 +684,56 @@
       (L.length ? (function () { var seen = {}, out = []; L.forEach(function (x) { if (!x.nt) { out.push(x); return; } if (seen[x.t]) { seen[x.t].ds.push(x.d); seen[x.t].ids.push(x._id); return; } var y2 = { nt: 1, t: x.t, by: x.by, at: x.at, d: x.d, ds: [x.d], ids: [x._id], _id: x._id }; seen[x.t] = y2; out.push(y2); }); return out; })().map(function (x) { var itn = IT[x.it] ? IT[x.it].n : ""; if (x.nt) return '<div class="xpsg1 nt" data-s="' + x.ids.join(",") + '"><span class="xpsd">' + (x.ds.length > 1 ? md(x.ds[0]) + "~" + md(x.ds[x.ds.length - 1]) : mdw(x.d)) + '</span><span class="xpst"><b>📌 ' + esc(x.t || "") + "</b><small>날짜 메모 · " + esc(nim(x.by) || "") + " " + esc(x.at || "") + '</small></span><button type="button" class="xcx" data-a="sgdel" aria-label="메모 빼기">✕</button></div>'; return '<div class="xpsg1' + (x.ap ? " ap" : "") + '" data-s="' + x._id + '"><span class="xpsd">' + mdw(x.d) + '</span><span class="xpst"><b>' + esc(itn || "품목 미정") + (x.n ? " +" + esc(x.n) + "개" : "") + "</b> " + esc(x.t || "") + "<small>" + esc(nim(x.by) || "") + " " + esc(x.at || "") + (x.ap ? " · 계획에 넣음 " + esc(x.ap) : "") + "</small></span>" +
         (x.ap ? '<em class="xpsok">✔ 계획에 넣음</em>' : (x.it && x.n ? '<button type="button" class="skbtn prim" data-a="sgap">＋ 계획에 넣기</button>' : "")) + '<button type="button" class="xcx" data-a="sgdel" aria-label="제안 빼기">✕</button></div>'; }).join("") : '<p class="xmempty">아직 제안이 없어요</p>') + "</div>";
   }
+  // 📅 생산 계획 캘린더 (11/16 사장님 「캘린더처럼 볼 수 있게」) — 표와 같은 칸(o.prod 계획 p · 실제 a)을 일~토 달력으로 · 날짜를 누르면 표의 그 날로
+  var PV = "cal"; try { PV = localStorage.getItem("cafesui.ui.xmprodv") === "tab" ? "tab" : "cal"; } catch (e) {}
+  function pvSet(v) { PV = v; try { localStorage.setItem("cafesui.ui.xmprodv", v); } catch (e) {} }
+  function lyDay(s) {   // 작년 같은 날짜 실제 작업량 (홀 · 미니 개 · 조각 판)
+    var o = { w: "", m: "", sl: "" };
+    [["w", /예약 홀케이크/], ["m", /미니케이크 생산/], ["sl", /조각케이크 생산 수량(\(전날|$)/]].forEach(function (q) {
+      var T = prevT(/실제 작업량/, q[1]), i = colIdx(T, s); if (!T || i < 1) return; var t = 0, any = 0;
+      T.r.slice(1).forEach(function (r) { if (/합계/.test(String(r[0]))) return; var v = r[i]; if (v !== "" && v != null && !isNaN(+v)) { t += +v; any = 1; } }); if (any) o[q[0]] = Math.round(t * 10) / 10;
+    });
+    return o;
+  }
+  function prodCal(g, it, D, P, pa, pb, t0) {
+    if (!D.length) return "";
+    var a = new Date(+D[0].slice(0, 4), +D[0].slice(5, 7) - 1, +D[0].slice(8)), b = new Date(+D[D.length - 1].slice(0, 4), +D[D.length - 1].slice(5, 7) - 1, +D[D.length - 1].slice(8));
+    a.setDate(a.getDate() - a.getDay()); b.setDate(b.getDate() + (6 - b.getDay()));
+    var KG = [["🎂", "홀 · 중간", function (x) { return x.k === "홀" || x.k === "중간" || x.k === "기타"; }, "개", "w"], ["🧁", "미니", function (x) { return x.k === "미니"; }, "개", "m"], ["🍰", "조각", function (x) { return x.k === "조각"; }, "판", "sl"]];
+    var TT = { w: 0, m: 0, sl: 0 }, h = '<div class="xpcal"><div class="xpcalh">' + WDN.map(function (w, i) { return '<b class="' + (i === 0 ? "sun" : i === 6 ? "sat" : "") + '">' + w + "</b>"; }).join("") + "</div><div class=\"xpcalg\">";
+    for (var d = new Date(a); d <= b; d.setDate(d.getDate() + 1)) {
+      var s = ymd(d), inD = D.indexOf(s) >= 0, wd = d.getDay(), ly = PLREF ? lyDay(s) : {};
+      var cls = "xpcd" + (inD ? " on" : " off") + (s >= pa && s <= pb ? " peak" : "") + (s === t0 ? " now" : "") + (wd === 0 ? " sun" : wd === 6 ? " sat" : "");
+      var body = "";
+      if (inD) {
+        KG.forEach(function (G) {
+          var L = it.filter(G[2]), t = 0, ta = 0, parts = [];
+          L.forEach(function (x) { var c = (P[x._id] || {})[s] || {}, v = N(c.p); t += v; ta += N(c.a); if (v) parts.push(esc((x.n || "").replace(/\s*\([^)]{7,}\)?.*$/, "").replace(/ 조각$/, "")) + " " + v); });
+          TT[G[4]] += t;
+          if (t || (ly[G[4]] !== "" && ly[G[4]] != null)) body += '<div class="xpcq ' + G[4] + (t ? "" : " zero") + '"><span class="xpcq1">' + G[0] + " " + G[1] + " <b>" + (t || 0) + "</b>" + G[3] + (ta ? ' <em>실제 ' + ta + "</em>" : "") + "</span>" + (parts.length > 1 ? "<small>" + parts.join(" · ") + "</small>" : "") + (ly[G[4]] !== "" && ly[G[4]] != null ? '<small class="ly">' + (cur - 1) + "년 " + ly[G[4]] + G[3] + "</small>" : "") + "</div>";
+        });
+      }
+      var sg = inD || sugs(cur).some(function (x) { return x.d === s; }) ? sugHead(s) : "", ck = ckHead(s);
+      h += '<div class="' + cls + '"' + (inD ? ' data-d="' + s + '" role="button" tabindex="0" title="눌러서 표에서 이 날 숫자 고치기"' : "") + '><div class="xpcdh"><b>' + (d.getMonth() + 1) + "/" + d.getDate() + "</b><span>" + WDN[wd] + "</span>" + (s >= pa && s <= pb && inD ? '<i class="pk">🔥 피크</i>' : "") + (s === t0 ? '<i class="td">오늘</i>' : "") + (!inD && wd === 0 ? '<i class="cl">휴무</i>' : "") + "</div>" + body + (sg ? '<div class="xpcds">' + sg + "</div>" : "") + (ck ? '<div class="xpcdk">' + ck + "</div>" : "") + "</div>";
+    }
+    h += '</div><p class="xpcalf">📅 이 기간 계획 합: 🎂 홀 · 중간 <b>' + TT.w + '개</b> · 🧁 미니 <b>' + TT.m + '개</b> · 🍰 조각 <b>' + TT.sl + '판</b> (약 ' + TT.sl * 4 + '조각 · 1판 ≈ 4조각) — 날짜를 누르면 표에서 그 날 숫자를 고칠 수 있어요' + (PLREF ? ' · 회색 = ' + (cur - 1) + "년 같은 날 실제" : "") + "</p></div>";
+    return h;
+  }
   function drawProd(el) {   // 🍰 생산 계획 (10/30 · 날짜별 생산 + 주간 계획표 ① 합침) — 위: 목표 ↔ 계획 숫자 · 💡 제안 · 표(홀 · 중간 / 미니 / 조각(판)) · 칸마다 작년 숫자 · 주석
     var g = goalOf(cur), it = rows(g.it), D = daysOf(cur), P = load(cur).prod || {}, ps = prodSums(cur), gs = goalSum(g), py = cur - 1;
     var pa = gday(cur, gmd(g.pf, "12/21")), pb = gday(cur, gmd(g.pt, "12/25")), gCake = gs.whole + gs.mini, pCake = ps.whole + ps.mini;
     var sg = sugs(cur).filter(function (x) { return !x.nt && !x.ap && x.it; }).length, t0 = today();
     function kp(lab, b, em, off, go) { return '<button type="button" class="xpk' + (off ? " off" : "") + '"' + (go ? ' data-go="' + go + '"' : "") + "><span>" + lab + "</span><b>" + b + "</b>" + (em ? "<em>" + em + "</em>" : "") + "</button>"; }
     var h = '<div class="xmbox"><div class="xmbh"><b>🍰 ' + cur + ' 생산 계획</b><span>날짜마다 몇 개 만들지(윗칸 계획 · 아랫칸 실제) · 칸 아래 회색 = 작년 · 재작년 같은 날 · 💬 = ' + py + '년 파일 주석 · ✅ = 그 날 할 일 · 💡 = 제안 · 📌 = 날짜 메모</span></div>' +
-      '<div class="xmbtns"><label class="xpchk"><input type="checkbox" id="xpRefChk"' + (PLREF ? " checked" : "") + "> 작년 · 재작년 숫자 · 주석 같이 보기</label>" +
+      '<div class="xmbtns"><span class="xpvw" role="group" aria-label="보기"><button type="button" data-a="pvcal" class="' + (PV === "cal" ? "on" : "") + '">📅 캘린더로 보기</button><button type="button" data-a="pvtab" class="' + (PV === "tab" ? "on" : "") + '">📋 표 · 숫자 고치기</button></span><label class="xpchk"><input type="checkbox" id="xpRefChk"' + (PLREF ? " checked" : "") + "> 작년 · 재작년 숫자 · 주석 같이 보기</label>" +
       '<button type="button" class="skbtn" data-a="plwide">' + (document.documentElement.classList.contains("xmwide") ? "↩ 원래 폭으로" : "⛶ 넓게 보기") + '</button><button type="button" class="skbtn" data-a="plprint">🖨 인쇄 · PDF</button><button type="button" class="skbtn xpaopen">💰 가격표</button></div>' +
       '<div class="xpkpis">' + kp("🎯 크리스마스 케이크 목표 → 계획", gCake + " → " + pCake + "개", gmd(g.from, "11/11") + "~" + gmd(g.to, "12/25") + (pCake && gCake ? " · " + (pCake - gCake >= 0 ? "+" : "") + (pCake - gCake) : " · 계획을 적어 주세요"), pCake && gCake && pCake !== gCake, "goal") +
         kp("🔥 피크 " + md(pa) + "~" + md(pb) + " 목표 → 계획", (g.peak ? esc(g.peak) : "—") + " → " + ps.peak + "개", N(g.peak) && ps.peak ? (ps.peak - N(g.peak) >= 0 ? "+" : "") + (ps.peak - N(g.peak)) + "개" : "", N(g.peak) && ps.peak && ps.peak !== N(g.peak), "goal") +
         kp("🍰 조각 (기본 케이크)", (N(load(cur).slicePan) || "—") + " → " + ps.slice + "판", "목표 판 → 계획 판", 0, "goal") +
         kp("💡 제안", sg + "개 남음", sg ? "「＋ 계획에 넣기」를 눌러야 계획에 들어가요" : "모두 반영", sg, "") + "</div>" +
-      sugBox() +
-      '<label class="xmnote xmshort">생산 날짜 (쉼표로 · 예: 12/18, 12/19 …)<input type="text" class="xdays" value="' + ea2(D.map(function (s) { return (+s.slice(5, 7)) + "/" + (+s.slice(8)); }).join(", ")) + '"></label>' +
-      '<div class="xmtw"><table class="xmt prod"><thead><tr><th>품목</th>' + D.map(function (s) { var dw = new Date(+s.slice(0, 4), +s.slice(5, 7) - 1, +s.slice(8)).getDay(); return '<th class="' + (s >= pa && s <= pb ? "peak" : "") + (s === t0 ? " now" : "") + (dw === 6 ? " sat" : dw === 0 ? " sun" : "") + '">' + mdw(s) + sugHead(s) + ckHead(s) + (PLREF ? yHeadHtml(s) : "") + "</th>"; }).join("") + '<th>합계</th></tr></thead><tbody>';
+      sugBox() + (PV === "cal" ? prodCal(g, it, D, P, pa, pb, t0) : "") +
+      '<div class="xptabw"' + (PV === "cal" ? " hidden" : "") + '><label class="xmnote xmshort">생산 날짜 (쉼표로 · 예: 12/18, 12/19 …)<input type="text" class="xdays" value="' + ea2(D.map(function (s) { return (+s.slice(5, 7)) + "/" + (+s.slice(8)); }).join(", ")) + '"></label>' +
+      '<div class="xmtw"><table class="xmt prod"><thead><tr><th>품목</th>' + D.map(function (s) { var dw = new Date(+s.slice(0, 4), +s.slice(5, 7) - 1, +s.slice(8)).getDay(); return '<th data-d="' + s + '" class="' + (s >= pa && s <= pb ? "peak" : "") + (s === t0 ? " now" : "") + (dw === 6 ? " sat" : dw === 0 ? " sun" : "") + '">' + mdw(s) + sugHead(s) + ckHead(s) + (PLREF ? yHeadHtml(s) : "") + "</th>"; }).join("") + '<th>합계</th></tr></thead><tbody>';
     var GR = [["🎂 홀 · 중간 (크리스마스 케이크)", function (x) { return x.k === "홀" || x.k === "중간" || x.k === "기타"; }, "개"], ["🧁 미니 (크리스마스 케이크)", function (x) { return x.k === "미니"; }, "개"], ["🍰 조각 · 기본 케이크 (판)", function (x) { return x.k === "조각"; }, "판"]];
     var tfoot = "";
     GR.forEach(function (G) {
@@ -715,7 +750,7 @@
       h += '<tr class="xpsum"><th>' + G[0].split(" (")[0] + ' 합 <small>계획 / 실제</small></th>' + D.map(function (s, i) { return '<td class="num"><b>' + (colP[i] || "") + '</b><br><span class="a">' + (colA[i] || "") + "</span></td>"; }).join("") +
         '<td class="num"><b>' + colP.reduce(function (a, b) { return a + b; }, 0) + G[2] + '</b><br><span class="a">' + colA.reduce(function (a, b) { return a + b; }, 0) + "</span></td></tr>";
     });
-    h += "</tbody></table></div>" + g25box("cake") + g25box("slice") + "</div>";
+    h += "</tbody></table></div></div>" + g25box("cake") + g25box("slice") + "</div>";
     var pv = HIST()[py];
     if (pv && pv.tables) {
       var T = pv.tables.filter(function (x) { return /실제 작업량/.test(x.s) && /홀케이크|미니케이크|조각케이크 생산 수량\(전날|조각케이크 생산 수량$/.test(x.t); });
@@ -735,7 +770,10 @@
       setTimeout(function () { drawPane(true); }, 0);
     });
     el.addEventListener("click", function (e) {
+      var cd = e.target.closest && e.target.closest(".xpcd[data-d]");
+      if (cd && !e.target.closest("[data-a]")) { pvSet("tab"); drawPane(true); setTimeout(function () { var th = document.querySelector('#xmProd th[data-d="' + cd.dataset.d + '"]'); if (th) { th.scrollIntoView({ block: "center", inline: "center" }); th.classList.add("xpflash"); setTimeout(function () { th.classList.remove("xpflash"); }, 2200); } }, 60); return; }
       var b = e.target.closest && e.target.closest("[data-a]"); if (!b) return; var a = b.dataset.a, row = b.closest("[data-s]"), sid = row && row.dataset.s;
+      if (a === "pvcal" || a === "pvtab") { pvSet(a === "pvcal" ? "cal" : "tab"); drawPane(true); return; }
       if (a === "sgap") {
         var S = (load(cur).sug || {})[sid]; if (!S || S.ap) return;
         if (!confirm(mdw(S.d) + " 계획 칸에 " + S.n + "개를 더할까요?")) return;
@@ -991,6 +1029,7 @@
     ["🌙", "24일은 해마다 밤샘", "23 · 24년 새벽 4시 반 · 25년 24일 19시간", "일할 사람 · 미리 해 둘 일을 먼저 정하기"],
     ["🧁", "미니 · 조각이 남는다", "24년 미니 80개 중 15개 · 25년 미니 118개 중 12개 · 25년 딸기 생크림 조각 82판(약 328조각) 중 56조각 남음", "미니는 작년보다 12개 덜 (106개까지) · 딸기 생크림 조각은 14판(56조각) 덜 = 68판"],
     ["🧊", "냉장고 자리가 늘 모자라다", "24년 케이크를 차 안에 보관 · 25년 홀 13개 그날 못 만듦", "냉장고에 몇 개 들어가는지 먼저 세기"],
+    ["📦", "재료는 늘 넉넉 · 남은 수는 거의 안 적었다", "생크림 23년 약 60통 · 25년 20통 넘게 더 받음 · 딸기 25년 22팩 + 손질한 2바구니 남음 · 시트는 3년 다 남은 수 기록 없음", "12/26 마감 때 남은 시트 · 생크림 · 딸기 · 조각 · 미니를 세서 적기 · 생크림 · 딸기는 필요량 + 10%까지만"],
     ["🍓", "딸기에서 사고가 난다", "23년 딸기 농장 거래 중간에 끊김 · 24년 상한 딸기 큰 통 3개 버림", "거래처 두 곳 · 쓰기 직전에 손질 · 냉장 보관"]
   ];
   var FBY = {
@@ -999,18 +1038,21 @@
       g: ["시트를 빵집에 주문해서, 시트 굽는 일이 없어졌다.", "일 순서가 손에 익어서 작업이 생각보다 빨랐다.", "초코딸기 조각이 잘 팔렸다. (3개만 남음)", "준비 순서가 자리 잡았다: 12/6 거래처에 개수 알림 → 12/8 리본 자르기 → 12/9 상자 · 엽서 주문 → 12/22 홀 예약 마감"],
       b: ["12월 초(1~9일) 예약이 12개뿐이라 목표를 300개 → 180개로 낮췄다. 늦게 알아챘다.", "미니를 너무 많이 깔아서 12개 남았다.", "딸기 생크림 조각이 56개 남았다.", "냉장고 자리가 없어서 홀 13개를 그날 못 만들었다.", "23 · 24일에 「오늘 홀케이크 있어요?」 전화가 많았는데 팔 케이크가 없었다.", "24일 19시간, 25일 15시간 반 일했다."],
       x: ["홀은 150개쯤 들어온다고 생각하고 준비하기.", "미니는 12개 덜 만들기: 118 → 106개까지. 25일 현장 미니는 26 → 14개쯤. 진열용 1개는 꼭 꺼내 두기. (봐야 산다)", "딸기 생크림 조각은 14판(56조각) 덜 만들기: 82 → 68판. 23 · 24일 몫에서 빼기.", "초코딸기 조각은 25판이 거의 다 팔림(3개 남음) → 그대로 또는 조금 더.", "냉장고에 몇 개 들어가는지 먼저 세기.", "23 · 24일엔 그날 팔 홀케이크를 몇 개 준비하기."],
+      l: [["🍞 시트", "빵집 주문 기본 74 · 초코 12", "기록 없음", "none"], ["🥛 생크림", "필요 약 243통 · 받은 것 216 + 80 = 296통", "약 20통 여유 (파일 메모 「20개 정도 여유」 · 계산으로는 53통 더 받음)", "over"], ["🧈 휘핑", "필요 43개 · 주문 48개", "약 5개 여유 (계산)", "over"], ["🍓 딸기", "필요 333팩 · 주문 340팩", "22팩 + 손질해 둔 2바구니 남음", "over"], ["🍰 조각", "134판 (딸기 생크림 82 · 초코딸기 25 · 말차 9 · 과일동산 6 · 망고 6 · 샤인 4 · 티라미수 2)", "딸기 생크림 56조각(14판) · 초코딸기 3 · 샤요 1 남음 · 파손 말차 2 · 샤요 1", "over"], ["🧁 미니", "118개 만듦", "12개 남음 (약 106개 팔림)", "over"]],
       f: [["🍞 시트", "빵집에 주문 — 기본 74 · 초코 12 (136만 원 · 29.5만 원 · 묶음 단위 확인 필요)"], ["🥛 재료", "생크림 216통 · 휘핑 48개 · 딸기 340팩 · 홀 1개 = 생크림 340g + 휘핑 100g + 딸기 1통"], ["👥 사람", "사장님 · 항아님 · 어머님 + 추가 1명 · 1시간에 7개 정도"]] },
     2024: { t: "야근 줄이기를 목표로 한 해",
       n: [["홀", "174개 (목표 230)"], ["미니", "80개"], ["조각", "808조각"], ["예상 매출", "1,567만 원"]],
       g: ["시트를 직접 구웠는데, 오븐 두 대를 같이 쓰니 6시간 → 4시간으로 줄었다.", "2명이서 홀 15개를 1시간 30분에 만들었다.", "미니를 찾는 손님이 생각보다 많았다.", "조각케이크는 오후 3시쯤 다 팔렸다."],
       b: ["첫날 시트 재료를 잘못 재서 다시 했다. (3시간 넘게 걸림)", "딸기를 너무 일찍 손질하고 밖에 둬서 큰 통 3개 분량을 버렸다.", "냉장고가 좁아서 케이크 · 시트를 차 안에 보관했다.", "23 · 24일 새벽 4시 반까지 일했다. 갈수록 지쳐서 느려졌다.", "미니 15개 · 피스타치오 딸기 조각 7개가 남았다."],
       x: ["재료 재는 시간을 줄여야 일찍 끝난다.", "아이싱이 끝나면 하나씩 바로 완성해서 내보내기.", "딸기는 쓰기 직전에 손질하고 냉장 보관.", "미니는 15개 덜 만들기: 80 → 65개 (그래도 25년엔 미니 찾는 손님이 늘어 106개 팔림)", "시트는 직접 굽지 말고 줄이기 → 25년에 빵집 주문으로 바꿈"],
+      l: [["🍞 시트", "직접 구움 기본 242 · 초코 45 · 미니 25장", "기록 없음", "none"], ["🥛 생크림", "필요 약 134통 · 계획표 준비 216통 · 작업표 메모 65 + 20통", "남은 수 기록 없음 (준비 숫자도 서로 달라요)", "none"], ["🍓 딸기", "필요 292팩 · 준비 315팩 (재료 목록엔 411팩)", "상한 딸기 큰 통 3개 버림", "bad"], ["🍰 조각", "123판 (딸기 생크림 61 · 초코딸기 22 · 망고 13 · 피스타치오 12 · 샤인 11 · 티라미수 4)", "피스타치오 딸기 조각 7개 남음 · 나머지는 오후 3시쯤 다 나감", "over"], ["🧁 미니", "80개 만듦", "15개 남음 (65개 팔림)", "over"]],
       f: [["🍞 시트", "직접 구움 — 기본 242 · 초코 45 · 미니 25장 (하루 기본 11번 · 초코 2~3번 굽기)"], ["🥛 재료", "생크림 85통 (65 + 20) · 딸기 411팩"], ["👥 사람", "사장님 · 항아님 · 어머님 + 추가 1명 (바 · 설거지 · 뒷정리)"]] },
     2023: { t: "계획대로 만든 해",
       n: [["홀", "152개 (계획 151)"], ["미니", "71개"], ["조각", "123판"]],
       g: ["계획한 숫자(151개)와 실제(152개)가 거의 같았다."],
       b: ["딸기 농장 거래가 12/19에 끊겨서 도매시장으로 바꿨다.", "생크림을 여러 곳에서 나눠 사서 헷갈렸다.", "22~24일 사장님이 밤을 새웠다.", "시트 재료를 실제보다 적게 준비했다."],
       x: ["생크림은 한 곳에서 고정으로 받기.", "딸기 거래처는 두 곳 이상 잡아 두기.", "작업 순서: 조각 → 미니 → 홀, 초코부터."],
+      l: [["🍞 시트", "직접 구움 기본 221 · 초코 54장", "기록 없음 · 오히려 재료를 적게 준비했다", "none"], ["🥛 생크림", "필요 164통 · 들어온 것 224통", "약 60통 더 받음 (남은 수는 안 적음)", "over"], ["🍓 딸기", "필요 약 160 · 들어온 것 165.5 (밀양 25 + 도매 140.5)", "약 5 여유 · 거의 딱 맞음", "ok"], ["🧁 미니 · 🍰 조각", "미니 71개 · 조각 123판", "기록 없음", "none"]],
       f: [["🍞 시트", "직접 구움 — 기본 221 · 초코 54장"], ["🥛 재료", "생크림 224통 · 딸기 밀양 농장 60 + 도매 100"], ["👥 사람", "사장님 + 도와준 사람 2명 (하루 3시간쯤)"]] },
     2022: { t: "현장 판매를 시작한 해",
       n: [["예약", "85개 (+20)"], ["현장 판매", "44개 준비"]],
@@ -1030,11 +1072,14 @@
       ["ok", "24일 19시간 일했다", "23일 픽업을 13 → 33개로 늘렸다 · 미니 24일 몫은 23일에 미리"],
       ["ok", "준비가 12월에 몰렸다", "올해는 3주쯤 빠르다 (회의 10/9 · 안내지 10/28 · 리본 주문 11/16)"],
       ["ok", "바쁜 날 문구 픽까지 하느라 힘들었다", "12/23~25 픽업은 문구 픽 안 함"],
-      ["part", "24일에 너무 몰린다", "그래도 24일 한판 · 반짝 82개 (작년 69개) → 예약 수량 막기 · 추가 인력 정하기"],
+      ["part", "24일에 너무 몰린다", "그래도 24일 한판 · 반짝 77개 (작년 69개) → 예약 수량 막기 · 추가 인력 정하기"],
       ["part", "그날 홀케이크 찾는 전화를 못 받았다", "23 · 24일 홀 5개씩 더 만들자는 제안만 있음 (계획엔 아직 안 넣음)"],
       ["todo", "예약이 적은 걸 늦게 알았다", "매주 스마트플레이스에서 크리스마스 예약 개수 보기"],
       ["todo", "냉장고 자리가 모자랐다", "24 · 25일 냉장고에 몇 개 들어가는지 세기"],
-      ["todo", "딸기 생크림 조각이 56개 남았다 (82판 만듦)", "딸기 생크림 조각은 68판(약 272조각)까지만 · 23 · 24일에서 14판 빼기 · 초코딸기 조각은 작년 25판 그대로나 조금 더"],
+      ["ok", "딸기 생크림 조각이 56개 남았다 (82판 만듦)", "생산 계획에 딸기 생크림 68판 (23일 30 → 22 · 24일 20 → 14) · 초코딸기 25 · 피스타치오 10 · 샤인 4 · 망고 6 = 113판을 넣었다 · ⚠ 목표 칸 「딸기 생크림 300조각」은 68판(약 272조각)보다 많음 — 확인"],
+      ["part", "미니가 남았다 (24년 15개 · 25년 12개)", "계획 미니 90개 (작년 118개) · 25일은 25개 (작년 50개) — 남기보다 모자랄 수 있으니 25일 오후에 진열 보고 더 만들지 정하기"],
+      ["todo", "생크림 · 딸기를 넉넉히 받아 남았다 (25년 생크림 20통 넘게 · 딸기 22팩)", "재료 표 필요 수량 + 10%까지만 주문 · 매일 남은 통 수 세서 다음 주문 줄이기"],
+      ["todo", "끝나고 남은 시트 · 생크림 수를 안 적었다 (3년 다)", "12/26 마감 때 남은 시트 · 생크림 · 딸기 · 조각 · 미니 세서 📊 지난 해에 적기"],
       ["todo", "시트를 빵집에 주문 (작년 기본 74 · 초코 12)", "올해 목표에 맞춰 수량 다시 계산 · 11월 말 견적"]
     ]
   };
@@ -1057,6 +1102,7 @@
       var Y = FBY[y], open = !compact || i < 2;
       return '<details class="fb2y"' + (open ? " open" : "") + '><summary><span class="fb2yr">' + y + '</span><span class="fb2yt">' + esc(Y.t) + '</span><span class="fb2nums">' + Y.n.map(function (n) { return '<span><small>' + esc(n[0]) + "</small><b>" + esc(n[1]) + "</b></span>"; }).join("") + "</span></summary>" +
         '<div class="fb2g3"><div class="fb2c good"><b>👍 잘된 점</b>' + li(Y.g) + '</div><div class="fb2c bad"><b>👎 아쉬운 점</b>' + li(Y.b) + '</div><div class="fb2c next"><b>👉 그래서 다음엔</b>' + li(Y.x) + "</div></div>" +
+        (Y.l && Y.l.length ? '<div class="fb2left"><b class="fb2lh">📦 얼마나 남았나 <small>준비한 것 → 남은 것</small></b><table><thead><tr><th>품목</th><th>준비 · 만든 것</th><th>남은 것</th></tr></thead><tbody>' + Y.l.map(function (r) { var tg = ({ over: "남음", ok: "딱 맞음", bad: "버림", none: "기록 없음" })[r[3]]; return '<tr class="lq-' + r[3] + '"><th>' + esc(r[0]) + "</th><td>" + esc(r[1]) + '</td><td><span class="fb2lt">' + tg + "</span> " + (r[2] === tg ? "" : esc(r[2])) + "</td></tr>"; }).join("") + "</tbody></table></div>" : "") +
         (Y.f.length ? '<div class="fb2facts">' + Y.f.map(function (f) { return "<div><b>" + f[0] + "</b><span>" + esc(f[1]) + "</span></div>"; }).join("") + "</div>" : "") + "</details>";
     }).join("") + "</div>";
     return h;
@@ -1142,14 +1188,20 @@
       tile("예약 " + first.y + " → " + lastR.y, lastR.res, "건", first.res + "건에서 " + (first.res ? "×" + (lastR.res / first.res).toFixed(1) : ""), "") +
       (peakD ? tile("가장 바빴던 날", peakD.n, "건", mdw(peakD.d) + " · " + peakD.d.slice(0, 4), "") : "") +
       (lastR.money ? tile(lastR.y + " 예상 매출", Math.round(lastR.money / 10000), "만 원", (lastR.cost ? "재료 · 부자재 " + Math.round(lastR.cost / 10000) + "만 원" : ""), "") : "") + "</div></div>";
-    // 차트 ①
+    // 차트 ① — 막대마다 센 기간 · 목표 기간 (11/16 사장님 「총 날짜랑 목표 날짜도 알려줘야지」)
+    var PD = { 2021: "12/21~25 예약", 2022: "12/22~24 예약", 2023: "12/18~25", 2024: "12/18~25", 2025: "12/18~25" }, GPD = { 2023: "12/18~25", 2024: "12/18~25", 2025: "12/18~25" };
+    var pdNow = (function () { var P = load(cur).prod || {}, ds = []; rows(g.it).forEach(function (x) { if (x.k === "조각") return; var r = P[x._id] || {}; Object.keys(r).forEach(function (d) { if (N(r[d] && r[d].p) > 0) ds.push(d); }); }); ds.sort(); return ds.length ? rg2(md2s(ds[0]), md2s(ds[ds.length - 1])) : ""; })();
+    function rg2(a, b) { var A = a.split("/"), B = b.split("/"); return a === b ? a : A[0] === B[0] ? a + "~" + B[1] : a + "~" + b; }
+    function md2s(d) { return (+d.slice(5, 7)) + "/" + (+d.slice(8)); }
+    var gpNow = rg2(gmd(g.from, "11/11"), gmd(g.to, "12/25"));
     h += '<div class="xigcard"><div class="xigh"><b>📈 해마다 크리스마스 케이크 (홀 + 미니)</b><span class="xlg"><i class="sw w"></i>홀 · 중간 <i class="sw m"></i>미니 <i class="sw g"></i>목표 (지난 해는 홀 목표) <i class="sw p"></i>' + cur + ' 계획</span></div><div class="xgcols" role="img" aria-label="해마다 크리스마스 케이크 개수">' +
       C.map(function (c, i) {
         var tot = c.w + c.m, tip = c.y + "년 · 홀 " + c.w + " · 미니 " + c.m + " = " + tot + "개" + (c.goal ? " · 목표 " + c.goal : "") + (c.res ? " · 예약 명단 " + c.res + "건" : "") + (c.now ? " (올해 생산 계획 칸 합)" : "");
         return '<div class="xgcol' + (c.now ? " now" : "") + '" style="--i:' + i + '" data-tip="' + ea2(tip) + '" tabindex="0"><div class="xgbar"><b class="xgtot" style="bottom:calc(' + (tot / mx * 100) + '% + 2px)">' + (tot || (c.now ? "계획 0" : "—")) + "</b>" +
-          (c.goal ? '<s class="xggoal' + (c.goal < tot && tot - c.goal < mx * 0.12 ? " lo" : "") + '" style="bottom:' + (c.goal / mx * 100) + '%"><em>' + (c.now ? "목표 " : "홀 목표 ") + c.goal + "</em></s>" : "") +
-          '<i class="m" style="height:' + (c.m / mx * 100) + '%">' + (c.m >= mx * 0.08 ? "<u>" + c.m + "</u>" : "") + '</i><i class="w" style="height:' + (c.w / mx * 100) + '%">' + (c.w >= mx * 0.08 ? "<u>" + c.w + "</u>" : "") + "</i></div><span>" + c.y + (c.now ? "<small>계획</small>" : "") + "</span></div>";
-      }).join("") + '</div><p class="xgnote">' + (function () { var a = C.filter(function (c) { return c.goal && !c.now; }); return a.length ? "지난 해 목표는 홀 기준 — 홀 실제 / 목표: " + a.map(function (c) { return c.y + " " + c.w + "/" + c.goal + " (" + Math.round(c.w / c.goal * 100) + "%)"; }).join(" · ") : ""; })() + (gt ? " · <b>" + cur + " 목표 " + gt + "개 → 지금 계획 " + (ps.whole + ps.mini) + "개</b>" : "") + "</p></div>";
+          (c.goal ? '<s class="xggoal' + (c.goal < tot && tot - c.goal < mx * 0.12 ? " lo" : "") + '" style="bottom:' + (c.goal / mx * 100) + '%"><em>' + (c.now ? "목표 " : "홀 목표 ") + c.goal + '<small>' + (c.now ? gpNow : (GPD[c.y] || "")) + "</small></em></s>" : "") +
+          '<i class="m" style="height:' + (c.m / mx * 100) + '%">' + (c.m >= mx * 0.08 ? "<u>" + c.m + "</u>" : "") + '</i><i class="w" style="height:' + (c.w / mx * 100) + '%">' + (c.w >= mx * 0.08 ? "<u>" + c.w + "</u>" : "") + "</i></div><span>" + c.y + (c.now ? "<small>계획</small>" : "") + '<small class="xgper">' + (c.now ? (pdNow || "날짜 칸 없음") : (PD[c.y] || "")) + "</small></span></div>";
+      }).join("") + '</div><p class="xgnote">' + (function () { var a = C.filter(function (c) { return c.goal && !c.now; }); return a.length ? "지난 해 목표는 홀 기준 — 홀 실제 / 목표: " + a.map(function (c) { return c.y + " " + c.w + "/" + c.goal + " (" + Math.round(c.w / c.goal * 100) + "%)"; }).join(" · ") : ""; })() + (gt ? " · <b>" + cur + " 목표 " + gt + "개 → 지금 계획 " + (ps.whole + ps.mini) + "개</b>" : "") + "</p>" +
+      '<p class="xgper2">📅 <b>막대 아래 날짜 = 센 기간</b> · 2021 · 2022는 예약 명단만, 2023~2025는 크리스마스 주간(12/18~25) 실제 만든 수' + (gt ? '<br>⚠ <b>' + cur + ' 목표 ' + gt + '개는 ' + gpNow + ' 전체 기간</b>인데, 막대(계획 ' + (ps.whole + ps.mini) + '개)는 <b>' + (pdNow || "날짜별 생산 칸") + '</b> 날짜별 생산 계획만 — 그 앞(' + gmd(g.from, "11/11") + '~12/17)에 팔 몫은 아직 날짜 칸이 없어요' + (N(g.peak) ? ' · 그중 피크 ' + gmd(g.pf, "12/21") + '~' + gmd(g.pt, "12/25") + ' 목표 ' + esc(g.peak) + '개 → 계획 ' + ps.peak + '개' : "") : "") + "</p></div>";
     // 차트 ② 예약 몰리는 날 (해 × 날짜)
     var dk = {}; ys.forEach(function (y) { Object.keys(H[y].res || {}).forEach(function (d) { dk[d.slice(5)] = 1; }); }); var DK = Object.keys(dk).sort(), hmx = 1;
     ys.forEach(function (y) { Object.keys(H[y].res || {}).forEach(function (d) { hmx = Math.max(hmx, H[y].res[d].n); }); });
