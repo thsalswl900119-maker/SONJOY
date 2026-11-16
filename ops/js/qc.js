@@ -72,7 +72,7 @@
     tick(); draw(); toast(note ? "📝 특이사항 남겼어요" : "👍 이상무 기록했어요");
   }
   // 기록하면 오늘 할 일 「★ 케이크 크림 … 당도 체크」(t506)도 같이 체크
-  function tick() { var b = document.querySelector('#tp2 .box[data-k="t506"]'); if (b && b.getAttribute("aria-pressed") !== "true" && !document.getElementById("tdPastMsg")) b.click(); }
+  function tick() { return; /* 11/16 t506 = 크로스체크(두 사람이 같이 먹어 보기)로 바뀌어 맛 기록만으로 자동 체크하지 않음 */ var b = document.querySelector('#tp2 .box[data-k="t506"]'); if (b && b.getAttribute("aria-pressed") !== "true" && !document.getElementById("tdPastMsg")) b.click(); }
   function add(ok) {
     var w = me(); if (!w) { alert("먼저 이름을 고르세요 (누가 봤는지 남깁니다)"); return; }
     var inp = box.querySelector(".qcm"), m = inp.value.trim(), it = sel;
