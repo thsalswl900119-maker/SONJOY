@@ -7,7 +7,7 @@
 // 저장: cafesui.qc.<해> = { id: { d, at, who, it, ok(1|0), m, fix:{by, at, m} } } — 한 줄씩 더하기만(지우지 않음)
 (function () {
   var box = document.getElementById("qcBox"); if (!box) return;
-  var PRE = "cafesui.qc.", ITEMS = ["생크림", "망고", "딸기", "샤인머스캣", "초코 크림", "기타"], BOSS = ["사장님", "정항아"], REQ = ["정항아", "박혜빈"], WIT = "케이크 · 과일 당도", sel = "생크림";
+  var PRE = "cafesui.qc.", ITEMS = ["생크림", "망고", "딸기", "샤인머스캣", "초코 크림", "시트", "기타"], BOSS = ["사장님", "정항아"], REQ = ["정항아", "박혜빈"], WIT = "케이크 · 과일 당도", sel = "생크림";
   function me() { try { return localStorage.getItem("cafesui.me") || ""; } catch (e) { return ""; } }
   function pad(n) { return (n < 10 ? "0" : "") + n; }
   function ymd(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
