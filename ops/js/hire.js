@@ -81,7 +81,7 @@
     var FP = firebase.firestore.FieldPath;
     authed().then(loadPriv).then(function (pk) {
       priv = pk; if (!priv) throw new Error("nopriv");
-      return firebase.firestore().collection("ops").where(FP.documentId(), ">=", "hire.a.").where(FP.documentId(), "<", "hire.a/").get();
+      return firebase.firestore().collection("ops").where(FP.documentId(), ">=", "hire.a.").where(FP.documentId(), "<=", "hire.a.\uf8ff").get();
     }).then(function (snap) {
       var list = []; snap.forEach(function (doc) { list.push({ id: doc.id, v: (doc.data() || {}).v }); });
       return Promise.all(list.map(function (r) {
@@ -157,6 +157,17 @@
     else if (box && !key) draw();
   });
   mount();
+  /* 바로 가기 주소 …/ops/#hire = 관리자 → 📨 지원자 면접 (11/16 사장님 「지원자 답을 보고 싶다」) */
+  if (location.hash === "#hire") {
+    var tries = 0;
+    (function go() {
+      var t = document.querySelector('.tab[data-p="tp15"]');
+      if (t && document.getElementById("tp15").hidden) t.click();
+      var b = document.querySelector('#tp15 .mgt[data-m="hire"]');
+      if (b && !b.hidden) { b.click(); var s = document.getElementById("mgHireSlot"); if (s) s.scrollIntoView({ block: "start" }); return; }
+      if (++tries < 60) setTimeout(go, 500);
+    })();
+  }
   if (window.MutationObserver) {
     var t = null, mo = new MutationObserver(function () { if (t) return; t = setTimeout(function () { t = null; mount(); }, 400); });
     var pn = document.getElementById("tp15"); if (pn) mo.observe(pn, { childList: true, subtree: true });
