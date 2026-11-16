@@ -885,6 +885,8 @@
           if (histPlain != null) encr(k2, histPlain).then(function (o) { try { localStorage.setItem(PRE + "hist", JSON.stringify(o)); } catch (e) {} });
           // 관리자 탭 🔐 계정 · 연락처 폴더(vault.js)도 같은 비밀번호라 같이 다시 잠근다
           var vo = J(PRE + "vault"); if (vo && key) dec(key, vo).then(function (t) { return encr(k2, t); }).then(function (o) { try { localStorage.setItem(PRE + "vault", JSON.stringify(o)); } catch (e) {} }, function () {});
+          /* 관리자 탭 📨 지원자 면접(hire.js)의 여는 열쇠(pk)도 같은 비밀번호라 같이 다시 잠근다 */
+          var ho = J(PRE + "hirekey"); if (ho && ho.pk && key) dec(key, ho.pk).then(function (t) { return encr(k2, t); }).then(function (pk) { ho.pk = pk; try { localStorage.setItem(PRE + "hirekey", JSON.stringify(ho)); } catch (e) {} }, function () {});
           try { localStorage.setItem(PRE + "meta", JSON.stringify(meta)); } catch (e) {}
           return C.exportKey("raw", k2).then(function (raw) { try { localStorage.setItem(KEYK, JSON.stringify({ s: meta.s, k: bu(raw) })); } catch (e) {} key = k2; alert("바꿨습니다 · 다른 기기는 새 비밀번호를 넣어야 열립니다"); });
         });

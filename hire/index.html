@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>카페스이 1차 면접</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* 한 화면에 질문 하나 · 휴대폰 먼저 · 카페스이 크림 / 갈색 */
+:root{
+  --bg:#FBF6EA; --card:#FFFDF7; --raise:#F4ECDA; --ink:#3F3226; --ink2:#5E4D3B; --muted:#736350;
+  --rule:#E3D6BC; --acc:#8F5A22; --accbg:#F7EBD8; --ok:#56703F; --bad:#9E4430; --on:#FFFCF6;
+  --serif:"Gowun Batang","Noto Serif KR",serif; --sans:"Noto Sans KR",system-ui,-apple-system,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#17140F; --card:#221E17; --raise:#2C2619; --ink:#EFE6D6; --ink2:#D2C6B0; --muted:#B3A68F;
+  --rule:#433A26; --acc:#E2A45C; --accbg:#3A2C15; --ok:#A8BC84; --bad:#EE9B84; --on:#17140F; color-scheme:dark}}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.7;word-break:keep-all;overflow-wrap:anywhere;
+  padding:env(safe-area-inset-top,0px) max(16px,env(safe-area-inset-right,0px)) env(safe-area-inset-bottom,0px) max(16px,env(safe-area-inset-left,0px))}
+.wrap{max-width:560px;margin:0 auto;padding-block:22px 48px;display:grid;gap:16px}
+h1,h2{font-family:var(--serif);font-weight:700;margin:0;text-wrap:balance}
+.brand{display:flex;align-items:center;gap:12px}
+.cup{width:44px;height:44px;flex:none}
+.brand small{display:block;font-size:13px;color:var(--muted);letter-spacing:.08em}
+.brand h1{font-size:23px;line-height:1.3}
+.card{background:var(--card);border:1px solid var(--rule);border-radius:12px;padding:20px 18px;display:grid;gap:12px}
+.lead{margin:0;color:var(--ink2);font-size:15.5px}
+ul.pts{margin:0;padding-left:20px;display:grid;gap:4px;color:var(--ink2);font-size:15px}
+.cond{background:var(--accbg);border-radius:10px;padding:12px 14px;font-size:15px;color:var(--ink)}
+.cond b{color:var(--acc)}
+label.f{display:grid;gap:6px;font-weight:700;font-size:15px;color:var(--ink2)}
+input,textarea{font:inherit;font-size:16px;color:var(--ink);background:var(--card);border:1.5px solid var(--rule);border-radius:8px;padding:12px 14px;width:100%}
+textarea{min-height:170px;resize:vertical;line-height:1.7}
+input:focus-visible,textarea:focus-visible,button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.chk{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;color:var(--ink2)}
+.chk input{width:22px;height:22px;flex:none;margin-top:3px;accent-color:var(--acc)}
+.btn{font:inherit;font-family:var(--serif);font-weight:700;font-size:17px;min-height:52px;border-radius:999px;border:1.5px solid var(--rule);background:var(--card);color:var(--ink2);padding:0 22px;cursor:pointer}
+.btn.pri{background:var(--acc);border-color:var(--acc);color:var(--on)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:10px}.row .btn{flex:1}
+.prog{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+.bar{flex:1;height:8px;border-radius:99px;background:var(--raise);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--acc);border-radius:99px;transition:width .25s}
+.tag{justify-self:start;font-size:13px;font-weight:700;letter-spacing:.04em;padding:3px 11px;border-radius:99px;background:var(--raise);color:var(--ink2)}
+.scene{border-left:3px solid var(--acc);background:var(--raise);padding:10px 14px;border-radius:0 8px 8px 0;font-size:15px;color:var(--ink2)}
+.q{font-family:var(--serif);font-size:20px;line-height:1.55}
+.hint{font-size:14px;color:var(--muted)}
+.cnt{font-size:13px;color:var(--muted);text-align:right;font-variant-numeric:tabular-nums;margin-top:-6px}
+.msg{font-size:14.5px;min-height:1.4em;margin:0}
+.msg.bad{color:var(--bad);font-weight:700}.msg.ok{color:var(--ok)}
+.done{text-align:center;padding-block:30px}
+.done .mark{font-size:30px;color:var(--acc)}
+.sum{display:grid;gap:8px;font-size:14.5px}
+.sum div{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dotted var(--rule);padding-bottom:6px}
+.sum span.e{color:var(--bad);font-weight:700}
+.foot{font-size:13px;color:var(--muted);text-align:center}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="brand">
+    <svg class="cup" viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="21" fill="var(--accbg)"/><path d="M11 18h19l-2 11a5 5 0 0 1-5 4h-5a5 5 0 0 1-5-4z" fill="none" stroke="var(--acc)" stroke-width="2.2" stroke-linejoin="round"/><path d="M30 20h3a3.5 3.5 0 0 1 0 7h-3" fill="none" stroke="var(--acc)" stroke-width="2.2"/><path d="M19 14c-2-2-1-4 1-5M23 14c-2-2-1-4 1-5" fill="none" stroke="var(--acc)" stroke-width="1.8" stroke-linecap="round"/></svg>
+    <div><small>부산 명지 · 카페스이</small><h1>카페스이 1차 면접</h1></div>
+  </header>
+
+  <section id="sIntro" class="card">
+    <h2>지원해 주셔서 감사합니다</h2>
+    <p class="lead">카페스이는 부산 명지의 작은 일본 감성 디저트 카페예요. 에그타르트와 케이크, 음료를 직원들이 직접 만들어 팝니다.</p>
+    <div class="cond">근무: <b>주 4일</b> · 수 08:30~16:30 · 목 · 금 09:30~16:30 · 토 09:00~17:30<br>첫 출근: <b>12월 23일</b></div>
+    <ul class="pts">
+      <li>질문 16개 · 20~30분쯤 걸려요.</li>
+      <li>정답은 없어요. 실제로 있었던 일을 편하게 적어 주세요.</li>
+      <li>쓰는 동안 이 휴대폰에 저장돼요. 창을 닫아도 다시 열면 이어서 쓸 수 있어요.</li>
+      <li>「제출하기」를 누르면 답이 사장님께 바로 전달돼요.</li>
+    </ul>
+    <label class="f" for="inName">이름<input id="inName" autocomplete="name" placeholder="예) 김하늘" maxlength="20"></label>
+    <label class="chk" for="agree"><input type="checkbox" id="agree"><span>답변은 채용 판단에만 쓰고, 채용이 끝나면 지운다는 안내를 읽었어요. (나이 · 가족 · 결혼 같은 건 묻지 않아요)</span></label>
+    <button type="button" class="btn pri" id="btnStart" disabled>면접 시작</button>
+    <p class="msg" id="introMsg"></p>
+  </section>
+
+  <section id="sQ" class="card" hidden>
+    <div class="prog"><span id="pN">1 / 16</span><div class="bar"><i id="pBar" style="width:6%"></i></div></div>
+    <span class="tag" id="qTag">시작</span>
+    <div class="scene" id="qScene" hidden></div>
+    <div class="q" id="qText"></div>
+    <div class="hint" id="qHint"></div>
+    <textarea id="ans" aria-labelledby="qText" placeholder="여기에 적어 주세요"></textarea>
+    <div class="cnt"><span id="cnt">0</span>자 · <span id="saved">저장됨</span></div>
+    <p class="msg" id="qMsg"></p>
+    <div class="row"><button type="button" class="btn" id="btnPrev">이전</button><button type="button" class="btn pri" id="btnNext">다음</button></div>
+  </section>
+
+  <section id="sReview" class="card" hidden>
+    <h2>제출 전에 확인해 주세요</h2>
+    <div class="sum" id="sumList"></div>
+    <p class="msg" id="sendMsg"></p>
+    <div class="row"><button type="button" class="btn" id="btnBack">고치러 가기</button><button type="button" class="btn pri" id="btnSend">제출하기</button></div>
+    <p class="hint">제출하면 답을 고칠 수 없어요.</p>
+  </section>
+
+  <section id="sDone" class="card done" hidden>
+    <div class="mark">❊</div>
+    <h2>답변이 전달됐어요</h2>
+    <p class="lead">정성껏 적어 주셔서 감사합니다.<br>결과는 사장님이 직접 연락드릴게요.</p>
+    <p class="hint">늘 그 자리에서, 사계절을 굽는 카페스이</p>
+  </section>
+
+  <p class="foot">답변은 잠금(암호화)되어 사장님만 열어 볼 수 있어요.</p>
+</main>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+<script src="../js/config.js"></script>
+<script>
+(function () {
+  // 질문 (사장님 「카페스이 1차 면접」 10/9판에서 주 4일 자리에 맞게 고침 · 11/16)
+  var Q = [
+    { t: "시작", q: "카페스이를 어떻게 알게 되셨고, 왜 여기서 일하고 싶으신가요?" },
+    { t: "근무", q: "수 08:30~16:30, 목 · 금 09:30~16:30, 토 09:00~17:30 (주 4일)로 6개월 이상 꾸준히 일할 수 있나요?", h: "학교 · 다른 일처럼 겹치는 일정이 있으면 같이 적어 주세요." },
+    { t: "근무", q: "첫 출근은 12월 23일이에요. 12/23~12/31은 크리스마스 · 연말이라 1년 중 가장 바빠요. 이 기간에 빠짐없이 나올 수 있나요?" },
+    { t: "근무", q: "집에서 가게(부산 명지)까지 무엇을 타고, 몇 분쯤 걸려서 오시나요?" },
+    { t: "인성", s: "수요일 오픈 날, 10분 일찍(08:20) 와야 하는데 버스가 늦어 08:35 도착이 확실해졌어요.", q: "어떻게 하시겠어요?" },
+    { t: "인성", q: "일하다 실수한 적이 있다면 어떤 실수였고, 그때 처음 한 말과 행동은 무엇이었나요?" },
+    { t: "인성", s: "손님 음료를 잘못 만들어 나갔고, 매니저가 그 자리에서 짧게 지적했어요.", q: "첫 마디로 뭐라고 하고, 그다음 어떻게 하시겠어요?" },
+    { t: "성격", q: "포장이나 설거지처럼 매일 반복되는 조용한 일을 몇 시간씩 할 때 어떤 마음이 드나요?" },
+    { t: "성격", q: "일을 시작하거나 끝낼 때 빠뜨리지 않으려고 하는 확인 습관이 있나요?", h: "실제로 하는 예를 들어 주세요." },
+    { t: "성격", q: "바쁘고 정신없을 때 나는 어떤 모습이 되나요?", h: "본인이 아는 단점도 괜찮아요." },
+    { t: "일하는 마음", q: "전에 일하던 곳에서 시키지 않았는데 스스로 한 일이 있나요?" },
+    { t: "일하는 마음", s: "사장님도 매니저도 가게에 없는데, 케이크에 쓸 과일 상태가 이상해 보여요.", q: "어떻게 하시겠어요?" },
+    { t: "함께 일하기", s: "내 일은 다 끝났는데, 옆에서 동료가 설거지가 밀려 퇴근이 늦어질 것 같아요.", q: "어떻게 하시겠어요?" },
+    { t: "함께 일하기", s: "12월 24일, 케이크 주문이 밀려 있고 홀도 꽉 찼어요. 매니저가 「주방만 봐 주세요」라고 했는데 홀에서 손님이 나를 불러요.", q: "어떻게 하시겠어요?" },
+    { t: "함께 일하기", q: "같이 일했던 사람 중 가장 잘 맞았던 사람은 어떤 사람이었나요? 가장 힘들었던 사람은요?" },
+    { t: "마지막", q: "카페스이에 궁금한 점이 있으면 적어 주세요.", h: "급여 · 조건은 면접 때 사장님이 직접 안내해요. 없으면 비워 두셔도 돼요.", opt: 1 }
+  ];
+  var DK = "hire1.draft", st = { name: "", a: [], i: 0, sent: "" };
+  function $(id) { return document.getElementById(id); }
+  try { var d = JSON.parse(localStorage.getItem(DK) || "null"); if (d && d.a) st = d; } catch (e) {}
+  while (st.a.length < Q.length) st.a.push("");
+  function keep() { try { localStorage.setItem(DK, JSON.stringify(st)); } catch (e) {} }
+  function show(id) { ["sIntro", "sQ", "sReview", "sDone"].forEach(function (s) { $(s).hidden = s !== id; }); window.scrollTo(0, 0); }
+
+  // 서버 · 잠금 열쇠(공개 열쇠만)
+  var db = null, pub = null, ready = false;
+  function boot() {
+    if (!window.firebase || !window.FIREBASE_CONFIG) { $("introMsg").textContent = "연결 파일을 못 읽었어요 · 인터넷을 확인하고 새로고침해 주세요"; $("introMsg").className = "msg bad"; return; }
+    try { firebase.initializeApp(window.FIREBASE_CONFIG); } catch (e) {}
+    db = firebase.firestore();
+    firebase.auth().signInAnonymously().then(function () {
+      return db.collection("ops").doc("cafesui.recipe.hirekey").get();
+    }).then(function (snap) {
+      var o = null; try { o = JSON.parse((snap.exists && snap.data().v) || "null"); } catch (e) {}
+      if (!o || !o.pub) throw new Error("nokey");
+      return crypto.subtle.importKey("jwk", o.pub, { name: "RSA-OAEP", hash: "SHA-256" }, false, ["encrypt"]);
+    }).then(function (k) { pub = k; ready = true; }).catch(function (e) {
+      if (String(e && e.message) === "nokey") { $("introMsg").textContent = "아직 받을 준비가 안 됐어요 · 답은 써 두시고, 사장님께 알려 주세요"; $("introMsg").className = "msg bad"; }
+    });
+  }
+
+  // 시작 화면
+  $("inName").value = st.name || "";
+  $("agree").checked = !!st.ok;
+  function canStart() { $("btnStart").disabled = !($("inName").value.trim() && $("agree").checked); }
+  $("inName").addEventListener("input", function () { st.name = this.value.trim(); keep(); canStart(); });
+  $("agree").addEventListener("change", function () { st.ok = this.checked ? 1 : 0; keep(); canStart(); });
+  canStart();
+  $("btnStart").addEventListener("click", function () { st.i = st.i || 0; draw(); show("sQ"); });
+
+  // 질문 화면
+  function draw() {
+    var q = Q[st.i];
+    $("pN").textContent = (st.i + 1) + " / " + Q.length;
+    $("pBar").style.width = Math.round((st.i + 1) / Q.length * 100) + "%";
+    $("qTag").textContent = q.t;
+    $("qScene").hidden = !q.s; $("qScene").textContent = q.s ? "상황 · " + q.s : "";
+    $("qText").textContent = q.q;
+    $("qHint").textContent = q.h || "짧아도 괜찮아요. 실제로 있었던 일이면 더 좋아요.";
+    $("ans").value = st.a[st.i] || "";
+    $("cnt").textContent = $("ans").value.length;
+    $("qMsg").textContent = "";
+    $("btnPrev").textContent = st.i === 0 ? "처음으로" : "이전";
+    $("btnNext").textContent = st.i === Q.length - 1 ? "다 썼어요" : "다음";
+  }
+  var tm = null;
+  $("ans").addEventListener("input", function () {
+    st.a[st.i] = this.value; $("cnt").textContent = this.value.length; $("saved").textContent = "저장 중";
+    clearTimeout(tm); tm = setTimeout(function () { keep(); $("saved").textContent = "저장됨"; }, 300);
+  });
+  $("btnPrev").addEventListener("click", function () { keep(); if (st.i === 0) { show("sIntro"); return; } st.i--; keep(); draw(); });
+  $("btnNext").addEventListener("click", function () {
+    keep();
+    if (!Q[st.i].opt && !(st.a[st.i] || "").trim()) { $("qMsg").textContent = "한 줄이라도 적어 주세요"; $("qMsg").className = "msg bad"; $("ans").focus(); return; }
+    if (st.i < Q.length - 1) { st.i++; keep(); draw(); return; }
+    review();
+  });
+
+  // 확인 · 제출
+  function review() {
+    var h = "";
+    Q.forEach(function (q, i) {
+      var a = (st.a[i] || "").trim();
+      h += '<div><span>' + (i + 1) + ". " + q.t + '</span>' + (a ? "<span>" + a.length + "자</span>" : (q.opt ? "<span>비움</span>" : '<span class="e">안 씀</span>')) + "</div>";
+    });
+    $("sumList").innerHTML = h;
+    $("sendMsg").textContent = ""; show("sReview");
+  }
+  $("btnBack").addEventListener("click", function () { var miss = Q.findIndex(function (q, i) { return !q.opt && !(st.a[i] || "").trim(); }); st.i = miss >= 0 ? miss : 0; draw(); show("sQ"); });
+  function b64(u) { var s = "", a = new Uint8Array(u); for (var i = 0; i < a.length; i++) s += String.fromCharCode(a[i]); return btoa(s); }
+  $("btnSend").addEventListener("click", function () {
+    var miss = Q.findIndex(function (q, i) { return !q.opt && !(st.a[i] || "").trim(); });
+    if (miss >= 0) { $("sendMsg").textContent = (miss + 1) + "번 답이 비어 있어요"; $("sendMsg").className = "msg bad"; return; }
+    if (!ready) { $("sendMsg").textContent = "연결 중이에요 · 몇 초 뒤 다시 눌러 주세요"; $("sendMsg").className = "msg bad"; boot(); return; }
+    var btn = this; btn.disabled = true; $("sendMsg").textContent = "보내는 중…"; $("sendMsg").className = "msg";
+    var at = new Date(), body = JSON.stringify({ name: st.name, at: at.toISOString(), qs: Q.map(function (q) { return (q.s ? "(" + q.s + ") " : "") + q.q; }), tags: Q.map(function (q) { return q.t; }), a: st.a.slice(0, Q.length), ua: navigator.userAgent.slice(0, 120) });
+    var iv = crypto.getRandomValues(new Uint8Array(12)), ak;
+    crypto.subtle.generateKey({ name: "AES-GCM", length: 256 }, true, ["encrypt"]).then(function (k) {
+      ak = k; return crypto.subtle.encrypt({ name: "AES-GCM", iv: iv }, k, new TextEncoder().encode(body));
+    }).then(function (c) {
+      return crypto.subtle.exportKey("raw", ak).then(function (raw) { return crypto.subtle.encrypt({ name: "RSA-OAEP" }, pub, raw); }).then(function (ek) { return { ek: b64(ek), i: b64(iv), c: b64(c) }; });
+    }).then(function (o) {
+      var id = "hire.a." + at.getTime() + "-" + Math.random().toString(36).slice(2, 8);
+      st.sent = id;
+      return db.collection("ops").doc(id).set({ v: JSON.stringify(o), by: "hire", t: firebase.firestore.FieldValue.serverTimestamp() });
+    }).then(function () {
+      try { localStorage.removeItem(DK); } catch (e) {}
+      show("sDone");
+    }).catch(function () {
+      btn.disabled = false; $("sendMsg").textContent = "보내지 못했어요 · 인터넷을 확인하고 다시 눌러 주세요 (쓴 답은 그대로 있어요)"; $("sendMsg").className = "msg bad";
+    });
+  });
+  boot();
+})();
+</script>
+</body>
+</html>
