@@ -331,7 +331,7 @@
     var noticeT = null;
     // 11/7 워크샵 동시 접속 「튕김」 — 예전엔 다른 기기가 무엇이든 저장하면 손 뗀 기기는 4초 뒤 화면 전체를 새로 읽었음(맨 위로 · 하위 화면 · 펼친 카드 풀림 · 사진 다시 받기).
     // 화면이 그 자리에서 새 값으로 바꿔 끼우는 키(LIVE)는 새로 읽지 않고, 워크샵 · 벤치마킹 화면을 보는 중엔 어떤 키든 자동 새로고침 안 함(띠만)
-    var LIVE = /^cafesui\.(ws|bench|files|log|stock|todo|week|att|sched|offreq|daynotes|weekrep|xmas|qc|price|fruitcap|fruitprice|recipe|mgrchk)\b/;
+    var LIVE = /^cafesui\.(ws|bench|files|log|stock|todo|week|att|sched|offreq|daynotes|weekrep|xmas|qc|cross|price|fruitcap|fruitprice|recipe|mgrchk)\b/;
     function onCalmTab() { return ["tp9", "tp17"].some(function (id) { var p = document.getElementById(id); return p && !p.hidden; }); }
     function notifyChange() {
       // 다른 컴퓨터에서 바뀐 게 있다 — 쓰는 중이 아니면 바로 새로 읽고, 쓰는 중이면 위에 버튼만 띄운다
