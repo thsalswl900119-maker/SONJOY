@@ -695,6 +695,64 @@
     });
     return o;
   }
+  // 📊 작년 대비 (11/16 사장님 「작년 기준으로 대비 · 작년 대비로 목표를 잡아 주면」) — 작년 실제 작업량 표 전체(12/18~25) · 남은 것(FBY l) · 올해 목표 · 날짜 계획을 종류별 한 표로
+  var LYLEFT = { 2025: { w: 0, md: 0, m: 12, sl: 15 }, 2024: { w: 0, md: 0, m: 15, sl: 2 } };   // 남은 것 (조각은 판 · 25년 딸기 생크림 56 + 초딸 3 + 샤요 1 = 60조각 ≈ 15판)
+  function lyAll(pa, pb) {   // 작년 표 전체 합 · 피크(같은 월/일) 합
+    var o = { w: 0, m: 0, sl: 0, pw: 0, pm: 0, psl: 0, cols: [] }, a = md(pa), b = md(pb);
+    function inPk(k) { var x = k.split("/"), A = a.split("/"), B = b.split("/"); var v = +x[0] * 100 + +x[1]; return v >= +A[0] * 100 + +A[1] && v <= +B[0] * 100 + +B[1]; }
+    [["w", /예약 홀케이크/], ["m", /미니케이크 생산/], ["sl", /조각케이크 생산 수량(\(전날|$)/]].forEach(function (q) {
+      var T = prevT(/실제 작업량/, q[1]); if (!T) return;
+      for (var i = 1; i < T.r[0].length; i++) {
+        var hk = /(\d{1,2})\/(\d{1,2})/.exec(String(T.r[0][i])); if (!hk) continue; var k = (+hk[1]) + "/" + (+hk[2]), t = 0;
+        T.r.slice(1).forEach(function (r) { if (/합계/.test(String(r[0]))) return; var v = r[i]; if (v !== "" && v != null && !isNaN(+v)) t += +v; });
+        o[q[0]] += t; if (inPk(k)) o["p" + q[0]] += t;
+      }
+    });
+    return o;
+  }
+  function yoyBox(g, it, P, pa, pb) {
+    var py = cur - 1, L = lyAll(pa, pb), LF = LYLEFT[py] || { w: 0, md: 0, m: 0, sl: 0 }, sp = N(load(cur).slicePan);
+    if (!L.w && !L.m) return "";
+    function sumK(f, pk) { return it.filter(f).reduce(function (a, x) { var r = P[x._id] || {}; return a + Object.keys(r).reduce(function (b, d) { return b + ((!pk || (d >= pa && d <= pb)) ? N(r[d] && r[d].p) : 0); }, 0); }, 0); }
+    function tK(f) { return it.filter(f).reduce(function (a, x) { return a + N(x.t); }, 0); }
+    function pct(a, b) { if (!b) return a ? "새로" : ""; var d = a - b; return (d >= 0 ? "▲" : "▼") + Math.abs(d) + " (" + (d >= 0 ? "+" : "−") + Math.round(Math.abs(d) / b * 100) + "%)"; }
+    function cls(a, b) { return !b ? "nw" : a > b ? "up" : a < b ? "dn" : "eq"; }
+    var fW = function (x) { return x.k === "홀"; }, fMd = function (x) { return x.k === "중간" || x.k === "기타"; }, fM = function (x) { return x.k === "미니"; }, fS = function (x) { return x.k === "조각"; };
+    var R = [
+      ["🎂", "한판 (홀)", "개", L.w, LF.w, tK(fW), sumK(fW), "23 · 24일 「오늘 홀 있어요?」 전화 몫까지"],
+      ["🎁", "반짝 (중간)", "개", 0, 0, tK(fMd), sumK(fMd), "올해 새로 · 단체 주문"],
+      ["🧁", "미니", "개", L.m, LF.m, tK(fM), sumK(fM), "작년 " + LF.m + "개 남음 → 줄임"],
+      ["🍰", "조각 (판)", "판", L.sl, LF.sl, sp || 0, sumK(fS), "작년 약 " + LF.sl + "판(" + LF.sl * 4 + "조각) 남음 → 줄임"]
+    ];
+    var h = '<div class="xyoy"><table><thead><tr><th>종류</th><th>' + py + '년<small>만든 것</small></th><th>' + py + '년<small>남은 것 → 팔린 것</small></th><th class="hl">' + cur + '년 목표<small>작년 만든 것 대비</small></th><th>' + cur + '년 날짜 계획<small>12/18~ 날짜 칸 합</small></th><th>목표와 차이</th></tr></thead><tbody>';
+    var T = { ly: 0, sold: 0, goal: 0, plan: 0 };
+    R.forEach(function (r, i) {
+      var sold = r[3] - r[4], gap = r[6] - r[5];
+      if (i < 3) { T.ly += r[3]; T.sold += sold; T.goal += r[5]; T.plan += r[6]; }
+      h += '<tr' + (i === 3 ? ' class="sl"' : "") + '><th><span class="ic">' + r[0] + "</span>" + r[1] + "</th>" +
+        '<td class="n">' + (r[3] ? r[3] + r[2] : "—") + "</td>" +
+        '<td class="n sm">' + (r[3] ? (r[4] ? '<s class="lf">' + r[4] + r[2] + " 남음</s> → " : "") + sold + r[2] + (r[4] ? "" : " (다 팔림)") : "—") + "</td>" +
+        '<td class="n hl"><b>' + (r[5] || "—") + r[2] + '</b><em class="' + cls(r[5], r[3]) + '">' + pct(r[5], r[3]) + "</em><small>" + esc(r[7]) + "</small></td>" +
+        '<td class="n"><b>' + r[6] + r[2] + "</b></td>" +
+        '<td class="n gp ' + (gap === 0 ? "ok" : "no") + '">' + (gap === 0 ? "✔ 맞음" : (gap < 0 ? "−" + (-gap) : "+" + gap) + r[2] + (gap < 0 && i < 2 ? "<small>12/17 전(예약 들어오는 대로) 몫</small>" : "<small>날짜 칸을 고쳐 맞추기</small>")) + "</td></tr>";
+    });
+    var gt = T.plan - T.goal;
+    h += '</tbody><tfoot><tr><th>🎄 크리스마스 케이크 합<small>한판 + 반짝 + 미니</small></th><td class="n">' + T.ly + '개</td><td class="n sm">' + T.sold + '개 팔림</td><td class="n hl"><b>' + T.goal + '개</b><em class="' + cls(T.goal, T.ly) + '">' + pct(T.goal, T.ly) + "</em>" + (N(g.total) && N(g.total) !== T.goal ? "<small>전사 목표 칸은 " + esc(g.total) + "개 (품목 합과 " + (N(g.total) - T.goal) + "개 차이)</small>" : "") + '</td><td class="n"><b>' + T.plan + '개</b></td><td class="n gp ' + (gt === 0 ? "ok" : "no") + '">' + (gt === 0 ? "✔ 맞음" : (gt < 0 ? "−" : "+") + Math.abs(gt) + "개<small>" + (gt < 0 ? "12/17 전 몫" : "목표보다 많음") + "</small>") + "</td></tr></tfoot></table></div>";
+    // 피크 같은 기간
+    var pW = sumK(function (x) { return x.k !== "조각" && x.k !== "미니"; }, 1), pM = sumK(fM, 1), lyP = L.pw + L.pm, pP = pW + pM, gp = N(g.peak);
+    h += '<div class="xyoypk"><b class="t">🔥 피크 ' + md(pa) + "~" + md(pb) + ' 같은 날짜끼리</b>' +
+      '<div class="c"><span>' + py + '년 실제</span><b>' + lyP + "개</b><small>한판 " + L.pw + " · 미니 " + L.pm + "</small></div>" +
+      '<div class="c hl"><span>' + cur + '년 목표</span><b>' + (gp || "—") + "개</b><small>" + (gp ? pct(gp, lyP) + " 작년 대비" : "") + "</small>" + (gp && gp < lyP ? '<button type="button" class="xyoyw" data-go="goal">⚠ 작년 같은 날짜(' + lyP + '개)보다 적게 잡혀 있어요 → 🎯 목표에서 고치기</button>' : "") + "</div>" +
+      '<div class="c"><span>' + cur + '년 날짜 계획</span><b>' + pP + "개</b><small>한판 · 반짝 " + pW + " · 미니 " + pM + (gp ? " · 목표와 " + (pP - gp >= 0 ? "+" : "−") + Math.abs(pP - gp) : "") + "</small></div></div>";
+    // 한 줄 정리
+    var lines = [];
+    lines.push("한판은 작년 " + L.w + "개 → 목표 " + R[0][5] + "개 " + pct(R[0][5], L.w) + " · 날짜 칸엔 " + R[0][6] + "개, 나머지 " + Math.max(0, R[0][5] - R[0][6]) + "개는 12/17 전에 예약 들어오는 대로");
+    lines.push("미니는 작년 " + L.m + "개 만들어 " + LF.m + "개 남음(팔린 " + (L.m - LF.m) + "개) → 목표 " + R[2][5] + "개 — 팔린 수보다 " + Math.max(0, L.m - LF.m - R[2][5]) + "개 적어서 남을 걱정은 적고, 25일 오후 진열이 모자랄 수 있음");
+    lines.push("조각은 작년 " + L.sl + "판 중 약 " + LF.sl + "판 남음 → 올해 " + (sp || "—") + "판 (딸기 생크림 82 → 68판, 23 · 24일에서 뺌)");
+    lines.push("피크 " + md(pa) + "~" + md(pb) + "는 작년 " + lyP + "개 → 올해 계획 " + pP + "개" + (gp && gp !== pP ? " (목표 칸 " + gp + "개와 " + (pP - gp) + "개 차이)" : ""));
+    h += '<ul class="xyoyl">' + lines.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>";
+    return h;
+  }
   function prodCal(g, it, D, P, pa, pb, t0) {
     if (!D.length) return "";
     var a = new Date(+D[0].slice(0, 4), +D[0].slice(5, 7) - 1, +D[0].slice(8)), b = new Date(+D[D.length - 1].slice(0, 4), +D[D.length - 1].slice(5, 7) - 1, +D[D.length - 1].slice(8));
@@ -710,9 +768,10 @@
           var L = it.filter(G[2]), t = 0, ta = 0, parts = [];
           L.forEach(function (x) { var c = (P[x._id] || {})[s] || {}, v = N(c.p); t += v; ta += N(c.a); if (v) parts.push(esc((x.n || "").replace(/\s*\([^)]{7,}\)?.*$/, "").replace(/ 조각$/, "")) + " " + v); });
           TT[G[4]] += t;
-          if (t || (ly[G[4]] !== "" && ly[G[4]] != null)) body += '<div class="xpcq ' + G[4] + (t ? "" : " zero") + '"><span class="xpcq1">' + G[0] + " " + G[1] + " <b>" + (t || 0) + "</b>" + G[3] + (ta ? ' <em>실제 ' + ta + "</em>" : "") + "</span>" + (parts.length > 1 ? "<small>" + parts.join(" · ") + "</small>" : "") + (ly[G[4]] !== "" && ly[G[4]] != null ? '<small class="ly">' + (cur - 1) + "년 " + ly[G[4]] + G[3] + "</small>" : "") + "</div>";
+          if (t || (ly[G[4]] !== "" && ly[G[4]] != null)) body += '<div class="xpcq ' + G[4] + (t ? "" : " zero") + '"><span class="xpcq1">' + G[0] + " " + G[1] + " <b>" + (t || 0) + "</b>" + G[3] + (ta ? ' <em>실제 ' + ta + "</em>" : "") + "</span>" + (parts.length > 1 ? "<small>" + parts.join(" · ") + "</small>" : "") + (ly[G[4]] !== "" && ly[G[4]] != null ? '<small class="ly">작년 ' + ly[G[4]] + G[3] + (t === ly[G[4]] ? " · 같음" : ' <b class="' + (t > ly[G[4]] ? "up" : "dn") + '">' + (t > ly[G[4]] ? "▲" : "▼") + Math.round(Math.abs(t - ly[G[4]]) * 10) / 10 + "</b>") + "</small>" : "") + "</div>";
         });
       }
+      if (!inD && PLREF && (ly.w !== "" || ly.m !== "" || ly.sl !== "")) cls += " lyoff", body += '<small class="xpcoff">작년 이날 ' + [ly.w !== "" ? "홀 " + ly.w : "", ly.m !== "" ? "미니 " + ly.m : "", ly.sl !== "" ? "조각 " + ly.sl + "판" : ""].filter(Boolean).join(" · ") + (wd === 0 ? " — 올해는 휴무라 앞뒤 날에 나눔" : "") + "</small>";
       var sg = inD || sugs(cur).some(function (x) { return x.d === s; }) ? sugHead(s) : "", ck = ckHead(s);
       h += '<div class="' + cls + '"' + (inD ? ' data-d="' + s + '" role="button" tabindex="0" title="눌러서 표에서 이 날 숫자 고치기"' : "") + '><div class="xpcdh"><b>' + (d.getMonth() + 1) + "/" + d.getDate() + "</b><span>" + WDN[wd] + "</span>" + (s >= pa && s <= pb && inD ? '<i class="pk">🔥 피크</i>' : "") + (s === t0 ? '<i class="td">오늘</i>' : "") + (!inD && wd === 0 ? '<i class="cl">휴무</i>' : "") + "</div>" + body + (sg ? '<div class="xpcds">' + sg + "</div>" : "") + (ck ? '<div class="xpcdk">' + ck + "</div>" : "") + "</div>";
     }
@@ -724,14 +783,12 @@
     var pa = gday(cur, gmd(g.pf, "12/21")), pb = gday(cur, gmd(g.pt, "12/25")), gCake = gs.whole + gs.mini, pCake = ps.whole + ps.mini;
     var sg = sugs(cur).filter(function (x) { return !x.nt && !x.ap && x.it; }).length, t0 = today();
     function kp(lab, b, em, off, go) { return '<button type="button" class="xpk' + (off ? " off" : "") + '"' + (go ? ' data-go="' + go + '"' : "") + "><span>" + lab + "</span><b>" + b + "</b>" + (em ? "<em>" + em + "</em>" : "") + "</button>"; }
-    var h = '<div class="xmbox"><div class="xmbh"><b>🍰 ' + cur + ' 생산 계획</b><span>날짜마다 몇 개 만들지(윗칸 계획 · 아랫칸 실제) · 칸 아래 회색 = 작년 · 재작년 같은 날 · 💬 = ' + py + '년 파일 주석 · ✅ = 그 날 할 일 · 💡 = 제안 · 📌 = 날짜 메모</span></div>' +
-      '<div class="xmbtns"><span class="xpvw" role="group" aria-label="보기"><button type="button" data-a="pvcal" class="' + (PV === "cal" ? "on" : "") + '">📅 캘린더로 보기</button><button type="button" data-a="pvtab" class="' + (PV === "tab" ? "on" : "") + '">📋 표 · 숫자 고치기</button></span><label class="xpchk"><input type="checkbox" id="xpRefChk"' + (PLREF ? " checked" : "") + "> 작년 · 재작년 숫자 · 주석 같이 보기</label>" +
+    var h = '<div class="xmbox xpnew"><div class="xmbh"><b>🍰 ' + cur + ' 생산 계획 · 작년(' + py + ') 대비</b><span>① 종류별로 작년과 비교 → ② 날짜별 계획 (캘린더로 보기 · 표에서 숫자 고치기)</span></div>' +
+      yoyBox(g, it, P, pa, pb) +
+      '<div class="xmbtns xpbar"><span class="xpvw" role="group" aria-label="보기"><button type="button" data-a="pvcal" class="' + (PV === "cal" ? "on" : "") + '">📅 캘린더로 보기</button><button type="button" data-a="pvtab" class="' + (PV === "tab" ? "on" : "") + '">📋 표 · 숫자 고치기</button></span><label class="xpchk"><input type="checkbox" id="xpRefChk"' + (PLREF ? " checked" : "") + "> 작년 숫자 같이 보기</label>" +
       '<button type="button" class="skbtn" data-a="plwide">' + (document.documentElement.classList.contains("xmwide") ? "↩ 원래 폭으로" : "⛶ 넓게 보기") + '</button><button type="button" class="skbtn" data-a="plprint">🖨 인쇄 · PDF</button><button type="button" class="skbtn xpaopen">💰 가격표</button></div>' +
-      '<div class="xpkpis">' + kp("🎯 크리스마스 케이크 목표 → 계획", gCake + " → " + pCake + "개", gmd(g.from, "11/11") + "~" + gmd(g.to, "12/25") + (pCake && gCake ? " · " + (pCake - gCake >= 0 ? "+" : "") + (pCake - gCake) : " · 계획을 적어 주세요"), pCake && gCake && pCake !== gCake, "goal") +
-        kp("🔥 피크 " + md(pa) + "~" + md(pb) + " 목표 → 계획", (g.peak ? esc(g.peak) : "—") + " → " + ps.peak + "개", N(g.peak) && ps.peak ? (ps.peak - N(g.peak) >= 0 ? "+" : "") + (ps.peak - N(g.peak)) + "개" : "", N(g.peak) && ps.peak && ps.peak !== N(g.peak), "goal") +
-        kp("🍰 조각 (기본 케이크)", (N(load(cur).slicePan) || "—") + " → " + ps.slice + "판", "목표 판 → 계획 판", 0, "goal") +
-        kp("💡 제안", sg + "개 남음", sg ? "「＋ 계획에 넣기」를 눌러야 계획에 들어가요" : "모두 반영", sg, "") + "</div>" +
-      sugBox() + (PV === "cal" ? prodCal(g, it, D, P, pa, pb, t0) : "") +
+      (PV === "cal" ? prodCal(g, it, D, P, pa, pb, t0) : "") +
+      '<details class="xpsgd"><summary>💡 생산 제안 · 📌 날짜 메모' + (sg ? ' <b class="xpsgn">아직 계획에 안 넣은 제안 ' + sg + "개</b>" : "") + "</summary>" + sugBox() + "</details>" +
       '<div class="xptabw"' + (PV === "cal" ? " hidden" : "") + '><label class="xmnote xmshort">생산 날짜 (쉼표로 · 예: 12/18, 12/19 …)<input type="text" class="xdays" value="' + ea2(D.map(function (s) { return (+s.slice(5, 7)) + "/" + (+s.slice(8)); }).join(", ")) + '"></label>' +
       '<div class="xmtw"><table class="xmt prod"><thead><tr><th>품목</th>' + D.map(function (s) { var dw = new Date(+s.slice(0, 4), +s.slice(5, 7) - 1, +s.slice(8)).getDay(); return '<th data-d="' + s + '" class="' + (s >= pa && s <= pb ? "peak" : "") + (s === t0 ? " now" : "") + (dw === 6 ? " sat" : dw === 0 ? " sun" : "") + '">' + mdw(s) + sugHead(s) + ckHead(s) + (PLREF ? yHeadHtml(s) : "") + "</th>"; }).join("") + '<th>합계</th></tr></thead><tbody>';
     var GR = [["🎂 홀 · 중간 (크리스마스 케이크)", function (x) { return x.k === "홀" || x.k === "중간" || x.k === "기타"; }, "개"], ["🧁 미니 (크리스마스 케이크)", function (x) { return x.k === "미니"; }, "개"], ["🍰 조각 · 기본 케이크 (판)", function (x) { return x.k === "조각"; }, "판"]];
