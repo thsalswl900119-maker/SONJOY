@@ -606,6 +606,11 @@
     var r = q - (isNaN(hs) ? 0 : hs) - (isNaN(pr) ? 0 : pr);
     return '<small class="xmbuy' + (r > 0 ? " more" : " ok") + '">' + (r > 0 ? "→ 더 사야 " + r : "✔ 충분 (" + (r === 0 ? "딱 맞음" : "+" + (-r) + " 여유") + ")") + "</small>";
   }
+  // 📦 상자 · 하판 따로 세기 (11/16 사장님 「하판 갯수랑 상자 갯수랑 분리해서」) — 이름에 상자 · 하판이 같이 있거나 sp:1이면 필요 · 남은 것 · 미리 주문 · 더 살 것을 두 줄로 (상자 = q · has · pre, 하판 = q2 · has2 · pre2 · 하판 필요 수량이 비면 상자와 같은 수)
+  function isSplit(x) { return x.sp === 1 || (x.sp !== 0 && /상자/.test(x.n || "") && /하판/.test(x.n || "")); }
+  function canSplit(x) { return /상자|하판|박스/.test(x.n || ""); }
+  function partOf(x, i) { return i ? { q: x.q2 !== undefined && String(x.q2).trim() !== "" ? x.q2 : x.q, has: x.has2, pre: x.pre2, qAuto: !(x.q2 !== undefined && String(x.q2).trim() !== "") } : { q: x.q, has: x.has, pre: x.pre }; }
+  function moreN(x) { var q = parseFloat(String(x.q || "").replace(/,/g, "")), hs = parseFloat(String(x.has || "").replace(/,/g, "").replace(/^[^\d]*/, "")), pr = parseFloat(String(x.pre || "").replace(/,/g, "").replace(/^[^\d]*/, "")); return isNaN(q) || (isNaN(hs) && isNaN(pr)) ? null : q - (isNaN(hs) ? 0 : hs) - (isNaN(pr) ? 0 : pr); }
   function drawMat(el) {   // 🧾 재료 · 부자재 — 10/30 사장님 「위에 것(대표 재료)처럼 가로로」 · 분류별 표 · 줄마다 수량 · 금액 · 주문처 · 메모 · 주문함 · 입고
     var L = rows(load(cur).mat), cost = 0, od = 0, ind = 0, pcost = 0, nd = needOf(cur);
     L.forEach(function (x) { cost += N(x.c); pcost += N(x.pc); if (x.od) od++; if (x.ind) ind++; });
@@ -620,18 +625,26 @@
       var G = L.filter(function (x) { return (MK2.indexOf(x.k) < 0 ? "기타" : x.k) === k; }); if (!G.length && k === "기타") return;
       var gc = 0, go = 0, gi = 0; G.forEach(function (x) { gc += N(x.c); if (x.od) go++; if (x.ind) gi++; });
       var V = G.filter(function (x) { return MFLT === "all" || st(x) === MFLT; });
-      var gm = 0; G.forEach(function (x) { var q = parseFloat(String(x.q || "").replace(/,/g, "")), hs = parseFloat(String(x.has || "").replace(/,/g, "").replace(/^[^\d]*/, "")), pr = parseFloat(String(x.pre || "").replace(/,/g, "").replace(/^[^\d]*/, "")); if (!isNaN(q) && !(isNaN(hs) && isNaN(pr)) && q - (isNaN(hs) ? 0 : hs) - (isNaN(pr) ? 0 : pr) > 0) gm++; });
+      var gm = 0; G.forEach(function (x) { if (isSplit(x)) { if ((moreN(partOf(x, 0)) || 0) > 0 || (moreN(partOf(x, 1)) || 0) > 0) gm++; return; } var q = parseFloat(String(x.q || "").replace(/,/g, "")), hs = parseFloat(String(x.has || "").replace(/,/g, "").replace(/^[^\d]*/, "")), pr = parseFloat(String(x.pre || "").replace(/,/g, "").replace(/^[^\d]*/, "")); if (!isNaN(q) && !(isNaN(hs) && isNaN(pr)) && q - (isNaN(hs) ? 0 : hs) - (isNaN(pr) ? 0 : pr) > 0) gm++; });
       h += '<tr class="xmgrp"><th colspan="10"><span class="xmgt">' + MIC[k] + " " + k + '</span><span class="xmgn"><i>품목 <b>' + G.length + '</b></i><i class="w">대기 <b>' + (G.length - go - G.filter(function (x) { return x.ind && !x.od; }).length) + '</b></i><i class="o">주문함 <b>' + go + '</b></i><i class="g">입고 <b>' + gi + "</b></i>" + (gm ? '<i class="r">더 살 것 <b>' + gm + "</b></i>" : "") + (gc ? '<i class="c">' + won(gc) + "</i>" : "") + "</span>" +
         (k === "크림 · 과일" ? '<span class="xmneed" title="🥛 위 대표 재료 표에서 계산한 필요량 (+10%)">필요 ' + nd.map(function (r) { return r.lab + " <b>" + r.n + r.u + "</b>"; }).join(" · ") + "</span>" : "") +
         '<button type="button" class="skbtn" data-a="madd" data-k="' + k + '">＋ ' + k + " 추가</button></th></tr>";
       if (!V.length) { h += '<tr class="xmnone"><td colspan="10">' + (G.length ? "이 보기에 해당하는 품목이 없어요" : "아직 없어요 · 「＋ 추가」로 넣기") + "</td></tr>"; return; }
       V.forEach(function (x) {
         h += '<tr class="xmr ' + st(x) + '" data-id="' + x._id + '"><td class="mst"><span class="xmdot">' + (x.ind ? "입고" : x.od ? "주문함" : "대기") + '</span><select class="xmi xmk" data-f="k" aria-label="분류 바꾸기" title="분류 바꾸기">' + MK2.map(function (z) { return "<option" + (z === (MK2.indexOf(x.k) < 0 ? "기타" : x.k) ? " selected" : "") + ' value="' + z + '">' + MIC[z] + "</option>"; }).join("") + "</select></td>" +
-          '<td class="mn" data-l="품목"><textarea class="xmi xmn2" data-f="n" rows="1" placeholder="품목">' + esc(x.n || "") + '</textarea><input type="text" class="xmi xmsrc" data-f="s" value="' + ea2(x.s) + '" placeholder="주문처" aria-label="주문처"></td>' +
+          '<td class="mn" data-l="품목"><textarea class="xmi xmn2" data-f="n" rows="1" placeholder="품목">' + esc(x.n || "") + '</textarea><input type="text" class="xmi xmsrc" data-f="s" value="' + ea2(x.s) + '" placeholder="주문처" aria-label="주문처">' + (canSplit(x) ? '<button type="button" class="xspbtn' + (isSplit(x) ? " on" : "") + '" data-a="msplit">' + (isSplit(x) ? "✔ 상자 · 하판 따로 세는 중" : "⇅ 상자 · 하판 따로 세기") + "</button>" : "") + '</td>' +
+          (isSplit(x) ? (function () {
+            var A = partOf(x, 0), B = partOf(x, 1);
+            function two(lab, a, b) { return '<div class="xsp"><span class="xspl">상자</span>' + a + '</div><div class="xsp b"><span class="xspl">하판</span>' + b + "</div>"; }
+            return '<td class="mq" data-l="필요 수량">' + two("", '<input type="text" class="xmi" data-f="q" value="' + ea2(x.q) + '" placeholder="상자 수">', '<input type="text" class="xmi" data-f="q2" value="' + ea2(x.q2 || "") + '" placeholder="' + ea2(x.q ? x.q + " (상자와 같음)" : "하판 수") + '">') + (x.pq && String(x.pq) !== String(x.q) ? '<small class="xpref">작년 ' + esc(x.pq) + "</small>" : "") + (x.qb ? '<small class="xqb" title="' + ea2(x.qb) + '">🎯 ' + esc(x.qb) + "</small>" : "") + "</td>" +
+              '<td class="mh" data-l="지금 남은 것">' + two("", '<input type="text" class="xmi" data-f="has" value="' + ea2(x.has || "") + '" placeholder="상자 남은 수">' + (x.hasAt ? '<small class="xpref" title="' + ea2(x.hasAt) + '">' + esc(x.hasAt) + "</small>" : ""), '<input type="text" class="xmi" data-f="has2" value="' + ea2(x.has2 || "") + '" placeholder="하판 남은 수">' + (x.has2At ? '<small class="xpref" title="' + ea2(x.has2At) + '">' + esc(x.has2At) + "</small>" : "")) + "</td>" +
+              '<td class="mp" data-l="미리 주문한 것">' + two("", '<textarea class="xmi" data-f="pre" rows="1" placeholder="상자 개수 · 날짜">' + esc(x.pre || "") + "</textarea>" + (x.preAt ? '<small class="xpref">' + esc(x.preAt) + "</small>" : ""), '<textarea class="xmi" data-f="pre2" rows="1" placeholder="하판 개수 · 날짜">' + esc(x.pre2 || "") + "</textarea>" + (x.pre2At ? '<small class="xpref">' + esc(x.pre2At) + "</small>" : "")) + "</td>" +
+              '<td class="mr" data-l="더 살 것">' + two("", buyMore(A, 1), buyMore(B, 1)) + "</td>";
+          })() :
           '<td class="mq" data-l="필요 수량"><input type="text" class="xmi" data-f="q" value="' + ea2(x.q) + '" placeholder="수량">' + (x.pq && String(x.pq) !== String(x.q) ? '<small class="xpref">작년 ' + esc(x.pq) + "</small>" : "") + (x.qb ? '<small class="xqb" title="' + ea2(x.qb) + '">🎯 ' + esc(x.qb) + "</small>" : "") + "</td>" +
           '<td class="mh" data-l="지금 남은 것"><input type="text" class="xmi" data-f="has" value="' + ea2(x.has || "") + '" placeholder="남은 수">' + (x.hasAt ? '<small class="xpref" title="' + ea2(x.hasAt) + '">' + esc(x.hasAt) + "</small>" : "") + "</td>" +
           '<td class="mp" data-l="미리 주문한 것"><textarea class="xmi" data-f="pre" rows="1" placeholder="개수 · 날짜" title="예) 100개 · 11/3 주문 · 11/10 도착">' + esc(x.pre || "") + "</textarea>" + (x.preAt ? '<small class="xpref" title="' + ea2(x.preAt) + '">' + esc(x.preAt) + "</small>" : "") + "</td>" +
-          '<td class="mr" data-l="더 살 것">' + buyMore(x, 1) + "</td>" +
+          '<td class="mr" data-l="더 살 것">' + buyMore(x, 1) + "</td>") +
           '<td class="mc" data-l="금액(원)"><input type="text" inputmode="numeric" class="xmi money num" data-f="c" value="' + ea2(money(x.c)) + '" placeholder="금액">' + (x.pc && N(x.pc) !== N(x.c) ? '<small class="xpref">작년 ' + N(x.pc).toLocaleString("ko-KR") + "</small>" : "") + "</td>" +
           '<td class="mm" data-l="메모"><textarea class="xmi" data-f="m" rows="1" placeholder="메모">' + esc(x.m || "") + "</textarea></td>" +
           '<td class="mb"><button type="button" class="xmst" data-a="od" aria-pressed="' + !!x.od + '">' + (x.od ? "✔ 주문함<small>" + esc(nim(x.od.by)) + " " + esc(x.od.at) + "</small>" : "주문함") + '</button><button type="button" class="xmst" data-a="ind" aria-pressed="' + !!x.ind + '">' + (x.ind ? "✔ 입고<small>" + esc(nim(x.ind.by)) + " " + esc(x.ind.at) + "</small>" : "입고") + "</button></td>" +
@@ -648,7 +661,7 @@
       var t2 = e.target; if (!t2.classList.contains("xmi")) return;
       var r = t2.closest("tr[data-id]"); if (!r) return;
       var id = r.dataset.id, f = t2.dataset.f, v = t2.classList.contains("money") ? moneyRaw(t2.value) : t2.value.trim();
-      matEdit(cur, function (m) { if (!m[id]) return; m[id][f] = v; if (f === "has" || f === "pre") m[id][f + "At"] = v ? stampNow() + " · " + nim(me() || "") : ""; }); setTimeout(function () { drawPane(true); }, 0);
+      matEdit(cur, function (m) { if (!m[id]) return; m[id][f] = v; if (f === "has" || f === "pre" || f === "has2" || f === "pre2") m[id][f + "At"] = v ? stampNow() + " · " + nim(me() || "") : ""; }); setTimeout(function () { drawPane(true); }, 0);
     });
     el.addEventListener("click", function (e) {
       var b = e.target.closest("[data-a]"); if (!b || !el.contains(b)) return; var a = b.dataset.a, card = b.closest("tr[data-id]"), id = card && card.dataset.id;
@@ -663,6 +676,7 @@
         drawPane(); return;
       }
       if (!id) return;
+      if (a === "msplit") { var on = b.classList.contains("on"); if (on && !confirm("상자 · 하판을 한 줄로 합칠까요? (하판 칸에 적은 숫자는 그대로 남고 화면에서만 안 보여요)")) return; matEdit(cur, function (m) { if (m[id]) m[id].sp = on ? 0 : 1; }); drawPane(true); return; }
       if (a === "mdel") { if (!confirm("「" + (card.querySelector('[data-f="n"]').value || "이 품목") + "」을(를) 목록에서 뺄까요?")) return; matEdit(cur, function (m) { if (m[id]) m[id].del = me() || "1"; }); drawPane(); return; }
       if (a === "od" || a === "ind") {
         var w = me(); if (!w) { alert("먼저 이름을 고르세요 (누가 했는지 남깁니다)"); return; }
