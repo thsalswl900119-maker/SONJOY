@@ -61,7 +61,7 @@
   // 「＋ 값 적기」(한도선 표 rec)도 같이 셈
   function allLines() {
     var a = lines(), cap = null; try { cap = JSON.parse(localStorage.getItem("cafesui.fruitcap") || "{}").it || {}; } catch (e) {}
-    Object.keys(cap || {}).forEach(function (f) { var r = (cap[f] || {}).rec || {}; Object.keys(r).forEach(function (k) { if (r[k] && r[k].p && !r[k].del) a.push({ d: r[k].d, f: f, n: "", q: 1, p: +r[k].p, src: "값 적기", by: r[k].who }); }); });
+    Object.keys(cap || {}).forEach(function (f) { var r = (cap[f] || {}).rec || {}; Object.keys(r).forEach(function (k) { if (r[k] && r[k].p && !r[k].del) { var o2 = { d: r[k].d, f: f, n: "", q: 1, p: +r[k].p, src: "값 적기", by: r[k].who }; if (r[k].u) o2.u = r[k].u; a.push(o2); } }); });
     return a;
   }
   window.__CS_FP_FID = fid;
@@ -79,8 +79,9 @@
   }
   function qtxt(q) { return (Math.round(q * 10) / 10).toLocaleString("ko-KR"); }
   function draw() {
-    var all = allLines().map(function (x) { return x.u === "반박스" && !/^반박스/.test(((names().filter(function (r) { return r.id === x.f; })[0]) || {}).u || "") ? Object.assign({}, x, { f: x.f + "h" }) : x; });
-    var rows = [], byF = {}; names().forEach(function (r) { rows.push(r); rows.push({ id: r.id + "h", n: r.n + " (반박스)", u: "반박스" }); });
+    // 단위가 다른 줄(반박스 · 1kg)은 따로 줄 — 적힌 값 그대로 (11/18 사장님 「1kg는 1kg대로 · 500g은 500g 따로」)
+    var all = allLines().map(function (x) { if (x.u === "1kg") return Object.assign({}, x, { f: x.f + "k" }); return x.u === "반박스" && !/^반박스/.test(((names().filter(function (r) { return r.id === x.f; })[0]) || {}).u || "") ? Object.assign({}, x, { f: x.f + "h" }) : x; });
+    var rows = [], byF = {}; names().forEach(function (r) { rows.push(r); rows.push({ id: r.id + "h", n: r.n + " (반박스)", u: "반박스" }); rows.push({ id: r.id + "k", n: r.n + " (1kg)", u: "1kg" }); });
     all.forEach(function (x) { (byF[x.f] = byF[x.f] || []).push(x); });
     var months = []; for (var i = 11; i >= 0; i--) months.push(addM(thisYm, -i));
     var has = function (ym) { return all.some(function (x) { return ymOf(x.d) === ym; }); };

@@ -5,13 +5,15 @@
 (function () {
   var box = document.getElementById("skStraw"); if (!box) return;
   var FR = [
-    { id: "f1", ic: "🍓", n: "딸기", unit: "500g 1통", start: 10, mons: [10, 11, 12, 1, 2, 3, 4, 5], note: "시즌 = 10월 ~ 다음 해 5월 · 500g 1통 값 그대로 (여름딸기만 1kg → 500g으로)" },
+    { id: "f1", ic: "🍓", n: "딸기", unit: "500g 1통", start: 10, mons: [10, 11, 12, 1, 2, 3, 4, 5], note: "시즌 = 10월 ~ 다음 해 5월 · 500g 1통 값 그대로 (1kg 값은 「🍓 딸기 1kg」에 따로)" },
+    { key: "f1k", id: "f1", u: "1kg", ic: "🍓", n: "딸기 1kg", unit: "1kg", start: 10, mons: [10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9], note: "1kg로 산 것만 · 1kg 값 그대로 (여름딸기 · 밀양 딸기밭 · 1kg 팩 — 500g으로 나누지 않음) · 한도선은 500g 기준이라 여기엔 없음" },
     { id: "f2", ic: "🥭", n: "태국망고", unit: "1박스", start: 1, mons: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], note: "1년 내내 · 박스 크기(12 · 14 · 16수)가 섞여 있어요 · 반박스는 뺌" },
     { id: "f3", ic: "🥭", n: "애플망고", unit: "1박스 (약 4kg)", start: 1, mons: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], note: "1년 내내 · 4kg 8~12과 박스 기준" }
   ];
-  var cur = "f1"; try { var sv = localStorage.getItem("cafesui.ui.fpchart"); if (sv && FR.some(function (f) { return f.id === sv; })) cur = sv; } catch (e) {}
+  FR.forEach(function (f) { if (!f.key) f.key = f.id; });
+  var cur = "f1"; try { var sv = localStorage.getItem("cafesui.ui.fpchart"); if (sv && FR.some(function (f) { return f.key === sv; })) cur = sv; } catch (e) {}
   var now = new Date(), Y = now.getFullYear(), TM = now.getMonth() + 1;
-  function cfg() { return FR.filter(function (f) { return f.id === cur; })[0]; }
+  function cfg() { return FR.filter(function (f) { return f.key === cur; })[0]; }
   function curSeason(c) { return c.start === 1 ? Y : (TM >= 8 ? Y : Y - 1); }
   var S = curSeason(cfg()), PICK = null;
   function won(n) { return Math.round(n).toLocaleString("ko-KR"); }
@@ -22,13 +24,13 @@
   function lines(c) {
     var a = window.__CS_FP_LINES ? window.__CS_FP_LINES(c.id) : [], seen = {}, out = [];
     a.forEach(function (x) {
-      if (x.u === "반박스") return;
+      if ((x.u || "") !== (c.u || "")) return;   // 반박스 · 1kg는 따로 (적힌 값 그대로)
       var p = +x.p; if (!p || !x.d || p > 500000) return; var d = String(x.d).slice(0, 10), k = d + "|" + p; if (seen[k]) return; seen[k] = 1;
       out.push({ d: d, p: p, src: x.src || "", n: x.n || "", by: x.by || "", q: Number(x.q) || 1 });
     });
     return out.sort(function (a, b) { return a.d < b.d ? -1 : a.d > b.d ? 1 : 0; });
   }
-  function capOf(c, m) { return window.__CS_FCAP ? window.__CS_FCAP(c.id, m) : 0; }
+  function capOf(c, m) { return c.u ? 0 : window.__CS_FCAP ? window.__CS_FCAP(c.id, m) : 0; }
   function stat(L) { if (!L || !L.length) return null; var q = 0, s = 0, lo = null, hi = null; L.forEach(function (x) { q += x.q; s += x.p * x.q; if (!lo || x.p < lo.p) lo = x; if (!hi || x.p > hi.p) hi = x; }); return { n: L.length, avg: s / q, lo: lo.p, hi: hi.p, dl: lo.d, dh: hi.d, xl: lo, xh: hi }; }
   function byMonth(c, s, all) { var by = {}; c.mons.forEach(function (m) { by[m] = []; }); all.forEach(function (x) { if (seasonOf(c, x.d) === s) by[+x.d.slice(5, 7)].push(x); }); return by; }
   function md(d) { return (+d.slice(5, 7)) + "/" + (+d.slice(8, 10)); }
@@ -39,7 +41,7 @@
     var minS = Math.min.apply(null, Object.keys(ss).map(Number).concat([cs]));
     var thisM = S === cs && c.mons.indexOf(TM) >= 0 ? TM : null;
     var h = '<div class="fch"><b>📈 과일값 그래프</b><span>값을 적을 때마다 저절로 들어가요 · 한 줄 = 한 달 · <b>막대 = 그 달 가장 싼 값 ~ 가장 비싼 값</b></span></div>' +
-      '<div class="stfr" role="tablist" aria-label="과일 고르기">' + FR.map(function (f) { var n = lines(f).length; return '<button type="button" role="tab" data-fr="' + f.id + '" aria-selected="' + (f.id === cur) + '">' + f.ic + " " + f.n + "<small>" + n + "번</small></button>"; }).join("") + "</div>" +
+      '<div class="stfr" role="tablist" aria-label="과일 고르기">' + FR.map(function (f) { var n = lines(f).length; return '<button type="button" role="tab" data-fr="' + f.key + '" aria-selected="' + (f.key === cur) + '">' + f.ic + " " + f.n + "<small>" + n + "번</small></button>"; }).join("") + "</div>" +
       '<div class="stnav"><button type="button" data-s="-1"' + (S <= minS ? " disabled" : "") + ' aria-label="이전">◀</button><b>' + c.ic + " " + c.n + " · " + slab(c, S) + ' <small>' + esc(c.unit) + ' 값</small></b><button type="button" data-s="1"' + (S >= cs ? " disabled" : "") + ' aria-label="다음">▶</button>' + (S !== cs ? '<button type="button" data-s="0">' + (c.start === 1 ? "올해로" : "이번 시즌으로") + "</button>" : "") + "</div>";
     var sAll = stat([].concat.apply([], c.mons.map(function (m) { return A[m]; })));
     var ms = c.mons.filter(function (m) { return A[m].length; });
@@ -84,7 +86,7 @@
     // 고른 달에 들어온 값 (날짜순)
     if (km && A[km].length) {
       h += '<div class="stlist"><b>🧾 ' + km + "월에 들어온 값 " + A[km].length + "번 <small>(줄을 누르면 그 달로 바뀌어요)</small></b><ul>" +
-        A[km].map(function (x) { return "<li" + (x.p === sAll.hi ? ' class="hi"' : x.p === sAll.lo ? ' class="lo"' : "") + "><span>" + md(x.d) + "</span><b>" + won(x.p) + "원</b><em>" + (c.id === "f1" ? esc(x.n || where(x) || "") : (x.q > 1 ? x.q + "박스 · " : "") + esc(x.n || where(x) || "")) + "</em></li>"; }).join("") + "</ul></div>";
+        A[km].map(function (x) { return "<li" + (x.p === sAll.hi ? ' class="hi"' : x.p === sAll.lo ? ' class="lo"' : "") + "><span>" + md(x.d) + "</span><b>" + won(x.p) + "원</b><em>" + (c.id === "f1" ? esc((x.q > 1 && c.u ? x.q + "kg · " : "") + (x.n || where(x) || "")) : (x.q > 1 ? x.q + "박스 · " : "") + esc(x.n || where(x) || "")) + "</em></li>"; }).join("") + "</ul></div>";
     }
     h += '<p class="stnote">' + esc(c.note) + "</p>";
     box.innerHTML = h;
