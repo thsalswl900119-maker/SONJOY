@@ -40,7 +40,7 @@
     var ss = {}; all.forEach(function (x) { var s = seasonOf(c, x.d); if (s != null) ss[s] = 1; });
     var minS = Math.min.apply(null, Object.keys(ss).map(Number).concat([cs]));
     var thisM = S === cs && c.mons.indexOf(TM) >= 0 ? TM : null;
-    var h = '<div class="fch"><b>📈 과일값 그래프</b><span>값을 적을 때마다 저절로 들어가요 · 한 줄 = 한 달 · <b>막대 = 그 달 가장 싼 값 ~ 가장 비싼 값</b></span></div>' +
+    var h = '<div class="fch"><b>📈 과일값 그래프</b><span>값을 적을 때마다 저절로 들어가요 · <b>막대 하나 = 그 달 평균 값</b></span></div>' +
       '<div class="stfr" role="tablist" aria-label="과일 고르기">' + FR.map(function (f) { var n = lines(f).length; return '<button type="button" role="tab" data-fr="' + f.key + '" aria-selected="' + (f.key === cur) + '">' + f.ic + " " + f.n + "<small>" + n + "번</small></button>"; }).join("") + "</div>" +
       '<div class="stnav"><button type="button" data-s="-1"' + (S <= minS ? " disabled" : "") + ' aria-label="이전">◀</button><b>' + c.ic + " " + c.n + " · " + slab(c, S) + ' <small>' + esc(c.unit) + ' 값</small></b><button type="button" data-s="1"' + (S >= cs ? " disabled" : "") + ' aria-label="다음">▶</button>' + (S !== cs ? '<button type="button" data-s="0">' + (c.start === 1 ? "올해로" : "이번 시즌으로") + "</button>" : "") + "</div>";
     var sAll = stat([].concat.apply([], c.mons.map(function (m) { return A[m]; })));
@@ -51,52 +51,59 @@
       var same = function (v) { var ds = []; all.forEach(function (x) { if (x.p === v && seasonOf(c, x.d) === S && ds.indexOf(md(x.d)) < 0) ds.push(md(x.d)); }); return ds; };
       var dH = same(sAll.hi), dL = same(sAll.lo);
       // 큰 숫자 3칸 — 가장 비쌌을 때 · 가장 쌌을 때 · 이 달 평균
-      h += '<div class="stbig">' +
+      h += '<div class="stbig st2">' +
         '<div class="hi"><span>🔺 ' + sshort(c, S) + " 가장 비쌌을 때</span><b>" + won(sAll.hi) + "<small>원</small></b><em>" + (dH.length > 1 ? dH.join(" · ") + " (" + dH.length + "번)" : md(sAll.dh) + (where(sAll.xh) ? " · " + esc(where(sAll.xh)) : "")) + "</em></div>" +
         '<div class="lo"><span>🔻 ' + sshort(c, S) + " 가장 쌌을 때</span><b>" + won(sAll.lo) + "<small>원</small></b><em>" + (dL.length > 1 ? dL.join(" · ") + " (" + dL.length + "번)" : md(sAll.dl) + (where(sAll.xl) ? " · " + esc(where(sAll.xl)) : "")) + "</em></div>" +
-        '<div class="' + (over ? "bad" : cp ? "good" : "") + '"><span>' + km + "월 평균" + (km === thisM ? " (이번 달)" : "") + "</span><b>" + won(a.avg) + "<small>원</small></b><em>" + (cp ? (over ? "⚠ 한도선 " + won(cp) + "원보다 " + won(a.avg - cp) + "원 비싸요" : "✔ 한도선 " + won(cp) + "원 안이에요") : a.n + "번 들어옴") + "</em></div></div>";
+        "</div>";
+      // 쉬운 말 정리 (11/18 사장님 「그래프 가독성 쉽게」)
+      var b0 = stat(B[km]), say = [];
+      say.push("<b>" + km + "월" + (km === thisM ? "(이번 달)" : "") + " 평균 " + won(a.avg) + "원</b>" + (cp ? (over ? " — 한도선 " + won(cp) + "원보다 <em class=\"ov\">" + won(a.avg - cp) + "원 비싸요</em>" : " — 한도선 " + won(cp) + "원 <em class=\"ok\">안이에요</em>") : ""));
+      if (b0) { var dd = a.avg - b0.avg; say.push("작년 " + km + "월 평균은 " + won(b0.avg) + "원 → 올해가 <b>" + won(Math.abs(dd)) + "원 " + (dd >= 0 ? "더 비싸요" : "더 싸요") + "</b> (" + (dd >= 0 ? "+" : "−") + Math.round(Math.abs(dd) / b0.avg * 100) + "%)"); }
       if (ms.length > 1) {
         var hiM = ms.slice().sort(function (p, q) { return stat(A[q]).avg - stat(A[p]).avg; })[0], loM = ms.slice().sort(function (p, q) { return stat(A[p]).avg - stat(A[q]).avg; })[0];
-        h += '<p class="stsum">📌 ' + esc(slab(c, S)) + " — <b>" + hiM + "월이 가장 비쌌고</b>(평균 " + won(stat(A[hiM]).avg) + "원) <b>" + loM + "월이 가장 쌌어요</b>(평균 " + won(stat(A[loM]).avg) + "원)</p>";
+        say.push(esc(sshort(c, S)) + "엔 <b>" + hiM + "월이 가장 비쌌고</b> <b>" + loM + "월이 가장 쌌어요</b>");
       }
+      h += '<ul class="stsay">' + say.map(function (t) { return "<li>" + t + "</li>"; }).join("") + "</ul>";
     }
-    // 달마다 한 줄 — 같은 눈금(0원 ~ 가장 비싼 값)
-    var vals = [0];
-    c.mons.forEach(function (m) { [A[m], B[m]].forEach(function (L) { L.forEach(function (x) { vals.push(x.p); }); }); var cp = capOf(c, m); if (cp) vals.push(cp); });
-    var mx = Math.max.apply(null, vals), stp = mx <= 30000 ? 5000 : mx <= 70000 ? 10000 : 20000, top = Math.max(stp, Math.ceil(mx / stp) * stp);
-    function pc(v) { return (v / top * 100).toFixed(2) + "%"; }
-    var ticks = ""; for (var v = 0; v <= top; v += stp) ticks += '<i style="left:' + pc(v) + '"' + (v + stp > top ? ' class="end"' : "") + '><span>' + (v ? (v / 10000 >= 1 && v % 10000 === 0 ? v / 10000 + "만" : won(v)) : "0") + "</span></i>";
-    h += '<div class="stlad" role="list" aria-label="' + esc(c.n + " " + slab(c, S)) + ' 달마다 가장 싼 값 ~ 가장 비싼 값">';
-    h += '<div class="stlrow sthead"><div class="stlm"></div><div class="stlt"><div class="stax">' + ticks + '</div></div><div class="stlv">이 달 값</div></div>';
-    c.mons.forEach(function (m) {
-      var a = stat(A[m]), b = stat(B[m]), cp = capOf(c, m); if (!a && !b) return;
-      var over = a && cp && a.avg > cp;
-      h += '<div class="stlrow' + (m === thisM ? " now" : "") + (m === km ? " pick" : "") + (a ? "" : " noa") + '" role="listitem" data-m="' + m + '" tabindex="0">' +
-        '<div class="stlm"><b>' + m + "월</b>" + (m === thisM ? "<small>이번 달</small>" : "") + "</div>" +
-        '<div class="stlt"><div class="stgrid">' + ticks.replace(/<span>.*?<\/span>/g, "") + "</div>" +
-        (b ? '<div class="stbar ly" style="left:' + pc(b.lo) + ";width:calc(" + pc(b.hi - b.lo) + ' + 4px)" title="' + esc(sshort(c, S - 1) + " " + m + "월 " + won(b.lo) + " ~ " + won(b.hi) + " · 평균 " + won(b.avg)) + '"></div>' : "") +
-        (a ? '<div class="stbar ty" style="left:' + pc(a.lo) + ";width:calc(" + pc(a.hi - a.lo) + ' + 8px)"></div><div class="stdot" style="left:' + pc(a.avg) + '" title="평균 ' + won(a.avg) + '원"></div>' : "") +
-        (cp ? '<div class="stcap" style="left:' + pc(cp) + '" title="한도선 ' + won(cp) + '원"></div>' : "") + "</div>" +
-        '<div class="stlv">' + (a ? "<b>" + won(a.lo) + " ~ " + won(a.hi) + "</b><span>평균 " + won(a.avg) + (over ? ' <em class="ov">⚠ 한도선 넘음</em>' : "") + " · " + a.n + "번</span>" : '<span class="na">' + sshort(c, S) + " 기록 없음</span>") +
-        (b ? '<span class="lyv">' + sshort(c, S - 1) + " " + won(b.lo) + " ~ " + won(b.hi) + " · 평균 " + won(b.avg) + "</span>" : "") + "</div></div>";
-    });
-    h += "</div>";
-    h += '<div class="stleg2"><span><i class="k ty"></i>' + esc(sshort(c, S)) + ' 가장 싼 값 ~ 가장 비싼 값</span><span><i class="k dot"></i>평균</span><span><i class="k ly"></i>' + esc(sshort(c, S - 1)) + ' 같은 달</span><span><i class="k cap"></i>한도선</span></div>';
+    // 달마다 세로 막대 하나 = 그 달 평균 (11/18 · 가로 막대 · 점 · 점선이 겹쳐 헷갈리던 것을 바꿈)
+    var cols = c.mons.filter(function (m) { return A[m].length || B[m].length; });
+    if (cols.length) {
+      var vals = [0];
+      cols.forEach(function (m) { var a1 = stat(A[m]), b1 = stat(B[m]), cp1 = capOf(c, m); if (a1) vals.push(a1.avg); if (b1) vals.push(b1.avg); if (cp1) vals.push(cp1); });
+      var top = Math.max.apply(null, vals) * 1.18 || 1;
+      var pc = function (v) { return (v / top * 100).toFixed(2) + "%"; };
+      h += '<div class="stcols" role="list" aria-label="' + esc(c.n + " " + slab(c, S)) + ' 달마다 평균 값">';
+      cols.forEach(function (m) {
+        var a = stat(A[m]), b = stat(B[m]), cp = capOf(c, m), over = a && cp && a.avg > cp;
+        var tip = m + "월 · " + (a ? "평균 " + won(a.avg) + "원 · 가장 쌀 때 " + won(a.lo) + "원 · 가장 비쌀 때 " + won(a.hi) + "원 · " + a.n + "번" : sshort(c, S) + " 기록 없음") + (b ? " / 작년 평균 " + won(b.avg) + "원" : "") + (cp ? " / 한도선 " + won(cp) + "원" : "");
+        h += '<div class="stc' + (m === thisM ? " now" : "") + (m === km ? " pick" : "") + (a ? "" : " noa") + '" role="listitem" data-m="' + m + '" tabindex="0" title="' + esc(tip) + '">' +
+          '<div class="stcp">' +
+          (b ? '<div class="stcb ly" style="height:' + pc(b.avg) + '"></div>' : "") +
+          (a ? '<div class="stcb ty' + (over ? " over" : "") + '" style="height:' + pc(a.avg) + '"><b>' + (over ? "⚠ " : "") + won(a.avg) + "</b></div>" : '<div class="stcna">기록<br>없음</div>') +
+          (cp ? '<div class="stccap" style="bottom:' + pc(cp) + '"></div>' : "") + "</div>" +
+          '<div class="stcm"><b>' + m + "월</b>" + (m === thisM ? "<small>이번 달</small>" : "") + "</div>" +
+          '<div class="stcv">' + (a ? (a.lo === a.hi ? "<span>" + won(a.lo) + "</span>" : '<span class="lo"><small>싸게</small>' + won(a.lo) + '</span><span class="hi"><small>비싸게</small>' + won(a.hi) + "</span>") : "") + (b ? '<span class="lyv"><small>작년</small>' + won(b.avg) + "</span>" : "") + "</div></div>";
+      });
+      h += "</div>";
+      h += '<div class="stleg3"><span><i class="k ty"></i>' + esc(sshort(c, S)) + ' 평균</span><span><i class="k over"></i>⚠ 한도선보다 비쌈</span><span><i class="k ly"></i>작년 같은 달 평균</span>' + (c.u ? "" : '<span><i class="k cap"></i>한도선 (이보다 높으면 비싸게 산 것)</span>') + '<span class="tip">막대를 누르면 그 달에 들어온 값이 아래에 나와요' + (cols.length > 4 ? " · 휴대폰은 막대를 옆으로 밀면 다른 달도 보여요" : "") + '</span></div>';
+    }
     if (!sAll) h += '<p class="stempty">' + esc(slab(c, S)) + "엔 아직 " + esc(c.n) + "값이 없어요 — 아래 " + esc(c.n) + " 카드의 「＋ 값 적기」로 넣으면 여기 막대가 생겨요</p>";
     // 고른 달에 들어온 값 (날짜순)
     if (km && A[km].length) {
-      h += '<div class="stlist"><b>🧾 ' + km + "월에 들어온 값 " + A[km].length + "번 <small>(줄을 누르면 그 달로 바뀌어요)</small></b><ul>" +
+      h += '<div class="stlist"><b>🧾 ' + km + "월에 들어온 값 " + A[km].length + "번 <small>(위 막대를 누르면 그 달로 바뀌어요)</small></b><ul>" +
         A[km].map(function (x) { return "<li" + (x.p === sAll.hi ? ' class="hi"' : x.p === sAll.lo ? ' class="lo"' : "") + "><span>" + md(x.d) + "</span><b>" + won(x.p) + "원</b><em>" + (c.id === "f1" ? esc((x.q > 1 && c.u ? x.q + "kg · " : "") + (x.n || where(x) || "")) : (x.q > 1 ? x.q + "박스 · " : "") + esc(x.n || where(x) || "")) + "</em></li>"; }).join("") + "</ul></div>";
     }
     h += '<p class="stnote">' + esc(c.note) + "</p>";
     box.innerHTML = h;
+    var cw = box.querySelector(".stcols"), pk = cw && cw.querySelector(".stc.pick");   // 고른 달(이번 달)이 보이게 옆으로 밀어 둠
+    if (pk && cw.scrollWidth > cw.clientWidth) cw.scrollLeft = Math.max(0, pk.offsetLeft - cw.clientWidth / 2 + pk.offsetWidth / 2);
   }
   box.addEventListener("click", function (e) {
     var f = e.target.closest("[data-fr]"); if (f) { cur = f.dataset.fr; PICK = null; try { localStorage.setItem("cafesui.ui.fpchart", cur); } catch (x) {} S = curSeason(cfg()); draw(); return; }
-    var r = e.target.closest(".stlrow[data-m]"); if (r) { PICK = +r.dataset.m; draw(); return; }
+    var r = e.target.closest(".stc[data-m]"); if (r) { PICK = +r.dataset.m; draw(); return; }
     var b = e.target.closest("[data-s]"); if (!b) return; var d = +b.dataset.s; S = d ? S + d : curSeason(cfg()); PICK = null; draw();
   });
-  box.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { var r = e.target.closest && e.target.closest(".stlrow[data-m]"); if (r) { e.preventDefault(); PICK = +r.dataset.m; draw(); } } });
+  box.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { var r = e.target.closest && e.target.closest(".stc[data-m]"); if (r) { e.preventDefault(); PICK = +r.dataset.m; draw(); } } });
   var t0 = 0; function later() { clearTimeout(t0); t0 = setTimeout(draw, 300); }
   window.addEventListener("cs:remote", function (e) { var ks = (e.detail && e.detail.keys) || []; if (ks.some(function (k) { return /^cafesui\.fruit(price|cap)$/.test(k); })) later(); });
   ["skCap", "skPrice"].forEach(function (id) { var el = document.getElementById(id); if (el && window.MutationObserver) new MutationObserver(later).observe(el, { childList: true }); });
