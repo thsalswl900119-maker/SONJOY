@@ -33,15 +33,16 @@
       var t;
       while ((t = ire.exec(seg))) {
         var name = t[1].trim(), f = fid(name); if (!f) continue;
-        if (/-\s*$/.test(seg.slice(0, t.index))) continue;
-        var qt = t[3] || "", q = /반/.test(qt) ? 0.5 : (parseFloat(qt) || 1), p = 0, kg = parseFloat(t[2]) || 0;
+        if (/[^\s-]-\s*$/.test(seg.slice(0, t.index))) continue;   // 「엄궁-」처럼 낱말에 붙은 - 만 건너뜀 (줄 앞 「- 」 목록은 읽음)
+        // 11/18 사장님 「적힌 값 그대로」: 반박스(0.5박스)는 반박스 값 그대로(u 반박스 · 1박스 값으로 2배 하지 않음) · 딸기는 kg으로 나누지 않음(500g 1통 값)
+        var qt = t[3] || "", half = /반|^0\.5/.test(qt) || /반\s*박스/.test(name), q = half ? 1 : (parseFloat(qt) || 1), p = 0, kg = parseFloat(t[2]) || 0;
         if (t[4]) p = num(t[4]);
         else if (t[5]) { p = num(t[5]); q = +t[6] || 1; kg = 0; }
         else if (t[7]) { p = Math.round(num(t[7]) / q); }
-        if (f === "f1" && kg && t[4]) p = Math.round(p / (kg * 2));   // 딸기 1kg 팩 값 → 500g 1통 값으로
+        if (f === "f1" && kg && t[4]) q = kg;   // 「딸기 6kg × 23,000원」 — 값은 적힌 그대로
         if (kg && t[7] && f !== "f1") { if (f === "f10") p = Math.round(num(t[7]) / (kg / 2)); else continue; }   // 대추방울 kg 묶음 → 2kg 박스 값 · 다른 과일 kg 합계는 건너뜀
         if (!p || p < 1000) continue;
-        out.push({ d: d, f: f, n: name.replace(/\s+/g, " "), q: q, p: p });
+        var o1 = { d: d, f: f, n: name.replace(/\s+/g, " ") + (half && !/반/.test(name) ? " 반박스" : ""), q: q, p: p }; if (half) o1.u = "반박스"; out.push(o1);
       }
     });
     return out;
@@ -78,7 +79,8 @@
   }
   function qtxt(q) { return (Math.round(q * 10) / 10).toLocaleString("ko-KR"); }
   function draw() {
-    var all = allLines(), rows = names(), byF = {};
+    var all = allLines().map(function (x) { return x.u === "반박스" && !/^반박스/.test(((names().filter(function (r) { return r.id === x.f; })[0]) || {}).u || "") ? Object.assign({}, x, { f: x.f + "h" }) : x; });
+    var rows = [], byF = {}; names().forEach(function (r) { rows.push(r); rows.push({ id: r.id + "h", n: r.n + " (반박스)", u: "반박스" }); });
     all.forEach(function (x) { (byF[x.f] = byF[x.f] || []).push(x); });
     var months = []; for (var i = 11; i >= 0; i--) months.push(addM(thisYm, -i));
     var has = function (ym) { return all.some(function (x) { return ymOf(x.d) === ym; }); };
@@ -148,7 +150,7 @@
       var have = lines(), o = load(); o.ln = o.ln || {}; var n = 0, base = Date.now();
       PREV.forEach(function (x, i) {
         if (have.some(function (y) { return y.d === x.d && y.f === x.f && y.p === x.p && +y.q === +x.q; })) return;
-        o.ln["l" + (base + i).toString(36)] = { d: x.d, f: x.f, n: x.n, q: x.q, p: x.p, src: "붙여넣기 " + stamp(), by: me() }; n++;
+        o.ln["l" + (base + i).toString(36)] = { d: x.d, f: x.f, n: x.n, q: x.q, p: x.p, src: "붙여넣기 " + stamp(), by: me() }; if (x.u) o.ln["l" + (base + i).toString(36)].u = x.u; n++;
       });
       o.at = stamp(); o.by = me();
       try { localStorage.setItem(KEY, JSON.stringify(o)); } catch (er) {}
