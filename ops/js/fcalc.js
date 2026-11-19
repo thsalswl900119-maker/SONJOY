@@ -148,6 +148,8 @@
         h += '<div class="fcbn">' + c.parts.join(" + ") + ' = <b>' + (c.spDay ? c.tot : c.need) + '통</b>' + (c.spDay ? ' <small>(여분 포함)</small>' : '') + '</div>';
         h += '<div class="fcbsp">➕ 여분 <b>' + rng(c.sp[0], c.sp[1]) + '통</b> <small>' + (c.spDay ? '(위 날마다 숫자에 이미 들어감)' : c.spAuto ? '(자동 · 위 표 「➕ 여분」 칸에 그 날 여분을 적으면 그 숫자)' : '(예전에 적은 여분)') + '</small></div>';
         h += '<label>📦 그날 재고 <input type="number" inputmode="decimal" min="0" step="any" data-b="' + bd + '" data-k="stock" value="' + esc(pv.stock || "") + '" placeholder="' + esc(c.first ? (c.st ? c.st.n + " (재고 기록 " + c.st.d.slice(5).replace("-", "/") + ")" : "재고 기록 없음") : "그날 세서 적기") + '"> 통</label>';
+        if (c.st) { var b0 = r1(c.need + c.sp[0]), b1 = r1(c.need + c.sp[1]);   // 11/19 사장님 「그날 재고 넣으면 숫자가 빠져야」 — 빼는 줄을 눈에 보이게
+          h += '<div class="fcbst">' + rng(b0, b1) + '통 <b class="fcminus">− 그날 재고 ' + c.hv + '통</b> = ' + rng(r1(b0 - c.hv), r1(b1 - c.hv)) + '통' + (c.st.d === "직접" ? ' <small>(직접 적은 재고)</small>' : ' <small>(재고 기록 ' + c.st.d.slice(5).replace("-", "/") + ' 숫자 · 그날 세서 적으면 그 숫자로)</small>') + '</div>'; }
         h += '<div class="fcbr">→ <b>' + rng(c.lo, c.hi) + '통</b> 사기 <small>(500g · ' + rng(r1(c.lo * 0.5), r1(c.hi * 0.5)) + 'kg)</small></div>' + (!c.st ? '<div class="fcbw">⚠ 그날 남은 재고를 적으면 그만큼 빠져요</div>' : '') + '</div>';
       });
       h += '</div>';
@@ -156,6 +158,7 @@
       h += '<div class="fcbuys"><div class="fcbuy next" data-b="' + week + '"><div class="fcbh">🥭 이번 주 망고 (한 주 한 번에 · 수요일에 목 · 금 · 토 미리 계산)</div><div class="fcbn">' + (m.parts.join(" + ") || "아직 적은 날 없음") + ' = <b>' + (m.spDay ? m.tot : m.need) + '알</b></div>';
       h += '<div class="fcbsp">➕ 여분 <b>' + m.sp + '알</b> <small>(' + (m.spDay ? '위 날마다 숫자에 이미 들어감' : '위 표 「➕ 여분」 칸에 날마다 적으면 들어가요') + ')</small></div>';
       h += '<label>📦 지금 재고 <input type="number" inputmode="decimal" min="0" step="any" data-b="' + week + '" data-k="stock" value="' + esc(pv2.stock || "") + '" placeholder="' + esc(m.st ? m.st.n + " (재고 기록 " + m.st.d.slice(5).replace("-", "/") + ")" : "재고 기록 없음") + '"> 알</label>';
+      if (m.st) { var mb = r1(m.need + m.sp); h += '<div class="fcbst">' + mb + '알 <b class="fcminus">− 재고 ' + m.hv + '알</b> = ' + r1(mb - m.hv) + '알' + (m.st.d === "직접" ? ' <small>(직접 적은 재고)</small>' : ' <small>(재고 기록 ' + m.st.d.slice(5).replace("-", "/") + ' 숫자)</small>') + '</div>'; }
       h += '<div class="fcbr">→ <b>' + m.q + '알</b>' + (m.box != null ? ' = <b>' + m.box + '박스</b> <small>(1박스 ' + m.s.pkN + '알)</small>' : '') + '</div></div></div>';
     }
     // 네이버 예약 붙여 넣기 상자는 뺌 (11/19 사장님 「지워줘 · 직원이 직접 세어서」)
