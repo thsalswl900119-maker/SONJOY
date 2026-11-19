@@ -1,9 +1,9 @@
 // 🧮 과일 주문 계산기 (11/19 사장님 「네이버 예약 + 조각케이크 생산 + 여분 · 과일별 딸기 / 망고 · 매일 계산 · 딸기는 월 · 수 · 금에 사 옴」)
-// 한 주(월~토)를 날마다 한 줄로 적고 → 딸기 사는 날마다 묶어 계산: 월 = 월 · 화 쓸 것 / 수 = 수 · 목 / 금 = 금 · 토 (+ 토요일에 미리 만드는 월요일 조각케이크분)
+// 한 주(월~토)를 날마다 한 줄로 적고 → 딸기 사는 날마다 묶어 계산: 월 = 월 · 화 쓸 것 / 수 = 수 · 목 / 금 = 금 · 토 (토요일 숫자에 월요일 조각케이크분 포함 · 11/19 사장님)
 // 딸기 기준(사장님 · 1통 = 무조건 500g): 한판 1통 · 반짝 0.7 · 미니 0.5 · 토핑 1통에 10~11조각(적게 잡아 10)
 // 여분(사장님): 딸기 평일 3~4통 · 주말(금 · 토) 4~5통 → 월 · 수 사는 날 3~4 · 금 사는 날 4~5 (칸에 적으면 그 숫자)
 // 망고: 한 주 한 번에(수요일에 목 · 금 · 토 미리 계산하는 것과 같은 묶음) · 한판 3.5알(발주 기준표) · 나머지 기준은 (제안)
-// 저장 cafesui.fcalc = { set:{ straw, mango }, d:{ 날짜:{ straw:{whole, mid, mini, pan, top, monPan, monTop}, mango:{…} } }, p:{ 사는 날:{ straw:{spare, stock}, mango:{…} } }, at, by }
+// 저장 cafesui.fcalc = { set:{ straw, mango }, d:{ 날짜:{ straw:{whole, mid, mini, pan, top, spare(그 날 여분)}, mango:{…} } }, p:{ 사는 날:{ straw:{spare, stock}, mango:{…} } }, at, by }
 (function () {
   var box = document.getElementById("skCalc");
   if (!box) return;
@@ -86,26 +86,24 @@
       if (c[0] === "top") { if (s.top > 0) { n += x / s.top; L.push("토핑 " + x + "조각 ÷ " + s.top); } else L.push("⚠ 토핑 " + x + "조각 (기준 비어 계산 안 함)"); return; }
       n += x * s[c[0]]; L.push(c[1].replace(/^\S+ /, "") + " " + x + " × " + s[c[0]]);
     });
-    if (wd(d) === 6) {
-      var mp = num(v.monPan), mt = num(v.monTop);
-      if (mp) { n += mp * s.pan; L.push("월요일분 조각 " + mp + "판 × " + s.pan); }
-      if (mt && s.top > 0) { n += mt / s.top; L.push("월요일분 토핑 " + mt + " ÷ " + s.top); }
-    }
     return { n: r1(n), L: L };
   }
+  // 11/19 사장님 「그 요일에 바로 여분 입력」 — 날마다 줄의 ➕ 여분 칸(o.d[날짜][과일].spare)
+  function daySpare(o, f, ds) { var any = false, sum = 0; ds.forEach(function (d) { var v = ((o.d[d] || {})[f]) || {}; if (has(v.spare)) { any = true; sum += num(v.spare); } }); return any ? r1(sum) : null; }
   // 사는 날 묶음 계산
   function buyCalc(o, f, bd) {
-    var B = BUY[wd(bd)], F = FR[f], s = setOf(o, f), pv = ((o.p[bd] || {})[f]) || {}, need = 0, parts = [];
-    B.use.forEach(function (w) { var d = add(bd, w - wd(bd)), x = dayNeed(o, f, d); need += x.n; parts.push(lab(d) + " " + x.n + F.u); });
-    var sp = has(pv.spare) ? [num(pv.spare), num(pv.spare)] : B.sp;
+    var B = BUY[wd(bd)], F = FR[f], s = setOf(o, f), pv = ((o.p[bd] || {})[f]) || {}, need = 0, parts = [], uds = [];
+    B.use.forEach(function (w) { var d = add(bd, w - wd(bd)), x = dayNeed(o, f, d); uds.push(d); need += x.n; parts.push(lab(d) + " " + x.n + F.u); });
+    var ds = daySpare(o, f, uds);
+    var sp = ds != null ? [ds, ds] : has(pv.spare) ? [num(pv.spare), num(pv.spare)] : B.sp;
     var first = nextBuy() === bd, st = has(pv.stock) ? { n: num(pv.stock), d: "직접" } : (first ? stockNow(f) : null), hv = st ? st.n : 0;
     var lo = Math.max(0, Math.ceil(need + sp[0] - hv - 1e-9)), hi = Math.max(0, Math.ceil(need + sp[1] - hv - 1e-9));
-    return { need: r1(need), parts: parts, sp: sp, spAuto: !has(pv.spare), st: st, hv: hv, first: first, lo: lo, hi: hi, s: s };
+    return { need: r1(need), parts: parts, sp: sp, spAuto: ds == null && !has(pv.spare), spDay: ds != null, st: st, hv: hv, first: first, lo: lo, hi: hi, s: s };
   }
   function weekCalc(o, f) {   // 망고: 한 주 한 번에
     var F = FR[f], s = setOf(o, f), pv = ((o.p[week] || {})[f]) || {}, need = 0, parts = [];
     days().forEach(function (d) { var x = dayNeed(o, f, d); if (x.n) { need += x.n; parts.push(lab(d) + " " + x.n + F.u); } });
-    var sp = has(pv.spare) ? num(pv.spare) : 0, st = has(pv.stock) ? { n: num(pv.stock), d: "직접" } : stockNow(f), hv = st ? st.n : 0;
+    var ds = daySpare(o, f, days()), sp = ds != null ? ds : has(pv.spare) ? num(pv.spare) : 0, st = has(pv.stock) ? { n: num(pv.stock), d: "직접" } : stockNow(f), hv = st ? st.n : 0;
     var q = Math.max(0, Math.ceil(need + sp - hv - 1e-9));
     return { need: r1(need), parts: parts, sp: sp, st: st, hv: hv, q: q, box: s.pkN > 1 ? Math.ceil(q / s.pkN) : null, s: s };
   }
@@ -129,18 +127,14 @@
     h += '<div class="fctop"><button type="button" class="fcwk" data-w="-7">◀ 지난 주</button><b>' + lab(D[0]) + ' ~ ' + lab(D[5]) + '</b><button type="button" class="fcwk" data-w="7">다음 주 ▶</button>' + (week !== monOf(today()) ? '<button type="button" class="fcwk" data-w="0">이번 주</button>' : '') +
       '<span class="fcfr">' + Object.keys(FR).map(function (f) { return '<button type="button" class="fcfb' + (f === fsel ? ' on' : '') + '" data-f="' + f + '">' + FR[f].nm + '</button>'; }).join("") + '</span></div>';
     // 날마다 한 줄
-    h += '<div class="fctw"><table class="fct"><thead><tr><th>날짜</th>' + COLS.map(function (c) { return '<th>' + c[1] + '<small>' + (c[0] === "top" ? (s.top > 0 ? "1" + F.u + "에 " + s.top : "기준 없음") : "× " + s[c[0]] + F.u) + '</small></th>'; }).join("") + '<th>하루 필요</th></tr></thead><tbody>';
+    h += '<div class="fctw"><table class="fct"><thead><tr><th>날짜</th>' + COLS.map(function (c) { return '<th>' + c[1] + '<small>' + (c[0] === "top" ? (s.top > 0 ? "1" + F.u + "에 " + s.top : "기준 없음") : "× " + s[c[0]] + F.u) + '</small></th>'; }).join("") + '<th class="fcspth">➕ 여분<small>' + F.u + ' · 그 날</small></th><th>하루 필요</th></tr></thead><tbody>';
     D.forEach(function (d) {
       var v = ((o.d[d] || {})[fsel]) || {}, x = dayNeed(o, fsel, d), rv = sysRv(d)[fsel], rvs = ["whole", "mid", "mini"].filter(function (k) { return rv[k] && String(rv[k]) !== String(v[k] || ""); });
       var cls = (d === today() ? " today" : "") + (BUY[wd(d)] && fsel === "straw" ? " buy" : "") + (d < today() ? " past" : "");
-      h += '<tr class="' + cls + '" data-d="' + d + '"><th>' + lab(d) + (BUY[wd(d)] && fsel === "straw" ? '<span class="fcbuyt">🛒 딸기 사는 날</span>' : '') + (wd(d) === 1 ? '<span class="fcmonh">조각은 토요일에 미리 만든 건 빼고</span>' : '') + (rvs.length ? '<button type="button" class="fcrvput" data-d="' + d + '" title="일지 「📅 예약 넣기」 메모에서 찾은 예약">📒 예약 메모 ' + rvs.map(function (k) { return { whole: "한판", mid: "반짝", mini: "미니" }[k] + " " + rv[k]; }).join(" · ") + ' ← 넣기</button>' : '') + '</th>';
+      h += '<tr class="' + cls + '" data-d="' + d + '"><th>' + lab(d) + (BUY[wd(d)] && fsel === "straw" ? '<span class="fcbuyt">🛒 딸기 사는 날</span>' : '') + (wd(d) === 1 ? '<span class="fcmonh">조각은 토요일에 미리 만든 건 빼고</span>' : '') + (wd(d) === 6 ? '<span class="fcmonh">월요일 조각케이크분 포함해서 적기</span>' : '') + (rvs.length ? '<button type="button" class="fcrvput" data-d="' + d + '" title="일지 「📅 예약 넣기」 메모에서 찾은 예약">📒 예약 메모 ' + rvs.map(function (k) { return { whole: "한판", mid: "반짝", mini: "미니" }[k] + " " + rv[k]; }).join(" · ") + ' ← 넣기</button>' : '') + '</th>';
       COLS.forEach(function (c) { h += '<td><input type="number" inputmode="decimal" min="0" step="any" data-d="' + d + '" data-k="' + c[0] + '" value="' + esc(v[c[0]] || "") + '" placeholder="0" aria-label="' + lab(d) + ' ' + c[1] + '"></td>'; });
-      h += '<td class="fcdn"><b>' + (x.n ? x.n + F.u : "—") + '</b></td></tr>';
-      if (wd(d) === 6) {
-        h += '<tr class="fcmon" data-d="' + d + '"><th>↳ 토요일에 미리 만드는<br>월요일분</th><td colspan="3" class="fcmonn">토요일은 월요일 조각케이크 생산분이 미리 들어가요</td>' +
-          '<td><input type="number" inputmode="decimal" min="0" step="any" data-d="' + d + '" data-k="monPan" value="' + esc(v.monPan || "") + '" placeholder="0" aria-label="월요일분 조각 판"></td>' +
-          '<td><input type="number" inputmode="decimal" min="0" step="any" data-d="' + d + '" data-k="monTop" value="' + esc(v.monTop || "") + '" placeholder="0" aria-label="월요일분 토핑 조각"></td><td class="fcdn"><small>위 줄에 같이 더함</small></td></tr>';
-      }
+      h += '<td class="fcsp"><input type="number" inputmode="decimal" min="0" step="any" data-d="' + d + '" data-k="spare" value="' + esc(v.spare || "") + '" placeholder="0" aria-label="' + lab(d) + ' 여분 ' + F.u + '"></td>';
+      h += '<td class="fcdn"><b>' + (x.n ? x.n + F.u : "—") + '</b>' + (has(v.spare) && num(v.spare) ? '<small class="fcdsp">+ 여분 ' + r1(num(v.spare)) + F.u + '</small>' : '') + '</td></tr>';
     });
     h += '</tbody></table></div>';
     // 사는 날 카드
@@ -149,9 +143,9 @@
       D.filter(function (d) { return BUY[wd(d)]; }).forEach(function (bd) {
         var c = buyCalc(o, "straw", bd), B = BUY[wd(bd)], pv = ((o.p[bd] || {}).straw) || {};
         h += '<div class="fcbuy' + (bd === nb ? ' next' : '') + (bd < today() ? ' past' : '') + '" data-b="' + bd + '"><div class="fcbh">🛒 ' + lab(bd) + ' 딸기 사기' + (bd === nb ? ' <span class="fcnext">다음에 살 날</span>' : '') + '</div>';
-        h += '<div class="fcbu">' + B.use.map(function (w) { return WD[w]; }).join(" · ") + ' 쓸 것' + (wd(bd) === 5 ? ' (+ 토요일에 만드는 월요일분)' : '') + '</div>';
+        h += '<div class="fcbu">' + B.use.map(function (w) { return WD[w]; }).join(" · ") + ' 쓸 것' + (wd(bd) === 5 ? ' (토요일 숫자에 월요일분 포함)' : '') + '</div>';
         h += '<div class="fcbn">' + c.parts.join(" + ") + ' = <b>' + c.need + '통</b></div>';
-        h += '<label>➕ 여분 <input type="number" inputmode="decimal" min="0" step="any" data-b="' + bd + '" data-k="spare" value="' + esc(pv.spare || "") + '" placeholder="' + rng(B.sp[0], B.sp[1]) + ' (자동)"> 통</label>';
+        h += '<div class="fcbsp">➕ 여분 <b>' + rng(c.sp[0], c.sp[1]) + '통</b> <small>' + (c.spDay ? '(위 표에 날마다 적은 여분 합)' : c.spAuto ? '(자동 · 위 표 「➕ 여분」 칸에 그 날 여분을 적으면 그 숫자)' : '(예전에 적은 여분)') + '</small></div>';
         h += '<label>📦 그날 재고 <input type="number" inputmode="decimal" min="0" step="any" data-b="' + bd + '" data-k="stock" value="' + esc(pv.stock || "") + '" placeholder="' + esc(c.first ? (c.st ? c.st.n + " (재고 기록 " + c.st.d.slice(5).replace("-", "/") + ")" : "재고 기록 없음") : "그날 세서 적기") + '"> 통</label>';
         h += '<div class="fcbr">→ <b>' + rng(c.lo, c.hi) + '통</b> 사기 <small>(500g · ' + rng(r1(c.lo * 0.5), r1(c.hi * 0.5)) + 'kg)</small></div>' + (!c.st ? '<div class="fcbw">⚠ 그날 남은 재고를 적으면 그만큼 빠져요</div>' : '') + '</div>';
       });
@@ -159,7 +153,7 @@
     } else {
       var m = weekCalc(o, fsel), pv2 = ((o.p[week] || {})[fsel]) || {};
       h += '<div class="fcbuys"><div class="fcbuy next" data-b="' + week + '"><div class="fcbh">🥭 이번 주 망고 (한 주 한 번에 · 수요일에 목 · 금 · 토 미리 계산)</div><div class="fcbn">' + (m.parts.join(" + ") || "아직 적은 날 없음") + ' = <b>' + m.need + '알</b></div>';
-      h += '<label>➕ 여분 <input type="number" inputmode="decimal" min="0" step="any" data-b="' + week + '" data-k="spare" value="' + esc(pv2.spare || "") + '" placeholder="0"> 알</label>';
+      h += '<div class="fcbsp">➕ 여분 <b>' + m.sp + '알</b> <small>(위 표 「➕ 여분」 칸에 날마다 적은 합)</small></div>';
       h += '<label>📦 지금 재고 <input type="number" inputmode="decimal" min="0" step="any" data-b="' + week + '" data-k="stock" value="' + esc(pv2.stock || "") + '" placeholder="' + esc(m.st ? m.st.n + " (재고 기록 " + m.st.d.slice(5).replace("-", "/") + ")" : "재고 기록 없음") + '"> 알</label>';
       h += '<div class="fcbr">→ <b>' + m.q + '알</b>' + (m.box != null ? ' = <b>' + m.box + '박스</b> <small>(1박스 ' + m.s.pkN + '알)</small>' : '') + '</div></div></div>';
     }
