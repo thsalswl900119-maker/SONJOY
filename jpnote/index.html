@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>일본어 오답노트</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Noto+Sans+KR:wght@400;600;800&display=swap">
+<style>
+/* 공책 한 권: 빨간 펜(틀린 답) · 초록 펜(정답) · 연필(메모) */
+:root{--bg:#F6F3EC;--card:#FFFFFF;--ink:#26221C;--ink2:#4B443A;--mute:#6E6556;--line:#E2D9C8;--red:#B4342A;--green:#2E7D32;--accent:#1F4E8C;--soft:#EEF3FA;--hl:#FFF1B8;
+  --jp:"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;--kr:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1B1A17;--card:#25231F;--ink:#F1ECE2;--ink2:#D6CEC0;--mute:#B1A795;--line:#3A362E;--red:#F08A7E;--green:#86C98A;--accent:#8FB4EA;--soft:#22303F;--hl:#4A4020;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1B1A17;--card:#25231F;--ink:#F1ECE2;--ink2:#D6CEC0;--mute:#B1A795;--line:#3A362E;--red:#F08A7E;--green:#86C98A;--accent:#8FB4EA;--soft:#22303F;--hl:#4A4020;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--kr);font-size:15px;line-height:1.6;word-break:keep-all;overflow-wrap:anywhere;
+  padding:16px max(16px,env(safe-area-inset-right,0px)) 40px max(16px,env(safe-area-inset-left,0px))}
+.wrap{max-width:980px;margin:0 auto;display:grid;gap:14px}
+h1{margin:0;font-size:26px;font-weight:800;letter-spacing:-.01em}
+h1 small{display:block;font-size:14px;font-weight:600;color:var(--mute);margin-top:2px}
+.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:10px}
+.me{display:flex;align-items:center;gap:8px;font-size:15px}
+.me b{color:var(--accent)}
+button{font:inherit;cursor:pointer}
+.btn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:8px 13px;font-weight:600;font-size:15px}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.ok{background:var(--green);border-color:var(--green);color:#fff}
+.btn.sm{padding:5px 10px;font-size:14px}
+.btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.stats{display:flex;flex-wrap:wrap;gap:8px;font-size:14px;color:var(--ink2)}
+.chip{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);border-radius:999px;padding:3px 10px;background:var(--card);font-size:14px;color:var(--ink2)}
+.chip b{color:var(--ink)}
+.often{margin-top:8px;font-size:14px;color:var(--ink2)}
+.often .jp{font-family:var(--jp);font-weight:700;background:var(--hl);padding:0 4px;border-radius:4px}
+form .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 12px}
+@media (max-width:640px){form .grid{grid-template-columns:1fr}}
+label.f{display:grid;gap:4px;font-size:14px;font-weight:600;color:var(--ink2)}
+label.f.full{grid-column:1/-1}
+input,select,textarea{font:inherit;font-size:16px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:8px 10px;width:100%}
+input.jp,textarea.jp{font-family:var(--jp)}
+textarea{min-height:64px;resize:vertical}
+.types{display:flex;flex-wrap:wrap;gap:6px}
+.types button{border:1px solid var(--line);background:var(--card);color:var(--ink2);border-radius:999px;padding:5px 12px;font-size:14px}
+.types button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.frow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px}
+.msg{font-size:14px;color:var(--mute)}
+.msg.bad{color:var(--red);font-weight:700}
+.filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.filters select,.filters input{width:auto;min-width:0;flex:1 1 140px}
+.list{display:grid;gap:10px}
+.note{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--red);border-radius:12px;padding:12px 14px;display:grid;gap:6px}
+.note .meta{display:flex;flex-wrap:wrap;gap:6px 10px;font-size:13.5px;color:var(--mute)}
+.note .meta .who{color:var(--accent);font-weight:700}
+.note .meta .ty{background:var(--soft);color:var(--accent);border-radius:6px;padding:0 6px;font-weight:600}
+.q{font-family:var(--jp);font-size:20px;font-weight:700;line-height:1.5}
+.ans{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:16px}
+.ans .w{color:var(--red)} .ans .w s{text-decoration-thickness:2px}
+.ans .r{color:var(--green);font-weight:700}
+.ans .jp{font-family:var(--jp)}
+.mean{font-size:15px;color:var(--ink2)}
+.tip{font-size:14.5px;background:var(--hl);border-radius:8px;padding:6px 10px;color:var(--ink)}
+.acts{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:13.5px;color:var(--mute)}
+.empty{text-align:center;color:var(--mute);padding:24px 10px;border:1px dashed var(--line);border-radius:12px;font-size:15px}
+/* 퀴즈 */
+.quiz{display:grid;gap:10px;text-align:center}
+.quiz .q{font-size:30px}
+.quiz .hide{color:var(--mute);font-size:15px}
+.quiz .reveal{display:grid;gap:4px;font-size:17px}
+.hdr{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
+.hdr h2{margin:0;font-size:18px}
+.namebox{display:grid;gap:8px}
+@media (prefers-reduced-motion:no-preference){.note{transition:background .3s}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <h1>일본어 오답노트<small>틀린 문제를 다 같이 한곳에 모아요 · 링크 하나로</small></h1>
+    <div class="me" id="meBox"></div>
+  </div>
+
+  <section class="card namebox" id="nameCard" hidden>
+    <b>처음 오셨네요. 이름(닉네임)을 적어 주세요</b>
+    <input id="nameIn" maxlength="20" placeholder="예) 민지" autocomplete="nickname">
+    <div><button class="btn pri" id="nameOk" type="button">시작하기</button></div>
+    <span class="msg">이 휴대폰 · 컴퓨터에 기억돼요. 오답에 이 이름이 같이 적혀요.</span>
+  </section>
+
+  <section class="card" id="sumCard">
+    <div class="stats" id="stats"><span class="chip">불러오는 중…</span></div>
+    <div class="often" id="often"></div>
+  </section>
+
+  <section class="card" id="formCard">
+    <div class="hdr"><h2 id="formTitle">✏ 오답 적기</h2><button class="btn sm" type="button" id="formCancel" hidden>고치기 그만</button></div>
+    <form id="nf" autocomplete="off">
+      <div class="grid">
+        <label class="f">날짜<input type="date" id="fDate"></label>
+        <label class="f">교재 · 범위<input id="fBook" placeholder="예) N3 단어장 DAY 05 · 모의고사 1회"></label>
+        <div class="f full"><span style="font-size:14px;font-weight:600;color:var(--ink2)">유형</span>
+          <div class="types" id="fTypes"></div></div>
+        <label class="f full">문제 (단어 · 문장)<textarea class="jp" id="fQ" required placeholder="예) 扱う  /  彼は約束を＿＿＿。"></textarea></label>
+        <label class="f">내가 쓴 답<input class="jp" id="fMy" placeholder="예) あつかう → あずかう 로 씀"></label>
+        <label class="f">정답<input class="jp" id="fRight" placeholder="예) あつかう"></label>
+        <label class="f">읽는 법 · 후리가나<input class="jp" id="fYomi" placeholder="예) あつかう"></label>
+        <label class="f">뜻<input id="fMean" placeholder="예) 다루다, 취급하다"></label>
+        <label class="f full">왜 틀렸나 · 외울 팁<textarea id="fTip" placeholder="예) 預かる(맡다)와 헷갈림 → 「扱」는 손 수변: 손으로 다룬다"></textarea></label>
+      </div>
+      <div class="frow"><button class="btn pri" type="submit" id="fSave">오답 올리기</button><span class="msg" id="fMsg"></span></div>
+    </form>
+  </section>
+
+  <section class="card" id="quizCard" hidden>
+    <div class="hdr"><h2>🔁 복습 퀴즈</h2><button class="btn sm" type="button" id="quizClose">닫기</button></div>
+    <div class="quiz" id="quizBox"></div>
+  </section>
+
+  <section>
+    <div class="hdr"><h2>📒 모두의 오답 <span class="msg" id="cnt"></span></h2>
+      <div class="frow" style="margin:0"><button class="btn sm" type="button" id="quizGo">🔁 복습 퀴즈</button><button class="btn sm" type="button" id="copyAll">📋 보이는 것 복사</button></div></div>
+    <div class="filters">
+      <select id="flWho" aria-label="사람"></select>
+      <select id="flType" aria-label="유형"></select>
+      <input id="flQ" placeholder="🔍 찾기 (단어 · 뜻 · 범위)" aria-label="찾기">
+    </div>
+  </section>
+  <div class="list" id="list"><div class="empty">불러오는 중…</div></div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+<script src="../js/config.js"></script>
+<script>
+(function () {
+  // 저장: 서버 ops 컬렉션 「jpnote.<시각>-<무작위>」 문서 하나 = 오답 하나 · { v: JSON, by: "jp", t }
+  // 지우기는 del 표시만(문서는 남김) · 고치기는 적은 사람(이름)만
+  var TYPES = ["단어", "한자", "문법", "독해", "청해", "기타"];
+  var PRE = "jpnote.";
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function today() { var d = new Date(); return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
+  function ls(k, v) { try { if (v === undefined) return localStorage.getItem(k) || ""; localStorage.setItem(k, v); } catch (e) { return ""; } }
+  var me = ls("jpnote.me"), notes = {}, db = null, editId = null, type = "단어";
+
+  // 이름
+  function paintMe() {
+    $("meBox").innerHTML = me ? '나: <b>' + esc(me) + '</b> <button class="btn sm" type="button" id="meCh">이름 바꾸기</button>' : "";
+    $("nameCard").hidden = !!me;
+    var b = $("meCh"); if (b) b.onclick = function () { $("nameIn").value = me; me = ""; paintMe(); $("nameIn").focus(); };
+  }
+  $("nameOk").onclick = function () { var v = $("nameIn").value.trim(); if (!v) { $("nameIn").focus(); return; } me = v; ls("jpnote.me", v); paintMe(); render(); };
+  $("nameIn").addEventListener("keydown", function (e) { if (e.key === "Enter") $("nameOk").click(); });
+  paintMe();
+
+  // 유형 단추
+  $("fTypes").innerHTML = TYPES.map(function (t) { return '<button type="button" data-t="' + t + '" aria-pressed="' + (t === type) + '">' + t + '</button>'; }).join("");
+  $("fTypes").addEventListener("click", function (e) { var b = e.target.closest("button"); if (!b) return; type = b.dataset.t; [].forEach.call($("fTypes").children, function (x) { x.setAttribute("aria-pressed", x.dataset.t === type); }); });
+  $("fDate").value = today();
+  $("fBook").value = ls("jpnote.book");
+
+  // 서버
+  function boot() {
+    if (!window.firebase || !window.FIREBASE_CONFIG) { $("list").innerHTML = '<div class="empty">연결 파일을 못 읽었어요 · 인터넷을 확인하고 새로고침해 주세요</div>'; return; }
+    try { firebase.initializeApp(window.FIREBASE_CONFIG); } catch (e) {}
+    db = firebase.firestore();
+    var timer = setTimeout(function () { $("list").innerHTML = '<div class="empty">불러오기가 늦어요 · 인터넷을 확인하고 새로고침해 주세요</div>'; }, 12000);
+    firebase.auth().signInAnonymously().then(function () {
+      var FP = firebase.firestore.FieldPath;
+      db.collection("ops").where(FP.documentId(), ">=", PRE).where(FP.documentId(), "<=", PRE + "").onSnapshot(function (snap) {
+        clearTimeout(timer);
+        snap.docChanges().forEach(function (c) {
+          if (c.type === "removed") { delete notes[c.doc.id]; return; }
+          try { notes[c.doc.id] = JSON.parse(c.doc.data().v || "{}"); } catch (e) {}
+        });
+        render();
+      }, function (err) { clearTimeout(timer); $("list").innerHTML = '<div class="empty">불러오지 못했어요 (' + esc(err && err.code) + ') · 새로고침해 주세요</div>'; });
+    }).catch(function () { clearTimeout(timer); $("list").innerHTML = '<div class="empty">연결이 안 됐어요 · 새로고침해 주세요</div>'; });
+  }
+  function put(id, o) { return db.collection("ops").doc(id).set({ v: JSON.stringify(o), by: "jp", t: firebase.firestore.FieldValue.serverTimestamp() }); }
+
+  // 올리기 · 고치기
+  $("nf").addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!me) { $("nameCard").hidden = false; $("nameIn").focus(); return; }
+    var q = $("fQ").value.trim(); if (!q) { $("fMsg").textContent = "문제(단어 · 문장)를 적어 주세요"; $("fMsg").className = "msg bad"; return; }
+    if (!db) { $("fMsg").textContent = "아직 연결 중이에요 · 잠시 뒤 다시 눌러 주세요"; $("fMsg").className = "msg bad"; return; }
+    var base = editId && notes[editId] ? notes[editId] : {};
+    var o = Object.assign({}, base, { d: $("fDate").value || today(), book: $("fBook").value.trim(), ty: type, q: q, my: $("fMy").value.trim(), ok: $("fRight").value.trim(), yomi: $("fYomi").value.trim(), mean: $("fMean").value.trim(), tip: $("fTip").value.trim() });
+    if (editId) { o.ed = me + " " + new Date().toISOString(); } else { o.who = me; o.at = new Date().toISOString(); o.re = {}; }
+    var id = editId || (PRE + Date.now() + "-" + Math.random().toString(36).slice(2, 7));
+    ls("jpnote.book", o.book);
+    $("fSave").disabled = true; $("fMsg").textContent = "올리는 중…"; $("fMsg").className = "msg";
+    put(id, o).then(function () {
+      $("fMsg").textContent = editId ? "고쳤어요" : "올렸어요 · 모두에게 보여요"; resetForm();
+    }).catch(function (err) { $("fMsg").textContent = "못 올렸어요 (" + (err && err.code) + ") · 다시 눌러 주세요"; $("fMsg").className = "msg bad"; })
+      .then(function () { $("fSave").disabled = false; });
+  });
+  function resetForm() {
+    editId = null; ["fQ", "fMy", "fRight", "fYomi", "fMean", "fTip"].forEach(function (k) { $(k).value = ""; });
+    $("formTitle").textContent = "✏ 오답 적기"; $("fSave").textContent = "오답 올리기"; $("formCancel").hidden = true;
+  }
+  $("formCancel").onclick = function () { resetForm(); $("fMsg").textContent = ""; };
+
+  // 목록
+  function shown() {
+    var w = $("flWho").value, t = $("flType").value, s = $("flQ").value.trim().toLowerCase();
+    return Object.keys(notes).filter(function (id) {
+      var n = notes[id]; if (!n || n.del) return false;
+      if (w && n.who !== w) return false; if (t && n.ty !== t) return false;
+      if (s && [n.q, n.ok, n.my, n.yomi, n.mean, n.tip, n.book].join(" ").toLowerCase().indexOf(s) < 0) return false;
+      return true;
+    }).sort(function (a, b) { return (notes[b].d || "").localeCompare(notes[a].d || "") || (notes[b].at || "").localeCompare(notes[a].at || ""); });
+  }
+  function fillSel(sel, all, list) {
+    var v = sel.value; sel.innerHTML = '<option value="">' + all + '</option>' + list.map(function (x) { return '<option' + (x === v ? ' selected' : '') + '>' + esc(x) + '</option>'; }).join("");
+  }
+  var rt = null;
+  function render() { clearTimeout(rt); rt = setTimeout(draw, 80); }
+  function draw() {
+    var all = Object.keys(notes).map(function (k) { return notes[k]; }).filter(function (n) { return n && !n.del; });
+    var who = {}, typ = {}, key = {};
+    all.forEach(function (n) { who[n.who] = (who[n.who] || 0) + 1; typ[n.ty] = (typ[n.ty] || 0) + 1; var k = (n.ok || n.q || "").trim(); if (k) key[k] = (key[k] || 0) + 1; });
+    fillSel($("flWho"), "👥 모든 사람", Object.keys(who).sort());
+    fillSel($("flType"), "🏷 모든 유형", TYPES.filter(function (t) { return typ[t]; }));
+    $("stats").innerHTML = '<span class="chip">전체 <b>' + all.length + '</b>개</span>' + Object.keys(who).sort(function (a, b) { return who[b] - who[a]; }).map(function (w) { return '<span class="chip">' + esc(w) + ' <b>' + who[w] + '</b></span>'; }).join("");
+    var often = Object.keys(key).filter(function (k) { return key[k] > 1; }).sort(function (a, b) { return key[b] - key[a]; }).slice(0, 8);
+    $("often").innerHTML = often.length ? '여러 명이 틀린 것: ' + often.map(function (k) { return '<span class="jp">' + esc(k) + '</span> ' + key[k] + '번'; }).join(" · ") : "";
+    var ids = shown();
+    $("cnt").textContent = ids.length + "개";
+    if (!all.length) { $("list").innerHTML = '<div class="empty">아직 오답이 없어요. 위 「✏ 오답 적기」에 첫 오답을 올려 주세요.</div>'; return; }
+    if (!ids.length) { $("list").innerHTML = '<div class="empty">찾는 조건에 맞는 오답이 없어요.</div>'; return; }
+    $("list").innerHTML = ids.map(function (id) {
+      var n = notes[id], mine = me && n.who === me, re = n.re || {}, reN = Object.keys(re).length, iDid = me && re[me];
+      return '<article class="note" data-id="' + id + '">' +
+        '<div class="meta"><span class="who">' + esc(n.who || "?") + '</span><span>' + esc((n.d || "").slice(5).replace("-", "/")) + '</span>' + (n.ty ? '<span class="ty">' + esc(n.ty) + '</span>' : '') + (n.book ? '<span>' + esc(n.book) + '</span>' : '') + '</div>' +
+        '<div class="q">' + esc(n.q).replace(/\n/g, "<br>") + '</div>' +
+        ((n.my || n.ok) ? '<div class="ans">' + (n.my ? '<span class="w">✗ <s class="jp">' + esc(n.my) + '</s></span>' : '') + (n.ok ? '<span class="r">○ <span class="jp">' + esc(n.ok) + '</span></span>' : '') + (n.yomi ? '<span class="jp">（' + esc(n.yomi) + '）</span>' : '') + '</div>' : '') +
+        (n.mean ? '<div class="mean">뜻: ' + esc(n.mean) + '</div>' : '') +
+        (n.tip ? '<div class="tip">💡 ' + esc(n.tip).replace(/\n/g, "<br>") + '</div>' : '') +
+        '<div class="acts"><button class="btn sm' + (iDid ? ' ok' : '') + '" type="button" data-a="re">' + (iDid ? '✔ 나도 이제 맞힘' : '✔ 다시 맞혔어요') + '</button>' + (reN ? '<span>다시 맞힌 사람 ' + reN + '명</span>' : '') +
+        (mine ? '<button class="btn sm" type="button" data-a="ed">고치기</button><button class="btn sm" type="button" data-a="del">빼기</button>' : '') + '</div></article>';
+    }).join("");
+  }
+  ["flWho", "flType"].forEach(function (k) { $(k).addEventListener("change", render); });
+  $("flQ").addEventListener("input", render);
+
+  var delAsk = null;
+  $("list").addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-a]"); if (!b) return;
+    var id = b.closest(".note").dataset.id, n = notes[id]; if (!n) return;
+    if (b.dataset.a === "re") {
+      if (!me) { $("nameCard").hidden = false; return; }
+      var o = Object.assign({}, n); o.re = Object.assign({}, n.re || {});
+      if (o.re[me]) delete o.re[me]; else o.re[me] = today();
+      put(id, o);
+    } else if (b.dataset.a === "ed") {
+      editId = id; $("fDate").value = n.d || today(); $("fBook").value = n.book || ""; type = n.ty || "단어";
+      [].forEach.call($("fTypes").children, function (x) { x.setAttribute("aria-pressed", x.dataset.t === type); });
+      $("fQ").value = n.q || ""; $("fMy").value = n.my || ""; $("fRight").value = n.ok || ""; $("fYomi").value = n.yomi || ""; $("fMean").value = n.mean || ""; $("fTip").value = n.tip || "";
+      $("formTitle").textContent = "✏ 오답 고치기"; $("fSave").textContent = "고친 것 올리기"; $("formCancel").hidden = false;
+      $("formCard").scrollIntoView({ behavior: "smooth", block: "start" });
+    } else if (b.dataset.a === "del") {
+      if (delAsk !== id) { delAsk = id; b.textContent = "정말 뺄까요? 한 번 더 누르기"; setTimeout(function () { if (delAsk === id) { delAsk = null; render(); } }, 4000); return; }
+      delAsk = null; var o2 = Object.assign({}, n, { del: me + " " + new Date().toISOString() }); put(id, o2);
+    }
+  });
+
+  // 복습 퀴즈
+  var qList = [], qi = 0, open = false;
+  function qDraw() {
+    var box = $("quizBox");
+    if (!qList.length) { box.innerHTML = '<p class="msg">퀴즈로 낼 오답이 없어요. 아래 찾기 조건을 바꿔 보세요.</p>'; return; }
+    var n = notes[qList[qi]] || {};
+    box.innerHTML = '<div class="msg">' + (qi + 1) + ' / ' + qList.length + ' · ' + esc(n.ty || "") + (n.book ? ' · ' + esc(n.book) : '') + '</div><div class="q">' + esc(n.q).replace(/\n/g, "<br>") + '</div>' +
+      (open ? '<div class="reveal">' + (n.ok ? '<div class="ans" style="justify-content:center"><span class="r">○ <span class="jp">' + esc(n.ok) + '</span></span>' + (n.yomi ? '<span class="jp">（' + esc(n.yomi) + '）</span>' : '') + '</div>' : '') + (n.mean ? '<div class="mean">' + esc(n.mean) + '</div>' : '') + (n.tip ? '<div class="tip">💡 ' + esc(n.tip) + '</div>' : '') + '</div>' : '<div class="hide">생각해 보고 「정답 보기」</div>') +
+      '<div class="frow" style="justify-content:center">' + (open ? '<button class="btn pri" type="button" id="qNext">다음 →</button>' : '<button class="btn pri" type="button" id="qOpen">정답 보기</button>') + '</div>';
+    var o = $("qOpen"); if (o) o.onclick = function () { open = true; qDraw(); };
+    var x = $("qNext"); if (x) x.onclick = function () { open = false; qi = (qi + 1) % qList.length; qDraw(); };
+  }
+  $("quizGo").onclick = function () {
+    qList = shown().sort(function () { return Math.random() - .5; }); qi = 0; open = false;
+    $("quizCard").hidden = false; qDraw(); $("quizCard").scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+  $("quizClose").onclick = function () { $("quizCard").hidden = true; };
+
+  // 복사
+  $("copyAll").onclick = function () {
+    var s = shown().map(function (id) { var n = notes[id]; return "[" + (n.d || "") + " · " + (n.who || "") + " · " + (n.ty || "") + (n.book ? " · " + n.book : "") + "]\n" + n.q + (n.my ? "\n✗ " + n.my : "") + (n.ok ? "\n○ " + n.ok + (n.yomi ? " (" + n.yomi + ")" : "") : "") + (n.mean ? "\n뜻: " + n.mean : "") + (n.tip ? "\n💡 " + n.tip : ""); }).join("\n\n");
+    var b = $("copyAll");
+    (navigator.clipboard ? navigator.clipboard.writeText(s) : Promise.reject()).then(function () { b.textContent = "✔ 복사했어요"; setTimeout(function () { b.textContent = "📋 보이는 것 복사"; }, 1800); }, function () { b.textContent = "복사가 막혔어요"; });
+  };
+
+  boot();
+})();
+</script>
+</body>
+</html>
