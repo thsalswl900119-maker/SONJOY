@@ -10,8 +10,15 @@
     { id: "f2", ic: "🥭", n: "태국망고", unit: "1박스", start: 1, mons: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], note: "1년 내내 · 박스 크기(12 · 14 · 16수)가 섞여 있어요 · 반박스는 뺌" },
     { id: "f3", ic: "🥭", n: "애플망고", unit: "1박스 (약 4kg)", start: 1, mons: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], note: "1년 내내 · 4kg 8~12과 박스 기준" }
   ];
-  FR.forEach(function (f) { if (!f.key) f.key = f.id; });
+  FR.forEach(function (f) { if (!f.key) f.key = f.id; f.g = f.id === "f1" ? "st" : "mg"; });
+  // 11/19 사장님 「과일별 단가 / 딸기 계절별 단가분석 / 망고 계절별 단가분석 / 과일달력」 — 그래프 하나를 딸기 · 망고 칸으로 옮겨 가며 씀
+  var GRP = "st"; try { if (localStorage.getItem("cafesui.ui.skfpart") === "mg") GRP = "mg"; } catch (e) {}
+  var LAST = { st: "f1", mg: "f2" };
   var cur = "f1"; try { var sv = localStorage.getItem("cafesui.ui.fpchart"); if (sv && FR.some(function (f) { return f.key === sv; })) cur = sv; } catch (e) {}
+  FR.forEach(function (f) { if (f.key === cur) LAST[f.g] = cur; });
+  cur = LAST[GRP];
+  function place() { var sl = document.querySelector('.stslot[data-g="' + GRP + '"]'); if (sl && box.parentNode !== sl) sl.appendChild(box); }
+  window.__CS_STGRP = function (g) { if (g !== "st" && g !== "mg") return; if (g !== GRP) { GRP = g; cur = LAST[g]; PICK = null; S = curSeason(cfg()); } place(); draw(); };
   var now = new Date(), Y = now.getFullYear(), TM = now.getMonth() + 1;
   function cfg() { return FR.filter(function (f) { return f.key === cur; })[0]; }
   function curSeason(c) { return c.start === 1 ? Y : (TM >= 8 ? Y : Y - 1); }
@@ -40,8 +47,8 @@
     var ss = {}; all.forEach(function (x) { var s = seasonOf(c, x.d); if (s != null) ss[s] = 1; });
     var minS = Math.min.apply(null, Object.keys(ss).map(Number).concat([cs]));
     var thisM = S === cs && c.mons.indexOf(TM) >= 0 ? TM : null;
-    var h = '<div class="fch"><b>📈 과일값 그래프</b><span>값을 적을 때마다 저절로 들어가요 · <b>막대 하나 = 그 달 평균 값</b></span></div>' +
-      '<div class="stfr" role="tablist" aria-label="과일 고르기">' + FR.map(function (f) { var n = lines(f).length; return '<button type="button" role="tab" data-fr="' + f.key + '" aria-selected="' + (f.key === cur) + '">' + f.ic + " " + f.n + "<small>" + n + "번</small></button>"; }).join("") + "</div>" +
+    var h = '<div class="fch"><b>' + (GRP === "mg" ? "🥭 망고 계절별 단가 분석" : "🍓 딸기 계절별 단가 분석") + '</b><span>값을 적을 때마다 저절로 들어가요 · <b>막대 하나 = 그 달 평균 값</b></span></div>' +
+      '<div class="stfr" role="tablist" aria-label="과일 고르기">' + FR.filter(function (f) { return f.g === GRP; }).map(function (f) { var n = lines(f).length; return '<button type="button" role="tab" data-fr="' + f.key + '" aria-selected="' + (f.key === cur) + '">' + f.ic + " " + f.n + "<small>" + n + "번</small></button>"; }).join("") + "</div>" +
       '<div class="stnav"><button type="button" data-s="-1"' + (S <= minS ? " disabled" : "") + ' aria-label="이전">◀</button><b>' + c.ic + " " + c.n + " · " + slab(c, S) + ' <small>' + esc(c.unit) + ' 값</small></b><button type="button" data-s="1"' + (S >= cs ? " disabled" : "") + ' aria-label="다음">▶</button>' + (S !== cs ? '<button type="button" data-s="0">' + (c.start === 1 ? "올해로" : "이번 시즌으로") + "</button>" : "") + "</div>";
     var sAll = stat([].concat.apply([], c.mons.map(function (m) { return A[m]; })));
     var ms = c.mons.filter(function (m) { return A[m].length; });
@@ -88,10 +95,22 @@
       h += '<div class="stleg3"><span><i class="k ty"></i>' + esc(sshort(c, S)) + ' 평균</span><span><i class="k over"></i>⚠ 한도선보다 비쌈</span><span><i class="k ly"></i>작년 같은 달 평균</span>' + (c.u ? "" : '<span><i class="k cap"></i>한도선 (이보다 높으면 비싸게 산 것)</span>') + '<span class="tip">막대를 누르면 그 달에 들어온 값이 아래에 나와요' + (cols.length > 4 ? " · 휴대폰은 막대를 옆으로 밀면 다른 달도 보여요" : "") + '</span></div>';
     }
     if (!sAll) h += '<p class="stempty">' + esc(slab(c, S)) + "엔 아직 " + esc(c.n) + "값이 없어요 — 아래 " + esc(c.n) + " 카드의 「＋ 값 적기」로 넣으면 여기 막대가 생겨요</p>";
-    // 고른 달에 들어온 값 (날짜순)
+    // 고른 달에 들어온 값 — 달력 모양 (11/19 사장님 「캘린더처럼」)
     if (km && A[km].length) {
-      h += '<div class="stlist"><b>🧾 ' + km + "월에 들어온 값 " + A[km].length + "번 <small>(위 막대를 누르면 그 달로 바뀌어요)</small></b><ul>" +
-        A[km].map(function (x) { return "<li" + (x.p === sAll.hi ? ' class="hi"' : x.p === sAll.lo ? ' class="lo"' : "") + "><span>" + md(x.d) + "</span><b>" + won(x.p) + "원</b><em>" + (c.id === "f1" ? esc((x.q > 1 && c.u ? x.q + "kg · " : "") + (x.n || where(x) || "")) : (x.q > 1 ? x.q + "박스 · " : "") + esc(x.n || where(x) || "")) + "</em></li>"; }).join("") + "</ul></div>";
+      var yy = c.start === 1 ? S : (km >= c.start ? S : S + 1), first = new Date(yy, km - 1, 1), nd = new Date(yy, km, 0).getDate(), td0 = new Date();
+      var byD = {}; A[km].forEach(function (x) { (byD[+x.d.slice(8, 10)] = byD[+x.d.slice(8, 10)] || []).push(x); });
+      var info = function (x) { return c.id === "f1" ? (x.q > 1 && c.u ? x.q + "kg · " : "") + (x.n || where(x) || "") : (x.q > 1 ? x.q + "박스 · " : "") + (x.n || where(x) || ""); };
+      var cells = ""; for (var b0i = 0; b0i < first.getDay(); b0i++) cells += '<div class="stcd blank"></div>';
+      for (var dd2 = 1; dd2 <= nd; dd2++) {
+        var wd = new Date(yy, km - 1, dd2).getDay(), xs = byD[dd2] || [], isT = td0.getFullYear() === yy && td0.getMonth() === km - 1 && td0.getDate() === dd2;
+        cells += '<div class="stcd' + (wd === 0 ? " sun" : wd === 6 ? " sat" : "") + (xs.length ? " has" : "") + (isT ? " today" : "") + '"><span class="stcdn">' + dd2 + (isT ? " 오늘" : "") + "</span>" +
+          xs.map(function (x) { return '<div class="stcdv' + (x.p === sAll.hi ? " hi" : x.p === sAll.lo ? " lo" : "") + '" title="' + esc(md(x.d) + " " + won(x.p) + "원 · " + info(x)) + '"><b>' + won(x.p) + "<small>원</small></b><em>" + esc(info(x)) + "</em></div>"; }).join("") + "</div>";
+      }
+      var ac = stat(A[km]);
+      h += '<div class="stlist stcalw"><b>🗓 ' + yy + "년 " + km + "월에 들어온 값 " + A[km].length + "번 <small>(평균 " + won(ac.avg) + "원 · 위 막대를 누르면 그 달로 바뀌어요)</small></b>" +
+        '<div class="stcal"><div class="stcwh">' + ["일", "월", "화", "수", "목", "금", "토"].map(function (w, i) { return '<span class="' + (i === 0 ? "sun" : i === 6 ? "sat" : "") + '">' + w + "</span>"; }).join("") + "</div>" +
+        '<div class="stcg">' + cells + "</div></div>" +
+        '<div class="stcleg"><span class="hi">빨간 칸 = ' + esc(sshort(c, S)) + ' 가장 비쌌던 값</span><span class="lo">파란 칸 = 가장 쌌던 값</span></div></div>';
     }
     h += '<p class="stnote">' + esc(c.note) + "</p>";
     box.innerHTML = h;
@@ -99,7 +118,7 @@
     if (pk && cw.scrollWidth > cw.clientWidth) cw.scrollLeft = Math.max(0, pk.offsetLeft - cw.clientWidth / 2 + pk.offsetWidth / 2);
   }
   box.addEventListener("click", function (e) {
-    var f = e.target.closest("[data-fr]"); if (f) { cur = f.dataset.fr; PICK = null; try { localStorage.setItem("cafesui.ui.fpchart", cur); } catch (x) {} S = curSeason(cfg()); draw(); return; }
+    var f = e.target.closest("[data-fr]"); if (f) { cur = f.dataset.fr; LAST[GRP] = cur; PICK = null; try { localStorage.setItem("cafesui.ui.fpchart", cur); } catch (x) {} S = curSeason(cfg()); draw(); return; }
     var r = e.target.closest(".stc[data-m]"); if (r) { PICK = +r.dataset.m; draw(); return; }
     var b = e.target.closest("[data-s]"); if (!b) return; var d = +b.dataset.s; S = d ? S + d : curSeason(cfg()); PICK = null; draw();
   });
@@ -107,6 +126,6 @@
   var t0 = 0; function later() { clearTimeout(t0); t0 = setTimeout(draw, 300); }
   window.addEventListener("cs:remote", function (e) { var ks = (e.detail && e.detail.keys) || []; if (ks.some(function (k) { return /^cafesui\.fruit(price|cap)$/.test(k); })) later(); });
   ["skCap", "skPrice"].forEach(function (id) { var el = document.getElementById(id); if (el && window.MutationObserver) new MutationObserver(later).observe(el, { childList: true }); });
-  document.addEventListener("click", function (e) { if (e.target.closest && e.target.closest('[data-fp="cap"], .sktab, .tab[data-p="tp12"]')) setTimeout(draw, 80); });
-  setTimeout(draw, 400);
+  document.addEventListener("click", function (e) { if (e.target.closest && e.target.closest('.skfp, .sktab, .tab[data-p="tp12"]')) setTimeout(draw, 80); });
+  setTimeout(function () { place(); draw(); }, 400);
 })();

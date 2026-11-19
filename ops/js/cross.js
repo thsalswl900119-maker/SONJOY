@@ -49,29 +49,77 @@
     return { L: L, wk: wk, tm: tm, miss: miss, mid: dw >= 4 || dw === 0, late: dw === 6 };
   }
 
+  // ── 🏯 도장깨기 (11/19 사장님 「게임 도장깨듯 재미적으로 · 루틴이 되고 딱 머리에 박혀 당연히 해야 하는 것처럼」) ──
+  // 저장값은 그대로 — 칭호 · 도장 · 배지는 기록에서 계산만 함.
+  var COL = { "정항아": "#C45A00", "박혜빈": "#1B5FC1", "이해선": "#8E3BB0", "사장님": "#2E7D32" };
+  var LV = [[0, "🥚", "새내기"], [1, "🍞", "시트 견습생"], [4, "🍦", "크림 수련생"], [8, "🍓", "과일 감별사"], [15, "🎂", "맛 지킴이"], [25, "👑", "카페스이 맛 장인"]];
+  var GATE = [["🍞", "1관문"], ["🍦", "2관문"], ["🍓", "3관문"], ["🤝", "최종 관문"]];
+  var FX = null;
+  function lvOf(n) { var i = 0; for (var j = 0; j < LV.length; j++) if (n >= LV[j][0]) i = j; return i; }
+  function best(mp) {   // 지금까지 가장 길게 이어진 주
+    var ks = Object.keys(mp || {}).sort(), b = 0, c = 0, prev = "";
+    ks.forEach(function (w) { c = prev && addDays(prev, 7) === w ? c + 1 : 1; prev = w; if (c > b) b = c; });
+    return b;
+  }
+  function stats(n, S) {
+    var mp = S.wk[n] || {}, mine = S.L.filter(function (x) { return done(x) && x.who === n; });
+    var first = {}; mine.forEach(function (x) { var w = monOf(x.d); if (!first[w] || x.d < first[w]) first[w] = x.d; });
+    var early = Object.keys(first).filter(function (w) { var p = first[w].split("-"), g = new Date(+p[0], +p[1] - 1, +p[2]).getDay(); return g >= 1 && g <= 3; }).length;
+    var helps = S.L.filter(function (x) { return done(x) && x.cx && x.cx.by === n && x.who !== n; }).length;
+    return { mp: mp, cnt: mp[S.tm] || 0, st: streak(mp, S.tm), best: best(mp), total: mine.length, early: early, helps: helps };
+  }
+  function mapHtml(act) {
+    var dn = act ? [!!act.s1, !!act.s2, !!act.s3, !!act.cx] : [0, 0, 0, 0], cur = act ? dn.indexOf(false) : -1;
+    var tx = STEP.map(function (s) { return s; }).concat([["같이 먹은 사람이 「크로스체크 확인」 누르기 = 완료", ""]]);
+    var h = '<div class="crmap">' + (act ? '<div class="crmh">▶ 지금 <b>' + GATE[cur][1] + "</b> 도전 중 · " + esc(nim(act.who)) + " + " + esc(nim(act.w)) + "</div>" : "") + "<ol>";
+    h += tx.map(function (t, i) {
+      return '<li class="crg' + (i === 3 ? " boss" : "") + (dn[i] ? " clr" : "") + (i === cur ? " cur" : "") + '"><span class="crgi" aria-hidden="true">' + GATE[i][0] + '</span><span class="crgn">' + GATE[i][1] + "</span><b>" + esc(t[0]) + "</b>" + (t[1] ? "<em>" + esc(t[1]) + "</em>" : "") + (dn[i] ? '<i class="crstamp" aria-label="깸">깸!</i>' : "") + "</li>";
+    }).join("");
+    return h + "</ol></div>";
+  }
+  function teamHtml(S) {
+    var all1 = function (w) { return REQ.every(function (n) { return S.wk[n] && S.wk[n][w]; }); };
+    var n = 0, w = all1(S.tm) ? S.tm : addDays(S.tm, -7); while (all1(w)) { n++; w = addDays(w, -7); }
+    var ok = all1(S.tm);
+    return '<div class="crteam' + (ok ? " ok" : "") + '">🏆 <b>이번 주 팀 퀘스트</b> ' + REQ.map(function (p) { var c = S.wk[p] && S.wk[p][S.tm]; return '<span class="' + (c ? "y" : "n") + '">' + esc(nim(p)) + (c ? " ✔" : " ⏳") + "</span>"; }).join("") +
+      '<em>' + (ok ? "🎉 팀 도장 획득!" : "둘 다 깨면 팀 도장") + (n ? " · 팀 " + n + "주 연속" : "") + "</em></div>";
+  }
+  function player(n, S) {
+    var t = stats(n, S), li = lvOf(t.total), L0 = LV[li], nx = LV[li + 1];
+    var pct = nx ? Math.round((t.total - L0[0]) / (nx[0] - L0[0]) * 100) : 100;
+    var w8 = []; for (var i = 7; i >= 0; i--) w8.push(addDays(S.tm, -7 * i));
+    var BD = [["🏅", "첫 도장", t.total >= 1], ["🔥", "3주 연속", t.best >= 3], ["💯", "도장 10개", t.total >= 10], ["🤝", "짝꿍 확인 5번", t.helps >= 5], ["🌅", "월~수에 미리 3주", t.early >= 3], ["👑", "8주 연속", t.best >= 8]];
+    return '<div class="crpl2' + (t.cnt ? " ok" : "") + '" style="--pc:' + (COL[n] || "#8F5A22") + '"><div class="crpa" aria-hidden="true">' + esc(n.charAt(0)) + '</div><div class="crpb">' +
+      '<div class="crpt"><b class="crsn">' + esc(nim(n)) + '</b><span class="crlv">Lv.' + li + " " + L0[1] + " " + L0[2] + "</span>" +
+      (t.cnt ? '<span class="crclr">이번 주 CLEAR ✔' + (t.cnt > 1 ? " " + t.cnt + "번" : "") + "</span>" : '<span class="crsno">이번 주 아직</span>') +
+      (t.st ? '<span class="crfire">🔥 ' + t.st + "주 연속</span>" : "") + "</div>" +
+      '<div class="crxp" role="img" aria-label="다음 칭호까지 ' + pct + '%"><i style="width:' + pct + '%"></i></div>' +
+      '<small class="crxpt">🍓 도장 <b>' + t.total + "개</b>" + (nx ? " · 「" + nx[1] + " " + nx[2] + "」까지 " + (nx[0] - t.total) + "개" : " · 최고 칭호") + (t.helps ? " · 🤝 짝꿍 확인 " + t.helps + "번" : "") + "</small>" +
+      '<div class="cr8" title="최근 8주 도장판 (왼쪽이 오래된 주)">' + w8.map(function (w) { var on = !!t.mp[w], now = w === S.tm; return '<i class="' + (on ? "on" : "") + (now ? " now" : "") + '" title="' + md(w) + " 주" + (on ? " ✔" : now ? " (이번 주)" : "") + '">' + (on ? "🍓" : now ? "?" : "") + "</i>"; }).join("") + "</div>" +
+      '<div class="crbdg">' + BD.map(function (b) { return '<span class="' + (b[2] ? "y" : "n") + '" title="' + esc(b[1]) + (b[2] ? " 획득" : " · 아직") + '">' + (b[2] ? b[0] : "🔒") + " " + esc(b[1]) + "</span>"; }).join("") + "</div></div></div>";
+  }
+  function boom(fx) {
+    var o = document.createElement("div"); o.className = "crboom"; o.setAttribute("role", "status");
+    o.innerHTML = '<div class="crbs"><span class="crbi">🍓</span><b>도장 쾅!</b><span>' + esc(fx.msg || "이번 주 퀘스트 CLEAR") + "</span></div>";
+    box.appendChild(o); o.addEventListener("click", function () { o.remove(); });
+    setTimeout(function () { if (o.parentNode) o.remove(); }, 2800);
+  }
+
   function draw() {
     if (box.contains(document.activeElement) && /INPUT|TEXTAREA/.test(document.activeElement.tagName)) return;
     var S = state(), m = me(), td = ymd(new Date());
     var mineOpen = S.L.filter(function (x) { return x.d === td && !done(x) && (x.who === m || x.w === m); });
     var today = S.L.filter(function (x) { return x.d === td; });
-    var h = '<div class="crh"><b>🤝 케이크 크로스체크 · 이번 주</b><span>작업할 때마다 · 순서대로 눌러서 체크 → 같이 먹은 사람이 마지막에 확인</span></div>';
-    // 순서 안내
-    h += '<ol class="crord">' + STEP.map(function (s, i) { return "<li><b>" + (i + 1) + ")</b> " + esc(s[0]) + (s[1] ? "<em>" + esc(s[1]) + "</em>" : "") + "</li>"; }).join("") +
-      '<li class="crx"><b>🤝</b> 같이 먹은 사람이 「크로스체크 확인」 누르기 = 완료</li></ol>';
-    // 직원별 이번 주 · 연속 주 · 최근 8주
-    var weeks8 = []; for (var i = 7; i >= 0; i--) weeks8.push(addDays(S.tm, -7 * i));
-    h += '<div class="crstaff">' + REQ.concat(m && REQ.indexOf(m) < 0 && m !== "사장님" ? [m] : []).map(function (n) {
-      var mp = S.wk[n] || {}, cnt = mp[S.tm] || 0, st = streak(mp, S.tm);
-      return '<div class="crsr' + (cnt ? " ok" : "") + '"><b class="crsn">' + esc(nim(n)) + "</b>" +
-        (cnt ? '<span class="crsok">✔ 이번 주 ' + cnt + "번</span>" : '<span class="crsno">이번 주 아직</span>') +
-        (st ? '<span class="crfire">🔥 ' + st + "주 연속</span>" : "") +
-        '<span class="cr8" title="최근 8주 (왼쪽이 오래된 주)">' + weeks8.map(function (w) { var on = !!mp[w], now = w === S.tm; return '<i class="' + (on ? "on" : "") + (now ? " now" : "") + '" title="' + md(w) + " 주" + (on ? " ✔" : "") + '"></i>'; }).join("") + "</span></div>";
-    }).join("") + "</div>";
-    if (S.miss.length && S.mid) h += '<p class="crwarn' + (S.late ? " late" : "") + '">⏰ <b>이번 주 크로스체크 아직: ' + S.miss.map(nim).join(" · ") + "</b>" + (S.late ? " — 오늘(토)이 이번 주 마지막 영업일" : " — 케이크 작업할 때 같이 먹어 보고 체크해 주세요") + "</p>";
+    var act = mineOpen[0] || null;
+    var h = '<div class="crh"><b>🏯 케이크 맛 도장깨기 · 이번 주 퀘스트</b><span>케이크 작업할 때마다 관문 4개를 차례로 깨고 🍓 도장 받기 · 매주 1번 이상</span></div>';
+    h += mapHtml(act);
+    h += teamHtml(S);
+    h += '<div class="crplayers">' + REQ.concat(m && REQ.indexOf(m) < 0 && m !== "사장님" ? [m] : []).map(function (n) { return player(n, S); }).join("") + "</div>";
+    if (S.miss.length && S.mid) h += '<p class="crwarn' + (S.late ? " late" : "") + '">⏰ <b>이번 주 퀘스트 아직 못 깬 사람: ' + S.miss.map(nim).join(" · ") + "</b>" + (S.late ? " — 오늘(토)이 이번 주 마지막 영업일" : " — 케이크 작업할 때 같이 먹어 보고 체크해 주세요") + "</p>";
     // 오늘 기록 카드
     h += today.map(card).join("");
     if (!m) h += '<p class="crme">이름을 고르면 「크로스체크 시작」 단추가 생겨요</p>';
-    else if (!pastView() && !mineOpen.length) h += '<div class="crstart"><span>🍰 오늘 케이크 작업 크로스체크 — 같이 먹을 사람</span>' +
+    else if (!pastView() && !mineOpen.length) h += '<div class="crstart"><span>⚔ 오늘 도장깨기 시작 — 같이 먹을 사람 고르기</span>' +
       PEOPLE.filter(function (n) { return n !== m; }).map(function (n) { return '<button type="button" class="crgo" data-w="' + esc(n) + '">' + esc(nim(n)) + (n === "이해선" ? " (엄마)" : "") + "</button>"; }).join("") + "</div>";
     // 이번 주 지난 기록
     var past = S.L.filter(function (x) { return x.d !== td && x.d >= S.tm; });
@@ -80,6 +128,7 @@
         (x.m2 ? " · 크림: " + esc(x.m2) : "") + (x.m3 ? " · 과일: " + esc(x.m3) : "") + "</div>";
     }).join("") + "</div>";
     box.innerHTML = h;
+    if (FX) { var fx = FX; FX = null; var el = box.querySelector('.crcard[data-id="' + fx.id + '"] [data-s="' + fx.k + '"]'); if (el) el.classList.add("pop"); if (fx.boom) boom(fx); }
     band(S);
   }
   function card(x) {
@@ -88,11 +137,11 @@
       var k = "s" + (i + 1), v = x[k], prev = i === 0 || x["s" + i], dis = !can || !prev || pastView();
       var memo = i === 1 ? '<input type="text" class="crm" data-f="m2" value="' + esc(x.m2 || "") + '" placeholder="크림 판단 (예: 그대로 / 설탕 +10g)"' + (can ? "" : " disabled") + ">" :
         i === 2 ? '<input type="text" class="crm" data-f="m3" value="' + esc(x.m3 || "") + '" placeholder="과일 당도 (예: 딸기 당도 좋음 / 조금 심)"' + (can ? "" : " disabled") + ">" : "";
-      return '<div class="crstep' + (v ? " on" : "") + (!prev && !v ? " lock" : "") + '"><button type="button" class="crb" data-s="' + k + '"' + (dis && !v ? " disabled" : "") + ' aria-pressed="' + (!!v) + '">' + (v ? "✔" : i + 1) + "</button>" +
+      return '<div class="crstep' + (v ? " on" : "") + (!prev && !v ? " lock" : "") + '" data-s="' + k + '">' + (v ? '<i class="crstamp" aria-hidden="true">깸!</i>' : "") + '<button type="button" class="crb" data-s="' + k + '"' + (dis && !v ? " disabled" : "") + ' aria-pressed="' + (!!v) + '">' + (v ? "✔" : i + 1) + "</button>" +
         '<span class="crst"><b>' + (i + 1) + ") " + esc(s[0]) + "</b>" + (s[1] ? "<em>" + esc(s[1]) + "</em>" : "") + (v ? '<small>' + esc(v) + "</small>" : !prev ? "<small>앞 단계 먼저</small>" : "") + memo + "</span></div>";
     }).join("");
     var all3 = x.s1 && x.s2 && x.s3, partner = boss || x.w === m;
-    var cx = x.cx ? '<div class="crcx on">🤝 <b>크로스체크 확인</b> ' + esc(nim(x.cx.by)) + " · " + esc(x.cx.at) + "</div>" :
+    var cx = x.cx ? '<div class="crcx on" data-s="cx"><i class="crstamp big" aria-hidden="true">🍓 도장</i>🤝 <b>크로스체크 확인</b> ' + esc(nim(x.cx.by)) + " · " + esc(x.cx.at) + "</div>" :
       '<div class="crcx">' + (!all3 ? "🤝 1) 2) 3)을 다 하면 " + esc(nim(x.w)) + "이 확인" :
         partner && !pastView() ? '<button type="button" class="crcxb">🤝 ' + esc(nim(m === x.w ? m : x.w)) + " 크로스체크 확인</button>" : "🤝 " + esc(nim(x.w)) + " 확인 기다리는 중") + "</div>";
     return '<div class="crcard' + (ok ? " ok" : "") + '" data-id="' + x.id + '" data-y="' + x.y + '"><div class="crch"><b>' + (ok ? "✅ " : "🍰 ") + esc(nim(x.who)) + " + " + esc(nim(x.w)) + "</b><span>" + md(x.d) + " " + esc(x.at) + (ok ? " · 완료" : "") + "</span>" +
@@ -112,18 +161,21 @@
     }
     var b = t.closest(".crb");
     if (b && !b.disabled) {
-      var k = b.dataset.s;
+      var k = b.dataset.s, c0 = b.closest(".crcard").dataset.id;
       upd(b, function (x) {
         if (x[k]) { if (x.cx) return; if (!confirm("이 단계 체크를 풀까요?")) return; var n = +k.slice(1); for (var j = n; j <= 3; j++) delete x["s" + j]; return; }
-        x[k] = hm(d) + " " + m;
+        x[k] = hm(d) + " " + m; FX = { id: c0, k: k };
       });
       draw();
       return;
     }
     if (t.closest(".crcxb")) {
+      var c1 = t.closest(".crcard"), x0 = all().filter(function (y) { return y.id === c1.dataset.id; })[0];
+      var S0 = state(), wkr = x0 && x0.who, lv0 = wkr ? lvOf(stats(wkr, S0).total) : 0;
       var cid = upd(t, function (x) { if (x.s1 && x.s2 && x.s3 && !x.cx) x.cx = { by: m, at: md(ymd(d)) + " " + hm(d) }; });
       var x = all().filter(function (y) { return y.id === cid; })[0];
       if (x && done(x) && x.d === ymd(d)) tick();
+      if (x && done(x)) { var t1 = stats(x.who, state()), lv1 = lvOf(t1.total); FX = { id: cid, k: "cx", boom: 1, msg: nim(x.who) + " 🍓 도장 " + t1.total + "개째 · 이번 주 퀘스트 CLEAR" + (lv1 > lv0 ? " · 🎉 칭호 UP → " + LV[lv1][1] + " " + LV[lv1][2] : "") }; }
       draw(); toast("✅ 크로스체크 완료 — 오늘 할 일에도 체크했어요"); return;
     }
     if (t.closest(".crdel")) { if (!confirm("이 크로스체크 기록을 뺄까요? (기록은 남고 화면에서만 빠집니다)")) return; upd(t, function (x) { x.del = m + " " + md(ymd(d)) + " " + hm(d); }); draw(); }

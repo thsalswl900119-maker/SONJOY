@@ -107,12 +107,13 @@
       Array.prototype.forEach.call(sk2.querySelectorAll(".skfp"), function (b) { b.setAttribute("aria-selected", String(b.dataset.fp === k)); });
       Array.prototype.forEach.call(sk2.querySelectorAll(".skfpane"), function (p) { p.hidden = p.dataset.fp !== k; });
       if (k === "cal" && !sk2.hidden) loadCal();
+      if ((k === "st" || k === "mg") && window.__CS_STGRP) window.__CS_STGRP(k);
     }
     // 「🍓 과일」 탭을 처음 열 때 달력을 불러옴 (첫 화면 가볍게)
     document.addEventListener("click", function (e) { if (e.target.closest && e.target.closest('.sktab[data-c="sk2"]')) setTimeout(function () { if (!sk2.hidden && !sk2.querySelector('.skfpane[data-fp="cal"]').hidden) loadCal(); }, 30); });
     sk2.addEventListener("click", function (e) { var b = e.target.closest && e.target.closest(".skfp"); if (b) show(b.dataset.fp); });
     var k0 = "cap"; try { k0 = localStorage.getItem(KEY) || "cap"; } catch (e) {}
-    show(k0 === "cal" ? "cal" : "cap");
+    show(/^(cal|st|mg)$/.test(k0) ? k0 : "cap");   // 11/19 사장님 「과일별 단가 / 딸기 계절별 단가분석 / 망고 계절별 단가분석 / 과일달력」 네 파트
     window.__CS_SKFPART = show;
     // 예전 주소(#tp7 · 과일 탭)로 들어오면 재고·발주 「🍓 과일 시즌」으로
     window.__CS_GO_FRUIT = function (k) { var t = document.querySelector('.tab[data-p="tp12"]'), st = document.querySelector('#tp12 .sktab[data-c="sk2"]'); if (t) t.click(); if (st) st.click(); show(k || "cal"); };
