@@ -197,7 +197,7 @@
       if (el.querySelector(".tedform")) return;
       var f = document.createElement("span"); f.className = "tedform";
       var cur = blockId(blockOf(el));
-      var opts = allBlocks().map(function (b) { var id = blockId(b); return '<option value="' + id.replace(/"/g, "&quot;") + '"' + (id === cur ? " selected" : "") + ">" + id.replace(/^td0\|/, "[오픈] ").replace(/^td1\|/, "[미들] ").replace(/^td2\|/, "[마감] ") + "</option>"; }).join("");
+      var opts = allBlocks().map(function (b) { var id = blockId(b); return '<option value="' + id.replace(/"/g, "&quot;") + '"' + (id === cur ? " selected" : "") + ">" + id.replace(/^td0\|/, "[오픈] ").replace(/^td1\|/, "[미들] ").replace(/^td4\|/, "[케이크 담당] ").replace(/^td2\|/, "[마감] ") + "</option>"; }).join("");
       f.innerHTML = '<label>옮길 묶음<select>' + opts + '</select></label><span class="tedrow"><button type="button" class="ok">옮기기</button><button type="button" class="no">취소</button></span>';
       el.appendChild(f);
       f.addEventListener("click", function (e) { e.stopPropagation(); if (e.target.tagName === "BUTTON") e.preventDefault(); });
@@ -408,7 +408,7 @@
     var body = document.getElementById("tdRepBody"); if (!body) return;
     function esc(v) { return String(v == null ? "" : v).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
     function nim(n) { return n === "사장님" ? n : n + "님"; }
-    var SH = [["td0", "오픈"], ["td1", "미들"], ["td2", "마감"]];
+    var SH = [["td0", "오픈"], ["td1", "미들"], ["td4", "케이크 담당"], ["td2", "마감"]];
     var lastText = "";
     // 빙수 시즌 묶음(data-season="4-9") — 보는 날짜의 달이 시즌 밖이면 접고 체크 · 「안 한 것」에서 뺀다
     function seasonPaint() {

@@ -197,7 +197,7 @@
   }
   document.addEventListener("click", function (e) {
     if (!e.target.closest(".crgoto")) return;
-    var st = document.querySelector('#tp2 .stab[data-s="td1"]'); if (st) st.click();
+    var st = document.querySelector('#tp2 .stab[data-s="td4"]'); if (st) st.click();
     setTimeout(function () { box.scrollIntoView({ block: "center", behavior: "smooth" }); }, 120);
   });
   window.addEventListener("cs:remote", function () { setTimeout(draw, 200); });
