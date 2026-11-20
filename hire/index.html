@@ -72,16 +72,16 @@ input:focus-visible,textarea:focus-visible,button:focus-visible{outline:3px soli
   </header>
 
   <section id="sIntro" class="card">
-    <h2>지원해 주셔서 감사합니다</h2>
+    <h2 id="hiH2">지원해 주셔서 감사합니다</h2>
     <p class="lead">카페스이는 부산 명지의 작은 일본 감성 디저트 카페예요. 에그타르트와 케이크, 음료를 직원들이 직접 만들어 팝니다.</p>
     <div class="cond">근무: <b>주 4일</b> · 수 08:30~16:30 · 목 · 금 09:30~16:30 · 토 09:00~17:30<br>첫 출근: <b>12월 23일</b></div>
     <ul class="pts">
-      <li>질문 16개 · 20~30분쯤 걸려요.</li>
+      <li id="qCount">질문 16개 · 20~30분쯤 걸려요.</li>
       <li>정답은 없어요. 실제로 있었던 일을 편하게 적어 주세요.</li>
       <li>쓰는 동안 이 휴대폰에 저장돼요. 창을 닫아도 다시 열면 이어서 쓸 수 있어요.</li>
       <li>「제출하기」를 누르면 답이 사장님께 바로 전달돼요.</li>
     </ul>
-    <label class="f" for="inName">이름<input id="inName" autocomplete="name" placeholder="예) 김하늘" maxlength="20"></label>
+    <label class="f" for="inName" id="nameBox">이름<input id="inName" autocomplete="name" placeholder="예) 김하늘" maxlength="20"></label>
     <label class="chk" for="agree"><input type="checkbox" id="agree"><span>답변은 채용 판단에만 쓰고, 채용이 끝나면 지운다는 안내를 읽었어요. (나이 · 가족 · 결혼 같은 건 묻지 않아요)</span></label>
     <button type="button" class="btn pri" id="btnStart" disabled>면접 시작</button>
     <p class="msg" id="introMsg"></p>
@@ -142,7 +142,10 @@ input:focus-visible,textarea:focus-visible,button:focus-visible{outline:3px soli
     { t: "함께 일하기", q: "같이 일했던 사람 중 가장 잘 맞았던 사람은 어떤 사람이었나요? 가장 힘들었던 사람은요?" },
     { t: "마지막", q: "카페스이에 궁금한 점이 있으면 적어 주세요.", h: "급여 · 조건은 면접 때 사장님이 직접 안내해요. 없으면 비워 두셔도 돼요.", opt: 1 }
   ];
-  var DK = "hire1.draft", st = { name: "", a: [], i: 0, sent: "" };
+  // 지원자별 질문(11/20 사장님 「지원서 보고 그 사람에 맞게 기존 문제랑 섞어서」): 주소 ?k=<코드> → 서버 ops/「hire.q.<코드>」의 질문으로 바꿈
+  var K = (new URLSearchParams(location.search).get("k") || "").toLowerCase();
+  if (!/^[a-z0-9]{6,24}$/.test(K)) K = "";
+  var DK = K ? "hire1.draft." + K : "hire1.draft", st = { name: "", a: [], i: 0, sent: "" }, setOk = !K;
   function $(id) { return document.getElementById(id); }
   try { var d = JSON.parse(localStorage.getItem(DK) || "null"); if (d && d.a) st = d; } catch (e) {}
   while (st.a.length < Q.length) st.a.push("");
@@ -161,15 +164,36 @@ input:focus-visible,textarea:focus-visible,button:focus-visible{outline:3px soli
       var o = null; try { o = JSON.parse((snap.exists && snap.data().v) || "null"); } catch (e) {}
       if (!o || !o.pub) throw new Error("nokey");
       return crypto.subtle.importKey("jwk", o.pub, { name: "RSA-OAEP", hash: "SHA-256" }, false, ["encrypt"]);
-    }).then(function (k) { pub = k; ready = true; }).catch(function (e) {
+    }).then(function (k) {
+      pub = k;
+      if (!K) return;
+      return db.collection("ops").doc("hire.q." + K).get().then(function (snap) {
+        var o = null; try { o = JSON.parse((snap.exists && snap.data().v) || "null"); } catch (e) {}
+        if (!o || !o.qs || !o.qs.length) throw new Error("noset");
+        useSet(o);
+      });
+    }).then(function () { ready = true; }).catch(function (e) {
+      if (String(e && e.message) === "noset") { $("introMsg").textContent = "이 링크의 질문을 찾지 못했어요 · 사장님께 링크를 다시 받아 주세요"; $("introMsg").className = "msg bad"; return; }
       if (String(e && e.message) === "nokey") { $("introMsg").textContent = "아직 받을 준비가 안 됐어요 · 답은 써 두시고, 사장님께 알려 주세요"; $("introMsg").className = "msg bad"; }
     });
+  }
+
+  function useSet(o) {
+    Q = o.qs;
+    while (st.a.length < Q.length) st.a.push("");
+    if (st.i >= Q.length) st.i = 0;
+    if (o.name) {
+      st.name = o.name; $("inName").value = o.name; $("nameBox").hidden = true;
+      $("hiH2").textContent = o.name + "님, 지원해 주셔서 감사합니다";
+    }
+    $("qCount").textContent = "질문 " + Q.length + "개 · 30분쯤 걸려요.";
+    setOk = true; keep(); canStart();
   }
 
   // 시작 화면
   $("inName").value = st.name || "";
   $("agree").checked = !!st.ok;
-  function canStart() { $("btnStart").disabled = !($("inName").value.trim() && $("agree").checked); }
+  function canStart() { $("btnStart").disabled = !(setOk && $("inName").value.trim() && $("agree").checked); }
   $("inName").addEventListener("input", function () { st.name = this.value.trim(); keep(); canStart(); });
   $("agree").addEventListener("change", function () { st.ok = this.checked ? 1 : 0; keep(); canStart(); });
   canStart();
@@ -220,7 +244,7 @@ input:focus-visible,textarea:focus-visible,button:focus-visible{outline:3px soli
     if (miss >= 0) { $("sendMsg").textContent = (miss + 1) + "번 답이 비어 있어요"; $("sendMsg").className = "msg bad"; return; }
     if (!ready) { $("sendMsg").textContent = "연결 중이에요 · 몇 초 뒤 다시 눌러 주세요"; $("sendMsg").className = "msg bad"; boot(); return; }
     var btn = this; btn.disabled = true; $("sendMsg").textContent = "보내는 중…"; $("sendMsg").className = "msg";
-    var at = new Date(), body = JSON.stringify({ name: st.name, at: at.toISOString(), qs: Q.map(function (q) { return (q.s ? "(" + q.s + ") " : "") + q.q; }), tags: Q.map(function (q) { return q.t; }), a: st.a.slice(0, Q.length), ua: navigator.userAgent.slice(0, 120) });
+    var at = new Date(), body = JSON.stringify({ name: st.name, k: K || undefined, at: at.toISOString(), qs: Q.map(function (q) { return (q.s ? "(" + q.s + ") " : "") + q.q; }), tags: Q.map(function (q) { return q.t; }), a: st.a.slice(0, Q.length), ua: navigator.userAgent.slice(0, 120) });
     var iv = crypto.getRandomValues(new Uint8Array(12)), ak;
     crypto.subtle.generateKey({ name: "AES-GCM", length: 256 }, true, ["encrypt"]).then(function (k) {
       ak = k; return crypto.subtle.encrypt({ name: "AES-GCM", iv: iv }, k, new TextEncoder().encode(body));

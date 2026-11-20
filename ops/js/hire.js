@@ -7,6 +7,8 @@
   var PRE = "cafesui.recipe.", HK = PRE + "hirekey", KEYK = "cafesui.ui.rk";
   var LINK = "https://thsalswl900119-maker.github.io/SONJOY/hire/";
   var key = null, priv = null, rows = null, box = null, busy = false;
+  // 판단점(11/20 사장님 「실제 면접에서 좋고 나쁨을 가를 수 있게」): 서버 ops/「hire.q.<코드>」(지원자별) · 「hire.q.default」(기본 질문)의 r = 공개 열쇠로 잠근 { items:[{q, good[], bad[], ask}], focus[] }
+  var sets = {};
   function J(k) { try { var m = window.__CS_MEM; return JSON.parse((m && k in m ? m[k] : localStorage.getItem(k)) || "null"); } catch (e) { return null; } }
   function me() { try { return localStorage.getItem("cafesui.me") || ""; } catch (e) { return ""; } }
   function canSee() { var m = me(); return m === "사장님" || m === "정항아"; }
@@ -28,6 +30,22 @@
   }
   function when(iso) { var d = new Date(iso); if (isNaN(d)) return ""; return (d.getMonth() + 1) + "/" + d.getDate() + " " + String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0"); }
 
+  function norm(t) { return String(t || "").replace(/\s+/g, "").replace(/[「」"'·.,?!()~]/g, ""); }
+  function judgeOf(d, i) {
+    var q = norm((d.qs || [])[i]); if (!q) return null;
+    var cands = [];
+    if (d.k && sets[d.k] && sets[d.k].items) cands = cands.concat(sets[d.k].items);
+    if (sets["default"] && sets["default"].items) cands = cands.concat(sets["default"].items);
+    for (var j = 0; j < cands.length; j++) { var c = norm(cands[j].q); if (c && q.indexOf(c) >= 0) return cands[j]; }
+    return null;
+  }
+  function judgeHtml(j) {
+    if (!j) return "";
+    function li(a) { return (a || []).map(function (x) { return "<li>" + esc(x) + "</li>"; }).join(""); }
+    return '<div class="hrjudge">' + (j.good && j.good.length ? '<div class="hjg"><b>좋은 신호</b><ul>' + li(j.good) + '</ul></div>' : "") +
+      (j.bad && j.bad.length ? '<div class="hjb"><b>아쉬운 신호</b><ul>' + li(j.bad) + '</ul></div>' : "") +
+      (j.ask ? '<div class="hja"><b>2차에서 물어볼 것</b> ' + esc(j.ask) + '</div>' : "") + '</div>';
+  }
   function linkHtml() {
     return '<div class="hrlink"><b>지원자에게 보낼 링크</b><span class="hrurl">' + LINK + '</span><button type="button" class="mvbtn pri" data-a="cplink">📋 링크 복사</button></div>' +
       '<p class="mvnote">카톡 · 문자로 이 링크만 보내면 돼요. 지원자는 로그인 없이 답을 쓰고 「제출하기」를 누르면 여기로 들어옵니다.</p>';
@@ -57,10 +75,12 @@
       var d = r.d, qa = "";
       (d.qs || []).forEach(function (q, i) {
         var a = (d.a && d.a[i]) || "";
-        qa += '<div class="hrqa"><div class="hrq"><span>' + (i + 1) + '</span>' + (d.tags && d.tags[i] ? '<em>' + esc(d.tags[i]) + '</em>' : "") + esc(q) + '</div><div class="hra' + (a.trim() ? "" : " empty") + '">' + (a.trim() ? esc(a) : "비움") + '</div></div>';
+        qa += '<div class="hrqa"><div class="hrq"><span>' + (i + 1) + '</span>' + (d.tags && d.tags[i] ? '<em>' + esc(d.tags[i]) + '</em>' : "") + esc(q) + '</div><div class="hra' + (a.trim() ? "" : " empty") + '">' + (a.trim() ? esc(a) : "비움") + '</div>' + judgeHtml(judgeOf(d, i)) + '</div>';
       });
-      h += '<details class="hrcard"' + (ri === 0 ? " open" : "") + '><summary><b>' + esc(d.name || "이름 없음") + '</b><span>' + esc(when(d.at)) + ' 제출</span></summary>' +
-        '<div class="hrbody">' + qa + '<div class="mvtools"><button type="button" class="mvbtn" data-a="cp" data-i="' + ri + '">📋 이 답 전체 복사</button></div></div></details>';
+      var fs = [].concat((d.k && sets[d.k] && sets[d.k].focus) || [], (sets["default"] && sets["default"].focus) || []);
+      var fh = fs.length ? '<div class="hrfocus"><b>이 지원자 볼 점</b><ul>' + fs.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + '</ul></div>' : "";
+      h += '<details class="hrcard"' + (ri === 0 ? " open" : "") + '><summary><b>' + esc(d.name || "이름 없음") + '</b><span>' + esc(when(d.at)) + ' 제출' + (d.k ? ' · 맞춤 질문' : '') + '</span></summary>' +
+        '<div class="hrbody">' + fh + qa + '<div class="mvtools"><button type="button" class="mvbtn" data-a="cp" data-i="' + ri + '">📋 이 답 전체 복사</button></div></div></details>';
     });
     box.innerHTML = h;
   }
@@ -93,6 +113,17 @@
       }));
     }).then(function (rs) {
       rs.sort(function (a, b) { return a.id < b.id ? 1 : -1; });
+      var ks = ["default"]; rs.forEach(function (r) { if (r.d && r.d.k && ks.indexOf(r.d.k) < 0 && /^[a-z0-9]{6,24}$/.test(r.d.k)) ks.push(r.d.k); });
+      return Promise.all(ks.map(function (k) {
+        if (sets[k]) return null;
+        return firebase.firestore().collection("ops").doc("hire.q." + k).get().then(function (snap) {
+          var o = JSON.parse((snap.exists && snap.data().v) || "null"); if (!o || !o.r) return;
+          return C.decrypt({ name: "RSA-OAEP" }, priv, ub(o.r.ek)).then(function (raw) { return C.importKey("raw", raw, { name: "AES-GCM" }, false, ["decrypt"]); })
+            .then(function (ak) { return C.decrypt({ name: "AES-GCM", iv: ub(o.r.i) }, ak, ub(o.r.c)); })
+            .then(function (b) { sets[k] = JSON.parse(new TextDecoder().decode(b)); });
+        }).catch(function () {});
+      })).then(function () { return rs; });
+    }).then(function (rs) {
       rows = rs; busy = false; draw();
     }).catch(function (e) { busy = false; rows = []; draw("답을 읽지 못했어요 · 🔄 새로 읽기를 눌러 주세요 (" + (e && e.message || "") + ")", true); });
   }
@@ -138,7 +169,7 @@
     else if (a === "reload") fetchRows();
     else if (a === "cplink") copy(LINK);
     else if (a === "cp") { var r = rows && rows[+b.dataset.i]; if (r && r.d) copy(textOf(r)); }
-    else if (a === "hide") { key = null; priv = null; rows = null; tried = "x"; draw(); }
+    else if (a === "hide") { key = null; priv = null; rows = null; sets = {}; tried = "x"; draw(); }
   }
   function mount() {
     var slot = document.getElementById("mgHireSlot"); if (!slot || slot.__hr) return;
