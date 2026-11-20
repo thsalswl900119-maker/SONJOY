@@ -4024,7 +4024,7 @@
            "rvChecks", "rvCount", "rvRank");
   // 📸 제품 사진 공유(t509 · 주 1~2번 · 각자) — 이번 주(월~토) 누가 몇 번 체크했는지 줄 아래에 (10/27 사장님)
   (function () {
-    var el = document.getElementById("phWeek"); if (!el) return;
+    var els = [document.getElementById("phWeek"), document.getElementById("phWeek2")].filter(Boolean); if (!els.length) return;
     var PEOPLE = ["정항아", "박혜빈", "이해선"];
     function pad(n) { return (n < 10 ? "0" : "") + n; }
     function paint() {
@@ -4032,10 +4032,10 @@
       for (var i = 0; i < 6; i++) {
         var d = new Date(mon.getFullYear(), mon.getMonth(), mon.getDate() + i); if (d > now) break;
         var o = {}; try { o = JSON.parse(localStorage.getItem("cafesui.todo." + d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate())) || "{}") || {}; } catch (e) {}
-        var v = o.t509; if (!v) continue; var n = typeof v === "string" ? v : "이름 없음"; cnt[n] = (cnt[n] || 0) + 1;
+        ["t509", "t514"].forEach(function (k) { var v = o[k]; if (!v) return; var n = typeof v === "string" ? v : "이름 없음"; cnt[n] = (cnt[n] || 0) + 1; });   /* 11/20 미들 t509 + 케이크 담당 t514 같이 셈 */
       }
       var names = PEOPLE.slice(); Object.keys(cnt).forEach(function (n) { if (names.indexOf(n) < 0) names.push(n); });
-      el.innerHTML = "이번 주 " + names.map(function (n) { var c = cnt[n] || 0; return '<b class="' + (c ? "ok" : "") + '">' + n + (n === "사장님" || n === "이름 없음" ? "" : "님") + " " + c + "번</b>"; }).join("");
+      var hh = "이번 주 " + names.map(function (n) { var c = cnt[n] || 0; return '<b class="' + (c ? "ok" : "") + '">' + n + (n === "사장님" || n === "이름 없음" ? "" : "님") + " " + c + "번</b>"; }).join(""); els.forEach(function (el) { el.innerHTML = hh; });
     }
     paint();
     document.addEventListener("click", function (e) { if (e.target.closest && e.target.closest('#tp2 .box, .tab[data-p="tp2"]')) setTimeout(paint, 300); }, true);

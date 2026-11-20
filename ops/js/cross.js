@@ -111,7 +111,7 @@
     var mineOpen = S.L.filter(function (x) { return x.d === td && !done(x) && (x.who === m || x.w === m); });
     var today = S.L.filter(function (x) { return x.d === td; });
     var act = mineOpen[0] || null;
-    var h = '<div class="crh"><b>🏯 케이크 맛 도장깨기 · 이번 주 퀘스트</b><span>케이크 작업할 때마다 관문 4개를 차례로 깨고 🍓 도장 받기 · 매주 1번 이상</span></div>';
+    var h = '<div class="crh"><b>🏯 케이크 맛 도장깨기 · 이번 주 퀘스트</b><span>케이크 작업할 때마다 관문 4개를 차례로 깨고 🍓 도장 받기 · 매주 1번 이상</span></div><div class="crmust"><span class="crmst">★</span><b>1주일에 한번씩 <mark>무조건 하기</mark></b><span class="crmst">★</span></div>';
     h += mapHtml(act);
     h += teamHtml(S);
     h += '<div class="crplayers">' + REQ.concat(m && REQ.indexOf(m) < 0 && m !== "사장님" ? [m] : []).map(function (n) { return player(n, S); }).join("") + "</div>";
