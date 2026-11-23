@@ -1,70 +1,70 @@
 <title>명지 꽃집 플레이스 수업</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;500;700;900&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;500;700;900&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <style>
-/* 명지 꽃집 스마트플레이스 특강 덱 — 「학원 AI 원데이 클래스」와 같은 짜임에 꽃집 색(꽃 포장지 크림 · 잎 초록 · 작약 분홍 · 장미 빨강 · 초록 칠판).
-   색 역할: 잎 초록=설명, 작약 분홍=핵심, 장미=채점·주의, 칠판=판서·실습. 1280×720 고정 무대를 화면에 맞춰 키움. */
+/* 명지 꽃집 스마트플레이스 특강 덱 — 「학원 AI 원데이 클래스」와 같은 짜임 · 파스텔 겨울 방 색(눈 같은 흰 바탕 · 벚꽃 분홍 · 하늘 파랑 · 버터 노랑 · 잎 초록 — 사장님이 준 그림 색).
+   색 역할: 하늘 파랑=설명, 버터 노랑=핵심 형광, 벚꽃 분홍=채점·강조, 파랑 판=판서·실습. 1280×720 고정 무대를 화면에 맞춰 키움. */
 :root{
-  --paper:#FCF7F4; --grid:#F0E3E2; --card:#FFFFFF; --soft:#F6EEEA; --line:#E2D2CF;
-  --navy:#24483A; --navy-2:#3D6253; --sub:#5E6B60;
-  --yellow:#F6A9BD; --yellow-t:#FDE8EE; --red:#B5174F; --red-t:#FCE4EC; --green:#2F7A45; --green-t:#E2F2E6;
-  --board:#1F3B30; --chalk:#F1F5EE; --chalk-y:#F9C2D1; --chalk-p:#FFE08A;
-  --display:"Black Han Sans","Noto Sans KR",sans-serif;
+  --paper:#FFFAF9; --grid:#F7E9EC; --card:#FFFFFF; --soft:#FDF0F2; --line:#EFD9DE;
+  --navy:#46557E; --navy-2:#66759E; --sub:#6E6878;
+  --yellow:#F8E19A; --yellow-t:#FFF7DC; --red:#C24E6A; --red-t:#FDE7EC; --green:#3E7A4E; --green-t:#E5F3E7; --pink:#F4C7CF; --pink-t:#FCE9ED; --sky:#C9DCF0; --sky-t:#EEF5FC;
+  --board:#4E6797; --chalk:#FFFFFF; --chalk-y:#FFE7A3; --chalk-p:#FFD3DC;
+  --display:"Jua","Noto Sans KR",sans-serif;
   --sans:"Noto Sans KR","Apple SD Gothic Neo",sans-serif;
   --hand:"Gowun Dodum","Noto Sans KR",sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
   color-scheme:light;
 }
 *{box-sizing:border-box}
-html,body{margin:0;height:100%;background:#14211B;overflow:hidden}
+html,body{margin:0;height:100%;background:#2E3550;overflow:hidden}
 body{font-family:var(--sans);color:var(--navy);word-break:keep-all;-webkit-font-smoothing:antialiased;font-weight:500}
 #stage{position:absolute;left:50%;top:50%;width:1280px;height:720px;transform-origin:center center}
 .slide{position:absolute;inset:0;display:none;overflow:hidden;background-color:var(--paper);
-  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:32px 32px}
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:40px 40px}
 .slide.on{display:block}
-.slide.navy{background:var(--navy);background-image:linear-gradient(#2E5546 1px,transparent 1px),linear-gradient(90deg,#2E5546 1px,transparent 1px);background-size:32px 32px;color:#F4F6FB}
+.slide.navy{background:var(--board);background-image:linear-gradient(#5770A0 1px,transparent 1px),linear-gradient(90deg,#5770A0 1px,transparent 1px);background-size:32px 32px;color:#F4F6FB}
 .slide.chalk{background:var(--board);background-image:radial-gradient(circle at 30% 20%,rgba(255,255,255,.06),transparent 60%);color:var(--chalk)}
 .in{position:absolute;left:72px;right:72px;top:84px;bottom:58px;display:flex;flex-direction:column}
-.sign{position:absolute;left:0;right:0;top:0;height:58px;display:flex;align-items:center;gap:14px;padding:0 72px;border-bottom:2px solid var(--navy);background:rgba(252,247,244,.94)}
-.navy .sign,.chalk .sign{background:rgba(31,59,48,.95);border-color:#4C7563}
+.sign{position:absolute;left:0;right:0;top:0;height:58px;display:flex;align-items:center;gap:14px;padding:0 72px;border-bottom:1px solid var(--line);background:rgba(255,250,249,.96)}
+.navy .sign,.chalk .sign{background:rgba(78,103,151,.96);border-color:#7088B5}
 .sign img{width:34px;height:auto}
 .sign .nm{font:900 13px var(--sans);letter-spacing:.06em}
 .sign .ttl{font-size:14px;font-weight:700;color:var(--sub);padding-left:14px;border-left:1.5px solid var(--line)}
-.navy .sign .ttl,.chalk .sign .ttl{color:#D7E6DC;border-color:#4C7563}
-.sign .period{margin-left:auto;font:400 17px var(--display);background:var(--yellow);color:var(--navy);padding:4px 14px;border-radius:6px}
+.navy .sign .ttl,.chalk .sign .ttl{color:#EEF4FC;border-color:#7088B5}
+.sign .period{margin-left:auto;font:400 17px var(--display);background:var(--pink-t);color:var(--red);padding:5px 16px;border-radius:999px;border:1.5px solid var(--pink)}
 .prog{position:absolute;left:72px;bottom:20px;display:flex;align-items:center;gap:6px;font:600 11.5px var(--mono);letter-spacing:.08em;color:#7D879C}
 .prog i{width:26px;height:8px;border-radius:2px;background:#DCE0E8;display:block}
 .prog i.on{background:var(--navy)}
-.navy .prog i,.chalk .prog i{background:#3D6253}.navy .prog i.on,.chalk .prog i.on{background:var(--yellow)}
-.navy .prog,.chalk .prog{color:#B8D0C1}
+.navy .prog i,.chalk .prog i{background:#6A82B0}.navy .prog i.on,.chalk .prog i.on{background:var(--yellow)}
+.navy .prog,.chalk .prog{color:#DCE7F5}
 .pnum{position:absolute;right:72px;bottom:18px;font:600 11.5px var(--mono);letter-spacing:.1em;color:#7D879C}
 h1,h2{font-family:var(--display);font-weight:400;margin:0;letter-spacing:-.01em;text-wrap:balance}
-h1{font-size:72px;line-height:1.12}
-h2{font-size:42px;line-height:1.2}
+h1{font-size:70px;line-height:1.16;font-weight:700}
+h2{font-size:44px;line-height:1.22;font-weight:700}
 h3{margin:0;font-size:21px;font-weight:900;line-height:1.35}
 p{margin:0}
 mark{background:linear-gradient(transparent 55%,var(--yellow) 55%);color:inherit;padding:0 4px}
-.navy mark{background:linear-gradient(transparent 55%,rgba(246,169,189,.55) 55%)}
+.navy mark{background:linear-gradient(transparent 55%,rgba(248,225,154,.55) 55%)}
 .red{color:var(--red)}
 .lead{font-size:21px;line-height:1.65;color:var(--sub);margin-top:14px}
-.navy .lead{color:#D7E6DC}
+.navy .lead{color:#EEF4FC}
 .row{display:flex;gap:18px}.col{display:flex;flex-direction:column}.grow{flex:1;min-height:0}
 .k{font:600 12.5px var(--mono);letter-spacing:.12em;color:var(--sub)}
-.navy .k{color:#B8D0C1}
-.card{background:var(--card);border:2px solid var(--navy);border-radius:14px;padding:18px 20px}
-.card p{font-size:16px;line-height:1.6;color:var(--sub);margin-top:6px}
+.navy .k{color:#FFE7A3}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 22px;box-shadow:0 12px 26px -20px rgba(70,85,126,.35)}
+.card p{font-size:18px;line-height:1.65;color:var(--sub);margin-top:6px}
 .card p b{color:var(--navy)}
 .card.soft{border:1.5px solid var(--line)}
 .num{font:400 30px var(--display);color:var(--navy);line-height:1}
 .tag{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:900;padding:5px 12px;border-radius:999px;background:var(--navy);color:#fff;white-space:nowrap}
 .tag.y{background:var(--yellow);color:var(--navy)}.tag.r{background:var(--red);color:#fff}.tag.l{background:var(--card);color:var(--navy);border:1.5px solid var(--navy)}
 .hand{font-family:var(--hand);font-weight:700}
-.post{background:#FFF3A8;padding:16px 18px 20px;box-shadow:0 14px 22px -16px rgba(30,30,10,.6);font-family:var(--hand);font-weight:700;font-size:20px;line-height:1.5;color:#3E3A22}
-.post small{display:block;font:900 12px var(--sans);letter-spacing:.06em;color:#9A8A2E;margin-bottom:6px}
-.board{background:var(--board);border:12px solid #9B7653;border-radius:12px;box-shadow:inset 0 0 40px rgba(0,0,0,.35),0 20px 30px -22px rgba(20,25,20,.8);color:var(--chalk);padding:22px 30px;font-family:var(--hand);font-weight:700;font-size:24px;line-height:1.6}
+.post{background:var(--yellow-t);border-radius:4px 18px 4px 18px;padding:16px 18px 20px;box-shadow:0 14px 22px -16px rgba(30,30,10,.6);font-family:var(--hand);font-weight:700;font-size:20px;line-height:1.5;color:#3D3A31}
+.post small{display:block;font:900 12px var(--sans);letter-spacing:.06em;color:var(--red);margin-bottom:6px}
+.board{background:var(--board);border-radius:18px !important;border:2px solid #A9BEDF;border-radius:12px;box-shadow:inset 0 0 40px rgba(0,0,0,.35),0 20px 30px -22px rgba(20,25,20,.8);color:var(--chalk);padding:22px 30px;font-family:var(--hand);font-weight:700;font-size:24px;line-height:1.6}
 .board h3{font-family:var(--hand);font-size:26px;color:var(--chalk-y)}
 .board .y{color:var(--chalk-y)}.board .p{color:var(--chalk-p)}
-.sheetp{background:#fff;border:1.5px solid var(--line);border-radius:4px;padding:20px 26px;box-shadow:0 22px 34px -26px rgba(20,30,60,.7);position:relative;font-size:15.5px}
+.sheetp{background:#fff;border:1px solid var(--line);border-radius:6px;padding:22px 28px;box-shadow:0 22px 34px -26px rgba(70,85,126,.35);position:relative;font-size:17.5px}
 .sheetp .hd{display:flex;justify-content:space-between;border-bottom:2px solid var(--navy);padding-bottom:8px;margin-bottom:10px;font-weight:900}
 .sheetp .q{display:flex;gap:10px;padding:7px 0;border-bottom:1px dashed #E1E4EB;align-items:baseline}
 .sheetp .q b{font:400 16px var(--display);color:var(--navy);width:30px;flex:none}
@@ -73,73 +73,73 @@ mark{background:linear-gradient(transparent 55%,var(--yellow) 55%);color:inherit
 .prompt{background:var(--card);border:2px dashed var(--navy-2);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;min-height:0}
 .prompt header{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 16px;background:var(--yellow-t);border-bottom:1.5px dashed var(--navy-2)}
 .prompt header span{font-weight:900;font-size:15px}
-.prompt pre{margin:0;padding:14px 18px;font:500 15.5px/1.65 var(--sans);white-space:pre-wrap;overflow:auto;color:var(--navy)}
+.prompt pre{margin:0;padding:16px 20px;font:500 17.5px/1.7 var(--sans);white-space:pre-wrap;overflow:auto;color:var(--navy)}
 .copy{font:900 13px var(--sans);border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:8px;padding:5px 12px;cursor:pointer;white-space:nowrap}
 .copy:hover{background:var(--navy);color:#fff}
 .timer{display:flex;align-items:center;gap:12px;background:var(--navy);color:#fff;border-radius:14px;padding:10px 14px 10px 18px}
 .timer b{font:600 34px var(--mono);min-width:3.4em;font-variant-numeric:tabular-nums}
-.timer span{font-size:13px;color:#D7E6DC;line-height:1.35}
+.timer span{font-size:13px;color:#EEF4FC;line-height:1.35}
 .timer button{font:900 13px var(--sans);border:0;border-radius:8px;padding:8px 12px;cursor:pointer;background:var(--yellow);color:var(--navy)}
-.timer button.ghost{background:transparent;color:#D7E6DC;border:1px solid #4C7563}
+.timer button.ghost{background:transparent;color:#EEF4FC;border:1px solid #4C7563}
 .timer.done{background:var(--red)}
 .steps{display:flex;flex-direction:column;gap:9px}
-.step{display:flex;gap:12px;align-items:flex-start;font-size:17px;line-height:1.55}
+.step{display:flex;gap:12px;align-items:flex-start;font-size:19.5px;line-height:1.55}
 .step b.n{width:30px;height:30px;flex:none;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font:400 15px var(--display)}
-table.tb{border-collapse:collapse;width:100%;background:#fff;border:2px solid var(--navy);font-size:16px}
-.tb th{background:var(--navy);color:#fff;font-weight:900;text-align:left;padding:10px 14px;font-size:15px}
-.tb td{padding:9px 14px;border-top:1.5px solid var(--line);vertical-align:top;line-height:1.5}
+table.tb{border-collapse:collapse;width:100%;background:#fff;border:1px solid var(--line);font-size:18px}
+.tb th{background:var(--sky-t);color:var(--navy);font-weight:900;text-align:left;padding:10px 14px;font-size:15px}
+.tb td{padding:11px 16px;border-top:1.5px solid var(--line);vertical-align:top;line-height:1.5}
 .tb td:first-child{font-weight:900;white-space:nowrap}
 .tb td.n{text-align:right;font-variant-numeric:tabular-nums;font-weight:900}
 .bar{height:12px;background:var(--navy);border-radius:6px}
 .bar.y{background:var(--yellow)}
-.pending{flex:1;border:3px dashed var(--red);background:var(--red-t);border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:30px}
+.pending{flex:1;border:3px dashed var(--pink);background:var(--pink-t);border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:30px}
 .pending b{font:400 30px var(--display);color:var(--red)}
 .pending p{font-size:18px;color:var(--navy-2);max-width:44ch}
 .kwg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;flex:1;min-height:0}
-.kwc{background:#fff;border:2px solid var(--navy);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.kwc{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;min-width:0}
 .kwc h3{font-size:18px;display:flex;justify-content:space-between;align-items:baseline}
 .kwc h3 small{font:600 11.5px var(--mono);color:var(--sub)}
-.kwc ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:3px;font-size:14.5px}
+.kwc ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;font-size:15.5px}
 .kwc li{display:flex;justify-content:space-between;gap:6px;border-bottom:1px dashed #E1E4EB;padding:2px 0}
 .kwc li em{font-style:normal;font:600 12px var(--mono);color:var(--sub);white-space:nowrap}
-.kwc li.star{background:var(--yellow-t);font-weight:900}
+.kwc li.star{background:var(--yellow-t);font-weight:900;border-radius:6px;padding:2px 6px}
 .kwc li.star em{color:var(--navy)}
 .sets{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-.set{background:#fff;border:2px solid var(--navy);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
-.set .sh{background:var(--navy);color:#fff;padding:10px 14px}
-.set .sh b{font:400 22px var(--display);color:var(--yellow)}
-.set .sh span{display:block;font-size:13px;color:#D7E6DC}
+.set{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.set .sh{background:var(--sky-t);color:var(--navy);padding:10px 14px}
+.set .sh b{font:400 22px var(--display);color:var(--navy)}
+.set .sh span{display:block;font-size:14px;color:var(--sub)}
 .set ol{margin:10px 14px 12px;padding-left:22px;font-size:17px;line-height:1.75;font-weight:700}
 .set ol li:first-child{color:var(--red)}
-.set.now{border:3px solid var(--yellow);box-shadow:0 0 0 3px var(--navy)}
-.set.now .sh{background:var(--yellow)}.set.now .sh b{color:var(--navy)}.set.now .sh span{color:var(--navy-2)}
+.set.now{border:3px solid var(--pink);box-shadow:0 10px 24px -14px rgba(194,78,106,.5)}
+.set.now .sh{background:var(--pink)}.set.now .sh b{color:var(--navy)}.set.now .sh span{color:var(--navy-2)}
 .stat3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
-.st{background:#fff;border:2px solid var(--navy);border-radius:16px;padding:18px 20px;display:flex;flex-direction:column;gap:4px}
+.st{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px 20px;display:flex;flex-direction:column;gap:4px}
 .st small{font-size:14px;font-weight:700;color:var(--sub)}
 .st b{font:400 40px var(--display);color:var(--navy);line-height:1.1}
 .st span{font-size:13.5px;color:var(--sub)}
-.st.y{background:var(--yellow-t)}
+.st.y{background:var(--pink-t)}
 .vs{display:grid;grid-template-columns:1fr 1fr;gap:16px;flex:1;min-height:0}
 .vs .card h3{display:flex;gap:8px;align-items:center}
-.vs blockquote{margin:8px 0 0;font-family:var(--hand);font-weight:700;font-size:19px;line-height:1.7;color:var(--navy)}
+.vs blockquote{margin:8px 0 0;font-family:var(--display);font-weight:400;font-size:20px;line-height:1.7;color:var(--navy)}
 .vs .bad{border-color:var(--red)}.vs .bad h3{color:var(--red)}
 .vs .good{border-color:var(--green)}.vs .good h3{color:var(--green)}
 .vs .why{margin-top:auto;padding-top:10px;border-top:2px dashed var(--line);font-size:14.5px;color:var(--sub)}
 .cal{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
 .mo{background:#fff;border:2px solid var(--line);border-radius:12px;padding:10px 12px;min-height:96px}
 .mo b{font:400 22px var(--display)}
-.mo p{font-size:13.5px;line-height:1.45;color:var(--sub);margin-top:4px}
-.mo.hot{border-color:var(--red);background:var(--red-t)}
+.mo p{font-size:15.5px;line-height:1.45;color:var(--sub);margin-top:4px}
+.mo.hot{border-color:var(--pink);background:var(--pink-t)}
 .mo.hot b{color:var(--red)}
 .chk{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px}
-.chk label{display:flex;gap:10px;align-items:flex-start;background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:8px 12px;font-size:15px;line-height:1.45;cursor:pointer}
+.chk label{display:flex;gap:10px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:17px;line-height:1.45;cursor:pointer}
 .chk input{width:20px;height:20px;accent-color:var(--navy);flex:none;margin-top:1px}
 .chk b{color:var(--navy)}
 .qz{display:flex;flex-direction:column;gap:12px;flex:1;min-height:0}
 .qq{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:12px 16px;position:relative}
-.qq .qt{font-weight:900;font-size:17px}
+.qq .qt{font-weight:900;font-size:19px}
 .qq .opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
-.qq .opts button{font:700 15px var(--sans);border:1.5px solid var(--line);background:var(--soft);color:var(--navy);border-radius:8px;padding:6px 12px;cursor:pointer}
+.qq .opts button{font:700 16.5px var(--sans);border:1.5px solid var(--line);background:var(--soft);color:var(--navy);border-radius:8px;padding:6px 12px;cursor:pointer}
 .qq .opts button.ok{border:3px solid var(--red);background:#fff;color:var(--red)}
 .qq .opts button.no{text-decoration:line-through;opacity:.55}
 .qq .ans{margin-top:8px;font-family:var(--hand);font-weight:700;color:var(--red);font-size:17px}
@@ -180,7 +180,7 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--red);outline-of
 </section>
 
 <!-- 2 질문 -->
-<section class="slide" data-ch="0" data-sign="먼저 질문 하나" data-period="시작" data-min="2" data-notes="(질문 · 3분)
+<section class="slide" data-ch="0" data-sign="먼저 질문 하나" data-period="시작" data-min="1" data-notes="(질문 · 3분)
 하나 여쭤볼게요. 손님이 꽃 사러 오기 전에 휴대폰으로 뭘 볼까요?
 맞아요, 네이버 지도, 플레이스예요. 그리고 거기서 오래 안 봐요. 딱 10초.
 그 10초 동안 보는 게 세 가지예요. 첫 사진, 리뷰 수와 답글, 그리고 가격이 보이는지.
@@ -201,70 +201,153 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--red);outline-of
 
 <!-- 3 오늘 순서 -->
 <section class="slide" data-ch="0" data-sign="오늘 순서" data-period="시작" data-min="1" data-notes="(오늘 순서 · 1분)
-오늘은 네 챕터로 가요.
-챕터 1은 진단. 사장님 가게와 명지 꽃집 다섯 곳을 같은 기준으로 비교해요.
-챕터 2는 숫자. 손님이 실제로 치는 검색어와 명지 사람들이 꽃에 얼마를 쓰는지.
-챕터 3은 글쓰기. 소개글과 리뷰 답글을 공식대로 직접 써 봐요.
-챕터 4는 설정과 홍보. 체크리스트 따라 같이 고치고, 숙제 드리고 마칠게요.">
+오늘은 다섯 챕터예요. 먼저 왜 AI를 써야 하는지, 업종마다 어디에 쓰는지, 손님에게 어떻게 보이게 하는지 짚고요.
+그다음은 사장님 가게 이야기예요. 진단, 숫자, 글쓰기, 설정까지. 꽃집을 예시로 처음부터 끝까지 같이 해 볼게요.">
   <div class="in">
-    <h2>오늘은 <mark>네 챕터</mark>, 휴대폰으로 같이 고쳐요</h2>
-    <div class="col grow" style="gap:12px;margin-top:20px">
-      <div class="card row fi" style="align-items:center;gap:22px;padding:14px 24px;--d:.05s"><b class="num" style="font-size:22px;width:92px">챕터 1</b><div style="flex:1"><b style="font-size:26px">진단</b><p style="font-size:17px;margin-top:2px">우리 가게 플레이스 · 명지 경쟁 꽃집 5곳 비교</p></div><span style="font-size:18px;color:var(--sub)">15분</span></div>
-      <div class="card row fi" style="align-items:center;gap:22px;padding:14px 24px;--d:.15s"><b class="num" style="font-size:22px;width:92px">챕터 2</b><div style="flex:1"><b style="font-size:26px">숫자 보기</b><p style="font-size:17px;margin-top:2px">검색량 · 대표 키워드 후보 48개 · 명지 꽃 소비</p></div><span style="font-size:18px;color:var(--sub)">15분</span></div>
-      <div class="card row fi" style="align-items:center;gap:22px;padding:14px 24px;--d:.25s;background:var(--yellow-t)"><b class="num" style="font-size:22px;width:92px">챕터 3</b><div style="flex:1"><b style="font-size:26px">글쓰기</b><p style="font-size:17px;margin-top:2px">소개글 공식 · 키워드 넣은 리뷰 답글 · AI로 쓰기</p></div><span style="font-size:18px;color:var(--sub)">20분</span></div>
-      <div class="card row fi" style="align-items:center;gap:22px;padding:14px 24px;--d:.35s"><b class="num" style="font-size:22px;width:92px">챕터 4</b><div style="flex:1"><b style="font-size:26px">설정 · 홍보</b><p style="font-size:17px;margin-top:2px">체크리스트 · 대목 달력 · 홍보 순서 · 하면 안 되는 것</p></div><span style="font-size:18px;color:var(--sub)">10분</span></div>
+    <h2>오늘은 <mark>다섯 챕터</mark>, 꽃집 예시로 처음부터 끝까지</h2>
+    <div class="col grow" style="gap:10px;margin-top:18px">
+      <div class="card row fi" style="align-items:center;gap:22px;padding:12px 24px;--d:.05s;background:var(--sky-t)"><b class="num" style="font-size:22px;width:92px">챕터 1</b><div style="flex:1"><b style="font-size:25px">왜 AI인가</b><p style="font-size:17px;margin-top:0">필요성 · 업종별로 어디에 쓰나 · 손님에게 보이는 길</p></div><span style="font-size:17px;color:var(--sub)">10분</span></div>
+      <div class="card row fi" style="align-items:center;gap:22px;padding:12px 24px;--d:.12s"><b class="num" style="font-size:22px;width:92px">챕터 2</b><div style="flex:1"><b style="font-size:25px">진단</b><p style="font-size:17px;margin-top:0">우리 가게 플레이스 · 명지 경쟁 꽃집 5곳 비교</p></div><span style="font-size:17px;color:var(--sub)">8분</span></div>
+      <div class="card row fi" style="align-items:center;gap:22px;padding:12px 24px;--d:.19s"><b class="num" style="font-size:22px;width:92px">챕터 3</b><div style="flex:1"><b style="font-size:25px">숫자 보기</b><p style="font-size:17px;margin-top:0">검색량 · 대표 키워드 후보 48개 · 명지 꽃 소비</p></div><span style="font-size:17px;color:var(--sub)">10분</span></div>
+      <div class="card row fi" style="align-items:center;gap:22px;padding:12px 24px;--d:.26s;background:var(--pink-t)"><b class="num" style="font-size:22px;width:92px">챕터 4</b><div style="flex:1"><b style="font-size:25px">글쓰기</b><p style="font-size:17px;margin-top:0">시그니처 소개글 · 키워드 넣은 리뷰 답글 · AI로 쓰기</p></div><span style="font-size:17px;color:var(--sub)">22분</span></div>
+      <div class="card row fi" style="align-items:center;gap:22px;padding:12px 24px;--d:.33s"><b class="num" style="font-size:22px;width:92px">챕터 5</b><div style="flex:1"><b style="font-size:25px">설정 · 홍보</b><p style="font-size:17px;margin-top:0">체크리스트 · 대목 달력 · 홍보 순서 · 하면 안 되는 것</p></div><span style="font-size:17px;color:var(--sub)">7분</span></div>
     </div>
   </div>
   <span class="pnum">3</span>
 </section>
 
-<!-- 4 챕터1 표지 -->
-<section class="slide navy" data-ch="1" data-sign="진단" data-period="챕터 1" data-min="1" data-notes="(챕터 1 시작)
-먼저 사장님 가게를 손님 눈으로 볼게요. 좋은 점도, 고칠 점도 솔직하게 짚을게요.">
+<!-- AI 챕터 표지 -->
+<section class="slide navy" data-ch="1" data-sign="왜 AI인가" data-period="챕터 1" data-min="1" data-notes="(챕터 1 시작)
+본격적으로 가게 얘기 하기 전에, 왜 AI를 써야 하는지부터 짧게 짚을게요. 학원 원장님들 수업에서도 똑같이 시작했어요.">
   <div class="in" style="justify-content:center">
     <span class="k" style="font-size:16px;color:var(--yellow)">챕터 1</span>
-    <h1 style="margin-top:14px;font-size:84px;color:var(--yellow)">진단</h1>
-    <p class="lead" style="font-size:24px">우리 가게를 <b style="color:#fff">손님 눈으로</b>, 명지 꽃집 5곳과 <b style="color:#fff">같은 기준으로</b></p>
-    <div class="row" style="margin-top:26px;gap:10px"><span class="tag y">만드는 것</span><span style="font-size:18px">바로 고칠 것 3가지</span></div>
+    <h1 style="margin-top:14px;font-size:84px;color:#fff">왜 AI인가</h1>
+    <p class="lead" style="font-size:24px">AI는 <b style="color:#fff">우리 가게를 모르는 똑똑한 새 알바생</b>이에요</p>
+    <div class="row" style="margin-top:26px;gap:10px"><span class="tag y">알게 되는 것</span><span style="font-size:18px">필요성 · 업종별 쓰임 · 손님에게 보이는 길</span></div>
   </div>
   <span class="pnum">4</span>
 </section>
 
+<!-- AI 필요성 -->
+<section class="slide" data-ch="1" data-sign="AI, 왜 지금 써야 할까" data-period="챕터 1" data-min="3" data-notes="(필요성 · 3분)
+사장님들한테 물어보면 열에 아홉은 AI가 곧 꼭 필요해진다고 해요. 배민 사장님 설문에서 91.5%. 그런데 실제로 쓰는 분은 32%예요.
+왜 안 쓰냐면, 1위가 「어떻게 쓰는지 몰라서」예요. 비싸서가 아니라요.
+제가 카페에서 해 보니까 AI가 제일 잘하는 건 세 가지예요. 글 쓰기, 숫자 정리, 따라 하는 매뉴얼 만들기.
+사장님이 하루에 손님 응대 말고 붙잡고 있는 일, 소식 글, 리뷰 답글, 메뉴 설명. 이게 AI가 대신 초안을 써 주는 일이에요. 사장님은 고치기만 하면 돼요.">
+  <div class="in">
+    <p class="k">WHY · 알고는 있는데 안 쓰는 이유</p>
+    <h2 style="margin-top:6px">사장님 10명 중 9명은 <mark>필요하다</mark>는데, 쓰는 건 3명</h2>
+    <div class="stat3" style="margin-top:22px">
+      <div class="st fi" style="--d:.05s"><small>「3년 안에 AI가 꼭 필요해진다」</small><b>91.5%</b><span>배민 외식업 사장님 836명 설문</span></div>
+      <div class="st fi" style="--d:.15s"><small>실제로 쓰고 있다</small><b>32.1%</b><span>같은 설문</span></div>
+      <div class="st y fi" style="--d:.25s"><small>못 쓰는 이유 1위</small><b>방법을 몰라서</b><span>33.8% · 비싸서가 아니에요</span></div>
+    </div>
+    <div class="row grow" style="gap:16px;margin-top:18px">
+      <div class="card col" style="flex:1;gap:6px;background:var(--sky-t)"><h3>✍ 글 쓰기</h3><p style="margin:0">소개글 · 소식 · 리뷰 답글 · 메뉴 설명 초안</p></div>
+      <div class="card col" style="flex:1;gap:6px;background:var(--pink-t)"><h3>🔢 숫자 정리</h3><p style="margin:0">매출 · 재고 · 원가 · 검색량을 한눈에</p></div>
+      <div class="card col" style="flex:1;gap:6px;background:var(--yellow-t)"><h3>📋 매뉴얼</h3><p style="margin:0">말로 하던 일을 직원이 따라 하는 글로</p></div>
+    </div>
+    <p style="font-size:13px;color:var(--sub);margin-top:8px">출처: 배민 외식업주 836명 설문(2026) · 서울 소상공인 300곳 조사(관심 61.7% · 실제 활용 9.7%)</p>
+  </div>
+  <span class="pnum">5</span>
+</section>
+
+<!-- 업종별 접목 -->
+<section class="slide" data-ch="1" data-sign="업종별로 어디에 쓰나" data-period="챕터 1" data-min="3" data-notes="(업종별 · 3분)
+업종이 달라도 AI가 하는 일은 비슷해요. 손님에게 보이는 글, 숫자, 매뉴얼.
+저희 카페는 직원 넷이 쓰는 운영 시스템, 월말회의 정리, 리뷰 분석을 AI랑 같이 해요.
+꽃집이라면 오늘 들어온 꽃으로 소식 글, 대목 예약 안내, 꽃말을 넣은 카드 문구, 가격대별 상품 설명이 바로 쓸 수 있는 곳이에요.
+오늘은 꽃집으로 처음부터 끝까지 해 볼 건데, 다른 업종도 칸만 바꾸면 똑같아요.">
+  <div class="in">
+    <h2>업종이 달라도 <mark>쓰는 곳은 같아요</mark></h2>
+    <table class="tb" style="margin-top:16px">
+      <thead><tr><th>업종</th><th>손님에게 보이는 글</th><th>숫자 · 운영</th></tr></thead>
+      <tbody>
+        <tr style="background:var(--pink-t)"><td>💐 꽃집</td><td>오늘 들어온 꽃 소식 · 대목 예약 안내 · 꽃말 카드 문구 · 가격대별 상품 설명</td><td>꽃 시세 기록 · 대목 생산량 · 폐기 줄이기</td></tr>
+        <tr><td>☕ 카페 (카페스이)</td><td>신메뉴 소개 · 리뷰 답글 · 블로그 초안</td><td>직원 운영 시스템 · 월말회의 정리 · 과일 단가</td></tr>
+        <tr><td>💇 미용실</td><td>시술 전후 설명 · 예약 안내 · 관리법 문자</td><td>재방문 주기 · 예약 빈 시간</td></tr>
+        <tr><td>🍲 식당</td><td>메뉴판 설명 · 배달앱 소개 · 단체 예약 안내</td><td>원가율 · 요일별 매출</td></tr>
+        <tr><td>📚 학원</td><td>설명회 안내 · 상담 문자 · 블로그</td><td>시험지 · 오답 정리</td></tr>
+      </tbody>
+    </table>
+    <div class="post" style="margin-top:12px"><small>선생님 메모</small>오늘은 꽃집으로 끝까지 — 다른 업종은 「업종 · 상품 · 손님 상황」 칸만 바꾸면 그대로예요</div>
+  </div>
+  <span class="pnum">6</span>
+</section>
+
+<!-- 노출 구조 -->
+<section class="slide" data-ch="1" data-sign="손님에게 보이는 길" data-period="챕터 1" data-min="3" data-notes="(노출 · 3분)
+손님이 우리 가게를 찾는 길은 거의 정해져 있어요. 네이버에 「명지꽃집」을 치고, 지도에 뜬 가게 몇 개를 눌러 보고, 사진이랑 리뷰랑 가격을 보고 정해요.
+그래서 노출은 세 군데에서 결정돼요. 플레이스, 블로그 후기, 인스타.
+AI는 여기서 글을 대신 써 주는 역할이에요. 손님이 치는 말, 그러니까 키워드를 소개글, 소식, 답글에 자연스럽게 넣는 걸 도와줘요.
+단, AI 글을 그대로 올리면 다 비슷해져요. 그래서 오늘 「우리만의 한 문장」을 같이 찾을 거예요.">
+  <div class="in">
+    <h2>손님은 이 길로 <mark>우리 가게를 찾아요</mark></h2>
+    <div class="row" style="gap:10px;margin-top:22px;align-items:stretch">
+      <div class="card col fi" style="flex:1;gap:4px;--d:.05s;text-align:center;background:var(--sky-t)"><span style="font-size:30px">🔍</span><b style="font-size:20px">검색</b><p style="margin:0;font-size:16px">「명지꽃집」</p></div>
+      <b style="align-self:center;font-size:28px;color:var(--sub)">→</b>
+      <div class="card col fi" style="flex:1;gap:4px;--d:.15s;text-align:center"><span style="font-size:30px">🗺</span><b style="font-size:20px">지도 · 플레이스</b><p style="margin:0;font-size:16px">사진 · 리뷰 · 가격</p></div>
+      <b style="align-self:center;font-size:28px;color:var(--sub)">→</b>
+      <div class="card col fi" style="flex:1;gap:4px;--d:.25s;text-align:center"><span style="font-size:30px">📝</span><b style="font-size:20px">블로그 · 인스타</b><p style="margin:0;font-size:16px">후기 · 분위기</p></div>
+      <b style="align-self:center;font-size:28px;color:var(--sub)">→</b>
+      <div class="card col fi" style="flex:1;gap:4px;--d:.35s;text-align:center;background:var(--pink-t)"><span style="font-size:30px">💐</span><b style="font-size:20px">예약 · 방문</b><p style="margin:0;font-size:16px">픽업 · 배달</p></div>
+    </div>
+    <div class="board" style="margin-top:20px;display:flex;flex-direction:column;gap:6px">
+      <h3>판서 · AI가 하는 일</h3>
+      <div>손님이 치는 말(<span class="y">키워드</span>)을 → 소개글 · 소식 · 답글에 <span class="y">자연스럽게</span></div>
+      <div>단, AI 글 그대로 = 다 비슷해짐 → <span class="p">우리만의 한 문장</span>을 사장님이 넣기</div>
+    </div>
+  </div>
+  <span class="pnum">7</span>
+</section>
+
+<!-- 4 챕터1 표지 -->
+<section class="slide navy" data-ch="2" data-sign="진단" data-period="챕터 2" data-min="1" data-notes="(챕터 1 시작)
+먼저 사장님 가게를 손님 눈으로 볼게요. 좋은 점도, 고칠 점도 솔직하게 짚을게요.">
+  <div class="in" style="justify-content:center">
+    <span class="k" style="font-size:16px;color:var(--yellow)">챕터 2</span>
+    <h1 style="margin-top:14px;font-size:84px;color:var(--yellow)">진단</h1>
+    <p class="lead" style="font-size:24px">우리 가게를 <b style="color:#fff">손님 눈으로</b>, 명지 꽃집 5곳과 <b style="color:#fff">같은 기준으로</b></p>
+    <div class="row" style="margin-top:26px;gap:10px"><span class="tag y">만드는 것</span><span style="font-size:18px">바로 고칠 것 3가지</span></div>
+  </div>
+  <span class="pnum">8</span>
+</section>
+
 <!-- 5 우리 가게 진단 -->
-<section class="slide" data-ch="1" data-sign="우리 가게 플레이스 진단" data-period="챕터 1" data-min="5" data-notes="(진단 · 7분)
+<section class="slide" data-ch="2" data-sign="우리 가게 플레이스 진단" data-period="챕터 2" data-min="3" data-notes="(진단 · 7분)
 (진단 결과가 채워지면 하나씩 짚기)
 잘된 점부터 칭찬하고, 고칠 점은 「오늘 바로 할 수 있는 것」만 고르세요.">
   <div class="in">
     <h2>우리 가게 플레이스 <mark>진단표</mark></h2>
     <div class="pending" id="diagBox" style="margin-top:18px"><b>진단 결과를 채우는 중이에요</b><p>사진 · 소개글 · 상품 가격 · 리뷰 수 · 사장님 답글 · 소식 · 「명지 꽃집」 검색 순위를 네이버 화면에서 읽고 있어요.</p></div>
   </div>
-  <span class="pnum">5</span>
+  <span class="pnum">9</span>
 </section>
 
 <!-- 6 경쟁 비교 -->
-<section class="slide" data-ch="1" data-sign="명지 경쟁 꽃집 5곳 비교" data-period="챕터 1" data-min="5" data-notes="(경쟁 비교 · 7분)
+<section class="slide" data-ch="2" data-sign="명지 경쟁 꽃집 5곳 비교" data-period="챕터 2" data-min="3" data-notes="(경쟁 비교 · 7분)
 우리가 앞선 칸은 초록, 뒤처진 칸은 빨강이에요. 1등 가게와 다른 점 세 가지만 기억하세요.">
   <div class="in">
     <h2>명지 꽃집 5곳과 <mark>나란히</mark></h2>
     <div class="pending" id="vsBox" style="margin-top:18px"><b>비교표를 채우는 중이에요</b><p>5곳을 우리 가게와 같은 항목으로 읽어 한 표에 놓아요. 앞선 칸은 초록, 뒤처진 칸은 빨강.</p></div>
   </div>
-  <span class="pnum">6</span>
+  <span class="pnum">10</span>
 </section>
 
 <!-- 7 챕터2 표지 -->
-<section class="slide navy" data-ch="2" data-sign="숫자 보기" data-period="챕터 2" data-min="1" data-notes="(챕터 2 시작)
+<section class="slide navy" data-ch="3" data-sign="숫자 보기" data-period="챕터 3" data-min="1" data-notes="(챕터 2 시작)
 이제 숫자를 볼게요. 감으로 하지 않고, 손님이 실제로 치는 말과 동네 사람들이 쓰는 돈을 보고 정해요.">
   <div class="in" style="justify-content:center">
-    <span class="k" style="font-size:16px;color:var(--yellow)">챕터 2</span>
+    <span class="k" style="font-size:16px;color:var(--yellow)">챕터 3</span>
     <h1 style="margin-top:14px;font-size:84px;color:var(--yellow)">숫자 보기</h1>
     <p class="lead" style="font-size:24px">손님이 <b style="color:#fff">실제로 치는 말</b>, 명지 사람들이 <b style="color:#fff">꽃에 쓰는 돈</b></p>
     <div class="row" style="margin-top:26px;gap:10px"><span class="tag y">만드는 것</span><span style="font-size:18px">대표 키워드 5개 · 우리 가격대</span></div>
   </div>
-  <span class="pnum">7</span>
+  <span class="pnum">11</span>
 </section>
 
 <!-- 8 검색량 -->
-<section class="slide" data-ch="2" data-sign="명지 꽃집 검색량" data-period="챕터 2" data-min="3" data-notes="(검색량 · 4분)
+<section class="slide" data-ch="3" data-sign="명지 꽃집 검색량" data-period="챕터 3" data-min="2" data-notes="(검색량 · 4분)
 네이버에서 한 달 동안 몇 번 검색되는지예요. 11월 숫자라 2월 졸업, 5월 어버이날엔 훨씬 커요. 어느 쪽이 큰지만 보세요.
 명지꽃집 4,920번. 강서구꽃집은 330번. 열다섯 배예요. 동네 손님은 「강서구」가 아니라 「명지」로 찾아요.
 명지 꽃배달은 30번뿐이에요. 배달 원하는 손님도 결국 「명지꽃집」으로 검색해요.
@@ -284,11 +367,11 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--red);outline-of
     </div>
     <p style="font-size:13px;color:var(--sub);margin-top:10px">네이버 검색광고 키워드 수치 · 한 달 PC+모바일 합계 · 2026-11-23 조회. 계절에 따라 크게 달라져요.</p>
   </div>
-  <span class="pnum">8</span>
+  <span class="pnum">12</span>
 </section>
 
 <!-- 9 상황 키워드 -->
-<section class="slide" data-ch="2" data-sign="상황 · 상품 키워드" data-period="챕터 2" data-min="1" data-notes="(상황 · 상품 키워드 · 2분)
+<section class="slide" data-ch="3" data-sign="상황 · 상품 키워드" data-period="챕터 3" data-min="1" data-notes="(상황 · 상품 키워드 · 2분)
 이번엔 전국에서 상황별로 얼마나 찾는지예요. 근조화환, 개업화분, 축하화환이 압도적이에요.
 사장님 가게가 화환을 하신다면 「명지 개업화분」 「명지 축하화환」을 상품으로 따로 올려 두세요. 안 하시면 꽃다발, 꽃바구니, 생일, 졸업에 집중하시면 돼요.">
   <div class="in">
@@ -296,11 +379,11 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--red);outline-of
     <div class="col grow" style="gap:7px;margin-top:16px" id="sitBars"></div>
     <div class="post" style="margin-top:10px"><small>선생님 메모</small>화환 · 화분을 하시면 → 「명지 개업화분」 「명지 축하화환」 상품 따로 / 안 하시면 → 꽃다발 · 꽃바구니 · 생일 · 졸업에 집중</div>
   </div>
-  <span class="pnum">9</span>
+  <span class="pnum">13</span>
 </section>
 
 <!-- 10 대표 키워드 후보 48 -->
-<section class="slide" data-ch="2" data-sign="대표 키워드 후보 48개" data-period="챕터 2" data-min="2" data-notes="(대표 키워드 후보 · 3분)
+<section class="slide" data-ch="3" data-sign="대표 키워드 후보 48개" data-period="챕터 3" data-min="2" data-notes="(대표 키워드 후보 · 3분)
 대표 키워드 칸에는 다섯 개만 들어가요. 그런데 후보는 넉넉히 가지고 있어야 해요. 여기 마흔여덟 개를 네 묶음으로 정리했어요.
 노란 줄은 검색량을 실제로 확인한 거예요. 숫자가 없는 건 아직 확인 안 한 후보예요.
 이 후보들은 대표 키워드 칸에만 쓰는 게 아니에요. 소개글, 상품 이름, 소식, 리뷰 답글에 하나씩 자연스럽게 넣는 재료예요.
@@ -309,11 +392,11 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--red);outline-of
     <div class="row" style="align-items:baseline;justify-content:space-between"><h2 style="font-size:36px">대표 키워드 <mark>후보 48개</mark></h2><span class="tag y">노란 줄 = 검색량 확인 · 숫자 = 한 달 검색</span></div>
     <div class="kwg" style="margin-top:12px" id="kwGrid"></div>
   </div>
-  <span class="pnum">10</span>
+  <span class="pnum">14</span>
 </section>
 
 <!-- 11 계절별 5개 세트 -->
-<section class="slide" data-ch="2" data-sign="계절마다 바꾸는 대표 키워드 5개" data-period="챕터 2" data-min="2" data-notes="(계절별 세트 · 2분)
+<section class="slide" data-ch="3" data-sign="계절마다 바꾸는 대표 키워드 5개" data-period="챕터 3" data-min="1" data-notes="(계절별 세트 · 2분)
 대표 키워드 다섯 개는 1년 내내 같은 걸 둘 필요가 없어요. 1번 명지꽃집만 고정하고, 나머지는 계절에 맞춰 바꿔요.
 지금은 12월이니까 크리스마스 세트. 1월 중순에 졸업 세트로, 4월 중순에 어버이날 세트로.
 바꾸면 반영에 며칠 걸린다는 얘기가 있으니까, 대목 2~3주 전에 바꾸세요.">
@@ -327,11 +410,11 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--red);outline-of
     </div>
     <div class="row" style="margin-top:20px;gap:14px;align-items:center"><span class="tag r">주의</span><span style="font-size:17px;font-weight:700">화환을 안 하면 「개업화분」 자리에 「꽃선물」 · 클래스를 하면 「플라워클래스」 · 바꾸는 건 <mark>대목 2~3주 전</mark></span></div>
   </div>
-  <span class="pnum">11</span>
+  <span class="pnum">15</span>
 </section>
 
 <!-- 12 명지 꽃 소비 -->
-<section class="slide" data-ch="2" data-sign="명지에서는 꽃에 얼마나, 누가, 얼마짜리를" data-period="챕터 2" data-min="2" data-notes="(명지 꽃 소비 · 3분)
+<section class="slide" data-ch="3" data-sign="명지에서는 꽃에 얼마나, 누가, 얼마짜리를" data-period="챕터 3" data-min="1" data-notes="(명지 꽃 소비 · 3분)
 명지동 사람들이 꽃에 한 달 얼마 쓰는지 잰 공개 자료는 없어요. 그래서 전국 평균으로 계산했어요. 한 달 7천만 원에서 2억 원 사이. 이건 마트, 온라인, 화환까지 다 합친 거예요.
 누가 사냐면, 30대 여성이 가장 뚜렷해요. 명지는 평균 나이 37세, 부산에서 가장 젊은 편이에요.
 얼마짜리를 사냐면, 1만~3만 원이 절반이에요. 3만 원 넘게 사는 사람은 30대가 제일 많고요.
@@ -352,11 +435,11 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--red);outline-of
     </div>
     <p style="font-size:12.5px;color:var(--sub);margin-top:8px">출처: 행안부 주민등록 인구(2026-06) · 농식품부 · 농촌진흥청 · 통계청 가계동향 · KREI(2013 · 2021). 동 단위 실측 자료는 없어 전국 평균으로 추정.</p>
   </div>
-  <span class="pnum">12</span>
+  <span class="pnum">16</span>
 </section>
 
 <!-- 13 소상공인365 -->
-<section class="slide" data-ch="2" data-sign="우리 가게 진짜 숫자 보는 법" data-period="챕터 2" data-min="1" data-notes="(소상공인365 · 2분)
+<section class="slide" data-ch="3" data-sign="우리 가게 진짜 숫자 보는 법" data-period="챕터 3" data-min="1" data-notes="(소상공인365 · 2분)
 우리 동네 꽃집 진짜 매출은 소상공인365에서 무료로 볼 수 있어요. 숙제로 한 번 들어가 보세요.
 매출을 결제 건수로 나누면 한 번 결제할 때 평균 금액이 나와요. 이게 우리 상품 가격대를 정하는 기준이 돼요.">
   <div class="in">
@@ -378,23 +461,23 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--red);outline-of
       </div>
     </div>
   </div>
-  <span class="pnum">13</span>
+  <span class="pnum">17</span>
 </section>
 
 <!-- 14 챕터3 표지 -->
-<section class="slide navy" data-ch="3" data-sign="글쓰기" data-period="챕터 3" data-min="1" data-notes="(챕터 3 시작)
+<section class="slide navy" data-ch="4" data-sign="글쓰기" data-period="챕터 4" data-min="1" data-notes="(챕터 3 시작)
 이제 직접 써 볼게요. 소개글과 리뷰 답글. 공식이 있어서 어렵지 않아요. AI한테 시키는 방법도 같이 알려 드릴게요.">
   <div class="in" style="justify-content:center">
-    <span class="k" style="font-size:16px;color:var(--yellow)">챕터 3</span>
+    <span class="k" style="font-size:16px;color:var(--yellow)">챕터 4</span>
     <h1 style="margin-top:14px;font-size:84px;color:var(--yellow)">글쓰기</h1>
     <p class="lead" style="font-size:24px">소개글 · 리뷰 답글을 <b style="color:#fff">공식대로</b>, <b style="color:#fff">AI와 같이</b></p>
     <div class="row" style="margin-top:26px;gap:10px"><span class="tag y">만드는 것</span><span style="font-size:18px">우리 가게 소개글 · 리뷰 답글 4종</span></div>
   </div>
-  <span class="pnum">14</span>
+  <span class="pnum">18</span>
 </section>
 
 <!-- 15 소개글 공식 -->
-<section class="slide chalk" data-ch="3" data-sign="소개글 공식" data-period="챕터 3" data-min="3" data-notes="(소개글 공식 · 3분)
+<section class="slide chalk" data-ch="4" data-sign="소개글 공식" data-period="챕터 4" data-min="3" data-notes="(소개글 공식 · 3분)
 소개글은 손님이 「여기서 사도 되나?」를 정하는 글이에요. 순서만 지키면 돼요.
 어디, 무엇, 언제, 어떻게, 찾아오는 길.
 키워드는 문장 안에 한 번씩만. 명지꽃집, 꽃다발, 졸업식 꽃다발. 이게 다예요.
@@ -410,11 +493,11 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--red);outline-of
       <div class="fi" style="--d:.55s;margin-top:8px;font-size:22px">⚠ 키워드는 문장 안에 <span class="y">한 번씩만</span> · 「최고 · 최저가 · 1등」 금지</div>
     </div>
   </div>
-  <span class="pnum">15</span>
+  <span class="pnum">19</span>
 </section>
 
 <!-- 16 틀린 글 vs 맞는 글 -->
-<section class="slide" data-ch="3" data-sign="틀린 소개글 vs 맞는 소개글" data-period="챕터 3" data-min="2" data-notes="(비교 · 2분)
+<section class="slide" data-ch="4" data-sign="틀린 소개글 vs 맞는 소개글" data-period="챕터 4" data-min="1" data-notes="(비교 · 2분)
 왼쪽처럼 쓰시는 분 많아요. 키워드를 많이 넣으면 잘 걸릴 것 같아서요. 그런데 손님이 읽으면 광고 같고, 정작 가격도 받는 법도 없어요.
 오른쪽은 같은 키워드가 문장 속에 한 번씩 들어가 있고, 가격, 받는 법, 배달 지역이 다 있어요.">
   <div class="in">
@@ -424,11 +507,55 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--red);outline-of
       <div class="card good col fi" style="--d:.2s"><h3>⭕ 잘 쓴 글</h3><blockquote>명지국제신도시 상가 1층의 작은 꽃집이에요. 그날 들어온 꽃으로 꽃다발과 꽃바구니를 만들고, 개업 · 축하 화분도 준비해요. 생일, 졸업식, 어버이날 꽃을 많이 찾으세요. 네이버 예약으로 픽업 시간을 정해 주시면 기다리지 않고 받아 가실 수 있고, 명지 · 신호 · 녹산은 당일 배달돼요. 꽃다발은 2만 원부터예요.</blockquote><p class="why">키워드가 문장 속에 한 번씩 · 가격 · 받는 법 · 지역이 다 있음</p></div>
     </div>
   </div>
-  <span class="pnum">16</span>
+  <span class="pnum">20</span>
+</section>
+
+<!-- 시그니처 공식 -->
+<section class="slide chalk" data-ch="4" data-sign="시그니처 소개글" data-period="챕터 4" data-min="3" data-notes="(시그니처 · 3분)
+공식대로 쓰면 틀린 글은 안 돼요. 그런데 옆 꽃집이랑 비슷해져요. AI한테 시키면 더 비슷해지고요.
+그래서 하나를 더 넣어요. 우리만의 한 문장. 세 가지 질문으로 찾아요.
+매일 빼먹지 않는 고집 하나. 손님이 자주 하는 말 하나. 우리 가게만 하는 것 하나.
+이 한 문장을 소개글 맨 앞에 두고, 키워드는 그 문장을 받쳐 주는 사실 안에 넣어요. 그러면 키워드가 들어가도 광고 같지 않아요.">
+  <div class="in" style="top:80px">
+    <h2 style="color:#fff">시그니처 소개글 = <span style="color:var(--chalk-y)">우리만의 한 문장</span> + 키워드</h2>
+    <div class="row grow" style="gap:18px;margin-top:16px">
+      <div class="board col" style="flex:1;gap:10px;justify-content:center;font-size:23px">
+        <h3>우리만의 한 문장 찾기 · 질문 3개</h3>
+        <div class="fi" style="--d:.05s">① 매일 <span class="y">빼먹지 않는 고집</span> 하나는?</div>
+        <div class="fi" style="--d:.15s">② 손님이 <span class="y">자주 하는 말</span> 하나는?</div>
+        <div class="fi" style="--d:.25s">③ 우리 가게<span class="y">만</span> 하는 것 하나는?</div>
+      </div>
+      <div class="board col" style="flex:1;gap:10px;justify-content:center;font-size:23px">
+        <h3>키워드 녹이는 법</h3>
+        <div class="fi" style="--d:.3s">첫 문장 = <span class="y">우리만의 한 문장</span></div>
+        <div class="fi" style="--d:.4s">키워드는 그 문장을 <span class="p">받치는 사실</span> 안에</div>
+        <div class="fi" style="--d:.5s">한 키워드는 <span class="p">한 번만</span> · 손님 장면으로</div>
+        <div class="fi" style="--d:.6s">숫자 · 이름 · 시간처럼 <span class="y">확인되는 말</span></div>
+      </div>
+    </div>
+  </div>
+  <span class="pnum">21</span>
+</section>
+
+<!-- 평범 vs 시그니처 -->
+<section class="slide" data-ch="4" data-sign="평범한 글 vs 시그니처 글" data-period="챕터 4" data-min="3" data-notes="(비교 · 3분)
+왼쪽은 공식대로 쓴 글이에요. 틀린 데는 없어요. 그런데 꽃집 이름만 바꾸면 어느 집이든 돼요.
+오른쪽은 첫 문장이 「매일 아침 엄궁 꽃시장에서 그날 가장 싱싱한 꽃만 골라 와요」예요. 이게 그 가게만의 고집이에요.
+노란 줄이 키워드예요. 명지꽃집, 꽃다발, 생일 꽃다발, 개업 화분, 당일 배달. 다 들어갔는데 광고 같지 않죠. 고집을 받쳐 주는 사실 안에 들어 있어서 그래요.
+(예시 글이에요. 사장님 가게 진짜 고집으로 바꿔 쓰세요.)">
+  <div class="in">
+    <h2>같은 키워드, <mark>우리 가게만의 글</mark></h2>
+    <div class="vs" style="margin-top:16px">
+      <div class="card col fi" style="--d:.05s"><h3 style="color:var(--sub)">😐 평범한 글 (틀리진 않음)</h3><blockquote>명지국제신도시 상가 1층의 꽃집이에요. 꽃다발과 꽃바구니, 개업 화분을 준비해요. 생일과 기념일에 많이 찾으세요. 네이버 예약으로 픽업할 수 있고 명지 · 신호 · 녹산은 당일 배달돼요.</blockquote><p class="why">어느 꽃집 이름을 넣어도 맞는 글 → 기억에 안 남음</p></div>
+      <div class="card col fi" style="--d:.2s;border:2px solid var(--pink)"><h3 style="color:var(--red)">💐 시그니처 글</h3><blockquote>매일 아침 엄궁 꽃시장에서 그날 가장 싱싱한 꽃만 골라 와요. 그래서 <mark>명지꽃집</mark> ○○의 <mark>꽃다발</mark>은 같은 꽃으로 두 번 만들지 않아요. 「받는 분이 어떤 분이세요?」 먼저 여쭙고 <mark>생일 꽃다발</mark>도, <mark>개업 화분</mark>도 그분께 맞춰 묶어 드려요. 명지 · 신호 · 녹산은 <mark>당일 배달</mark>, 꽃다발은 2만 원부터예요.</blockquote><p class="why">첫 문장 = 고집 · 키워드 5개가 그 고집을 받치는 사실 안에 · 가격까지</p></div>
+    </div>
+    <p style="font-size:13px;color:var(--sub);margin-top:8px">예시 글이에요 · 가게의 진짜 고집과 사실로 바꿔 쓰기</p>
+  </div>
+  <span class="pnum">22</span>
 </section>
 
 <!-- 17 실습: AI로 소개글 -->
-<section class="slide" data-ch="3" data-sign="실습 · AI로 소개글 쓰기" data-period="챕터 3" data-min="5" data-notes="(실습 · 5분 · T로 타이머)
+<section class="slide" data-ch="4" data-sign="실습 · AI로 소개글 쓰기" data-period="챕터 4" data-min="4" data-notes="(실습 · 5분 · T로 타이머)
 이 명령문을 복사해서 ChatGPT에 붙여 넣으세요. 대괄호 칸만 우리 가게 내용으로 바꾸시면 돼요.
 나온 글을 그대로 쓰지 마시고, 사장님 말투로 한 번 고치세요. 특히 가격과 배달 지역은 사실인지 꼭 확인.
 손님 이름이나 연락처는 AI에 넣지 마세요.">
@@ -437,13 +564,14 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--red);outline-of
     <div class="row grow" style="gap:18px;margin-top:14px;min-height:0">
       <div class="prompt" style="flex:1.5"><header><span>그대로 복사 · [ ] 칸만 바꾸기</span><button class="copy" type="button">복사</button></header>
 <pre>너는 동네 꽃집을 돕는 직원이야. 네이버 스마트플레이스 소개글을 써 줘.
+- 우리만의 한 문장(첫 문장으로): [매일 아침 꽃시장에서 그날 꽃만 골라 옴]
 - 위치: [명지국제신도시 ○○상가 1층]
 - 많이 팔리는 것: [꽃다발, 꽃바구니, 개업 화분]
 - 주로 찾는 날: [생일, 졸업식, 어버이날]
 - 받는 방법: [네이버 예약 픽업, 명지 · 신호 · 녹산 당일 배달]
 - 시작 가격: [꽃다발 2만 원부터]
 - 주차 · 특징: [지하 주차 1시간 무료, 사진 보내 주면 색감 맞춰 줌]
-순서는 어디 → 무엇 → 언제 → 어떻게 → 찾아오는 길.
+첫 문장은 우리만의 한 문장, 그다음 무엇 → 언제 → 어떻게 → 찾아오는 길.
 키워드 「명지꽃집」 「꽃다발」은 문장 안에 한 번씩만 자연스럽게.
 「최고 · 최저가 · 1등」 같은 말은 쓰지 말고, 동네 꽃집 말투로 5~6문장.</pre></div>
       <div class="col" style="flex:1;gap:12px">
@@ -453,11 +581,11 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--red);outline-of
       </div>
     </div>
   </div>
-  <span class="pnum">17</span>
+  <span class="pnum">23</span>
 </section>
 
 <!-- 18 리뷰 답글 4단계 -->
-<section class="slide chalk" data-ch="3" data-sign="키워드 넣은 리뷰 답글" data-period="챕터 3" data-min="3" data-notes="(리뷰 답글 4단계 · 3분)
+<section class="slide chalk" data-ch="4" data-sign="키워드 넣은 리뷰 답글" data-period="챕터 4" data-min="3" data-notes="(리뷰 답글 4단계 · 3분)
 리뷰 답글은 리뷰 쓴 손님만 읽는 게 아니에요. 다음 손님이 읽어요.
 답글에 「졸업식 꽃다발」 「개업화분」 같은 말이 들어가면, 보는 사람이 「이 집은 이것도 하는구나」 알게 돼요.
 단, 답글에 키워드 넣으면 순위가 오른다는 네이버 공식 자료는 없어요. 다음 손님에게 정보를 주는 글로 쓰세요.
@@ -472,11 +600,11 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--red);outline-of
       <div class="fi" style="--d:.45s;margin-top:8px;font-size:21px">⚠ 키워드 <span class="y">1~2개</span> · 같은 문장 복사 금지 · <span class="y">이틀 안에</span> · 순위가 오른다는 공식 자료는 없음</div>
     </div>
   </div>
-  <span class="pnum">18</span>
+  <span class="pnum">24</span>
 </section>
 
 <!-- 19 실습: 답글 -->
-<section class="slide" data-ch="3" data-sign="실습 · 리뷰 답글" data-period="챕터 3" data-min="5" data-notes="(실습 · 5분)
+<section class="slide" data-ch="4" data-sign="실습 · 리뷰 답글" data-period="챕터 4" data-min="4" data-notes="(실습 · 5분)
 최근 리뷰 하나를 골라서, 닉네임은 지우고 내용만 붙여 넣으세요. 손님 이름은 AI에 넣지 않아요.
 오른쪽 예시 네 가지가 칭찬, 개업화분 배달, 사진 리뷰, 아쉬움 리뷰예요. 아쉬움 리뷰일수록 빨리, 정중하게.">
   <div class="in" style="top:74px">
@@ -500,32 +628,32 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--red);outline-of
       </div>
     </div>
   </div>
-  <span class="pnum">19</span>
+  <span class="pnum">25</span>
 </section>
 
 <!-- 20 챕터4 표지 -->
-<section class="slide navy" data-ch="4" data-sign="설정 · 홍보" data-period="챕터 4" data-min="1" data-notes="(챕터 4 시작)
+<section class="slide navy" data-ch="5" data-sign="설정 · 홍보" data-period="챕터 5" data-min="1" data-notes="(챕터 4 시작)
 마지막이에요. 스마트플레이스 설정을 같이 열어서 하나씩 체크하고, 대목 준비와 홍보 순서 정리하고 마칠게요.">
   <div class="in" style="justify-content:center">
-    <span class="k" style="font-size:16px;color:var(--yellow)">챕터 4</span>
+    <span class="k" style="font-size:16px;color:var(--yellow)">챕터 5</span>
     <h1 style="margin-top:14px;font-size:84px;color:var(--yellow)">설정 · 홍보</h1>
     <p class="lead" style="font-size:24px">같이 <b style="color:#fff">체크하고</b>, 대목은 <b style="color:#fff">3주 전에</b></p>
   </div>
-  <span class="pnum">20</span>
+  <span class="pnum">26</span>
 </section>
 
 <!-- 21 체크리스트 -->
-<section class="slide" data-ch="4" data-sign="스마트플레이스 설정 체크리스트" data-period="챕터 4" data-min="3" data-notes="(체크리스트 · 4분)
+<section class="slide" data-ch="5" data-sign="스마트플레이스 설정 체크리스트" data-period="챕터 5" data-min="2" data-notes="(체크리스트 · 4분)
 휴대폰으로 스마트플레이스 켜고 한 줄씩 같이 볼게요. 화면에서 눌러서 체크하시면 돼요.">
   <div class="in" style="top:74px">
     <h2 style="font-size:36px">같이 열어서 <mark>하나씩 체크</mark></h2>
     <div class="chk" style="margin-top:14px" id="chkList"></div>
   </div>
-  <span class="pnum">21</span>
+  <span class="pnum">27</span>
 </section>
 
 <!-- 22 대목 달력 -->
-<section class="slide" data-ch="4" data-sign="꽃집 대목 달력" data-period="챕터 4" data-min="2" data-notes="(대목 달력 · 2분)
+<section class="slide" data-ch="5" data-sign="꽃집 대목 달력" data-period="챕터 5" data-min="1" data-notes="(대목 달력 · 2분)
 대목은 예전보다 약해졌어요. 어버이날 카네이션 거래량이 전년보다 10% 가까이 줄었다는 기사도 있어요. 그래서 미리 예약을 받아 두는 게 승부예요.
 3주 전에 예약 상품 열고, 2주 전에 소식 올리고, 1주 전에 마감 안내.">
   <div class="in">
@@ -543,11 +671,11 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--red);outline-of
     </div>
     <p style="font-size:12.5px;color:var(--sub);margin-top:8px">출처: 꽃집 운영자 · 플로리스트 글, 한국경제(2025 어버이날 카네이션 거래 9.9% 감소), 전민일보 · 남도일보(졸업 특수 약화)</p>
   </div>
-  <span class="pnum">22</span>
+  <span class="pnum">28</span>
 </section>
 
 <!-- 23 홍보 방법 -->
-<section class="slide" data-ch="4" data-sign="홍보 방법 고르기" data-period="챕터 4" data-min="2" data-notes="(홍보 방법 · 2분)
+<section class="slide" data-ch="5" data-sign="홍보 방법 고르기" data-period="챕터 5" data-min="1" data-notes="(홍보 방법 · 2분)
 홍보 방법은 많지만 순서가 있어요. 기본 설정이 안 된 채로 광고부터 하면 돈만 나가요.
 가격대별 사진과 소개글을 먼저, 그다음 주 1회 소식과 답글, 대목 3주 전엔 예약과 당근, 광고는 마지막이에요.">
   <div class="in">
@@ -566,11 +694,11 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--red);outline-of
       <span class="tag y">① 가격대별 사진 · 소개글</span>→<span class="tag y">② 주 1회 소식 · 답글</span>→<span class="tag y">③ 대목 3주 전 예약 + 당근</span>→<span class="tag">④ 그다음 광고</span>
     </div>
   </div>
-  <span class="pnum">23</span>
+  <span class="pnum">29</span>
 </section>
 
 <!-- 24 하면 안 되는 것 -->
-<section class="slide" data-ch="4" data-sign="이건 하면 안 돼요" data-period="챕터 4" data-min="2" data-notes="(금지 · 2분)
+<section class="slide" data-ch="5" data-sign="이건 하면 안 돼요" data-period="챕터 5" data-min="1" data-notes="(금지 · 2분)
 마지막으로 꼭 피하셔야 할 것. 리뷰는 정직하게.
 대가 숨긴 리뷰, 방문 안 한 리뷰는 네이버 정책 위반이에요. 상습이면 리뷰 탭이 가려지고 계정이 막힐 수 있어요.
 「리뷰 쓰면 할인」도 위반 소지가 있어요. 리뷰 지워 준다는 대행사도 조심하세요.">
@@ -587,11 +715,11 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--red);outline-of
       <div style="position:absolute;right:30px;bottom:20px;font:400 52px var(--display);color:var(--red);transform:rotate(-10deg)">정직!</div>
     </div>
   </div>
-  <span class="pnum">24</span>
+  <span class="pnum">30</span>
 </section>
 
 <!-- 25 확인 문제 -->
-<section class="slide" data-ch="4" data-sign="확인 문제" data-period="챕터 4" data-min="2" data-notes="(확인 문제 · 3분)
+<section class="slide" data-ch="5" data-sign="확인 문제" data-period="챕터 5" data-min="1" data-notes="(확인 문제 · 3분)
 오늘 배운 거 세 문제만 풀어 볼게요. 답을 누르면 빨간 펜으로 채점돼요.">
   <div class="in" style="top:74px">
     <h2 style="font-size:36px">확인 문제 · <mark>빨간 펜 채점</mark></h2>
@@ -601,11 +729,11 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--red);outline-of
       <div class="qq" data-ans="3"><p class="qt">Q3. 가장 좋은 리뷰 답글은?</p><div class="opts"><button type="button">① 감사합니다~ 또 오세요^^</button><button type="button">② 명지꽃집 명지꽃다발 최고!</button><button type="button">③ 모든 리뷰에 같은 문장</button><button type="button">④ 졸업식 꽃다발 마음에 드셨다니 기뻐요. 어버이날 카네이션도 미리 예약받아요.</button></div><p class="ans" hidden>리뷰를 받아 주고, 상품 이름과 다음 정보가 자연스럽게 들어갔어요.</p></div>
     </div>
   </div>
-  <span class="pnum">25</span>
+  <span class="pnum">31</span>
 </section>
 
 <!-- 26 숙제 -->
-<section class="slide" data-ch="4" data-sign="이번 주 숙제" data-period="마무리" data-min="1" data-notes="(숙제 · 2분)
+<section class="slide" data-ch="5" data-sign="이번 주 숙제" data-period="마무리" data-min="1" data-notes="(숙제 · 2분)
 이번 주 숙제 여섯 가지예요. 다 하시면 플레이스가 완전히 달라져 있을 거예요.
 다음에 만나면 같이 확인할게요. 오늘 정말 수고 많으셨어요.">
   <div class="in">
@@ -615,11 +743,11 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--red);outline-of
       <p style="margin-top:14px;font-size:15px;color:var(--sub)">다음 시간에 같이 확인해요 · 체크한 건 이 화면에 남아요 · 문의는 언제든 편하게</p>
     </div>
   </div>
-  <span class="pnum">26</span>
+  <span class="pnum">32</span>
 </section>
 
 <!-- 27 마무리 -->
-<section class="slide navy" data-ch="4" data-sign="마무리" data-period="마무리" data-min="1" data-notes="(마무리)
+<section class="slide navy" data-ch="5" data-sign="마무리" data-period="마무리" data-min="1" data-notes="(마무리)
 오늘 한 줄로 정리하면, 내가 쓰고 싶은 말 말고 손님이 치는 말. 가격을 먼저 보여 주고, 리뷰엔 이틀 안에 정직하게.
 수고하셨습니다.">
   <div class="in" style="justify-content:center;align-items:flex-start">
@@ -630,9 +758,9 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--red);outline-of
       <span>② 사진 · 소개글에 <b style="color:var(--yellow)">가격</b>을 먼저</span>
       <span>③ 리뷰엔 <b style="color:var(--yellow)">이틀 안에</b>, 정직하게</span>
     </div>
-    <div class="row" style="margin-top:30px;align-items:center;gap:12px"><img src="cup.png" alt="" width="44" height="41"><span style="font-size:16px;color:#D7E6DC">강사 손민지 · 카페스이 &amp; 스이노키친</span></div>
+    <div class="row" style="margin-top:30px;align-items:center;gap:12px"><img src="cup.png" alt="" width="44" height="41"><span style="font-size:16px;color:#EEF4FC">강사 손민지 · 카페스이 &amp; 스이노키친</span></div>
   </div>
-  <span class="pnum">27</span>
+  <span class="pnum">33</span>
 </section>
 
 </div>
@@ -668,14 +796,14 @@ chk("chkList",CHK,"c");chk("hwList",HW,"h");
 /* 위 띠 · 진행 */
 const slides=[...document.querySelectorAll('.slide')];
 const stage=document.getElementById('stage'),notes=document.getElementById('notes'),pg=document.getElementById('pg');
-const CH=['챕터 1 · 진단','챕터 2 · 숫자 보기','챕터 3 · 글쓰기','챕터 4 · 설정 · 홍보'];
+const CH=['챕터 1 · 왜 AI인가','챕터 2 · 진단','챕터 3 · 숫자 보기','챕터 4 · 글쓰기','챕터 5 · 설정 · 홍보'];
 slides.forEach(s=>{
   if(s.hasAttribute('data-plain'))return;
   const ch=+s.dataset.ch;
   const sign=document.createElement('div');sign.className='sign';
   sign.innerHTML=`<img src="cup.png" alt=""><span class="nm">명지 꽃집 플레이스 특강</span><span class="ttl">${s.dataset.sign||''}</span><span class="period">${s.dataset.period||''}</span>`;
   s.prepend(sign);
-  if(ch>0){const p=document.createElement('div');p.className='prog';p.innerHTML=[1,2,3,4].map(n=>`<i class="${n<=ch?'on':''}"></i>`).join('')+`<span style="margin-left:6px">${CH[ch-1]}</span>`;s.append(p)}
+  if(ch>0){const p=document.createElement('div');p.className='prog';p.innerHTML=[1,2,3,4,5].map(n=>`<i class="${n<=ch?'on':''}"></i>`).join('')+`<span style="margin-left:6px">${CH[ch-1]}</span>`;s.append(p)}
 });
 const mins=slides.map(s=>+(s.dataset.min||0));
 const cum=mins.map((_,k)=>mins.slice(0,k+1).reduce((a,b)=>a+b,0));
