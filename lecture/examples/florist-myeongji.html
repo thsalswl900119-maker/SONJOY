@@ -2,13 +2,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;500;700;900&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <style>
-/* 명지 꽃집 스마트플레이스 특강 덱 — 「학원 AI 원데이 클래스」와 같은 옷(모눈종이 · 남색 · 노랑 형광펜 · 빨강 채점펜 · 칠판 · 학습지 · 가정통신문).
-   색 역할: 남색=설명, 노랑=핵심, 빨강=채점·주의, 칠판=판서·실습. 1280×720 고정 무대를 화면에 맞춰 키움. */
+/* 명지 꽃집 스마트플레이스 특강 덱 — 「학원 AI 원데이 클래스」와 같은 짜임에 꽃집 색(꽃 포장지 크림 · 잎 초록 · 작약 분홍 · 장미 빨강 · 초록 칠판).
+   색 역할: 잎 초록=설명, 작약 분홍=핵심, 장미=채점·주의, 칠판=판서·실습. 1280×720 고정 무대를 화면에 맞춰 키움. */
 :root{
-  --paper:#FBF9F2; --grid:#E4E7EE; --card:#FFFFFF; --soft:#F2F1EA; --line:#CDD3DF;
-  --navy:#1C2A4A; --navy-2:#3A4766; --sub:#55607A;
-  --yellow:#FFD43B; --yellow-t:#FFF3C4; --red:#D6283B; --red-t:#FBE3E5; --green:#2F7A45; --green-t:#E2F2E6;
-  --board:#22304F; --chalk:#EEF3EC; --chalk-y:#F6E27A; --chalk-p:#F7A8B8;
+  --paper:#FCF7F4; --grid:#F0E3E2; --card:#FFFFFF; --soft:#F6EEEA; --line:#E2D2CF;
+  --navy:#24483A; --navy-2:#3D6253; --sub:#5E6B60;
+  --yellow:#F6A9BD; --yellow-t:#FDE8EE; --red:#B5174F; --red-t:#FCE4EC; --green:#2F7A45; --green-t:#E2F2E6;
+  --board:#1F3B30; --chalk:#F1F5EE; --chalk-y:#F9C2D1; --chalk-p:#FFE08A;
   --display:"Black Han Sans","Noto Sans KR",sans-serif;
   --sans:"Noto Sans KR","Apple SD Gothic Neo",sans-serif;
   --hand:"Gowun Dodum","Noto Sans KR",sans-serif;
@@ -16,27 +16,27 @@
   color-scheme:light;
 }
 *{box-sizing:border-box}
-html,body{margin:0;height:100%;background:#151B2B;overflow:hidden}
+html,body{margin:0;height:100%;background:#14211B;overflow:hidden}
 body{font-family:var(--sans);color:var(--navy);word-break:keep-all;-webkit-font-smoothing:antialiased;font-weight:500}
 #stage{position:absolute;left:50%;top:50%;width:1280px;height:720px;transform-origin:center center}
 .slide{position:absolute;inset:0;display:none;overflow:hidden;background-color:var(--paper);
   background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:32px 32px}
 .slide.on{display:block}
-.slide.navy{background:var(--navy);background-image:linear-gradient(#26375C 1px,transparent 1px),linear-gradient(90deg,#26375C 1px,transparent 1px);background-size:32px 32px;color:#F4F6FB}
+.slide.navy{background:var(--navy);background-image:linear-gradient(#2E5546 1px,transparent 1px),linear-gradient(90deg,#2E5546 1px,transparent 1px);background-size:32px 32px;color:#F4F6FB}
 .slide.chalk{background:var(--board);background-image:radial-gradient(circle at 30% 20%,rgba(255,255,255,.06),transparent 60%);color:var(--chalk)}
 .in{position:absolute;left:72px;right:72px;top:84px;bottom:58px;display:flex;flex-direction:column}
-.sign{position:absolute;left:0;right:0;top:0;height:58px;display:flex;align-items:center;gap:14px;padding:0 72px;border-bottom:2px solid var(--navy);background:rgba(251,249,242,.92)}
-.navy .sign,.chalk .sign{background:rgba(28,42,74,.94);border-color:#3A4C76}
+.sign{position:absolute;left:0;right:0;top:0;height:58px;display:flex;align-items:center;gap:14px;padding:0 72px;border-bottom:2px solid var(--navy);background:rgba(252,247,244,.94)}
+.navy .sign,.chalk .sign{background:rgba(31,59,48,.95);border-color:#4C7563}
 .sign img{width:34px;height:auto}
 .sign .nm{font:900 13px var(--sans);letter-spacing:.06em}
 .sign .ttl{font-size:14px;font-weight:700;color:var(--sub);padding-left:14px;border-left:1.5px solid var(--line)}
-.navy .sign .ttl,.chalk .sign .ttl{color:#C9D2E6;border-color:#4A5B83}
+.navy .sign .ttl,.chalk .sign .ttl{color:#D7E6DC;border-color:#4C7563}
 .sign .period{margin-left:auto;font:400 17px var(--display);background:var(--yellow);color:var(--navy);padding:4px 14px;border-radius:6px}
 .prog{position:absolute;left:72px;bottom:20px;display:flex;align-items:center;gap:6px;font:600 11.5px var(--mono);letter-spacing:.08em;color:#7D879C}
 .prog i{width:26px;height:8px;border-radius:2px;background:#DCE0E8;display:block}
 .prog i.on{background:var(--navy)}
-.navy .prog i,.chalk .prog i{background:#33456D}.navy .prog i.on,.chalk .prog i.on{background:var(--yellow)}
-.navy .prog,.chalk .prog{color:#9FB0CF}
+.navy .prog i,.chalk .prog i{background:#3D6253}.navy .prog i.on,.chalk .prog i.on{background:var(--yellow)}
+.navy .prog,.chalk .prog{color:#B8D0C1}
 .pnum{position:absolute;right:72px;bottom:18px;font:600 11.5px var(--mono);letter-spacing:.1em;color:#7D879C}
 h1,h2{font-family:var(--display);font-weight:400;margin:0;letter-spacing:-.01em;text-wrap:balance}
 h1{font-size:72px;line-height:1.12}
@@ -44,13 +44,13 @@ h2{font-size:42px;line-height:1.2}
 h3{margin:0;font-size:21px;font-weight:900;line-height:1.35}
 p{margin:0}
 mark{background:linear-gradient(transparent 55%,var(--yellow) 55%);color:inherit;padding:0 4px}
-.navy mark{background:linear-gradient(transparent 55%,rgba(255,212,59,.55) 55%)}
+.navy mark{background:linear-gradient(transparent 55%,rgba(246,169,189,.55) 55%)}
 .red{color:var(--red)}
 .lead{font-size:21px;line-height:1.65;color:var(--sub);margin-top:14px}
-.navy .lead{color:#C9D2E6}
+.navy .lead{color:#D7E6DC}
 .row{display:flex;gap:18px}.col{display:flex;flex-direction:column}.grow{flex:1;min-height:0}
 .k{font:600 12.5px var(--mono);letter-spacing:.12em;color:var(--sub)}
-.navy .k{color:#9FB0CF}
+.navy .k{color:#B8D0C1}
 .card{background:var(--card);border:2px solid var(--navy);border-radius:14px;padding:18px 20px}
 .card p{font-size:16px;line-height:1.6;color:var(--sub);margin-top:6px}
 .card p b{color:var(--navy)}
@@ -61,7 +61,7 @@ mark{background:linear-gradient(transparent 55%,var(--yellow) 55%);color:inherit
 .hand{font-family:var(--hand);font-weight:700}
 .post{background:#FFF3A8;padding:16px 18px 20px;box-shadow:0 14px 22px -16px rgba(30,30,10,.6);font-family:var(--hand);font-weight:700;font-size:20px;line-height:1.5;color:#3E3A22}
 .post small{display:block;font:900 12px var(--sans);letter-spacing:.06em;color:#9A8A2E;margin-bottom:6px}
-.board{background:var(--board);border:12px solid #8A6A4E;border-radius:12px;box-shadow:inset 0 0 40px rgba(0,0,0,.35),0 20px 30px -22px rgba(20,25,20,.8);color:var(--chalk);padding:22px 30px;font-family:var(--hand);font-weight:700;font-size:24px;line-height:1.6}
+.board{background:var(--board);border:12px solid #9B7653;border-radius:12px;box-shadow:inset 0 0 40px rgba(0,0,0,.35),0 20px 30px -22px rgba(20,25,20,.8);color:var(--chalk);padding:22px 30px;font-family:var(--hand);font-weight:700;font-size:24px;line-height:1.6}
 .board h3{font-family:var(--hand);font-size:26px;color:var(--chalk-y)}
 .board .y{color:var(--chalk-y)}.board .p{color:var(--chalk-p)}
 .sheetp{background:#fff;border:1.5px solid var(--line);border-radius:4px;padding:20px 26px;box-shadow:0 22px 34px -26px rgba(20,30,60,.7);position:relative;font-size:15.5px}
@@ -78,9 +78,9 @@ mark{background:linear-gradient(transparent 55%,var(--yellow) 55%);color:inherit
 .copy:hover{background:var(--navy);color:#fff}
 .timer{display:flex;align-items:center;gap:12px;background:var(--navy);color:#fff;border-radius:14px;padding:10px 14px 10px 18px}
 .timer b{font:600 34px var(--mono);min-width:3.4em;font-variant-numeric:tabular-nums}
-.timer span{font-size:13px;color:#C9D2E6;line-height:1.35}
+.timer span{font-size:13px;color:#D7E6DC;line-height:1.35}
 .timer button{font:900 13px var(--sans);border:0;border-radius:8px;padding:8px 12px;cursor:pointer;background:var(--yellow);color:var(--navy)}
-.timer button.ghost{background:transparent;color:#C9D2E6;border:1px solid #4A5B83}
+.timer button.ghost{background:transparent;color:#D7E6DC;border:1px solid #4C7563}
 .timer.done{background:var(--red)}
 .steps{display:flex;flex-direction:column;gap:9px}
 .step{display:flex;gap:12px;align-items:flex-start;font-size:17px;line-height:1.55}
@@ -108,7 +108,7 @@ table.tb{border-collapse:collapse;width:100%;background:#fff;border:2px solid va
 .set{background:#fff;border:2px solid var(--navy);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
 .set .sh{background:var(--navy);color:#fff;padding:10px 14px}
 .set .sh b{font:400 22px var(--display);color:var(--yellow)}
-.set .sh span{display:block;font-size:13px;color:#C9D2E6}
+.set .sh span{display:block;font-size:13px;color:#D7E6DC}
 .set ol{margin:10px 14px 12px;padding-left:22px;font-size:17px;line-height:1.75;font-weight:700}
 .set ol li:first-child{color:var(--red)}
 .set.now{border:3px solid var(--yellow);box-shadow:0 0 0 3px var(--navy)}
@@ -154,7 +154,7 @@ table.tb{border-collapse:collapse;width:100%;background:#fff;border:2px solid va
 #hud .hb{display:flex;gap:6px;align-items:center;pointer-events:auto}
 #hud button{font:12px var(--sans);color:#D7DEEE;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);border-radius:6px;padding:5px 10px;cursor:pointer}
 #hud button:hover,#hud button.on{background:var(--yellow);color:var(--navy);border-color:var(--yellow)}
-#notes{position:fixed;left:0;right:0;bottom:0;max-height:40vh;overflow:auto;background:rgba(16,22,38,.97);color:#EEF1F8;font:17px/1.8 var(--sans);padding:16px 28px 46px;display:none;border-top:3px solid var(--yellow);white-space:pre-line;z-index:3}
+#notes{position:fixed;left:0;right:0;bottom:0;max-height:40vh;overflow:auto;background:rgba(18,32,26,.97);color:#EEF1F8;font:17px/1.8 var(--sans);padding:16px 28px 46px;display:none;border-top:3px solid var(--yellow);white-space:pre-line;z-index:3}
 #notes.on{display:block}
 #notes .t{font-size:12.5px;color:var(--yellow);letter-spacing:.06em;margin-bottom:4px;font-weight:700}
 #notes.on ~ #hud{bottom:40vh}
@@ -630,7 +630,7 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--red);outline-of
       <span>② 사진 · 소개글에 <b style="color:var(--yellow)">가격</b>을 먼저</span>
       <span>③ 리뷰엔 <b style="color:var(--yellow)">이틀 안에</b>, 정직하게</span>
     </div>
-    <div class="row" style="margin-top:30px;align-items:center;gap:12px"><img src="cup.png" alt="" width="44" height="41"><span style="font-size:16px;color:#C9D2E6">강사 손민지 · 카페스이 &amp; 스이노키친</span></div>
+    <div class="row" style="margin-top:30px;align-items:center;gap:12px"><img src="cup.png" alt="" width="44" height="41"><span style="font-size:16px;color:#D7E6DC">강사 손민지 · 카페스이 &amp; 스이노키친</span></div>
   </div>
   <span class="pnum">27</span>
 </section>
