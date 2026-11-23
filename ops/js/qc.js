@@ -39,7 +39,7 @@
     if (W.n && W.miss.length) warn += '<p class="qcwarn' + (W.late ? " late" : "") + '">👥 <b>이번 주 아직 안 한 사람: ' + W.miss.map(nim).join(" · ") + "</b>" + (W.late ? " — 오늘(토)이 마지막 영업일" : "") + "</p>";
     if (!W.n) warn += '<p class="qcwarn' + (W.late ? " late" : "") + '">🔎 <b>이번 주 맛 · 당도 기록이 아직 없어요</b>' + (W.late ? " — 오늘(토)이 이번 주 마지막 영업일이에요" : " — 케이크 작업하실 때 맛 보고 아래에 남겨 주세요") + "</p>";
     if (!W.mango) warn += '<p class="qcwarn' + (W.late ? " late" : "") + '">🥭 <b>망고 이번 주 기록이 없어요</b> — 크림 만들 때 맛 보고 남겨 주세요</p>';
-    box.innerHTML = '<div class="qch"><b>🔎 맛 · 당도 기록</b><span>맛 보고 바로 남기기 · <b>조금이라도 이상하면 ⚠</b> — 문제 터지기 전에 다 같이 봅니다</span></div>' +
+    box.innerHTML = '<div class="qch"><b>🔎 맛 · 당도 기록</b><small class="qcpraise">매일 하시는 분 대단해요 칭찬합니다</small><span>맛 보고 바로 남기기 · <b>조금이라도 이상하면 ⚠</b> — 문제 터지기 전에 다 같이 봅니다</span></div>' +
       '<p class="qcrule">📌 <b>이거 일주일에 1번씩은 체크해서 작성해주세요</b> 케이크 작업 근무하시면서 (루틴화시킬거예요)</p>' + staffRows(W) +
       '<div class="qcweek">이번 주(' + md(W.ws) + ' 월~) 기록 <b>' + W.n + '건</b>' + ITEMS.filter(function (n) { return n !== "기타"; }).map(function (n) { return '<span class="qcwk' + (W.done[n] ? " on" : "") + '">' + (W.done[n] ? "✔ " : "") + n + "</span>"; }).join("") + "</div>" + warn +
       '<div class="qcit" role="group" aria-label="품목">' + ITEMS.map(function (n) { return '<button type="button" class="qcchip' + (n === sel ? " on" : "") + '" data-it="' + n + '" aria-pressed="' + (n === sel) + '">' + n + "</button>"; }).join("") + "</div>" +
@@ -108,7 +108,7 @@
       else {
         if (!wk) { wk = document.createElement("div"); wk.className = "qcwkband"; var m0 = tp.querySelector(":scope > .csmotto"); tp.insertBefore(wk, m0 ? m0.nextSibling : tp.firstChild); }
         wk.classList.toggle("late", W.late);
-        wk.innerHTML = "🔎 <b>" + (!W.n ? "이번 주 맛 · 당도 기록이 아직 없어요" : W.miss.length ? "이번 주 당도 체크 아직: " + W.miss.map(nim).join(" · ") : "망고 이번 주 기록이 없어요") + "</b>" + (W.late ? " — 오늘(토)이 이번 주 마지막 영업일" : "") + ' · 케이크 작업하실 때 미들 「🔎 맛 · 당도 기록」에 남겨 주세요 <button type="button" class="qcgo">기록하러 가기 →</button>';
+        wk.innerHTML = "🔎 <b>" + (!W.n ? "이번 주 맛 · 당도 기록이 아직 없어요" : W.miss.length ? "이번 주 당도 체크 아직: " + W.miss.map(nim).join(" · ") : "망고 이번 주 기록이 없어요") + "</b>" + (W.late ? " — 오늘(토)이 이번 주 마지막 영업일" : "") + ' · 케이크 작업하실 때 케이크 담당 탭 「🔎 맛 · 당도 기록」에 남겨 주세요 <button type="button" class="qcgo">기록하러 가기 →</button>';
       }
     }
     ["tp2", "tp4"].forEach(function (pid) {
@@ -123,7 +123,7 @@
     });
   }
   document.addEventListener("click", function (e) {
-    if (e.target.closest(".qcgo")) { var st = document.querySelector('#tp2 .stab[data-s="td1"]'); if (st) st.click(); setTimeout(function () { box.scrollIntoView({ block: "center", behavior: "smooth" }); }, 120); return; }
+    if (e.target.closest(".qcgo")) { var st = document.querySelector('#tp2 .stab[data-s="td4"]'); if (st) st.click(); setTimeout(function () { box.scrollIntoView({ block: "center", behavior: "smooth" }); }, 120); return; }
     var b = e.target.closest(".qcfixb"); if (!b) return;
     var r = b.closest(".qcar"), id = r.dataset.id, y = +r.dataset.y;
     var m = prompt("어떻게 조치했는지 한 줄 (예: 망고 설탕 +10g · 거래처에 알림)", ""); if (m === null) return;

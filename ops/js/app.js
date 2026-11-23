@@ -197,7 +197,7 @@
       if (el.querySelector(".tedform")) return;
       var f = document.createElement("span"); f.className = "tedform";
       var cur = blockId(blockOf(el));
-      var opts = allBlocks().map(function (b) { var id = blockId(b); return '<option value="' + id.replace(/"/g, "&quot;") + '"' + (id === cur ? " selected" : "") + ">" + id.replace(/^td0\|/, "[오픈] ").replace(/^td1\|/, "[미들] ").replace(/^td2\|/, "[마감] ") + "</option>"; }).join("");
+      var opts = allBlocks().map(function (b) { var id = blockId(b); return '<option value="' + id.replace(/"/g, "&quot;") + '"' + (id === cur ? " selected" : "") + ">" + id.replace(/^td0\|/, "[오픈] ").replace(/^td1\|/, "[미들] ").replace(/^td4\|/, "[케이크 담당] ").replace(/^td2\|/, "[마감] ") + "</option>"; }).join("");
       f.innerHTML = '<label>옮길 묶음<select>' + opts + '</select></label><span class="tedrow"><button type="button" class="ok">옮기기</button><button type="button" class="no">취소</button></span>';
       el.appendChild(f);
       f.addEventListener("click", function (e) { e.stopPropagation(); if (e.target.tagName === "BUTTON") e.preventDefault(); });
@@ -408,7 +408,7 @@
     var body = document.getElementById("tdRepBody"); if (!body) return;
     function esc(v) { return String(v == null ? "" : v).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
     function nim(n) { return n === "사장님" ? n : n + "님"; }
-    var SH = [["td0", "오픈"], ["td1", "미들"], ["td2", "마감"]];
+    var SH = [["td0", "오픈"], ["td1", "미들"], ["td4", "케이크 담당"], ["td2", "마감"]];
     var lastText = "";
     // 빙수 시즌 묶음(data-season="4-9") — 보는 날짜의 달이 시즌 밖이면 접고 체크 · 「안 한 것」에서 뺀다
     function seasonPaint() {
@@ -4024,7 +4024,7 @@
            "rvChecks", "rvCount", "rvRank");
   // 📸 제품 사진 공유(t509 · 주 1~2번 · 각자) — 이번 주(월~토) 누가 몇 번 체크했는지 줄 아래에 (10/27 사장님)
   (function () {
-    var el = document.getElementById("phWeek"); if (!el) return;
+    var els = [document.getElementById("phWeek"), document.getElementById("phWeek2")].filter(Boolean); if (!els.length) return;
     var PEOPLE = ["정항아", "박혜빈", "이해선"];
     function pad(n) { return (n < 10 ? "0" : "") + n; }
     function paint() {
@@ -4032,10 +4032,10 @@
       for (var i = 0; i < 6; i++) {
         var d = new Date(mon.getFullYear(), mon.getMonth(), mon.getDate() + i); if (d > now) break;
         var o = {}; try { o = JSON.parse(localStorage.getItem("cafesui.todo." + d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate())) || "{}") || {}; } catch (e) {}
-        var v = o.t509; if (!v) continue; var n = typeof v === "string" ? v : "이름 없음"; cnt[n] = (cnt[n] || 0) + 1;
+        ["t509", "t514"].forEach(function (k) { var v = o[k]; if (!v) return; var n = typeof v === "string" ? v : "이름 없음"; cnt[n] = (cnt[n] || 0) + 1; });   /* 11/20 미들 t509 + 케이크 담당 t514 같이 셈 */
       }
       var names = PEOPLE.slice(); Object.keys(cnt).forEach(function (n) { if (names.indexOf(n) < 0) names.push(n); });
-      el.innerHTML = "이번 주 " + names.map(function (n) { var c = cnt[n] || 0; return '<b class="' + (c ? "ok" : "") + '">' + n + (n === "사장님" || n === "이름 없음" ? "" : "님") + " " + c + "번</b>"; }).join("");
+      var hh = "이번 주 " + names.map(function (n) { var c = cnt[n] || 0; return '<b class="' + (c ? "ok" : "") + '">' + n + (n === "사장님" || n === "이름 없음" ? "" : "님") + " " + c + "번</b>"; }).join(""); els.forEach(function (el) { el.innerHTML = hh; });
     }
     paint();
     document.addEventListener("click", function (e) { if (e.target.closest && e.target.closest('#tp2 .box, .tab[data-p="tp2"]')) setTimeout(paint, 300); }, true);
