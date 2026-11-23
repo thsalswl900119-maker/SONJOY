@@ -13,6 +13,8 @@
 
 - **링크는 어사이드로 열기(11/20 · 사장님 「무조건 작업 연결할 때 어사이드로 열어줘」)**: 작업 결과 링크(artifact · ops · demo · jpnote · hire 등)를 드릴 때마다 사장님 iMac의 Claude 작업창(send_message · 없으면 iMac 환경에 create_session)에 「어사이드(Aside) 새 탭으로 열기 · 읽기만」을 같이 보낸다. iMac이 꺼져 있으면 그렇다고 알리고 링크만 드림.
 
+- **사장님 1:1 특강 포맷(11/23 · 사장님 「이 포맷을 꼭 기억해서 어떤 업종이 와도」)**: 다른 가게 사장님 수업은 `lecture/README.md` 순서 · 모양 그대로(학원 강의안 PPT형 덱 · 60분 · 진단 → 숫자 → 글쓰기 → 설정 · 대본 · 타이머 · 확인 문제 · 숙제). 예시 `lecture/examples/florist-myeongji.html` · artifact HrhkUmyxH2HsGTRfKRWmm7.
+
 ## 데이터
 - 저장된 데이터는 절대 지우거나 덮어쓰지 않는다. 이관·병합은 "빈 칸만 채우기"로만.
 - 어떤 기기에서 저장해도 반드시 서버(Firestore `ops` 컬렉션)에 남아야 한다.
