@@ -159,6 +159,7 @@ table.tb{border-collapse:collapse;width:100%;background:#fff;border:1px solid va
 #notes .t{font-size:12.5px;color:var(--yellow);letter-spacing:.06em;margin-bottom:4px;font-weight:700}
 #notes.on ~ #hud{bottom:40vh}
 button:focus-visible,input:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+.tight td{padding:6px 12px!important}.tight th{padding:7px 12px!important}
 </style>
 
 <div id="stage">
@@ -253,7 +254,7 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--red);outline-of
 </section>
 
 <!-- 업종별 접목 -->
-<section class="slide" data-ch="1" data-sign="업종별로 어디에 쓰나" data-period="챕터 1" data-min="3" data-notes="(업종별 · 3분)
+<section class="slide" data-ch="1" data-sign="업종별로 어디에 쓰나" data-period="챕터 1" data-min="2" data-notes="(업종별 · 3분)
 업종이 달라도 AI가 하는 일은 비슷해요. 손님에게 보이는 글, 숫자, 매뉴얼.
 저희 카페는 직원 넷이 쓰는 운영 시스템, 월말회의 정리, 리뷰 분석을 AI랑 같이 해요.
 꽃집이라면 오늘 들어온 꽃으로 소식 글, 대목 예약 안내, 꽃말을 넣은 카드 문구, 가격대별 상품 설명이 바로 쓸 수 있는 곳이에요.
@@ -314,42 +315,56 @@ AI는 여기서 글을 대신 써 주는 역할이에요. 손님이 치는 말, 
 </section>
 
 <!-- 5 우리 가게 진단 -->
-<section class="slide" data-ch="2" data-sign="우리 가게 플레이스 진단" data-period="챕터 2" data-min="3" data-notes="(진단 · 7분)
-(진단 결과가 채워지면 하나씩 짚기)
-잘된 점부터 칭찬하고, 고칠 점은 「오늘 바로 할 수 있는 것」만 고르세요.">
+<section class="slide" data-ch="2" data-sign="우리 가게 플레이스 진단" data-period="챕터 2" data-min="3" data-notes="(진단 · 3분)
+먼저 칭찬부터 할게요. 답글을 열 개 중 여덟 개 다셨고, 답글마다 「명지 꽃집 차곡」을 넣으셨어요. 가격표 이름도 「아담 · 기본 · 풍성」이라 손님이 고르기 쉬워요.
+비어 있는 칸은 리뷰 수, 예약 상품, 소식, 알림받기, 클립, 톡톡이에요. 리뷰 수는 하루아침에 안 늘어요. 그래서 오늘은 손이 바로 닿는 세 가지만 해요.
+예약 상품을 가격표 이름 그대로 네 개, 소식은 한 달에 두 번, 그리고 톡톡과 알림받기 선물.
+리뷰 1위 폴폴플라워는 가격표와 예약 상품 이름을 똑같이 맞췄어요. 손님이 헷갈릴 일이 없죠.">
   <div class="in">
-    <h2>우리 가게 플레이스 <mark>진단표</mark></h2>
-    <div class="pending" id="diagBox" style="margin-top:18px"><b>진단 결과를 채우는 중이에요</b><p>사진 · 소개글 · 상품 가격 · 리뷰 수 · 사장님 답글 · 소식 · 「명지 꽃집」 검색 순위를 네이버 화면에서 읽고 있어요.</p></div>
+    <h2>차곡 플레이스 <mark>진단표</mark></h2>
+    <div class="row" style="gap:16px;align-items:flex-start;margin-top:4px">
+      <div style="flex:1.55"><table class="tb tight" style="margin-top:10px;font-size:15px"><thead><tr><th>칸</th><th>차곡 지금</th><th>명지 꽃집 24곳 중</th></tr></thead><tbody><tr><td>방문자 / 블로그 리뷰</td><td>18 / 0</td><td style="background:var(--red-t);color:var(--red);font-weight:900">23곳 중 21등 · 블로그 공동 꼴찌</td></tr><tr><td>가격표</td><td>9줄 · 3만~13만 원 · 「S(아담) · M(기본) · L(풍성)」</td><td style="background:var(--green-t);color:var(--green);font-weight:900">중간 이상 · 입구 상품(1만 원대)이 없음</td></tr><tr><td>네이버 예약 상품</td><td>「미니 꽃다발」 1개</td><td style="background:var(--red-t);color:var(--red);font-weight:900">예약 받는 가게 중 꼴찌권</td></tr><tr><td>사장님 답글</td><td>8/10 · 답글마다 「명지 꽃집 차곡」</td><td style="background:var(--green-t);color:var(--green);font-weight:900">상위권</td></tr><tr><td>새소식</td><td>소식 탭 없음</td><td style="background:var(--red-t);color:var(--red);font-weight:900">꼴찌권 (1등 폴폴 월 2~3번)</td></tr><tr><td>알림받기 · 쿠폰 · 이벤트</td><td>없음</td><td style="background:var(--red-t);color:var(--red);font-weight:900">명지 다수는 3,000원 쿠폰 · 메시지 카드</td></tr><tr><td>클립(짧은 영상)</td><td>없음</td><td style="background:var(--red-t);color:var(--red);font-weight:900">디오르 · 나풀 · 쏘뷰티풀 등은 있음</td></tr><tr><td>톡톡 · 24시 픽업</td><td>둘 다 없음 (인스타만)</td><td style="background:var(--red-t);color:var(--red);font-weight:900">대부분 톡톡 있음</td></tr></tbody></table></div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:10px;margin-top:12px">
+        <div class="card" style="padding:14px 18px;border-color:var(--green)"><p style="margin:0"><b style="color:var(--green)">이미 잘하는 것</b><br>답글 8/10 · 가격표 이름이 사이즈 + 느낌으로 친절함</p></div>
+        <div class="card" style="padding:14px 18px;border:2px solid var(--red)"><p style="margin:0"><b style="color:var(--red)">오늘 바로 고칠 3가지</b><br>① <b>예약 상품 4개</b> · 가격표 이름 그대로 미니 · S · M · L<br>② <b>소식 한 달 2번</b> · 월초 운영 안내 + 이번 주 꽃<br>③ <b>톡톡 켜고 알림받기 선물</b> · 생화보존제 · 메시지 카드</p></div>
+        <div class="post" style="margin:0"><small>선생님 메모</small>리뷰 1위 폴폴(751)은 가격표 · 예약 상품 이름을 「미니 · 기본 · 시그니처 · 스페셜」로 똑같이 맞췄어요</div>
+      </div>
+    </div>
+    <p style="font-size:13.5px;color:var(--sub);margin-top:8px">수업 가게 「차곡」 · 2026-11-23 네이버 플레이스 화면 그대로 · 답글은 방문자 리뷰 최신 10개 · 「명지꽃집」 검색 1~24위와 비교</p>
   </div>
   <span class="pnum">9</span>
 </section>
 
 <!-- 6 경쟁 비교 -->
 <section class="slide" data-ch="2" data-sign="명지 경쟁 꽃집 비교" data-period="챕터 2" data-min="2" data-notes="(경쟁 비교 · 2분)
-초록은 잘하는 칸, 빨강은 놓치는 칸이에요.
-리뷰가 가장 많은 디오르플레르는 답글 10개 다 달고, 소식도 한 달에 한두 번 올려요. 상품 이름에 「기념일 BEST」처럼 용도를 붙였어요.
-온니플라워는 소개글 첫 줄에서 손님을 카톡으로 보내요 — 네이버 예약 · 톡톡으로 받는 게 플레이스에선 유리해요.
-명지 꽃집들 답글은 이미 서울 · 송도 1등 가게들보다 잘하고 있어요. 그건 그대로 지키세요.
-1등과 다른 점 세 가지: 소식 주기, 가격표 정리, 용도 이름 붙인 상품.">
+「명지꽃집」으로 검색하면 꽃집이 서른 곳 넘게 나와요. 리뷰가 많은 순서로 놓고, 사장님이 고르신 다섯 곳(ⓛ)도 같이 넣었어요.
+1등 폴폴플라워는 리뷰 751개 — 답글 10개 다 달고, 소식을 한 달에 두세 번, 예약 상품을 가격표 이름 그대로 다섯 개 넘게 열어 뒀어요. 쿠폰은 없어요. 쿠폰보다 기본기가 먼저라는 뜻이에요.
+리뷰 많은 가게 대부분이 답글 10/10이에요. 명지는 답글 경쟁이 이미 세요. 차곡 8/10은 따라가고 있어요.
+차곡이 가장 크게 벌어진 칸은 예약 상품(1개)과 소식(없음)이에요.">
   <div class="in">
-    <h2>명지 꽃집들과 <mark>나란히</mark></h2>
-    <table class="tb" style="margin-top:14px;font-size:16.5px">
-      <thead><tr><th>가게</th><th>방문자 / 블로그 리뷰</th><th>가격표</th><th>답글 (최근 10개)</th><th>마지막 소식</th><th>알림받기 쿠폰</th></tr></thead>
-      <tbody>
-        <tr><td>디오르플레르</td><td class="n" style="background:var(--green-t);color:var(--green);font-weight:900">355 / 42</td><td>2~10만 원 · 이름에 용도 「기념일 BEST」</td><td style="background:var(--green-t);color:var(--green);font-weight:900">10/10</td><td style="background:var(--green-t);color:var(--green);font-weight:900">10/24 · 월 1~2번</td><td>예약 2,000원</td></tr>
-        <tr><td>나풀</td><td class="n">134 / 18</td><td>2.5~10만 원 · 24시 픽업</td><td style="background:var(--green-t);color:var(--green);font-weight:900">10/10</td><td style="background:var(--green-t);color:var(--green);font-weight:900">11/08 · 월 1~2번</td><td style="background:var(--red-t);color:var(--red);font-weight:900">없음</td></tr>
-        <tr><td>온니플라워</td><td class="n">242 / 188</td><td>1.5~15만 원 · 첫 줄이 「카톡이 답장 빨라요」</td><td style="background:var(--red-t);color:var(--red);font-weight:900">0/10</td><td style="background:var(--red-t);color:var(--red);font-weight:900">4/29</td><td>1,000원</td></tr>
-        <tr><td>조에드플레르</td><td class="n" style="background:var(--red-t);color:var(--red);font-weight:900">28 / 6</td><td>1.5~13만 원 · 클래스 · 웨딩 · 기업</td><td style="background:var(--green-t);color:var(--green);font-weight:900">8/10</td><td style="background:var(--red-t);color:var(--red);font-weight:900">4/29</td><td style="background:var(--red-t);color:var(--red);font-weight:900">없음</td></tr>
-        <tr style="background:var(--yellow-t)"><td>⭐ 우리 가게</td><td colspan="5" style="color:var(--sub)">같은 기준으로 읽는 중 — 채워지면 이 줄에 넣어요</td></tr>
-      </tbody>
-    </table>
-    <div class="row" style="margin-top:12px;gap:12px;align-items:stretch">
-      <div class="card" style="flex:1;padding:14px 18px"><p style="margin:0"><b>명지가 이미 잘하는 것</b> · 답글은 타 지역 1등 가게들보다 낫다 (타 지역 9곳 중 7곳이 0/10)</p></div>
-      <div class="card" style="flex:1;padding:14px 18px;border-color:var(--red)"><p style="margin:0"><b style="color:var(--red)">명지가 놓치는 것</b> · 가격표 칸에 안내문이 섞임(「상주 시간」 「24시 픽업」이 상품처럼 보임) · 소식이 반년 멈춘 곳 2곳</p></div>
-    </div>
-    <p style="font-size:13.5px;color:var(--sub);margin-top:8px">2026-11-23 네이버 플레이스 화면 그대로 읽음 · 답글은 방문자 리뷰 최신 10개 · 블로그 리뷰는 카페 글 포함</p>
+    <h2>명지 리뷰 상위 꽃집과 <mark>나란히</mark></h2>
+    <table class="tb tight" style="margin-top:8px;font-size:14.5px">
+      <thead><tr><th>가게 (리뷰 순)</th><th>방문자 / 블로그</th><th>가격표</th><th>예약 상품</th><th>답글</th><th>마지막 소식</th><th>알림받기 · 쿠폰</th></tr></thead>
+      <tbody><tr><td>폴폴플라워</td><td style="background:var(--green-t);color:var(--green);font-weight:900">751 / 60</td><td>2.5만~25만 원+</td><td style="background:var(--green-t);color:var(--green);font-weight:900">5개 넘음</td><td style="background:var(--green-t);color:var(--green);font-weight:900">10/10</td><td style="background:var(--green-t);color:var(--green);font-weight:900">11/09 · 월 2~3번</td><td style="background:var(--red-t);color:var(--red);font-weight:900">없음</td></tr><tr><td>블루밍센트</td><td style="background:var(--green-t);color:var(--green);font-weight:900">466 / 120</td><td>5만~20만 원</td><td>3개</td><td style="background:var(--green-t);color:var(--green);font-weight:900">10/10</td><td>9/24 · 시즌만</td><td style="background:var(--red-t);color:var(--red);font-weight:900">없음</td></tr><tr><td>디오르플레르 <small style="color:var(--red);font-weight:700">ⓛ광고</small></td><td>355 / 42</td><td>2만~10만 원</td><td style="background:var(--green-t);color:var(--green);font-weight:900">5개</td><td style="background:var(--green-t);color:var(--green);font-weight:900">10/10</td><td style="background:var(--green-t);color:var(--green);font-weight:900">10/24 · 월 1~2번</td><td>예약 2,000원</td></tr><tr><td>매이정원 <small style="color:var(--red);font-weight:700">ⓛ광고</small></td><td>321 / 158</td><td>단계 이름 · 최고 30만 원</td><td style="background:var(--green-t);color:var(--green);font-weight:900">5개</td><td style="background:var(--green-t);color:var(--green);font-weight:900">10/10</td><td style="background:var(--red-t);color:var(--red);font-weight:900">7/21 · 드묾</td><td>메시지 카드</td></tr><tr><td>온니플라워 <small style="color:var(--red);font-weight:700">ⓛ광고</small></td><td>242 / 188</td><td>1.5만~15만 원</td><td>3개</td><td style="background:var(--red-t);color:var(--red);font-weight:900">0/10</td><td style="background:var(--red-t);color:var(--red);font-weight:900">4/29 · 시즌만</td><td>1,000원</td></tr><tr><td>쏘뷰티풀 <small style="color:var(--red);font-weight:700">ⓛ광고</small></td><td>192 / 74</td><td>4만~10만 원</td><td>2개</td><td>6/10</td><td>확인 못 함</td><td>3,000원</td></tr><tr><td>오브더제이</td><td>181 / 116</td><td>4.5만~9만 원</td><td style="background:var(--red-t);color:var(--red);font-weight:900">없음 (카카오)</td><td style="background:var(--green-t);color:var(--green);font-weight:900">10/10</td><td style="background:var(--red-t);color:var(--red);font-weight:900">5/06 · 시즌만</td><td style="background:var(--red-t);color:var(--red);font-weight:900">없음</td></tr><tr><td>로지무드</td><td>168 / 5</td><td>2.5만~15만 원</td><td>3개</td><td style="background:var(--green-t);color:var(--green);font-weight:900">8/10</td><td>확인 못 함</td><td style="background:var(--red-t);color:var(--red);font-weight:900">없음</td></tr><tr><td>나풀 <small style="color:var(--red);font-weight:700">광고</small></td><td>134 / 18</td><td>2.5만~10만 원</td><td style="background:var(--green-t);color:var(--green);font-weight:900">6개 · 이름에 가격</td><td style="background:var(--green-t);color:var(--green);font-weight:900">10/10</td><td style="background:var(--green-t);color:var(--green);font-weight:900">11/08 · 월 1~2번</td><td style="background:var(--red-t);color:var(--red);font-weight:900">없음</td></tr><tr><td>조에드플레르 <small style="color:var(--red);font-weight:700">ⓛ광고</small></td><td style="background:var(--red-t);color:var(--red);font-weight:900">28 / 6</td><td>1.5만~13만 원</td><td style="background:var(--green-t);color:var(--green);font-weight:900">6개</td><td style="background:var(--green-t);color:var(--green);font-weight:900">8/10</td><td style="background:var(--red-t);color:var(--red);font-weight:900">4/29 · 시즌만</td><td style="background:var(--red-t);color:var(--red);font-weight:900">없음</td></tr><tr style="background:var(--yellow-t)"><td>⭐ 차곡</td><td style="background:var(--red-t);color:var(--red);font-weight:900">18 / 0</td><td>3만~13만 원</td><td style="background:var(--red-t);color:var(--red);font-weight:900">1개</td><td style="background:var(--green-t);color:var(--green);font-weight:900">8/10</td><td style="background:var(--red-t);color:var(--red);font-weight:900">없음</td><td style="background:var(--red-t);color:var(--red);font-weight:900">없음</td></tr></tbody></table>
+    <p style="font-size:13px;color:var(--sub);margin-top:6px">ⓛ = 사장님이 고른 비교 가게 5곳 · 광고 = 「명지꽃집」 검색 광고 칸 · 2026-11-23 플레이스 화면 그대로 · 답글은 방문자 리뷰 최신 10개 · 블로그 리뷰는 카페 글 포함</p>
   </div>
   <span class="pnum">10</span>
+</section>
+
+<!-- 명지 꽃집 24곳 -->
+<section class="slide" data-ch="2" data-sign="명지 꽃집 24곳 한눈에" data-period="챕터 2" data-min="1" data-notes="(전체 표 · 1분 · 보여 주기만)
+「명지꽃집」 검색 결과 1~24위를 같은 칸으로 다 봤어요. 순위는 광고 칸을 뺀 검색 목록 순서예요.
+눈여겨볼 것 두 가지. 리뷰가 많아도 검색 순위가 높은 건 아니에요 — 폴폴 751개가 9위예요. 그리고 리뷰가 몇 달째 멈춘 가게(1월26일 · 로즈로제 · 플라워나누다)는 답글도 0이에요.
+차곡은 18위. 관리만 시작해도 위로 올라갈 자리가 많아요.">
+  <div class="in">
+    <h2>「명지꽃집」 검색 <mark>24곳 한눈에</mark></h2>
+    <div class="row" style="gap:14px;margin-top:10px;align-items:flex-start">
+      <div style="flex:1"><table class="tb" style="font-size:13.5px"><thead><tr><th>순위 · 가게</th><th>방문자</th><th>블로그</th><th>답글</th><th>예약</th><th>알림 · 쿠폰</th></tr></thead><tbody><tr><td style="padding:5px 10px">1. 디오르플레르</td><td class="n" style="padding:5px 10px">355</td><td class="n" style="padding:5px 10px">42</td><td style="padding:5px 10px">10/10</td><td style="padding:5px 10px">5</td><td style="padding:5px 10px">쿠폰 2천</td></tr><tr><td style="padding:5px 10px">2. 온니플라워</td><td class="n" style="padding:5px 10px">242</td><td class="n" style="padding:5px 10px">188</td><td style="padding:5px 10px">0/10</td><td style="padding:5px 10px">3</td><td style="padding:5px 10px">쿠폰 1천</td></tr><tr><td style="padding:5px 10px">3. 로지무드</td><td class="n" style="padding:5px 10px">168</td><td class="n" style="padding:5px 10px">5</td><td style="padding:5px 10px">8/10</td><td style="padding:5px 10px">3</td><td style="padding:5px 10px">–</td></tr><tr><td style="padding:5px 10px">4. 나풀</td><td class="n" style="padding:5px 10px">134</td><td class="n" style="padding:5px 10px">18</td><td style="padding:5px 10px">10/10</td><td style="padding:5px 10px">6</td><td style="padding:5px 10px">–</td></tr><tr><td style="padding:5px 10px">5. 매이정원</td><td class="n" style="padding:5px 10px">321</td><td class="n" style="padding:5px 10px">158</td><td style="padding:5px 10px">10/10</td><td style="padding:5px 10px">5</td><td style="padding:5px 10px">카드</td></tr><tr><td style="padding:5px 10px">6. 유화당</td><td class="n" style="padding:5px 10px">103</td><td class="n" style="padding:5px 10px">92</td><td style="padding:5px 10px">0/10</td><td style="padding:5px 10px">5</td><td style="padding:5px 10px">쿠폰 3천</td></tr><tr><td style="padding:5px 10px">7. 소안플라워</td><td class="n" style="padding:5px 10px">19</td><td class="n" style="padding:5px 10px">34</td><td style="padding:5px 10px">9/10</td><td style="padding:5px 10px">1</td><td style="padding:5px 10px">쿠폰 3천</td></tr><tr><td style="padding:5px 10px">8. 쏘뷰티풀</td><td class="n" style="padding:5px 10px">192</td><td class="n" style="padding:5px 10px">74</td><td style="padding:5px 10px">6/10</td><td style="padding:5px 10px">2</td><td style="padding:5px 10px">쿠폰 3천</td></tr><tr><td style="padding:5px 10px">9. 폴폴플라워</td><td class="n" style="padding:5px 10px">751</td><td class="n" style="padding:5px 10px">60</td><td style="padding:5px 10px">10/10</td><td style="padding:5px 10px">5+</td><td style="padding:5px 10px">–</td></tr><tr><td style="padding:5px 10px">10. 플로엔비</td><td class="n" style="padding:5px 10px">–</td><td class="n" style="padding:5px 10px">0</td><td style="padding:5px 10px">–</td><td style="padding:5px 10px">없음</td><td style="padding:5px 10px">–</td></tr><tr><td style="padding:5px 10px">11. 1월26일 플라워</td><td class="n" style="padding:5px 10px">124</td><td class="n" style="padding:5px 10px">5</td><td style="padding:5px 10px">0/10</td><td style="padding:5px 10px">없음</td><td style="padding:5px 10px">–</td></tr><tr><td style="padding:5px 10px">12. 블루밍센트</td><td class="n" style="padding:5px 10px">466</td><td class="n" style="padding:5px 10px">120</td><td style="padding:5px 10px">10/10</td><td style="padding:5px 10px">3</td><td style="padding:5px 10px">–</td></tr></tbody></table></div>
+      <div style="flex:1"><table class="tb" style="font-size:13.5px"><thead><tr><th>순위 · 가게</th><th>방문자</th><th>블로그</th><th>답글</th><th>예약</th><th>알림 · 쿠폰</th></tr></thead><tbody><tr><td style="padding:5px 10px">13. 플로랄브리즈</td><td class="n" style="padding:5px 10px">83</td><td class="n" style="padding:5px 10px">51</td><td style="padding:5px 10px">10/10</td><td style="padding:5px 10px">1</td><td style="padding:5px 10px">–</td></tr><tr><td style="padding:5px 10px">14. 메르시제이</td><td class="n" style="padding:5px 10px">21</td><td class="n" style="padding:5px 10px">5</td><td style="padding:5px 10px">9/10</td><td style="padding:5px 10px">1</td><td style="padding:5px 10px">–</td></tr><tr><td style="padding:5px 10px">15. 로즈로제플라워</td><td class="n" style="padding:5px 10px">26</td><td class="n" style="padding:5px 10px">29</td><td style="padding:5px 10px">0/10</td><td style="padding:5px 10px">없음</td><td style="padding:5px 10px">–</td></tr><tr><td style="padding:5px 10px">16. 조에드플레르</td><td class="n" style="padding:5px 10px">28</td><td class="n" style="padding:5px 10px">6</td><td style="padding:5px 10px">8/10</td><td style="padding:5px 10px">6</td><td style="padding:5px 10px">–</td></tr><tr><td style="padding:5px 10px">17. 플라워샵 아줄</td><td class="n" style="padding:5px 10px">50</td><td class="n" style="padding:5px 10px">47</td><td style="padding:5px 10px">10/10</td><td style="padding:5px 10px">2</td><td style="padding:5px 10px">쿠폰 3천</td></tr><tr style="background:var(--yellow-t)"><td style="padding:5px 10px">18. ⭐ 차곡</td><td class="n" style="padding:5px 10px">18</td><td class="n" style="padding:5px 10px">0</td><td style="padding:5px 10px">8/10</td><td style="padding:5px 10px">1</td><td style="padding:5px 10px">–</td></tr><tr><td style="padding:5px 10px">19. 누에보플레르</td><td class="n" style="padding:5px 10px">55</td><td class="n" style="padding:5px 10px">207</td><td style="padding:5px 10px">9/10</td><td style="padding:5px 10px">없음</td><td style="padding:5px 10px">–</td></tr><tr><td style="padding:5px 10px">20. 플디플라워</td><td class="n" style="padding:5px 10px">2</td><td class="n" style="padding:5px 10px">0</td><td style="padding:5px 10px">1/2</td><td style="padding:5px 10px">3</td><td style="padding:5px 10px">–</td></tr><tr><td style="padding:5px 10px">21. 가은플라워</td><td class="n" style="padding:5px 10px">19</td><td class="n" style="padding:5px 10px">4</td><td style="padding:5px 10px">1/10</td><td style="padding:5px 10px">없음</td><td style="padding:5px 10px">–</td></tr><tr><td style="padding:5px 10px">22. 오브더제이</td><td class="n" style="padding:5px 10px">181</td><td class="n" style="padding:5px 10px">116</td><td style="padding:5px 10px">10/10</td><td style="padding:5px 10px">없음</td><td style="padding:5px 10px">–</td></tr><tr><td style="padding:5px 10px">23. 온화정</td><td class="n" style="padding:5px 10px">5</td><td class="n" style="padding:5px 10px">1</td><td style="padding:5px 10px">5/5</td><td style="padding:5px 10px">2</td><td style="padding:5px 10px">카드</td></tr><tr><td style="padding:5px 10px">24. 플라워나누다</td><td class="n" style="padding:5px 10px">27</td><td class="n" style="padding:5px 10px">3</td><td style="padding:5px 10px">0/10</td><td style="padding:5px 10px">없음</td><td style="padding:5px 10px">–</td></tr></tbody></table></div>
+    </div>
+    <p style="font-size:13px;color:var(--sub);margin-top:6px">순위 = 광고 칸 뺀 검색 목록 순서 · 2026-11-23 · 예약 = 네이버 예약 상품 수 · 25~33위(화환 배달 등)는 다음에 더함</p>
+  </div>
+  <span class="pnum">11</span>
 </section>
 
 <!-- 다른 지역 잘되는 꽃집 -->
@@ -385,7 +400,7 @@ AI는 여기서 글을 대신 써 주는 역할이에요. 손님이 치는 말, 
     </div>
     <p style="font-size:13.5px;color:var(--sub);margin-top:10px">서면 래예 · 해운대 튜희 · 센텀(수영구) 제이넵 · 성수 꽃향기 · 호랭이 · 연남 해리스 · 판교 바움앤블룸 · 송도 모우디 · 시연화다 · 2026-11-23 플레이스 화면 기준 (광고 뺀 상위 35곳 중 방문자 리뷰 순)</p>
   </div>
-  <span class="pnum">11</span>
+  <span class="pnum">12</span>
 </section>
 
 <!-- 7 챕터2 표지 -->
@@ -397,7 +412,7 @@ AI는 여기서 글을 대신 써 주는 역할이에요. 손님이 치는 말, 
     <p class="lead" style="font-size:24px">손님이 <b style="color:#fff">실제로 치는 말</b>, 명지 사람들이 <b style="color:#fff">꽃에 쓰는 돈</b></p>
     <div class="row" style="margin-top:26px;gap:10px"><span class="tag y">만드는 것</span><span style="font-size:18px">대표 키워드 5개 · 우리 가격대</span></div>
   </div>
-  <span class="pnum">12</span>
+  <span class="pnum">13</span>
 </section>
 
 <!-- 8 검색량 -->
@@ -421,7 +436,7 @@ AI는 여기서 글을 대신 써 주는 역할이에요. 손님이 치는 말, 
     </div>
     <p style="font-size:13px;color:var(--sub);margin-top:10px">네이버 검색광고 키워드 수치 · 한 달 PC+모바일 합계 · 2026-11-23 조회. 계절에 따라 크게 달라져요.</p>
   </div>
-  <span class="pnum">13</span>
+  <span class="pnum">14</span>
 </section>
 
 <!-- 9 상황 키워드 -->
@@ -433,7 +448,7 @@ AI는 여기서 글을 대신 써 주는 역할이에요. 손님이 치는 말, 
     <div class="col grow" style="gap:7px;margin-top:16px" id="sitBars"></div>
     <div class="post" style="margin-top:10px"><small>선생님 메모</small>화환 · 화분을 하시면 → 「명지 개업화분」 「명지 축하화환」 상품 따로 / 안 하시면 → 꽃다발 · 꽃바구니 · 생일 · 졸업에 집중</div>
   </div>
-  <span class="pnum">14</span>
+  <span class="pnum">15</span>
 </section>
 
 <!-- 10 대표 키워드 후보 48 -->
@@ -446,7 +461,7 @@ AI는 여기서 글을 대신 써 주는 역할이에요. 손님이 치는 말, 
     <div class="row" style="align-items:baseline;justify-content:space-between"><h2 style="font-size:36px">대표 키워드 <mark>후보 48개</mark></h2><span class="tag y">노란 줄 = 검색량 확인 · 숫자 = 한 달 검색</span></div>
     <div class="kwg" style="margin-top:12px" id="kwGrid"></div>
   </div>
-  <span class="pnum">15</span>
+  <span class="pnum">16</span>
 </section>
 
 <!-- 11 계절별 5개 세트 -->
@@ -464,7 +479,7 @@ AI는 여기서 글을 대신 써 주는 역할이에요. 손님이 치는 말, 
     </div>
     <div class="row" style="margin-top:20px;gap:14px;align-items:center"><span class="tag r">주의</span><span style="font-size:17px;font-weight:700">화환을 안 하면 「개업화분」 자리에 「꽃선물」 · 클래스를 하면 「플라워클래스」 · 바꾸는 건 <mark>대목 2~3주 전</mark></span></div>
   </div>
-  <span class="pnum">16</span>
+  <span class="pnum">17</span>
 </section>
 
 <!-- 12 명지 꽃 소비 -->
@@ -489,7 +504,7 @@ AI는 여기서 글을 대신 써 주는 역할이에요. 손님이 치는 말, 
     </div>
     <p style="font-size:12.5px;color:var(--sub);margin-top:8px">출처: 행안부 주민등록 인구(2026-06) · 농식품부 · 농촌진흥청 · 통계청 가계동향 · KREI(2013 · 2021). 동 단위 실측 자료는 없어 전국 평균으로 추정.</p>
   </div>
-  <span class="pnum">17</span>
+  <span class="pnum">18</span>
 </section>
 
 <!-- 13 소상공인365 -->
@@ -515,7 +530,7 @@ AI는 여기서 글을 대신 써 주는 역할이에요. 손님이 치는 말, 
       </div>
     </div>
   </div>
-  <span class="pnum">18</span>
+  <span class="pnum">19</span>
 </section>
 
 <!-- 14 챕터3 표지 -->
@@ -527,7 +542,7 @@ AI는 여기서 글을 대신 써 주는 역할이에요. 손님이 치는 말, 
     <p class="lead" style="font-size:24px">소개글 · 리뷰 답글을 <b style="color:#fff">공식대로</b>, <b style="color:#fff">AI와 같이</b></p>
     <div class="row" style="margin-top:26px;gap:10px"><span class="tag y">만드는 것</span><span style="font-size:18px">우리 가게 소개글 · 리뷰 답글 4종</span></div>
   </div>
-  <span class="pnum">19</span>
+  <span class="pnum">20</span>
 </section>
 
 <!-- 15 소개글 공식 -->
@@ -547,7 +562,7 @@ AI는 여기서 글을 대신 써 주는 역할이에요. 손님이 치는 말, 
       <div class="fi" style="--d:.55s;margin-top:8px;font-size:22px">⚠ 키워드는 문장 안에 <span class="y">한 번씩만</span> · 「최고 · 최저가 · 1등」 금지</div>
     </div>
   </div>
-  <span class="pnum">20</span>
+  <span class="pnum">21</span>
 </section>
 
 <!-- 16 틀린 글 vs 맞는 글 -->
@@ -561,7 +576,7 @@ AI는 여기서 글을 대신 써 주는 역할이에요. 손님이 치는 말, 
       <div class="card good col fi" style="--d:.2s"><h3>⭕ 잘 쓴 글</h3><blockquote>명지국제신도시 상가 1층의 작은 꽃집이에요. 그날 들어온 꽃으로 꽃다발과 꽃바구니를 만들고, 개업 · 축하 화분도 준비해요. 생일, 졸업식, 어버이날 꽃을 많이 찾으세요. 네이버 예약으로 픽업 시간을 정해 주시면 기다리지 않고 받아 가실 수 있고, 명지 · 신호 · 녹산은 당일 배달돼요. 꽃다발은 2만 원부터예요.</blockquote><p class="why">키워드가 문장 속에 한 번씩 · 가격 · 받는 법 · 지역이 다 있음</p></div>
     </div>
   </div>
-  <span class="pnum">21</span>
+  <span class="pnum">22</span>
 </section>
 
 <!-- 시그니처 공식 -->
@@ -588,7 +603,7 @@ AI는 여기서 글을 대신 써 주는 역할이에요. 손님이 치는 말, 
       </div>
     </div>
   </div>
-  <span class="pnum">22</span>
+  <span class="pnum">23</span>
 </section>
 
 <!-- 평범 vs 시그니처 -->
@@ -605,7 +620,7 @@ AI는 여기서 글을 대신 써 주는 역할이에요. 손님이 치는 말, 
     </div>
     <p style="font-size:13px;color:var(--sub);margin-top:8px">예시 글이에요 · 가게의 진짜 고집과 사실로 바꿔 쓰기</p>
   </div>
-  <span class="pnum">23</span>
+  <span class="pnum">24</span>
 </section>
 
 <!-- 17 실습: AI로 소개글 -->
@@ -635,7 +650,7 @@ AI는 여기서 글을 대신 써 주는 역할이에요. 손님이 치는 말, 
       </div>
     </div>
   </div>
-  <span class="pnum">24</span>
+  <span class="pnum">25</span>
 </section>
 
 <!-- 18 리뷰 답글 4단계 -->
@@ -654,7 +669,7 @@ AI는 여기서 글을 대신 써 주는 역할이에요. 손님이 치는 말, 
       <div class="fi" style="--d:.45s;margin-top:8px;font-size:21px">⚠ 키워드 <span class="y">1~2개</span> · 같은 문장 복사 금지 · <span class="y">이틀 안에</span> · 순위가 오른다는 공식 자료는 없음</div>
     </div>
   </div>
-  <span class="pnum">25</span>
+  <span class="pnum">26</span>
 </section>
 
 <!-- 19 실습: 답글 -->
@@ -682,7 +697,7 @@ AI는 여기서 글을 대신 써 주는 역할이에요. 손님이 치는 말, 
       </div>
     </div>
   </div>
-  <span class="pnum">26</span>
+  <span class="pnum">27</span>
 </section>
 
 <!-- 20 챕터4 표지 -->
@@ -693,7 +708,7 @@ AI는 여기서 글을 대신 써 주는 역할이에요. 손님이 치는 말, 
     <h1 style="margin-top:14px;font-size:84px;color:var(--yellow)">설정 · 홍보</h1>
     <p class="lead" style="font-size:24px">같이 <b style="color:#fff">체크하고</b>, 대목은 <b style="color:#fff">3주 전에</b></p>
   </div>
-  <span class="pnum">27</span>
+  <span class="pnum">28</span>
 </section>
 
 <!-- 21 체크리스트 -->
@@ -703,7 +718,7 @@ AI는 여기서 글을 대신 써 주는 역할이에요. 손님이 치는 말, 
     <h2 style="font-size:36px">같이 열어서 <mark>하나씩 체크</mark></h2>
     <div class="chk" style="margin-top:14px" id="chkList"></div>
   </div>
-  <span class="pnum">28</span>
+  <span class="pnum">29</span>
 </section>
 
 <!-- 22 대목 달력 -->
@@ -725,7 +740,7 @@ AI는 여기서 글을 대신 써 주는 역할이에요. 손님이 치는 말, 
     </div>
     <p style="font-size:12.5px;color:var(--sub);margin-top:8px">출처: 꽃집 운영자 · 플로리스트 글, 한국경제(2025 어버이날 카네이션 거래 9.9% 감소), 전민일보 · 남도일보(졸업 특수 약화)</p>
   </div>
-  <span class="pnum">29</span>
+  <span class="pnum">30</span>
 </section>
 
 <!-- 23 홍보 방법 -->
@@ -748,7 +763,7 @@ AI는 여기서 글을 대신 써 주는 역할이에요. 손님이 치는 말, 
       <span class="tag y">① 가격대별 사진 · 소개글</span>→<span class="tag y">② 주 1회 소식 · 답글</span>→<span class="tag y">③ 대목 3주 전 예약 + 당근</span>→<span class="tag">④ 그다음 광고</span>
     </div>
   </div>
-  <span class="pnum">30</span>
+  <span class="pnum">31</span>
 </section>
 
 <!-- 24 하면 안 되는 것 -->
@@ -769,7 +784,7 @@ AI는 여기서 글을 대신 써 주는 역할이에요. 손님이 치는 말, 
       <div style="position:absolute;right:30px;bottom:20px;font:400 52px var(--display);color:var(--red);transform:rotate(-10deg)">정직!</div>
     </div>
   </div>
-  <span class="pnum">31</span>
+  <span class="pnum">32</span>
 </section>
 
 <!-- 25 확인 문제 -->
@@ -783,7 +798,7 @@ AI는 여기서 글을 대신 써 주는 역할이에요. 손님이 치는 말, 
       <div class="qq" data-ans="3"><p class="qt">Q3. 가장 좋은 리뷰 답글은?</p><div class="opts"><button type="button">① 감사합니다~ 또 오세요^^</button><button type="button">② 명지꽃집 명지꽃다발 최고!</button><button type="button">③ 모든 리뷰에 같은 문장</button><button type="button">④ 졸업식 꽃다발 마음에 드셨다니 기뻐요. 어버이날 카네이션도 미리 예약받아요.</button></div><p class="ans" hidden>리뷰를 받아 주고, 상품 이름과 다음 정보가 자연스럽게 들어갔어요.</p></div>
     </div>
   </div>
-  <span class="pnum">32</span>
+  <span class="pnum">33</span>
 </section>
 
 <!-- 26 숙제 -->
@@ -797,7 +812,7 @@ AI는 여기서 글을 대신 써 주는 역할이에요. 손님이 치는 말, 
       <p style="margin-top:14px;font-size:15px;color:var(--sub)">다음 시간에 같이 확인해요 · 체크한 건 이 화면에 남아요 · 문의는 언제든 편하게</p>
     </div>
   </div>
-  <span class="pnum">33</span>
+  <span class="pnum">34</span>
 </section>
 
 <!-- 27 마무리 -->
@@ -814,7 +829,7 @@ AI는 여기서 글을 대신 써 주는 역할이에요. 손님이 치는 말, 
     </div>
     <div class="row" style="margin-top:30px;align-items:center;gap:12px"><img src="cup.png" alt="" width="44" height="41"><span style="font-size:16px;color:#F1EEFA">강사 손민지 · 카페스이 &amp; 스이노키친</span></div>
   </div>
-  <span class="pnum">34</span>
+  <span class="pnum">35</span>
 </section>
 
 </div>
