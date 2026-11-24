@@ -309,6 +309,13 @@
   function pkCls(e, a) { if (a === "" || a == null || e === null) return ""; var d = r1(N(a) - N(e)); return d > 0 ? " up" : d < 0 ? " dn" : " ok"; }
   function pkTip(e, a) { if (a === "" || a == null || e === null) return ""; var d = r1(N(a) - N(e)); return d > 0 ? "+" + d : d < 0 ? String(d) : "="; }
   function pkIn(k, v, e) { return '<input type="text" inputmode="decimal" class="xpkin' + pkCls(e, v) + '" data-k="' + ea2(k) + '" value="' + ea2(v == null ? "" : v) + '" aria-label="실제">' + (v !== "" && v != null ? '<i class="xpkdf' + pkCls(e, v) + '">' + pkTip(e, v) + "</i>" : ""); }
+  // 예상 숫자로 생크림 · 휘핑 · 딸기 다시 계산 (plan1124i와 같은 식) — 1개당 [생크림 g, 휘핑 g, 딸기 통] × 11월 보정(pk.exp.f)
+  function pkUnit(x) { if (x.k === "홀") return [340, 120, 1]; if (x.k === "중간") return [238, 84, 0.7]; if (x.k === "미니") return [170, 60, 0.5]; if (x.k === "조각") return [342, 121, /딸기/.test(x.n || "") ? 0.828 : 0]; return null; }
+  function pkNeed(y, D) {
+    var o = load(y), P = o.prod || {}, ex = (o.pk || {}).exp || {}, F = ex.f || [1.1303, 1.07, 0.9369], h26 = ex.h26 == null ? 9 : N(ex.h26), out = {};
+    D.forEach(function (d) { var s = [0, 0, 0]; rows(goalOf(y).it).forEach(function (x) { var u = pkUnit(x), v = N(((P[x._id] || {})[d] || {}).p); if (!u || !v) return; for (var i = 0; i < 3; i++) s[i] += v * u[i]; }); if (d.slice(5) === "12-26") { s[0] += h26 * 340; s[1] += h26 * 120; s[2] += h26; } out[d] = [r1(s[0] / 500 * F[0]), r1(s[1] / 1000 * F[1]), r1(s[2] * F[2])]; });
+    return out;
+  }
   function drawPeak(el) {
     if (cur < 2026) { el.innerHTML = ""; return; }
     var o = load(cur), pk = o.pk || {}, A = pk.a || {}, D = pkDays(cur), P = o.prod || {}, g = goalOf(cur), it = rows(g.it), M = o.mat || {}, W = ["일", "월", "화", "수", "목", "금", "토"], ly = cur - 1;
@@ -329,7 +336,7 @@
         D.forEach(function (d, di) {
           var lv = dup ? null : LV[di], e = ex(x._id, d), k = x._id + "|" + d, a = av(k);
           if (lv != null) { sl += lv; sln++; } se += e; if (a !== "") { sa += N(a); san++; }
-          cl += "<td>" + (lv != null ? r1(lv) : "") + "</td>"; ce += "<td>" + (e ? r1(e) : "") + "</td>"; ca += '<td class="pka">' + pkIn(k, a, e) + "</td>";
+          cl += "<td>" + (lv != null ? r1(lv) : "") + "</td>"; ce += '<td class="pkev"><input type="text" inputmode="decimal" class="xpkex" data-g="' + x._id + '" data-d="' + d + '" value="' + (e ? r1(e) : "") + '" aria-label="예상"></td>'; ca += '<td class="pka">' + pkIn(k, a, e) + "</td>";
         });
         gL += sl; gLn += sln; gE += se; gA += sa; gAn += san;
         var nm = '<th class="pkn" rowspan="3">' + esc(x.n) + (N(x.t) ? "<small>목표 " + N(x.t) + "</small>" : "") + "</th>";
@@ -345,20 +352,22 @@
     });
     var head = '<tr><th class="pkn">품목</th><th></th>' + dh + "<th>합</th></tr>";
     // 재료
+    var NEED = pkNeed(cur, D);
     var mrows = PKMAT.filter(function (r) { return M[r[0]] && !M[r[0]].del; }).map(function (r) {
       var m = M[r[0]], q = N(m.q), ko = "m|" + r[0] + "|o", ku = "m|" + r[0] + "|u", kl = "m|" + r[0] + "|l", ao = av(ko), au = av(ku);
       var src = String(m.s || "").trim(), chk = PKSRC.filter(function (c) { return c[0] === r[0] && !c[1].test(src); })[0];
-      return '<tr><th class="pkn">' + esc(r[1]) + '</th><td class="pksrc' + (src ? "" : " none") + '">' + (src ? esc(src) : "⚠ 거래처 적기") + (chk ? '<small class="pkwarn">⚠ ' + esc(chk[2]) + "</small>" : "") + '</td><td class="pklyv">' + (r[3] ? "<b>" + r[3] + "</b>" : "") + "<small>" + esc(r[4]) + '</small></td><td class="pkq"><b>' + q + "</b> " + r[2] + '</td><td class="pka">' + pkIn(ko, ao, q) + '</td><td class="pka">' + pkIn(ku, au, q) + '</td><td class="pka">' + pkIn(kl, av(kl), null).replace('class="xpkin', 'placeholder="' + (ao !== "" && au !== "" ? r1(N(ao) - N(au)) : "") + '" class="xpkin') + "</td></tr>";
+      var NI = { p18: 0, p17: 1, p20: 2 }[r[0]], nd = NI == null ? "" : (function () { var t = r1(D.reduce(function (s0, d) { return s0 + (NEED[d] ? NEED[d][NI] : 0); }, 0)), tq = r[0] === "p18" ? q + N((M.p19 || {}).q) : q, gap = Math.ceil(t - 1e-9) - tq; return '<small class="pkneed' + (gap > 0 ? " short" : "") + '">지금 예상으로 필요 ' + t + (r[0] === "p18" ? " (녹산 합쳐서)" : "") + (gap > 0 ? " → " + gap + " 모자람" : "") + "</small>"; })();
+      return '<tr><th class="pkn">' + esc(r[1]) + '</th><td class="pksrc' + (src ? "" : " none") + '">' + (src ? esc(src) : "⚠ 거래처 적기") + (chk ? '<small class="pkwarn">⚠ ' + esc(chk[2]) + "</small>" : "") + '</td><td class="pklyv">' + (r[3] ? "<b>" + r[3] + "</b>" : "") + "<small>" + esc(r[4]) + '</small></td><td class="pkq"><b>' + q + "</b> " + r[2] + nd + '</td><td class="pka">' + pkIn(ko, ao, q) + '</td><td class="pka">' + pkIn(ku, au, q) + '</td><td class="pka">' + pkIn(kl, av(kl), null).replace('class="xpkin', 'placeholder="' + (ao !== "" && au !== "" ? r1(N(ao) - N(au)) : "") + '" class="xpkin') + "</td></tr>";
     }).join("");
     // 거래처 빈 줄 (재료 · 부자재 전체)
     var noSrc = rows(M).filter(function (x) { return !String(x.s || "").trim() && !/택배비/.test(x.n || ""); });
-    var E = (pk.exp || {}).day || {}, dl = D.filter(function (d) { return E[d]; }), LYS = { "12-22": 62, "12-23": 116, "12-24": 90 };
+    var E = pkNeed(cur, D), dl = D.filter(function (d) { return E[d]; }), LYS = { "12-22": 62, "12-23": 116, "12-24": 90 };
     var dtab = dl.length ? '<table class="xpkt pkday"><thead><tr><th rowspan="2">날짜</th><th colspan="2">🥛 생크림 (통)</th><th colspan="2">🥛 휘핑 (개)</th><th colspan="3">🍓 딸기 (통)</th></tr><tr><th>예상</th><th>실제 쓴 수</th><th>예상</th><th>실제 쓴 수</th><th>' + String(ly).slice(2) + "년 받은 날</th><th>예상</th><th>실제 쓴 수</th></tr></thead><tbody>" + dl.map(function (d) {
       var e = E[d]; function c(i) { var k = "d|" + d + "|" + "cws"[i]; return '<td class="pkev">' + e[i] + '</td><td class="pka">' + pkIn(k, av(k), e[i]) + "</td>"; }
       return '<tr><th class="pkn">' + md(d) + "</th>" + c(0) + c(1) + '<td class="pklyv">' + (LYS[d.slice(5)] || "") + "</td>" + c(2).replace("</td><td", "</td><td") + "</tr>";
     }).join("") + '<tr class="pkgt"><th class="pkn">합</th>' + [0, 1, 2].map(function (i) { var s = r1(dl.reduce(function (t, d) { return t + E[d][i]; }, 0)), sa = 0, n = 0; dl.forEach(function (d) { var v = av("d|" + d + "|" + "cws"[i]); if (v !== "") { sa += N(v); n++; } }); return (i === 2 ? '<td class="pklyv">268</td>' : "") + "<td><b>" + s + '</b></td><td class="pks' + (n ? pkCls(s, sa) : "") + '">' + (n ? "<b>" + r1(sa) + "</b>" : "") + "</td>"; }).join("") + "</tr></tbody></table>" : "";
     el.innerHTML = '<div class="xpk"><div class="xpkh"><h3>📊 피크 기간 계산 및 실주문 현황</h3><span class="pkrange">' + md(D[0]) + " ~ " + md(D[D.length - 1]) + "</span></div>" +
-      '<p class="pkhow"><b>예상</b> = 🍰 생산 계획 · 🧾 재료 표 숫자 (고치면 여기도 바뀜) · <b>실제</b> 칸에 숫자를 적으면 색이 바뀝니다 — <i class="xpkdf up">예상보다 많음</i> <i class="xpkdf dn">예상보다 적음</i> <i class="xpkdf ok">같음</i></p>' +
+      '<p class="pkhow"><b>예상</b> = 🍰 생산 계획 숫자 — 점선 칸을 눌러 바로 고치면 생산 계획도 같이 바뀌고 생크림 · 휘핑 · 딸기 필요량도 다시 계산됩니다 · <b>실제</b> 칸에 숫자를 적으면 색이 바뀝니다 — <i class="xpkdf up">예상보다 많음</i> <i class="xpkdf dn">예상보다 적음</i> <i class="xpkdf ok">같음</i></p>' +
       '<div class="pkcards">' + cards + "</div>" +
       '<h4>① 날짜별 케이크 · 조각 <small>' + String(ly).slice(2) + "년 = 작년 같은 날 실제 작업량</small></h4><div class=\"xpkw\"><table class=\"xpkt pkcake\"><thead>" + head + "</thead><tbody>" + body + "</tbody></table></div>" +
       (mrows ? '<h4>② 시트 · 생크림 · 휘핑 · 딸기</h4><div class="xpkw"><table class="xpkt pkmat"><thead><tr><th class="pkn">재료</th><th>거래처</th><th>' + String(ly).slice(2) + "년</th><th>올해 예상</th><th>실제 받은 수</th><th>실제 쓴 수</th><th>남은 수</th></tr></thead><tbody>" + mrows + "</tbody></table></div>" : "") +
@@ -366,6 +375,16 @@
       (dtab ? '<h4>③ 날짜별 재료 쓴 양</h4><div class="xpkw">' + dtab + "</div>" : "") +
       (pk.calc ? '<details class="xpkc"><summary>🧮 계산 기록 · 기준값 (11/22 ~ 11/24 · 맨 아래가 지금 값)</summary><div class="xmpre">' + esc(pk.calc) + "</div></details>" : "") + "</div>";
   }
+  sec.addEventListener("change", function (e) {
+    var el = e.target; if (!el.classList || !el.classList.contains("xpkex")) return;
+    var g = el.dataset.g, d = el.dataset.d, v = el.value.trim().replace(/[^0-9.]/g, "");
+    xsave(cur, function (o) { o.prod = o.prod || {}; o.prod[g] = o.prod[g] || {}; var c = o.prod[g][d] = o.prod[g][d] || {}; if ((c.p || "") === v) return; c.p = v; c.ed = (me() || "") + " " + stampNow() + " (피크 표)"; var D0 = daysOf(cur); if (v && D0.indexOf(d) < 0) o.days = D0.concat([d]).sort(); });
+    setTimeout(function () {   // 다음 칸으로 넘어간 뒤 다시 그리고 그 칸으로 돌아감
+      var a = document.activeElement, q = a && a.classList && a.classList.contains("xpkex") ? '.xpkex[data-g="' + a.dataset.g + '"][data-d="' + a.dataset.d + '"]' : a && a.classList && a.classList.contains("xpkin") ? '.xpkin[data-k="' + a.dataset.k + '"]' : null, sy = window.pageYOffset;
+      if (a && a.classList && a.classList.contains("xpkin")) pkSave(a);
+      pend.meet = 0; drawPeak(document.getElementById("xmPeak")); if (q) { var n = document.querySelector("#xmPeak " + q); if (n) { try { n.focus({ preventScroll: true }); n.select(); } catch (er) {} window.scrollTo(0, sy); } }
+    }, 0);
+  });
   var pkT = null;
   sec.addEventListener("input", function (e) {
     var el = e.target; if (!el.classList || !el.classList.contains("xpkin")) return;
