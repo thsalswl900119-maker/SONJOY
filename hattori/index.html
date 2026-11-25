@@ -679,7 +679,7 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
   <span class="hint">이 휴대폰 · 컴퓨터에 기억돼요. 벤치마킹 평가와 소감은 이 이름의 내 칸에만 저장돼요.</span>
 </section>
 
-<div class="topbar"><span class="ver">버전 <b id="verTag">v1125-12</b> · 적으면 자동 저장 · 지운 줄도 서버에 남아요</span><span class="last" id="lastSave">아직 저장 전</span><button type="button" class="btn pri" id="saveNow">💾 지금 저장 + 백업</button></div>
+<div class="topbar"><span class="ver">버전 <b id="verTag">v1125-13</b> · 적으면 자동 저장 · 지운 줄도 서버에 남아요</span><span class="last" id="lastSave">아직 저장 전</span><button type="button" class="btn pri" id="saveNow">💾 지금 저장 + 백업</button></div>
 <nav class="bigtabs" role="tablist" aria-label="큰 탭">
   <a class="bt" role="tab" href="#tab-pre" data-tab="pre">📗 예습 노트</a>
   <a class="bt" role="tab" href="#tab-note" data-tab="note">✍️ 연수 노트</a>
@@ -2140,7 +2140,7 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
     el.innerHTML = '<div class="fhead"><b>📎 2026 도쿄 연수 · 항공권 · 예약 · 영수증 · 자료</b><span>' + all.length + '개 · ' + fsize(tot) + '</span></div>' +
       '<div class="fform"><div class="r2">' +
       '<label class="fl">종류<select class="upCat" aria-label="자료 종류">' + selOpts(CATORDER, "air") + '</select></label>' +
-      '<label class="fl">어디에 둘까요<select class="upShare" aria-label="보관 방법"><option value="local" selected>🔒 이 기기에만 보관 (서버에 안 보냄)</option><option value="server">👥 같이 보기 (서버)</option></select></label></div>' +
+      '<label class="fl">어디에 둘까요<select class="upShare" aria-label="보관 방법"><option value="server" selected>👥 같이 보기 (서버 · 어느 기기에서나 보여요)</option><option value="local">🔒 이 기기에만 보관 (서버에 안 보냄)</option></select></label></div>' +
       '<div class="r2"><input type="text" class="upT" placeholder="이름 (없으면 파일 이름 그대로)" aria-label="자료 이름"><input type="text" class="upM" placeholder="메모 (없어도 돼요)" aria-label="자료 메모"></div>' +
       '<p class="shwarn hint" id="shWarn"></p>' +
       '<label class="fdrop" for="up_files" id="fDrop"><b>📎 눌러서 사진 · 파일 올리기</b><span>여기로 끌어다 놓아도 돼요 · 사진은 자동으로 줄여서 · 다른 파일은 3MB까지 (이 기기에만은 20MB)</span></label>' +
@@ -2153,11 +2153,11 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
   });
   function syncShare(root) {
     var c = root.querySelector(".upCat"), s = root.querySelector(".upShare"), w = root.querySelector("#shWarn"); if (!c || !s) return;
-    if (w) w.textContent = s.value === "local" ? "🔒 이 기기에만 보관해요 · 다른 기기 · 다른 사람에겐 안 보이고, 백업에도 안 들어가요" + (PRIVATE_CAT[c.value] ? " · 이름 · 여권 정보가 있는 자료라 기본이 「이 기기에만」이에요" : "") : "👥 서버에 올려 같이 봐요 · 링크를 받은 누구나 볼 수 있어요" + (PRIVATE_CAT[c.value] ? " · ⚠ 이름 · 여권번호가 보이면 가리고 올리세요" : "");
+    if (w) w.textContent = s.value === "local" ? "🔒 이 기기에만 보관해요 · 다른 기기 · 다른 사람에겐 안 보이고, 백업에도 안 들어가요" : "👥 서버에 올려 같이 봐요 · 링크를 받은 누구나 볼 수 있어요" + (PRIVATE_CAT[c.value] ? " · ⚠ 이름 · 여권번호가 보이면 가리고 올리세요" : "");
     w.className = "shwarn " + (s.value === "server" && PRIVATE_CAT[c.value] ? "fmsg bad" : "hint");
   }
   $("secFiles").addEventListener("change", function (e) {
-    if (e.target.classList.contains("upCat")) { var s = $("secFiles").querySelector(".upShare"); s.value = PRIVATE_CAT[e.target.value] ? "local" : "server"; syncShare($("secFiles")); }
+    if (e.target.classList.contains("upCat")) { var s = $("secFiles").querySelector(".upShare"); syncShare($("secFiles")); }
     if (e.target.classList.contains("upShare")) syncShare($("secFiles"));
   });
   $("secFiles").addEventListener("change", function (e) {
