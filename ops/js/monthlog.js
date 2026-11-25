@@ -222,7 +222,7 @@
     // 유입 · 재방문 표는 지난달과 비교 (11/25 사장님) — 지난달 회의 표에 「이번 달」로 적어 둔 숫자를 「지난달」 칸(cy)에
     var pmY = +ym.slice(0, 4), pmM = +ym.slice(5, 7) - 1; if (pmM < 1) { pmM = 12; pmY--; }
     var mPm = J("cafesui.mtable." + pmY + "-" + (pmM < 10 ? "0" : "") + pmM) || {};
-    ["20", "21", "22", "23", "24", "26"].forEach(function (n) { if (mPm["cn" + n]) SL.push(["cy" + n, mPm["cn" + n], "지난달 " + n]); });
+    ["20", "21", "22", "23", "24", "26", "27"].forEach(function (n) { if (mPm["cn" + n]) SL.push(["cy" + n, mPm["cn" + n], "지난달 " + n]); });
     var memo2 = [];
     if (sNow && sNow.dl) memo2.push("이번 달 배민 = 배민+쿠팡 합친 금액");
     if (sLy && sLy.dl) memo2.push("작년 배민 = 배민+쿠팡 합친 금액");
