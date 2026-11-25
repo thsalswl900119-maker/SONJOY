@@ -444,6 +444,8 @@ select.cur{padding:9px 6px}
 .cleg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:0}
 .cwon,.cleft{font-size:15px}.cwon b,.cleft b{color:var(--wood)}
 .cdays{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.ctabs{margin:4px 0 10px}
+.cdays.one{grid-template-columns:minmax(0,1fr)!important}
 @media (max-width:900px){.cdays{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:640px){.cdays{grid-template-columns:minmax(0,1fr)}}
 .cday{background:#fff;border:1.5px solid var(--wood);border-radius:14px 18px 12px 20px;padding:12px;display:grid;gap:8px;align-content:start;min-width:0}
@@ -467,6 +469,7 @@ select.cur{padding:9px 6px}
 .fdrop{display:grid;gap:4px;place-items:center;text-align:center;border:2.5px dashed var(--wood);border-radius:16px;padding:22px 14px;background:var(--goldbg);cursor:pointer}
 .fdrop b{font-size:17px}.fdrop span{font-size:14px;color:var(--ink2)}
 .fdrop.on{background:var(--greenbg);border-color:var(--green)}
+.dropon{outline:3px dashed var(--green);outline-offset:3px;background:var(--greenbg)!important;border-radius:12px}
 .fchips{display:flex;flex-wrap:wrap;gap:6px}
 .fchip{font:inherit;font-size:14.5px;font-weight:700;border:1.5px solid var(--wood);background:var(--card);color:var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer}
 .fchip small{font-weight:800;color:var(--mute)}
@@ -624,7 +627,7 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
   <span class="hint">이 휴대폰 · 컴퓨터에 기억돼요. 벤치마킹 평가와 소감은 이 이름의 내 칸에만 저장돼요.</span>
 </section>
 
-<div class="topbar"><span class="ver">버전 <b id="verTag">v1125-7</b> · 적으면 자동 저장 · 지운 줄도 서버에 남아요</span><span class="last" id="lastSave">아직 저장 전</span><button type="button" class="btn pri" id="saveNow">💾 지금 저장 + 백업</button></div>
+<div class="topbar"><span class="ver">버전 <b id="verTag">v1125-8</b> · 적으면 자동 저장 · 지운 줄도 서버에 남아요</span><span class="last" id="lastSave">아직 저장 전</span><button type="button" class="btn pri" id="saveNow">💾 지금 저장 + 백업</button></div>
 <nav class="bigtabs" role="tablist" aria-label="큰 탭">
   <a class="bt" role="tab" href="#tab-pre" data-tab="pre">📗 예습 노트</a>
   <a class="bt" role="tab" href="#tab-note" data-tab="note">✍️ 연수 노트</a>
@@ -1776,7 +1779,7 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
     return o;
   }
   function refreshCost() { if (costSec && !typing(costSec.el)) draw(costSec); }
-  var costEdit = {};
+  var costEdit = {}, costTab = ls(PRE + "ui.cday") || String(todayDay() || 1);
   function selOpts(list, cur, blank) { return (blank ? '<option value="">' + blank + '</option>' : "") + list.map(function (o) { return '<option value="' + o[0] + '"' + (cur === o[0] ? " selected" : "") + '>' + (o.length > 2 && o[1].length <= 2 ? o[1] + " " + o[2] : o[1]) + '</option>'; }).join(""); }
   var costSec = mount($("secCost"), [PRE + "cost", PRE + "cost.*"], function (el) {
     var v = view(K.cost), fx = fxv(), sy = num(v.start), sw = num(v.startW), days = DAYS.map(function (d) { return costDay(d.n); });
@@ -1789,7 +1792,10 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
       '<div class="cwon">₩ 원화로 쓴 돈 <b>' + won(tw) + '</b> <small>(엔 합계에 안 넣음)</small></div>' +
       '<div class="cleft">남은 돈 <b>' + ((sy || sw) ? [sy ? yen(sy - ty) : "", sw ? won(sw - tw) : ""].filter(Boolean).join(" · ") : "시작 금액을 적으면 보여요") + '</b></div>' +
       '<div class="r3"><label class="fl">💴 시작 금액 · 엔' + inp(K.cost, "start", v.start, "예) 200000", 'inputmode="numeric"') + '</label><label class="fl">💳 시작 금액 · 원' + inp(K.cost, "startW", v.startW, "예) 300000", 'inputmode="numeric"') + '</label><label class="fl">💱 환율 (100엔당 원)' + inp(K.cost, "fx", v.fx, "836", 'inputmode="decimal"') + '</label></div></div>' +
-      '<div class="cdays">' + DAYS.map(function (d, di) {
+      '<nav class="dtabs ctabs" role="tablist" aria-label="지출 일차"><button type="button" class="dtab" role="tab" data-ctab="all" aria-selected="' + (costTab === "all") + '"><b>전체</b><span>6일 한눈에</span></button>' +
+        DAYS.map(function (d, di) { return '<button type="button" class="dtab" role="tab" data-ctab="' + d.n + '" aria-selected="' + (costTab === String(d.n)) + '"><b>' + d.n + '일차</b><span>' + d.d + ' · ' + yen(days[di].y) + '</span></button>'; }).join("") + '</nav>' +
+      '<div class="cdays' + (costTab === "all" ? "" : " one") + '">' + DAYS.map(function (d, di) {
+        if (costTab !== "all" && costTab !== String(d.n)) return "";
         var o = days[di], k = K.costd(d.n), ed = costEdit[d.n];
         var chips = PAY.filter(function (p) { return o.pay[p[0]]; }).map(function (p) { return '<span class="pchip">' + p[1] + ' ' + p[2] + ' ' + yen(o.pay[p[0]]) + '</span>'; }).join("");
         var body = ed ? '<div class="rows">' + (o.rows.map(function (a) { var id = a[0], r = a[1], p = "rows." + id;
@@ -1807,6 +1813,7 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
       }).join("") + '</div>';
   });
   $("secCost").addEventListener("click", function (e) {
+    var ct = e.target.closest("[data-ctab]"); if (ct) { costTab = ct.dataset.ctab; ls(PRE + "ui.cday", costTab); draw(costSec); return; }
     var t = e.target.closest("[data-cedit]"); if (t) { costEdit[t.dataset.cedit] = !costEdit[t.dataset.cedit]; draw(costSec); return; }
     var b = e.target.closest('[data-act="cadd"]'); if (!b) return;
     var box = b.closest(".cadd"), n = +box.dataset.cday, nm = box.querySelector(".caN").value.trim(), am = box.querySelector(".caA").value.trim();
@@ -1831,7 +1838,7 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
   }
   function photoForm(k, path, tag) {
     return '<div class="fform" data-up="' + esc(k) + '" data-path="' + esc(path) + '"><div class="r2"><input type="text" class="upT" placeholder="사진 제목 (예: 쇼트케이크 배합표)" aria-label="사진 제목"><input type="text" class="upM" placeholder="메모 (없어도 돼요)" aria-label="사진 메모"></div>' +
-      '<div class="addbar"><label class="btn pri" for="up_' + tag + '">📷 사진 올리기</label><input type="file" id="up_' + tag + '" class="upF" accept="image/*" multiple hidden><span class="fmsg"></span></div></div>';
+      '<div class="addbar"><label class="btn pri" for="up_' + tag + '">📷 사진 올리기</label><span class="hint">또는 사진을 이 칸으로 끌어다 놓기</span><input type="file" id="up_' + tag + '" class="upF" accept="image/*" multiple hidden><span class="fmsg"></span></div></div>';
   }
   var CATS = [["air", "✈️ 항공권"], ["vjw", "🛂 비짓재팬"], ["buy", "🛍 살 것"], ["rsv", "🎫 예약 확인"], ["etc", "📝 기타"]];
   var PRIVATE_CAT = { air: 1, vjw: 1, rsv: 1 };
@@ -2068,8 +2075,25 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
   var safe = function (s) { return String(s || "").replace(/\.[a-z0-9]+$/i, "").replace(/[^\w가-힣ぁ-んァ-ン一-龥-]+/g, "").slice(0, 24) || "photo"; };
   document.addEventListener("change", function (e) {
     var f = e.target; if (!f.classList || !f.classList.contains("upF")) return;
-    var box = f.closest("[data-up]"), msg = box.querySelector(".fmsg"), key = box.dataset.up, path = box.dataset.path;
     var files = [].slice.call(f.files || []); f.value = "";
+    upFiles(f.closest("[data-up]"), files);
+  });
+  /* 사진 칸 어디든 끌어다 놓기 (자료 모으기 칸은 따로 처리) */
+  function dropBox(e) { var b = e.target.closest && e.target.closest("[data-up]"); return b && b.querySelector(".upF") && !b.closest("#secFiles") ? b : null; }
+  var dropOn = null;
+  function dropMark(b) { if (dropOn && dropOn !== b) dropOn.classList.remove("dropon"); dropOn = b; if (b) b.classList.add("dropon"); }
+  ["dragenter", "dragover"].forEach(function (ev) { document.addEventListener(ev, function (e) { var b = dropBox(e); if (!b) { dropMark(null); return; } e.preventDefault(); if (e.dataTransfer) e.dataTransfer.dropEffect = "copy"; dropMark(b); }); });
+  document.addEventListener("dragleave", function (e) { if (!e.relatedTarget || !dropOn || !dropOn.contains(e.relatedTarget)) dropMark(null); });
+  document.addEventListener("drop", function (e) {
+    var b = dropBox(e); dropMark(null); if (!b) return; e.preventDefault();
+    var fs = [].slice.call((e.dataTransfer && e.dataTransfer.files) || []).filter(isImgFile);
+    var msg = b.querySelector(".fmsg");
+    if (!fs.length) { if (msg) { msg.textContent = "사진 파일만 놓아 주세요"; msg.className = "fmsg bad"; } return; }
+    if (!b.querySelector(".upF").multiple) fs = fs.slice(0, 1);
+    upFiles(b, fs);
+  });
+  function upFiles(box, files) {
+    var msg = box.querySelector(".fmsg"), key = box.dataset.up, path = box.dataset.path;
     if (!files.length) return;
     var title = box.querySelector(".upT").value.trim(), memo = box.querySelector(".upM").value.trim();
     var catEl = box.querySelector(".upCat"), shEl = box.querySelector(".upShare"), cat = catEl ? catEl.value : "", local = shEl && shEl.value === "local";
@@ -2097,7 +2121,7 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
       });
     });
     chain.then(function () { redrawFor(box); });
-  });
+  }
   function loadImgs(root) {
     root.querySelectorAll("img[data-fk],img[data-th]").forEach(function (im) {
       if (im.getAttribute("src")) return;
