@@ -3842,17 +3842,47 @@
           .replace(/(\d{1,3}(?:,\d{3})+원?|\d+(?:\.\d+)?만(?:원)?|\d+(?:\.\d+)?%)(?![^<]*<\/em>)/g, '<strong class="mtn">$1</strong>');
       }).join("");
     }
-    function mtLines(ls) {
+    /* 11/25 사장님 「보고서 내용이 눈에 더 들어오게 · 밑에 글 많은 거는 눈에 안 들어온다」
+       → 줄마다 앞머리(「 — 」 · 「:」 앞)는 굵게 · 날짜는 작은 딱지 · (제안)은 카드 맨 아래 초록 상자로 모음
+       · 줄이 많으면 앞 3줄만 보이고 나머지는 「▼ N줄 더 보기」(펼친 것은 다시 그려도 그대로 · __CS_MTOPEN) */
+    function mtLead(h) {
+      h = h.replace(/^((?:<[^>]+>)*)(\d{1,2}\/\d{1,2}(?:\s*[~·\-]\s*\d{1,2}(?:\/\d{1,2})?)?(?:\([월화수목금토일]\))?)(\s)/, '$1<em class="mtdt">$2</em>$3');
+      var m = h.match(/^(.{2,60}?)(\s[—–]\s|:\s)/);
+      if (m && !/<(?!\/?(em|mark|b|strong)\b)/.test(m[1]) && (m[1].match(/<[a-z]/g) || []).length === (m[1].match(/<\//g) || []).length && m[1].replace(/<[^>]+>/g, "").length <= 34)
+        h = '<b class="mtld">' + m[1] + "</b>" + m[2] + h.slice(m[0].length);
+      return h;
+    }
+    function mtLines(ls, key) {
       var raw = ls.map(function (l) { return l.replace(/^\s*[·•\-–]\s+/, ""); });
-      var hs = markHtml(raw);
-      return hs.map(function (h, i) {
+      var hs = markHtml(raw), body = [], sug = [];
+      hs.forEach(function (h, i) {
         var r = raw[i];
-        if (/^\(제안\)/.test(r)) return '<i class="rpl mtsug"><em class="mtsugt">제안</em>' + mtNumHtml(h.replace(/^\(제안\)\s*/, "")) + "</i>";
+        var rest = r.replace(/^\(제안\)\s*/, "");
+        if (/^\(제안\)/.test(r) && rest.length <= 25 && raw[i + 1] && !/^\(제안\)/.test(raw[i + 1])) { body.push('<i class="rpl mtsub mtsubg"><em class="mtsugt">제안</em><em class="mtsubt">' + esc(rest) + "</em></i>"); return; }   /* 「(제안) 일지에서 보이는 것」처럼 아래 줄의 제목이면 그 자리에 */
+        if (/^\(제안\)/.test(r)) { sug.push('<i class="rpl mtsug"><em class="mtsugt">제안</em>' + mtNumHtml(h.replace(/^\(제안\)\s*/, "")) + "</i>"); return; }
         var m = r.match(/^【([^】]+)】\s*(.*)$/);
-        if (m) return '<i class="rpl mtsub"><em class="mtsubt">' + esc(m[1]) + "</em>" + (m[2] ? " " + mtNumHtml(esc(m[2])) : "") + "</i>";
-        if (/^※/.test(r)) return '<i class="rpl mtnote">' + mtNumHtml(h) + "</i>";
-        return '<i class="rpl">' + mtNumHtml(h) + "</i>";
-      }).join("");
+        if (m) { body.push('<i class="rpl mtsub"><em class="mtsubt">' + esc(m[1]) + "</em>" + (m[2] ? " " + mtNumHtml(esc(m[2])) : "") + "</i>"); return; }
+        if (/^※/.test(r)) { body.push('<i class="rpl mtnote">' + mtNumHtml(h) + "</i>"); return; }
+        body.push('<i class="rpl">' + mtLead(mtNumHtml(h)) + "</i>");
+      });
+      var SHOW = 3, out;
+      if (body.length > SHOW + 1) {
+        var op = (window.__CS_MTOPEN || {})[key];
+        out = body.slice(0, SHOW).join("") + '<details class="mtmore" data-key="' + esc(key || "") + '"' + (op ? " open" : "") + '><summary><span class="mtmo">▼ 나머지 ' + (body.length - SHOW) +
+              '줄 더 보기</span><span class="mtmc">▲ 접기</span></summary>' + body.slice(SHOW).join("") + "</details>";
+      } else out = body.join("");
+      if (sug.length) out += '<div class="mtsugs">' + sug.join("") + "</div>";
+      return out;
+    }
+    if (!window.__CS_MTOPEN) {
+      window.__CS_MTOPEN = {};
+      document.addEventListener("toggle", function (e) { var d = e.target; if (d && d.classList && d.classList.contains("mtmore")) window.__CS_MTOPEN[d.dataset.key] = d.open; }, true);
+      document.addEventListener("click", function (e) {
+        var b = e.target.closest && e.target.closest(".mtallbtn"); if (!b) return;
+        var box = b.closest(".rppane") || document, ds = box.querySelectorAll("details.mtmore"), open = b.dataset.open !== "1";
+        ds.forEach(function (d) { d.open = open; window.__CS_MTOPEN[d.dataset.key] = open; });
+        b.dataset.open = open ? "1" : ""; b.textContent = open ? "▲ 모두 접기" : "▼ 모두 펼치기";
+      });
     }
     function mtKpi() {
       function v(k) { var el = document.querySelector('.cin[data-k="' + k + '"]') || form.querySelector('[data-k="' + k + '"]'); return el ? String(el.value || "").trim() : ""; }
@@ -3883,7 +3913,7 @@
                  (whoEl && whoEl.value ? " · " + esc(whoEl.value) : "") +
                  esc(rankEl && rankEl.value.trim() ? " · " + rankEl.value.trim() : "") +
                  '</div>';
-      if (formId === "mtForm") html += mtKpi();
+      if (formId === "mtForm") html += mtKpi() + '<div class="mtallrow"><span>📝 회의 내용 — 줄이 많은 칸은 앞 3줄만 보여요</span><button type="button" class="mtallbtn">▼ 모두 펼치기</button></div>';
       var rank = rankEl && rankEl.value.trim() ? " · " + rankEl.value.trim() : "";
       var text = ["[" + title + "] " + head +
                   (whoEl && whoEl.value ? " · " + whoEl.value : "") + rank];
@@ -3996,8 +4026,10 @@
           if (!v) return;
           var name = row.querySelector(".flab span").textContent;
           var ls = splitLines(v), hs = markHtml(ls);
+          if (formId === "mtForm") items += '<div class="rpitem mtcard"><b>' + esc(name) + '<small class="mtcnt">' + ls.length + "줄</small></b><span>" + mtLines(ls, (el.dataset.k || name)) + "</span></div>";
+          else
           items += '<div class="rpitem"><b>' + esc(name) + "</b><span>" +
-                   (formId === "mtForm" ? mtLines(ls) : ls.length > 1 ? hs.map(function (l) { return '<i class="rpl">' + l + "</i>"; }).join("") : hs[0]) +
+                   (ls.length > 1 ? hs.map(function (l) { return '<i class="rpl">' + l + "</i>"; }).join("") : hs[0]) +
                    "</span></div>";
           lines.push("· " + name + ": " + oneLine(markPlain(v)));
         });
@@ -4005,7 +4037,12 @@
         any = true;
         var ttl = sec.querySelector(".fsh").textContent;
         secN++;
-        html += '<div class="rpsec"><h4>' + (formId === "mtForm" ? '<em class="mtno">' + secN + "</em>" : "") + esc(ttl) + "</h4>" + items + "</div>";
+        var tone = "", ico = "";
+        if (formId === "mtForm") {
+          var TN = [[/매출/, "money", "💰"], [/유입/, "flow", "🔍"], [/컴플레인/, "warn", "⚠️"], [/응대/, "care", "🙋"], [/시스템/, "sys", "⚙️"], [/맛/, "taste", "🍓"], [/잘한/, "good", "👍"], [/개선/, "fix", "🛠"], [/목표/, "goal", "🎯"], [/준비/, "prep", "📦"]];
+          TN.some(function (t) { if (t[0].test(ttl)) { tone = " mt-" + t[1]; ico = /^\W/.test(ttl.trim()) && !/^[가-힣]/.test(ttl.trim()) ? "" : t[2] + " "; return true; } });
+        }
+        html += '<div class="rpsec' + tone + '"><h4>' + (formId === "mtForm" ? '<em class="mtno">' + secN + "</em>" : "") + esc(ico + ttl) + "</h4>" + items + "</div>";
         text.push("");
         text.push("[" + ttl + "]");
         text.push(lines.join(NL));
