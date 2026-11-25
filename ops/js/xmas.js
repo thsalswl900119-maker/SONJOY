@@ -325,7 +325,7 @@
     "조각|말딸": "남은 기록 없음"
   }, 2024: { "미니": "80개 중 15개 남음", "조각|피딸": "피딸 조각 7개 남음" } };
   var PKNOTE = { 2025: ["🧁 미니 118개 → 12개 남음 · 25일 현장 미니는 26 → 14개쯤", "🍰 딸기 생크림 조각 56조각 남음 (약 14판) · 초딸 3 · 샤요 1조각", "🍓 딸기 12/22~24 268통 받고 21통 + 2바구니 남음", "🥛 생크림 296통 받았는데 24일 14통 급하게 더 주문 (모자람)", "🍞 시트 기본 26 · 초코 5 · 말차 2장 남음 → 1월까지 씀", "📞 23 · 24일 당일 홀케이크 찾는 전화 많음 → 올해 현장 홀 단계 생산"], 2024: ["딸기 큰 통 3개 버림 · 미니 15개 남음 · 피딸 조각 7개 남음"] };
-  function pkLeft(x, y) { var L = PKLEFT[y] || {}; return x.k === "미니" ? L["미니"] : L[(x.k === "조각" ? "조각" : "홀") + "|" + gKey(x)] || ""; }
+  function pkLeft(x, y) { var L = PKLEFT[y] || {}; if (x.k === "중간") return "";   /* 반짝(중간)은 작년 「홀 다 팔림」 메모와 다른 품목 (11/25) */ return x.k === "미니" ? L["미니"] : L[(x.k === "조각" ? "조각" : "홀") + "|" + gKey(x)] || ""; }
   function pkRule(R0) {   // 🎯 사장님 원칙 (pk.rule · 빨간 규칙 상자)
     if (!R0 || !R0.it || !R0.it.length) return "";
     return '<div class="tnotice pkrule"><div class="tnhead">' + esc(R0.t || "") + '</div><ul>' + R0.it.map(function (r) { return "<li><b>" + esc(r[0]) + "</b><span>" + esc(r[1] || "") + "</span></li>"; }).join("") + "</ul></div>";
@@ -354,15 +354,33 @@
     var NEED = pkNeed(y, D), need = [0, 1, 2].map(function (i) { return r1(D.reduce(function (t, d) { return t + (NEED[d] ? NEED[d][i] : 0); }, 0)); });
     function nchk(i, have) { var gap = Math.ceil(need[i] - 1e-9) - have; return ' <small class="pks2nd' + (gap > 0 ? " short" : "") + '">지금 예상으로 필요 ' + need[i] + (gap > 0 ? " → " + gap + " 모자람" : " ✔") + "</small>"; }
     function nm(x) { return String(x.n || "").replace(/\s*\(([^)]{5,})\)?.*$/, ""); }
+    /* 11/25 사장님 「목표에 작년 실제 팔았던 것도 · 얼마나 남았고 · 커서 가져다 대면 메모장처럼」 — 작년 같은 날짜(12/21~26) 실제 작업량 · 남은 것 · 주석 */
+    var ly = y - 1, seenL = {};
+    function lyInfo(x) {
+      var LV = D.map(function (d) { var r = yRef(x, d, ly); return r && r.v != null && r.v !== "" && !isNaN(+r.v) ? +r.v : null; }), sig = LV.join(","), dup = /\d/.test(sig) && seenL[sig]; if (!dup) seenL[sig] = 1;
+      var s = 0, n = 0, per = []; LV.forEach(function (v, i) { if (v != null) { s += v; n++; per.push(mdw(ly + D[i].slice(4)) + " " + r1(v)); } });
+      var so = 0, son = 0, cm = []; D.forEach(function (d) { var q = soldRef(x, d, ly), r = yRef(x, d, ly); if (q && q.v != null && !isNaN(+q.v)) { so += +q.v; son++; } if (r && r.cm.length) cm.push(md(d) + " · " + r.cm.join(" / ")); if (q && q.cm.length) cm.push(md(d) + " 매장 · " + q.cm.join(" / ")); });
+      var lf = pkLeft(x, ly), lf2 = pkLeft(x, ly - 1), u = x.k === "조각" ? "판" : "개", m = lf.match(/(\d+)\s*(개|조각)\s*남/), left = /다 팔림/.test(lf) ? "다 팔림" : m ? m[1] + m[2] + " 남음" : "";
+      var yy = String(ly).slice(2) + "년", short = dup ? yy + " 위 줄과 같이 셈" : n ? yy + " " + r1(s) + u + (left ? " · " + left : "") : (left ? yy + " " + left : "");
+      var tip = ["📒 " + yy + " 같은 날짜 (" + md(D[0]) + "~" + md(D[D.length - 1]) + ")"];
+      if (dup) tip.push("작년엔 위 줄과 한 줄로 셈");
+      else if (n) { tip.push("실제 만든 것 " + r1(s) + u); tip.push("· " + per.join(" · ")); } else tip.push("작년 같은 날 작업 기록 없음");
+      if (son) tip.push("매장에서 판 것 " + r1(so) + (x.k === "조각" ? "조각" : "개"));
+      if (lf) tip.push("", "📦 남은 것 · 특이사항", lf);
+      if (lf2) tip.push("", String(ly - 1).slice(2) + "년 · " + lf2);
+      if (cm.length) tip.push("", "💬 작년 칸 메모", cm.join("\n"));
+      return { short: short, tip: tip.join("\n"), t: short };
+    }
+    function gth(x) { var L = lyInfo(x); return '<th class="pkcm" tabindex="0" data-tip="' + ea2(L.tip) + '">' + esc(nm(x)) + (L.short ? '<small class="pkly">' + esc(L.short) + "</small>" : "") + "</th>"; }
     var tH = hole.reduce(function (t, x) { return t + sum(x._id); }, 0), tM = mini.reduce(function (t, x) { return t + sum(x._id); }, 0), tS = sl.reduce(function (t, x) { return t + sum(x._id); }, 0);
-    var h = '<div class="pksum2"><div class="pks2h"><b>📋 예상 주문 계산 요약</b><span>' + md(D[0]) + " ~ " + md(D[D.length - 1]) + ' 기준 (시트는 12/1~26)</span><button type="button" class="skbtn" data-a="pkcopy">📋 글 복사</button></div>';
+    var h = '<div class="pksum2"><div class="pks2h"><b>📋 예상 주문 계산 요약</b><span class="pks2per"><b>' + mdw(D[0]) + " ~ " + mdw(D[D.length - 1]) + ' 주문 양</b> (시트는 12/1~26 · 목표 칸에 마우스를 올리면 작년 메모)</span><button type="button" class="skbtn" data-a="pkcopy">📋 글 복사</button></div>';
     h += '<div class="pks2g"><div class="pks2c"><h5>🎯 목표</h5><table><tbody>' +
-      hole.map(function (x) { return "<tr><th>" + esc(nm(x)) + "</th><td>" + gin(x) + "개" + (x._id === "g0" && wsT ? '<small>예약 ' + r1(sum(x._id) - wsT) + " + 현장 " + wsT + "</small>" : "") + "</td></tr>"; }).join("") +
-      mini.map(function (x) { return "<tr><th>" + esc(nm(x)) + "</th><td>" + gin(x) + "개</td></tr>"; }).join("") +
+      hole.map(function (x) { return "<tr>" + gth(x) + "<td>" + gin(x) + "개" + (x._id === "g0" && wsT ? '<small>예약 ' + r1(sum(x._id) - wsT) + " + 현장 " + wsT + "</small>" : "") + "</td></tr>"; }).join("") +
+      mini.map(function (x) { return "<tr>" + gth(x) + "<td>" + gin(x) + "개</td></tr>"; }).join("") +
       '<tr class="t"><th>케이크 합</th><td><b>' + r1(tH + tM) + "</b>개</td></tr>" +
-      sl.map(function (x) { return "<tr><th>" + esc(nm(x)) + "</th><td>" + gin(x) + "판</td></tr>"; }).join("") +
+      sl.map(function (x) { return "<tr>" + gth(x) + "<td>" + gin(x) + "판</td></tr>"; }).join("") +
       '<tr class="t"><th>조각 합</th><td><b>' + r1(tS) + "</b>판</td></tr></tbody></table>" + (wsTxt ? '<p class="pks2n">현장 홀 ' + wsTxt + " — 아침에 일부만 만들고 팔리는 것 보고 더 · 남으면 조각</p>" : "") + "</div>";
-    var txt = ["[🎄 크리스마스 예상 주문 계산 요약 · " + md(D[0]) + "~" + md(D[D.length - 1]) + "]", "", "■ 목표"].concat(hole.concat(mini).map(function (x) { return "· " + nm(x) + " " + sum(x._id) + "개" + (x._id === "g0" && wsT ? " (예약 " + r1(sum(x._id) - wsT) + " + 현장 " + wsT + ")" : ""); }), ["· 케이크 합 " + r1(tH + tM) + "개"], sl.map(function (x) { return "· " + nm(x) + " " + sum(x._id) + "판"; }), ["· 조각 합 " + r1(tS) + "판"]);
+    seenL = {}; var txt = ["[🎄 크리스마스 예상 주문 계산 요약 · " + mdw(D[0]) + " ~ " + mdw(D[D.length - 1]) + " 주문 양]", "", "■ 목표"].concat(hole.concat(mini).map(function (x) { return "· " + nm(x) + " " + sum(x._id) + "개" + (x._id === "g0" && wsT ? " (예약 " + r1(sum(x._id) - wsT) + " + 현장 " + wsT + ")" : "") + (function (L) { return L.short ? " — " + L.short : ""; })(lyInfo(x)); }), ["· 케이크 합 " + r1(tH + tM) + "개"], sl.map(function (x) { return "· " + nm(x) + " " + sum(x._id) + "판" + (function (L) { return L.short ? " — " + L.short : ""; })(lyInfo(x)); }), ["· 조각 합 " + r1(tS) + "판"]);
     if (od) {
       var S = od.sheet, Cr = od.cream, St = od.straw, Wh = od.whip, Mo = od.money || {};
       h += '<div class="pks2c"><h5>🍞 시트 (12/1~26)</h5><table><thead><tr><th>받는 날</th><th>기본</th><th>초코</th><th>말차</th></tr></thead><tbody>' + S.d.map(function (d, i) { return "<tr><th>" + d + "<small>" + S.r[i] + "</small></th><td>" + oin("sheet|b|" + i, S.b[i]) + "</td><td>" + oin("sheet|c|" + i, S.c[i]) + "</td><td>" + oin("sheet|m|" + i, S.m[i]) + "</td></tr>"; }).join("") +
@@ -1537,7 +1555,7 @@
   }
   (function () {   // 막대 위에 손가락 · 마우스 → 숫자 말풍선
     var tip = document.createElement("div"); tip.className = "xgtip"; tip.hidden = true; document.body.appendChild(tip);
-    function show(e) { var t = e.target.closest && e.target.closest("#xmasSec [data-tip]"); if (!t) { tip.hidden = true; return; } tip.textContent = t.dataset.tip; tip.hidden = false; var r = t.getBoundingClientRect(), w = tip.offsetWidth; tip.style.left = Math.max(8, Math.min(window.innerWidth - w - 8, r.left + r.width / 2 - w / 2)) + "px"; tip.style.top = Math.max(8, r.top - tip.offsetHeight - 8) + "px"; }
+    function show(e) { var t = e.target.closest && e.target.closest("#xmasSec [data-tip]"); if (!t || t.closest("#xmPeak")) { tip.hidden = true; return; }   /* 피크 표는 pktip(메모장 말풍선)만 — 두 개 겹쳐 뜨던 것 (11/25) */ tip.textContent = t.dataset.tip; tip.hidden = false; var r = t.getBoundingClientRect(), w = tip.offsetWidth; tip.style.left = Math.max(8, Math.min(window.innerWidth - w - 8, r.left + r.width / 2 - w / 2)) + "px"; tip.style.top = Math.max(8, r.top - tip.offsetHeight - 8) + "px"; }
     document.addEventListener("mouseover", show); document.addEventListener("focusin", show); document.addEventListener("click", show);
     window.addEventListener("scroll", function () { tip.hidden = true; }, { passive: true });
   })();
