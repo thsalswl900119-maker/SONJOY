@@ -444,6 +444,8 @@ select.cur{padding:9px 6px}
 .cleg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:0}
 .cwon,.cleft{font-size:15px}.cwon b,.cleft b{color:var(--wood)}
 .cdays{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.ctabs{margin:4px 0 10px}
+.cdays.one{grid-template-columns:minmax(0,1fr)!important}
 @media (max-width:900px){.cdays{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:640px){.cdays{grid-template-columns:minmax(0,1fr)}}
 .cday{background:#fff;border:1.5px solid var(--wood);border-radius:14px 18px 12px 20px;padding:12px;display:grid;gap:8px;align-content:start;min-width:0}
@@ -467,6 +469,7 @@ select.cur{padding:9px 6px}
 .fdrop{display:grid;gap:4px;place-items:center;text-align:center;border:2.5px dashed var(--wood);border-radius:16px;padding:22px 14px;background:var(--goldbg);cursor:pointer}
 .fdrop b{font-size:17px}.fdrop span{font-size:14px;color:var(--ink2)}
 .fdrop.on{background:var(--greenbg);border-color:var(--green)}
+.dropon{outline:3px dashed var(--green);outline-offset:3px;background:var(--greenbg)!important;border-radius:12px}
 .fchips{display:flex;flex-wrap:wrap;gap:6px}
 .fchip{font:inherit;font-size:14.5px;font-weight:700;border:1.5px solid var(--wood);background:var(--card);color:var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer}
 .fchip small{font-weight:800;color:var(--mute)}
@@ -603,6 +606,56 @@ input[type=checkbox]{accent-color:var(--green)}
 details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
 .savepill.ok{background:var(--green)}
 .savepill.bad{background:var(--red)}
+.trow.plan>.more .pmv{display:inline-flex;gap:4px;align-items:center;flex-wrap:wrap}
+.pmv select{font-size:15px;min-height:34px;border-radius:8px;border:1px solid var(--line,#d8cbb6);background:#fff;padding:0 6px}
+.pmv .btn[disabled]{opacity:.35}
+.pgone{margin-top:10px;background:var(--raise);border-radius:10px;padding:8px 10px}
+.pgone summary{cursor:pointer;font-weight:700}
+.pgone ul{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:6px}
+.pgone li{display:flex;gap:8px;align-items:center;justify-content:space-between;background:#fff;border-radius:8px;padding:6px 8px;font-size:15px}
+.pgone small{display:block;color:var(--mute);font-size:13px}
+/* ④ 일정 보드 · 표 (워크샵 일정과 같은 모양) */
+.pvbar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin:4px 0 12px}
+.pvs{display:inline-flex;border:1.5px solid #4A3B2C;border-radius:999px;overflow:hidden}
+.pv{font:inherit;font-size:15px;font-weight:700;padding:8px 16px;border:0;background:#FFFDF9;color:#4A3B2C;cursor:pointer;min-height:40px}
+.pv[aria-pressed="true"]{background:#4A3B2C;color:#FFF8EA}
+.pvr{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pbcols{display:grid;grid-template-columns:repeat(6,minmax(270px,1fr));gap:14px;align-items:start;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x proximity}
+.pbcol{background:#FFFDF9;border:1px solid #DCCDB5;border-radius:16px;padding:0 0 10px;box-shadow:0 2px 0 rgba(74,59,44,.06);overflow:hidden;scroll-snap-align:start}
+.pbcol.today{border:2.5px solid #C2412D;box-shadow:0 0 0 4px rgba(194,65,45,.12)}
+.pbh{padding:12px 14px 10px;background:#4A3B2C;color:#FFF8EA}
+.pbcol.past .pbh{background:#6E5E4C}
+.pbh1{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}.pbh1 b{font-size:22px}.pbh1 span{font-size:16px;color:#F2D9A8;font-weight:700}
+.pbtoday{font-style:normal;background:#C2412D;color:#fff;border-radius:999px;padding:1px 9px;font-size:13px}
+.pbq{margin-top:5px;font-size:14px;line-height:1.45;color:#FFF3DE}
+.pbq i{font-style:normal;font-weight:700;background:#E0A458;color:#3A2E22;border-radius:6px;padding:0 6px;margin-right:6px;font-size:13px}
+.pbn{margin-top:6px;font-size:13.5px;color:#EADBC4}.pbn b{color:#FFD0C6}
+.pblist{list-style:none;margin:0;padding:10px 10px 0;display:flex;flex-direction:column;gap:7px}
+.pbc{--k:#8F5A22;display:grid;grid-template-columns:62px 1fr;gap:8px;width:100%;text-align:left;font:inherit;color:#2E2419;background:#fff;border:1px solid #E6D9C4;border-left:5px solid var(--k);border-radius:11px;padding:9px 10px 9px 8px;cursor:pointer}
+.pbc:hover{background:#FFF8EA}
+.pbc.k-move{--k:#456270}.pbc.k-food{--k:#9A4D35}.pbc.k-cafe{--k:#8F5A22}.pbc.k-stay{--k:#56703F}.pbc.k-shop{--k:#8A4B7A}.pbc.k-class{--k:#3D5A9E}.pbc.k-art{--k:#7E6100}.pbc.k-etc{--k:#736350}
+.pbc.now{border:2.5px solid #C2412D;border-left:6px solid #C2412D}.pbc.done{opacity:.6}
+.pbtm{font-weight:700;font-size:14.5px;color:#8F5A22;line-height:1.35;overflow-wrap:anywhere}
+.pbbody{display:flex;flex-direction:column;gap:3px;min-width:0}
+.pbpl{font-size:16px;font-weight:700;line-height:1.4;word-break:keep-all;overflow-wrap:anywhere}.pbpl i{font-style:normal;margin-right:5px}
+.pbmo{font-size:14px;line-height:1.5;color:#4F4233;word-break:keep-all;overflow-wrap:anywhere}
+.pbnow{font-style:normal;align-self:flex-start;background:#C2412D;color:#fff;border-radius:999px;padding:1px 8px;font-size:12.5px;font-weight:700}
+.pbempty{padding:14px;color:var(--ink2)}
+.ptgrid{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.3fr);gap:16px;align-items:start;margin-top:12px}
+@media (max-width:860px){.ptgrid{grid-template-columns:minmax(0,1fr)}}
+.pttl{background:#FFFDF9;border:1px solid #DCCDB5;border-radius:14px;overflow:hidden}
+.ptth{background:#EFE6D6;padding:10px 14px;display:grid}.ptth b{font-size:17px}.ptth small{color:var(--ink2)}
+.pttl ol{list-style:none;margin:0;padding:4px 14px 10px;max-height:640px;overflow:auto}
+.pttl li{display:grid;grid-template-columns:60px 1fr;gap:8px;padding:9px 0;border-bottom:1px dotted #D3C2A6}
+.pttl li.now{background:#FCE4DF;border-radius:8px}
+.pttl .tm,.ptab .tm{font-weight:700;color:#8F5A22;white-space:nowrap}
+.pttl li b{display:block;font-size:16px}.pttl li small{display:block;color:#7A5A3C;font-size:14px;line-height:1.5}
+.ptab{background:#FFFDF9;border:1px solid #DCCDB5;border-radius:14px;overflow:auto}
+.ptab table{width:100%;border-collapse:collapse;font-size:15px}
+.ptab th{text-align:left;padding:10px 12px;border-bottom:1.5px dashed #D3C2A6;color:#5B4630}
+.ptab td{padding:11px 12px;border-bottom:1px solid #EFE6D6;vertical-align:top;line-height:1.5;word-break:keep-all;overflow-wrap:anywhere}
+.ptab tr.phit td{background:#FFE9A8;transition:background 2s}
+.ptab .pd{display:block;color:var(--ink2);font-size:13.5px;margin-top:3px}
 </style>
 </head>
 <body>
@@ -624,7 +677,7 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
   <span class="hint">이 휴대폰 · 컴퓨터에 기억돼요. 벤치마킹 평가와 소감은 이 이름의 내 칸에만 저장돼요.</span>
 </section>
 
-<div class="topbar"><span class="ver">버전 <b id="verTag">v1125-5</b> · 적으면 자동 저장 · 지운 줄도 서버에 남아요</span><span class="last" id="lastSave">아직 저장 전</span><button type="button" class="btn pri" id="saveNow">💾 지금 저장 + 백업</button></div>
+<div class="topbar"><span class="ver">버전 <b id="verTag">v1125-11</b> · 적으면 자동 저장 · 지운 줄도 서버에 남아요</span><span class="last" id="lastSave">아직 저장 전</span><button type="button" class="btn pri" id="saveNow">💾 지금 저장 + 백업</button></div>
 <nav class="bigtabs" role="tablist" aria-label="큰 탭">
   <a class="bt" role="tab" href="#tab-pre" data-tab="pre">📗 예습 노트</a>
   <a class="bt" role="tab" href="#tab-note" data-tab="note">✍️ 연수 노트</a>
@@ -985,7 +1038,7 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
   </section>
 
   <section class="sec ppane" id="s5" data-pp="day">
-    <div class="sech"><span class="num">④</span><h2>날짜별 일정</h2><small>1일차 11/30 ~ 6일차 12/5 · 줄마다 📍 지도 · 🚶 길찾기</small></div>
+    <div class="sech"><span class="num">④</span><h2>날짜별 일정</h2><small>1일차 11/30 ~ 6일차 12/5 · 장소는 구글 지도 저장 목록으로 봐요</small></div>
     <div id="secPlan"></div>
   </section>
 
@@ -998,85 +1051,9 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
     <div class="sech"><span class="num">⑥</span><h2>📁 자료 모으기 · 항공권 · 예약</h2><small>✈️ 항공권 · 🛂 비짓재팬 QR · 🎫 예약 확인 · 🛍 살 것 · 📝 기타 · 캡처 사진으로 올려요</small></div>
     <div id="secFiles"></div>
     <div class="card">
-      <b>🗺 내 구글 지도 저장 목록 · 「26년 핫토리 제과연수」 72곳</b>
+      <b>🗺 내 구글 지도 저장 목록 · 「26년 핫토리 제과연수」</b>
       <span class="hint">구글 지도 앱에 저장한 목록이에요 · 앱에서 열면 지도 위에 한 번에 보여요</span>
       <div class="addbar"><a class="btn pri" href="https://maps.app.goo.gl/dv9QNdypMGAmfNXG8" target="_blank" rel="noopener">🗺 구글 지도에서 목록 열기 ↗</a></div>
-      <details class="gmlist"><summary>장소 이름 · 지도 버튼 펼쳐 보기</summary>
-      <ul class="shops">
-        <li><b>소우소우 교토 아오야마점</b> <span class="maps" data-map="소우소우 교토 아오야마점"></span></li>
-        <li><b>Totopa Sauna</b> <span class="maps" data-map="Totopa Sauna"></span></li>
-        <li><b>포켓몬센터 시부야</b> <span class="maps" data-map="포켓몬센터 시부야"></span></li>
-        <li><b>다이소 하라주쿠</b> <span class="maps" data-map="다이소 하라주쿠"></span></li>
-        <li><b>Seijo Ishii Shinjuku Lumine 1 Store</b> <span class="maps" data-map="Seijo Ishii Shinjuku Lumine 1 Store"></span></li>
-        <li><b>신주쿠 다카시마야</b> <span class="maps" data-map="신주쿠 다카시마야"></span></li>
-        <li><b>My Basket Yoyogi 1-chome Shop</b> <span class="maps" data-map="My Basket Yoyogi 1-chome Shop"></span></li>
-        <li><b>On Store Tokyo Cat Street</b> <span class="maps" data-map="On Store Tokyo Cat Street"></span></li>
-        <li><b>HOKA Harajuku Store</b> <span class="maps" data-map="HOKA Harajuku Store"></span></li>
-        <li><b>HOKA Shibuya</b> <span class="maps" data-map="HOKA Shibuya"></span></li>
-        <li><b>이세탄 신주쿠</b> <span class="maps" data-map="이세탄 신주쿠"></span></li>
-        <li><b>돈카츠 야마베</b> <span class="maps" data-map="돈카츠 야마베"></span></li>
-        <li><b>멘 치라시</b> <span class="maps" data-map="멘 치라시"></span></li>
-        <li><b>Musashino Abura Gakkai Yoyogi branch</b> <span class="maps" data-map="Musashino Abura Gakkai Yoyogi branch"></span></li>
-        <li><b>Yamato Transport Co., Ltd. Yoyogi 2-Chome Center</b> <span class="maps" data-map="Yamato Transport Co., Ltd. Yoyogi 2-Chome Center"></span></li>
-        <li><b>Sawamura Bakery &amp; Restaurant</b> <span class="maps" data-map="Sawamura Bakery &amp; Restaurant"></span></li>
-        <li><b>키디랜드 하라주쿠점</b> <span class="maps" data-map="키디랜드 하라주쿠점"></span></li>
-        <li><b>라포레 하라주쿠</b> <span class="maps" data-map="라포레 하라주쿠"></span></li>
-        <li><b>i2</b> <span class="maps" data-map="i2 東京"></span></li>
-        <li><b>PREMIER MAI</b> <span class="maps" data-map="PREMIER MAI"></span></li>
-        <li><b>에스키스</b> <span class="maps" data-map="에스키스"></span></li>
-        <li><b>Ciest</b> <span class="maps" data-map="Ciest"></span></li>
-        <li><b>La gueule de bois</b> <span class="maps" data-map="La gueule de bois"></span></li>
-        <li><b>AKOMEYA TOKYO NEWoMan SHINJUKU</b> <span class="maps" data-map="AKOMEYA TOKYO NEWoMan SHINJUKU"></span></li>
-        <li><b>AU GAMIN DE TOKIO</b> <span class="maps" data-map="AU GAMIN DE TOKIO"></span></li>
-        <li><b>고쿄 히가시 교엔</b> <span class="maps" data-map="고쿄 히가시 교엔"></span></li>
-        <li><b>Au Bon Vieux Temps</b> <span class="maps" data-map="Au Bon Vieux Temps"></span></li>
-        <li><b>아코메야 식당 도큐 프라자 시부야</b> <span class="maps" data-map="아코메야 식당 도큐 프라자 시부야"></span></li>
-        <li><b>Gourmet Yakimusubi Onimaru Nishi-Shinjuku</b> <span class="maps" data-map="Gourmet Yakimusubi Onimaru Nishi-Shinjuku"></span></li>
-        <li><b>Gajoen Tokyo</b> <span class="maps" data-map="Gajoen Tokyo"></span></li>
-        <li><b>아메리칸</b> <span class="maps" data-map="아메리칸 도쿄"></span></li>
-        <li><b>Tarui Bakery</b> <span class="maps" data-map="Tarui Bakery"></span></li>
-        <li><b>모어댄 베이커리</b> <span class="maps" data-map="모어댄 베이커리"></span></li>
-        <li><b>Shiomi Bakery</b> <span class="maps" data-map="Shiomi Bakery"></span></li>
-        <li><b>코메라쿠</b> <span class="maps" data-map="코메라쿠"></span></li>
-        <li><b>Fukinuki</b> <span class="maps" data-map="Fukinuki"></span></li>
-        <li><b>도쿄도 미술관</b> <span class="maps" data-map="도쿄도 미술관"></span></li>
-        <li><b>타츠키치 신주쿠본점</b> <span class="maps" data-map="타츠키치 신주쿠본점"></span></li>
-        <li><b>move</b> <span class="maps" data-map="move 東京"></span></li>
-        <li><b>H°M&#x27;S WatchStore Omotesando</b> <span class="maps" data-map="H°M&#x27;S WatchStore Omotesando"></span></li>
-        <li><b>PORTER EXCHANGE SHIBUYA</b> <span class="maps" data-map="PORTER EXCHANGE SHIBUYA"></span></li>
-        <li><b>PORTER STAND Shinjuku</b> <span class="maps" data-map="PORTER STAND Shinjuku"></span></li>
-        <li><b>치이카와 파크</b> <span class="maps" data-map="치이카와 파크"></span></li>
-        <li><b>Magical Chiikawa</b> <span class="maps" data-map="Magical Chiikawa"></span></li>
-        <li><b>Chiikawa Land shinjuku</b> <span class="maps" data-map="Chiikawa Land shinjuku"></span></li>
-        <li><b>DAISO</b> <span class="maps" data-map="DAISO 東京"></span></li>
-        <li><b>스탠다드프로덕트</b> <span class="maps" data-map="스탠다드프로덕트"></span></li>
-        <li><b>모모파라다이스 시부야센터가이점</b> <span class="maps" data-map="모모파라다이스 시부야센터가이점"></span></li>
-        <li><b>파르코 시부야</b> <span class="maps" data-map="파르코 시부야"></span></li>
-        <li><b>베주 아랑 뒤카스 도쿄</b> <span class="maps" data-map="베주 아랑 뒤카스 도쿄"></span></li>
-        <li><b>모닥불가 hanare</b> <span class="maps" data-map="모닥불가 hanare"></span></li>
-        <li><b>호보 신주쿠 노렌가이</b> <span class="maps" data-map="호보 신주쿠 노렌가이"></span></li>
-        <li><b>아임 도넛? 글루텐 프리 시부야 아오야마</b> <span class="maps" data-map="아임 도넛? 글루텐 프리 시부야 아오야마"></span></li>
-        <li><b>마루망 스토어</b> <span class="maps" data-map="마루망 스토어"></span></li>
-        <li><b>Kinokuniya Takashimaya Shinjuku</b> <span class="maps" data-map="Kinokuniya Takashimaya Shinjuku"></span></li>
-        <li><b>29 Terrace</b> <span class="maps" data-map="29 Terrace"></span></li>
-        <li><b>미쓰비시1호관미술관</b> <span class="maps" data-map="미쓰비시1호관미술관"></span></li>
-        <li><b>도미닉・부셰 도쿄</b> <span class="maps" data-map="도미닉・부셰 도쿄"></span></li>
-        <li><b>L&#x27;eau</b> <span class="maps" data-map="L&#x27;eau 東京"></span></li>
-        <li><b>도쿄 규쿄도 긴자 본점</b> <span class="maps" data-map="도쿄 규쿄도 긴자 본점"></span></li>
-        <li><b>사푸</b> <span class="maps" data-map="사푸 도쿄"></span></li>
-        <li><b>스카이 라운지 스텔라 가든</b> <span class="maps" data-map="스카이 라운지 스텔라 가든"></span></li>
-        <li><b>Shigetsu</b> <span class="maps" data-map="Shigetsu"></span></li>
-        <li><b>아코메야 도쿄 도큐플라자 시부야</b> <span class="maps" data-map="아코메야 도쿄 도큐플라자 시부야"></span></li>
-        <li><b>아코메야 도쿄 인 라 카구</b> <span class="maps" data-map="아코메야 도쿄 인 라 카구"></span></li>
-        <li><b>구라마에</b> <span class="maps" data-map="구라마에 도쿄"></span></li>
-        <li><b>국립서양미술관</b> <span class="maps" data-map="국립서양미술관"></span></li>
-        <li><b>메이지 신궁 뮤지엄</b> <span class="maps" data-map="메이지 신궁 뮤지엄"></span></li>
-        <li><b>레스토랑 네모</b> <span class="maps" data-map="레스토랑 네모"></span></li>
-        <li><b>로지에(L&#x27;OSIER)</b> <span class="maps" data-map="로지에(L&#x27;OSIER)"></span></li>
-        <li><b>다카다노바바</b> <span class="maps" data-map="다카다노바바"></span></li>
-        <li><b>아임 도넛 글루텐 프리 • 비건</b> <span class="maps" data-map="아임 도넛 글루텐 프리 • 비건"></span></li>
-      </ul>
-      </details>
     </div>
     <div class="card">
       <b>🛒 숙소 근처 마트 · 슈퍼</b>
@@ -1279,51 +1256,51 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
     { n: 5, d: "12/4 (금)", ymd: [2026, 12, 4], title: "도쿄 디저트 · 긴자" },
     { n: 6, d: "12/5 (토)", ymd: [2026, 12, 5], title: "귀국" }
   ];
-  function classDay(evening, extra) {
-    var r = [["07:00", "기상", ""], ["", "학교 갈 준비", "점심 대용 도시락 챙기기"], ["08:40", "핫토리 수업 (Hattori Nutrition College)", "8:40까지 도착 · 편한 운동화 · 개인 쉐프복 · 휴대폰 충전기 · 펜"], ["12:00", "점심", "도시락 먹기 · 물 챙기기"], ["17:00", "수업 끝", ""]];
-    return r.concat(evening, extra || [["", "혼자 레시피 정리 마무리", "이 페이지 수업 노트에 바로 적기"], ["", "오답노트 보고 자기", ""]]);
-  }
+  /* 날짜별 일정 = 노션 「26.12.1-3 3박 4일 도쿄 핫토리 제과 연수 with 빠아빠」 표 그대로 (2026-11-25 옮김 · 약 이름만 뺌) */
   var PLAN_ROWS = {
-    1: [["08:20", "김해 출발 BX0717", "캐리어 1개 (45L도 같이)"],
-        ["10:25", "나리타 공항 도착", "나리타 제1터미널 · 밖으로 나오는 시간까지"],
-        ["", "나리타 지하 · 넥스 왕복 티켓 사기", "5,200엔 · 여권 필요 · 교통카드 1장에 10,000엔 충전 · 편의점에서 간단히 · 신주쿠까지 약 1시간 30분"],
-        ["13:00", "신주쿠역 도착", "남쪽출구 코인락커에 캐리어 맡기기"],
-        ["13:10", "★ 포터 (이세탄 본관 2층)", "★ 꼭 사기 · 하울 본삭 미니 네이비 · 없으면 16:15 포터 오모테산도점 (12~20시) · 여권 챙기기"],
-        ["13:45", "장어덮밥 고바야시 (小ばやし · こばやし)", "신주쿠 동쪽출구 2분 · 안 되면 기쿠카와 (菊川 · きくかわ)"],
-        ["14:40", "택배 픽업 (요요기)", ""],
-        ["15:10", "숙소에 짐 두기", "핫토리 학교 근처 숙소 · 체크인 16시 · 얼리 체크인 문의 · 안 되면 락커에 두고 다니기"],
-        ["15:30", "★ 하라주쿠", "★ 꼭 사기 · 호카 하라주쿠 직영점 (신발) · 온러닝 캣스트리트 · 여권 챙기기"],
-        ["16:15", "★ 오모테산도", "★ 꼭 사기 · MATOW 스퀘어 시계 (H°M'S WatchStore 오모테산도 · 19:30 마감 · 저녁 전에) · 넘버슈가 · 피에르 에르메 · 포터 오모테산도점 (12~20시)"],
-        ["17:45", "저녁 (혼자) · 오모테산도", "とんかつ まい泉(まいせん) 青山本店(あおやまほんてん) (카운터석 · 11:00~22:00 무휴) 또는 麺散 (우동 · 월 ~22:00)"],
-        ["19:00", "★ 호카 시부야 직영점", "20시 마감 · 하라주쿠에서 못 샀으면 여기서 · 여권 챙기기"],
-        ["20:00", "마트 + 다이소", "다이소: 빅카메라 신주쿠 8층 · 비타민 · 휴족시간 · 겔 · 1회용 컵 · 햇반 · 후리카케 · 오니기리통"],
-        ["", "산 짐 정리하기", "미리 산 것 다 정리"],
-        ["", "학교 갈 준비하고 쉬기", ""]],
-    2: classDay([["18:00", "레시피 정리 (수복님과)", ""], ["", "저녁", "우마야 (신주쿠) 또는 탄보 (요요기) · 다카시마야 지하 구경 (7시 반까지)"]]),
-    3: classDay([["18:00", "레시피 정리 (수복님과)", ""], ["", "신주쿠 저녁 쇼핑", "알펜도쿄 (온러닝) · 치이카와랜드 · 무인양품 · 세계당 (문구) · 이세탄 지하"]]),
-    4: classDay([["", "레시피 정리 (수복님과)", "오늘 배운 것 보고 정리"], ["18:00", "저녁 · 야키니쿠 시시로", "학교 바로 옆 · 18시 오픈"]], [["", "혼자 레시피 정리 마무리", "이 페이지 수업 노트에 바로 적기"]]),
-    5: [["06:00", "기상 · 일본어 청해 4회", "듣기 + 채점 + 피드백"],
-        ["09:30", "도쿄도미술관 오르세전", "2,400엔 · 예약 필요 없음 · 오픈런"],
-        ["12:00", "가볍게 점심", "미술관 안 레스토랑이나 카페"],
-        ["13:00", "긴자선 타고 긴자로", ""],
-        ["14:00", "페닌슐라 도쿄 애프터눈티", "호텔 디저트 · 예약"],
-        ["16:30", "긴자 디저트 구경", "키쿠노야 (틴 · 18시 마감) · 시세이도 팔러 (틴쿠키) · 긴자 웨스트 · 팡메종 · 이토야 (문구)"],
-        ["18:00", "히가시야 긴자 (HIGASHIYA GINZA)", "19시 마감 · 와가시 매장 구경"],
-        ["19:00", "프렌치 코스 · 셰토모 (긴자)", "히가시야와 같은 건물 11층 · TableCheck로 예약"],
-        ["밤", "숙소 · 짐 싸기", "포터 · 시계는 기내 가방에"]],
-    6: [["06:00", "기상 · 체크아웃", ""],
-        ["07:30", "공항으로 출발", "넥스 왕복표"],
-        ["09:00", "나리타 제1터미널 도착", "면세 환급 받기 (포터 · 시계 · 여권)"],
-        ["11:25", "BX0718 한국으로", ""],
-        ["", "일본어 청해 5회", "비행기 안에서 풀고 공부해 보기"]]
+    1: [["6:00 (am)", "김해공항으로 가기", "집에서 5:20에 택시불러서 가기"],
+        ["11:00 (am)", "나리타 공항 도착", "아예 밖으로 나오는 시간까지 [나리타 국제1공항]"],
+        ["", "나리타공항 지하로 가서 - 넥스 왕복 티켓 사기 (5,200엔, 여권)", "교통카드 충전하고 편의점에서 간단히 먹을거 사기 / 카드 1장에 충전하기 (10,000엔) / 나리타익스프레스로 한번에 신주쿠역까지 감 (1시간30분)"],
+        ["1:00", "신주쿠역 도착", "남쪽출구 코인락커에 캐리어 맡기기 (빨리 체크인되면 끌고 픽업가기)"],
+        ["", "야마토운수 (요요기)", "택배 픽업 → 냉장보관 / 평일 12-8시"],
+        ["3:10", "숙소 체크인", "짐 두고 냉장고 / 얼리체크인 안되면 락커에 두고 다니기"],
+        ["1:45", "장어덮밥 - 小ばやし (고바야시)", "신주쿠 동쪽출구 2분 / 안되면 菊川 (기쿠카와)"],
+        ["1:10", "포터 (이세탄 본관 2층)", "하울 본삭 미니 네이비 사기 (30,800엔) / 여권 챙기기"],
+        ["3:30", "하라주쿠 구경가기", "호카 직영점 / 온러닝 캣스트리트"],
+        ["4:15", "오모테산도", "MATOW 시계 (H°M'S) - 손목시계 (까르띠에맛)"],
+        ["", "시부야로 이동", "포켓몬센터 / 스텐다드 프로덕트 / 무지 /"],
+        ["", "저녁식사", "야끼니꾸 먹기"],
+        ["8:00", "마트다녀오기 (다이소까지) · 다이소: 빅카메라 신주쿠 8층 / 마트: OK스토어", "비타민, 휴족시간, 겔, 1회용컵, 햇반, 후리카게, 오니기리통"],
+        ["", "산 짐 정리하기", "미리 산거 다 정리하기"],
+        ["", "학교갈 준비하고 쉬기", ""]],
+    2: [["7:00", "기상", ""], ["", "학교갈 준비하기", "점심 대용 먹을꺼 챙기기 (도시락)"], ["8:40", "Hattori Nutrition College", "핫토리에 8:40 까지 가기"], ["", "", "준비물. 편한운동화 / 개인 쉐프복 / 핸드폰충전기 / 펜 /"], ["12:00", "점심식사", "도시락 먹기 (먹는거보고 물이랑 좀 챙기기)"], ["5:00", "수업 1일차 종료", ""], ["6:00", "마치고 정리하기", "레시피 정리하기 (수복님하고)"], ["", "근처 마트 갈수 있음 다녀오기", ""], ["", "혼자 레시피 정리 마무리", "클로드로 하기"], ["", "오답노트 보고 자기", ""]],
+    3: [["7:00", "기상", ""], ["", "학교갈 준비하기", "점심 대용 먹을꺼 챙기기 (도시락)"], ["8:40", "Hattori Nutrition College", "핫토리에 8:40 까지 가기"], ["", "", "준비물. 편한운동화 / 개인 쉐프복 / 핸드폰충전기 / 펜 /"], ["12:00", "점심식사", "도시락 먹기 (먹는거보고 물이랑 좀 챙기기)"], ["5:00", "수업 1일차 종료", ""], ["6:00", "마치고 정리하기", "레시피 정리하기 (수복님하고)"], ["", "근처 마트 갈수 있음 다녀오기", ""], ["", "혼자 레시피 정리 마무리", "클로드로 하기"], ["", "오답노트 보고 자기", ""]],
+    4: [["7:00", "기상", ""], ["", "학교갈 준비하기", "점심 대용 먹을꺼 챙기기 (도시락)"], ["8:40", "Hattori Nutrition College", "핫토리에 8:40 까지 가기"], ["", "", "준비물. 편한운동화 / 개인 쉐프복 / 핸드폰충전기 / 펜 /"], ["12:00", "점심식사", "도시락 먹기 (먹는거보고 물이랑 좀 챙기기)"], ["5:00", "수업 1일차 종료", ""], ["6:00", "마치고 정리하기", "오늘은 보고 레시피 정리하기 (수복님하고)"], ["", "저녁식사", "야끼니꾸 먹으러가기 (시시로, 학교 바로 옆 / 6시 오픈)"], ["", "혼자 레시피 정리 마무리", "클로드로 하기"]],
+    5: [["6:00", "기상", ""],
+        ["", "일본어 청해 4회 하기", "듣기 들어보기 + 채점 + 피드백"],
+        ["9:30", "도쿄도미술관 오픈런하기", "오르세미술관전시보기 (2,400엔, 예약 필요없음)"],
+        ["12:00", "점심", "미술관 안 레스토랑이나 카페"],
+        ["13:00", "긴자선 타고 미쓰코시마에로", ""],
+        ["13:15", "니혼바시 미쓰코시 지하 + 센비키야", "과일선물·과일산도 구경"],
+        ["14:15", "(선택) Pâtisserie Ease", "시간 없으면 빼기"],
+        ["15:00", "도쿄역 - 치이카와랜드 + 기프트팔레트", "치이카와 키링 사기 / 역 한정 선물과자 구경"],
+        ["16:00", "긴자 디저트 구경", "키쿠노야 (틴, 6시마감) / 시세이도팔러 (틴쿠키) / 긴자웨스트 / 마쓰야·미쓰코시 지하 / 팡메종 소금빵 / 이토야 문구 / 사다하루아오키"],
+        ["18:00", "HIGASHIYA GINZA", "7시 마감 / 와가시 매장 구경"],
+        ["18:30", "프렌치 코스 - 셰토모 (긴자)", "히가시야 같은 건물 11층 / 1인 예약 가능 / 테이블체크로 예약하기"],
+        ["밤", "숙소 · 짐 싸기", "포터·시계는 기내가방에 넣기"]],
+    6: [["6:00", "기상하기", ""],
+        ["7:30", "공항으로 출발하기 (넥스 왕복표)", ""],
+        ["9:00", "나리타 제1공항으로", "도착하기 / 면세 환급 받기 (포터·시계, 여권)"],
+        ["11:25", "한국으로", ""],
+        ["", "일본어 청해 5회 하기", "비행기안에서 풀고 공부해보기"]]
   };
   var PLAN_MEMO = {
-    1: "BX0717 김해 08:20 → 나리타 10:25 · 여행자보험 · 로밍 완료 · 캐리어 1개 (45L도 같이)",
-    2: "저녁 후보: 우마야 (신주쿠) · 탄보 (요요기) · 다카시마야 지하 구경 (숙소 근처 · 7시 반까지) · GU",
-    3: "저녁 쇼핑: 알펜도쿄 (온러닝) · 치이카와랜드 · 무인양품 · 세계당 (문구) · 이세탄 지하",
-    4: "저녁: 야키니쿠 시시로 (학교 바로 옆 · 18시 오픈)",
-    5: "미술관 → 페닌슐라 애프터눈티 → 긴자 디저트 → 히가시야 → 셰토모",
-    6: "BX0718 나리타 제1터미널 11:25 → 13:55 · 위탁 수하물 15kg / 기내용 10kg"
+    1: "여행자보험 / 로밍 완료 · 11.30 월 8:20 - 10:25 BX0717 · 캐리어 1개 가져가기 (45L 짜리도 같이)",
+    2: "저녁: 우마야 (신주쿠) or 탄보 (요요기) / 다카시마야 지하 구경 (숙소 옆, 7시반까지) / GU",
+    3: "저녁 쇼핑: 알펜도쿄 (온러닝) / 치이카와랜드 / 무인양품 / 세계당 (문구) / 이세탄 지하",
+    4: "",
+    5: "",
+    6: "나리타 제1터미널 11:25 - 13:55 BX0718 · 위탁수화물 15kg / 기내용 10kg"
   };
   var BENCH_STORES = [
     ["넘버슈가 오모테산도", "오모테산도", "1일차"], ["피에르 에르메 아오야마", "오모테산도", "1일차"], ["다카시마야 신주쿠 지하", "신주쿠", "2일차"],
@@ -1506,8 +1483,8 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
     var r = rowsOf(rows), withPics = !!opt.pics;
     return '<ul class="cks">' + r.map(function (a) {
       var id = a[0], x = a[1], p = path + "." + id;
-      var more = opt.more ? '<div class="ckmore">' + ta(k, p + ".m", x.m, "메모 (주소 · 예약번호 · 가격 등)") +
-        '<div class="plrow"><label class="pllab">📍 장소<input type="text" ' + A(k, p + ".pl") + ' value="' + esc(x.pl || "") + '" placeholder="예) 伊勢丹新宿店 本館" aria-label="장소 검색어"></label>' + mapBtns(x.pl !== undefined && x.pl !== "" ? x.pl : (x.pl === undefined ? placeFromText(x.x) : "")) + '</div></div>' : "";
+      var more = opt.more ? '<div class="ckmore">' + ta(k, p + ".m", x.m, "메모 (주소 · 예약번호 · 가격 등)") + (opt.noMap ? '</div>' :
+        '<div class="plrow"><label class="pllab">📍 장소<input type="text" ' + A(k, p + ".pl") + ' value="' + esc(x.pl || "") + '" placeholder="예) 伊勢丹新宿店 本館" aria-label="장소 검색어"></label>' + mapBtns(x.pl !== undefined && x.pl !== "" ? x.pl : (x.pl === undefined ? placeFromText(x.x) : "")) + '</div></div>') : "";
       var picBtn = "", thumbs = "", upAttr = "";
       if (withPics) {
         var ph = rowsOf(x.ph || {}), fid = "up_" + (k + "_" + p).replace(/[^\w]/g, "_");
@@ -1789,11 +1766,56 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
     el.innerHTML = '<div class="card must"><b>★ 꼭 사기 (11/30)</b>' + MUST_NOTE + ckList(K.buy, "must", v.must, { pics: true }) + '</div>' +
       '<div class="grid2"><div class="card"><b>🛍 가자마자 사야 하는 것</b>' + ckList(K.buy, "now", v.now) + '</div>' +
       '<div class="card"><b>🏪 가게에 필요한 것 + 내 것</b>' + ckList(K.buy, "shop", v.shop) + '</div></div>' +
-      '<div class="card"><div class="fl">📦 메모 · 택배 픽업' + ta(K.buy, "memo", v.memo, "택배 · 픽업 메모") + '</div></div>';
+      '<div class="card"><div class="fl">📦 메모 · 택배 픽업' + ta(K.buy, "memo", v.memo, "택배 · 픽업 메모") + '</div></div>' +
+      (function () { var bp = rowsOf(v.ph); return '<div class="card"><b>📷 사진만 따로 모으기</b><span class="hint">살 것 캡처 · 가게 사진 · 영수증처럼 목록 줄과 상관없는 사진 · 여러 장 한 번에 올려도 돼요</span>' +
+        (bp.length ? '<div class="fgrid">' + bp.map(function (a) { return fileCard(K.buy, "ph", a[0], a[1]); }).join("") + '</div>' : '<div class="empty">아직 사진이 없어요</div>') +
+        photoForm(K.buy, "ph", "buyph") + '</div>'; })();
   });
 
   /* ④ 날짜별 일정 · 잠금(잘못 눌러 바뀌는 것 막기) · 「★ 꼭 해야 할 일 및 사기」는 잠금과 상관없이 체크 · 고치기 */
-  var locked = true, openDays = {}, openMore = {};
+  var locked = true, openDays = {}, openMore = {}; /* 보기(보드 · 표) ↔ 「✎ 일정 수정하기」 (워크샵 일정과 같은 방식 · 2026-11-25) */
+  var pview = ls(PRE + "ui.pview") || "board", pflash = null;
+  var WDK = ["일", "월", "화", "수", "목", "금", "토"];
+  function pkind(t) {
+    if (/공항|이동|택시|넥스|나리타|역 도착|역\s|긴자선|출발|도착|락커|비행기|한국으로|BX0/.test(t)) return ["move", "🚕"];
+    if (/핫토리|Hattori|수업|레시피|오답|청해|공부/.test(t)) return ["class", "🎓"];
+    if (/숙소|체크인|체크아웃|기상|쉬기|짐 싸기|짐 정리|준비하기/.test(t)) return ["stay", "🏨"];
+    if (/식사|점심|저녁|아침|덮밥|야끼|야키|코스|도시락|레스토랑/.test(t)) return ["food", "🍽"];
+    if (/카페|디저트|HIGASHIYA|Pâtisserie|미쓰코시|센비키야|와가시|과자/.test(t)) return ["cafe", "☕"];
+    if (/포터|오모테산도|하라주쿠|시부야|마트|다이소|쇼핑|치이카와|이세탄|무인양품|구경|사기/.test(t)) return ["shop", "🛍"];
+    if (/미술관|전시/.test(t)) return ["art", "🖼"];
+    return ["etc", "📍"];
+  }
+  function prowsT(n) { var last = null; return rowsOf(view(K.plan(n)).rows).map(function (a) { var r = a[1], m = pmin(r.t, last); if (m != null) last = m; return { id: a[0], r: r, k: m, own: !!String(r.t || "").trim() }; }).filter(function (x) { return x.r.w || x.r.m || x.r.t; }); }
+  function pviewBar(editing) {
+    return '<div class="pvbar"><span class="pvs" role="group" aria-label="일정 보기"><button type="button" class="pv" data-pview="board" aria-pressed="' + (!editing && pview === "board") + '">🗂 보드로 보기</button><button type="button" class="pv" data-pview="table" aria-pressed="' + (!editing && pview === "table") + '">📋 표 · 타임테이블</button></span>' +
+      '<small class="hint">' + (editing ? "지금 고치는 중 · 고친 칸은 바로 저장돼요" : "카드를 누르면 표에서 그 줄을 보여 줘요 · 고칠 땐 「✎ 일정 수정하기」") + '</small>' +
+      '<span class="pvr"><a class="btn sm" href="https://maps.app.goo.gl/dv9QNdypMGAmfNXG8" target="_blank" rel="noopener">🗺 구글 지도 목록 ↗</a><button type="button" class="btn ' + (editing ? "pri" : "") + '" data-pedit="1">' + (editing ? "✔ 수정 끝" : "✎ 일정 수정하기") + '</button></span></div>';
+  }
+  function pnowIdx(n, list) { var td = todayDay(); if (td !== n) return -1; var d = new Date(), nm = d.getHours() * 60 + d.getMinutes(), i0 = -1; list.forEach(function (x, i) { if (x.k != null && x.k <= nm) i0 = i; }); return i0; }
+  function pboard() {
+    var td = todayDay();
+    return '<div class="pbcols">' + DAYS.map(function (d) {
+      var list = prowsT(d.n), v = view(K.plan(d.n)), must = rowsOf(v.must).filter(function (a) { return !a[1].ok; }).length, nowI = pnowIdx(d.n, list), past = td && d.n < td;
+      var dt = new Date(d.ymd[0], d.ymd[1] - 1, d.ymd[2]);
+      return '<section class="pbcol' + (td === d.n ? " today" : "") + (past ? " past" : "") + '"><div class="pbh"><div class="pbh1"><b>' + d.n + '일차</b><span>' + (dt.getMonth() + 1) + "/" + dt.getDate() + " (" + WDK[dt.getDay()] + ')</span>' + (td === d.n ? '<em class="pbtoday">오늘</em>' : "") + '</div>' +
+        '<div class="pbq"><i>' + esc(d.title) + '</i>' + (v.memo ? esc(v.memo) : "") + '</div><div class="pbn">일정 ' + list.length + '개' + (must ? ' · <b>★ 꼭 할 일 ' + must + '</b>' : "") + '</div></div>' +
+        (list.length ? '<ol class="pblist">' + list.map(function (x, i) {
+          var kd = pkind((x.r.w || "") + " " + (x.r.m || "")), cls = "pbc k-" + kd[0] + (i === nowI ? " now" : "") + (nowI >= 0 && i < nowI ? " done" : "");
+          return '<li><button type="button" class="' + cls + '" data-pcard="' + d.n + "|" + esc(x.id) + '" title="누르면 표에서 이 줄을 보여 줘요"><span class="pbtm">' + (x.own ? esc(x.r.t) : "↳") + '</span><span class="pbbody"><span class="pbpl"><i aria-hidden="true">' + kd[1] + '</i>' + esc(x.r.w || x.r.m || "") + '</span>' + (x.r.m && x.r.w ? '<span class="pbmo">' + esc(x.r.m) + '</span>' : "") + (i === nowI ? '<em class="pbnow">지금 여기</em>' : "") + '</span></button></li>';
+        }).join("") + '</ol>' : '<p class="pbempty">아직 일정이 없어요 · 「✎ 일정 수정하기」로 적어 주세요</p>') + '</section>';
+    }).join("") + '</div>';
+  }
+  function ptable(tabs) {
+    var d = DAYS[curDay - 1] || DAYS[0], k = K.plan(d.n), v = view(k), list = prowsT(d.n), nowI = pnowIdx(d.n, list);
+    var tt = '<div class="pttl"><div class="ptth"><b>타임테이블</b><small>' + d.n + '일차 ' + d.d + ' · ' + esc(d.title) + '</small></div><ol>' + list.map(function (x, i) {
+      return '<li class="' + (i === nowI ? "now" : "") + '"><span class="tm">' + (x.own ? esc(x.r.t) : "·") + '</span><span><b>' + esc(x.r.w || "") + '</b>' + (x.r.m ? '<small>' + esc(x.r.m) + '</small>' : "") + '</span></li>'; }).join("") + '</ol></div>';
+    var tb = '<div class="ptab"><table><thead><tr><th>시간</th><th>할 일</th><th>해야 할 일 + 메모</th></tr></thead><tbody>' + list.map(function (x) {
+      return '<tr data-prow="' + esc(x.id) + '"' + (pflash === x.id ? ' class="phit"' : "") + '><td class="tm">' + (x.own ? esc(x.r.t) : "·") + '</td><td>' + esc(x.r.w || "") + '</td><td>' + esc(x.r.m || "") + (x.r.d ? '<small class="pd">📝 ' + esc(x.r.d) + '</small>' : "") + '</td></tr>'; }).join("") + '</tbody></table>' + (list.length ? "" : '<div class="empty">아직 일정이 없어요</div>') + '</div>';
+    return tabs + (v.memo ? '<div class="callout">' + esc(v.memo) + '</div>' : "") +
+      '<div class="must mustck"><b>★ 꼭 해야 할 일 및 사기</b><span class="hint">체크 · 메모는 바로 돼요</span>' + ckList(k, "must", v.must, { pics: true, more: true, noMap: true, kind: "must" }) + '</div>' +
+      '<div class="ptgrid">' + tt + tb + '</div>';
+  }
   (function () { var t = todayDay(); openDays[t || 1] = true; })();
   function rowPlace(n, id, r) {
     if (r.pl !== undefined && r.pl !== "") return r.pl;
@@ -1808,32 +1830,73 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
       var v = view(K.plan(d.n)), must = rowsOf(v.must), left = must.filter(function (a) { return !a[1].ok; }).length;
       return '<button type="button" class="dtab" role="tab" data-pday="' + d.n + '" aria-selected="' + (curDay === d.n) + '"><b>' + d.n + '일차</b><span>' + d.d + '</span>' + (td === d.n ? '<em class="today">오늘</em>' : "") + (left ? '<i class="dleft">★' + left + '</i>' : "") + '</button>';
     }).join("") + '</nav>';
+    if (locked) { el.innerHTML = pviewBar(false) + (pview === "board" ? pboard() : ptable(tabs)); if (pflash) { var hr = el.querySelector(".phit"); if (hr) setTimeout(function () { hr.scrollIntoView({ block: "center", behavior: "smooth" }); }, 50); pflash = null; } return; }
     var d = DAYS[curDay - 1] || DAYS[0];
     var k = K.plan(d.n), v = view(k), rows = rowsOf(v.rows), ro = locked ? "readonly" : "";
-    el.innerHTML = tabs + '<div class="lockbar' + (locked ? "" : " open") + '"><button type="button" class="btn ' + (locked ? "" : "pri") + '" id="lockBtn" aria-pressed="' + (!locked) + '">' + (locked ? "✎ 일정 수정하기" : "✔ 수정 끝 · 잠그기") + '</button><span class="hint">' + (locked ? "🔒 일정 표는 잘못 눌러 바뀌지 않게 잠겨 있어요 · 「★ 꼭 해야 할 일 및 사기」는 바로 체크 · 고칠 수 있어요" : "지금 고칠 수 있어요 · 고친 칸은 바로 저장돼요") + '</span></div>' +
+    el.innerHTML = pviewBar(true) + tabs +
       '<div class="dayhead"><b>' + d.d + ' ' + d.n + '일차</b><span>' + d.title + ' · 일정 ' + rows.length + '개</span>' + (td === d.n ? '<span class="today">오늘</span>' : "") + '</div>' +
       '<div class="dbody">' +
-      '<div class="must mustck"><b>★ 꼭 해야 할 일 및 사기</b><span class="hint">줄마다 메모 · 📍 장소 · 📷 사진 · 다 하면 체크</span>' + ckList(k, "must", v.must, { pics: true, more: true, kind: "must" }) + '</div>' +
+      '<div class="must mustck"><b>★ 꼭 해야 할 일 및 사기</b><span class="hint">줄마다 메모 · 📷 사진 · 다 하면 체크</span>' + ckList(k, "must", v.must, { pics: true, more: true, noMap: true, kind: "must" }) + '</div>' +
       (locked ? (v.memo ? '<div class="callout">' + esc(v.memo) + '</div>' : "") : '<div class="fl">✈ 항공편 · 짐 · 메모' + ta(k, "memo", v.memo, "항공편 · 짐 등 메모") + '</div>') +
       '<div class="trow plan head' + (locked ? " ro" : "") + '"><span>시간</span><span>할 일</span><span>해야 할 일 + 메모</span>' + (locked ? "" : "<span></span>") + '</div><div class="rows">' +
       (rows.map(function (a) {
         var id = a[0], r = a[1], p = "rows." + id, mk = k + "|" + id, pl = rowPlace(d.n, id, r), open = openMore[mk];
         var extra = "";
         if (locked) {
-          extra = (pl ? mapBtns(pl) : "") + (r.d ? '<button type="button" class="btn sm" data-act="more" data-mk="' + esc(mk) + '">' + (open ? "－ 접기" : "＋ 자세히") + '</button>' + (open ? '<div class="dtext">' + esc(r.d) + '</div>' : "") : "");
+          extra = (r.d ? '<button type="button" class="btn sm" data-act="more" data-mk="' + esc(mk) + '">' + (open ? "－ 접기" : "＋ 자세히") + '</button>' + (open ? '<div class="dtext">' + esc(r.d) + '</div>' : "") : "");
         } else {
-          extra = '<button type="button" class="btn sm" data-act="more" data-mk="' + esc(mk) + '">' + (open ? "－ 접기" : "＋ 자세히") + '</button>' + (pl ? mapBtns(pl) : "") +
-            (open ? '<div class="dmore"><label class="pllab">📍 장소 (구글 지도 검색어)<input type="text" ' + A(k, p + ".pl") + ' value="' + esc(r.pl !== undefined ? r.pl : pl) + '" placeholder="예) 伊勢丹新宿店 本館 · 여러 곳은 「 / 」로" aria-label="장소 검색어"></label>' +
-              '<div class="fl">📝 자세히 (주소 · 예약번호 · 이동 방법)' + ta(k, p + ".d", r.d, "예) 예약번호 · 몇 번 출구 · 몇 호선 · 걸어서 몇 분") + '</div></div>' : "");
+          var ix = rows.indexOf(a);
+          extra = '<span class="pmv"><button type="button" class="btn sm" data-pmv="up" data-id="' + esc(id) + '"' + (ix ? "" : " disabled") + ' aria-label="위로">▲</button><button type="button" class="btn sm" data-pmv="dn" data-id="' + esc(id) + '"' + (ix < rows.length - 1 ? "" : " disabled") + ' aria-label="아래로">▼</button>' +
+            '<select class="pmday" data-id="' + esc(id) + '" aria-label="다른 날로 옮기기"><option value="">📅 다른 날로</option>' + DAYS.filter(function (x) { return x.n !== d.n; }).map(function (x) { return '<option value="' + x.n + '">' + x.n + '일차 ' + esc(x.d) + '</option>'; }).join("") + '</select></span>' +
+            '<button type="button" class="btn sm" data-act="more" data-mk="' + esc(mk) + '">' + (open ? "－ 접기" : "＋ 자세히") + '</button>' +
+            (open ? '<div class="dmore"><div class="fl">📝 자세히 (주소 · 예약번호 · 이동 방법)' + ta(k, p + ".d", r.d, "예) 예약번호 · 몇 번 출구 · 몇 호선 · 걸어서 몇 분") + '</div></div>' : "");
         }
         return '<div class="trow plan' + (locked ? " ro" : "") + '">' + inp(k, p + ".t", r.t, "시간", 'class="t" ' + ro) + ta(k, p + ".w", r.w, "할 일", ro) + ta(k, p + ".m", r.m, "해야 할 일 + 메모", ro) + (locked ? "" : delBtn(k, p)) +
           (extra ? '<div class="more">' + extra + '</div>' : "") + '</div>';
       }).join("") || '<div class="empty">아직 일정이 없어요</div>') +
-      '</div>' + (locked ? "" : '<div class="addbar">' + addBtn(k, "rows", "plan") + '</div>') + '</div>';
+      '</div>' + (locked ? "" : '<div class="addbar">' + addBtn(k, "rows", "plan", "＋ 일정 추가") + '<button type="button" class="btn sm" data-psort="1">⏱ 시간순으로 정렬</button><span class="hint">▲▼ 순서 · 📅 다른 날로 · × 빼기(뺀 일정은 아래에서 되살려요)</span></div>' + (function () {
+        var gone = Object.keys(v.rows || {}).map(function (id) { return [id, v.rows[id]]; }).filter(function (x) { return x[1] && x[1].del; });
+        if (!gone.length) return "";
+        return '<details class="pgone"><summary>↩ 뺀 일정 ' + gone.length + '개 · 되살리기</summary><ul>' + gone.map(function (x) {
+          var r = x[1], mv = /^→(\d)/.exec(String(r.del));
+          return '<li><span><b>' + esc(r.t || "") + '</b> ' + esc(r.w || "(이름 없음)") + '<small>' + (mv ? mv[1] + "일차로 옮김" : "뺀 사람 · 때: " + esc(String(r.del).replace(/T.*/, ""))) + '</small></span>' + (mv ? "" : '<button type="button" class="btn sm" data-pback="' + esc(x[0]) + '">↩ 되살리기</button>') + '</li>';
+        }).join("") + '</ul></details>';
+      })()) + '</div>';
+  });
+  /* 일정 순서 · 옮기기 · 정렬 · 되살리기 (지우지 않음 · 옮기면 원래 줄은 del 「→N일차」) */
+  /* 시간 읽기: 「1:00」처럼 오전/오후가 없으면 앞 일정보다 1시간 넘게 이르면 오후로 봄(6:00 am → 11:00 am → 1:00 = 13:00) */
+  function pmin(t, prev) { var m = /(\d{1,2})\s*[:：시]\s*(\d{1,2})?/.exec(String(t || "")); if (!m) return null; var h = +m[1], x; if (/오후|pm/i.test(t) && h < 12) h += 12; x = h * 60 + (+m[2] || 0); if (!/오전|am/i.test(t) && h < 12 && prev != null && x < prev - 60) x += 720; return x; }
+  $("secPlan").addEventListener("click", function (e) {
+    var k = K.plan(curDay), v = view(k), rows = rowsOf(v.rows), b;
+    if ((b = e.target.closest("[data-pmv]"))) {
+      var i = rows.findIndex(function (a) { return a[0] === b.dataset.id; }), j = b.dataset.pmv === "up" ? i - 1 : i + 1;
+      if (i < 0 || j < 0 || j >= rows.length) return;
+      rows.forEach(function (a, n) { var o = n === i ? j : n === j ? i : n; if ((a[1].o || 0) !== o + 1) put(k, "rows." + a[0] + ".o", o + 1); });
+      draw(planSec); return;
+    }
+    if (e.target.closest("[data-psort]")) {
+      var last = -1, keyed = rows.map(function (a, n) { var m = pmin(a[1].t, last < 0 ? null : last); if (m != null) last = m; return { a: a, m: last, n: n }; });
+      keyed.sort(function (x, y) { return x.m - y.m || x.n - y.n; });
+      keyed.forEach(function (x, n) { if ((x.a[1].o || 0) !== n + 1) put(k, "rows." + x.a[0] + ".o", n + 1); });
+      draw(planSec); return;
+    }
+    if ((b = e.target.closest("[data-pback]"))) { put(k, "rows." + b.dataset.pback + ".del", ""); draw(planSec); }
+  });
+  $("secPlan").addEventListener("change", function (e) {
+    var s = e.target.closest(".pmday"); if (!s || !s.value) return;
+    var to = +s.value, k = K.plan(curDay), r = clone((view(k).rows || {})[s.dataset.id] || {}), dn = DAYS[to - 1];
+    if (!confirm("「" + (r.w || "이 일정") + "」을(를) " + to + "일차 " + dn.d + "로 옮길까요?")) { s.value = ""; return; }
+    delete r.del; r.o = Date.now(); r.from = curDay + "일차 " + (me || "");
+    put(K.plan(to), "rows." + uid("r"), r);
+    put(k, "rows." + s.dataset.id + ".del", "→" + to + "일차 " + (me || "?") + " " + new Date().toISOString());
+    draw(planSec);
   });
   $("secPlan").addEventListener("click", function (e) { var t = e.target.closest("[data-pday]"); if (t) { curDay = +t.dataset.pday; ls(PRE + "ui.pday", String(curDay)); draw(planSec); } });
   $("secPlan").addEventListener("click", function (e) {
     if (e.target.closest("#lockBtn")) { locked = !locked; draw(planSec); return; }
+    var pv = e.target.closest("[data-pview]"); if (pv) { pview = pv.dataset.pview; ls(PRE + "ui.pview", pview); locked = true; draw(planSec); return; }
+    if (e.target.closest("[data-pedit]")) { locked = !locked; draw(planSec); $("s5").scrollIntoView({ behavior: "smooth", block: "start" }); return; }
+    var pc = e.target.closest("[data-pcard]"); if (pc) { var pp = pc.dataset.pcard.split("|"); curDay = +pp[0]; ls(PRE + "ui.pday", String(curDay)); pview = "table"; ls(PRE + "ui.pview", pview); pflash = pp[1]; draw(planSec); return; }
     var m = e.target.closest('[data-act="more"]'); if (m) { openMore[m.dataset.mk] = !openMore[m.dataset.mk]; draw(planSec); }
   });
   $("secPlan").addEventListener("toggle", function (e) { var d = e.target.closest && e.target.closest("details.day"); if (d) openDays[d.dataset.day] = d.open; }, true);
@@ -1850,7 +1913,7 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
     return o;
   }
   function refreshCost() { if (costSec && !typing(costSec.el)) draw(costSec); }
-  var costEdit = {};
+  var costEdit = {}, costTab = ls(PRE + "ui.cday") || String(todayDay() || 1);
   function selOpts(list, cur, blank) { return (blank ? '<option value="">' + blank + '</option>' : "") + list.map(function (o) { return '<option value="' + o[0] + '"' + (cur === o[0] ? " selected" : "") + '>' + (o.length > 2 && o[1].length <= 2 ? o[1] + " " + o[2] : o[1]) + '</option>'; }).join(""); }
   var costSec = mount($("secCost"), [PRE + "cost", PRE + "cost.*"], function (el) {
     var v = view(K.cost), fx = fxv(), sy = num(v.start), sw = num(v.startW), days = DAYS.map(function (d) { return costDay(d.n); });
@@ -1863,7 +1926,10 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
       '<div class="cwon">₩ 원화로 쓴 돈 <b>' + won(tw) + '</b> <small>(엔 합계에 안 넣음)</small></div>' +
       '<div class="cleft">남은 돈 <b>' + ((sy || sw) ? [sy ? yen(sy - ty) : "", sw ? won(sw - tw) : ""].filter(Boolean).join(" · ") : "시작 금액을 적으면 보여요") + '</b></div>' +
       '<div class="r3"><label class="fl">💴 시작 금액 · 엔' + inp(K.cost, "start", v.start, "예) 200000", 'inputmode="numeric"') + '</label><label class="fl">💳 시작 금액 · 원' + inp(K.cost, "startW", v.startW, "예) 300000", 'inputmode="numeric"') + '</label><label class="fl">💱 환율 (100엔당 원)' + inp(K.cost, "fx", v.fx, "836", 'inputmode="decimal"') + '</label></div></div>' +
-      '<div class="cdays">' + DAYS.map(function (d, di) {
+      '<nav class="dtabs ctabs" role="tablist" aria-label="지출 일차"><button type="button" class="dtab" role="tab" data-ctab="all" aria-selected="' + (costTab === "all") + '"><b>전체</b><span>6일 한눈에</span></button>' +
+        DAYS.map(function (d, di) { return '<button type="button" class="dtab" role="tab" data-ctab="' + d.n + '" aria-selected="' + (costTab === String(d.n)) + '"><b>' + d.n + '일차</b><span>' + d.d + ' · ' + yen(days[di].y) + '</span></button>'; }).join("") + '</nav>' +
+      '<div class="cdays' + (costTab === "all" ? "" : " one") + '">' + DAYS.map(function (d, di) {
+        if (costTab !== "all" && costTab !== String(d.n)) return "";
         var o = days[di], k = K.costd(d.n), ed = costEdit[d.n];
         var chips = PAY.filter(function (p) { return o.pay[p[0]]; }).map(function (p) { return '<span class="pchip">' + p[1] + ' ' + p[2] + ' ' + yen(o.pay[p[0]]) + '</span>'; }).join("");
         var body = ed ? '<div class="rows">' + (o.rows.map(function (a) { var id = a[0], r = a[1], p = "rows." + id;
@@ -1881,6 +1947,7 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
       }).join("") + '</div>';
   });
   $("secCost").addEventListener("click", function (e) {
+    var ct = e.target.closest("[data-ctab]"); if (ct) { costTab = ct.dataset.ctab; ls(PRE + "ui.cday", costTab); draw(costSec); return; }
     var t = e.target.closest("[data-cedit]"); if (t) { costEdit[t.dataset.cedit] = !costEdit[t.dataset.cedit]; draw(costSec); return; }
     var b = e.target.closest('[data-act="cadd"]'); if (!b) return;
     var box = b.closest(".cadd"), n = +box.dataset.cday, nm = box.querySelector(".caN").value.trim(), am = box.querySelector(".caA").value.trim();
@@ -1905,7 +1972,7 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
   }
   function photoForm(k, path, tag) {
     return '<div class="fform" data-up="' + esc(k) + '" data-path="' + esc(path) + '"><div class="r2"><input type="text" class="upT" placeholder="사진 제목 (예: 쇼트케이크 배합표)" aria-label="사진 제목"><input type="text" class="upM" placeholder="메모 (없어도 돼요)" aria-label="사진 메모"></div>' +
-      '<div class="addbar"><label class="btn pri" for="up_' + tag + '">📷 사진 올리기</label><input type="file" id="up_' + tag + '" class="upF" accept="image/*" multiple hidden><span class="fmsg"></span></div></div>';
+      '<div class="addbar"><label class="btn pri" for="up_' + tag + '">📷 사진 올리기</label><span class="hint">또는 사진을 이 칸으로 끌어다 놓기</span><input type="file" id="up_' + tag + '" class="upF" accept="image/*" multiple hidden><span class="fmsg"></span></div></div>';
   }
   var CATS = [["air", "✈️ 항공권"], ["vjw", "🛂 비짓재팬"], ["buy", "🛍 살 것"], ["rsv", "🎫 예약 확인"], ["etc", "📝 기타"]];
   var PRIVATE_CAT = { air: 1, vjw: 1, rsv: 1 };
@@ -2142,8 +2209,25 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
   var safe = function (s) { return String(s || "").replace(/\.[a-z0-9]+$/i, "").replace(/[^\w가-힣ぁ-んァ-ン一-龥-]+/g, "").slice(0, 24) || "photo"; };
   document.addEventListener("change", function (e) {
     var f = e.target; if (!f.classList || !f.classList.contains("upF")) return;
-    var box = f.closest("[data-up]"), msg = box.querySelector(".fmsg"), key = box.dataset.up, path = box.dataset.path;
     var files = [].slice.call(f.files || []); f.value = "";
+    upFiles(f.closest("[data-up]"), files);
+  });
+  /* 사진 칸 어디든 끌어다 놓기 (자료 모으기 칸은 따로 처리) */
+  function dropBox(e) { var b = e.target.closest && e.target.closest("[data-up]"); return b && b.querySelector(".upF") && !b.closest("#secFiles") ? b : null; }
+  var dropOn = null;
+  function dropMark(b) { if (dropOn && dropOn !== b) dropOn.classList.remove("dropon"); dropOn = b; if (b) b.classList.add("dropon"); }
+  ["dragenter", "dragover"].forEach(function (ev) { document.addEventListener(ev, function (e) { var b = dropBox(e); if (!b) { dropMark(null); return; } e.preventDefault(); if (e.dataTransfer) e.dataTransfer.dropEffect = "copy"; dropMark(b); }); });
+  document.addEventListener("dragleave", function (e) { if (!e.relatedTarget || !dropOn || !dropOn.contains(e.relatedTarget)) dropMark(null); });
+  document.addEventListener("drop", function (e) {
+    var b = dropBox(e); dropMark(null); if (!b) return; e.preventDefault();
+    var fs = [].slice.call((e.dataTransfer && e.dataTransfer.files) || []).filter(isImgFile);
+    var msg = b.querySelector(".fmsg");
+    if (!fs.length) { if (msg) { msg.textContent = "사진 파일만 놓아 주세요"; msg.className = "fmsg bad"; } return; }
+    if (!b.querySelector(".upF").multiple) fs = fs.slice(0, 1);
+    upFiles(b, fs);
+  });
+  function upFiles(box, files) {
+    var msg = box.querySelector(".fmsg"), key = box.dataset.up, path = box.dataset.path;
     if (!files.length) return;
     var title = box.querySelector(".upT").value.trim(), memo = box.querySelector(".upM").value.trim();
     var catEl = box.querySelector(".upCat"), shEl = box.querySelector(".upShare"), cat = catEl ? catEl.value : "", local = shEl && shEl.value === "local";
@@ -2171,7 +2255,7 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
       });
     });
     chain.then(function () { redrawFor(box); });
-  });
+  }
   function loadImgs(root) {
     root.querySelectorAll("img[data-fk],img[data-th]").forEach(function (im) {
       if (im.getAttribute("src")) return;
