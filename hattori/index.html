@@ -298,7 +298,7 @@ footer{font-size:14px;color:var(--mute);border-top:1px solid var(--line2);paddin
     <p class="sub">도쿄 핫토리영양전문학교 · 2026. 11. 30 ~ 12. 5 · 수업 12/1 ~ 3 · 일본 디저트 9가지</p>
   </div>
   <div class="dd" id="dd"></div>
-  <div class="me" id="meBox"></div>
+  <div class="me" id="meBox" hidden></div>
 </header>
 
 <section class="namecard" id="nameCard" hidden>
@@ -1104,11 +1104,11 @@ footer{font-size:14px;color:var(--mute);border-top:1px solid var(--line2);paddin
   var meKey = function () { return me.replace(/\./g, "·").replace(/\s+/g, " ").trim(); };
   function paintMe() {
     $("meBox").innerHTML = me ? '나: <b>' + esc(me) + '</b> <button class="btn sm" type="button" id="meCh">이름 바꾸기</button>' : '<button class="btn sm" type="button" id="meSet">이름 적기</button>';
-    $("nameCard").hidden = !!me;
+    
     var c = $("meCh"); if (c) c.onclick = function () { $("nameIn").value = me; $("nameCard").hidden = false; $("nameIn").focus(); };
     var s = $("meSet"); if (s) s.onclick = function () { $("nameCard").hidden = false; $("nameIn").focus(); };
   }
-  $("nameOk").onclick = function () { var v = $("nameIn").value.trim().slice(0, 20); if (!v) { $("nameIn").focus(); return; } me = v; ls(PRE + "me", v); paintMe(); sections.forEach(draw); };
+  $("nameOk").onclick = function () { var v = $("nameIn").value.trim().slice(0, 20); if (!v) { $("nameIn").focus(); return; } me = v; ls(PRE + "me", v); $("nameCard").hidden = true; paintMe(); sections.forEach(draw); };
   $("nameIn").addEventListener("keydown", function (e) { if (e.key === "Enter") $("nameOk").click(); });
   paintMe();
 
@@ -1340,7 +1340,7 @@ footer{font-size:14px;color:var(--mute);border-top:1px solid var(--line2);paddin
   $("secFiles").addEventListener("click", function (e) {
     if (!e.target.closest("#lnAdd")) return;
     var t = $("lnT").value.trim(), u = $("lnU").value.trim(), m = $("lnM").value.trim(), msg = $("lnMsg");
-    if (!me) { $("nameCard").hidden = false; $("nameIn").focus(); return; }
+    if (!me) { $("nameCard").hidden = false; $("nameCard").scrollIntoView({behavior:"smooth",block:"center"}); $("nameIn").focus(); return; }
     if (!u) { msg.textContent = "링크 주소를 넣어 주세요"; msg.className = "fmsg bad"; return; }
     if (!/^https?:\/\//i.test(u)) u = "https://" + u;
     if (!/^https?:\/\/[^\s]+\.[^\s]+/i.test(u)) { msg.textContent = "주소 모양이 이상해요"; msg.className = "fmsg bad"; return; }
@@ -1369,7 +1369,7 @@ footer{font-size:14px;color:var(--mute);border-top:1px solid var(--line2);paddin
     var box = f.closest("[data-up]"), msg = box.querySelector(".fmsg"), key = box.dataset.up, path = box.dataset.path;
     var files = [].slice.call(f.files || []); f.value = "";
     if (!files.length) return;
-    if (!me) { $("nameCard").hidden = false; $("nameIn").focus(); return; }
+    if (!me) { $("nameCard").hidden = false; $("nameCard").scrollIntoView({behavior:"smooth",block:"center"}); $("nameIn").focus(); return; }
     if (!db || !online) { msg.textContent = "인터넷 연결 뒤에 올려 주세요"; msg.className = "fmsg bad"; return; }
     var title = box.querySelector(".upT").value.trim(), memo = box.querySelector(".upM").value.trim();
     var chain = Promise.resolve();
