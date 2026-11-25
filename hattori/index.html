@@ -614,6 +614,48 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
 .pgone ul{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:6px}
 .pgone li{display:flex;gap:8px;align-items:center;justify-content:space-between;background:#fff;border-radius:8px;padding:6px 8px;font-size:15px}
 .pgone small{display:block;color:var(--mute);font-size:13px}
+/* ④ 일정 보드 · 표 (워크샵 일정과 같은 모양) */
+.pvbar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin:4px 0 12px}
+.pvs{display:inline-flex;border:1.5px solid #4A3B2C;border-radius:999px;overflow:hidden}
+.pv{font:inherit;font-size:15px;font-weight:700;padding:8px 16px;border:0;background:#FFFDF9;color:#4A3B2C;cursor:pointer;min-height:40px}
+.pv[aria-pressed="true"]{background:#4A3B2C;color:#FFF8EA}
+.pvr{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pbcols{display:grid;grid-template-columns:repeat(6,minmax(270px,1fr));gap:14px;align-items:start;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x proximity}
+.pbcol{background:#FFFDF9;border:1px solid #DCCDB5;border-radius:16px;padding:0 0 10px;box-shadow:0 2px 0 rgba(74,59,44,.06);overflow:hidden;scroll-snap-align:start}
+.pbcol.today{border:2.5px solid #C2412D;box-shadow:0 0 0 4px rgba(194,65,45,.12)}
+.pbh{padding:12px 14px 10px;background:#4A3B2C;color:#FFF8EA}
+.pbcol.past .pbh{background:#6E5E4C}
+.pbh1{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}.pbh1 b{font-size:22px}.pbh1 span{font-size:16px;color:#F2D9A8;font-weight:700}
+.pbtoday{font-style:normal;background:#C2412D;color:#fff;border-radius:999px;padding:1px 9px;font-size:13px}
+.pbq{margin-top:5px;font-size:14px;line-height:1.45;color:#FFF3DE}
+.pbq i{font-style:normal;font-weight:700;background:#E0A458;color:#3A2E22;border-radius:6px;padding:0 6px;margin-right:6px;font-size:13px}
+.pbn{margin-top:6px;font-size:13.5px;color:#EADBC4}.pbn b{color:#FFD0C6}
+.pblist{list-style:none;margin:0;padding:10px 10px 0;display:flex;flex-direction:column;gap:7px}
+.pbc{--k:#8F5A22;display:grid;grid-template-columns:62px 1fr;gap:8px;width:100%;text-align:left;font:inherit;color:#2E2419;background:#fff;border:1px solid #E6D9C4;border-left:5px solid var(--k);border-radius:11px;padding:9px 10px 9px 8px;cursor:pointer}
+.pbc:hover{background:#FFF8EA}
+.pbc.k-move{--k:#456270}.pbc.k-food{--k:#9A4D35}.pbc.k-cafe{--k:#8F5A22}.pbc.k-stay{--k:#56703F}.pbc.k-shop{--k:#8A4B7A}.pbc.k-class{--k:#3D5A9E}.pbc.k-art{--k:#7E6100}.pbc.k-etc{--k:#736350}
+.pbc.now{border:2.5px solid #C2412D;border-left:6px solid #C2412D}.pbc.done{opacity:.6}
+.pbtm{font-weight:700;font-size:14.5px;color:#8F5A22;line-height:1.35;overflow-wrap:anywhere}
+.pbbody{display:flex;flex-direction:column;gap:3px;min-width:0}
+.pbpl{font-size:16px;font-weight:700;line-height:1.4;word-break:keep-all;overflow-wrap:anywhere}.pbpl i{font-style:normal;margin-right:5px}
+.pbmo{font-size:14px;line-height:1.5;color:#4F4233;word-break:keep-all;overflow-wrap:anywhere}
+.pbnow{font-style:normal;align-self:flex-start;background:#C2412D;color:#fff;border-radius:999px;padding:1px 8px;font-size:12.5px;font-weight:700}
+.pbempty{padding:14px;color:var(--ink2)}
+.ptgrid{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.3fr);gap:16px;align-items:start;margin-top:12px}
+@media (max-width:860px){.ptgrid{grid-template-columns:minmax(0,1fr)}}
+.pttl{background:#FFFDF9;border:1px solid #DCCDB5;border-radius:14px;overflow:hidden}
+.ptth{background:#EFE6D6;padding:10px 14px;display:grid}.ptth b{font-size:17px}.ptth small{color:var(--ink2)}
+.pttl ol{list-style:none;margin:0;padding:4px 14px 10px;max-height:640px;overflow:auto}
+.pttl li{display:grid;grid-template-columns:60px 1fr;gap:8px;padding:9px 0;border-bottom:1px dotted #D3C2A6}
+.pttl li.now{background:#FCE4DF;border-radius:8px}
+.pttl .tm,.ptab .tm{font-weight:700;color:#8F5A22;white-space:nowrap}
+.pttl li b{display:block;font-size:16px}.pttl li small{display:block;color:#7A5A3C;font-size:14px;line-height:1.5}
+.ptab{background:#FFFDF9;border:1px solid #DCCDB5;border-radius:14px;overflow:auto}
+.ptab table{width:100%;border-collapse:collapse;font-size:15px}
+.ptab th{text-align:left;padding:10px 12px;border-bottom:1.5px dashed #D3C2A6;color:#5B4630}
+.ptab td{padding:11px 12px;border-bottom:1px solid #EFE6D6;vertical-align:top;line-height:1.5;word-break:keep-all;overflow-wrap:anywhere}
+.ptab tr.phit td{background:#FFE9A8;transition:background 2s}
+.ptab .pd{display:block;color:var(--ink2);font-size:13.5px;margin-top:3px}
 </style>
 </head>
 <body>
@@ -635,7 +677,7 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
   <span class="hint">이 휴대폰 · 컴퓨터에 기억돼요. 벤치마킹 평가와 소감은 이 이름의 내 칸에만 저장돼요.</span>
 </section>
 
-<div class="topbar"><span class="ver">버전 <b id="verTag">v1125-10</b> · 적으면 자동 저장 · 지운 줄도 서버에 남아요</span><span class="last" id="lastSave">아직 저장 전</span><button type="button" class="btn pri" id="saveNow">💾 지금 저장 + 백업</button></div>
+<div class="topbar"><span class="ver">버전 <b id="verTag">v1125-11</b> · 적으면 자동 저장 · 지운 줄도 서버에 남아요</span><span class="last" id="lastSave">아직 저장 전</span><button type="button" class="btn pri" id="saveNow">💾 지금 저장 + 백업</button></div>
 <nav class="bigtabs" role="tablist" aria-label="큰 탭">
   <a class="bt" role="tab" href="#tab-pre" data-tab="pre">📗 예습 노트</a>
   <a class="bt" role="tab" href="#tab-note" data-tab="note">✍️ 연수 노트</a>
@@ -1731,7 +1773,49 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
   });
 
   /* ④ 날짜별 일정 · 잠금(잘못 눌러 바뀌는 것 막기) · 「★ 꼭 해야 할 일 및 사기」는 잠금과 상관없이 체크 · 고치기 */
-  var locked = false, openDays = {}, openMore = {}; /* 일정은 늘 바로 고치기 (잠금 없앰 · 2026-11-25) */
+  var locked = true, openDays = {}, openMore = {}; /* 보기(보드 · 표) ↔ 「✎ 일정 수정하기」 (워크샵 일정과 같은 방식 · 2026-11-25) */
+  var pview = ls(PRE + "ui.pview") || "board", pflash = null;
+  var WDK = ["일", "월", "화", "수", "목", "금", "토"];
+  function pkind(t) {
+    if (/공항|이동|택시|넥스|나리타|역 도착|역\s|긴자선|출발|도착|락커|비행기|한국으로|BX0/.test(t)) return ["move", "🚕"];
+    if (/핫토리|Hattori|수업|레시피|오답|청해|공부/.test(t)) return ["class", "🎓"];
+    if (/숙소|체크인|체크아웃|기상|쉬기|짐 싸기|짐 정리|준비하기/.test(t)) return ["stay", "🏨"];
+    if (/식사|점심|저녁|아침|덮밥|야끼|야키|코스|도시락|레스토랑/.test(t)) return ["food", "🍽"];
+    if (/카페|디저트|HIGASHIYA|Pâtisserie|미쓰코시|센비키야|와가시|과자/.test(t)) return ["cafe", "☕"];
+    if (/포터|오모테산도|하라주쿠|시부야|마트|다이소|쇼핑|치이카와|이세탄|무인양품|구경|사기/.test(t)) return ["shop", "🛍"];
+    if (/미술관|전시/.test(t)) return ["art", "🖼"];
+    return ["etc", "📍"];
+  }
+  function prowsT(n) { var last = null; return rowsOf(view(K.plan(n)).rows).map(function (a) { var r = a[1], m = pmin(r.t, last); if (m != null) last = m; return { id: a[0], r: r, k: m, own: !!String(r.t || "").trim() }; }).filter(function (x) { return x.r.w || x.r.m || x.r.t; }); }
+  function pviewBar(editing) {
+    return '<div class="pvbar"><span class="pvs" role="group" aria-label="일정 보기"><button type="button" class="pv" data-pview="board" aria-pressed="' + (!editing && pview === "board") + '">🗂 보드로 보기</button><button type="button" class="pv" data-pview="table" aria-pressed="' + (!editing && pview === "table") + '">📋 표 · 타임테이블</button></span>' +
+      '<small class="hint">' + (editing ? "지금 고치는 중 · 고친 칸은 바로 저장돼요" : "카드를 누르면 표에서 그 줄을 보여 줘요 · 고칠 땐 「✎ 일정 수정하기」") + '</small>' +
+      '<span class="pvr"><a class="btn sm" href="https://maps.app.goo.gl/dv9QNdypMGAmfNXG8" target="_blank" rel="noopener">🗺 구글 지도 목록 ↗</a><button type="button" class="btn ' + (editing ? "pri" : "") + '" data-pedit="1">' + (editing ? "✔ 수정 끝" : "✎ 일정 수정하기") + '</button></span></div>';
+  }
+  function pnowIdx(n, list) { var td = todayDay(); if (td !== n) return -1; var d = new Date(), nm = d.getHours() * 60 + d.getMinutes(), i0 = -1; list.forEach(function (x, i) { if (x.k != null && x.k <= nm) i0 = i; }); return i0; }
+  function pboard() {
+    var td = todayDay();
+    return '<div class="pbcols">' + DAYS.map(function (d) {
+      var list = prowsT(d.n), v = view(K.plan(d.n)), must = rowsOf(v.must).filter(function (a) { return !a[1].ok; }).length, nowI = pnowIdx(d.n, list), past = td && d.n < td;
+      var dt = new Date(d.ymd[0], d.ymd[1] - 1, d.ymd[2]);
+      return '<section class="pbcol' + (td === d.n ? " today" : "") + (past ? " past" : "") + '"><div class="pbh"><div class="pbh1"><b>' + d.n + '일차</b><span>' + (dt.getMonth() + 1) + "/" + dt.getDate() + " (" + WDK[dt.getDay()] + ')</span>' + (td === d.n ? '<em class="pbtoday">오늘</em>' : "") + '</div>' +
+        '<div class="pbq"><i>' + esc(d.title) + '</i>' + (v.memo ? esc(v.memo) : "") + '</div><div class="pbn">일정 ' + list.length + '개' + (must ? ' · <b>★ 꼭 할 일 ' + must + '</b>' : "") + '</div></div>' +
+        (list.length ? '<ol class="pblist">' + list.map(function (x, i) {
+          var kd = pkind((x.r.w || "") + " " + (x.r.m || "")), cls = "pbc k-" + kd[0] + (i === nowI ? " now" : "") + (nowI >= 0 && i < nowI ? " done" : "");
+          return '<li><button type="button" class="' + cls + '" data-pcard="' + d.n + "|" + esc(x.id) + '" title="누르면 표에서 이 줄을 보여 줘요"><span class="pbtm">' + (x.own ? esc(x.r.t) : "↳") + '</span><span class="pbbody"><span class="pbpl"><i aria-hidden="true">' + kd[1] + '</i>' + esc(x.r.w || x.r.m || "") + '</span>' + (x.r.m && x.r.w ? '<span class="pbmo">' + esc(x.r.m) + '</span>' : "") + (i === nowI ? '<em class="pbnow">지금 여기</em>' : "") + '</span></button></li>';
+        }).join("") + '</ol>' : '<p class="pbempty">아직 일정이 없어요 · 「✎ 일정 수정하기」로 적어 주세요</p>') + '</section>';
+    }).join("") + '</div>';
+  }
+  function ptable(tabs) {
+    var d = DAYS[curDay - 1] || DAYS[0], k = K.plan(d.n), v = view(k), list = prowsT(d.n), nowI = pnowIdx(d.n, list);
+    var tt = '<div class="pttl"><div class="ptth"><b>타임테이블</b><small>' + d.n + '일차 ' + d.d + ' · ' + esc(d.title) + '</small></div><ol>' + list.map(function (x, i) {
+      return '<li class="' + (i === nowI ? "now" : "") + '"><span class="tm">' + (x.own ? esc(x.r.t) : "·") + '</span><span><b>' + esc(x.r.w || "") + '</b>' + (x.r.m ? '<small>' + esc(x.r.m) + '</small>' : "") + '</span></li>'; }).join("") + '</ol></div>';
+    var tb = '<div class="ptab"><table><thead><tr><th>시간</th><th>할 일</th><th>해야 할 일 + 메모</th></tr></thead><tbody>' + list.map(function (x) {
+      return '<tr data-prow="' + esc(x.id) + '"' + (pflash === x.id ? ' class="phit"' : "") + '><td class="tm">' + (x.own ? esc(x.r.t) : "·") + '</td><td>' + esc(x.r.w || "") + '</td><td>' + esc(x.r.m || "") + (x.r.d ? '<small class="pd">📝 ' + esc(x.r.d) + '</small>' : "") + '</td></tr>'; }).join("") + '</tbody></table>' + (list.length ? "" : '<div class="empty">아직 일정이 없어요</div>') + '</div>';
+    return tabs + (v.memo ? '<div class="callout">' + esc(v.memo) + '</div>' : "") +
+      '<div class="must mustck"><b>★ 꼭 해야 할 일 및 사기</b><span class="hint">체크 · 메모는 바로 돼요</span>' + ckList(k, "must", v.must, { pics: true, more: true, noMap: true, kind: "must" }) + '</div>' +
+      '<div class="ptgrid">' + tt + tb + '</div>';
+  }
   (function () { var t = todayDay(); openDays[t || 1] = true; })();
   function rowPlace(n, id, r) {
     if (r.pl !== undefined && r.pl !== "") return r.pl;
@@ -1746,9 +1830,10 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
       var v = view(K.plan(d.n)), must = rowsOf(v.must), left = must.filter(function (a) { return !a[1].ok; }).length;
       return '<button type="button" class="dtab" role="tab" data-pday="' + d.n + '" aria-selected="' + (curDay === d.n) + '"><b>' + d.n + '일차</b><span>' + d.d + '</span>' + (td === d.n ? '<em class="today">오늘</em>' : "") + (left ? '<i class="dleft">★' + left + '</i>' : "") + '</button>';
     }).join("") + '</nav>';
+    if (locked) { el.innerHTML = pviewBar(false) + (pview === "board" ? pboard() : ptable(tabs)); if (pflash) { var hr = el.querySelector(".phit"); if (hr) setTimeout(function () { hr.scrollIntoView({ block: "center", behavior: "smooth" }); }, 50); pflash = null; } return; }
     var d = DAYS[curDay - 1] || DAYS[0];
     var k = K.plan(d.n), v = view(k), rows = rowsOf(v.rows), ro = locked ? "readonly" : "";
-    el.innerHTML = tabs + '<div class="lockbar open"><span class="hint">✎ 칸을 눌러 바로 고쳐요 · 고친 칸은 바로 저장돼요</span><a class="btn sm" href="https://maps.app.goo.gl/dv9QNdypMGAmfNXG8" target="_blank" rel="noopener">🗺 구글 지도 목록 ↗</a></div>' +
+    el.innerHTML = pviewBar(true) + tabs +
       '<div class="dayhead"><b>' + d.d + ' ' + d.n + '일차</b><span>' + d.title + ' · 일정 ' + rows.length + '개</span>' + (td === d.n ? '<span class="today">오늘</span>' : "") + '</div>' +
       '<div class="dbody">' +
       '<div class="must mustck"><b>★ 꼭 해야 할 일 및 사기</b><span class="hint">줄마다 메모 · 📷 사진 · 다 하면 체크</span>' + ckList(k, "must", v.must, { pics: true, more: true, noMap: true, kind: "must" }) + '</div>' +
@@ -1809,6 +1894,9 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
   $("secPlan").addEventListener("click", function (e) { var t = e.target.closest("[data-pday]"); if (t) { curDay = +t.dataset.pday; ls(PRE + "ui.pday", String(curDay)); draw(planSec); } });
   $("secPlan").addEventListener("click", function (e) {
     if (e.target.closest("#lockBtn")) { locked = !locked; draw(planSec); return; }
+    var pv = e.target.closest("[data-pview]"); if (pv) { pview = pv.dataset.pview; ls(PRE + "ui.pview", pview); locked = true; draw(planSec); return; }
+    if (e.target.closest("[data-pedit]")) { locked = !locked; draw(planSec); $("s5").scrollIntoView({ behavior: "smooth", block: "start" }); return; }
+    var pc = e.target.closest("[data-pcard]"); if (pc) { var pp = pc.dataset.pcard.split("|"); curDay = +pp[0]; ls(PRE + "ui.pday", String(curDay)); pview = "table"; ls(PRE + "ui.pview", pview); pflash = pp[1]; draw(planSec); return; }
     var m = e.target.closest('[data-act="more"]'); if (m) { openMore[m.dataset.mk] = !openMore[m.dataset.mk]; draw(planSec); }
   });
   $("secPlan").addEventListener("toggle", function (e) { var d = e.target.closest && e.target.closest("details.day"); if (d) openDays[d.dataset.day] = d.open; }, true);
