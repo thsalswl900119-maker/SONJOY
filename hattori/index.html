@@ -681,7 +681,7 @@ body.study .bt[data-tab=plan],body.study #tab-plan,body.study #saveNow,body.stud
   <span class="hint">이 휴대폰 · 컴퓨터에 기억돼요. 벤치마킹 평가와 소감은 이 이름의 내 칸에만 저장돼요.</span>
 </section>
 
-<div class="topbar"><span class="ver">버전 <b id="verTag">v1126-2</b> · 적으면 자동 저장 · 지운 줄도 서버에 남아요</span><span class="last" id="lastSave">아직 저장 전</span><button type="button" class="btn pri" id="saveNow">💾 지금 저장 + 백업</button></div>
+<div class="topbar"><span class="ver">버전 <b id="verTag">v1126-3</b> · 적으면 자동 저장 · 지운 줄도 서버에 남아요</span><span class="last" id="lastSave">아직 저장 전</span><button type="button" class="btn pri" id="saveNow">💾 지금 저장 + 백업</button></div>
 <nav class="bigtabs" role="tablist" aria-label="큰 탭">
   <a class="bt" role="tab" href="#tab-pre" data-tab="pre">📗 예습 노트</a>
   <a class="bt" role="tab" href="#tab-note" data-tab="note">✍️ 연수 노트</a>
@@ -1747,7 +1747,7 @@ body.study .bt[data-tab=plan],body.study #tab-plan,body.study #saveNow,body.stud
       '<div class="ask"><h3>질문과 답</h3>' + it.ask.map(function (q, j) { return '<div class="qa"><label>' + rb(esc(q)) + '</label>' + ta(k, "ans." + j, (v.ans || {})[j], "답") + '</div>'; }).join("") +
       '<div class="field"><label style="font-size:16px">추가 질문 · 메모</label>' + ta(k, "extra", v.extra, "더 물어본 것 · 기억할 것") + '</div></div>' +
       '<div class="ncard hot st-hide"><div class="field"><label>☕ 카페스이에 접목할 것</label><span class="hint" style="color:inherit;opacity:.9">메뉴 · 시즌 · 선물 · 원가 · 직원 교육 쪽으로 바로 해 볼 것</span>' + ta(k, "cafe", v.cafe, "예) 겨울 딸기 쇼트케이크에 시럽 농도 바꿔 보기 · 틴쿠키 답례품 구성", 'style="min-height:110px"') + '</div></div>' +
-      '<div class="ncard"><div class="field"><span class="lbl">📷 레시피 · 완성 사진</span><span class="hint">휴대폰 사진을 줄여서 올려요 (긴 변 1280px)</span>' +
+      '<div class="ncard"><div class="field"><span class="lbl">📷 레시피 · 완성 사진</span><span class="hint">배합표 · 공정 · 완성 사진을 올려요 · 같이 보는 사람 모두에게 보여요</span>' +
       (ph.length ? '<div class="fgrid">' + ph.map(function (a) { return fileCard(k, "ph", a[0], a[1]); }).join("") + '</div>' : '<div class="empty">아직 사진이 없어요</div>') +
       photoForm(k, "ph", "cls") + '</div></div>' +
       pager(cur, "data-cls-go") + '</div>';
@@ -1983,7 +1983,8 @@ body.study .bt[data-tab=plan],body.study #tab-plan,body.study #saveNow,body.stud
   }
   function photoForm(k, path, tag) {
     return '<div class="fform" data-up="' + esc(k) + '" data-path="' + esc(path) + '"><div class="r2"><input type="text" class="upT" placeholder="사진 제목 (예: 쇼트케이크 배합표)" aria-label="사진 제목"><input type="text" class="upM" placeholder="메모 (없어도 돼요)" aria-label="사진 메모"></div>' +
-      '<div class="addbar"><label class="btn pri" for="up_' + tag + '">📷 사진 올리기</label><span class="hint">또는 사진을 이 칸으로 끌어다 놓기</span><input type="file" id="up_' + tag + '" class="upF" accept="image/*" multiple hidden><span class="fmsg"></span></div></div>';
+      '<label class="fdrop" for="up_' + tag + '"><b>📷 눌러서 사진 올리기</b><span>여기로 끌어다 놓아도 돼요 · 여러 장 한 번에 · 사진은 자동으로 줄여서 올려요</span></label>' +
+      '<input type="file" id="up_' + tag + '" class="upF" accept="image/*" multiple hidden><span class="fmsg"></span></div>';
   }
   var CATS = [["air", "✈️ 항공권"], ["vjw", "🛂 비짓재팬"], ["buy", "🛍 살 것"], ["rsv", "🎫 예약 확인"], ["etc", "📝 기타"]];
   var PRIVATE_CAT = { air: 1, vjw: 1, rsv: 1 };
