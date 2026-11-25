@@ -3862,6 +3862,11 @@
       var t5 = v("cn5"), dd = v("cn25"), d6 = d("6");
       card("매출 합계", t5, "원", dd ? "영업 " + dd + "일" : "", "wide");
       card("하루 매출", v("cn6"), "원", d6.t ? "작년보다 " + d6.t : "", d6.c);
+      /* 11/25 사장님 「영업일수가 안 적혀 있는 것 같다」 · 「지난달이랑 비교」 → 영업일수 카드 · 유입(지난달 대비) 카드 */
+      card("영업일수", dd, "일", v("cy25") ? "작년 " + v("cy25") + "일" : "", "");
+      var d20 = d("20"), d23 = d("23");
+      card("플레이스 유입", v("cn20"), "회", d20.t ? "지난달 " + d20.t : "", d20.c);
+      card("재방문율", v("cn23").replace(/%$/, ""), "%", d23.t ? "지난달 " + d23.t + "%p" : "", d23.c);
       [["10", "에그타르트"], ["11", "조각케이크"], ["12", "홀케이크"], ["13", "별조각"]].forEach(function (x) {
         var dx = d(x[0]); card(x[1], v("cn" + x[0]), "개", dx.t ? "작년 " + dx.t : "", dx.c);
       });
@@ -3911,9 +3916,9 @@
           });
           if (!rows) return;
           any = true;
-          var ttl = wrap.querySelector(".cmph").textContent;
+          var ttl = wrap.querySelector(".cmph").firstChild.textContent.trim() + (wrap.dataset.prev ? " (" + wrap.dataset.prev + " → 이번 달)" : "");
           html += '<div class="rpsec rpsecT"><h4>' + esc(ttl) + "</h4>" +
-                  '<table class="rpnums rpcmp"><tr class="rpch"><th></th><td>작년</td><td>이번 달</td><td>차이</td></tr>' + rows + "</table></div>";
+                  '<table class="rpnums rpcmp' + (wrap.dataset.prev ? " rpmo" : "") + '"><tr class="rpch"><th></th><td>' + esc(wrap.dataset.prev || "작년") + '</td><td>이번 달</td><td>차이</td></tr>' + rows + "</table></div>";   /* 11/25 유입 표는 지난달과 비교 */
           text.push("");
           text.push("[" + ttl + "]");
           text.push(lines.join(NL));

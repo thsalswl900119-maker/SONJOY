@@ -218,7 +218,11 @@
     var PD = J("cafesui.prod") || {}, PM = [["10", "egg", "에그타르트"], ["11", "slice", "조각케이크"], ["12", "whole", "홀케이크"], ["13", "star", "별조각"], ["14", "bingsu", "빙수"]];
     if (PD[ly]) PM.forEach(function (x) { if (PD[ly][x[1]] != null) SL.push(["cy" + x[0], C(PD[ly][x[1]]) || "0", "작년 " + x[2]]); });
     if (PD[ym]) PM.forEach(function (x) { if (PD[ym][x[1]] != null && !iany["cn" + x[0]]) SL.push(["cn" + x[0], C(PD[ym][x[1]]) || "0", x[2] + "(생산량 파일)"]); });
-    ["8", "10", "11", "12", "13", "14", "20", "21", "22", "23", "24", "26"].forEach(function (n) { if (mLy["cn" + n]) SL.push(["cy" + n, mLy["cn" + n], "작년 " + n]); });
+    ["8", "10", "11", "12", "13", "14"].forEach(function (n) { if (mLy["cn" + n]) SL.push(["cy" + n, mLy["cn" + n], "작년 " + n]); });
+    // 유입 · 재방문 표는 지난달과 비교 (11/25 사장님) — 지난달 회의 표에 「이번 달」로 적어 둔 숫자를 「지난달」 칸(cy)에
+    var pmY = +ym.slice(0, 4), pmM = +ym.slice(5, 7) - 1; if (pmM < 1) { pmM = 12; pmY--; }
+    var mPm = J("cafesui.mtable." + pmY + "-" + (pmM < 10 ? "0" : "") + pmM) || {};
+    ["20", "21", "22", "23", "24", "26"].forEach(function (n) { if (mPm["cn" + n]) SL.push(["cy" + n, mPm["cn" + n], "지난달 " + n]); });
     var memo2 = [];
     if (sNow && sNow.dl) memo2.push("이번 달 배민 = 배민+쿠팡 합친 금액");
     if (sLy && sLy.dl) memo2.push("작년 배민 = 배민+쿠팡 합친 금액");
