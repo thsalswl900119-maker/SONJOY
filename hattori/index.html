@@ -606,6 +606,14 @@ input[type=checkbox]{accent-color:var(--green)}
 details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
 .savepill.ok{background:var(--green)}
 .savepill.bad{background:var(--red)}
+.trow.plan>.more .pmv{display:inline-flex;gap:4px;align-items:center;flex-wrap:wrap}
+.pmv select{font-size:15px;min-height:34px;border-radius:8px;border:1px solid var(--line,#d8cbb6);background:#fff;padding:0 6px}
+.pmv .btn[disabled]{opacity:.35}
+.pgone{margin-top:10px;background:var(--raise);border-radius:10px;padding:8px 10px}
+.pgone summary{cursor:pointer;font-weight:700}
+.pgone ul{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:6px}
+.pgone li{display:flex;gap:8px;align-items:center;justify-content:space-between;background:#fff;border-radius:8px;padding:6px 8px;font-size:15px}
+.pgone small{display:block;color:var(--mute);font-size:13px}
 </style>
 </head>
 <body>
@@ -627,7 +635,7 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
   <span class="hint">이 휴대폰 · 컴퓨터에 기억돼요. 벤치마킹 평가와 소감은 이 이름의 내 칸에만 저장돼요.</span>
 </section>
 
-<div class="topbar"><span class="ver">버전 <b id="verTag">v1125-8</b> · 적으면 자동 저장 · 지운 줄도 서버에 남아요</span><span class="last" id="lastSave">아직 저장 전</span><button type="button" class="btn pri" id="saveNow">💾 지금 저장 + 백업</button></div>
+<div class="topbar"><span class="ver">버전 <b id="verTag">v1125-9</b> · 적으면 자동 저장 · 지운 줄도 서버에 남아요</span><span class="last" id="lastSave">아직 저장 전</span><button type="button" class="btn pri" id="saveNow">💾 지금 저장 + 백업</button></div>
 <nav class="bigtabs" role="tablist" aria-label="큰 탭">
   <a class="bt" role="tab" href="#tab-pre" data-tab="pre">📗 예습 노트</a>
   <a class="bt" role="tab" href="#tab-note" data-tab="note">✍️ 연수 노트</a>
@@ -1752,13 +1760,51 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
         if (locked) {
           extra = (r.d ? '<button type="button" class="btn sm" data-act="more" data-mk="' + esc(mk) + '">' + (open ? "－ 접기" : "＋ 자세히") + '</button>' + (open ? '<div class="dtext">' + esc(r.d) + '</div>' : "") : "");
         } else {
-          extra = '<button type="button" class="btn sm" data-act="more" data-mk="' + esc(mk) + '">' + (open ? "－ 접기" : "＋ 자세히") + '</button>' +
+          var ix = rows.indexOf(a);
+          extra = '<span class="pmv"><button type="button" class="btn sm" data-pmv="up" data-id="' + esc(id) + '"' + (ix ? "" : " disabled") + ' aria-label="위로">▲</button><button type="button" class="btn sm" data-pmv="dn" data-id="' + esc(id) + '"' + (ix < rows.length - 1 ? "" : " disabled") + ' aria-label="아래로">▼</button>' +
+            '<select class="pmday" data-id="' + esc(id) + '" aria-label="다른 날로 옮기기"><option value="">📅 다른 날로</option>' + DAYS.filter(function (x) { return x.n !== d.n; }).map(function (x) { return '<option value="' + x.n + '">' + x.n + '일차 ' + esc(x.d) + '</option>'; }).join("") + '</select></span>' +
+            '<button type="button" class="btn sm" data-act="more" data-mk="' + esc(mk) + '">' + (open ? "－ 접기" : "＋ 자세히") + '</button>' +
             (open ? '<div class="dmore"><div class="fl">📝 자세히 (주소 · 예약번호 · 이동 방법)' + ta(k, p + ".d", r.d, "예) 예약번호 · 몇 번 출구 · 몇 호선 · 걸어서 몇 분") + '</div></div>' : "");
         }
         return '<div class="trow plan' + (locked ? " ro" : "") + '">' + inp(k, p + ".t", r.t, "시간", 'class="t" ' + ro) + ta(k, p + ".w", r.w, "할 일", ro) + ta(k, p + ".m", r.m, "해야 할 일 + 메모", ro) + (locked ? "" : delBtn(k, p)) +
           (extra ? '<div class="more">' + extra + '</div>' : "") + '</div>';
       }).join("") || '<div class="empty">아직 일정이 없어요</div>') +
-      '</div>' + (locked ? "" : '<div class="addbar">' + addBtn(k, "rows", "plan") + '</div>') + '</div>';
+      '</div>' + (locked ? "" : '<div class="addbar">' + addBtn(k, "rows", "plan", "＋ 일정 추가") + '<button type="button" class="btn sm" data-psort="1">⏱ 시간순으로 정렬</button><span class="hint">▲▼ 순서 · 📅 다른 날로 · × 빼기(뺀 일정은 아래에서 되살려요)</span></div>' + (function () {
+        var gone = Object.keys(v.rows || {}).map(function (id) { return [id, v.rows[id]]; }).filter(function (x) { return x[1] && x[1].del; });
+        if (!gone.length) return "";
+        return '<details class="pgone"><summary>↩ 뺀 일정 ' + gone.length + '개 · 되살리기</summary><ul>' + gone.map(function (x) {
+          var r = x[1], mv = /^→(\d)/.exec(String(r.del));
+          return '<li><span><b>' + esc(r.t || "") + '</b> ' + esc(r.w || "(이름 없음)") + '<small>' + (mv ? mv[1] + "일차로 옮김" : "뺀 사람 · 때: " + esc(String(r.del).replace(/T.*/, ""))) + '</small></span>' + (mv ? "" : '<button type="button" class="btn sm" data-pback="' + esc(x[0]) + '">↩ 되살리기</button>') + '</li>';
+        }).join("") + '</ul></details>';
+      })()) + '</div>';
+  });
+  /* 일정 순서 · 옮기기 · 정렬 · 되살리기 (지우지 않음 · 옮기면 원래 줄은 del 「→N일차」) */
+  /* 시간 읽기: 「1:00」처럼 오전/오후가 없으면 앞 일정보다 1시간 넘게 이르면 오후로 봄(6:00 am → 11:00 am → 1:00 = 13:00) */
+  function pmin(t, prev) { var m = /(\d{1,2})\s*[:：시]\s*(\d{1,2})?/.exec(String(t || "")); if (!m) return null; var h = +m[1], x; if (/오후|pm/i.test(t) && h < 12) h += 12; x = h * 60 + (+m[2] || 0); if (!/오전|am/i.test(t) && h < 12 && prev != null && x < prev - 60) x += 720; return x; }
+  $("secPlan").addEventListener("click", function (e) {
+    var k = K.plan(curDay), v = view(k), rows = rowsOf(v.rows), b;
+    if ((b = e.target.closest("[data-pmv]"))) {
+      var i = rows.findIndex(function (a) { return a[0] === b.dataset.id; }), j = b.dataset.pmv === "up" ? i - 1 : i + 1;
+      if (i < 0 || j < 0 || j >= rows.length) return;
+      rows.forEach(function (a, n) { var o = n === i ? j : n === j ? i : n; if ((a[1].o || 0) !== o + 1) put(k, "rows." + a[0] + ".o", o + 1); });
+      draw(planSec); return;
+    }
+    if (e.target.closest("[data-psort]")) {
+      var last = -1, keyed = rows.map(function (a, n) { var m = pmin(a[1].t, last < 0 ? null : last); if (m != null) last = m; return { a: a, m: last, n: n }; });
+      keyed.sort(function (x, y) { return x.m - y.m || x.n - y.n; });
+      keyed.forEach(function (x, n) { if ((x.a[1].o || 0) !== n + 1) put(k, "rows." + x.a[0] + ".o", n + 1); });
+      draw(planSec); return;
+    }
+    if ((b = e.target.closest("[data-pback]"))) { put(k, "rows." + b.dataset.pback + ".del", ""); draw(planSec); }
+  });
+  $("secPlan").addEventListener("change", function (e) {
+    var s = e.target.closest(".pmday"); if (!s || !s.value) return;
+    var to = +s.value, k = K.plan(curDay), r = clone((view(k).rows || {})[s.dataset.id] || {}), dn = DAYS[to - 1];
+    if (!confirm("「" + (r.w || "이 일정") + "」을(를) " + to + "일차 " + dn.d + "로 옮길까요?")) { s.value = ""; return; }
+    delete r.del; r.o = Date.now(); r.from = curDay + "일차 " + (me || "");
+    put(K.plan(to), "rows." + uid("r"), r);
+    put(k, "rows." + s.dataset.id + ".del", "→" + to + "일차 " + (me || "?") + " " + new Date().toISOString());
+    draw(planSec);
   });
   $("secPlan").addEventListener("click", function (e) { var t = e.target.closest("[data-pday]"); if (t) { curDay = +t.dataset.pday; ls(PRE + "ui.pday", String(curDay)); draw(planSec); } });
   $("secPlan").addEventListener("click", function (e) {
