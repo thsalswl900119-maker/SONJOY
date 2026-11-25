@@ -156,7 +156,7 @@ details.day>summary .today{background:var(--red);color:#fff;border-radius:6px;pa
 .store .sh{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;justify-content:space-between}
 .store .sh b{font-size:18px}
 .store .sh small{font-size:14px;color:var(--mute)}
-.scores{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,138px),1fr));gap:8px}
+.scores{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:10px}
 .scores label{display:grid;gap:3px;font-size:14px;font-weight:700;color:var(--ink2)}
 .mysum{font-size:15px;font-weight:700;color:var(--br)}
 .others{display:grid;gap:6px}
@@ -294,9 +294,11 @@ details.fold>summary.fsum>.sech{border-bottom:2px solid var(--line2)}
 .savepill.bad{background:var(--red)}
 .savepill:empty{display:none}
 .ckpics{flex-basis:100%;display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:2px 0 6px 32px}
-.ckpic{position:relative;display:inline-block}
+.gmlist summary{cursor:pointer;font-weight:700;margin:6px 0}
+.ckpic{position:relative;display:inline-flex;flex-direction:column;align-items:center;gap:3px;width:104px}
+.ckpic .cap{font-size:12px;line-height:1.3;color:var(--ink,#4a3426);font-weight:700;text-align:center;word-break:keep-all;max-width:104px}
 .ckpic img{width:96px;height:96px;object-fit:cover;border-radius:10px;border:1.5px solid var(--line2);cursor:zoom-in;background:#fff}
-.ckpic .del,.ckpic button{position:absolute;top:-8px;right:-8px}
+.ckpic .del,.ckpic button{position:absolute;top:-8px;right:-4px}
 .row-ck.withpic{flex-wrap:wrap}
 .lightbox img{max-height:86vh}
 .topbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;background:var(--card);border:1.5px solid var(--line2);border-radius:12px;padding:8px 12px;margin:6px 0 4px}
@@ -327,7 +329,7 @@ footer{font-size:14px;color:var(--mute);border-top:1px solid var(--line2);paddin
 @media (prefers-reduced-motion:no-preference){.ipanel{animation:rise .22s ease-out}}
 @keyframes rise{from{opacity:.4;transform:translateY(6px)}to{opacity:1;transform:none}}
 
-/* v1125-2 · 지도 · 여러 줄 · 자세히 · 통화 · 자료 모으기 */
+/* v1125-4 · 지도 · 여러 줄 · 자세히 · 통화 · 자료 모으기 */
 .cks li{flex-wrap:wrap;align-items:flex-start}
 .cks li>input[type=checkbox]{margin-top:10px}
 .cks li>textarea{flex:1 1 200px;min-width:0}
@@ -373,6 +375,17 @@ select.cur{padding:9px 6px}
 .fgh{font-family:var(--hd);font-size:20px;color:var(--red)}
 .fgh small{font-family:var(--kr);font-size:14px;color:var(--ink2)}
 .fcard.local{border-style:dashed!important}
+.flist{display:grid;gap:8px}
+.frow{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:10px;align-items:center;background:var(--card);border:1.5px solid var(--wood);border-radius:12px 16px 10px 14px;padding:8px 10px}
+.frow.local{border-style:dashed}
+.frow .fth{width:64px;height:64px;object-fit:cover;border-radius:8px;border:1px solid var(--line);cursor:zoom-in;background:#fff}
+.frow .fic{width:64px;height:64px;display:grid;place-items:center;font-size:30px;background:var(--raise);border-radius:8px}
+.fmeta{display:grid;gap:2px;min-width:0}
+.fmeta .fn{font-size:15.5px;overflow-wrap:anywhere}
+.fmeta .fsub{font-size:14px;color:var(--mute)}
+.fmeta .m{font-size:14.5px;color:var(--ink2)}
+.fbtns{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:flex-end}
+@media (max-width:640px){.frow{grid-template-columns:56px minmax(0,1fr)}.frow .fth,.frow .fic{width:56px;height:56px}.fbtns{grid-column:1/-1;justify-content:flex-start}}
 .lbadge{font-size:13.5px;font-weight:700;color:var(--green);background:var(--greenbg);border-radius:8px;padding:2px 8px}
 .lnsmall{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;font-size:14px;color:var(--ink2)}
 .lnsmall a{font-size:14px}
@@ -386,6 +399,128 @@ select.cur{padding:9px 6px}
   .trow.cost>textarea:nth-of-type(2){grid-column:1/4}
   .trow.plan>.more{grid-column:1}
 }
+
+/* v1125-5 · 일정·준비 타일 탭 · 지출 · 자료 · 벤치마킹 (워크샵 구조 · 핫토리 색) */
+.ptiles{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:6px;margin:4px 0 8px}
+.ptile{display:flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:left;font:inherit;padding:9px 9px 8px;min-height:62px;border:1.5px solid var(--wood);border-radius:12px 14px 10px 14px;background:var(--card);color:var(--ink);cursor:pointer;min-width:0}
+.ptl{font-size:15px;font-weight:800;word-break:keep-all}
+.ptn{display:inline-grid;place-items:center;min-width:20px;height:20px;margin-right:4px;border-radius:50%;background:var(--green);color:#fff;font-style:normal;font-size:12.5px;font-weight:900}
+.pts{font-size:13px;font-weight:700;color:var(--mute);word-break:keep-all}
+.ptile[aria-selected="true"]{background:var(--red);border-color:var(--red);box-shadow:0 3px 0 var(--wood)}
+.ptile[aria-selected="true"] .ptl,.ptile[aria-selected="true"] .pts{color:#fff}
+.ptile[aria-selected="true"] .ptn{background:#fff;color:var(--red)}
+.ptile[data-pp="sum"]{background:var(--goldbg)}
+.ptile[data-pp="sum"][aria-selected="true"]{background:var(--green);border-color:var(--green)}
+@media (max-width:1000px){.ptiles{grid-template-columns:repeat(5,minmax(0,1fr))}}
+@media (max-width:640px){.ptiles{display:flex;overflow-x:auto;padding:2px 2px 8px;-webkit-overflow-scrolling:touch}.ptile{flex:0 0 118px}}
+.sumg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:640px){.sumg{grid-template-columns:minmax(0,1fr)}}
+.sumc{align-content:start}
+.sumrows{display:grid;gap:3px}
+.sr{display:grid;grid-template-columns:56px minmax(0,1fr);gap:6px;font-size:15px;padding:2px 6px;border-radius:6px}
+.sr span:first-child{font-weight:800;color:var(--wood)}
+.sr.next{background:var(--goldbg);font-weight:700}
+.summ{display:grid;gap:3px;padding-left:18px}
+.summ small{color:var(--green);font-weight:700}
+.sumbig{font-family:var(--hd);font-size:30px;color:var(--red)}
+.sec>*,#planBody>*,.dbody>*{min-width:0}
+.dtabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;max-width:100%}
+.dtab{flex:0 0 auto;display:grid;gap:1px;text-align:left;font:inherit;padding:7px 12px;border:1.5px solid var(--wood);border-radius:12px;background:var(--card);color:var(--ink);cursor:pointer;position:relative}
+.dtab b{font-size:15px}.dtab span{font-size:13px;color:var(--mute)}
+.dtab[aria-selected="true"]{background:var(--red);border-color:var(--red)}.dtab[aria-selected="true"] b,.dtab[aria-selected="true"] span{color:#fff}
+.dtab .today{position:absolute;top:-8px;right:4px;font-style:normal;font-size:11.5px;font-weight:800;background:var(--green);color:#fff;border-radius:999px;padding:0 6px}
+.dtab .dleft{font-style:normal;font-size:12.5px;font-weight:800;color:var(--wood)}
+.dtab[aria-selected="true"] .dleft{color:#FBF0D2}
+.dayhead{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+.dayhead b{font-family:var(--hd);font-size:22px;color:var(--red)}
+.dayhead span{font-size:14.5px;color:var(--mute)}
+.ctop{background:var(--card);border:1.5px solid var(--wood);border-radius:14px 18px 12px 20px;padding:14px;display:grid;gap:10px}
+.ctotal{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
+.ctotal span{font-weight:800}.ctotal b{font-family:var(--hd);font-size:34px;color:var(--red)}.ctotal small{font-size:14px;color:var(--mute)}
+.cbar{display:flex;height:16px;border-radius:999px;overflow:hidden;background:var(--raise)}
+.cbar span{display:block;height:100%}
+.cbar.sm{height:8px}
+.cleg{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:14px}
+.cleg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:0}
+.cwon,.cleft{font-size:15px}.cwon b,.cleft b{color:var(--wood)}
+.cdays{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.ctabs{margin:4px 0 10px}
+.cdays.one{grid-template-columns:minmax(0,1fr)!important}
+@media (max-width:900px){.cdays{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.cdays{grid-template-columns:minmax(0,1fr)}}
+.cday{background:#fff;border:1.5px solid var(--wood);border-radius:14px 18px 12px 20px;padding:12px;display:grid;gap:8px;align-content:start;min-width:0}
+.cdh{display:flex;justify-content:space-between;gap:6px;align-items:baseline;flex-wrap:wrap}
+.cdh b{font-size:16px}.cdy{font-family:var(--hd);font-size:22px;color:var(--red)}
+.cdm{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.pchip{font-size:13.5px;font-weight:700;background:var(--goldbg);border:1px solid var(--gold);border-radius:999px;padding:1px 8px}
+.ccat{display:grid;gap:4px}
+.cch{display:flex;justify-content:space-between;gap:6px;font-size:14.5px}
+.citem{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:6px;font-size:14.5px;align-items:baseline}
+.citem .ci2 small{display:block;color:var(--mute);font-size:13.5px}
+.cedit{display:grid;gap:4px;background:var(--raise);border-radius:10px;padding:6px}
+.ce1{display:grid;grid-template-columns:96px minmax(0,1fr) 36px;gap:4px}
+.ce2{display:grid;grid-template-columns:minmax(0,1fr) 76px minmax(0,1.2fr);gap:4px}
+.cadd{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) 58px;gap:4px;border-top:1.5px dashed var(--line2);padding-top:8px}
+.cadd .caN{grid-column:1/3}.cadd .caA{grid-column:3/4}
+.cadd select,.cadd input{padding:7px 6px;font-size:16px}
+.cadd .btn{grid-column:1/-1}
+.fhead{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline}
+.fhead b{font-family:var(--hd);font-size:21px;color:var(--red)}.fhead span{font-size:14.5px;color:var(--mute)}
+.fdrop{display:grid;gap:4px;place-items:center;text-align:center;border:2.5px dashed var(--wood);border-radius:16px;padding:22px 14px;background:var(--goldbg);cursor:pointer}
+.fdrop b{font-size:17px}.fdrop span{font-size:14px;color:var(--ink2)}
+.fdrop.on{background:var(--greenbg);border-color:var(--green)}
+.dropon{outline:3px dashed var(--green);outline-offset:3px;background:var(--greenbg)!important;border-radius:12px}
+.fchips{display:flex;flex-wrap:wrap;gap:6px}
+.fchip{font:inherit;font-size:14.5px;font-weight:700;border:1.5px solid var(--wood);background:var(--card);color:var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer}
+.fchip small{font-weight:800;color:var(--mute)}
+.fchip[aria-pressed="true"]{background:var(--red);border-color:var(--red);color:#fff}.fchip[aria-pressed="true"] small{color:#fff}
+.fgrid2{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+@media (max-width:900px){.fgrid2{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:640px){.fgrid2{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.fcard2{background:#fff;border:1.5px solid var(--wood);border-radius:12px;padding:8px;display:grid;gap:5px;align-content:start;min-width:0}
+.fcard2.local{border-style:dashed}
+.fpv{position:relative;aspect-ratio:4/3;border-radius:8px;overflow:hidden;background:var(--raise);display:grid}
+.fpv img{width:100%;height:100%;object-fit:cover;cursor:zoom-in;display:block}
+.fpvb{all:unset;cursor:pointer;display:grid;place-items:center;width:100%;height:100%}
+.fpvi{font-size:44px}
+.flock{position:absolute;top:4px;left:4px;background:#fff;border-radius:999px;padding:0 6px;font-size:14px}
+.fcard2 .fn{font-size:14.5px;overflow-wrap:anywhere;line-height:1.35}
+.fcard2 .fsub{font-size:13px;color:var(--mute)}
+.fcard2 input,.fcard2 select{font-size:16px;padding:6px 8px}
+.fc2b{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.fc2b select{flex:1 1 90px;min-width:0;width:auto}
+.bstore{padding:0!important}
+.bsum{list-style:none;cursor:pointer;display:grid;grid-template-columns:auto minmax(0,1fr) minmax(0,150px) auto auto;gap:8px;align-items:center;padding:12px 14px}
+.bsum::-webkit-details-marker{display:none}
+.btm{font-weight:800;font-size:14px;background:var(--goldbg);border:1px solid var(--gold);border-radius:999px;padding:2px 9px}
+.bnm{display:grid;min-width:0}.bnm b{font-size:16.5px}.bnm small{font-size:13.5px;color:var(--mute)}
+.bav{display:grid;gap:3px;font-size:13.5px;color:var(--ink2)}.bav b{font-family:var(--hd);font-size:20px;color:var(--red)}
+.bbar{display:block;height:8px;border-radius:999px;background:var(--raise);overflow:hidden}
+.bbar>i{display:block;height:100%;background:var(--red)}
+.bbar.g>i{background:var(--green)}
+.bph{font-size:14px;font-weight:700}
+.bme{font-size:13.5px;font-weight:800;color:#fff;background:var(--green);border-radius:999px;padding:2px 9px;white-space:nowrap}
+.bme.no{background:var(--raise);color:var(--mute)}
+.bbody{display:grid;gap:12px;padding:0 14px 16px}
+.bavg{display:grid;gap:6px}
+.bavgg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px 14px}
+.bai{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr) 34px;gap:6px;align-items:center;font-size:14px}
+.bmy{display:grid;gap:10px;background:var(--panel);border-radius:12px;padding:10px}
+.bmyh{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline}
+.bcrit{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.bc{background:#fff;border:1.5px solid var(--line2);border-radius:10px;padding:8px;display:grid;gap:4px;align-content:start;min-width:0}
+.bc>b{font-size:15px}.bc .hint{font-size:13px}
+@media (max-width:900px){.bcrit{grid-template-columns:repeat(2,minmax(0,1fr))}.bavgg{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.bsum{grid-template-columns:auto minmax(0,1fr) auto;}.bav{grid-column:1/-1}.bph{display:none}.bavgg{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:420px){.bcrit{grid-template-columns:minmax(0,1fr)}}
+.fbtop{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:center}
+.rvme{display:grid;gap:8px;background:#fff;border:1.5px solid var(--wood);border-top:6px solid var(--green);border-radius:14px;padding:12px}
+.rvh{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline}.rvh b{font-size:18px}
+.rvq{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+@media (max-width:900px){.rvq{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.rvq{grid-template-columns:minmax(0,1fr)}}
+.rvc{background:var(--panel);border:1.5px solid var(--line2);border-radius:10px;padding:8px;display:grid;gap:4px;align-content:start}
+.rvc b{font-size:14.5px}
 
 /* ===== 크리스마스 그림 톤 (색 · 질감만 · 그림 없음) ===== */
 html{background:var(--bg)}
@@ -471,6 +606,60 @@ input[type=checkbox]{accent-color:var(--green)}
 details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
 .savepill.ok{background:var(--green)}
 .savepill.bad{background:var(--red)}
+.trow.plan>.more .pmv{display:inline-flex;gap:4px;align-items:center;flex-wrap:wrap}
+.pmv select{font-size:15px;min-height:34px;border-radius:8px;border:1px solid var(--line,#d8cbb6);background:#fff;padding:0 6px}
+.pmv .btn[disabled]{opacity:.35}
+.pgone{margin-top:10px;background:var(--raise);border-radius:10px;padding:8px 10px}
+.pgone summary{cursor:pointer;font-weight:700}
+.pgone ul{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:6px}
+.pgone li{display:flex;gap:8px;align-items:center;justify-content:space-between;background:#fff;border-radius:8px;padding:6px 8px;font-size:15px}
+.pgone small{display:block;color:var(--mute);font-size:13px}
+/* ④ 일정 보드 · 표 (워크샵 일정과 같은 모양) */
+.pvbar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin:4px 0 12px}
+.pvs{display:inline-flex;border:1.5px solid #4A3B2C;border-radius:999px;overflow:hidden}
+.pv{font:inherit;font-size:15px;font-weight:700;padding:8px 16px;border:0;background:#FFFDF9;color:#4A3B2C;cursor:pointer;min-height:40px}
+.pv[aria-pressed="true"]{background:#4A3B2C;color:#FFF8EA}
+.pvr{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pbcols{display:grid;grid-template-columns:repeat(6,minmax(270px,1fr));gap:14px;align-items:start;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x proximity}
+.pbcol{background:#FFFDF9;border:1px solid #DCCDB5;border-radius:16px;padding:0 0 10px;box-shadow:0 2px 0 rgba(74,59,44,.06);overflow:hidden;scroll-snap-align:start}
+.pbcol.today{border:2.5px solid #C2412D;box-shadow:0 0 0 4px rgba(194,65,45,.12)}
+.pbh{padding:12px 14px 10px;background:#4A3B2C;color:#FFF8EA}
+.pbcol.past .pbh{background:#6E5E4C}
+.pbh1{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}.pbh1 b{font-size:22px}.pbh1 span{font-size:16px;color:#F2D9A8;font-weight:700}
+.pbtoday{font-style:normal;background:#C2412D;color:#fff;border-radius:999px;padding:1px 9px;font-size:13px}
+.pbq{margin-top:5px;font-size:14px;line-height:1.45;color:#FFF3DE}
+.pbq i{font-style:normal;font-weight:700;background:#E0A458;color:#3A2E22;border-radius:6px;padding:0 6px;margin-right:6px;font-size:13px}
+.pbn{margin-top:6px;font-size:13.5px;color:#EADBC4}.pbn b{color:#FFD0C6}
+.pblist{list-style:none;margin:0;padding:10px 10px 0;display:flex;flex-direction:column;gap:7px}
+.pbc{--k:#8F5A22;display:grid;grid-template-columns:62px 1fr;gap:8px;width:100%;text-align:left;font:inherit;color:#2E2419;background:#fff;border:1px solid #E6D9C4;border-left:5px solid var(--k);border-radius:11px;padding:9px 10px 9px 8px;cursor:pointer}
+.pbc:hover{background:#FFF8EA}
+.pbc.k-move{--k:#456270}.pbc.k-food{--k:#9A4D35}.pbc.k-cafe{--k:#8F5A22}.pbc.k-stay{--k:#56703F}.pbc.k-shop{--k:#8A4B7A}.pbc.k-class{--k:#3D5A9E}.pbc.k-art{--k:#7E6100}.pbc.k-etc{--k:#736350}
+.pbc.now{border:2.5px solid #C2412D;border-left:6px solid #C2412D}.pbc.done{opacity:.6}
+.pbtm{font-weight:700;font-size:14.5px;color:#8F5A22;line-height:1.35;overflow-wrap:anywhere}
+.pbbody{display:flex;flex-direction:column;gap:3px;min-width:0}
+.pbpl{font-size:16px;font-weight:700;line-height:1.4;word-break:keep-all;overflow-wrap:anywhere}.pbpl i{font-style:normal;margin-right:5px}
+.pbmo{font-size:14px;line-height:1.5;color:#4F4233;word-break:keep-all;overflow-wrap:anywhere}
+.pbnow{font-style:normal;align-self:flex-start;background:#C2412D;color:#fff;border-radius:999px;padding:1px 8px;font-size:12.5px;font-weight:700}
+.pbempty{padding:14px;color:var(--ink2)}
+.ptgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:16px;align-items:start;margin-top:12px}
+@media (max-width:860px){.ptgrid{grid-template-columns:minmax(0,1fr)}}
+.pttl{background:#FFFDF9;border:1px solid #DCCDB5;border-radius:14px;overflow:hidden}
+.ptth{background:#EFE6D6;padding:10px 14px;display:grid}.ptth b{font-size:17px}.ptth small{color:var(--ink2)}
+.pttl ol{list-style:none;margin:0;padding:4px 14px 10px;max-height:640px;overflow:auto}
+.pttl li{display:grid;grid-template-columns:96px minmax(0,1fr);gap:10px;padding:9px 0;border-bottom:1px dotted #D3C2A6}
+.pttl li.now{background:#FCE4DF;border-radius:8px}
+.pttl .tm,.ptab .tm{font-weight:700;color:#8F5A22;white-space:normal;word-break:keep-all;line-height:1.4}
+.pttl li b{display:block;font-size:16px}.pttl li small{display:block;color:#7A5A3C;font-size:14px;line-height:1.5}
+.ptab{background:#FFFDF9;border:1px solid #DCCDB5;border-radius:14px;overflow:auto}
+.ptab table{width:100%;border-collapse:collapse;font-size:15px;table-layout:fixed}
+.ptab col.c1{width:96px}.ptab col.c2{width:34%}
+.ptab th{text-align:left;padding:10px 12px;border-bottom:1.5px dashed #D3C2A6;color:#5B4630}
+.ptab th,.ptab td{white-space:normal!important;min-width:0!important}
+.ptab td{padding:11px 12px;border-bottom:1px solid #EFE6D6;vertical-align:top;line-height:1.5;word-break:keep-all;overflow-wrap:anywhere}
+.ptab tr.phit td{background:#FFE9A8;transition:background 2s}
+.ptab .pd{display:block;color:var(--ink2);font-size:13.5px;margin-top:3px}
+/* 같이 공부하는 분 공유용 (?study) · 예습 · 연수 노트 · 이론만 · 카페스이 관련은 숨김 */
+body.study .bt[data-tab=plan],body.study #tab-plan,body.study #saveNow,body.study .st-hide{display:none!important}
 </style>
 </head>
 <body>
@@ -478,7 +667,7 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
 
 <header class="top">
   <div>
-    <span class="kick">카페스이 · 빠아빠 4기</span>
+    <span class="kick" id="kick">카페스이 · 빠아빠 4기</span>
     <h1>핫토리 제과연수 2026</h1>
     <p class="sub">도쿄 핫토리영양전문학교 · 2026. 11. 30 ~ 12. 5 · 수업 12/1 ~ 3 · 일본 디저트 9가지</p>
   </div>
@@ -492,7 +681,7 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
   <span class="hint">이 휴대폰 · 컴퓨터에 기억돼요. 벤치마킹 평가와 소감은 이 이름의 내 칸에만 저장돼요.</span>
 </section>
 
-<div class="topbar"><span class="ver">버전 <b id="verTag">v1125-2</b> · 적으면 자동 저장 · 지운 줄도 서버에 남아요</span><span class="last" id="lastSave">아직 저장 전</span><button type="button" class="btn pri" id="saveNow">💾 지금 저장 + 백업</button></div>
+<div class="topbar"><span class="ver">버전 <b id="verTag">v1126-6</b> · 적으면 자동 저장 · 지운 줄도 서버에 남아요</span><span class="last" id="lastSave">아직 저장 전</span><button type="button" class="btn pri" id="saveNow">💾 지금 저장 + 백업</button></div>
 <nav class="bigtabs" role="tablist" aria-label="큰 탭">
   <a class="bt" role="tab" href="#tab-pre" data-tab="pre">📗 예습 노트</a>
   <a class="bt" role="tab" href="#tab-note" data-tab="note">✍️ 연수 노트</a>
@@ -766,7 +955,7 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
     <div class="tbl"><table style="min-width:640px">
       <thead><tr><th>빵 이름</th><th>모양</th><th>특징 (식감 · 풍미 · 공법)</th><th>노션</th></tr></thead>
       <tbody id="lastRecipes"></tbody></table></div>
-    <p class="hint"><a href="https://app.notion.com/p/2bb69763f923809e941cd1b686192867" target="_blank" rel="noopener">레시피 자료 모음 (노션) ↗</a></p>
+    <p class="hint st-hide"><a href="https://app.notion.com/p/2bb69763f923809e941cd1b686192867" target="_blank" rel="noopener">레시피 자료 모음 (노션) ↗</a></p>
   </section>
   <div class="part" id="lastRec"><span class="pn">2025 제빵</span><h2>작년 연수 기록</h2><p>모집 내용 · 미리 준비한 것 · 25년 피드백</p></div>
   <section class="sec" id="l1">
@@ -792,7 +981,7 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
     <div class="card"><p>왕복 항공권 캡처 · 로밍 · 해외 사용 카드(여권 명의자와 같아야 함) · 여행자보험 · 비짓재팬 QR · 일본 교통카드 · 환전 · 여권 · 개인 짐 · 쉐프복 3벌 · 멀티탭 / 돼지코 · 일정 최종 점검</p></div>
   </section>
 
-  <section class="sec" id="l3">
+  <section class="sec st-hide" id="l3">
     <div class="sech"><span class="num">3</span><h2>25년의 피드백 · 좋은 것 / 안 좋은 것</h2></div>
     <div class="card"><ul>
       <li>매일 숏츠로 공부 영상 올리기 (인스타 + 숏츠)</li>
@@ -820,19 +1009,22 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
     <span class="fmsg" id="pinMsg"></span>
   </div>
   <div id="planBody" class="tabpane" hidden>
-  <nav class="jump" aria-label="일정 · 준비 안에서 이동">
-    <a href="#s1">① 커리큘럼</a><a href="#s2">② 미리 준비</a><a href="#s3">③ 구매</a><a href="#s5">④ 날짜별 일정</a><a href="#s6">⑤ 지출내역</a><a href="#s7">⑥ 자료</a><a href="#s8">⑦ 벤치마킹</a><a href="#s9">⑧ 소감 · 피드백</a>
-  </nav>
+  <nav class="ptiles" id="ptiles" role="tablist" aria-label="일정 · 준비 화면"></nav>
   <div class="addbar" style="margin-top:0"><button type="button" class="btn sm" id="planLockBtn">🔒 잠그기</button><span class="hint">이 기기에서 다시 잠가요</span></div>
 
-  <section class="sec" id="s1">
+  <section class="sec ppane" id="s0" data-pp="sum">
+    <div class="sech"><span class="num">🏕</span><h2>한눈에</h2><small>오늘 · 다음 일정 · 꼭 사기 남은 것 · 지출 · 자료</small></div>
+    <div id="secSum"></div>
+  </section>
+
+  <section class="sec ppane" id="s1" data-pp="cur">
     <div class="sech"><span class="num">①</span><h2>커리큘럼 및 안내사항</h2><small>개인 실습 위주 · 촬영 · 녹화 가능</small></div>
     <div class="callout"><b>지금 바로 매출로 이어지는 일본 디저트 실전 연수</b><span>꾸준히 팔리고, 선물용으로 강하고, 카페에서 바로 쓸 수 있는 일본 대표 디저트 9가지</span></div>
     <div class="cur" id="curList"></div>
     <p class="hint">출처 · <a href="https://blog.naver.com/mainssang/224271512975" target="_blank" rel="noopener">빠아빠 마스터클래스 4기 모집 안내 ↗</a></p>
   </section>
 
-  <section class="sec" id="s2">
+  <section class="sec ppane" id="s2" data-pp="prep">
     <div class="sech"><span class="num">②</span><h2>미리 준비해야 할 것들</h2><small>다 한 건 체크 → 줄 그어짐</small></div>
     <div class="warn">
       <p>▪️ 비짓재팬 등록하고 QR코드 캡처해 두기 (필수는 아니지만 해 두면 편해요)</p>
@@ -844,23 +1036,29 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
     <div id="secPrep"></div>
   </section>
 
-  <section class="sec" id="s3">
+  <section class="sec ppane" id="s3" data-pp="buy">
     <div class="sech"><span class="num">③</span><h2>구매해 와야 할 것들</h2></div>
     <div id="secBuy"></div>
   </section>
 
-  <section class="sec" id="s5">
-    <div class="sech"><span class="num">④</span><h2>날짜별 일정</h2><small>1일차 11/30 ~ 6일차 12/5 · 줄마다 📍 지도 · 🚶 길찾기</small></div>
+  <section class="sec ppane" id="s5" data-pp="day">
+    <div class="sech"><span class="num">④</span><h2>날짜별 일정</h2><small>1일차 11/30 ~ 6일차 12/5 · 장소는 구글 지도 저장 목록으로 봐요</small></div>
     <div id="secPlan"></div>
   </section>
 
-  <section class="sec" id="s6">
+  <section class="sec ppane" id="s6" data-pp="cost">
     <div class="sech"><span class="num">⑤</span><h2>날짜별 지출내역</h2><small>¥ 엔 · ₩ 원 섞어 쓰기 · 총 · 남은 돈 · 원 환산은 자동</small></div>
     <div id="secCost"></div>
   </section>
 
-  <section class="sec" id="s7">
-    <div class="sech"><span class="num">⑥</span><h2>미리 준비하는 자료 · 📁 자료 모으기</h2><small>항공권 · 비짓재팬 QR · 살 것 · 예약 확인 · 기타</small></div>
+  <section class="sec ppane" id="s7" data-pp="file">
+    <div class="sech"><span class="num">⑥</span><h2>📁 자료 모으기 · 항공권 · 예약</h2><small>✈️ 항공권 · 🛂 비짓재팬 QR · 🎫 예약 확인 · 🛍 살 것 · 📝 기타 · 캡처 사진으로 올려요</small></div>
+    <div id="secFiles"></div>
+    <div class="card">
+      <b>🗺 내 구글 지도 저장 목록 · 「26년 핫토리 제과연수」</b>
+      <span class="hint">구글 지도 앱에 저장한 목록이에요 · 앱에서 열면 지도 위에 한 번에 보여요</span>
+      <div class="addbar"><a class="btn pri" href="https://maps.app.goo.gl/dv9QNdypMGAmfNXG8" target="_blank" rel="noopener">🗺 구글 지도에서 목록 열기 ↗</a></div>
+    </div>
     <div class="card">
       <b>🛒 숙소 근처 마트 · 슈퍼</b>
       <ul class="shops">
@@ -872,15 +1070,14 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
         <li><b>OK<ruby>ストア<rt>すとあ</rt></ruby> <ruby>千駄ヶ谷店<rt>せんだがやてん</rt></ruby></b> · 조금 멂 · ~21:30 <span class="maps" data-map="OKストア 千駄ヶ谷店"></span></li>
       </ul>
     </div>
-    <div id="secFiles"></div>
   </section>
 
-  <section class="sec" id="s8">
+  <section class="sec ppane" id="s8" data-pp="bench">
     <div class="sech"><span class="num">⑦</span><h2>🔎 벤치마킹</h2><small>가게마다 사람별 7항목 /10 · 🏆 평균 순위 /70 · 내 칸만 저장</small></div>
     <div id="secBench"></div>
   </section>
 
-  <section class="sec" id="s9">
+  <section class="sec ppane" id="s9" data-pp="feel">
     <div class="sech"><span class="num">⑧</span><h2>💌 소감 · 피드백</h2><small>다녀와서 각자 적어요 · 내 카드만 적을 수 있어요</small></div>
     <div id="secReview"></div>
   </section>
@@ -889,7 +1086,7 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
 
 
 <footer>
-  <span>정리 · 손조이 (카페스이) · 같이 쓰는 페이지라 개인정보(숙소 주소 · 카드 · 여권 번호 등)는 적지 말아 주세요</span>
+  <span id="footNote">정리 · 손조이 (카페스이) · 같이 쓰는 페이지라 개인정보(숙소 주소 · 카드 · 여권 번호 등)는 적지 말아 주세요</span>
   <span>커리큘럼 출처 · <a href="https://blog.naver.com/mainssang/224271512975" target="_blank" rel="noopener">빠아빠 마스터클래스 4기 모집 안내</a></span>
 </footer>
 </div>
@@ -1063,51 +1260,51 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
     { n: 5, d: "12/4 (금)", ymd: [2026, 12, 4], title: "도쿄 디저트 · 긴자" },
     { n: 6, d: "12/5 (토)", ymd: [2026, 12, 5], title: "귀국" }
   ];
-  function classDay(evening, extra) {
-    var r = [["07:00", "기상", ""], ["", "학교 갈 준비", "점심 대용 도시락 챙기기"], ["08:40", "핫토리 수업 (Hattori Nutrition College)", "8:40까지 도착 · 편한 운동화 · 개인 쉐프복 · 휴대폰 충전기 · 펜"], ["12:00", "점심", "도시락 먹기 · 물 챙기기"], ["17:00", "수업 끝", ""]];
-    return r.concat(evening, extra || [["", "혼자 레시피 정리 마무리", "이 페이지 수업 노트에 바로 적기"], ["", "오답노트 보고 자기", ""]]);
-  }
+  /* 날짜별 일정 = 노션 「26.12.1-3 3박 4일 도쿄 핫토리 제과 연수 with 빠아빠」 표 그대로 (2026-11-25 옮김 · 약 이름만 뺌) */
   var PLAN_ROWS = {
-    1: [["08:20", "김해 출발 BX0717", "캐리어 1개 (45L도 같이)"],
-        ["10:25", "나리타 공항 도착", "나리타 제1터미널 · 밖으로 나오는 시간까지"],
-        ["", "나리타 지하 · 넥스 왕복 티켓 사기", "5,200엔 · 여권 필요 · 교통카드 1장에 10,000엔 충전 · 편의점에서 간단히 · 신주쿠까지 약 1시간 30분"],
-        ["13:00", "신주쿠역 도착", "남쪽출구 코인락커에 캐리어 맡기기"],
-        ["13:10", "★ 포터 (이세탄 본관 2층)", "★ 꼭 사기 · 하울 본삭 미니 네이비 · 없으면 16:15 포터 오모테산도점 (12~20시) · 여권 챙기기"],
-        ["13:45", "장어덮밥 고바야시 (小ばやし · こばやし)", "신주쿠 동쪽출구 2분 · 안 되면 기쿠카와 (菊川 · きくかわ)"],
-        ["14:40", "택배 픽업 (요요기)", ""],
-        ["15:10", "숙소에 짐 두기", "핫토리 학교 근처 숙소 · 체크인 16시 · 얼리 체크인 문의 · 안 되면 락커에 두고 다니기"],
-        ["15:30", "★ 하라주쿠", "★ 꼭 사기 · 호카 하라주쿠 직영점 (신발) · 온러닝 캣스트리트 · 여권 챙기기"],
-        ["16:15", "★ 오모테산도", "★ 꼭 사기 · MATOW 스퀘어 시계 (H°M'S WatchStore 오모테산도 · 19:30 마감 · 저녁 전에) · 넘버슈가 · 피에르 에르메 · 포터 오모테산도점 (12~20시)"],
-        ["17:45", "저녁 (혼자) · 오모테산도", "とんかつ まい泉(まいせん) 青山本店(あおやまほんてん) (카운터석 · 11:00~22:00 무휴) 또는 麺散 (우동 · 월 ~22:00)"],
-        ["19:00", "★ 호카 시부야 직영점", "20시 마감 · 하라주쿠에서 못 샀으면 여기서 · 여권 챙기기"],
-        ["20:00", "마트 + 다이소", "다이소: 빅카메라 신주쿠 8층 · 비타민 · 휴족시간 · 겔 · 1회용 컵 · 햇반 · 후리카케 · 오니기리통"],
-        ["", "산 짐 정리하기", "미리 산 것 다 정리"],
-        ["", "학교 갈 준비하고 쉬기", ""]],
-    2: classDay([["18:00", "레시피 정리 (수복님과)", ""], ["", "저녁", "우마야 (신주쿠) 또는 탄보 (요요기) · 다카시마야 지하 구경 (7시 반까지)"]]),
-    3: classDay([["18:00", "레시피 정리 (수복님과)", ""], ["", "신주쿠 저녁 쇼핑", "알펜도쿄 (온러닝) · 치이카와랜드 · 무인양품 · 세계당 (문구) · 이세탄 지하"]]),
-    4: classDay([["", "레시피 정리 (수복님과)", "오늘 배운 것 보고 정리"], ["18:00", "저녁 · 야키니쿠 시시로", "학교 바로 옆 · 18시 오픈"]], [["", "혼자 레시피 정리 마무리", "이 페이지 수업 노트에 바로 적기"]]),
-    5: [["06:00", "기상 · 일본어 청해 4회", "듣기 + 채점 + 피드백"],
-        ["09:30", "도쿄도미술관 오르세전", "2,400엔 · 예약 필요 없음 · 오픈런"],
-        ["12:00", "가볍게 점심", "미술관 안 레스토랑이나 카페"],
-        ["13:00", "긴자선 타고 긴자로", ""],
-        ["14:00", "페닌슐라 도쿄 애프터눈티", "호텔 디저트 · 예약"],
-        ["16:30", "긴자 디저트 구경", "키쿠노야 (틴 · 18시 마감) · 시세이도 팔러 (틴쿠키) · 긴자 웨스트 · 팡메종 · 이토야 (문구)"],
-        ["18:00", "히가시야 긴자 (HIGASHIYA GINZA)", "19시 마감 · 와가시 매장 구경"],
-        ["19:00", "프렌치 코스 · 셰토모 (긴자)", "히가시야와 같은 건물 11층 · TableCheck로 예약"],
-        ["밤", "숙소 · 짐 싸기", "포터 · 시계는 기내 가방에"]],
-    6: [["06:00", "기상 · 체크아웃", ""],
-        ["07:30", "공항으로 출발", "넥스 왕복표"],
-        ["09:00", "나리타 제1터미널 도착", "면세 환급 받기 (포터 · 시계 · 여권)"],
-        ["11:25", "BX0718 한국으로", ""],
-        ["", "일본어 청해 5회", "비행기 안에서 풀고 공부해 보기"]]
+    1: [["6:00 (am)", "김해공항으로 가기", "집에서 5:20에 택시불러서 가기"],
+        ["11:00 (am)", "나리타 공항 도착", "아예 밖으로 나오는 시간까지 [나리타 국제1공항]"],
+        ["", "나리타공항 지하로 가서 - 넥스 왕복 티켓 사기 (5,200엔, 여권)", "교통카드 충전하고 편의점에서 간단히 먹을거 사기 / 카드 1장에 충전하기 (10,000엔) / 나리타익스프레스로 한번에 신주쿠역까지 감 (1시간30분)"],
+        ["1:00", "신주쿠역 도착", "남쪽출구 코인락커에 캐리어 맡기기 (빨리 체크인되면 끌고 픽업가기)"],
+        ["", "야마토운수 (요요기)", "택배 픽업 → 냉장보관 / 평일 12-8시"],
+        ["3:10", "숙소 체크인", "짐 두고 냉장고 / 얼리체크인 안되면 락커에 두고 다니기"],
+        ["1:45", "장어덮밥 - 小ばやし (고바야시)", "신주쿠 동쪽출구 2분 / 안되면 菊川 (기쿠카와)"],
+        ["1:10", "포터 (이세탄 본관 2층)", "하울 본삭 미니 네이비 사기 (30,800엔) / 여권 챙기기"],
+        ["3:30", "하라주쿠 구경가기", "호카 직영점 / 온러닝 캣스트리트"],
+        ["4:15", "오모테산도", "MATOW 시계 (H°M'S) - 손목시계 (까르띠에맛)"],
+        ["", "시부야로 이동", "포켓몬센터 / 스텐다드 프로덕트 / 무지 /"],
+        ["", "저녁식사", "야끼니꾸 먹기"],
+        ["8:00", "마트다녀오기 (다이소까지) · 다이소: 빅카메라 신주쿠 8층 / 마트: OK스토어", "비타민, 휴족시간, 겔, 1회용컵, 햇반, 후리카게, 오니기리통"],
+        ["", "산 짐 정리하기", "미리 산거 다 정리하기"],
+        ["", "학교갈 준비하고 쉬기", ""]],
+    2: [["7:00", "기상", ""], ["", "학교갈 준비하기", "점심 대용 먹을꺼 챙기기 (도시락)"], ["8:40", "Hattori Nutrition College", "핫토리에 8:40 까지 가기"], ["", "", "준비물. 편한운동화 / 개인 쉐프복 / 핸드폰충전기 / 펜 /"], ["12:00", "점심식사", "도시락 먹기 (먹는거보고 물이랑 좀 챙기기)"], ["5:00", "수업 1일차 종료", ""], ["6:00", "마치고 정리하기", "레시피 정리하기 (수복님하고)"], ["", "근처 마트 갈수 있음 다녀오기", ""], ["", "혼자 레시피 정리 마무리", "클로드로 하기"], ["", "오답노트 보고 자기", ""]],
+    3: [["7:00", "기상", ""], ["", "학교갈 준비하기", "점심 대용 먹을꺼 챙기기 (도시락)"], ["8:40", "Hattori Nutrition College", "핫토리에 8:40 까지 가기"], ["", "", "준비물. 편한운동화 / 개인 쉐프복 / 핸드폰충전기 / 펜 /"], ["12:00", "점심식사", "도시락 먹기 (먹는거보고 물이랑 좀 챙기기)"], ["5:00", "수업 1일차 종료", ""], ["6:00", "마치고 정리하기", "레시피 정리하기 (수복님하고)"], ["", "근처 마트 갈수 있음 다녀오기", ""], ["", "혼자 레시피 정리 마무리", "클로드로 하기"], ["", "오답노트 보고 자기", ""]],
+    4: [["7:00", "기상", ""], ["", "학교갈 준비하기", "점심 대용 먹을꺼 챙기기 (도시락)"], ["8:40", "Hattori Nutrition College", "핫토리에 8:40 까지 가기"], ["", "", "준비물. 편한운동화 / 개인 쉐프복 / 핸드폰충전기 / 펜 /"], ["12:00", "점심식사", "도시락 먹기 (먹는거보고 물이랑 좀 챙기기)"], ["5:00", "수업 1일차 종료", ""], ["6:00", "마치고 정리하기", "오늘은 보고 레시피 정리하기 (수복님하고)"], ["", "저녁식사", "야끼니꾸 먹으러가기 (시시로, 학교 바로 옆 / 6시 오픈)"], ["", "혼자 레시피 정리 마무리", "클로드로 하기"]],
+    5: [["6:00", "기상", ""],
+        ["", "일본어 청해 4회 하기", "듣기 들어보기 + 채점 + 피드백"],
+        ["9:30", "도쿄도미술관 오픈런하기", "오르세미술관전시보기 (2,400엔, 예약 필요없음)"],
+        ["12:00", "점심", "미술관 안 레스토랑이나 카페"],
+        ["13:00", "긴자선 타고 미쓰코시마에로", ""],
+        ["13:15", "니혼바시 미쓰코시 지하 + 센비키야", "과일선물·과일산도 구경"],
+        ["14:15", "(선택) Pâtisserie Ease", "시간 없으면 빼기"],
+        ["15:00", "도쿄역 - 치이카와랜드 + 기프트팔레트", "치이카와 키링 사기 / 역 한정 선물과자 구경"],
+        ["16:00", "긴자 디저트 구경", "키쿠노야 (틴, 6시마감) / 시세이도팔러 (틴쿠키) / 긴자웨스트 / 마쓰야·미쓰코시 지하 / 팡메종 소금빵 / 이토야 문구 / 사다하루아오키"],
+        ["18:00", "HIGASHIYA GINZA", "7시 마감 / 와가시 매장 구경"],
+        ["18:30", "프렌치 코스 - 셰토모 (긴자)", "히가시야 같은 건물 11층 / 1인 예약 가능 / 테이블체크로 예약하기"],
+        ["밤", "숙소 · 짐 싸기", "포터·시계는 기내가방에 넣기"]],
+    6: [["6:00", "기상하기", ""],
+        ["7:30", "공항으로 출발하기 (넥스 왕복표)", ""],
+        ["9:00", "나리타 제1공항으로", "도착하기 / 면세 환급 받기 (포터·시계, 여권)"],
+        ["11:25", "한국으로", ""],
+        ["", "일본어 청해 5회 하기", "비행기안에서 풀고 공부해보기"]]
   };
   var PLAN_MEMO = {
-    1: "BX0717 김해 08:20 → 나리타 10:25 · 여행자보험 · 로밍 완료 · 캐리어 1개 (45L도 같이)",
-    2: "저녁 후보: 우마야 (신주쿠) · 탄보 (요요기) · 다카시마야 지하 구경 (숙소 근처 · 7시 반까지) · GU",
-    3: "저녁 쇼핑: 알펜도쿄 (온러닝) · 치이카와랜드 · 무인양품 · 세계당 (문구) · 이세탄 지하",
-    4: "저녁: 야키니쿠 시시로 (학교 바로 옆 · 18시 오픈)",
-    5: "미술관 → 페닌슐라 애프터눈티 → 긴자 디저트 → 히가시야 → 셰토모",
-    6: "BX0718 나리타 제1터미널 11:25 → 13:55 · 위탁 수하물 15kg / 기내용 10kg"
+    1: "여행자보험 / 로밍 완료 · 11.30 월 8:20 - 10:25 BX0717 · 캐리어 1개 가져가기 (45L 짜리도 같이)",
+    2: "저녁: 우마야 (신주쿠) or 탄보 (요요기) / 다카시마야 지하 구경 (숙소 옆, 7시반까지) / GU",
+    3: "저녁 쇼핑: 알펜도쿄 (온러닝) / 치이카와랜드 / 무인양품 / 세계당 (문구) / 이세탄 지하",
+    4: "",
+    5: "",
+    6: "나리타 제1터미널 11:25 - 13:55 BX0718 · 위탁수화물 15kg / 기내용 10kg"
   };
   var BENCH_STORES = [
     ["넘버슈가 오모테산도", "오모테산도", "1일차"], ["피에르 에르메 아오야마", "오모테산도", "1일차"], ["다카시마야 신주쿠 지하", "신주쿠", "2일차"],
@@ -1214,7 +1411,8 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
   }
   function flushAll() { Object.keys(S.pend).forEach(function (k) { if (!S.timers[k] && !S.busy[k]) flush(k); }); }
   setInterval(function () { if (pendCount()) flushAll(); }, 20000);
-  window.addEventListener("online", flushAll);
+  /* 인터넷 없이 페이지를 연 뒤 연결되면 서버에 다시 붙고 밀린 글을 보냄 (새로고침 안 해도 됨) */
+  window.addEventListener("online", function () { if (!online) boot(); else flushAll(); });
   document.addEventListener("visibilitychange", function () { if (document.visibilityState === "hidden") Object.keys(S.timers).forEach(function (k) { if (S.timers[k]) { clearTimeout(S.timers[k]); flush(k); } }); });
 
   var stT = null;
@@ -1262,10 +1460,11 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
   function ta(k, p, v, ph, extra) { return '<textarea rows="1" ' + A(k, p) + ' placeholder="' + esc(ph) + '" aria-label="' + esc(ph) + '" ' + (extra || "") + '>' + esc(v) + '</textarea>'; }
   function delBtn(k, path, label) { return '<button type="button" class="x" data-act="del" data-k="' + esc(k) + '" data-path="' + esc(path) + '" aria-label="' + (label || "이 줄 빼기") + '">×</button>'; }
   function addBtn(k, path, kind, label) { return '<button type="button" class="btn sm" data-act="add" data-k="' + esc(k) + '" data-path="' + esc(path) + '" data-kind="' + kind + '">' + (label || "＋ 줄 추가") + '</button>'; }
+  function capName(t) { return String(t || "").replace(/^\s*★\s*/, "").split(" · ")[0].split(" / ")[0].trim(); }
   function picsHtml(k, phPath, list, title) {
     var ph = rowsOf(list || {}), fid = "up_" + (k + "_" + phPath).replace(/[^\w]/g, "_");
     return '<div class="ckpics" data-up="' + esc(k) + '" data-path="' + esc(phPath) + '">' +
-      ph.map(function (b) { return '<span class="ckpic"><img data-fk="' + esc(b[1].k) + '" alt="' + esc(title || "사진") + ' 사진 · 누르면 크게">' + (me && b[1].by === me ? delBtn(k, phPath + "." + b[0], "✕") : "") + '</span>'; }).join("") +
+      ph.map(function (b) { return '<span class="ckpic"><img data-fk="' + esc(b[1].k) + '" alt="' + esc(title || "사진") + ' 사진 · 누르면 크게">' + (capName(title) ? '<span class="cap">' + esc(capName(title)) + '</span>' : "") + (me && b[1].by === me ? delBtn(k, phPath + "." + b[0], "✕") : "") + '</span>'; }).join("") +
       '<input type="hidden" class="upT" value="' + esc(String(title || "").slice(0, 20)) + '"><input type="hidden" class="upM" value="">' +
       '<label class="btn sm ckadd" for="' + fid + '" title="사진 넣기">📷 ' + (ph.length ? "추가" : "사진") + '</label><input type="file" id="' + fid + '" class="upF" accept="image/*" hidden><span class="fmsg"></span></div>';
   }
@@ -1289,15 +1488,15 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
     var r = rowsOf(rows), withPics = !!opt.pics;
     return '<ul class="cks">' + r.map(function (a) {
       var id = a[0], x = a[1], p = path + "." + id;
-      var more = opt.more ? '<div class="ckmore">' + ta(k, p + ".m", x.m, "메모 (주소 · 예약번호 · 가격 등)") +
-        '<div class="plrow"><label class="pllab">📍 장소<input type="text" ' + A(k, p + ".pl") + ' value="' + esc(x.pl || "") + '" placeholder="예) 伊勢丹新宿店 本館" aria-label="장소 검색어"></label>' + mapBtns(x.pl !== undefined && x.pl !== "" ? x.pl : (x.pl === undefined ? placeFromText(x.x) : "")) + '</div></div>' : "";
+      var more = opt.more ? '<div class="ckmore">' + ta(k, p + ".m", x.m, "메모 (주소 · 예약번호 · 가격 등)") + (opt.noMap ? '</div>' :
+        '<div class="plrow"><label class="pllab">📍 장소<input type="text" ' + A(k, p + ".pl") + ' value="' + esc(x.pl || "") + '" placeholder="예) 伊勢丹新宿店 本館" aria-label="장소 검색어"></label>' + mapBtns(x.pl !== undefined && x.pl !== "" ? x.pl : (x.pl === undefined ? placeFromText(x.x) : "")) + '</div></div>') : "";
       var picBtn = "", thumbs = "", upAttr = "";
       if (withPics) {
         var ph = rowsOf(x.ph || {}), fid = "up_" + (k + "_" + p).replace(/[^\w]/g, "_");
         upAttr = ' data-up="' + esc(k) + '" data-path="' + esc(p + ".ph") + '"';
         picBtn = '<label class="btn sm ckadd" for="' + fid + '" title="사진 넣기" aria-label="사진 넣기">📷</label><input type="file" id="' + fid + '" class="upF" accept="image/*" hidden>' +
           '<input type="hidden" class="upT" value="' + esc(String(x.x || "").slice(0, 20)) + '"><input type="hidden" class="upM" value="">';
-        thumbs = (ph.length ? '<div class="ckpics">' + ph.map(function (b) { return '<span class="ckpic"><img data-fk="' + esc(b[1].k) + '" alt="' + esc(x.x || "사진") + ' 사진 · 누르면 크게">' + (me && b[1].by === me ? delBtn(k, p + ".ph." + b[0], "✕") : "") + '</span>'; }).join("") + '</div>' : "") + '<span class="fmsg"></span>';
+        thumbs = (ph.length ? '<div class="ckpics">' + ph.map(function (b) { return '<span class="ckpic"><img data-fk="' + esc(b[1].k) + '" alt="' + esc(x.x || "사진") + ' 사진 · 누르면 크게">' + (capName(x.x) ? '<span class="cap">' + esc(capName(x.x)) + '</span>' : "") + (me && b[1].by === me ? delBtn(k, p + ".ph." + b[0], "✕") : "") + '</span>'; }).join("") + '</div>' : "") + '<span class="fmsg"></span>';
       }
       return '<li class="row-ck' + (x.ok ? " done" : "") + '"' + upAttr + '><div class="ckline"><input type="checkbox" ' + A(k, p + ".ok") + (x.ok ? " checked" : "") + ' aria-label="했어요">' +
         ta(k, p + ".x", x.x, "항목") + picBtn + delBtn(k, p) + '</div>' + thumbs + more + '</li>';
@@ -1319,7 +1518,7 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
     if (t.type === "checkbox") { var li = t.closest(".row-ck"); if (li) li.classList.toggle("done", t.checked); }
     if (t.tagName === "TEXTAREA") grow(t);
     if (t.dataset.k.indexOf(PRE + "cost") === 0) refreshCost();
-    if (t.dataset.k === K.bench) refreshRank();
+    if (t.dataset.k === K.bench) { var bm = /^ev\.([^.]+)\.([^.]+)\./.exec(t.dataset.p); if (bm && bm[2] === meKey()) put(K.bench, "ev." + bm[1] + "." + bm[2] + ".at", new Date().toISOString()); refreshRank(); var bar = t.parentNode && t.parentNode.querySelector(".bbar.g i"); if (bar && t.tagName === "SELECT") bar.style.width = (num(t.value) * 10) + "%"; }
     if (t.dataset.k.indexOf(PRE + "class.") === 0) refreshDone();
   }
   document.addEventListener("input", onField);
@@ -1369,7 +1568,7 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
     return d;
   }
   function buildFolds() {
-    ["tab-pre", "tab-note", "tab-theory", "planBody"].forEach(function (tid) {
+    ["tab-pre", "tab-note", "tab-theory"].forEach(function (tid) {
       var pane = $(tid); if (!pane) return;
       /* ① 섹션(section.sec): 제목 줄 = 접는 머리 */
       pane.querySelectorAll("section.sec").forEach(function (sec, i) {
@@ -1432,8 +1631,15 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
 
   /* ---------- 큰 탭 · #tab-이름 ---------- */
   var TABS = ["pre", "note", "theory", "plan"];
+  var STUDY = /[?&]study\b/.test(location.search);
+  if (STUDY) {
+    document.body.classList.add("study");
+    $("kick").textContent = "빠아빠 4기 · 같이 공부하는 노트";
+    $("footNote").textContent = "예습 · 수업 레시피 · 이론 공유용 화면이에요 · 수업에서 다르게 배우면 수업 내용이 기준이에요";
+  }
   function showTab(name, keepScroll) {
     if (TABS.indexOf(name) < 0) name = "pre";
+    if (STUDY && name === "plan") name = "pre";
     if (name === "plan") paintLock();
     TABS.forEach(function (t) { $("tab-" + t).hidden = t !== name; });
     document.querySelectorAll(".bt").forEach(function (b) { b.setAttribute("aria-selected", String(b.dataset.tab === name)); });
@@ -1458,7 +1664,7 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
   /* 🗓 일정 · 준비 잠금 · 화면만 가리는 용도 (서버 데이터를 숨기는 것은 아님) · 번호는 해시로만 비교 */
   var PIN_HASH = "604c3f0292e070afa232eec0dfd853e2cdc3fce8eaefa3fa920fc34d4cb675ce";
   function sha256(str) { return crypto.subtle.digest("SHA-256", new TextEncoder().encode(str)).then(function (b) { return Array.prototype.map.call(new Uint8Array(b), function (x) { return (x < 16 ? "0" : "") + x.toString(16); }).join(""); }); }
-  function paintLock() { var ok = ls(PRE + "ui.unlock") === PIN_HASH; $("planLock").hidden = ok; $("planBody").hidden = !ok; }
+  function paintLock() { var ok = ls(PRE + "ui.unlock") === PIN_HASH; if (ok && !me) { me = "손조이"; ls(PRE + "me", me); } $("planLock").hidden = ok; $("planBody").hidden = !ok; }
   function tryPin() {
     var v = $("pinIn").value.trim(), m = $("pinMsg");
     if (!v) { $("pinIn").focus(); return; }
@@ -1541,8 +1747,8 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
       '<div class="ncard"><div class="field"><label>실패 원인과 해결</label>' + ta(k, "fails", v.fails, "예) 시트가 갈라짐 → 굽는 시간 2분 줄이기", 'style="min-height:110px"') + '</div></div></div>' +
       '<div class="ask"><h3>질문과 답</h3>' + it.ask.map(function (q, j) { return '<div class="qa"><label>' + rb(esc(q)) + '</label>' + ta(k, "ans." + j, (v.ans || {})[j], "답") + '</div>'; }).join("") +
       '<div class="field"><label style="font-size:16px">추가 질문 · 메모</label>' + ta(k, "extra", v.extra, "더 물어본 것 · 기억할 것") + '</div></div>' +
-      '<div class="ncard hot"><div class="field"><label>☕ 카페스이에 접목할 것</label><span class="hint" style="color:inherit;opacity:.9">메뉴 · 시즌 · 선물 · 원가 · 직원 교육 쪽으로 바로 해 볼 것</span>' + ta(k, "cafe", v.cafe, "예) 겨울 딸기 쇼트케이크에 시럽 농도 바꿔 보기 · 틴쿠키 답례품 구성", 'style="min-height:110px"') + '</div></div>' +
-      '<div class="ncard"><div class="field"><span class="lbl">📷 레시피 · 완성 사진</span><span class="hint">휴대폰 사진을 줄여서 올려요 (긴 변 1280px)</span>' +
+      '<div class="ncard hot st-hide"><div class="field"><label>☕ 카페스이에 접목할 것</label><span class="hint" style="color:inherit;opacity:.9">메뉴 · 시즌 · 선물 · 원가 · 직원 교육 쪽으로 바로 해 볼 것</span>' + ta(k, "cafe", v.cafe, "예) 겨울 딸기 쇼트케이크에 시럽 농도 바꿔 보기 · 틴쿠키 답례품 구성", 'style="min-height:110px"') + '</div></div>' +
+      '<div class="ncard"><div class="field"><span class="lbl">📷 레시피 · 완성 사진</span><span class="hint">배합표 · 공정 · 완성 사진을 올려요 · 같이 보는 사람 모두에게 보여요</span>' +
       (ph.length ? '<div class="fgrid">' + ph.map(function (a) { return fileCard(k, "ph", a[0], a[1]); }).join("") + '</div>' : '<div class="empty">아직 사진이 없어요</div>') +
       photoForm(k, "ph", "cls") + '</div></div>' +
       pager(cur, "data-cls-go") + '</div>';
@@ -1572,11 +1778,56 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
     el.innerHTML = '<div class="card must"><b>★ 꼭 사기 (11/30)</b>' + MUST_NOTE + ckList(K.buy, "must", v.must, { pics: true }) + '</div>' +
       '<div class="grid2"><div class="card"><b>🛍 가자마자 사야 하는 것</b>' + ckList(K.buy, "now", v.now) + '</div>' +
       '<div class="card"><b>🏪 가게에 필요한 것 + 내 것</b>' + ckList(K.buy, "shop", v.shop) + '</div></div>' +
-      '<div class="card"><div class="fl">📦 메모 · 택배 픽업' + ta(K.buy, "memo", v.memo, "택배 · 픽업 메모") + '</div></div>';
+      '<div class="card"><div class="fl">📦 메모 · 택배 픽업' + ta(K.buy, "memo", v.memo, "택배 · 픽업 메모") + '</div></div>' +
+      (function () { var bp = rowsOf(v.ph); return '<div class="card"><b>📷 사진만 따로 모으기</b><span class="hint">살 것 캡처 · 가게 사진 · 영수증처럼 목록 줄과 상관없는 사진 · 여러 장 한 번에 올려도 돼요</span>' +
+        (bp.length ? '<div class="fgrid">' + bp.map(function (a) { return fileCard(K.buy, "ph", a[0], a[1]); }).join("") + '</div>' : '<div class="empty">아직 사진이 없어요</div>') +
+        photoForm(K.buy, "ph", "buyph") + '</div>'; })();
   });
 
   /* ④ 날짜별 일정 · 잠금(잘못 눌러 바뀌는 것 막기) · 「★ 꼭 해야 할 일 및 사기」는 잠금과 상관없이 체크 · 고치기 */
-  var locked = true, openDays = {}, openMore = {};
+  var locked = true, openDays = {}, openMore = {}; /* 보기(보드 · 표) ↔ 「✎ 일정 수정하기」 (워크샵 일정과 같은 방식 · 2026-11-25) */
+  var pview = ls(PRE + "ui.pview") || "board", pflash = null;
+  var WDK = ["일", "월", "화", "수", "목", "금", "토"];
+  function pkind(t) {
+    if (/공항|이동|택시|넥스|나리타|역 도착|역\s|긴자선|출발|도착|락커|비행기|한국으로|BX0/.test(t)) return ["move", "🚕"];
+    if (/핫토리|Hattori|수업|레시피|오답|청해|공부/.test(t)) return ["class", "🎓"];
+    if (/숙소|체크인|체크아웃|기상|쉬기|짐 싸기|짐 정리|준비하기/.test(t)) return ["stay", "🏨"];
+    if (/식사|점심|저녁|아침|덮밥|야끼|야키|코스|도시락|레스토랑/.test(t)) return ["food", "🍽"];
+    if (/카페|디저트|HIGASHIYA|Pâtisserie|미쓰코시|센비키야|와가시|과자/.test(t)) return ["cafe", "☕"];
+    if (/포터|오모테산도|하라주쿠|시부야|마트|다이소|쇼핑|치이카와|이세탄|무인양품|구경|사기/.test(t)) return ["shop", "🛍"];
+    if (/미술관|전시/.test(t)) return ["art", "🖼"];
+    return ["etc", "📍"];
+  }
+  function prowsT(n) { var last = null; return rowsOf(view(K.plan(n)).rows).map(function (a) { var r = a[1], m = pmin(r.t, last); if (m != null) last = m; return { id: a[0], r: r, k: m, own: !!String(r.t || "").trim() }; }).filter(function (x) { return x.r.w || x.r.m || x.r.t; }); }
+  function pviewBar(editing) {
+    return '<div class="pvbar"><span class="pvs" role="group" aria-label="일정 보기"><button type="button" class="pv" data-pview="board" aria-pressed="' + (!editing && pview === "board") + '">🗂 보드로 보기</button><button type="button" class="pv" data-pview="table" aria-pressed="' + (!editing && pview === "table") + '">📋 표 · 타임테이블</button></span>' +
+      '<small class="hint">' + (editing ? "지금 고치는 중 · 고친 칸은 바로 저장돼요" : "카드를 누르면 표에서 그 줄을 보여 줘요 · 고칠 땐 「✎ 일정 수정하기」") + '</small>' +
+      '<span class="pvr"><a class="btn sm" href="https://maps.app.goo.gl/dv9QNdypMGAmfNXG8" target="_blank" rel="noopener">🗺 구글 지도 목록 ↗</a><button type="button" class="btn ' + (editing ? "pri" : "") + '" data-pedit="1">' + (editing ? "✔ 수정 끝" : "✎ 일정 수정하기") + '</button></span></div>';
+  }
+  function pnowIdx(n, list) { var td = todayDay(); if (td !== n) return -1; var d = new Date(), nm = d.getHours() * 60 + d.getMinutes(), i0 = -1; list.forEach(function (x, i) { if (x.k != null && x.k <= nm) i0 = i; }); return i0; }
+  function pboard() {
+    var td = todayDay();
+    return '<div class="pbcols">' + DAYS.map(function (d) {
+      var list = prowsT(d.n), v = view(K.plan(d.n)), must = rowsOf(v.must).filter(function (a) { return !a[1].ok; }).length, nowI = pnowIdx(d.n, list), past = td && d.n < td;
+      var dt = new Date(d.ymd[0], d.ymd[1] - 1, d.ymd[2]);
+      return '<section class="pbcol' + (td === d.n ? " today" : "") + (past ? " past" : "") + '"><div class="pbh"><div class="pbh1"><b>' + d.n + '일차</b><span>' + (dt.getMonth() + 1) + "/" + dt.getDate() + " (" + WDK[dt.getDay()] + ')</span>' + (td === d.n ? '<em class="pbtoday">오늘</em>' : "") + '</div>' +
+        '<div class="pbq"><i>' + esc(d.title) + '</i>' + (v.memo ? esc(v.memo) : "") + '</div><div class="pbn">일정 ' + list.length + '개' + (must ? ' · <b>★ 꼭 할 일 ' + must + '</b>' : "") + '</div></div>' +
+        (list.length ? '<ol class="pblist">' + list.map(function (x, i) {
+          var kd = pkind((x.r.w || "") + " " + (x.r.m || "")), cls = "pbc k-" + kd[0] + (i === nowI ? " now" : "") + (nowI >= 0 && i < nowI ? " done" : "");
+          return '<li><button type="button" class="' + cls + '" data-pcard="' + d.n + "|" + esc(x.id) + '" title="누르면 표에서 이 줄을 보여 줘요"><span class="pbtm">' + (x.own ? esc(x.r.t) : "↳") + '</span><span class="pbbody"><span class="pbpl"><i aria-hidden="true">' + kd[1] + '</i>' + esc(x.r.w || x.r.m || "") + '</span>' + (x.r.m && x.r.w ? '<span class="pbmo">' + esc(x.r.m) + '</span>' : "") + (i === nowI ? '<em class="pbnow">지금 여기</em>' : "") + '</span></button></li>';
+        }).join("") + '</ol>' : '<p class="pbempty">아직 일정이 없어요 · 「✎ 일정 수정하기」로 적어 주세요</p>') + '</section>';
+    }).join("") + '</div>';
+  }
+  function ptable(tabs) {
+    var d = DAYS[curDay - 1] || DAYS[0], k = K.plan(d.n), v = view(k), list = prowsT(d.n), nowI = pnowIdx(d.n, list);
+    var tt = '<div class="pttl"><div class="ptth"><b>타임테이블</b><small>' + d.n + '일차 ' + d.d + ' · ' + esc(d.title) + '</small></div><ol>' + list.map(function (x, i) {
+      return '<li class="' + (i === nowI ? "now" : "") + '"><span class="tm">' + (x.own ? esc(x.r.t) : "·") + '</span><span><b>' + esc(x.r.w || "") + '</b>' + (x.r.m ? '<small>' + esc(x.r.m) + '</small>' : "") + '</span></li>'; }).join("") + '</ol></div>';
+    var tb = '<div class="ptab"><table><colgroup><col class="c1"><col class="c2"><col></colgroup><thead><tr><th>시간</th><th>할 일</th><th>해야 할 일 + 메모</th></tr></thead><tbody>' + list.map(function (x) {
+      return '<tr data-prow="' + esc(x.id) + '"' + (pflash === x.id ? ' class="phit"' : "") + '><td class="tm">' + (x.own ? esc(x.r.t) : "·") + '</td><td>' + esc(x.r.w || "") + '</td><td>' + esc(x.r.m || "") + (x.r.d ? '<small class="pd">📝 ' + esc(x.r.d) + '</small>' : "") + '</td></tr>'; }).join("") + '</tbody></table>' + (list.length ? "" : '<div class="empty">아직 일정이 없어요</div>') + '</div>';
+    return tabs + (v.memo ? '<div class="callout">' + esc(v.memo) + '</div>' : "") +
+      '<div class="must mustck"><b>★ 꼭 해야 할 일 및 사기</b><span class="hint">체크 · 메모는 바로 돼요</span>' + ckList(k, "must", v.must, { pics: true, more: true, noMap: true, kind: "must" }) + '</div>' +
+      '<div class="ptgrid">' + tt + tb + '</div>';
+  }
   (function () { var t = todayDay(); openDays[t || 1] = true; })();
   function rowPlace(n, id, r) {
     if (r.pl !== undefined && r.pl !== "") return r.pl;
@@ -1584,78 +1835,139 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
     if (r.pl === undefined && seed && seed.w === r.w && PL_SEED[n] && PL_SEED[n][id]) return PL_SEED[n][id];
     return r.pl === undefined ? placeFromText(r.w) : "";
   }
+  var curDay = +(ls(PRE + "ui.pday") || 0) || todayDay() || 1;
   var planSec = mount($("secPlan"), [PRE + "plan.*"], function (el) {
     var td = todayDay();
-    el.innerHTML = '<div class="lockbar' + (locked ? "" : " open") + '"><button type="button" class="btn ' + (locked ? "" : "pri") + '" id="lockBtn" aria-pressed="' + (!locked) + '">' + (locked ? "✎ 일정 수정하기" : "✔ 수정 끝 · 잠그기") + '</button><span class="hint">' + (locked ? "🔒 일정 표는 잘못 눌러 바뀌지 않게 잠겨 있어요 · 「★ 꼭 해야 할 일 및 사기」는 바로 체크 · 고칠 수 있어요" : "지금 고칠 수 있어요 · 고친 칸은 바로 저장돼요") + '</span></div>' +
-      DAYS.map(function (d) {
-        var k = K.plan(d.n), v = view(k), rows = rowsOf(v.rows), must = rowsOf(v.must), ro = locked ? "readonly" : "";
-        var mustDone = must.filter(function (a) { return a[1].ok; }).length;
-        return '<details class="day" data-day="' + d.n + '"' + (openDays[d.n] ? " open" : "") + '><summary><b>' + d.d + ' ' + d.n + '일차</b><small>' + d.title + ' · 일정 ' + rows.length + '개' + (must.length ? ' · ★ ' + mustDone + '/' + must.length : "") + '</small>' + (td === d.n ? '<span class="today">오늘</span>' : "") + '</summary><div class="dbody">' +
-          '<div class="must mustck"><b>★ 꼭 해야 할 일 및 사기</b><span class="hint">줄마다 메모 · 📍 장소 · 📷 사진 · 다 하면 체크</span>' + ckList(k, "must", v.must, { pics: true, more: true, kind: "must" }) + '</div>' +
-          (locked ? (v.memo ? '<div class="callout">' + esc(v.memo) + '</div>' : "") : '<div class="fl">✈ 항공편 · 짐 · 메모' + ta(k, "memo", v.memo, "항공편 · 짐 등 메모") + '</div>') +
-          '<div class="trow plan head' + (locked ? " ro" : "") + '"><span>시간</span><span>할 일</span><span>해야 할 일 + 메모</span>' + (locked ? "" : "<span></span>") + '</div><div class="rows">' +
-          (rows.map(function (a) {
-            var id = a[0], r = a[1], p = "rows." + id, mk = k + "|" + id, pl = rowPlace(d.n, id, r), open = openMore[mk] || (!locked && false);
-            var extra = "";
-            if (locked) {
-              extra = (pl ? mapBtns(pl) : "") + (r.d ? '<button type="button" class="btn sm" data-act="more" data-mk="' + esc(mk) + '">' + (openMore[mk] ? "－ 접기" : "＋ 자세히") + '</button>' + (openMore[mk] ? '<div class="dtext">' + esc(r.d) + '</div>' : "") : "");
-            } else {
-              extra = '<button type="button" class="btn sm" data-act="more" data-mk="' + esc(mk) + '">' + (open ? "－ 접기" : "＋ 자세히") + '</button>' + (pl ? mapBtns(pl) : "") +
-                (open ? '<div class="dmore"><label class="pllab">📍 장소 (구글 지도 검색어)<input type="text" ' + A(k, p + ".pl") + ' value="' + esc(r.pl !== undefined ? r.pl : pl) + '" placeholder="예) 伊勢丹新宿店 本館 · 여러 곳은 「 / 」로" aria-label="장소 검색어"></label>' +
-                  '<div class="fl">📝 자세히 (주소 · 예약번호 · 이동 방법)' + ta(k, p + ".d", r.d, "예) 예약번호 · 몇 번 출구 · 몇 호선 · 걸어서 몇 분") + '</div></div>' : "");
-            }
-            return '<div class="trow plan' + (locked ? " ro" : "") + '">' + inp(k, p + ".t", r.t, "시간", 'class="t" ' + ro) + ta(k, p + ".w", r.w, "할 일", ro) + ta(k, p + ".m", r.m, "해야 할 일 + 메모", ro) + (locked ? "" : delBtn(k, p)) +
-              (extra ? '<div class="more">' + extra + '</div>' : "") + '</div>';
-          }).join("") || '<div class="empty">아직 일정이 없어요</div>') +
-          '</div>' + (locked ? "" : '<div class="addbar">' + addBtn(k, "rows", "plan") + '</div>') + '</div></details>';
-      }).join("");
+    var tabs = '<nav class="dtabs" role="tablist" aria-label="일차">' + DAYS.map(function (d) {
+      var v = view(K.plan(d.n)), must = rowsOf(v.must), left = must.filter(function (a) { return !a[1].ok; }).length;
+      return '<button type="button" class="dtab" role="tab" data-pday="' + d.n + '" aria-selected="' + (curDay === d.n) + '"><b>' + d.n + '일차</b><span>' + d.d + '</span>' + (td === d.n ? '<em class="today">오늘</em>' : "") + (left ? '<i class="dleft">★' + left + '</i>' : "") + '</button>';
+    }).join("") + '</nav>';
+    if (locked) { el.innerHTML = pviewBar(false) + (pview === "board" ? pboard() : ptable(tabs)); if (pflash) { var hr = el.querySelector(".phit"); if (hr) setTimeout(function () { hr.scrollIntoView({ block: "center", behavior: "smooth" }); }, 50); pflash = null; } return; }
+    var d = DAYS[curDay - 1] || DAYS[0];
+    var k = K.plan(d.n), v = view(k), rows = rowsOf(v.rows), ro = locked ? "readonly" : "";
+    el.innerHTML = pviewBar(true) + tabs +
+      '<div class="dayhead"><b>' + d.d + ' ' + d.n + '일차</b><span>' + d.title + ' · 일정 ' + rows.length + '개</span>' + (td === d.n ? '<span class="today">오늘</span>' : "") + '</div>' +
+      '<div class="dbody">' +
+      '<div class="must mustck"><b>★ 꼭 해야 할 일 및 사기</b><span class="hint">줄마다 메모 · 📷 사진 · 다 하면 체크</span>' + ckList(k, "must", v.must, { pics: true, more: true, noMap: true, kind: "must" }) + '</div>' +
+      (locked ? (v.memo ? '<div class="callout">' + esc(v.memo) + '</div>' : "") : '<div class="fl">✈ 항공편 · 짐 · 메모' + ta(k, "memo", v.memo, "항공편 · 짐 등 메모") + '</div>') +
+      '<div class="trow plan head' + (locked ? " ro" : "") + '"><span>시간</span><span>할 일</span><span>해야 할 일 + 메모</span>' + (locked ? "" : "<span></span>") + '</div><div class="rows">' +
+      (rows.map(function (a) {
+        var id = a[0], r = a[1], p = "rows." + id, mk = k + "|" + id, pl = rowPlace(d.n, id, r), open = openMore[mk];
+        var extra = "";
+        if (locked) {
+          extra = (r.d ? '<button type="button" class="btn sm" data-act="more" data-mk="' + esc(mk) + '">' + (open ? "－ 접기" : "＋ 자세히") + '</button>' + (open ? '<div class="dtext">' + esc(r.d) + '</div>' : "") : "");
+        } else {
+          var ix = rows.indexOf(a);
+          extra = '<span class="pmv"><button type="button" class="btn sm" data-pmv="up" data-id="' + esc(id) + '"' + (ix ? "" : " disabled") + ' aria-label="위로">▲</button><button type="button" class="btn sm" data-pmv="dn" data-id="' + esc(id) + '"' + (ix < rows.length - 1 ? "" : " disabled") + ' aria-label="아래로">▼</button>' +
+            '<select class="pmday" data-id="' + esc(id) + '" aria-label="다른 날로 옮기기"><option value="">📅 다른 날로</option>' + DAYS.filter(function (x) { return x.n !== d.n; }).map(function (x) { return '<option value="' + x.n + '">' + x.n + '일차 ' + esc(x.d) + '</option>'; }).join("") + '</select></span>' +
+            '<button type="button" class="btn sm" data-act="more" data-mk="' + esc(mk) + '">' + (open ? "－ 접기" : "＋ 자세히") + '</button>' +
+            (open ? '<div class="dmore"><div class="fl">📝 자세히 (주소 · 예약번호 · 이동 방법)' + ta(k, p + ".d", r.d, "예) 예약번호 · 몇 번 출구 · 몇 호선 · 걸어서 몇 분") + '</div></div>' : "");
+        }
+        return '<div class="trow plan' + (locked ? " ro" : "") + '">' + inp(k, p + ".t", r.t, "시간", 'class="t" ' + ro) + ta(k, p + ".w", r.w, "할 일", ro) + ta(k, p + ".m", r.m, "해야 할 일 + 메모", ro) + (locked ? "" : delBtn(k, p)) +
+          (extra ? '<div class="more">' + extra + '</div>' : "") + '</div>';
+      }).join("") || '<div class="empty">아직 일정이 없어요</div>') +
+      '</div>' + (locked ? "" : '<div class="addbar">' + addBtn(k, "rows", "plan", "＋ 일정 추가") + '<button type="button" class="btn sm" data-psort="1">⏱ 시간순으로 정렬</button><span class="hint">▲▼ 순서 · 📅 다른 날로 · × 빼기(뺀 일정은 아래에서 되살려요)</span></div>' + (function () {
+        var gone = Object.keys(v.rows || {}).map(function (id) { return [id, v.rows[id]]; }).filter(function (x) { return x[1] && x[1].del; });
+        if (!gone.length) return "";
+        return '<details class="pgone"><summary>↩ 뺀 일정 ' + gone.length + '개 · 되살리기</summary><ul>' + gone.map(function (x) {
+          var r = x[1], mv = /^→(\d)/.exec(String(r.del));
+          return '<li><span><b>' + esc(r.t || "") + '</b> ' + esc(r.w || "(이름 없음)") + '<small>' + (mv ? mv[1] + "일차로 옮김" : "뺀 사람 · 때: " + esc(String(r.del).replace(/T.*/, ""))) + '</small></span>' + (mv ? "" : '<button type="button" class="btn sm" data-pback="' + esc(x[0]) + '">↩ 되살리기</button>') + '</li>';
+        }).join("") + '</ul></details>';
+      })()) + '</div>';
   });
+  /* 일정 순서 · 옮기기 · 정렬 · 되살리기 (지우지 않음 · 옮기면 원래 줄은 del 「→N일차」) */
+  /* 시간 읽기: 「1:00」처럼 오전/오후가 없으면 앞 일정보다 1시간 넘게 이르면 오후로 봄(6:00 am → 11:00 am → 1:00 = 13:00) */
+  function pmin(t, prev) { var m = /(\d{1,2})\s*[:：시]\s*(\d{1,2})?/.exec(String(t || "")); if (!m) return null; var h = +m[1], x; if (/오후|pm/i.test(t) && h < 12) h += 12; x = h * 60 + (+m[2] || 0); if (!/오전|am/i.test(t) && h < 12 && prev != null && x < prev - 60) x += 720; return x; }
+  $("secPlan").addEventListener("click", function (e) {
+    var k = K.plan(curDay), v = view(k), rows = rowsOf(v.rows), b;
+    if ((b = e.target.closest("[data-pmv]"))) {
+      var i = rows.findIndex(function (a) { return a[0] === b.dataset.id; }), j = b.dataset.pmv === "up" ? i - 1 : i + 1;
+      if (i < 0 || j < 0 || j >= rows.length) return;
+      rows.forEach(function (a, n) { var o = n === i ? j : n === j ? i : n; if ((a[1].o || 0) !== o + 1) put(k, "rows." + a[0] + ".o", o + 1); });
+      draw(planSec); return;
+    }
+    if (e.target.closest("[data-psort]")) {
+      var last = -1, keyed = rows.map(function (a, n) { var m = pmin(a[1].t, last < 0 ? null : last); if (m != null) last = m; return { a: a, m: last, n: n }; });
+      keyed.sort(function (x, y) { return x.m - y.m || x.n - y.n; });
+      keyed.forEach(function (x, n) { if ((x.a[1].o || 0) !== n + 1) put(k, "rows." + x.a[0] + ".o", n + 1); });
+      draw(planSec); return;
+    }
+    if ((b = e.target.closest("[data-pback]"))) { put(k, "rows." + b.dataset.pback + ".del", ""); draw(planSec); }
+  });
+  $("secPlan").addEventListener("change", function (e) {
+    var s = e.target.closest(".pmday"); if (!s || !s.value) return;
+    var to = +s.value, k = K.plan(curDay), r = clone((view(k).rows || {})[s.dataset.id] || {}), dn = DAYS[to - 1];
+    if (!confirm("「" + (r.w || "이 일정") + "」을(를) " + to + "일차 " + dn.d + "로 옮길까요?")) { s.value = ""; return; }
+    delete r.del; r.o = Date.now(); r.from = curDay + "일차 " + (me || "");
+    put(K.plan(to), "rows." + uid("r"), r);
+    put(k, "rows." + s.dataset.id + ".del", "→" + to + "일차 " + (me || "?") + " " + new Date().toISOString());
+    draw(planSec);
+  });
+  $("secPlan").addEventListener("click", function (e) { var t = e.target.closest("[data-pday]"); if (t) { curDay = +t.dataset.pday; ls(PRE + "ui.pday", String(curDay)); draw(planSec); } });
   $("secPlan").addEventListener("click", function (e) {
     if (e.target.closest("#lockBtn")) { locked = !locked; draw(planSec); return; }
+    var pv = e.target.closest("[data-pview]"); if (pv) { pview = pv.dataset.pview; ls(PRE + "ui.pview", pview); locked = true; draw(planSec); return; }
+    if (e.target.closest("[data-pedit]")) { locked = !locked; draw(planSec); $("s5").scrollIntoView({ behavior: "smooth", block: "start" }); return; }
+    var pc = e.target.closest("[data-pcard]"); if (pc) { var pp = pc.dataset.pcard.split("|"); curDay = +pp[0]; ls(PRE + "ui.pday", String(curDay)); pview = "table"; ls(PRE + "ui.pview", pview); pflash = pp[1]; draw(planSec); return; }
     var m = e.target.closest('[data-act="more"]'); if (m) { openMore[m.dataset.mk] = !openMore[m.dataset.mk]; draw(planSec); }
   });
   $("secPlan").addEventListener("toggle", function (e) { var d = e.target.closest && e.target.closest("details.day"); if (d) openDays[d.dataset.day] = d.open; }, true);
 
-  /* ⑤ 날짜별 지출내역 · 일차마다 문서 하나 · 줄마다 ¥ 엔 / ₩ 원 (c 칸 · 없으면 엔) */
-  var openCost = {};
-  (function () { var t = todayDay(); openCost[t || 1] = true; })();
+  /* ⑤ 지출 · 일차마다 문서 하나(cost.dN) · 줄: n 이름 · a 금액 · c 통화(¥/₩ · 없으면 엔) · cat 분류(없으면 기타) · pay 결제(없으면 비움) · m 메모 */
+  var CCAT = [["food", "🍽 식사", "#B8423A"], ["cafe", "☕ 카페 · 간식 · 물", "#E3B04B"], ["move", "🚃 교통", "#4C7546"], ["shop", "🛍 오미야게 · 쇼핑", "#8A5A3B"], ["stay", "🧳 짐 · 숙소", "#6E7FA8"], ["etc", "📦 기타", "#A99A8C"]];
+  var PAY = [["card", "💳", "카드"], ["cash", "💴", "현금"], ["ic", "🚃", "충전카드(스이카)"]];
   var won = function (n) { return n.toLocaleString("ko-KR") + "원"; };
-  function dayT(n) { var y = 0, w = 0; rowsOf(view(K.costd(n)).rows).forEach(function (a) { var x = num(a[1].a); if (a[1].c === "₩") w += x; else y += x; }); return { y: y, w: w }; }
+  var catOf = function (r) { return CCAT.some(function (c) { return c[0] === r.cat; }) ? r.cat : "etc"; };
   function fxv() { var f = parseFloat(String(view(K.cost).fx == null ? "836" : view(K.cost).fx).replace(/[^\d.]/g, "")); return f > 0 ? f : 836; }
-  function both(y, w) { return [y || !w ? yen(y) : "", w ? won(w) : ""].filter(Boolean).join(" + "); }
-  function setT(id, t) { var e = $(id); if (e) e.textContent = t; }
-  function refreshCost() {
-    var v = view(K.cost), sy = num(v.start), sw = num(v.startW), fx = fxv(), ay = 0, aw = 0;
-    DAYS.forEach(function (d) {
-      var t = dayT(d.n); ay += t.y; aw += t.w;
-      setT("cs" + d.n, both(t.y, t.w));
-      setT("ct" + d.n, both(t.y, t.w));
-      setT("ck" + d.n, won(Math.round(t.y * fx / 100 + t.w)));
-      setT("cl" + d.n, (sy || sw) ? [sy ? yen(sy - ay) : "", sw ? won(sw - aw) : ""].filter(Boolean).join(" · ") : "시작 금액을 적으면 보여요");
-    });
-    setT("cAllY", yen(ay)); setT("cAllW", won(aw)); setT("cAllK", won(Math.round(ay * fx / 100 + aw)));
-    setT("cLeft", (sy || sw) ? [sy ? yen(sy - ay) : "", sw ? won(sw - aw) : ""].filter(Boolean).join(" · ") : "—");
+  function costDay(n) {
+    var o = { y: 0, w: 0, cat: {}, pay: {}, cnt: 0, rows: rowsOf(view(K.costd(n)).rows) };
+    o.rows.forEach(function (a) { var r = a[1], x = num(r.a); o.cnt++; if (r.c === "₩") { o.w += x; return; } o.y += x; var c = catOf(r); o.cat[c] = (o.cat[c] || 0) + x; if (r.pay) o.pay[r.pay] = (o.pay[r.pay] || 0) + x; });
+    return o;
   }
-  function curSel(k, p, c) { return '<select class="cur" ' + A(k, p) + ' aria-label="통화">' + [["¥", "¥ 엔"], ["₩", "₩ 원"]].map(function (o) { return '<option value="' + o[0] + '"' + ((c || "¥") === o[0] ? " selected" : "") + '>' + o[1] + '</option>'; }).join("") + '</select>'; }
-  mount($("secCost"), [PRE + "cost", PRE + "cost.*"], function (el) {
-    var v = view(K.cost);
-    el.innerHTML = '<div class="card"><div class="r3">' +
-      '<label class="fl">💴 시작 금액 · 엔' + inp(K.cost, "start", v.start, "예) 200000", 'inputmode="numeric"') + '</label>' +
-      '<label class="fl">💳 시작 금액 · 원' + inp(K.cost, "startW", v.startW, "예) 300000", 'inputmode="numeric"') + '</label>' +
-      '<label class="fl">💱 환율 (100엔당 원)' + inp(K.cost, "fx", v.fx, "836", 'inputmode="decimal"') + '</label></div>' +
-      '<span class="hint">줄마다 금액 옆에서 ¥ 엔 / ₩ 원을 골라요 · 「남은 돈」은 통화별로 = 시작 금액 − 그날까지 쓴 돈 · 「원 환산」은 엔 × 환율 ÷ 100 + 원</span></div>' +
-      DAYS.map(function (d) {
-        var k = K.costd(d.n), rows = rowsOf(view(k).rows);
-        return '<details class="day" data-cday="' + d.n + '"' + (openCost[d.n] ? " open" : "") + '><summary><b>' + d.d + ' 지출내역</b><small>총 <span id="cs' + d.n + '"></span></small></summary><div class="dbody">' +
-          '<div class="trow cost head"><span>항목</span><span>금액</span><span>통화</span><span>메모</span><span></span></div><div class="rows">' +
-          (rows.map(function (a) { var id = a[0], r = a[1], p = "rows." + id; return '<div class="trow cost">' + ta(k, p + ".n", r.n, "항목") + inp(k, p + ".a", r.a, "금액", 'inputmode="numeric"') + curSel(k, p + ".c", r.c) + ta(k, p + ".m", r.m, "메모") + delBtn(k, p) + '</div>'; }).join("") || '<div class="empty">아직 지출이 없어요</div>') +
-          '</div><div class="addbar">' + addBtn(k, "rows", "cost", "＋ 지출 추가") + '</div>' +
-          '<div class="tot"><span>총 <b id="ct' + d.n + '"></b></span><span>원 환산 <b id="ck' + d.n + '"></b></span><span>남은 돈 <b id="cl' + d.n + '"></b></span></div></div></details>';
-      }).join("") +
-      '<div class="grand"><span>6일 전체 · 엔 <b id="cAllY">—</b></span><span>원 <b id="cAllW">—</b></span><span>원 환산 총액 <b id="cAllK">—</b></span><span>남은 돈 <b id="cLeft" style="font-size:22px">—</b></span></div>';
-    setTimeout(refreshCost, 0);
+  function refreshCost() { if (costSec && !typing(costSec.el)) draw(costSec); }
+  var costEdit = {}, costTab = ls(PRE + "ui.cday") || String(todayDay() || 1);
+  function selOpts(list, cur, blank) { return (blank ? '<option value="">' + blank + '</option>' : "") + list.map(function (o) { return '<option value="' + o[0] + '"' + (cur === o[0] ? " selected" : "") + '>' + (o.length > 2 && o[1].length <= 2 ? o[1] + " " + o[2] : o[1]) + '</option>'; }).join(""); }
+  var costSec = mount($("secCost"), [PRE + "cost", PRE + "cost.*"], function (el) {
+    var v = view(K.cost), fx = fxv(), sy = num(v.start), sw = num(v.startW), days = DAYS.map(function (d) { return costDay(d.n); });
+    var ty = 0, tw = 0, tcat = {}; days.forEach(function (o) { ty += o.y; tw += o.w; Object.keys(o.cat).forEach(function (c) { tcat[c] = (tcat[c] || 0) + o.cat[c]; }); });
+    var pct = function (x, t) { return t ? Math.round(x / t * 100) : 0; };
+    var bar = '<div class="cbar">' + CCAT.map(function (c) { var x = tcat[c[0]] || 0; return x ? '<span style="width:' + (x / ty * 100) + '%;background:' + c[2] + '" title="' + c[1] + '"></span>' : ""; }).join("") + '</div>';
+    var legend = '<div class="cleg">' + CCAT.filter(function (c) { return tcat[c[0]]; }).map(function (c) { return '<span><i style="background:' + c[2] + '"></i>' + c[1] + ' <b>' + yen(tcat[c[0]]) + '</b> · ' + pct(tcat[c[0]], ty) + '%</span>'; }).join("") + '</div>';
+    el.innerHTML = '<div class="ctop"><div class="ctotal"><span>6일 엔 지출</span><b>' + yen(ty) + '</b><small>원 환산 ' + won(Math.round(ty * fx / 100 + tw)) + ' (100엔 = ' + fx + '원)</small></div>' +
+      (ty ? bar + legend : '<div class="hint">금액을 적으면 분류별 막대가 생겨요</div>') +
+      '<div class="cwon">₩ 원화로 쓴 돈 <b>' + won(tw) + '</b> <small>(엔 합계에 안 넣음)</small></div>' +
+      '<div class="cleft">남은 돈 <b>' + ((sy || sw) ? [sy ? yen(sy - ty) : "", sw ? won(sw - tw) : ""].filter(Boolean).join(" · ") : "시작 금액을 적으면 보여요") + '</b></div>' +
+      '<div class="r3"><label class="fl">💴 시작 금액 · 엔' + inp(K.cost, "start", v.start, "예) 200000", 'inputmode="numeric"') + '</label><label class="fl">💳 시작 금액 · 원' + inp(K.cost, "startW", v.startW, "예) 300000", 'inputmode="numeric"') + '</label><label class="fl">💱 환율 (100엔당 원)' + inp(K.cost, "fx", v.fx, "836", 'inputmode="decimal"') + '</label></div></div>' +
+      '<nav class="dtabs ctabs" role="tablist" aria-label="지출 일차"><button type="button" class="dtab" role="tab" data-ctab="all" aria-selected="' + (costTab === "all") + '"><b>전체</b><span>6일 한눈에</span></button>' +
+        DAYS.map(function (d, di) { return '<button type="button" class="dtab" role="tab" data-ctab="' + d.n + '" aria-selected="' + (costTab === String(d.n)) + '"><b>' + d.n + '일차</b><span>' + d.d + ' · ' + yen(days[di].y) + '</span></button>'; }).join("") + '</nav>' +
+      '<div class="cdays' + (costTab === "all" ? "" : " one") + '">' + DAYS.map(function (d, di) {
+        if (costTab !== "all" && costTab !== String(d.n)) return "";
+        var o = days[di], k = K.costd(d.n), ed = costEdit[d.n];
+        var chips = PAY.filter(function (p) { return o.pay[p[0]]; }).map(function (p) { return '<span class="pchip">' + p[1] + ' ' + p[2] + ' ' + yen(o.pay[p[0]]) + '</span>'; }).join("");
+        var body = ed ? '<div class="rows">' + (o.rows.map(function (a) { var id = a[0], r = a[1], p = "rows." + id;
+            return '<div class="cedit"><div class="ce1"><select ' + A(k, p + ".pay") + ' aria-label="결제 수단">' + selOpts(PAY, r.pay || "", "결제") + '</select>' + ta(k, p + ".n", r.n, "이름") + delBtn(k, p) + '</div>' +
+              '<div class="ce2">' + inp(k, p + ".a", r.a, "금액", 'inputmode="numeric"') + '<select ' + A(k, p + ".c") + ' aria-label="통화">' + selOpts([["¥", "¥ 엔"], ["₩", "₩ 원"]], r.c || "¥") + '</select><select ' + A(k, p + ".cat") + ' aria-label="분류">' + selOpts(CCAT, catOf(r)) + '</select></div>' + ta(k, p + ".m", r.m, "메모") + '</div>'; }).join("") || '<div class="empty">아직 지출이 없어요</div>') + '</div>'
+          : CCAT.filter(function (c) { return o.rows.some(function (a) { return a[1].c !== "₩" && catOf(a[1]) === c[0]; }); }).map(function (c) {
+              var x = o.cat[c[0]] || 0;
+              return '<div class="ccat"><div class="cch"><b>' + c[1] + '</b><span>' + yen(x) + ' · ' + pct(x, o.y) + '%</span></div><div class="cbar sm"><span style="width:' + pct(x, o.y) + '%;background:' + c[2] + '"></span></div>' +
+                o.rows.filter(function (a) { return a[1].c !== "₩" && catOf(a[1]) === c[0]; }).map(function (a) { var r = a[1], pi = PAY.filter(function (p) { return p[0] === r.pay; })[0]; return '<div class="citem"><span class="ci1">' + (pi ? pi[1] : "·") + '</span><span class="ci2">' + esc(r.n || "(이름 없음)") + (r.m ? '<small>' + esc(r.m) + '</small>' : "") + '</span><b>' + yen(num(r.a)) + '</b></div>'; }).join("") + '</div>';
+            }).join("") + (o.w ? '<div class="ccat"><div class="cch"><b>₩ 원화</b><span>' + won(o.w) + '</span></div>' + o.rows.filter(function (a) { return a[1].c === "₩"; }).map(function (a) { var r = a[1]; return '<div class="citem"><span class="ci1">₩</span><span class="ci2">' + esc(r.n || "(이름 없음)") + '</span><b>' + won(num(r.a)) + '</b></div>'; }).join("") + '</div>' : "") + (o.cnt ? "" : '<div class="empty">아직 지출이 없어요</div>');
+        return '<div class="cday"><div class="cdh"><b>' + d.n + '일차 ' + d.d + '</b><span class="cdy">' + yen(o.y) + (o.w ? ' + ' + won(o.w) : "") + '</span></div>' +
+          '<div class="cdm">' + chips + '<span class="hint">' + o.cnt + '건</span><button type="button" class="btn sm" data-cedit="' + d.n + '">' + (ed ? "✔ 다 고침" : "✎ 고치기") + '</button></div>' + body +
+          '<div class="cadd" data-cday="' + d.n + '"><select class="caCat" aria-label="분류">' + selOpts(CCAT, "food") + '</select><select class="caPay" aria-label="결제 수단">' + selOpts(PAY, "", "결제") + '</select><select class="caCur" aria-label="통화"><option value="¥">¥</option><option value="₩">₩</option></select>' +
+          '<input type="text" class="caN" placeholder="이름 (예: 편의점 물)" aria-label="지출 이름"><input type="text" class="caA" inputmode="numeric" placeholder="금액" aria-label="금액"><button type="button" class="btn pri sm" data-act="cadd">＋ 추가</button></div></div>';
+      }).join("") + '</div>';
   });
-  $("secCost").addEventListener("toggle", function (e) { var d = e.target.closest && e.target.closest("details.day"); if (d) openCost[d.dataset.cday] = d.open; }, true);
+  $("secCost").addEventListener("click", function (e) {
+    var ct = e.target.closest("[data-ctab]"); if (ct) { costTab = ct.dataset.ctab; ls(PRE + "ui.cday", costTab); draw(costSec); return; }
+    var t = e.target.closest("[data-cedit]"); if (t) { costEdit[t.dataset.cedit] = !costEdit[t.dataset.cedit]; draw(costSec); return; }
+    var b = e.target.closest('[data-act="cadd"]'); if (!b) return;
+    var box = b.closest(".cadd"), n = +box.dataset.cday, nm = box.querySelector(".caN").value.trim(), am = box.querySelector(".caA").value.trim();
+    if (!nm && !am) { box.querySelector(".caN").focus(); return; }
+    var row = { n: nm, a: am, c: box.querySelector(".caCur").value, cat: box.querySelector(".caCat").value, m: "", o: Date.now() }, py = box.querySelector(".caPay").value; if (py) row.pay = py;
+    put(K.costd(n), "rows." + uid("r"), row); draw(costSec);
+  });
+  $("secCost").addEventListener("keydown", function (e) { if (e.key === "Enter" && e.target.closest && e.target.closest(".cadd") && e.target.tagName === "INPUT") { e.preventDefault(); e.target.closest(".cadd").querySelector('[data-act="cadd"]').click(); } });
 
   /* ⑦ 📎 자료함 · 링크와 사진 (사진은 문서 하나에 한 장 · hattori26.file.<시각>_<이름>) */
   var FIXED_LINKS = [
@@ -1672,7 +1984,8 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
   }
   function photoForm(k, path, tag) {
     return '<div class="fform" data-up="' + esc(k) + '" data-path="' + esc(path) + '"><div class="r2"><input type="text" class="upT" placeholder="사진 제목 (예: 쇼트케이크 배합표)" aria-label="사진 제목"><input type="text" class="upM" placeholder="메모 (없어도 돼요)" aria-label="사진 메모"></div>' +
-      '<div class="addbar"><label class="btn pri" for="up_' + tag + '">📷 사진 올리기</label><input type="file" id="up_' + tag + '" class="upF" accept="image/*" multiple hidden><span class="fmsg"></span></div></div>';
+      '<label class="fdrop" for="up_' + tag + '"><b>📷 눌러서 사진 올리기</b><span>여기로 끌어다 놓아도 돼요 · 여러 장 한 번에 · 사진은 자동으로 줄여서 올려요</span></label>' +
+      '<input type="file" id="up_' + tag + '" class="upF" accept="image/*" multiple hidden><span class="fmsg"></span></div>';
   }
   var CATS = [["air", "✈️ 항공권"], ["vjw", "🛂 비짓재팬"], ["buy", "🛍 살 것"], ["rsv", "🎫 예약 확인"], ["etc", "📝 기타"]];
   var PRIVATE_CAT = { air: 1, vjw: 1, rsv: 1 };
@@ -1692,55 +2005,208 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
   function ldbPut(o) { return ldb().then(function (d) { return new Promise(function (res, rej) { var t = d.transaction("files", "readwrite"); t.objectStore("files").put(o); t.oncomplete = function () { res(); }; t.onerror = function () { rej(t.error); }; }); }); }
   function ldbDel(id) { return ldb().then(function (d) { return new Promise(function (res) { var t = d.transaction("files", "readwrite"); t.objectStore("files").delete(id); t.oncomplete = function () { res(); }; t.onerror = function () { res(); }; }); }); }
   var localFiles = [];
-  function loadLocal() { ldbAll().then(function (l) { localFiles = l; if (filesSec) draw(filesSec); }).catch(function () { localFiles = []; }); }
-  function saveLocalFiles(files, cat, title, memo, msg, box) {
+  function loadLocal() { ldbAll().then(function (l) { localFiles = l; if (filesSec) draw(filesSec); if (tilesSec) draw(tilesSec); if (sumSec) draw(sumSec); }).catch(function () { localFiles = []; }); }
+  var CHUNK = 190000, MAXRAW = 3 * 1024 * 1024, MAXLOCAL = 20 * 1024 * 1024;
+  function isImgFile(f) { return /^image\//i.test(f.type || "") && !/svg/i.test(f.type || ""); }
+  function fsize(n) { n = +n || 0; return n > 1048576 ? (n / 1048576).toFixed(1) + "MB" : Math.max(1, Math.round(n / 1024)) + "KB"; }
+  function ficon(ty, n) { ty = String(ty || ""); n = String(n || ""); return /^image\//.test(ty) ? "🖼" : /pdf/.test(ty) || /\.pdf$/i.test(n) ? "📕" : "📄"; }
+  function readURL(file) { return new Promise(function (ok, no) { var r = new FileReader(); r.onload = function () { ok(r.result); }; r.onerror = no; r.readAsDataURL(file); }); }
+  function shrinkTo(file, max, q) {
+    return loadImage(file).then(function (img) {
+      var sc = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight)), c = document.createElement("canvas");
+      c.width = Math.max(1, Math.round(img.naturalWidth * sc)); c.height = Math.max(1, Math.round(img.naturalHeight * sc));
+      var g = c.getContext("2d"); g.fillStyle = "#fff"; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, 0, 0, c.width, c.height);
+      return c.toDataURL("image/jpeg", q);
+    }).catch(function () { return null; });
+  }
+  function fileName(file, title, n, total, asJpg) {
+    var ext = asJpg ? ".jpg" : ((/\.[a-z0-9]{1,6}$/i.exec(file.name || "") || [""])[0]);
+    if (title) return (total > 1 ? title + " " + (n + 1) : title) + ext;
+    return asJpg ? String(file.name || "photo").replace(/\.[^.]+$/, "") + ".jpg" : (file.name || "file");
+  }
+  function saveLocalFiles(files, cat, title, memo, msg) {
     var chain = Promise.resolve();
     files.forEach(function (file, n) {
       chain = chain.then(function () {
-        msg.textContent = "사진 줄이는 중… (" + (n + 1) + "/" + files.length + ")"; msg.className = "fmsg";
-        var t = title ? (files.length > 1 ? title + " " + (n + 1) : title) : file.name.replace(/\.[^.]+$/, "");
-        return shrink(file, function (d) { return d; }).then(function (d) {
-          if (!d) { msg.textContent = "사진이 너무 커요 · 다른 사진으로 올려 주세요"; msg.className = "fmsg bad"; return; }
-          return ldbPut({ id: "L" + Date.now() + Math.random().toString(36).slice(2, 6), cat: cat || "etc", title: t, memo: memo, d: d, at: new Date().toISOString() }).then(function () { msg.textContent = "🔒 이 기기에만 보관했어요 ✓"; msg.className = "fmsg"; });
+        msg.textContent = "이 기기에 보관하는 중… (" + (n + 1) + "/" + files.length + ")"; msg.className = "fmsg";
+        var id = "L" + Date.now() + Math.random().toString(36).slice(2, 6), at = new Date().toISOString();
+        var p = isImgFile(file) ? shrinkTo(file, 1600, 0.82) : Promise.resolve(null);
+        return p.then(function (d) {
+          var rec;
+          if (d) rec = { id: id, cat: cat || "etc", n: fileName(file, title, n, files.length, true), title: fileName(file, title, n, files.length, true), ty: "image/jpeg", sz: Math.round(d.length * 0.75), memo: memo, d: d, at: at };
+          else {
+            if (file.size > MAXLOCAL) { msg.textContent = "「" + file.name + "」은(는) " + fsize(file.size) + "라 너무 커요 · 20MB까지"; msg.className = "fmsg bad"; return; }
+            rec = { id: id, cat: cat || "etc", n: fileName(file, title, n, files.length, false), title: fileName(file, title, n, files.length, false), ty: file.type || "application/octet-stream", sz: file.size, memo: memo, blob: file, at: at };
+          }
+          return ldbPut(rec).then(function () { msg.textContent = "🔒 이 기기에만 보관했어요 ✓"; msg.className = "fmsg"; });
         }).catch(function () { msg.textContent = "이 기기에 보관하지 못했어요 (개인정보 보호 모드 · 저장 공간 확인)"; msg.className = "fmsg bad"; });
       });
     });
     chain.then(loadLocal);
   }
+  /* 서버에 올리기 (워크샵 files.js 방식): 내용은 19만 자씩 ops/hattori26.file.<id>.p<번호> · 사진 작은 그림은 hattori26.file.<id>.th
+     목록 hattori26.files list.<id> 에는 이름 · 종류 · 크기 · 조각 수 · cat · 메모 · by · at 만 (작은 그림은 목록에 안 넣음) · 조각을 다 보낸 뒤에 목록에 넣음 */
+  function putDoc(key, v) { return db.collection("ops").doc(key).set({ v: v, by: "ht", t: firebase.firestore.FieldValue.serverTimestamp() }); }
+  function uploadServerFiles(files, cat, title, memo, msg) {
+    var chain = Promise.resolve();
+    files.forEach(function (file, n) {
+      chain = chain.then(function () {
+        var img = isImgFile(file);
+        if (!img && file.size > MAXRAW) { msg.textContent = "「" + file.name + "」은(는) " + fsize(file.size) + "라 너무 커요 · 3MB까지 올릴 수 있어요"; msg.className = "fmsg bad"; return; }
+        msg.textContent = (img ? "사진 줄이는 중… " : "읽는 중… ") + "(" + (n + 1) + "/" + files.length + ")"; msg.className = "fmsg";
+        var id = "g" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+        var p = img ? shrinkTo(file, 1600, 0.82).then(function (big) { return big ? shrinkTo(file, 260, 0.62).then(function (th) { return { url: big, ty: "image/jpeg", th: th, jpg: true }; }) : null; }) : Promise.resolve(null);
+        return p.then(function (r) {
+          if (!r) { if (file.size > MAXRAW) { msg.textContent = "「" + file.name + "」은(는) 3MB가 넘어요"; msg.className = "fmsg bad"; return null; } return readURL(file).then(function (u) { return { url: u, ty: file.type || "application/octet-stream" }; }); }
+          return r;
+        }).then(function (r) {
+          if (!r) return;
+          var parts = []; for (var a = 0; a < r.url.length; a += CHUNK) parts.push(r.url.slice(a, a + CHUNK));
+          msg.textContent = "올리는 중… (" + (n + 1) + "/" + files.length + " · 조각 " + parts.length + "개)";
+          var jobs = parts.map(function (part, x) { return putDoc(PRE + "file." + id + ".p" + (x + 1), part); });
+          if (r.th) jobs.push(putDoc(PRE + "file." + id + ".th", r.th));
+          return Promise.all(jobs).then(function () {
+            if (r.th) imgCache[PRE + "file." + id + ".th"] = r.th;
+            var item = { kind: "file", n: fileName(file, title, n, files.length, !!r.jpg), ty: r.ty, sz: r.jpg ? Math.round(r.url.length * 0.75) : file.size, parts: parts.length, cat: cat || "etc", m: memo, by: me, at: new Date().toISOString(), o: Date.now() };
+            if (r.th) item.tk = 1;
+            put(K.files, "list." + id, item);
+            msg.textContent = "올렸어요 ✓"; msg.className = "fmsg";
+          });
+        }).catch(function (err) { msg.textContent = "올리지 못했어요" + (err && err.code ? " (" + err.code + ")" : "") + " · 다시 해 주세요"; msg.className = "fmsg bad"; });
+      });
+    });
+    chain.then(function () { if (filesSec) draw(filesSec); });
+  }
+  /* 열기 · 받기 */
+  function dataURLtoBlob(u) {
+    var i = u.indexOf(","), meta = u.slice(5, i), ty = meta.split(";")[0] || "application/octet-stream", body = u.slice(i + 1);
+    if (!/;base64/.test(meta)) return new Blob([decodeURIComponent(body)], { type: ty });
+    var bin = atob(body), arr = new Uint8Array(bin.length); for (var j = 0; j < bin.length; j++) arr[j] = bin.charCodeAt(j);
+    return new Blob([arr], { type: ty });
+  }
+  function fetchSrc(src) {
+    var kind = src.slice(0, 2), id = src.slice(2);
+    if (kind === "l:") { var r = localFiles.filter(function (f) { return f.id === id; })[0]; if (!r) return Promise.reject(new Error("없음")); return Promise.resolve({ blob: r.blob || dataURLtoBlob(r.d), n: r.n || r.title || "file" }); }
+    if (!db || !online) return Promise.reject(new Error("인터넷 연결 뒤에 열어 주세요"));
+    if (kind === "p:") return db.collection("ops").doc(id).get().then(function (s) { if (!s.exists) throw new Error("없음"); var o = JSON.parse(s.data().v); return { blob: dataURLtoBlob(o.d), n: (o.n || "photo") + ".jpg" }; });
+    var f = (view(K.files).list || {})[id]; if (!f) return Promise.reject(new Error("없음"));
+    var keys = []; for (var x = 1; x <= (f.parts || 1); x++) keys.push(PRE + "file." + id + ".p" + x);
+    return Promise.all(keys.map(function (k) { return db.collection("ops").doc(k).get(); })).then(function (ss) {
+      if (ss.some(function (q) { return !q.exists; })) throw new Error("조각이 빠져 있어요");
+      return { blob: dataURLtoBlob(ss.map(function (q) { return q.data().v; }).join("")), n: f.n || "file" };
+    });
+  }
+  /* 사진은 누르면 받지 않고 화면에서 크게 보기 · PDF 같은 다른 파일만 새 창 */
+  function srcIsImg(src) {
+    var kind = src.slice(0, 2), id = src.slice(2), ty = "";
+    if (kind === "p:") return true;
+    if (kind === "l:") { var r = localFiles.filter(function (f) { return f.id === id; })[0]; ty = r ? r.ty : ""; }
+    if (kind === "s:") { var f = (view(K.files).list || {})[id]; ty = f ? f.ty : ""; }
+    return /^image\//i.test(ty || "");
+  }
+  function showBig(url) { var lb = $("lb"); lb.querySelector("img").src = url; lb.hidden = false; }
+  function openFile(src, mode, btn) {
+    var img = mode === "open" && srcIsImg(src);
+    var w = mode === "open" && !img ? window.open("", "_blank") : null, old = btn.textContent; btn.disabled = true; if (!btn.querySelector("img")) btn.textContent = "여는 중…";
+    fetchSrc(src).then(function (r) {
+      var url = URL.createObjectURL(r.blob);
+      if (img) { showBig(url); return; }
+      if (mode === "dl") { var a = document.createElement("a"); a.href = url; a.download = r.n; document.body.appendChild(a); a.click(); a.remove(); }
+      else if (w) w.location.href = url; else window.open(url, "_blank");
+      setTimeout(function () { URL.revokeObjectURL(url); }, 120000);
+    }).catch(function (e) { if (w) w.close(); alert("파일을 열지 못했어요 · " + (e && e.message ? e.message : "")); })
+      .then(function () { btn.disabled = false; if (!btn.querySelector("img")) btn.textContent = old; });
+  }
+  function frow(o) {
+    return '<div class="frow' + (o.local ? " local" : "") + '">' + (o.thumb || '<span class="fic">' + o.icon + '</span>') +
+      '<div class="fmeta"><b class="fn">' + esc(o.n) + '</b><span class="fsub">' + [o.sz ? fsize(o.sz) : "", o.when, o.by].filter(Boolean).map(esc).join(" · ") + '</span>' +
+      (o.memo ? '<span class="m">' + esc(o.memo) + '</span>' : "") + (o.local ? '<span class="lbadge">🔒 이 기기에만 있어요 · 다른 기기 · 다른 사람에겐 안 보여요</span>' : "") + '</div>' +
+      '<div class="fbtns"><button type="button" class="btn sm" data-fopen="' + esc(o.src) + '">열기</button><button type="button" class="btn sm" data-fdl="' + esc(o.src) + '">받기</button>' + (o.del || "") + '</div></div>';
+  }
+  var dshort = function (at) { return String(at || "").slice(5, 10).replace("-", "/"); };
+  var CATORDER = [["air", "✈️ 항공권"], ["vjw", "🛂 비짓재팬"], ["rsv", "🎫 예약"], ["rcp", "🧾 영수증"], ["buy", "🛍 살 것"], ["etc", "📄 자료"]];
+  var fileFilter = ls(PRE + "ui.ffilter") || "all";
+  function allFiles() {
+    var list = rowsOf(view(K.files).list).reverse(), out = [];
+    localFiles.slice().sort(function (a, b) { return (b.at || "").localeCompare(a.at || ""); }).forEach(function (f) {
+      out.push({ local: true, id: f.id, cat: CATORDER.some(function (c) { return c[0] === f.cat; }) ? f.cat : "etc", n: f.n || f.title || "파일", sz: f.sz || 0, at: f.at, memo: f.memo || "", ty: f.ty || (f.d ? "image/jpeg" : ""), d: f.d, src: "l:" + f.id });
+    });
+    list.forEach(function (a) {
+      var id = a[0], f = a[1]; if (f.kind !== "photo" && f.kind !== "file") return;
+      var o = { id: id, f: f, cat: CATORDER.some(function (c) { return c[0] === f.cat; }) ? f.cat : "etc", at: f.at, by: f.by };
+      if (f.kind === "photo") { o.n = f.title || "사진"; o.memo = f.memo || ""; o.mp = "list." + id + ".memo"; o.ty = "image/jpeg"; o.src = "p:" + f.k; o.fk = f.k; }
+      else { o.n = f.n; o.sz = f.sz; o.memo = f.m || ""; o.mp = "list." + id + ".m"; o.ty = f.ty; o.src = "s:" + id; if (f.tk) o.th = PRE + "file." + id + ".th"; }
+      out.push(o);
+    });
+    return out;
+  }
   var filesSec = mount($("secFiles"), [K.files], function (el) {
-    var list = rowsOf(view(K.files).list).reverse(), photos = list.filter(function (a) { return a[1].kind === "photo"; }), links = list.filter(function (a) { return a[1].kind === "link"; });
-    var groups = CATS.map(function (c) {
-      var srv = photos.filter(function (a) { return (a[1].cat || "etc") === c[0]; });
-      var loc = localFiles.filter(function (f) { return (f.cat || "etc") === c[0]; }).sort(function (a, b) { return (b.at || "").localeCompare(a.at || ""); });
-      if (!srv.length && !loc.length) return "";
-      return '<div class="fgroup"><b class="fgh">' + c[1] + ' <small>' + (srv.length + loc.length) + '개</small></b><div class="fgrid">' +
-        loc.map(function (f) { return '<div class="fcard local"><img data-lk="' + esc(f.id) + '" src="' + f.d + '" alt="' + esc(f.title || "사진") + '"><span class="t">' + esc(f.title || "") + '</span>' + (f.memo ? '<span class="m">' + esc(f.memo) + '</span>' : "") +
-          '<span class="lbadge">🔒 이 기기에만 있어요 · 다른 기기 · 다른 사람에겐 안 보여요</span><span class="by"><span>' + esc((f.at || "").slice(5, 10).replace("-", "/")) + '</span><button type="button" class="x" data-act="ldel" data-id="' + esc(f.id) + '" aria-label="이 기기에서 빼기">×</button></span></div>'; }).join("") +
-        srv.map(function (a) { return fileCard(K.files, "list", a[0], a[1]); }).join("") + '</div></div>';
-    }).join("");
-    el.innerHTML = '<div class="card"><b>➕ 자료 올리기</b>' +
-      '<div class="fform" data-up="' + K.files + '" data-path="list"><div class="r2">' +
-      '<label class="fl">종류<select class="upCat" aria-label="자료 종류">' + CATS.map(function (c) { return '<option value="' + c[0] + '">' + c[1] + '</option>'; }).join("") + '</select></label>' +
-      '<label class="fl">어디에 둘까요<select class="upShare" aria-label="보관 방법"><option value="local" selected>🔒 이 기기에만 보관 (서버에 안 보냄)</option><option value="server">👥 같이 보기 (서버)</option></select></label></div>' +
-      '<div class="r2"><input type="text" class="upT" placeholder="제목 (예: 11/30 BX0717 항공권)" aria-label="자료 제목"><input type="text" class="upM" placeholder="메모 (없어도 돼요)" aria-label="자료 메모"></div>' +
-      '<p class="shwarn hint" id="shWarn">🔒 항공권 · 비짓재팬 · 예약 확인은 이름 · 여권 정보가 있어서 기본이 「이 기기에만」이에요. 다른 기기 · 다른 사람에겐 안 보이고, 백업에도 안 들어가요.</p>' +
-      '<div class="addbar"><label class="btn pri" for="up_files">📷 사진 올리기</label><input type="file" id="up_files" class="upF" accept="image/*" multiple hidden><span class="fmsg"></span></div>' +
-      '<p class="hint">PDF는 이 방식으로 못 올려요 · 화면을 사진(캡처)으로 찍어서 올려 주세요</p></div></div>' +
-      (groups || '<div class="empty">아직 올린 자료가 없어요</div>') +
+    var all = allFiles(), links = rowsOf(view(K.files).list).filter(function (a) { return a[1].kind === "link"; }).reverse();
+    var cnt = {}; all.forEach(function (o) { cnt[o.cat] = (cnt[o.cat] || 0) + 1; });
+    var tot = all.reduce(function (t, o) { return t + (+o.sz || 0); }, 0);
+    if (fileFilter !== "all" && !cnt[fileFilter]) fileFilter = "all";
+    var shown = all.filter(function (o) { return fileFilter === "all" || o.cat === fileFilter; });
+    var card = function (o) {
+      var isImg = /^image\//.test(o.ty || "");
+      var pv = o.local && o.d ? '<img data-lk="' + esc(o.id) + '" src="' + o.d + '" alt="' + esc(o.n) + '">' : o.fk ? '<img data-fk="' + esc(o.fk) + '" alt="' + esc(o.n) + '">' :
+        o.th ? '<button type="button" class="fpvb" data-fopen="' + esc(o.src) + '" aria-label="' + esc(o.n) + ' 열기"><img data-th="' + esc(o.th) + '" alt="' + esc(o.n) + '"></button>' :
+        '<button type="button" class="fpvb fpvi" data-fopen="' + esc(o.src) + '" aria-label="' + esc(o.n) + ' 열기">' + ficon(o.ty, o.n) + '</button>';
+      var mine = o.local || (me && o.by === me);
+      var catSel = o.local ? '<select class="lcat" data-id="' + esc(o.id) + '" aria-label="분류">' + selOpts(CATORDER, o.cat) + '</select>' : '<select ' + A(K.files, "list." + o.id + ".cat") + ' aria-label="분류">' + selOpts(CATORDER, o.cat) + '</select>';
+      var memo = o.local ? '<input type="text" class="lmemo" data-id="' + esc(o.id) + '" value="' + esc(o.memo) + '" placeholder="이름 · 메모" aria-label="이름 · 메모">' : '<input type="text" ' + A(K.files, o.mp) + ' value="' + esc(o.memo) + '" placeholder="이름 · 메모" aria-label="이름 · 메모">';
+      var del = o.local ? '<button type="button" class="x" data-act="ldel" data-id="' + esc(o.id) + '" aria-label="이 기기에서 빼기">×</button>' : (mine ? delBtn(K.files, "list." + o.id, "빼기") : "");
+      return '<div class="fcard2' + (o.local ? " local" : "") + '"><div class="fpv">' + pv + (o.local ? '<span class="flock" title="이 기기에만 있어요">🔒</span>' : "") + '</div>' +
+        '<b class="fn">' + ficon(o.ty, o.n) + ' ' + esc(o.n) + '</b><span class="fsub">' + [o.local ? "이 기기에만" : o.by, dshort(o.at), o.sz ? fsize(o.sz) : ""].filter(Boolean).map(esc).join(" · ") + '</span>' +
+        memo + '<div class="fc2b">' + catSel + del + '</div><div class="fc2b"><button type="button" class="btn sm" data-fopen="' + esc(o.src) + '">열기</button><button type="button" class="btn sm" data-fdl="' + esc(o.src) + '">받기</button></div></div>';
+    };
+    el.innerHTML = '<div class="fhead"><b>📎 2026 도쿄 연수 · 항공권 · 예약 · 영수증 · 자료</b><span>' + all.length + '개 · ' + fsize(tot) + '</span></div>' +
+      '<div class="fform"><div class="r2">' +
+      '<label class="fl">종류<select class="upCat" aria-label="자료 종류">' + selOpts(CATORDER, "air") + '</select></label>' +
+      '<label class="fl">어디에 둘까요<select class="upShare" aria-label="보관 방법"><option value="server" selected>👥 같이 보기 (서버 · 어느 기기에서나 보여요)</option><option value="local">🔒 이 기기에만 보관 (서버에 안 보냄)</option></select></label></div>' +
+      '<div class="r2"><input type="text" class="upT" placeholder="이름 (없으면 파일 이름 그대로)" aria-label="자료 이름"><input type="text" class="upM" placeholder="메모 (없어도 돼요)" aria-label="자료 메모"></div>' +
+      '<p class="shwarn hint" id="shWarn"></p>' +
+      '<label class="fdrop" for="up_files" id="fDrop"><b>📎 눌러서 사진 · 파일 올리기</b><span>여기로 끌어다 놓아도 돼요 · 사진은 자동으로 줄여서 · 다른 파일은 3MB까지 (이 기기에만은 20MB)</span></label>' +
+      '<input type="file" id="up_files" class="upAny" multiple hidden><span class="fmsg" id="upMsg"></span></div>' +
+      '<div class="fchips" role="tablist" aria-label="자료 분류">' + [["all", "전체"]].concat(CATORDER).map(function (c) { var n = c[0] === "all" ? all.length : (cnt[c[0]] || 0); return '<button type="button" class="fchip" data-ff="' + c[0] + '" aria-pressed="' + (fileFilter === c[0]) + '">' + c[1] + ' <small>' + n + '</small></button>'; }).join("") + '</div>' +
+      (shown.length ? '<div class="fgrid2">' + shown.map(card).join("") + '</div>' : '<div class="empty">' + (all.length ? "이 분류에는 아직 없어요" : "아직 올린 자료가 없어요") + '</div>') +
       '<div class="lnsmall"><b>🔗 링크</b>' + FIXED_LINKS.map(function (l) { return '<a href="' + l[1] + '" target="_blank" rel="noopener">' + l[0] + '</a>'; }).join("") +
       links.map(function (a) { var f = a[1]; return '<a href="' + esc(f.url) + '" target="_blank" rel="noopener">' + esc(f.title || f.url) + '</a>' + (f.memo ? '<span class="hint">' + esc(f.memo) + '</span>' : ""); }).join("") + '</div>';
     syncShare(el);
   });
   function syncShare(root) {
     var c = root.querySelector(".upCat"), s = root.querySelector(".upShare"), w = root.querySelector("#shWarn"); if (!c || !s) return;
-    if (w) w.textContent = s.value === "local" ? "🔒 이 기기에만 보관해요 · 다른 기기 · 다른 사람에겐 안 보이고, 백업에도 안 들어가요" + (PRIVATE_CAT[c.value] ? " · 이름 · 여권 정보가 있는 자료라 기본이 「이 기기에만」이에요" : "") : "👥 서버에 올려 같이 봐요 · 링크를 받은 누구나 볼 수 있어요" + (PRIVATE_CAT[c.value] ? " · ⚠ 이름 · 여권번호가 보이면 가리고 올리세요" : "");
+    if (w) w.textContent = s.value === "local" ? "🔒 이 기기에만 보관해요 · 다른 기기 · 다른 사람에겐 안 보이고, 백업에도 안 들어가요" : "👥 서버에 올려 같이 봐요 · 링크를 받은 누구나 볼 수 있어요" + (PRIVATE_CAT[c.value] ? " · ⚠ 이름 · 여권번호가 보이면 가리고 올리세요" : "");
     w.className = "shwarn " + (s.value === "server" && PRIVATE_CAT[c.value] ? "fmsg bad" : "hint");
   }
   $("secFiles").addEventListener("change", function (e) {
-    if (e.target.classList.contains("upCat")) { var s = $("secFiles").querySelector(".upShare"); s.value = PRIVATE_CAT[e.target.value] ? "local" : "server"; syncShare($("secFiles")); }
+    if (e.target.classList.contains("upCat")) { var s = $("secFiles").querySelector(".upShare"); syncShare($("secFiles")); }
     if (e.target.classList.contains("upShare")) syncShare($("secFiles"));
   });
+  $("secFiles").addEventListener("change", function (e) {
+    var f = e.target;
+    if (f.classList && (f.classList.contains("lcat") || f.classList.contains("lmemo"))) {
+      var r = localFiles.filter(function (x) { return x.id === f.dataset.id; })[0]; if (!r) return;
+      if (f.classList.contains("lcat")) r.cat = f.value; else r.memo = f.value;
+      ldbPut(r).then(function () { if (f.classList.contains("lcat")) draw(filesSec); }); return;
+    }
+    if (!f.classList || !f.classList.contains("upAny")) return;
+    var files = [].slice.call(f.files || []); f.value = ""; takeFiles(files);
+  });
+  function takeFiles(files) {
+    var box = $("secFiles").querySelector(".fform"), msg = $("upMsg");
+    if (!files.length || !box) return;
+    var title = box.querySelector(".upT").value.trim(), memo = box.querySelector(".upM").value.trim(), cat = box.querySelector(".upCat").value, local = box.querySelector(".upShare").value === "local";
+    if (local) { saveLocalFiles(files, cat, title, memo, msg); return; }
+    if (!me) { msg.textContent = "이름을 먼저 적어 주세요"; msg.className = "fmsg bad"; needName(); return; }
+    if (!db || !online) { msg.textContent = "인터넷 연결 뒤에 올려 주세요"; msg.className = "fmsg bad"; return; }
+    if (PRIVATE_CAT[cat] && !window.confirm("⚠ 같이 보기(서버)로 올리면 링크를 받은 누구나 볼 수 있어요.\n이름 · 여권번호 · 예약번호가 보이면 가리고 올리세요.\n그래도 올릴까요?")) { msg.textContent = "올리지 않았어요"; msg.className = "fmsg"; return; }
+    uploadServerFiles(files, cat, title, memo, msg);
+  }
+  ["dragenter", "dragover"].forEach(function (ev) { $("secFiles").addEventListener(ev, function (e) { var d = e.target.closest && e.target.closest("#fDrop"); if (!d) return; e.preventDefault(); d.classList.add("on"); }); });
+  ["dragleave", "drop"].forEach(function (ev) { $("secFiles").addEventListener(ev, function (e) { var d = e.target.closest && e.target.closest("#fDrop"); if (!d) return; e.preventDefault(); d.classList.remove("on"); if (ev === "drop" && e.dataTransfer) takeFiles([].slice.call(e.dataTransfer.files || [])); }); });
   $("secFiles").addEventListener("click", function (e) {
+    var ff = e.target.closest("[data-ff]"); if (ff) { fileFilter = ff.dataset.ff; ls(PRE + "ui.ffilter", fileFilter); draw(filesSec); return; }
+    var o = e.target.closest("[data-fopen],[data-fdl]"); if (o) { openFile(o.dataset.fopen || o.dataset.fdl, o.dataset.fopen ? "open" : "dl", o); return; }
     var b = e.target.closest('[data-act="ldel"]'); if (!b) return;
     if (b.dataset.arm !== "1") { b.dataset.arm = "1"; b.classList.add("arm"); b.textContent = "빼기?"; return; }
     ldbDel(b.dataset.id).then(loadLocal);
@@ -1767,8 +2233,25 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
   var safe = function (s) { return String(s || "").replace(/\.[a-z0-9]+$/i, "").replace(/[^\w가-힣ぁ-んァ-ン一-龥-]+/g, "").slice(0, 24) || "photo"; };
   document.addEventListener("change", function (e) {
     var f = e.target; if (!f.classList || !f.classList.contains("upF")) return;
-    var box = f.closest("[data-up]"), msg = box.querySelector(".fmsg"), key = box.dataset.up, path = box.dataset.path;
     var files = [].slice.call(f.files || []); f.value = "";
+    upFiles(f.closest("[data-up]"), files);
+  });
+  /* 사진 칸 어디든 끌어다 놓기 (자료 모으기 칸은 따로 처리) */
+  function dropBox(e) { var b = e.target.closest && e.target.closest("[data-up]"); return b && b.querySelector(".upF") && !b.closest("#secFiles") ? b : null; }
+  var dropOn = null;
+  function dropMark(b) { if (dropOn && dropOn !== b) dropOn.classList.remove("dropon"); dropOn = b; if (b) b.classList.add("dropon"); }
+  ["dragenter", "dragover"].forEach(function (ev) { document.addEventListener(ev, function (e) { var b = dropBox(e); if (!b) { dropMark(null); return; } e.preventDefault(); if (e.dataTransfer) e.dataTransfer.dropEffect = "copy"; dropMark(b); }); });
+  document.addEventListener("dragleave", function (e) { if (!e.relatedTarget || !dropOn || !dropOn.contains(e.relatedTarget)) dropMark(null); });
+  document.addEventListener("drop", function (e) {
+    var b = dropBox(e); dropMark(null); if (!b) return; e.preventDefault();
+    var fs = [].slice.call((e.dataTransfer && e.dataTransfer.files) || []).filter(isImgFile);
+    var msg = b.querySelector(".fmsg");
+    if (!fs.length) { if (msg) { msg.textContent = "사진 파일만 놓아 주세요"; msg.className = "fmsg bad"; } return; }
+    if (!b.querySelector(".upF").multiple) fs = fs.slice(0, 1);
+    upFiles(b, fs);
+  });
+  function upFiles(box, files) {
+    var msg = box.querySelector(".fmsg"), key = box.dataset.up, path = box.dataset.path;
     if (!files.length) return;
     var title = box.querySelector(".upT").value.trim(), memo = box.querySelector(".upM").value.trim();
     var catEl = box.querySelector(".upCat"), shEl = box.querySelector(".upShare"), cat = catEl ? catEl.value : "", local = shEl && shEl.value === "local";
@@ -1796,14 +2279,14 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
       });
     });
     chain.then(function () { redrawFor(box); });
-  });
+  }
   function loadImgs(root) {
-    root.querySelectorAll("img[data-fk]").forEach(function (im) {
+    root.querySelectorAll("img[data-fk],img[data-th]").forEach(function (im) {
       if (im.getAttribute("src")) return;
-      var k = im.dataset.fk; if (k.indexOf(PRE + "file.") !== 0) return;
+      var k = im.dataset.fk || im.dataset.th; if (k.indexOf(PRE + "file.") !== 0) return;
       if (imgCache[k]) { im.src = imgCache[k]; return; }
       if (!db || !online) return;
-      db.collection("ops").doc(k).get().then(function (s) { if (!s.exists) return; try { var o = JSON.parse(s.data().v); imgCache[k] = o.d; im.src = o.d; } catch (e) {} }).catch(function () {});
+      db.collection("ops").doc(k).get().then(function (s) { if (!s.exists) return; var v = s.data().v || ""; try { var d = v.indexOf("data:") === 0 ? v : JSON.parse(v).d; imgCache[k] = d; im.src = d; } catch (e) {} }).catch(function () {});
     });
   }
   document.addEventListener("click", function (e) {
@@ -1811,6 +2294,7 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
     var lb = $("lb"); lb.querySelector("img").src = im.src; lb.hidden = false;
   });
   $("lbClose").onclick = function () { $("lb").hidden = true; };
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !$("lb").hidden) $("lb").hidden = true; });
   $("lb").addEventListener("click", function (e) { if (e.target === $("lb")) $("lb").hidden = true; });
 
   /* 💾 지금 저장 + 백업: 남은 변경을 바로 보내고, 지금 내용 전체를 백업 문서로 한 벌 더 남김(지우지 않음) */
@@ -1834,6 +2318,9 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
 
   /* 🔎 벤치마킹 · 가게마다 사람별 7항목 /10 */
   var CRIT = ["파사드", "향", "음악", "메뉴", "가격", "플레이팅·디테일", "재미"];
+  var CRIT_D = ["입구부터 화장실까지 · 건물 정면 외벽", "가게 전체에서 풍기는 향", "곡 · 크기 · 분위기", "구성 · 이름 · 설명", "가격 대비 만족", "그릇 · 포장 · 작은 배려", "또 오고 싶은가"];
+  var CRIT_Q = ["간판 · 입구 · 외관 색 · 조명 · 쇼윈도 진열 · 들어가고 싶었나", "들어갈 때 나는 향 · 버터 · 커피 · 향초 · 진하기", "장르 · 볼륨 · 분위기와 맞나 · 조용한가", "메뉴 수 · 대표 메뉴 · 시즌 한정 · 메뉴판 사진 · 설명 방식", "가격대 · 카페스이 비슷한 메뉴와 비교 · 값어치 했나", "접시 · 커트러리 · 포장지 · 리본 · 쇼케이스 이름표 · 손글씨", "기억에 남는 장면 · 사진 찍고 싶은 곳 · 이벤트 · 굿즈"];
+  var BX = [["vt", "🕒 방문 날짜 · 시간 · 대기", "예) 12/4 15:00 · 대기 20분 · 평일인데 꽉 참"], ["ate", "🍰 먹은 것 · 산 것 · 가격 (한 줄에 하나)", "예)\n딸기 쇼트케이크 · 1,200엔 · 시트 촉촉, 크림 덜 달다\n말차 푸딩 · 650엔 · 병 포장"], ["cust", "👥 손님층 · 회전", "나이대 · 혼자/일행 · 포장 비율 · 많이 사 가는 것 · 회전 속도"], ["serv", "🙇 직원 응대 · 주문 동선", "주문 방식 · 설명해 주는 말 · 속도 · 계산대 위치 · 대기 줄 처리"], ["pack", "🎁 포장 · 선물", "상자 · 쇼핑백 · 보냉 · 유통기한 표시 · 선물용 구성 · 포장 가격"], ["good", "👍 좋았던 점 (구체적으로)", "무엇이 · 왜 좋았나"], ["bad", "🤔 아쉬운 점", "무엇이 · 왜 아쉬웠나 · 나라면 어떻게"]];
   function personTotal(e) { var t = 0, n = 0; for (var i = 0; i < 7; i++) { var x = num(e && e["s" + i]); if (x) { t += Math.min(x, 10); n++; } } return { t: t, n: n }; }
   function ranking() {
     var v = view(K.bench);
@@ -1849,55 +2336,136 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
     document.querySelectorAll("[data-mysum]").forEach(function (s) { var e = (((view(K.bench).ev || {})[s.dataset.mysum]) || {})[meKey()]; var t = personTotal(e); s.textContent = "내 점수 " + t.t + " / 70" + (t.n < 7 ? " · " + t.n + "/7항목" : ""); });
   }
   function storePlace(id, s) { if (s.pl !== undefined && s.pl !== "") return s.pl; var seed = (SEED[K.bench].st || {})[id]; return s.pl === undefined && seed && seed.n === s.n && BENCH_PL[id] ? BENCH_PL[id] : (s.pl === undefined ? s.n : ""); }
-  mount($("secBench"), [K.bench], function (el) {
+  var openStores = {};
+  function critAvg(ev, i) { var t = 0, n = 0; Object.keys(ev).forEach(function (p) { var x = num((ev[p] || {})["s" + i]); if (x) { t += Math.min(x, 10); n++; } }); return n ? t / n : 0; }
+  var benchSec = mount($("secBench"), [K.bench], function (el) {
     var v = view(K.bench), st = rowsOf(v.st), mk = meKey();
     el.innerHTML = '<div class="card"><b>🏆 평균 순위 (/70)</b><div class="rank" id="rankBox"></div></div>' +
       (me ? "" : nameBox("내 점수 칸이 열려요")) +
-      '<div class="card"><b>➕ 가게 추가</b><div class="fform"><div class="r2"><input type="text" id="bnN" placeholder="가게 이름" aria-label="가게 이름"><input type="text" id="bnA" placeholder="동네 · 몇 일차 (예: 긴자 · 5일차)" aria-label="동네"></div><div class="addbar"><button type="button" class="btn pri" id="bnAdd">＋ 가게 추가</button></div></div></div>' +
+      '<div class="card"><b>➕ 가게 추가</b><div class="fform"><div class="r2"><input type="text" id="bnN" placeholder="가게 이름" aria-label="가게 이름"><input type="text" id="bnA" placeholder="동네 (예: 긴자)" aria-label="동네"></div>' +
+      '<div class="r2"><select id="bnD" aria-label="방문 일차"><option value="">방문 일차</option>' + DAYS.map(function (d) { return '<option value="' + d.n + '일차">' + d.n + '일차 ' + d.d + '</option>'; }).join("") + '</select><input type="text" id="bnT" placeholder="방문 시간 (예: 10:00)" aria-label="방문 시간"></div>' +
+      '<div class="addbar"><button type="button" class="btn pri" id="bnAdd">＋ 가게 추가</button></div></div></div>' +
       st.map(function (a) {
         var id = a[0], s = a[1], ev = (v.ev || {})[id] || {}, my = ev[mk] || {}, base = "ev." + id + "." + mk, pl = storePlace(id, s);
+        var tots = Object.keys(ev).map(function (p) { return personTotal(ev[p]); }).filter(function (x) { return x.n; });
+        var avg = tots.length ? tots.reduce(function (t, x) { return t + x.t; }, 0) / tots.length : 0, mine = personTotal(my);
+        var nph = Object.keys(ev).reduce(function (t, p) { return t + rowsOf((ev[p] || {}).ph).length; }, 0);
         var others = Object.keys(ev).filter(function (p) { return p !== mk; }).map(function (p) {
           var e = ev[p] || {}, t = personTotal(e), ph = rowsOf(e.ph);
           if (!t.n && !e.prod && !e.memo && !e.take && !e.good && !e.bad && !ph.length) return "";
           return '<div class="oth"><span><b>' + esc(p) + '</b> · ' + t.t + ' / 70</span><span>' + CRIT.map(function (c, i) { return c + " " + (e["s" + i] || "-") + (e["n" + i] ? " (" + esc(e["n" + i]) + ")" : ""); }).join(" · ") + '</span>' +
-            (e.prod ? '<span>🍰 ' + esc(e.prod) + '</span>' : "") + (e.good ? '<span>👍 ' + esc(e.good) + '</span>' : "") + (e.bad ? '<span>🤔 ' + esc(e.bad) + '</span>' : "") + (e.memo ? '<span>📝 ' + esc(e.memo) + '</span>' : "") + (e.take ? '<span>⭐ ' + esc(e.take) + '</span>' : "") +
+            (e.prod ? '<span>🍰 ' + esc(e.prod) + '</span>' : "") + BX.map(function (x) { return e[x[0]] && x[0] !== "good" && x[0] !== "bad" ? '<span>' + x[1].split(" ")[0] + ' ' + esc(e[x[0]]) + '</span>' : ""; }).join("") + (e.good ? '<span>👍 ' + esc(e.good) + '</span>' : "") + (e.bad ? '<span>🤔 ' + esc(e.bad) + '</span>' : "") + (e.memo ? '<span>📝 ' + esc(e.memo) + '</span>' : "") + (e.take ? '<span>⭐ ' + esc(e.take) + '</span>' : "") +
             (ph.length ? '<span class="ckpics">' + ph.map(function (b) { return '<span class="ckpic"><img data-fk="' + esc(b[1].k) + '" alt="' + esc(p) + ' 사진"></span>'; }).join("") + '</span>' : "") + '</div>';
         }).join("");
-        return '<div class="store"><div class="sh"><span><b>' + esc(s.n) + '</b> <small>' + esc([s.area, s.day].filter(Boolean).join(" · ")) + '</small></span>' + delBtn(K.bench, "st." + id, "가게 빼기") + '</div>' +
-          '<div class="plrow"><label class="pllab">📍 장소<input type="text" ' + A(K.bench, "st." + id + ".pl") + ' value="' + esc(s.pl !== undefined ? s.pl : pl) + '" placeholder="구글 지도 검색어" aria-label="장소 검색어"></label>' + mapBtns(pl) + '</div>' +
-          (me ? '<div class="scores">' + CRIT.map(function (c, i) {
+        var head = '<summary class="bsum"><span class="btm">' + esc(s.tm || "--:--") + '</span><span class="bnm"><b>' + esc(s.n) + '</b><small>' + esc([s.area, s.day].filter(Boolean).join(" · ")) + '</small></span>' +
+          '<span class="bav"><b>' + (tots.length ? (Math.round(avg * 10) / 10) : "-") + '</b> /70 · ' + tots.length + '명<i class="bbar"><i style="width:' + (avg / 70 * 100) + '%"></i></i></span>' +
+          '<span class="bph">📎 ' + nph + '</span>' + (mine.n ? '<span class="bme">✓ 내 평가</span>' : '<span class="bme no">아직</span>') + '</summary>';
+        var allAvg = '<div class="bavg"><b>👥 다 같이 매긴 점수 (평균)</b><div class="bavgg">' + CRIT.map(function (c, i) { var x = critAvg(ev, i); return '<div class="bai"><span>' + c + '</span><i class="bbar"><i style="width:' + (x * 10) + '%"></i></i><b>' + (x ? (Math.round(x * 10) / 10) : "-") + '</b></div>'; }).join("") + '</div></div>';
+        var myBox = me ? '<div class="bmy"><div class="bmyh"><b>✍️ 내 평가</b><span class="hint">' + (my.at ? "저장 " + String(my.at).slice(5, 16).replace("T", " ").replace("-", "/") : "아직 안 적음") + '</span><b class="mysum" data-mysum="' + id + '"></b></div>' +
+          '<div class="bcrit">' + CRIT.map(function (c, i) {
             var cv = String(my["s" + i] || "");
-            return '<label>' + c + '<select ' + A(K.bench, base + ".s" + i) + '><option value="">-</option>' + [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(function (n) { return '<option' + (cv === String(n) ? " selected" : "") + '>' + n + '</option>'; }).join("") + '</select>' +
-              '<input type="text" ' + A(K.bench, base + ".n" + i) + ' value="' + esc(my["n" + i] || "") + '" placeholder="한 줄 메모" aria-label="' + c + ' 한 줄 메모"></label>';
-          }).join("") + '</div><span class="mysum" data-mysum="' + id + '"></span>' +
-            '<div class="grid2"><div class="fl">🍰 대표 제품 · 가격' + ta(K.bench, base + ".prod", my.prod, "예) 생 카라멜 6개입 · 1,080엔") + '</div>' +
-            '<div class="fl">📝 메모 · 손님 관찰' + ta(K.bench, base + ".memo", my.memo, "본 것 · 느낀 것 · 손님이 무엇을 사 가나") + '</div>' +
-            '<div class="fl">👍 좋았던 점' + ta(K.bench, base + ".good", my.good, "좋았던 점") + '</div>' +
-            '<div class="fl">🤔 아쉬운 점' + ta(K.bench, base + ".bad", my.bad, "아쉬운 점") + '</div></div>' +
-            '<div class="fl">⭐ 카페스이에 가져올 것' + ta(K.bench, base + ".take", my.take, "바로 해 볼 것 · 여러 줄로 자세히", 'style="min-height:80px"') + '</div>' +
-            '<div class="fl">📷 사진' + picsHtml(K.bench, base + ".ph", my.ph, s.n) + '</div>' : "") +
-          (others ? '<div class="others">' + others + '</div>' : "") + '</div>';
+            return '<div class="bc"><b>' + c + '</b><span class="hint">' + CRIT_D[i] + '</span><select ' + A(K.bench, base + ".s" + i) + ' aria-label="' + c + ' 점수"><option value="">점수</option>' + [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(function (n) { return '<option' + (cv === String(n) ? " selected" : "") + '>' + n + '</option>'; }).join("") + '</select>' +
+              '<i class="bbar g"><i style="width:' + (num(cv) * 10) + '%"></i></i>' + ta(K.bench, base + ".n" + i, my["n" + i], CRIT_Q[i]) + '</div>';
+          }).join("") + '</div>' +
+          '<div class="fl">🍰 대표 제품 · 가격' + ta(K.bench, base + ".prod", my.prod, "예) 생 카라멜 6개입 · 1,080엔 · 가게가 제일 밀고 있는 것") + '</div>' +
+          '<div class="grid2">' + BX.map(function (x) { return '<div class="fl">' + x[1] + ta(K.bench, base + "." + x[0], my[x[0]], x[2], 'style="min-height:64px"') + '</div>'; }).join("") +
+          '<div class="fl">📝 그 밖에 본 것 · 메모' + ta(K.bench, base + ".memo", my.memo, "인테리어 · 좌석 수 · 쇼케이스 배치 · 인상 깊은 말", 'style="min-height:64px"') + '</div></div>' +
+          '<div class="fl">⭐ 카페스이에 가져올 것' + ta(K.bench, base + ".take", my.take, "무엇을 · 언제까지 · 어떻게 (예: 1월 딸기 쇼트 이름표를 손글씨 카드로)", 'style="min-height:80px"') + '</div>' +
+          '<div class="fl">📷 사진' + picsHtml(K.bench, base + ".ph", my.ph, s.n) + '</div></div>' : "";
+        return '<details class="store bstore" data-sid="' + esc(id) + '"' + (openStores[id] ? " open" : "") + '>' + head + '<div class="bbody">' +
+          '<div class="plrow"><label class="pllab">📍 장소<input type="text" ' + A(K.bench, "st." + id + ".pl") + ' value="' + esc(s.pl !== undefined ? s.pl : pl) + '" placeholder="구글 지도 검색어" aria-label="장소 검색어"></label>' +
+          '<label class="pllab" style="flex:0 1 120px">🕒 방문 시간<input type="text" ' + A(K.bench, "st." + id + ".tm") + ' value="' + esc(s.tm || "") + '" placeholder="10:00" aria-label="방문 시간"></label>' + mapBtns(pl) + delBtn(K.bench, "st." + id, "가게 빼기") + '</div>' +
+          allAvg + myBox + (others ? '<div class="others"><b>👥 다른 사람 평가</b>' + others + '</div>' : "") + '</div></details>';
       }).join("");
     setTimeout(refreshRank, 0);
   });
+  $("secBench").addEventListener("toggle", function (e) { var d = e.target; if (d.classList && d.classList.contains("bstore")) openStores[d.dataset.sid] = d.open; }, true);
   $("secBench").addEventListener("click", function (e) {
     if (!e.target.closest("#bnAdd")) return;
     var n = $("bnN").value.trim(), a = $("bnA").value.trim(); if (!n) { $("bnN").focus(); return; }
-    put(K.bench, "st." + uid("b"), { n: n, area: a, day: "", pl: "", o: Date.now() }); redrawFor($("secBench").firstChild);
+    put(K.bench, "st." + uid("b"), { n: n, area: a, day: $("bnD").value, tm: $("bnT").value.trim(), pl: "", o: Date.now() }); draw(benchSec);
   });
 
   /* ⑧ 💌 소감 · 피드백 · 내 카드만 적기 (예전 칸 키 a · b · c · d 그대로 + 새 칸 e) · 예전 공동 피드백(hattori26.feedback)도 여기 */
-  var RQ = [["a", "⭐ 이번 연수를 한 줄로"], ["b", "💛 좋았던 것"], ["e", "🤔 아쉬웠던 것 · 다음엔 이렇게"], ["c", "💡 새로 알게 된 것 · 배운 것"], ["d", "☕ 카페스이에 해 볼 것"]];
+  var RQ = [["a", "⭐ 이번 연수를 한 줄로", "예) 일본 디저트는 결국 온도와 수분 싸움이었다"],
+    ["r1", "📅 1일차 수업 · 배운 것과 느낀 것", "품목 · 셰프님이 강조한 것 · 내가 잘 안 된 것 · 다시 해 볼 것"],
+    ["r2", "📅 2일차 수업 · 배운 것과 느낀 것", "품목 · 셰프님이 강조한 것 · 내가 잘 안 된 것 · 다시 해 볼 것"],
+    ["r3", "📅 3일차 수업 · 배운 것과 느낀 것", "품목 · 셰프님이 강조한 것 · 내가 잘 안 된 것 · 다시 해 볼 것"],
+    ["best", "🍰 9품목 중 가장 인상 깊은 것 · 이유", "품목 이름 · 왜 · 카페스이에서 팔 수 있을까"],
+    ["b", "💛 좋았던 것", "수업 · 셰프님 · 같이 간 분들 · 벤치마킹 가게 · 일정 중 좋았던 순간을 구체적으로"],
+    ["e", "🤔 아쉬웠던 것 · 다음엔 이렇게", "무엇이 아쉬웠나 → 다음엔 어떻게 할까"],
+    ["c", "💡 새로 알게 된 것 (기술 · 재료 · 도구)", "예) 생크림 유지방 몇 %를 쓰는지 · 시트 굽는 온도 · 일본 재료 이름"],
+    ["trip", "🗓 일정 · 숙소 · 이동 돌아보기", "시간 배분 · 숙소 위치 · 교통 · 짐 · 다음엔 바꿀 것"],
+    ["money", "💴 돈 쓴 것 돌아보기", "잘 산 것 · 안 사도 됐던 것 · 예산 대비"],
+    ["d", "☕ 카페스이에 해 볼 것 (무엇을 · 언제까지)", "예) 1월: 딸기 다이후쿠 시즌 한정 테스트 · 2월: 틴쿠키 답례품 원가 계산"],
+    ["kit", "🍳 스이노키친 수업에 쓸 것", "수업 주제 · 실습 방식 · 수강생에게 보여 줄 사진"],
+    ["edu", "👩‍🍳 직원 교육에 쓸 것", "직원에게 알려 줄 기술 · 레시피 · 응대 방식"],
+    ["tip", "📌 다음에 갈 사람에게 팁", "준비물 · 꼭 가 볼 곳 · 조심할 것"]];
   mount($("secReview"), [K.review, K.fb], function (el) {
     var v = view(K.review), mk = meKey(), fb = view(K.fb);
-    var mine = me ? '<div class="rv mine"><h3>' + esc(me) + ' <span class="hint">(나)</span></h3>' + RQ.map(function (q) { return '<div class="fl">' + q[1] + ta(K.review, mk + "." + q[0], (v[mk] || {})[q[0]], q[1].slice(2).trim(), 'style="min-height:64px"') + '</div>'; }).join("") + '</div>' : nameBox("내 소감 · 피드백 카드가 열려요");
-    var others = Object.keys(v).filter(function (p) { return p !== mk && v[p] && RQ.some(function (q) { return String(v[p][q[0]] || "").trim(); }); }).map(function (p) {
+    var people = Object.keys(v).filter(function (p) { return v[p] && RQ.some(function (q) { return String(v[p][q[0]] || "").trim(); }); });
+    var mine = me ? '<div class="rvme"><div class="rvh"><b>✍️ ' + esc(me) + '</b><span class="hint">내 카드 · 적는 즉시 저장 · ' + RQ.filter(function (q) { return String((v[mk] || {})[q[0]] || "").trim(); }).length + ' / ' + RQ.length + '칸</span></div><div class="rvq">' +
+      RQ.map(function (q) { return '<div class="rvc"><b>' + q[1] + '</b>' + ta(K.review, mk + "." + q[0], (v[mk] || {})[q[0]], q[2], 'style="min-height:64px"') + '</div>'; }).join("") + '</div></div>' : nameBox("내 소감 · 피드백 카드가 열려요");
+    var others = people.filter(function (p) { return p !== mk; }).map(function (p) {
       return '<div class="rv"><h3>' + esc(p) + '</h3>' + RQ.filter(function (q) { return String(v[p][q[0]] || "").trim(); }).map(function (q) { return '<div><div class="q">' + q[1] + '</div><div class="a">' + esc(v[p][q[0]]) + '</div></div>'; }).join("") + '</div>';
     }).join("");
     var oldFb = String(fb.good || "").trim() || String(fb.bad || "").trim();
-    el.innerHTML = '<div class="rvgrid">' + mine + others + '</div>' +
+    el.innerHTML = '<div class="fbtop"><span>💌 소감 <b>' + people.length + '명</b> 적음</span><button type="button" class="btn sm" id="rvCopy">📋 소감 모아 복사</button></div>' + mine +
+      (others ? '<div class="rvgrid">' + others + '</div>' : "") +
       (oldFb ? '<div class="card"><b>📝 예전에 같이 적은 피드백</b><span class="hint">위에 따로 있던 「26년의 피드백」 칸이에요 · 지우지 않고 여기로 옮겨 보여요</span><div class="grid2"><div class="fl">😊 좋았던 것' + ta(K.fb, "good", fb.good, "좋았던 것") + '</div><div class="fl">🤔 안 좋았던 것 · 다음엔 이렇게' + ta(K.fb, "bad", fb.bad, "아쉬웠던 것") + '</div></div></div>' : "");
   });
+  $("secReview").addEventListener("click", function (e) {
+    var b = e.target.closest("#rvCopy"); if (!b) return;
+    var v = view(K.review), txt = Object.keys(v).map(function (p) { var rows = RQ.filter(function (q) { return String((v[p] || {})[q[0]] || "").trim(); }); return rows.length ? "■ " + p + "\n" + rows.map(function (q) { return q[1] + "\n" + v[p][q[0]]; }).join("\n\n") : ""; }).filter(Boolean).join("\n\n");
+    (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(function () { b.textContent = "✔ 복사했어요"; }, function () { b.textContent = "복사가 막혔어요"; });
+  });
+
+  /* ==================== 🏕 일정 · 준비 타일 탭 · 한눈에 ==================== */
+  var PP = [["sum", "🏕", "한눈에"], ["cur", "①", "커리큘럼"], ["prep", "②", "미리 준비"], ["buy", "③", "구매"], ["day", "④", "일정"], ["cost", "⑤", "지출"], ["file", "⑥", "자료 · 파일"], ["bench", "⑦", "벤치마킹"], ["feel", "⑧", "소감"]];
+  var curPP = ls(PRE + "ui.pp") || "sum";
+  function ckCount(rows) { var r = rowsOf(rows); return [r.filter(function (a) { return a[1].ok; }).length, r.length]; }
+  function ppStatus(k) {
+    if (k === "sum") { var t = todayDay(); return t ? "오늘 " + t + "일차" : (dday(2026, 11, 30) > 0 ? "출국 D-" + dday(2026, 11, 30) : "다녀왔어요"); }
+    if (k === "cur") return "9품목";
+    if (k === "prep") { var c = ckCount(view(K.prep).rows); return c[0] + " / " + c[1] + " 준비"; }
+    if (k === "buy") { var b = view(K.buy), x = [ckCount(b.must), ckCount(b.now), ckCount(b.shop)]; return x.reduce(function (s, y) { return s + y[0]; }, 0) + " / " + x.reduce(function (s, y) { return s + y[1]; }, 0) + " 삼"; }
+    if (k === "day") return "6일 · " + DAYS.reduce(function (s, d) { return s + rowsOf(view(K.plan(d.n)).rows).length; }, 0) + "줄";
+    if (k === "cost") return yen(DAYS.reduce(function (s, d) { return s + costDay(d.n).y; }, 0));
+    if (k === "file") return allFiles().length + "개";
+    if (k === "bench") { var v = view(K.bench), st = rowsOf(v.st); return st.length + "곳 · 평가 " + st.filter(function (a) { return Object.keys((v.ev || {})[a[0]] || {}).some(function (p) { return personTotal(v.ev[a[0]][p]).n; }); }).length; }
+    if (k === "feel") { var r = view(K.review); return Object.keys(r).filter(function (p) { return r[p] && RQ.some(function (q) { return String(r[p][q[0]] || "").trim(); }); }).length + "명"; }
+    return "";
+  }
+  var ALLPK = [K.prep, K.buy, PRE + "plan.*", PRE + "cost", PRE + "cost.*", K.files, K.bench, K.review];
+  var tilesSec = mount($("ptiles"), ALLPK, function (el) {
+    el.innerHTML = PP.map(function (p) { return '<button type="button" class="ptile" role="tab" data-pp="' + p[0] + '" aria-selected="' + (curPP === p[0]) + '"><span class="ptl"><i class="ptn">' + p[1] + '</i>' + p[2] + '</span><span class="pts">' + esc(ppStatus(p[0])) + '</span></button>'; }).join("");
+  });
+  function showPP(k, scroll) {
+    if (!PP.some(function (p) { return p[0] === k; })) k = "sum";
+    curPP = k; ls(PRE + "ui.pp", k);
+    document.querySelectorAll("#planBody .ppane").forEach(function (sec) { sec.hidden = sec.dataset.pp !== k; });
+    document.querySelectorAll("#ptiles .ptile").forEach(function (b) { b.setAttribute("aria-selected", String(b.dataset.pp === k)); });
+    if (scroll) $("ptiles").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  document.addEventListener("click", function (e) { var t = e.target.closest("[data-pp-go],#ptiles .ptile"); if (!t) return; showPP(t.dataset.ppGo || t.dataset.pp, !!t.dataset.ppGo); });
+  var sumSec = mount($("secSum"), ALLPK, function (el) {
+    var td = todayDay(), up = 0; for (var i = 0; i < DAYS.length; i++) { var y = DAYS[i].ymd; if (dday(y[0], y[1], y[2]) >= 0) { up = DAYS[i].n; break; } }
+    var dn = td || up || 1, d = DAYS[dn - 1], rows = rowsOf(view(K.plan(dn)).rows);
+    var now = new Date(), hm = (now.getHours() < 10 ? "0" : "") + now.getHours() + ":" + (now.getMinutes() < 10 ? "0" : "") + now.getMinutes(), nextIdx = -1;
+    if (td) rows.forEach(function (a, i) { if (nextIdx < 0 && /^\d{1,2}:\d{2}$/.test(a[1].t || "") && (a[1].t.length < 5 ? "0" + a[1].t : a[1].t) >= hm) nextIdx = i; });
+    var musts = [];
+    DAYS.forEach(function (x) { rowsOf(view(K.plan(x.n)).must).forEach(function (a) { if (!a[1].ok && a[1].x) musts.push([x.n + "일차", a[1].x]); }); });
+    rowsOf(view(K.buy).must).forEach(function (a) { if (!a[1].ok && a[1].x) musts.push(["구매", a[1].x]); });
+    var ty = 0, tw = 0; DAYS.forEach(function (x) { var o = costDay(x.n); ty += o.y; tw += o.w; });
+    var files = allFiles(), fc = {}; files.forEach(function (o) { fc[o.cat] = (fc[o.cat] || 0) + 1; });
+    el.innerHTML = '<div class="sumg">' +
+      '<div class="card sumc"><b>🗓 ' + (td ? "오늘" : "다음") + ' · ' + d.d + ' ' + dn + '일차 ' + d.title + '</b><div class="sumrows">' + (rows.length ? rows.map(function (a, i) { return '<div class="sr' + (i === nextIdx ? " next" : "") + '"><span>' + esc(a[1].t || "") + '</span><span>' + esc(a[1].w || "") + '</span></div>'; }).join("") : '<div class="empty">일정이 없어요</div>') + '</div><button type="button" class="btn sm" data-pp-go="day">④ 일정 보기 →</button></div>' +
+      '<div class="card sumc"><b>★ 꼭 사기 · 해야 할 일 남은 것 ' + musts.length + '개</b>' + (musts.length ? '<ul class="summ">' + musts.slice(0, 10).map(function (m) { return '<li><small>' + esc(m[0]) + '</small> ' + esc(m[1]) + '</li>'; }).join("") + '</ul>' + (musts.length > 10 ? '<span class="hint">외 ' + (musts.length - 10) + '개</span>' : "") : '<div class="empty">다 했어요 ✓</div>') + '<button type="button" class="btn sm" data-pp-go="day">체크하러 가기 →</button></div>' +
+      '<div class="card sumc"><b>💴 지출</b><span class="sumbig">' + yen(ty) + '</span><span class="hint">원화 ' + won(tw) + ' · 원 환산 ' + won(Math.round(ty * fxv() / 100 + tw)) + '</span><button type="button" class="btn sm" data-pp-go="cost">⑤ 지출 보기 →</button></div>' +
+      '<div class="card sumc"><b>📎 자료 ' + files.length + '개</b><span class="hint">' + (CATORDER.filter(function (c) { return fc[c[0]]; }).map(function (c) { return c[1] + " " + fc[c[0]]; }).join(" · ") || "아직 없어요") + '</span><button type="button" class="btn sm" data-pp-go="file">⑥ 자료 보기 →</button></div>' +
+      '</div>';
+  });
+  showPP(curPP);
 
   /* ==================== 📚 작년 연수 노트 ==================== */
   $("lastIng").innerHTML = lastIng.map(function (x) { return '<div class="card"><b>' + x[0] + '</b><span>✨ ' + x[1] + '</span><span class="hint">' + x[2] + '</span></div>'; }).join("");
