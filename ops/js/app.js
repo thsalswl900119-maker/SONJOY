@@ -3891,6 +3891,18 @@
       function card(lab, val, unit, sub, cls) { if (!val) return; cards.push('<div class="mtk ' + (cls || "") + '"><span class="mtkl">' + esc(lab) + '</span><b class="mtkv">' + esc(val) + '<small>' + esc(unit || "") + '</small></b>' + (sub ? '<span class="mtks">' + esc(sub) + "</span>" : "") + "</div>"); }
       var t5 = v("cn5"), dd = v("cn25"), d6 = d("6");
       card("매출 합계", t5, "원", dd ? "영업 " + dd + "일" : "", "wide");
+      /* 11/25 사장님 「손익분기점 어디에 있어?」 — 손익분기점 칸(ag307) 숫자를 맨 위 카드로 · 지금 매출이 몇 %인지 */
+      var bepT = v("ag307"), bm = /손익분기 매출 약 ([\d,]+)만/.exec(bepT), bb = /평달 기준[^\n]*?약 ([\d,]+)만/.exec(bepT);
+      var bdoc = null; try { bdoc = JSON.parse(localStorage.getItem("cafesui.bep." + ((mEl && mEl.value) || "")) || "null"); } catch (e) {}
+      if (bdoc && bdoc.be) {   /* 매달 넣는 손익분기 숫자(cafesui.bep.<달>)가 있으면 그걸로 — 칸 글보다 먼저 */
+        var mn = function (n) { return Math.round(n / 1e4).toLocaleString("ko-KR"); };
+        bm = [0, mn(bdoc.be)]; bb = bdoc.baseBe ? [0, mn(bdoc.baseBe)] : null;
+      }
+      if (bm) {
+        var bv = +bm[1].replace(/,/g, "") * 1e4, gv = +String(t5).replace(/[^\d]/g, "") || 0, pc = gv ? Math.round(gv / bv * 100) : 0;
+        var bbv = bb ? +bb[1].replace(/,/g, "") * 1e4 : 0, pc2 = gv && bbv ? Math.round(gv / bbv * 100) : 0;
+        card("💰 손익분기점", bm[1] + "만", "원", (pc ? "지금 " + pc + "%" + (pc >= 100 ? " ✔ 넘음" : " · " + Math.round((bv - gv) / 1e4).toLocaleString("ko-KR") + "만 남음") : "") + (bb ? " · 평달 기준 " + bb[1] + "만" + (pc2 ? " (" + pc2 + "%)" : "") : ""), "wide " + (pc >= 100 ? "up" : "warn"));
+      }
       card("하루 매출", v("cn6"), "원", d6.t ? "작년보다 " + d6.t : "", d6.c);
       /* 11/25 사장님 「영업일수가 안 적혀 있는 것 같다」 · 「지난달이랑 비교」 → 영업일수 카드 · 유입(지난달 대비) 카드 */
       card("영업일수", dd, "일", v("cy25") ? "작년 " + v("cy25") + "일" : "", "");

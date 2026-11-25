@@ -180,6 +180,7 @@
     if (wl.length) put.ag341 = wl.join(NL + NL);
     if (hide.length) put.ag343 = hide.length + "건" + NL + hide.map(function (x) { var sp = x.indexOf(" "); return "· " + x.slice(0, sp) + " " + short(x.slice(sp + 1), 40); }).join(NL);
     var Q = qcSum(ym); if (Q) { put.ag360 = Q.a; if (Q.b) put.ag361 = Q.b; }
+    var BP = bepText(ym); if (BP) put.ag307 = BP;   /* 11/25 사장님 「손익분기점 매달 가져올 수 있게」 */
     var filled = [], skipped = [];
     Object.keys(put).forEach(function (fk) {
       var el = document.querySelector('#mtForm .fin[data-k="' + fk + '"]'); if (!el) return;
@@ -248,6 +249,34 @@
     return filled;
   }
   var lastSkipped = [];
+  /* 손익분기점 (11/25 · 사장님 「경영팀하고 협업해서 · 매달 가져올 수 있게」)
+     경영노트(사장님 · 매니저 비밀번호 화면)의 손익분기 공식으로 Claude가 매달 숫자 몇 개만 서버에 넣는다 — cafesui.bep.<YYYY-MM>
+     = { be 이번 달 손익분기 매출, baseBe 평달 기준, od 그 달 영업일(일요일 · 쉬는 날 뺀), cogsR 원가율 %, cogsRp 지난달 원가율, upto 비용 기준 날짜, note }
+     서버가 공개라 비용 항목별 금액은 넣지 않는다. 매출 · 지난 영업일은 cafesui.sales[달](손익 장부) */
+  function bepText(ym) {
+    var b = J("cafesui.bep." + ym); if (!b || !b.be) return "";
+    var s = (J("cafesui.sales") || {})[ym] || {}, g = +s.total || 0, dn = +s.days || 0, od = +b.od || 0;
+    var man = function (n) { return Math.round(n / 1e4).toLocaleString("ko-KR") + "만"; };
+    var m = +ym.slice(5), L = [m + "월 손익분기점 (경영노트와 같은 계산" + (s.note ? " · 매출은 손익 장부" : "") + ")"];
+    L.push("· 이번 달 손익분기 매출 약 " + man(b.be) + " 원" + (od ? " = 영업 " + od + "일로 나누면 하루 약 " + man(b.be / od) : ""));
+    if (b.baseBe) L.push("· 평달 기준 (상여 · 광고 · 출장 같은 그때그때 나간 돈 뺀 달) 약 " + man(b.baseBe) + " 원" + (od ? " = 하루 약 " + man(b.baseBe / od) : ""));
+    if (g) {
+      L.push("· 지금 " + (dn ? dn + "일 " : "") + g.toLocaleString("ko-KR") + "원 → 이번 달 손익분기의 " + Math.round(g / b.be * 100) + "%" + (b.baseBe ? " · 평달 기준의 " + Math.round(g / b.baseBe * 100) + "%" : ""));
+      var left = od && dn ? od - dn : 0;
+      if (left > 0) {
+        var t = [];
+        if (b.baseBe) t.push(g >= b.baseBe ? "평달 기준은 이미 넘음" : "평달 기준까지 " + man(b.baseBe - g) + " (하루 " + man((b.baseBe - g) / left) + ")");
+        t.push(g >= b.be ? "이번 달 손익분기도 넘음 ✔" : "이번 달 손익분기까지 " + man(b.be - g) + " (하루 " + man((b.be - g) / left) + ")");
+        L.push("· 남은 영업 " + left + "일: " + t.join(" · "));
+        var proj = g / dn * od;
+        L.push("· 지금 하루 평균대로면 월말 약 " + man(proj) + " → " + (proj >= b.be ? "이번 달 손익분기를 넘음" : "이번 달 손익분기에 약 " + man(b.be - proj) + " 모자람"));
+      } else L.push(g >= b.be ? "✔ 이번 달 손익분기를 넘었어요 (+" + man(g - b.be) + ")" : "⚠ 이번 달 손익분기에 " + man(b.be - g) + " 모자랐어요");
+    }
+    if (b.cogsR) L.push("· 원가율 (재료 · 포장 ÷ 매출) " + b.cogsR + "%" + (b.cogsRp ? " — 지난달 " + b.cogsRp + "%" : ""));
+    if (b.note) L.push("※ " + b.note);
+    L.push("※ 비용은 경영노트 " + (b.upto ? "(" + b.upto + "까지) " : "") + "· 수수료는 정산 전이면 비율로 추정 · 자세한 항목은 경영노트에서");
+    return L.join(NL);
+  }
   // 맛 · 당도 체크 한 달 정리 (qc.js · cafesui.qc.<해>) — 직원별 몇 주 했는지 · 특이사항 · ⚠ 이상
   function qcSum(ym) {
     var o = J("cafesui.qc." + ym.slice(0, 4)) || {}, L = Object.keys(o).map(function (k) { return o[k]; }).filter(function (x) { return x && String(x.d || "").indexOf(ym) === 0; });
