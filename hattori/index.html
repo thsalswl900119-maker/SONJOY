@@ -641,18 +641,20 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
 .pbmo{font-size:14px;line-height:1.5;color:#4F4233;word-break:keep-all;overflow-wrap:anywhere}
 .pbnow{font-style:normal;align-self:flex-start;background:#C2412D;color:#fff;border-radius:999px;padding:1px 8px;font-size:12.5px;font-weight:700}
 .pbempty{padding:14px;color:var(--ink2)}
-.ptgrid{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.3fr);gap:16px;align-items:start;margin-top:12px}
+.ptgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:16px;align-items:start;margin-top:12px}
 @media (max-width:860px){.ptgrid{grid-template-columns:minmax(0,1fr)}}
 .pttl{background:#FFFDF9;border:1px solid #DCCDB5;border-radius:14px;overflow:hidden}
 .ptth{background:#EFE6D6;padding:10px 14px;display:grid}.ptth b{font-size:17px}.ptth small{color:var(--ink2)}
 .pttl ol{list-style:none;margin:0;padding:4px 14px 10px;max-height:640px;overflow:auto}
-.pttl li{display:grid;grid-template-columns:60px 1fr;gap:8px;padding:9px 0;border-bottom:1px dotted #D3C2A6}
+.pttl li{display:grid;grid-template-columns:96px minmax(0,1fr);gap:10px;padding:9px 0;border-bottom:1px dotted #D3C2A6}
 .pttl li.now{background:#FCE4DF;border-radius:8px}
-.pttl .tm,.ptab .tm{font-weight:700;color:#8F5A22;white-space:nowrap}
+.pttl .tm,.ptab .tm{font-weight:700;color:#8F5A22;white-space:normal;word-break:keep-all;line-height:1.4}
 .pttl li b{display:block;font-size:16px}.pttl li small{display:block;color:#7A5A3C;font-size:14px;line-height:1.5}
 .ptab{background:#FFFDF9;border:1px solid #DCCDB5;border-radius:14px;overflow:auto}
-.ptab table{width:100%;border-collapse:collapse;font-size:15px}
+.ptab table{width:100%;border-collapse:collapse;font-size:15px;table-layout:fixed}
+.ptab col.c1{width:96px}.ptab col.c2{width:34%}
 .ptab th{text-align:left;padding:10px 12px;border-bottom:1.5px dashed #D3C2A6;color:#5B4630}
+.ptab th,.ptab td{white-space:normal!important;min-width:0!important}
 .ptab td{padding:11px 12px;border-bottom:1px solid #EFE6D6;vertical-align:top;line-height:1.5;word-break:keep-all;overflow-wrap:anywhere}
 .ptab tr.phit td{background:#FFE9A8;transition:background 2s}
 .ptab .pd{display:block;color:var(--ink2);font-size:13.5px;margin-top:3px}
@@ -677,7 +679,7 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
   <span class="hint">이 휴대폰 · 컴퓨터에 기억돼요. 벤치마킹 평가와 소감은 이 이름의 내 칸에만 저장돼요.</span>
 </section>
 
-<div class="topbar"><span class="ver">버전 <b id="verTag">v1125-11</b> · 적으면 자동 저장 · 지운 줄도 서버에 남아요</span><span class="last" id="lastSave">아직 저장 전</span><button type="button" class="btn pri" id="saveNow">💾 지금 저장 + 백업</button></div>
+<div class="topbar"><span class="ver">버전 <b id="verTag">v1125-12</b> · 적으면 자동 저장 · 지운 줄도 서버에 남아요</span><span class="last" id="lastSave">아직 저장 전</span><button type="button" class="btn pri" id="saveNow">💾 지금 저장 + 백업</button></div>
 <nav class="bigtabs" role="tablist" aria-label="큰 탭">
   <a class="bt" role="tab" href="#tab-pre" data-tab="pre">📗 예습 노트</a>
   <a class="bt" role="tab" href="#tab-note" data-tab="note">✍️ 연수 노트</a>
@@ -1810,7 +1812,7 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
     var d = DAYS[curDay - 1] || DAYS[0], k = K.plan(d.n), v = view(k), list = prowsT(d.n), nowI = pnowIdx(d.n, list);
     var tt = '<div class="pttl"><div class="ptth"><b>타임테이블</b><small>' + d.n + '일차 ' + d.d + ' · ' + esc(d.title) + '</small></div><ol>' + list.map(function (x, i) {
       return '<li class="' + (i === nowI ? "now" : "") + '"><span class="tm">' + (x.own ? esc(x.r.t) : "·") + '</span><span><b>' + esc(x.r.w || "") + '</b>' + (x.r.m ? '<small>' + esc(x.r.m) + '</small>' : "") + '</span></li>'; }).join("") + '</ol></div>';
-    var tb = '<div class="ptab"><table><thead><tr><th>시간</th><th>할 일</th><th>해야 할 일 + 메모</th></tr></thead><tbody>' + list.map(function (x) {
+    var tb = '<div class="ptab"><table><colgroup><col class="c1"><col class="c2"><col></colgroup><thead><tr><th>시간</th><th>할 일</th><th>해야 할 일 + 메모</th></tr></thead><tbody>' + list.map(function (x) {
       return '<tr data-prow="' + esc(x.id) + '"' + (pflash === x.id ? ' class="phit"' : "") + '><td class="tm">' + (x.own ? esc(x.r.t) : "·") + '</td><td>' + esc(x.r.w || "") + '</td><td>' + esc(x.r.m || "") + (x.r.d ? '<small class="pd">📝 ' + esc(x.r.d) + '</small>' : "") + '</td></tr>'; }).join("") + '</tbody></table>' + (list.length ? "" : '<div class="empty">아직 일정이 없어요</div>') + '</div>';
     return tabs + (v.memo ? '<div class="callout">' + esc(v.memo) + '</div>' : "") +
       '<div class="must mustck"><b>★ 꼭 해야 할 일 및 사기</b><span class="hint">체크 · 메모는 바로 돼요</span>' + ckList(k, "must", v.must, { pics: true, more: true, noMap: true, kind: "must" }) + '</div>' +
