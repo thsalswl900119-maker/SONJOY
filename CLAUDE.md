@@ -13,6 +13,7 @@
 
 - **링크는 어사이드로 열기(11/20 · 사장님 「무조건 작업 연결할 때 어사이드로 열어줘」)**: 작업 결과 링크(artifact · ops · demo · jpnote · hire 등)를 드릴 때마다 사장님 iMac의 Claude 작업창(send_message · 없으면 iMac 환경에 create_session)에 「어사이드(Aside) 새 탭으로 열기 · 읽기만」을 같이 보낸다. iMac이 꺼져 있으면 그렇다고 알리고 링크만 드림.
 
+- **🤝 팀 게시판(11/26 · 사장님 「다른 팀하고 협업 · 의사소통이 잘되게」)**: 모든 Claude 팀(창)은 **시작할 때 `teams/BOARD.md`를 먼저 읽고, 끝날 때 「📣 소식」 맨 위에 한 줄**(날짜 · 팀 · 한 일 · 결과 링크 · 다른 팀이 알아야 할 것). 다른 팀 일이 필요하면 「🙋 부탁」에 적고 반장 켄(메인 대화 「켄」)에게 send_message. 같은 숫자는 한 곳(매출 = 경영노트 · 크리스마스 = 시스템 크리스마스 탭 · 가격 = 가격표)에서만 · 사장님 확인은 「⏳ 사장님 확인」에 모아 켄이 한 번에 여쭘. 공개 저장소라 금액 · 개인정보 · 비밀번호는 쓰지 않고 링크만.
 - **핫토리 제과연수 = 깃허브 페이지(11/25 사장님 「이거 말고 깃허브에 올린 거 · 지금 작업하는 거 고정」)**: https://thsalswl900119-maker.github.io/SONJOY/hattori/ (`hattori/index.html` · 정리 안내 `hattori/README.md`). 핫토리 연수 얘기가 나오면 artifact 「핫토리 제과연수 노트」(6YXYpgtBpX6k8Coc5B5H19 · 예전 것) 말고 이 페이지를 쓴다.
 - **사장님 1:1 특강 포맷(11/23 · 사장님 「이 포맷을 꼭 기억해서 어떤 업종이 와도」)**: 다른 가게 사장님 수업은 `lecture/README.md` 순서 · 모양 그대로(학원 강의안 PPT형 덱 · 60분 · 진단 → 숫자 → 글쓰기 → 설정 · 대본 · 타이머 · 확인 문제 · 숙제). 예시 `lecture/examples/florist-myeongji.html` · artifact HrhkUmyxH2HsGTRfKRWmm7.
 
