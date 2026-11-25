@@ -6,19 +6,21 @@
 <title>핫토리 제과연수 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+JP:wght@400;700&family=Noto+Sans+KR:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gaegu:wght@700&family=Noto+Sans+JP:wght@400;700&family=Noto+Sans+KR:wght@400;600;800&display=swap">
 <style>
 /* 핫토리 제과연수 2026 · 카페스이
    크림 · 브라운(일정 · 준비) + 코럴 · 크림(연수 노트) · 휴대폰 먼저
    본문 14px 이상 · 입력 16px · 대비 4.5:1 이상 · 단어 단위 줄바꿈 · 640px 이하 카드형 */
 :root{
-  --bg:#F4EFE4;--card:#FFFCF6;--raise:#EFE7D6;--ink:#2A251F;--ink2:#4F473D;--mute:#6B5B49;
-  --line:#E0D6C1;--line2:#CFC2A6;--br:#6B4A2B;--br2:#8F5A22;--brbg:#F7E7CE;
-  --red:#A8402F;--redbg:#FBEAE4;--green:#3E6B2F;--greenbg:#E4EDD9;
-  --coral:#A85A45;--coral-d:#8E4632;--coral-l:#E7C6B6;--cream:#F8F0E7;--panel:#FBF5EC;--class:#6E4F3E;--hl:#FFF1B8;
+  /* 크리스마스 그림 톤 · 크림 종이 · 크리스마스 빨강 · 호랑가시 초록 · 나무 갈색 · 금색 별 · 볼터치 분홍 */
+  --bg:#F7F0E3;--card:#FFFDF8;--raise:#EFE4D0;--ink:#3B2E28;--ink2:#5A4A40;--mute:#6A574B;
+  --line:#DCCDB4;--line2:#C9B396;--br:#A33A32;--br2:#8A5A3B;--brbg:#FBF0D2;
+  --red:#A33A32;--redbg:#F6DCD6;--green:#4C7546;--greenbg:#E3EDDC;
+  --coral:#B8423A;--coral-d:#A33A32;--coral-l:#F6DCD6;--cream:#F7F0E3;--panel:#FFFDF8;--class:#4C7546;--hl:#FBF0D2;
+  --gold:#E3B04B;--goldbg:#FBF0D2;--pink:#F2B8B5;--wood:#8A5A3B;
   --kr:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
   --jp:"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;
-  --hd:"Jua","Noto Sans KR",sans-serif;
+  --hd:"Gaegu","Noto Sans KR",sans-serif;
   color-scheme:light;
 }
 *{box-sizing:border-box}
@@ -171,7 +173,7 @@ details.day>summary .today{background:var(--red);color:#fff;border-radius:6px;pa
 .rv .a{font-size:15.5px;white-space:pre-wrap}
 
 /* ===== 연수 노트 (코럴 · 크림) ===== */
-.tabpane.note{--br:#8E4632;--br2:#8E4632;--line2:#E3C9BA}
+.tabpane.note{--br:#A33A32;--br2:#8A5A3B;--line2:#DCCDB4}
 .book{border-radius:18px;padding:22px 20px;display:grid;gap:6px;scroll-margin-top:64px}
 .book.pre{background:var(--card);border:3px solid var(--coral)}
 .book.cls{background:var(--class);color:#fff}
@@ -247,7 +249,7 @@ details.day>summary .today{background:var(--red);color:#fff;border-radius:6px;pa
 .state.done{background:var(--green);color:#fff;border-color:var(--green)}
 
 /* ===== 작년 연수 노트 ===== */
-#tab-theory .sech .num{background:#5A6B45}
+#tab-theory .sech .num{background:var(--green)}
 .lockcard{max-width:440px;margin:24px auto;background:var(--card);border:2px solid var(--br);border-radius:16px;padding:20px;display:grid;gap:10px}
 .lockcard>b{font-family:var(--hd);font-weight:400;font-size:22px;color:var(--br)}
 .lockcard .row{display:flex;gap:8px}
@@ -256,6 +258,36 @@ details.day>summary .today{background:var(--red);color:#fff;border-radius:6px;pa
 .tag{display:inline-block;font-size:13.5px;font-weight:700;border-radius:6px;padding:1px 8px;background:var(--greenbg);color:var(--green)}
 .ing{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:10px}
 .ing .card b{color:var(--br)}
+
+/* 후리가나 · 일본어 4열 · 유래 · 접기 */
+ruby{ruby-position:over}
+rt{font-size:max(11px,.55em);color:var(--ink2);font-weight:400;letter-spacing:0}
+.vocab{display:grid;gap:12px}
+.vocab4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media (max-width:1000px){.vocab4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:380px){.vocab4{grid-template-columns:1fr}}
+.word{line-height:1.5}
+.word .ja{line-height:2}
+.word .ex{font-family:var(--jp);font-size:14.5px;color:var(--ink2);border-top:1px dashed var(--coral-l);padding-top:4px;margin-top:2px;line-height:2}
+.vgh{font-family:var(--hd);font-size:20px;color:var(--coral-d)}
+.vgh small{font-family:var(--kr);font-size:14px;color:var(--ink2)}
+.ihead .jpn{line-height:2.1}
+.origin{background:#FFFDF8;border:1.5px solid var(--coral-l)}
+.origin p{font-size:15.5px}
+.origin .oline{background:#F1E2CF;border-radius:8px;padding:6px 10px}
+.origin .osrc{font-size:14px;color:var(--ink2)}
+.origin .osrc a{color:var(--coral-d)}
+details.fold{min-width:0}
+details.fold>summary.fsum{list-style:none;cursor:pointer;position:relative;display:block;padding-right:86px}
+details.fold>summary.fsum::-webkit-details-marker{display:none}
+details.fold>summary.fsum::after{content:"▾ 접기";position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:13.5px;font-weight:700;font-family:var(--kr);background:#fff;color:var(--ink);border:1px solid var(--line2);border-radius:999px;padding:2px 10px;white-space:nowrap}
+details.fold:not([open])>summary.fsum::after{content:"▸ 펼치기"}
+details.fold>summary.fsum:focus-visible{outline:3px solid var(--br2);outline-offset:2px;border-radius:14px}
+details.fold>summary.fsum>.part,details.fold>summary.fsum>.sech{margin:0}
+details.fold>summary.fsum>.sech{border-bottom:2px solid var(--line2)}
+.fbody{display:grid;gap:18px;padding-top:14px;min-width:0}
+.sec>details.fold>.fbody,details.fold.secf>.fbody{gap:12px}
+.foldbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 
 /* 저장 상태 · 사진 크게 보기 */
 .savepill{position:fixed;left:50%;transform:translateX(-50%);bottom:max(12px,env(safe-area-inset-bottom,0px));z-index:50;background:var(--ink);color:#fff;font-size:14.5px;font-weight:700;border-radius:999px;padding:8px 16px;max-width:calc(100% - 32px);text-align:center;box-shadow:0 4px 14px rgba(0,0,0,.18)}
@@ -286,6 +318,91 @@ footer{font-size:14px;color:var(--mute);border-top:1px solid var(--line2);paddin
 }
 @media (prefers-reduced-motion:no-preference){.ipanel{animation:rise .22s ease-out}}
 @keyframes rise{from{opacity:.4;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ===== 크리스마스 그림 톤 (색 · 질감만 · 그림 없음) ===== */
+html{background:var(--bg)}
+body{background-color:var(--bg);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='%23FFFFFF' opacity='.9'%3E%3Ccircle cx='22' cy='30' r='3'/%3E%3Ccircle cx='150' cy='18' r='2.2'/%3E%3Ccircle cx='205' cy='120' r='3'/%3E%3Ccircle cx='70' cy='160' r='2.4'/%3E%3Ccircle cx='120' cy='220' r='3'/%3E%3C/g%3E%3Cg fill='%23E3B04B' opacity='.22'%3E%3Cpath d='M95 70l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z'/%3E%3Cpath d='M200 200l2 5 5 .5-4 3.5 1 5-4-2.5-4 2.5 1-5-4-3.5 5-.5z'/%3E%3C/g%3E%3Cg fill='%23F2B8B5' opacity='.25'%3E%3Ccircle cx='180' cy='60' r='2'/%3E%3Ccircle cx='40' cy='210' r='2'/%3E%3C/g%3E%3C/svg%3E");background-size:240px 240px}
+.bigtabs{background:rgba(247,240,227,.96);border-bottom:2px dashed var(--wood)}
+.bt{border:1.5px solid var(--wood);border-radius:14px 18px 12px 16px}
+.bt[aria-selected="true"]{background:var(--red);border-color:var(--red);color:#fff;box-shadow:0 2px 0 var(--wood)}
+.top h1{color:var(--red)}
+.top h1::after{content:" ★";color:var(--gold)}
+.kick{background:var(--green)}
+.ddc{border:1.5px solid var(--wood);border-radius:14px 18px 12px 16px}
+.ddc.now{background:var(--green);border-color:var(--green)}
+.sech{border-bottom:2px dashed var(--wood)}
+.sech h2{color:var(--red)}
+.sech .num{background:var(--red)}
+th{background:var(--wood)!important;color:#fff!important}
+.note td:first-child,td:first-child{color:var(--ink)}
+/* 손그림 느낌 테두리 */
+.card,.ncard,.store,.fcard,.rv,.word,.cur .ci,details.day,.lockcard,.tbl,.quiz details{border:1.5px solid var(--wood)!important;border-radius:14px 18px 12px 20px / 18px 12px 20px 14px}
+.cur .ci{border-left:6px solid var(--green)!important}
+.ncard.hot{background:var(--red);border-color:var(--red)!important}
+/* 마스킹테이프 띠 */
+.card,.ncard,.store,.rv,.lockcard{position:relative}
+.card::before,.ncard::before,.store::before,.rv::before,.lockcard::before{content:"";position:absolute;top:-9px;left:50%;width:72px;height:18px;margin-left:-36px;background:rgba(246,220,214,.85);border-left:2px dotted rgba(255,255,255,.9);border-right:2px dotted rgba(255,255,255,.9);transform:rotate(-3deg);pointer-events:none}
+.card:nth-of-type(even)::before,.ncard:nth-of-type(even)::before,.store:nth-of-type(even)::before{background:rgba(251,240,210,.9);transform:rotate(2.5deg)}
+.word::before{display:none}
+/* 폴라로이드 카드 (품목 · 벤치마킹 · 사진) */
+.store,.fcard,.origin,.rv{background:#fff;padding-bottom:26px;box-shadow:0 3px 0 rgba(138,90,59,.18),0 8px 18px rgba(59,46,40,.08)}
+.fcard img{border-radius:4px;border:1px solid var(--line)}
+/* 표지 · PART 띠 */
+.book.pre{background:var(--card);border:3px dashed var(--red)}
+.book .lab{color:var(--green)}
+.book h2{color:var(--red)}
+.book.cls{background:var(--green)}
+.book.cls .lab,.book.cls p{color:#fff}
+.part{background:var(--red);background-image:radial-gradient(circle at 12% 30%,rgba(255,255,255,.22) 0 2px,transparent 3px),radial-gradient(circle at 85% 70%,rgba(255,255,255,.2) 0 2.5px,transparent 3.5px),radial-gradient(circle at 60% 20%,rgba(227,176,75,.45) 0 2px,transparent 3px);border:2px solid var(--wood)}
+.part .pn{color:#FBF0D2}
+.part h2{color:#fff}
+.part p{color:#fff}
+.chip{background:var(--red)}
+.chip.soft{background:var(--goldbg);color:var(--red);border:1px solid var(--gold)}
+.h2c,.ncard h3,.ask h3,.vgh,.lockcard>b{color:var(--red)}
+.ncard b{color:var(--red)}
+.ncard.hot h3,.ncard.hot b{color:#fff}
+.itab{border:1.5px solid var(--wood);background:var(--card);color:var(--ink)}
+.itab .n{background:var(--pink);color:var(--ink)}
+.itab[aria-selected="true"]{background:var(--red);border-color:var(--red);color:#fff}
+.itab[aria-selected="true"] .n{background:#fff;color:var(--red)}
+.itabs.cls .itab[aria-selected="true"]{background:var(--green);border-color:var(--green)}
+.itabs.cls .itab[aria-selected="true"] .n{color:var(--green)}
+.itab .ok{color:var(--green)}
+.flow li{border:1.5px dashed var(--line2)}
+.flow li::before{background:var(--green)}
+.ask{background:var(--goldbg);border:1.5px dashed var(--gold)}
+.ask p,.qa label{color:var(--red)}
+.nums{background:var(--card);border:1.5px dashed var(--wood)}
+.nums b{color:var(--red)}
+.quiz summary .qn{background:var(--green)}
+.quiz .a::before{color:var(--red)}
+.word .ja{color:var(--red)}
+.word .ex{border-top:1px dashed var(--line2)}
+.uses span{background:var(--greenbg);color:#3F6439}
+.origin .oline{background:var(--goldbg)}
+.origin .osrc a,.lastnote a,a{color:var(--wood)}
+.warn{border:1.5px dashed #D9877F;background:var(--redbg)}
+.callout{background:var(--goldbg);border:1.5px dashed var(--gold)}
+.namecard{background:var(--goldbg);border:1.5px solid var(--gold)}
+.must{background:var(--goldbg);border:2px solid var(--gold)}
+.must>b{color:var(--red)}
+.must>b::before{content:"★ ";color:var(--gold)}
+.rank .rk.top{border-color:var(--gold);background:var(--goldbg)}
+.rank .rk .n{color:var(--wood)}
+.rank .rk b.s{color:var(--red)}
+.mysum{color:var(--green)}
+.rv{border-top:6px solid var(--red)!important}
+.rv.mine{border-top-color:var(--green)!important}
+.grand{background:var(--green)}
+.lockbar.open{border-color:var(--red);background:var(--redbg)}
+.btn{border:1.5px solid var(--wood);color:var(--ink);border-radius:12px 14px 10px 14px}
+.btn.pri{background:var(--red);border-color:var(--red);color:#fff}
+input[type=checkbox]{accent-color:var(--green)}
+.row-ck.done input[type=text]{color:var(--mute);background:var(--greenbg)}
+details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
+.savepill.ok{background:var(--green)}
+.savepill.bad{background:var(--red)}
 </style>
 </head>
 <body>
@@ -332,7 +449,7 @@ footer{font-size:14px;color:var(--mute);border-top:1px solid var(--line2);paddin
     <div id="prePanel" role="tabpanel"></div>
   </div>
 
-  <div class="part" id="p4"><span class="pn">PART 2</span><h2>수업에서 들리는 일본어</h2><p>통역이 있어도, 셰프님 손을 보며 바로 알아들으면 훨씬 편해요</p></div>
+  <div class="part" id="p4"><span class="pn">PART 2</span><h2>수업에서 들리는 일본어 <span id="vocabCount"></span></h2><p>섞기 · 굽기 · 도구 · 재료 · 마무리 · 지시 말투 · 위에 작은 글자가 읽는 법이에요</p></div>
   <div class="vocab" id="vocab"></div>
 
   <div class="part" id="p5"><span class="pn">PART 3</span><h2>복습 퀴즈</h2><p>질문을 누르면 답이 열려요</p></div>
@@ -375,9 +492,9 @@ footer{font-size:14px;color:var(--mute);border-top:1px solid var(--line2);paddin
     <span class="chip">분류</span>
     <h2 class="h2c">이번 9품목은 네 갈래예요</h2>
     <div class="grid2">
-      <div class="ncard"><h3>생과자 生菓子</h3><p>생크림·과일이 들어가 1~2일 안에 파는 케이크류</p><p><b>롤케이크 · 쇼트케이크 · 과일 산도 · 나마 푸딩 · 수플레 치즈케이크</b></p></div>
-      <div class="ncard"><h3>구움과자 焼き菓子</h3><p>오래 두고 팔 수 있어 선물 세트의 중심</p><p><b>틴쿠키 · 마들렌 · 휘낭시에</b></p></div>
-      <div class="ncard"><h3>화과자 和菓子</h3><p>쌀가루와 앙금으로 만드는 일본 전통 과자</p><p><b>모찌 · 딸기 다이후쿠</b></p></div>
+      <div class="ncard"><h3>생과자 <ruby>生菓子<rt>なまがし</rt></ruby></h3><p>생크림·과일이 들어가 1~2일 안에 파는 케이크류</p><p><b>롤케이크 · 쇼트케이크 · 과일 산도 · 나마 푸딩 · 수플레 치즈케이크</b></p></div>
+      <div class="ncard"><h3>구움과자 <ruby>焼<rt>や</rt></ruby>き<ruby>菓子<rt>がし</rt></ruby></h3><p>오래 두고 팔 수 있어 선물 세트의 중심</p><p><b>틴쿠키 · 마들렌 · 휘낭시에</b></p></div>
+      <div class="ncard"><h3>화과자 <ruby>和菓子<rt>わがし</rt></ruby></h3><p>쌀가루와 앙금으로 만드는 일본 전통 과자</p><p><b>모찌 · 딸기 다이후쿠</b></p></div>
       <div class="ncard"><h3>캔디류</h3><p>설탕을 끓여 온도로 식감을 정하는 과자</p><p><b>생 카라멜</b></p></div>
     </div>
   </div>
@@ -401,10 +518,10 @@ footer{font-size:14px;color:var(--mute);border-top:1px solid var(--line2);paddin
     <div class="tbl"><table>
       <thead><tr><th>가루</th><th>원료</th><th>특징</th><th>쓰이는 곳</th></tr></thead>
       <tbody>
-        <tr><td>박력분 薄力粉</td><td>밀 · 단백질 7~8%</td><td>글루텐이 약해 부드러움. 대표 제품 바이올렛(닛신)</td><td>스펀지 · 쿠키 · 마들렌</td></tr>
+        <tr><td>박력분 <ruby>薄力粉<rt>はくりきこ</rt></ruby></td><td>밀 · 단백질 7~8%</td><td>글루텐이 약해 부드러움. 대표 제품 바이올렛(닛신)</td><td>스펀지 · 쿠키 · 마들렌</td></tr>
         <tr><td>슈퍼 바이올렛</td><td>밀 · 단백질 7%대</td><td>공기를 잘 품어 결이 고움</td><td>롤케이크 · 쇼트케이크</td></tr>
-        <tr><td>시라타마코 白玉粉</td><td>찹쌀</td><td>불려서 갈아 말린 가루. 매끈하고 쫄깃</td><td>다이후쿠 · 모찌</td></tr>
-        <tr><td>가타쿠리코 片栗粉</td><td>감자 전분</td><td>모찌가 손에 안 붙게 하는 덧가루</td><td>모찌 · 다이후쿠</td></tr>
+        <tr><td>시라타마코 <ruby>白玉粉<rt>しらたまこ</rt></ruby></td><td>찹쌀</td><td>불려서 갈아 말린 가루. 매끈하고 쫄깃</td><td>다이후쿠 · 모찌</td></tr>
+        <tr><td>가타쿠리코 <ruby>片栗粉<rt>かたくりこ</rt></ruby></td><td>감자 전분</td><td>모찌가 손에 안 붙게 하는 덧가루</td><td>모찌 · 다이후쿠</td></tr>
         <tr><td>콘스타치</td><td>옥수수 전분</td><td>글루텐 없이 식감을 가볍게</td><td>수플레 치즈케이크</td></tr>
       </tbody></table></div>
   </div>
@@ -416,7 +533,7 @@ footer{font-size:14px;color:var(--mute);border-top:1px solid var(--line2);paddin
   <section class="sec" id="l4">
     <div class="sech"><span class="num">4</span><h2>카시빵 vs 심플한 하드 계열 빵</h2></div>
     <div class="grid2">
-      <div class="card"><b>🍞 카시빵 (菓子パン) · 일본식 달콤한 빵 전체</b><ul>
+      <div class="card"><b>🍞 카시빵 (<ruby>菓子<rt>かし</rt></ruby><ruby>パン<rt>ぱん</rt></ruby>) · 일본식 달콤한 빵 전체</b><ul>
         <li>버터 · 달걀 · 우유 · 설탕이 들어간 리치한 반죽 · 폭신하고 단맛</li>
         <li>예) 메론빵 · 크림빵 · 단팥빵 · 카레빵</li>
         <li>일본 빵집의 60~70%가 카시빵</li>
@@ -485,19 +602,19 @@ footer{font-size:14px;color:var(--mute);border-top:1px solid var(--line2);paddin
         <li>전분 입자가 작고 균일해 물을 잘 붙잡음</li>
         <li>소프트 · 모찌모찌한 빵 문화에 맞춰 「흡수형」으로 제분 → 반죽이 말랑 · 촉촉</li>
       </ul></div>
-      <div class="card"><b>회분 (灰分 · ash)</b><p>밀가루를 태웠을 때 남는 무기질 양 · 정제도를 알려 줘요.</p><ul><li>낮다 → 껍질을 거의 뺀 고급 흰 밀가루</li><li>높다 → 겨층 포함 · 통밀 · 하드 계열</li></ul>
+      <div class="card"><b>회분 (<ruby>灰分<rt>かいぶん</rt></ruby> · ash)</b><p>밀가루를 태웠을 때 남는 무기질 양 · 정제도를 알려 줘요.</p><ul><li>낮다 → 껍질을 거의 뺀 고급 흰 밀가루</li><li>높다 → 겨층 포함 · 통밀 · 하드 계열</li></ul>
         <b>글루텐 = 글리아딘 + 글루테닌 + 물 + 반죽</b><p>글리아딘은 점성(늘어남), 글루테닌은 탄성(되돌아오는 힘). 글루텐이 빵의 구조를 만들어요.</p></div>
     </div>
     <div class="tbl"><table style="min-width:820px">
       <thead><tr><th>종류</th><th>단백질</th><th>제분 특징</th><th>주요 특징</th><th>식감</th><th>대표 용도</th><th>대표 제품</th></tr></thead>
       <tbody>
-        <tr><td>박력분 薄力粉</td><td>7~8%</td><td>회분↓ · 입자 매우 고움</td><td>글루텐 약함 · 제과 전용</td><td>바삭 · 부드러움 · 가벼움</td><td>스펀지 · 롤케이크 · 쿠키 · 타르트</td><td>바이올렛 · 슈퍼바이올렛</td></tr>
-        <tr><td>중력분 中力粉</td><td>8~10%</td><td>박력과 준강력 중간</td><td>일본에선 적게 씀</td><td>적당한 탄력</td><td>우동 · 범용</td><td>—</td></tr>
-        <tr><td>준강력분 準強力粉</td><td>10~11.5%</td><td>회분 중간 · 고흡수</td><td>일본 카시빵 핵심 · 결 고움</td><td>폭신 · 촉촉 · 섬세한 결</td><td>메론빵 · 크림빵 · 카시빵</td><td>리스도르 · 나폴레옹</td></tr>
-        <tr><td>강력분 強力粉</td><td>11.5~12.8%</td><td>글루텐 잘 형성</td><td>일본식 식빵 · 모닝롤 기본</td><td>쫀득 · 결 찢어짐</td><td>식빵 · 모닝롤 · 단팥빵</td><td>이글 · 키타노카오리 · 하루요코이</td></tr>
-        <tr><td>초강력분 超強力粉</td><td>13~14%</td><td>글루텐 파워 매우 강함</td><td>단단한 조직 · 흡수↑</td><td>탄력 강하고 쫀쫀</td><td>베이글 · 하드빵</td><td>유메치카라</td></tr>
+        <tr><td>박력분 <ruby>薄力粉<rt>はくりきこ</rt></ruby></td><td>7~8%</td><td>회분↓ · 입자 매우 고움</td><td>글루텐 약함 · 제과 전용</td><td>바삭 · 부드러움 · 가벼움</td><td>스펀지 · 롤케이크 · 쿠키 · 타르트</td><td>바이올렛 · 슈퍼바이올렛</td></tr>
+        <tr><td>중력분 <ruby>中力粉<rt>ちゅうりきこ</rt></ruby></td><td>8~10%</td><td>박력과 준강력 중간</td><td>일본에선 적게 씀</td><td>적당한 탄력</td><td>우동 · 범용</td><td>—</td></tr>
+        <tr><td>준강력분 <ruby>準強力粉<rt>じゅんきょうりきこ</rt></ruby></td><td>10~11.5%</td><td>회분 중간 · 고흡수</td><td>일본 카시빵 핵심 · 결 고움</td><td>폭신 · 촉촉 · 섬세한 결</td><td>메론빵 · 크림빵 · 카시빵</td><td>리스도르 · 나폴레옹</td></tr>
+        <tr><td>강력분 <ruby>強力粉<rt>きょうりきこ</rt></ruby></td><td>11.5~12.8%</td><td>글루텐 잘 형성</td><td>일본식 식빵 · 모닝롤 기본</td><td>쫀득 · 결 찢어짐</td><td>식빵 · 모닝롤 · 단팥빵</td><td>이글 · 키타노카오리 · 하루요코이</td></tr>
+        <tr><td>초강력분 <ruby>超強力粉<rt>ちょうきょうりきこ</rt></ruby></td><td>13~14%</td><td>글루텐 파워 매우 강함</td><td>단단한 조직 · 흡수↑</td><td>탄력 강하고 쫀쫀</td><td>베이글 · 하드빵</td><td>유메치카라</td></tr>
         <tr><td>프랑스빵 전용분</td><td>10.5~12% · 회분↑</td><td>회분 높아 풍미 강함</td><td>하드빵 전용</td><td>크러스트 바삭 · 크럼 가벼움</td><td>바게트 · 캄파뉴</td><td>메르베이유</td></tr>
-        <tr><td>전립분 全粒粉</td><td>단백질↑ · 회분↑</td><td>겉껍질까지 제분</td><td>영양 · 풍미↑ · 색 진함</td><td>고소 · 거친 질감</td><td>전립분 식빵 · 캄파뉴</td><td>키타노카오리 전립분</td></tr>
+        <tr><td>전립분 <ruby>全粒粉<rt>ぜんりゅうふん</rt></ruby></td><td>단백질↑ · 회분↑</td><td>겉껍질까지 제분</td><td>영양 · 풍미↑ · 색 진함</td><td>고소 · 거친 질감</td><td>전립분 식빵 · 캄파뉴</td><td>키타노카오리 전립분</td></tr>
         <tr><td>특수 제분분</td><td>제품마다 다름</td><td>회분 · 단백질 조절</td><td>목적형 (스펀지 · 롤케이크 전용 등)</td><td>특정 공정에 맞춤</td><td>롤케이크 · 스펀지</td><td>슈퍼바이올렛</td></tr>
       </tbody></table></div>
     <div class="tbl"><table style="min-width:720px">
@@ -683,12 +800,12 @@ footer{font-size:14px;color:var(--mute);border-top:1px solid var(--line2);paddin
     <div class="card">
       <b>🛒 숙소 근처 마트 · 슈퍼</b>
       <ul class="shops">
-        <li><b>まいばすけっと 新宿駅南店</b> · 신주쿠역 남쪽 → 요요기 가는 길 · 7~24시</li>
-        <li><b>まいばすけっと 代々木1丁目店</b> · 7~23시</li>
-        <li><b>マルマンストア 南新宿店</b> · 9~23시</li>
+        <li><b>まいばすけっと <ruby>新宿駅南店<rt>しんじゅくえきみなみてん</rt></ruby></b> · 신주쿠역 남쪽 → 요요기 가는 길 · 7~24시</li>
+        <li><b>まいばすけっと <ruby>代々木<rt>よよぎ</rt></ruby>1<ruby>丁目店<rt>ちょうめてん</rt></ruby></b> · 7~23시</li>
+        <li><b><ruby>マルマンストア<rt>まるまんすとあ</rt></ruby> <ruby>南新宿店<rt>みなみしんじゅくてん</rt></ruby></b> · 9~23시</li>
         <li><b>다카시마야 신주쿠 지하</b> · 10:30~19:30</li>
-        <li><b>成城石井 ルミネ新宿</b></li>
-        <li><b>OKストア 千駄ヶ谷店</b> · 조금 멂 · ~21:30</li>
+        <li><b><ruby>成城石井<rt>せいじょういしい</rt></ruby> <ruby>ルミネ<rt>るみね</rt></ruby><ruby>新宿<rt>しんじゅく</rt></ruby></b></li>
+        <li><b>OK<ruby>ストア<rt>すとあ</rt></ruby> <ruby>千駄ヶ谷店<rt>せんだがやてん</rt></ruby></b> · 조금 멂 · ~21:30</li>
       </ul>
     </div>
     <div id="secFiles"></div>
@@ -730,6 +847,7 @@ footer{font-size:14px;color:var(--mute);border-top:1px solid var(--line2);paddin
   var PRE = "hattori26.";
   var $ = function (id) { return document.getElementById(id); };
   var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
+  var rb = function (s) { return String(s == null ? "" : s).replace(/\{([^|{}]+)\|([^{}]+)\}/g, "<ruby>$1<rt>$2</rt></ruby>"); };
   var clone = function (o) { return o == null ? o : JSON.parse(JSON.stringify(o)); };
   function ls(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } return null; }
   var num = function (v) { return parseInt(String(v == null ? "" : v).replace(/[^\d]/g, ""), 10) || 0; };
@@ -738,61 +856,62 @@ footer{font-size:14px;color:var(--mute);border-top:1px solid var(--line2);paddin
 
   /* ---------- 9품목 (예습 · 수업 노트 · 커리큘럼 공통) ---------- */
   var items = [
-    { key: "dojima", name: "도지마 스타일 롤케이크", short: "도지마롤", jp: "堂島ロール風", feat: "폭신한 시트와 크림 밸런스. 재구매율 높은 스테디셀러", use: ["상시 메뉴", "홀케이크 대체"],
+    { key: "dojima", name: "도지마 스타일 롤케이크", short: "도지마롤", jp: "{堂島|どうじま}{ロール|ろーる}{風|ふう}", feat: "폭신한 시트와 크림 밸런스. 재구매율 높은 스테디셀러", use: ["상시 메뉴", "홀케이크 대체"],
       flow: ["계란 거품 내기 (별립 또는 공립)", "가루를 가볍게 섞고 녹인 버터·우유 넣기", "철판에 얇고 고르게 펴서 짧게 굽기", "식힌 뒤 크림을 두껍게 올리기", "종이로 감싸 말고 냉장에서 모양 잡기"],
       point: "도지마롤은 크림이 주인공이에요. 시트는 촉촉하고 잘 휘어야 하고, 크림은 많이 넣어도 무너지지 않게 휘핑해요.",
       fail: [["시트가 갈라짐", "너무 오래 구웠거나 식으면서 마름"], ["크림이 흘러내림", "휘핑이 약하거나 크림 온도가 높음"], ["단면이 찌그러짐", "냉장 휴지 없이 바로 자름"]],
       ask: ["시트는 별립법인지 공립법인지", "구운 면을 안쪽으로 마는지 바깥으로 마는지", "크림 유지방 %와 설탕 비율", "크림이 많아도 무너지지 않게 마는 요령"],
       nums: "시트 굽는 온도·시간 · 크림 휘핑 정도" },
-    { key: "short", name: "일본식 딸기 쇼트케이크", short: "쇼트케이크", jp: "苺のショートケーキ", feat: "실패 없는 제누아즈. 카페 매출 1순위 디저트", use: ["상시 메뉴", "겨울 딸기 시즌", "홀케이크 예약"],
+    { key: "short", name: "일본식 딸기 쇼트케이크", short: "쇼트케이크", jp: "{苺|いちご}の{ショートケーキ|しょーとけーき}", feat: "실패 없는 제누아즈. 카페 매출 1순위 디저트", use: ["상시 메뉴", "겨울 딸기 시즌", "홀케이크 예약"],
       flow: ["전란+설탕을 중탕으로 데우며 거품 내기", "리본 상태가 되면 가루 섞기", "녹인 버터·우유를 따뜻하게 넣기", "굽고 식혀 3장으로 자르기", "시럽 바르고 크림·딸기 샌드 후 아이싱"],
       point: "제누아즈가 촉촉하고 결이 고와야 해요. 시럽 바르는 양과 아이싱 크림 휘핑 정도가 맛과 모양을 같이 정해요.",
       fail: [["시트가 안 부풂", "거품이 덜 났거나 버터 넣을 때 꺼짐"], ["시트 바닥이 떡짐", "버터가 가라앉음 (섞기 부족)"], ["아이싱이 거침", "크림을 너무 단단하게 휘핑"]],
-      ask: ["중탕 온도와 거품을 멈추는 기준", "시럽 농도와 한 장에 바르는 양", "샌드용·아이싱용 크림을 몇 分立て로 나누는지", "딸기 자르는 방향과 배치"],
+      ask: ["중탕 온도와 거품을 멈추는 기준", "시럽 농도와 한 장에 바르는 양", "샌드용·아이싱용 크림을 몇 {分立|ぶだ}て로 나누는지", "딸기 자르는 방향과 배치"],
       nums: "계란 중탕 온도 · 굽기 온도·시간" },
-    { key: "cookie", name: "프리미엄 틴쿠키 세트", short: "틴쿠키", jp: "クッキー缶", feat: "여러 향의 티 쿠키 세트. 단가와 선물 수요를 같이 잡는 품목", use: ["선물 · 답례품", "명절"],
+    { key: "cookie", name: "프리미엄 틴쿠키 세트", short: "틴쿠키", jp: "{クッキー|くっきー}{缶|かん}", feat: "여러 향의 티 쿠키 세트. 단가와 선물 수요를 같이 잡는 품목", use: ["선물 · 답례품", "명절"],
       flow: ["버터를 부드럽게 풀고 설탕 섞기", "계란·가루·향 재료 넣기", "종류별로 성형 (짜기 · 자르기 · 굴리기)", "굽고 완전히 식히기", "건조제와 함께 틴에 채우기"],
       point: "쿠키 하나보다 「틴 안의 구성」이 상품이에요. 모양·색·식감이 겹치지 않게 고르고, 습기를 막아야 오래 팔 수 있어요.",
       fail: [["쿠키가 퍼짐", "버터가 너무 무르거나 오래 섞음"], ["눅눅해짐", "덜 식힌 채 담았거나 건조제 없음"], ["향이 약함", "찻잎 분쇄가 거침"]],
       ask: ["향 재료(차·허브)를 넣는 방법과 양", "틴 하나에 넣는 종류 수와 배치", "유통기한을 며칠로 보는지", "대량으로 만들 때 순서"],
       nums: "버터 온도 · 쿠키별 굽기 온도·시간" },
-    { key: "caramel", name: "생 카라멜", short: "생 카라멜", jp: "生キャラメル", feat: "딱딱하지도 흐르지도 않는 식감. 여러 맛으로 응용", use: ["선물 · 답례품", "계산대 소포장"],
+    { key: "caramel", name: "생 카라멜", short: "생 카라멜", jp: "{生|なま}{キャラメル|きゃらめる}", feat: "딱딱하지도 흐르지도 않는 식감. 여러 맛으로 응용", use: ["선물 · 답례품", "계산대 소포장"],
       flow: ["생크림·설탕·물엿을 냄비에 넣고 끓이기", "계속 저으며 목표 온도까지 졸이기", "불을 끄고 버터 넣기", "틀에 부어 식혀 굳히기", "잘라서 하나씩 포장"],
       point: "식감은 마지막 온도로 정해져요. 1~2℃ 차이로 딱딱해지거나 흐르니까 온도계와 찬물 테스트를 같이 써요.",
       fail: [["딱딱함", "너무 높은 온도까지 졸임"], ["흐르고 안 굳음", "온도가 낮음"], ["까끌까끌함", "설탕이 다시 결정이 됨"], ["탄 맛", "바닥을 안 저음"]],
       ask: ["최종 온도와 찬물 테스트로 보는 상태", "말차·홍차·소금 등 맛 재료 넣는 시점", "보관 온도와 기간", "포장지 종류"],
       nums: "최종 온도 (가장 중요!)" },
-    { key: "daifuku", name: "전통 모찌 · 딸기 다이후쿠", short: "다이후쿠", jp: "苺大福", feat: "일본 정통 모찌 기술. 한국에서도 줄 서는 품목", use: ["겨울 딸기 시즌", "SNS"],
+    { key: "daifuku", name: "전통 모찌 · 딸기 다이후쿠", short: "다이후쿠", jp: "{苺大福|いちごだいふく}", feat: "일본 정통 모찌 기술. 한국에서도 줄 서는 품목", use: ["겨울 딸기 시즌", "SNS"],
       flow: ["시라타마코+물을 매끈하게 풀기", "설탕 넣고 익히며 치대기", "가타쿠리코 위에서 나누기", "딸기를 앙금으로 감싸기", "모찌로 감싸 오므리기"],
       point: "익힌 뒤 얼마나 치대느냐로 쫄깃함이 정해지고, 설탕이 많을수록 덜 굳어요. 단면은 실이나 칼로 잘라 보여줘요.",
       fail: [["금방 딱딱해짐", "설탕 부족, 덧가루 과다"], ["끈적여서 못 다룸", "덜 익음, 덧가루 부족"], ["딸기 물이 나옴", "딸기 물기를 덜 닦음"]],
       ask: ["시라타마코만 쓰는지 섞는지", "찜기와 전자레인지 중 무엇으로 익히는지", "흰앙금과 팥앙금 중 무엇을 쓰는지", "몇 시간 안에 팔아야 하는지"],
       nums: "가루:물 비율 · 익히는 시간" },
-    { key: "madeleine", name: "마들렌 · 휘낭시에", short: "마들렌·휘낭시에", jp: "マドレーヌ・フィナンシェ", feat: "촉촉하고 속이 꽉 찬 구움과자. 매출을 받쳐주는 기본", use: ["상시 메뉴", "선물 · 답례품"],
+    { key: "madeleine", name: "마들렌 · 휘낭시에", short: "마들렌·휘낭시에", jp: "{マドレーヌ|まどれーぬ}・{フィナンシェ|ふぃなんしぇ}", feat: "촉촉하고 속이 꽉 찬 구움과자. 매출을 받쳐주는 기본", use: ["상시 메뉴", "선물 · 답례품"],
       flow: ["마들렌 — 재료를 순서대로 섞고 냉장 휴지", "휘낭시에 — 버터를 갈색이 될 때까지 끓이기", "휘낭시에 — 흰자·아몬드파우더·가루에 브라운버터", "틀에 버터 바르고 반죽 채우기", "높은 온도에서 짧게 굽기"],
       point: "마들렌은 차가운 반죽을 높은 온도에 넣어야 가운데 「배꼽(へそ)」이 올라와요. 휘낭시에는 브라운버터 색이 곧 향이에요.",
       fail: [["마들렌 배꼽이 없음", "휴지 부족, 오븐 온도 낮음"], ["틀에서 안 빠짐", "틀 버터·가루 부족"], ["휘낭시에가 씀", "버터를 너무 태움"], ["속이 퍽퍽", "너무 오래 구움"]],
       ask: ["반죽 휴지 시간", "브라운버터를 멈추는 색 기준", "꿀이나 전화당을 넣는지", "선물용 포장과 보관 기간"],
       nums: "휴지 시간 · 굽기 온도·시간" },
-    { key: "sando", name: "과일 산도", short: "과일 산도", jp: "フルーツサンド", feat: "단면 비주얼로 SNS 유입. 크림과 과일 배치가 핵심", use: ["SNS", "시즌 과일"],
+    { key: "sando", name: "과일 산도", short: "과일 산도", jp: "{フルーツサンド|ふるーつさんど}", feat: "단면 비주얼로 SNS 유입. 크림과 과일 배치가 핵심", use: ["SNS", "시즌 과일"],
       flow: ["식빵 얇게 준비", "크림을 단단하게 휘핑", "자를 선에 맞춰 과일 배치", "크림으로 빈틈 채우고 덮기", "랩으로 감싸 냉장 휴지 후 자르기"],
       point: "단면이 상품이에요. 자를 선을 먼저 정하고, 그 선에 과일 단면이 오도록 거꾸로 배치해요.",
       fail: [["단면이 밀림", "냉장 휴지 부족, 칼이 무딤"], ["빵이 젖음", "과일 물기"], ["과일이 빠짐", "크림이 과일 사이를 못 채움"]],
       ask: ["크림에 마스카르포네 등을 섞는지", "식빵 두께와 종류", "칼 데우는 법과 자르는 법", "판매 가능 시간"],
       nums: "크림 휘핑 정도 · 냉장 휴지 시간" },
-    { key: "pudding", name: "나마 푸딩 (말차 포함)", short: "나마 푸딩", jp: "生プリン・抹茶プリン", feat: "기본 푸딩에서 말차까지 응용. 전문점도 가능한 품목", use: ["상시 메뉴", "말차 라인"],
+    { key: "pudding", name: "나마 푸딩 (말차 포함)", short: "나마 푸딩", jp: "{生|なま}{プリン|ぷりん}・{抹茶|まっちゃ}{プリン|ぷりん}", feat: "기본 푸딩에서 말차까지 응용. 전문점도 가능한 품목", use: ["상시 메뉴", "말차 라인"],
       flow: ["우유·생크림·설탕 데우기", "노른자에 섞어 농도 내기", "체에 거르기", "컵에 담아 굳히기", "카라멜 소스 따로 만들기"],
-      point: "입에서 녹는 부드러움이 핵심이에요. 굽는 푸딩(焼きプリン)과 방식이 달라서, 수업에서 어느 쪽인지 먼저 확인해요.",
+      point: "입에서 녹는 부드러움이 핵심이에요. 굽는 푸딩({焼|や}き{プリン|ぷりん})과 방식이 달라서, 수업에서 어느 쪽인지 먼저 확인해요.",
       fail: [["기포 자국", "거르지 않았거나 세게 저음"], ["분리·덩어리", "노른자가 익음 (온도 높음)"], ["말차 색이 누렇게", "열을 오래 받음"], ["말차 덩어리", "체 없이 넣음"]],
       ask: ["젤라틴으로 굳히는지, 저온으로 익히는지", "말차 넣는 시점과 양", "카라멜 소스 농도", "보관 기간"],
       nums: "젤라틴 양 · 데우는 온도 · 냉각 시간" },
-    { key: "souffle", name: "수플레 치즈케이크", short: "수플레 치즈", jp: "スフレチーズケーキ", feat: "오지상 치즈케이크 스타일. 퍽퍽함과 비린 향 잡기", use: ["상시 메뉴", "홀 판매"],
+    { key: "souffle", name: "수플레 치즈케이크", short: "수플레 치즈", jp: "{スフレチーズケーキ|すふれちーずけーき}", feat: "오지상 치즈케이크 스타일. 퍽퍽함과 비린 향 잡기", use: ["상시 메뉴", "홀 판매"],
       flow: ["크림치즈·버터·우유를 중탕으로 녹이기", "노른자·가루 섞기", "흰자로 부드러운 머랭 만들기", "머랭을 나눠 섞기", "중탕으로 낮은 온도에서 천천히 굽기"],
       point: "머랭은 끝이 살짝 휘는 정도로 부드럽게. 오븐이 뜨거우면 위가 갈라지고, 급하게 식히면 꺼져요.",
       fail: [["윗면 갈라짐", "머랭 과다, 오븐 온도 높음"], ["꺼지고 주름", "급하게 꺼냄"], ["바닥이 떡짐", "머랭이 꺼짐"], ["비린 향", "레몬·바닐라 처리 부족"]],
       ask: ["머랭 단단함 기준", "굽는 동안 온도 바꾸는 단계", "중탕 물 온도와 양", "꺼내서 식히는 순서"],
       nums: "중탕 물 온도 · 단계별 오븐 온도" }
   ];
+  var ORIGIN = {"dojima": {"t": "2003년 오사카 비즈니스 거리 {堂島|どうじま}(도지마)에 문을 연 파티스리 몽셰르(당시 이름 몽슈슈)의 롤케이크에서 시작됐어요. 입소문으로 퍼져 오사카 대표 선물이 됐고, 지금은 「도지마롤 스타일」이 크림을 듬뿍 넣은 한 바퀴 롤을 가리키는 말처럼 쓰여요. 지금의 「한 바퀴 말이」 모양이 나오기 전, 1주일만 진열됐던 다른 모양이 있었다는 이야기도 있어요.", "line": "오사카 도지마에서 시작된, 크림이 주인공인 롤케이크예요.", "src": [["Impress 식품 뉴스 (2021)", "https://gourmet.watch.impress.co.jp/docs/news/1327443.html"], ["GLTJP · Mon cher 도지마 롤", "https://www.gltjp.com/ko/directory/item/15128/"]]}, "short": {"t": "원형은 서양의 쇼트케이크(비스킷 같은 반죽에 과일 · 크림)예요. 일본에서는 1922년 {不二家|ふじや}(후지야)가 카스텔라에 가까운 스펀지에 생크림을 올려 「쇼트케이크」로 팔기 시작했다는 설이 가장 널리 알려져 있어요(후지야 쪽 설명 기준). 딸기를 올린 모양이 언제 자리 잡았는지는 자료마다 달라요. 집집마다 퍼진 건 냉장고가 보급된 1955년 이후라고 해요.", "line": "서양 쇼트케이크를 일본이 스펀지와 생크림으로 다시 만든, 일본식 케이크의 얼굴이에요.", "src": [["Walkerplus", "https://www.walkerplus.com/article/1103770/"], ["macaroni", "https://macaro-ni.jp/22014?page=2"]]}, "cookie": {"t": "일본에서는 1927년 창업한 {泉屋東京店|いずみやとうきょうてん}(이즈미야 도쿄점)이 일본에서 처음 쿠키를 만들어 판 곳으로 알려져 있어요(가게 쪽 설명). 지금의 디자인 「{クッキー|くっきー}{缶|かん}」 붐은 최근 몇 년 사이 선물 · 손님 접대용으로 커졌고, 나고야 「카페 타나카」의 쿠키캔 브랜드가 선구로 소개되기도 해요. 어느 곳이 처음인지는 설이 여러 개예요.", "line": "뚜껑을 여는 순간이 선물이 되는, 일본 백화점의 대표 구움과자 세트예요.", "src": [["Visit Chiyoda · 이즈미야 도쿄점", "https://visit-chiyoda.tokyo/app/spot/detail/357"], ["도요케이자이 온라인", "https://toyokeizai.net/articles/-/656355"]]}, "caramel": {"t": "부드러운 「{生|なま}{キャラメル|きゃらめる}」를 일본 전국에 알린 건 홋카이도 도카치의 {花畑牧場|はなばたけぼくじょう}(하나바타케 목장 · 다나카 요시타케 대표)이에요. 2000년대 후반 폭발적으로 팔려 통신판매가 한 달 넘게 밀릴 정도였다고 해요. 처음 발매한 해와 누가 처음 「생 카라멜」이라고 불렀는지는 확인하지 못했어요.", "line": "홋카이도 목장 우유를 졸여 만든 「입에서 녹는 캐러멜」로 일본에 퍼졌어요.", "src": [["Walkerplus", "https://www.walkerplus.com/article/14143/"], ["TV도쿄 「솔로몬 유리」", "https://www.tv-tokyo.co.jp/solomon/backnumber/20140119/"]]}, "daifuku": {"t": "다이후쿠 자체는 오래된 화과자지만, 딸기를 통째로 넣은 딸기 다이후쿠는 1985년(쇼와 60년) 무렵 생겼어요. 원조를 주장하는 가게가 여러 곳이고 비슷한 시기에 팔기 시작해서, 어디가 먼저인지는 설이 여러 개예요. 도쿄 신주쿠의 {大角玉屋|おおすみたまや}(오스미타마야)가 「딸기 마메다이후쿠」 원조로 잘 알려져 있어요.", "line": "40년쯤 전에 생긴, 생각보다 젊은 화과자예요.", "src": [["macaroni", "https://macaro-ni.jp/32006"], ["All About", "https://allabout.co.jp/gm/gc/392423/"]]}, "madeleine": {"t": "마들렌 — 18세기 프랑스 로렌 지방 코메르시에서, 스타니스와프 공의 만찬에 하녀 「마들렌」이 조개 모양 과자를 구워 냈다는 전설이 가장 유명해요. 순례자들이 가져왔다는 설, 19세기 제과사가 만들었다는 설도 있어 설이 여러 개예요. 휘낭시에 — 17세기 수녀원 과자에서 시작해, 1890년 무렵 파리 증권거래소 근처 제과사 라스네가 작은 금괴 모양으로 바꿨다는 설이 알려져 있어요. 이름이 금괴 모양 때문인지 금융가 손님 때문인지도 설이 여러 개예요.", "line": "조개 모양은 하녀 마들렌의 전설, 금괴 모양은 파리 금융가 — 이야기가 있는 구움과자예요.", "src": [["Wikipedia · Madeleine", "https://en.wikipedia.org/wiki/Madeleine_(cake)"], ["France.fr", "https://www.france.fr/it/articolo/la-madeleine-il-duca-e-proust/"], ["Wikipedia · Financier", "https://en.wikipedia.org/wiki/Financier_(cake)"], ["Gault&Millau", "https://fr.gaultmillau.com/fr/news/le-financier-son-histoire-et-nos-bonnes-adresses"]]}, "sando": {"t": "과일 산도는 과일 가게가 운영하는 「{フルーツパーラー|ふるーつぱーらー}(후르츠 파라)」 문화에서 자랐어요. 도쿄 {千疋屋総本店|せんびきやそうほんてん}(센비키야 총본점)은 과일 식당 시절부터 이어 온 전통 메뉴로 과일 샌드위치를 내고 있다고 소개돼요. 다만 누가 처음 만들었는지는 확인되지 않았어요. 지금은 카페 · 빵집에서도 흔히 팔아요.", "line": "일본 과일 가게 「후르츠 파라」에서 자란, 과일을 가장 예쁘게 먹는 샌드위치예요.", "src": [["macaroni", "https://macaro-ni.jp/41392"]]}, "pudding": {"t": "1990년대 일본에서 예전의 단단한 커스터드 푸딩 대신, 생크림이 들어가 입에서 녹는 부드러운 푸딩이 붐이 됐어요. 1993년에 나온 파스텔(Pastel)의 「나메라카 푸딩」이 그 시작으로 자주 꼽혀요(「~라고 한다」는 소개가 많아요). 「{生|なま}{プリン|ぷりん}」이라는 이름은 여러 가게가 쓰는 말이라 원조를 하나로 말하기는 어려워요.", "line": "단단한 푸딩에서 「입에서 녹는 푸딩」으로 — 1990년대 일본이 바꾼 푸딩이에요.", "src": [["Walkerplus", "https://www.walkerplus.com/article/38232/"], ["Impress 식품 뉴스", "https://gourmet.watch.impress.co.jp/docs/news/2077766.html"]]}, "souffle": {"t": "일본식 수플레 치즈케이크는 1960년대 셰프 구즈노 도모타로가 베를린에서 먹은 독일 치즈케이크(케제쿠헨)에서 아이디어를 얻었다는 설이 알려져 있어요(영문 위키 기준 · 확실하지 않음). 오사카 「리쿠로 오지상」은 1984년 갓 구운 치즈케이크를 내놓아 크게 퍼뜨렸는데, 두 이야기는 서로 다른 이야기예요.", "line": "독일 치즈케이크를 일본이 폭신하게 바꾼 케이크예요.", "src": [["Wikipedia · Japanese cheesecake", "https://en.wikipedia.org/wiki/Japanese_cheesecake"], ["호시노 리조트 · 리쿠로 오지상", "https://hoshinoresorts.com/jp/guide/area/kinki/rikuro/"]]}};
   var CUR = {
     dojima: "부드러움과 크림 밸런스 · 재구매율 높은 스테디셀러 · 도지마롤 스타일의 폭신한 시트",
     short: "카페 매출 1순위 · 실패 없는 제누아즈 · 진짜 일본 전통 스타일 쇼트케이크",
@@ -806,7 +925,7 @@ footer{font-size:14px;color:var(--mute);border-top:1px solid var(--line2);paddin
   };
   var ingredients = [
     { n: "박력분", core: "뼈대를 만들되 질기지 않게", d: ["글루텐이 약해 부드럽고 가벼움", "체에 쳐서 넣어야 덩어리 없음", "많이 섞으면 질겨짐"] },
-    { n: "설탕", core: "단맛 + 거품 안정 + 촉촉함", d: ["계란 거품을 단단하고 오래가게", "수분을 잡아 촉촉함 유지", "상백당(上白糖)은 더 촉촉한 일본 설탕"] },
+    { n: "설탕", core: "단맛 + 거품 안정 + 촉촉함", d: ["계란 거품을 단단하고 오래가게", "수분을 잡아 촉촉함 유지", "상백당({上白糖|じょうはくとう})은 더 촉촉한 일본 설탕"] },
     { n: "계란", core: "거품으로 부풀고, 익으며 굳힌다", d: ["흰자 → 머랭으로 공기", "노른자 → 유화, 맛과 색", "실온 계란이 거품이 잘 남"] },
     { n: "생크림", core: "일본 케이크 맛의 주인공", d: ["유지방 높을수록 진하고 빨리 단단해짐", "차갑게 유지해야 분리 안 됨", "용도별 휘핑 정도가 다름"] },
     { n: "버터", core: "풍미와 식감을 같이 정한다", d: ["크리밍 → 바삭한 쿠키", "녹인 버터 → 촉촉한 마들렌", "브라운버터 → 고소한 휘낭시에"] },
@@ -815,26 +934,16 @@ footer{font-size:14px;color:var(--mute);border-top:1px solid var(--line2);paddin
     { n: "크림치즈", core: "치즈케이크의 맛과 질감", d: ["실온에서 풀어야 덩어리 없음", "레몬이 비린 향을 잡아줌", "브랜드마다 산미가 다름"] },
     { n: "젤라틴", core: "푸딩이 흔들리는 정도", d: ["찬물에 불린 뒤 따뜻한 액체에", "끓이면 굳는 힘이 약해짐", "조금만 달라도 식감이 크게 바뀜"] }
   ];
-  var vocab = [
-    ["泡立てる", "あわだてる", "거품을 내다"], ["湯煎", "ゆせん", "중탕"], ["七分立て", "しちぶだて", "70% 휘핑 · 떠올리면 흘러내림"],
-    ["八分立て", "はちぶだて", "80% 휘핑 · 뿔 끝이 살짝 휨"], ["角が立つ", "つのがたつ", "뿔이 서다"], ["生地", "きじ", "반죽 · 시트"],
-    ["粉をふるう", "こなをふるう", "가루를 체에 치다"], ["さっくり混ぜる", "さっくりまぜる", "자르듯 가볍게 섞다"], ["混ぜすぎ", "まぜすぎ", "너무 많이 섞음"],
-    ["焼き色", "やきいろ", "구움색"], ["粗熱を取る", "あらねつをとる", "한 김 식히다"], ["寝かせる", "ねかせる", "휴지시키다"],
-    ["冷やし固める", "ひやしかためる", "차갑게 굳히다"], ["煮詰める", "につめる", "졸이다"], ["裏ごし", "うらごし", "체에 내리다"],
-    ["艶", "つや", "윤기"], ["全卵", "ぜんらん", "전란"], ["卵黄 · 卵白", "らんおう · らんぱく", "노른자 · 흰자"],
-    ["生クリーム", "なまクリーム", "생크림"], ["乳脂肪", "にゅうしぼう", "유지방"], ["焦がしバター", "こがしバター", "브라운버터"],
-    ["シロップを打つ", "シロップをうつ", "시럽을 바르다"], ["ナッペ", "なっぺ", "크림 아이싱하기"], ["型", "かた", "틀"],
-    ["絞り袋 · 口金", "しぼりぶくろ · くちがね", "짤주머니 · 깍지"], ["打ち粉", "うちこ", "덧가루"], ["室温", "しつおん", "실온"]
-  ];
+  var VOCAB = [{"g": "🥣 섞기 · 거품", "w": [["{混|ま}ぜる", "まぜる", "섞다", "{全体|ぜんたい}を{混|ま}ぜます"], ["さっくり{混|ま}ぜる", "さっくりまぜる", "자르듯 가볍게 섞다", "{粉|こな}はさっくり{混|ま}ぜて"], ["{混|ま}ぜすぎ", "まぜすぎ", "너무 많이 섞음", "{混|ま}ぜすぎないでください"], ["{泡立|あわだ}てる", "あわだてる", "거품을 내다", "{卵白|らんぱく}を{泡立|あわだ}てます"], ["{泡|あわ}が{消|き}える", "あわがきえる", "거품이 꺼지다", "{泡|あわ}が{消|き}えないように"], ["{泡|あわ}をつぶさない", "あわをつぶさない", "거품을 꺼뜨리지 않다", ""], ["{角|つの}が{立|た}つ", "つのがたつ", "뿔이 서다", "{角|つの}が{ピン|ぴん}と{立|た}つまで"], ["{リボン|りぼん}{状|じょう}", "りぼんじょう", "리본 상태 · 떨어뜨리면 자국이 남음", ""], ["{メレンゲ|めれんげ}", "めれんげ", "머랭", ""], ["{溶|と}きほぐす", "ときほぐす", "(계란을) 풀다", "{卵|たまご}を{溶|と}きほぐします"], ["{溶|と}かす", "とかす", "녹이다", "{バター|ばたー}を{溶|と}かします"], ["なじませる", "なじませる", "어우러지게 하다 · 스며들게 하다", ""], ["{粉|こな}をふるう", "こなをふるう", "가루를 체에 치다", ""], ["{ダマ|だま}になる", "だまになる", "덩어리지다", "{ダマ|だま}にならないように"], ["{乳化|にゅうか}", "にゅうか", "유화 · 기름과 물이 매끈하게 섞임", ""], ["{分離|ぶんり}する", "ぶんりする", "분리되다", "{分離|ぶんり}したら{温|あたた}めて"], ["{底|そこ}から{混|ま}ぜる", "そこからまぜる", "바닥부터 섞다", ""]]}, {"g": "🔥 굽기 · 온도 · 시간", "w": [["{予熱|よねつ}", "よねつ", "예열", "{オーブン|おーぶん}を{予熱|よねつ}します"], ["{焼|や}く", "やく", "굽다", ""], ["{焼|や}き{色|いろ}", "やきいろ", "구움색", "{焼|や}き{色|いろ}がついたら"], ["{焼|や}きすぎ", "やきすぎ", "너무 구움", ""], ["{湯煎|ゆせん}", "ゆせん", "중탕", ""], ["{湯煎焼|ゆせんや}き", "ゆせんやき", "중탕으로 굽기", ""], ["{煮詰|につ}める", "につめる", "졸이다", ""], ["{沸騰|ふっとう}", "ふっとう", "끓음", "{沸騰|ふっとう}したら{火|ひ}を{止|と}めて"], ["{火|ひ}を{止|と}める", "ひをとめる", "불을 끄다", ""], ["{弱火|よわび} · {中火|ちゅうび} · {強火|つよび}", "よわび · ちゅうび · つよび", "약불 · 중불 · 센불", ""], ["{粗熱|あらねつ}を{取|と}る", "あらねつをとる", "한 김 식히다", ""], ["{冷|ひ}やす", "ひやす", "차갑게 하다 · 식히다", ""], ["{冷|ひ}やし{固|かた}める", "ひやしかためる", "차갑게 굳히다", ""], ["{寝|ね}かせる", "ねかせる", "휴지시키다", "{冷蔵庫|れいぞうこ}で{一晩|ひとばん}{寝|ね}かせます"], ["{常温|じょうおん} · {室温|しつおん}", "じょうおん · しつおん", "상온 · 실온", ""], ["{温度|おんど}", "おんど", "온도", "{何度|なんど}ですか"], ["〜{分|ふん} · 〜{秒|びょう}", "ふん · びょう", "~분 · ~초", "{十分|じゅっぷん}{焼|や}きます"], ["{竹串|たけぐし}を{刺|さ}す", "たけぐしをさす", "대꼬치로 찔러 보다 · 익었는지 확인", "{何|なに}もつかなければOK"]]}, {"g": "🥄 도구", "w": [["{ボウル|ぼうる}", "ぼうる", "볼", ""], ["{泡立|あわだ}て{器|き}", "あわだてき", "거품기", ""], ["{ハンドミキサー|はんどみきさー}", "はんどみきさー", "핸드 믹서", ""], ["{ゴムベラ|ごむべら}", "ごむべら", "고무 주걱", ""], ["{カード|かーど}", "かーど", "스크래퍼", ""], ["{絞|しぼ}り{袋|ぶくろ}", "しぼりぶくろ", "짤주머니", ""], ["{口金|くちがね}", "くちがね", "깍지", ""], ["{型|かた}", "かた", "틀", "{型|かた}に{バター|ばたー}を{塗|ぬ}ります"], ["{天板|てんぱん}", "てんぱん", "오븐 철판", ""], ["{オーブンシート|おーぶんしーと}", "おーぶんしーと", "오븐 시트 · 유산지", ""], ["{網|あみ}", "あみ", "식힘망", ""], ["{鍋|なべ}", "なべ", "냄비", ""], ["{温度計|おんどけい}", "おんどけい", "온도계", ""], ["はかり", "はかり", "저울", ""], ["{回転台|かいてんだい}", "かいてんだい", "돌림판", ""], ["{パレットナイフ|ぱれっとないふ}", "ぱれっとないふ", "스패튤러", ""], ["{茶|ちゃ}こし", "ちゃこし", "작은 체", ""], ["{ラップ|らっぷ}", "らっぷ", "랩", "{ラップ|らっぷ}をして{冷|ひ}やします"]]}, {"g": "🧈 재료", "w": [["{薄力粉|はくりきこ}", "はくりきこ", "박력분", ""], ["{強力粉|きょうりきこ}", "きょうりきこ", "강력분", ""], ["{全卵|ぜんらん}", "ぜんらん", "전란", ""], ["{卵黄|らんおう}", "らんおう", "노른자", ""], ["{卵白|らんぱく}", "らんぱく", "흰자", ""], ["{グラニュー|ぐらにゅー}{糖|とう}", "ぐらにゅーとう", "그래뉴당", ""], ["{上白糖|じょうはくとう}", "じょうはくとう", "상백당 · 촉촉한 일본 설탕", ""], ["{粉糖|ふんとう}", "ふんとう", "슈거파우더", ""], ["{生|なま}{クリーム|くりーむ}", "なまくりーむ", "생크림", ""], ["{乳脂肪|にゅうしぼう}", "にゅうしぼう", "유지방", "{乳脂肪|にゅうしぼう}42%"], ["{無塩|むえん}{バター|ばたー}", "むえんばたー", "무염 버터", ""], ["{焦|こ}がし{バター|ばたー}", "こがしばたー", "브라운버터", ""], ["{アーモンドプードル|あーもんどぷーどる}", "あーもんどぷーどる", "아몬드파우더", ""], ["{白玉粉|しらたまこ}", "しらたまこ", "찹쌀가루", ""], ["{片栗粉|かたくりこ}", "かたくりこ", "감자 전분 · 덧가루", ""], ["{抹茶|まっちゃ}", "まっちゃ", "말차", ""], ["{ゼラチン|ぜらちん}", "ぜらちん", "젤라틴", ""], ["{白餡|しろあん} · こし{餡|あん}", "しろあん · こしあん", "흰앙금 · 고운 팥앙금", ""], ["{クリームチーズ|くりーむちーず}", "くりーむちーず", "크림치즈", ""], ["{水飴|みずあめ}", "みずあめ", "물엿", ""]]}, {"g": "🍓 크림 · 모양 · 마무리", "w": [["{七分立|しちぶだ}て", "しちぶだて", "70% 휘핑 · 떠올리면 흘러내림", ""], ["{八分立|はちぶだ}て", "はちぶだて", "80% 휘핑 · 뿔 끝이 살짝 휨", ""], ["{九分立|くぶだ}て", "くぶだて", "90% 휘핑 · 단단함", ""], ["{ナッペ|なっぺ}", "なっぺ", "크림 아이싱하기", ""], ["{サンド|さんど}する", "さんどする", "사이에 끼우다", ""], ["{シロップ|しろっぷ}を{打|う}つ", "しろっぷをうつ", "시럽을 바르다", ""], ["{絞|しぼ}る", "しぼる", "짜다", "{口金|くちがね}で{絞|しぼ}ります"], ["{巻|ま}く", "まく", "말다", "{手前|てまえ}から{巻|ま}きます"], ["{断面|だんめん}", "だんめん", "단면", ""], ["{艶|つや}", "つや", "윤기", "{艶|つや}が{出|で}るまで"], ["{均|なら}す", "ならす", "평평하게 고르다", ""], ["{切|き}り{分|わ}ける", "きりわける", "잘라 나누다", ""], ["{包|つつ}む", "つつむ", "감싸다", ""], ["{打|う}ち{粉|こ}", "うちこ", "덧가루", ""], ["{生地|きじ}", "きじ", "반죽 · 시트", ""], ["{裏|うら}ごし", "うらごし", "체에 내리다", ""]]}, {"g": "🗣 지시 · 말투 · 칭찬 · 주의", "w": [["{少|すこ}しずつ", "すこしずつ", "조금씩", "{少|すこ}しずつ{加|くわ}えます"], ["{一気|いっき}に", "いっきに", "한 번에", ""], ["{手早|てばや}く", "てばやく", "재빨리", ""], ["ゆっくり", "ゆっくり", "천천히", ""], ["{加|くわ}える", "くわえる", "넣다 · 더하다", ""], ["このくらい", "このくらい", "이 정도", "このくらいの{固|かた}さ"], ["{固|かた}さ · {柔|やわ}らかさ", "かたさ · やわらかさ", "되기 · 부드러움", ""], ["{見|み}ていてください", "みていてください", "보고 계세요", ""], ["{次|つぎ}は", "つぎは", "다음은", ""], ["{触|さわ}らないでください", "さわらないでください", "만지지 마세요", ""], ["{気|き}をつけて", "きをつけて", "조심하세요", ""], ["{熱|あつ}いです", "あついです", "뜨거워요", ""], ["{大丈夫|だいじょうぶ}", "だいじょうぶ", "괜찮아요", ""], ["{上手|じょうず}です", "じょうずです", "잘하시네요", ""], ["いいですね", "いいですね", "좋네요", ""], ["{完成|かんせい}", "かんせい", "완성", ""], ["{試食|ししょく}", "ししょく", "시식", "{試食|ししょく}しましょう"], ["{質問|しつもん}はありますか", "しつもんはありますか", "질문 있어요?", ""]]}];
   var quiz = [
     ["공립법과 별립법은 무엇이 다른가요?", "공립법은 전란으로 한 번에 거품을 내고, 별립법은 노른자와 흰자를 나눠 각각 거품을 내요. 별립법이 더 가볍고 폭신해요."],
     ["생 카라멜의 식감은 무엇으로 정해지나요?", "끓이는 마지막 온도요. 1~2℃ 차이로 딱딱해지거나 흘러요."],
     ["마들렌 배꼽(へそ)이 올라오려면?", "휴지한 차가운 반죽을 높은 온도의 오븐에 넣어요."],
-    ["휘낭시에에 쓰는 「焦がしバター」는?", "브라운버터. 버터를 갈색이 될 때까지 끓여 고소한 향을 내요."],
+    ["휘낭시에에 쓰는 「{焦|こ}がし{バター|ばたー}」는?", "브라운버터. 버터를 갈색이 될 때까지 끓여 고소한 향을 내요."],
     ["다이후쿠가 금방 딱딱해지는 이유 두 가지는?", "설탕이 부족하거나 덧가루를 너무 많이 썼을 때요."],
     ["과일 산도에서 과일을 놓는 기준은?", "자를 선을 먼저 정하고, 그 선에 과일 단면이 오도록 배치해요."],
     ["수플레 치즈케이크 윗면이 갈라지는 이유는?", "머랭이 너무 많거나 단단하고, 오븐 온도가 높을 때요."],
-    ["七分立て와 八分立て의 차이는?", "七分立て는 떠올리면 흘러내리는 정도, 八分立て는 뿔 끝이 살짝 휘는 정도예요."],
+    ["{七分立|しちぶだ}て와 {八分立|はちぶだ}て의 차이는?", "{七分立|しちぶだ}て는 떠올리면 흘러내리는 정도, {八分立|はちぶだ}て는 뿔 끝이 살짝 휘는 정도예요."],
     ["틴쿠키가 눅눅해지지 않게 하려면?", "완전히 식힌 뒤 건조제와 함께 담아요."],
     ["말차 푸딩 색이 누렇게 변하는 이유는?", "말차가 열을 오래 받아서예요. 넣는 시점을 늦춰요."]
   ];
@@ -900,12 +1009,12 @@ footer{font-size:14px;color:var(--mute);border-top:1px solid var(--line2);paddin
         ["", "나리타 지하 · 넥스 왕복 티켓 사기", "5,200엔 · 여권 필요 · 교통카드 1장에 10,000엔 충전 · 편의점에서 간단히 · 신주쿠까지 약 1시간 30분"],
         ["13:00", "신주쿠역 도착", "남쪽출구 코인락커에 캐리어 맡기기"],
         ["13:10", "★ 포터 (이세탄 본관 2층)", "★ 꼭 사기 · 하울 본삭 미니 네이비 · 없으면 16:15 포터 오모테산도점 (12~20시) · 여권 챙기기"],
-        ["13:45", "장어덮밥 고바야시 (小ばやし)", "신주쿠 동쪽출구 2분 · 안 되면 기쿠카와 (菊川)"],
+        ["13:45", "장어덮밥 고바야시 (小ばやし · こばやし)", "신주쿠 동쪽출구 2분 · 안 되면 기쿠카와 (菊川 · きくかわ)"],
         ["14:40", "택배 픽업 (요요기)", ""],
         ["15:10", "숙소에 짐 두기", "핫토리 학교 근처 숙소 · 체크인 16시 · 얼리 체크인 문의 · 안 되면 락커에 두고 다니기"],
         ["15:30", "★ 하라주쿠", "★ 꼭 사기 · 호카 하라주쿠 직영점 (신발) · 온러닝 캣스트리트 · 여권 챙기기"],
         ["16:15", "★ 오모테산도", "★ 꼭 사기 · MATOW 스퀘어 시계 (H°M'S WatchStore 오모테산도 · 19:30 마감 · 저녁 전에) · 넘버슈가 · 피에르 에르메 · 포터 오모테산도점 (12~20시)"],
-        ["17:45", "저녁 (혼자) · 오모테산도", "とんかつ まい泉 青山本店 (카운터석 · 11:00~22:00 무휴) 또는 麺散 (우동 · 월 ~22:00)"],
+        ["17:45", "저녁 (혼자) · 오모테산도", "とんかつ まい泉(まいせん) 青山本店(あおやまほんてん) (카운터석 · 11:00~22:00 무휴) 또는 麺散 (우동 · 월 ~22:00)"],
         ["19:00", "★ 호카 시부야 직영점", "20시 마감 · 하라주쿠에서 못 샀으면 여기서 · 여권 챙기기"],
         ["20:00", "마트 + 다이소", "다이소: 빅카메라 신주쿠 8층 · 비타민 · 휴족시간 · 겔 · 1회용 컵 · 햇반 · 후리카케 · 오니기리통"],
         ["", "산 짐 정리하기", "미리 산 것 다 정리"],
@@ -1112,6 +1221,71 @@ footer{font-size:14px;color:var(--mute);border-top:1px solid var(--line2);paddin
   $("nameIn").addEventListener("keydown", function (e) { if (e.key === "Enter") $("nameOk").click(); });
   paintMe();
 
+
+  /* ---------- 접기 · 펼치기: PART · 섹션 · 큰 카드 · 일본어 묶음 (상태는 hattori26.ui.fold) ---------- */
+  var FOLDK = PRE + "ui.fold", foldSt = {};
+  try { foldSt = JSON.parse(ls(FOLDK) || "{}") || {}; } catch (e) { foldSt = {}; }
+  function saveFold() { ls(FOLDK, JSON.stringify(foldSt)); }
+  function wrapFold(head, items, id, cls) {
+    var d = document.createElement("details"); d.className = "fold" + (cls ? " " + cls : ""); d.dataset.fold = id;
+    var sm = document.createElement("summary"); sm.className = "fsum";
+    var body = document.createElement("div"); body.className = "fbody";
+    head.parentNode.insertBefore(d, head);
+    sm.appendChild(head); d.appendChild(sm); d.appendChild(body);
+    items.forEach(function (n) { body.appendChild(n); });
+    d.open = foldSt[id] !== 0;
+    return d;
+  }
+  function buildFolds() {
+    ["tab-pre", "tab-note", "tab-theory", "planBody"].forEach(function (tid) {
+      var pane = $(tid); if (!pane) return;
+      /* ① 섹션(section.sec): 제목 줄 = 접는 머리 */
+      pane.querySelectorAll("section.sec").forEach(function (sec, i) {
+        var h = sec.querySelector(":scope > .sech"); if (!h) return;
+        var rest = [].slice.call(sec.children).filter(function (n) { return n !== h; });
+        wrapFold(h, rest, tid + ":" + (sec.id || "s" + i), "secf");
+      });
+      /* ② 제목 있는 카드 묶음(.slide > .h2c): 칩 + 제목 = 머리 */
+      pane.querySelectorAll(".slide").forEach(function (sl, i) {
+        var h2 = sl.querySelector(":scope > h2.h2c"); if (!h2 || sl.closest(".ipanel")) return;
+        var head = document.createElement("div"); head.style.display = "grid"; head.style.gap = "8px";
+        var chip = sl.querySelector(":scope > .chip"); sl.insertBefore(head, sl.firstChild);
+        if (chip) head.appendChild(chip); head.appendChild(h2);
+        var rest = [].slice.call(sl.children).filter(function (n) { return n !== head; });
+        wrapFold(head, rest, tid + ":slide" + (sl.id || i));
+      });
+      /* ③ PART 띠: 다음 PART · 책 표지 전까지 */
+      var kids = [].slice.call(pane.children), cur = null, list = [];
+      function close() { if (cur) wrapFold(cur, list, tid + ":" + (cur.id || "part")); cur = null; list = []; }
+      kids.forEach(function (n) {
+        if (n.classList.contains("part")) { close(); cur = n; return; }
+        if (n.id === "tips" || n.classList.contains("book") || n.classList.contains("jump") || n.classList.contains("foldbar") || n.classList.contains("addbar")) { close(); return; }
+        if (cur) list.push(n);
+      });
+      close();
+      /* 탭 맨 위 「전부 접기 / 전부 펼치기」 */
+      var bar = document.createElement("div"); bar.className = "foldbar";
+      bar.innerHTML = '<button type="button" class="btn sm" data-foldall="0">▸ 전부 접기</button><button type="button" class="btn sm" data-foldall="1">▾ 전부 펼치기</button>';
+      var jump = pane.querySelector(":scope > .jump");
+      if (jump) jump.parentNode.insertBefore(bar, jump.nextSibling); else pane.insertBefore(bar, pane.firstChild);
+    });
+    /* 수업 일본어 묶음은 그려질 때 이미 details.fold */
+    document.querySelectorAll("details.vgroup").forEach(function (d) { d.open = foldSt[d.dataset.fold] !== 0; });
+  }
+  document.addEventListener("toggle", function (e) {
+    var d = e.target; if (!d.classList || !d.classList.contains("fold")) return;
+    if (d.open) delete foldSt[d.dataset.fold]; else foldSt[d.dataset.fold] = 0;
+    saveFold();
+  }, true);
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-foldall]"); if (!b) return;
+    var open = b.dataset.foldall === "1", pane = b.closest(".tabpane");
+    pane.querySelectorAll("details.fold").forEach(function (d) { d.open = open; if (open) delete foldSt[d.dataset.fold]; else foldSt[d.dataset.fold] = 0; });
+    saveFold();
+  });
+  function openTo(t) { for (var p = t.parentElement; p; p = p.parentElement) if (p.tagName === "DETAILS" && !p.open) p.open = true; }
+  buildFolds();
+
   /* ---------- D-day ---------- */
   function dday(y, m, d) { var t = new Date(), a = new Date(t.getFullYear(), t.getMonth(), t.getDate()), b = new Date(y, m - 1, d); return Math.round((b - a) / 86400000); }
   function todayDay() { for (var i = 0; i < DAYS.length; i++) { var x = DAYS[i].ymd; if (dday(x[0], x[1], x[2]) === 0) return DAYS[i].n; } return 0; }
@@ -1146,11 +1320,11 @@ footer{font-size:14px;color:var(--mute);border-top:1px solid var(--line2);paddin
   document.querySelectorAll(".jump").forEach(function (nav) {
     nav.addEventListener("click", function (e) {
       var a = e.target.closest("a[href^='#']"); if (!a) return; var t = document.querySelector(a.getAttribute("href")); if (!t) return;
-      e.preventDefault(); t.scrollIntoView({ behavior: "smooth", block: "start" });
+      e.preventDefault(); openTo(t); t.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   });
   /* 🗓 일정 · 준비 잠금 · 화면만 가리는 용도 (서버 데이터를 숨기는 것은 아님) · 번호는 해시로만 비교 */
-  var PIN_HASH = "a2634efa069e6dd0b5521247adc0105a3e5228c991b3bb52b359925333240ff4";
+  var PIN_HASH = "604c3f0292e070afa232eec0dfd853e2cdc3fce8eaefa3fa920fc34d4cb675ce";
   function sha256(str) { return crypto.subtle.digest("SHA-256", new TextEncoder().encode(str)).then(function (b) { return Array.prototype.map.call(new Uint8Array(b), function (x) { return (x < 16 ? "0" : "") + x.toString(16); }).join(""); }); }
   function paintLock() { var ok = ls(PRE + "ui.unlock") === PIN_HASH; $("planLock").hidden = ok; $("planBody").hidden = !ok; }
   function tryPin() {
@@ -1169,10 +1343,18 @@ footer{font-size:14px;color:var(--mute);border-top:1px solid var(--line2);paddin
   showTab(fromHash() || ls(PRE + "ui.tab") || "pre", true);
 
   /* ==================== 📒 연수 노트 ==================== */
-  $("ingredients").innerHTML = ingredients.map(function (i) { return '<div class="ncard"><h3>' + i.n + '</h3><p><b>' + i.core + '</b></p><ul>' + i.d.map(function (x) { return "<li>" + x + "</li>"; }).join("") + '</ul></div>'; }).join("");
-  $("vocab").innerHTML = vocab.map(function (v) { return '<div class="word"><span class="ja" lang="ja">' + v[0] + '</span><span class="yomi" lang="ja">' + v[1] + '</span><span class="ko">' + v[2] + '</span></div>'; }).join("");
-  $("quiz").innerHTML = quiz.map(function (q, i) { return '<details><summary><span class="qn">' + (i + 1) + '</span><span>' + q[0] + '</span></summary><p class="a">' + q[1] + '</p></details>'; }).join("");
+  $("ingredients").innerHTML = ingredients.map(function (i) { return '<div class="ncard"><h3>' + i.n + '</h3><p><b>' + i.core + '</b></p><ul>' + i.d.map(function (x) { return "<li>" + rb(x) + "</li>"; }).join("") + '</ul></div>'; }).join("");
+  $("vocab").innerHTML = VOCAB.map(function (g, gi) {
+    return '<details class="fold vgroup" data-fold="voc' + gi + '"' + (foldSt["voc" + gi] === 0 ? "" : " open") + '><summary class="fsum"><span class="vgh">' + g.g + ' <small>' + g.w.length + '개</small></span></summary><div class="fbody"><div class="vocab4">' +
+      g.w.map(function (v) { return '<div class="word"><span class="ja" lang="ja">' + rb(v[0]) + '</span><span class="yomi" lang="ja">' + v[1] + '</span><span class="ko">' + v[2] + '</span>' + (v[3] ? '<span class="ex" lang="ja">' + rb(v[3]) + '</span>' : "") + '</div>'; }).join("") + '</div></div></details>';
+  }).join("");
+  $("vocabCount").textContent = VOCAB.reduce(function (s, g) { return s + g.w.length; }, 0) + "개";
+  $("quiz").innerHTML = quiz.map(function (q, i) { return '<details><summary><span class="qn">' + (i + 1) + '</span><span>' + rb(q[0]) + '</span></summary><p class="a">' + rb(q[1]) + '</p></details>'; }).join("");
 
+  function originCard(k) {
+    var o = ORIGIN[k]; if (!o) return "";
+    return '<div class="ncard origin"><h3>📜 유래</h3><p>' + rb(o.t) + '</p><p class="oline">☕ 손님께 한 줄 · <b>' + o.line + '</b></p><p class="osrc">출처 · ' + o.src.map(function (x) { return '<a href="' + x[1] + '" target="_blank" rel="noopener">' + x[0] + '</a>'; }).join(" · ") + '</p></div>';
+  }
   function makeTabs(el, onPick, mark) {
     el.innerHTML = items.map(function (it, i) { return '<button type="button" class="itab" role="tab" aria-selected="false" data-i="' + i + '"><span class="n">' + (i + 1) + '</span>' + it.short + (mark ? '<span class="ok" data-ok="' + it.key + '"></span>' : "") + '</button>'; }).join("");
     el.addEventListener("click", function (e) { var b = e.target.closest(".itab"); if (b) onPick(+b.dataset.i); });
@@ -1184,10 +1366,11 @@ footer{font-size:14px;color:var(--mute);border-top:1px solid var(--line2);paddin
   var preTabs = $("preTabs"), prePanel = $("prePanel");
   function showPre(i) {
     var it = items[i]; selectTab(preTabs, i);
-    prePanel.innerHTML = '<div class="slide ipanel"><div class="ihead"><span class="chip soft">예습 ' + (i + 1) + ' / 9</span><h2 class="h2c">' + it.name + '</h2><span class="jpn" lang="ja">' + it.jp + '</span><p>' + it.feat + '</p><div class="uses">' + it.use.map(function (u) { return "<span>" + u + "</span>"; }).join("") + '</div></div>' +
+    prePanel.innerHTML = '<div class="slide ipanel"><div class="ihead"><span class="chip soft">예습 ' + (i + 1) + ' / 9</span><h2 class="h2c">' + it.name + '</h2><span class="jpn" lang="ja">' + rb(it.jp) + '</span><p>' + it.feat + '</p><div class="uses">' + it.use.map(function (u) { return "<span>" + u + "</span>"; }).join("") + '</div></div>' +
+      originCard(it.key) +
       '<div class="grid2"><div class="ncard"><h3>만드는 흐름</h3><ol class="flow">' + it.flow.map(function (s) { return "<li>" + s + "</li>"; }).join("") + '</ol></div>' +
-      '<div style="display:grid;gap:14px;align-content:start;min-width:0"><div class="ncard hot"><h3>핵심 포인트</h3><p>' + it.point + '</p></div><div class="ncard"><h3>흔한 실패</h3><ul class="fail">' + it.fail.map(function (f) { return '<li><span class="sym">' + f[0] + '</span><span class="why">' + f[1] + '</span></li>'; }).join("") + '</ul></div></div></div>' +
-      '<div class="ask"><h3>수업에서 물어볼 것</h3>' + it.ask.map(function (q) { return "<p>" + q + "</p>"; }).join("") + '</div>' +
+      '<div style="display:grid;gap:14px;align-content:start;min-width:0"><div class="ncard hot"><h3>핵심 포인트</h3><p>' + rb(it.point) + '</p></div><div class="ncard"><h3>흔한 실패</h3><ul class="fail">' + it.fail.map(function (f) { return '<li><span class="sym">' + f[0] + '</span><span class="why">' + f[1] + '</span></li>'; }).join("") + '</ul></div></div></div>' +
+      '<div class="ask"><h3>수업에서 물어볼 것</h3>' + it.ask.map(function (q) { return "<p>" + rb(q) + "</p>"; }).join("") + '</div>' +
       '<div class="nums"><b>▣ 수업 때 받아 적을 숫자</b> · ' + it.nums + '</div>' +
       '<div><button type="button" class="btn pri" data-to-cls="' + i + '">이 품목 수업 노트 쓰기 ✎</button></div>' + pager(i, "data-pre-go") + '</div>';
     ls(PRE + "ui.pre", String(i));
@@ -1224,7 +1407,7 @@ footer{font-size:14px;color:var(--mute);border-top:1px solid var(--line2);paddin
       '<div class="ncard"><div class="field"><label>온도 · 시간</label><span class="hint">' + esc(it.nums) + '</span>' + ta(k, "nums", v.nums, "예) 오븐 170℃ 30분", 'style="min-height:150px"') + '</div></div></div>' +
       '<div class="grid2"><div class="ncard hot"><div class="field"><label>셰프님 포인트</label>' + ta(k, "chef", v.chef, "셰프님이 강조한 말", 'style="min-height:110px"') + '</div></div>' +
       '<div class="ncard"><div class="field"><label>실패 원인과 해결</label>' + ta(k, "fails", v.fails, "예) 시트가 갈라짐 → 굽는 시간 2분 줄이기", 'style="min-height:110px"') + '</div></div></div>' +
-      '<div class="ask"><h3>질문과 답</h3>' + it.ask.map(function (q, j) { return '<div class="qa"><label>' + esc(q) + '</label>' + ta(k, "ans." + j, (v.ans || {})[j], "답") + '</div>'; }).join("") +
+      '<div class="ask"><h3>질문과 답</h3>' + it.ask.map(function (q, j) { return '<div class="qa"><label>' + rb(esc(q)) + '</label>' + ta(k, "ans." + j, (v.ans || {})[j], "답") + '</div>'; }).join("") +
       '<div class="field"><label style="font-size:16px">추가 질문 · 메모</label>' + ta(k, "extra", v.extra, "더 물어본 것 · 기억할 것") + '</div></div>' +
       '<div class="ncard"><div class="field"><span class="lbl">📷 레시피 · 완성 사진</span><span class="hint">휴대폰 사진을 줄여서 올려요 (긴 변 1280px)</span>' +
       (ph.length ? '<div class="fgrid">' + ph.map(function (a) { return fileCard(k, "ph", a[0], a[1]); }).join("") + '</div>' : '<div class="empty">아직 사진이 없어요</div>') +
