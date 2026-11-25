@@ -294,6 +294,15 @@ details.fold>summary.fsum>.sech{border-bottom:2px solid var(--line2)}
 .savepill.ok{background:var(--green)}
 .savepill.bad{background:var(--red)}
 .savepill:empty{display:none}
+.ckpics{flex-basis:100%;display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:2px 0 6px 32px}
+.ckpic{position:relative;display:inline-block}
+.ckpic img{width:96px;height:96px;object-fit:cover;border-radius:10px;border:1.5px solid var(--line2);cursor:zoom-in;background:#fff}
+.ckpic .del,.ckpic button{position:absolute;top:-8px;right:-8px}
+.row-ck.withpic{flex-wrap:wrap}
+.lightbox img{max-height:86vh}
+.topbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;background:var(--card);border:1.5px solid var(--line2);border-radius:12px;padding:8px 12px;margin:6px 0 4px}
+.topbar .ver{font-size:14px;color:var(--mute)}
+.topbar .last{font-size:14px;color:var(--mute)}
 .lightbox{position:fixed;inset:0;z-index:60;background:rgba(20,16,12,.9);display:grid;place-items:center;padding:16px}
 .lightbox img{max-width:100%;max-height:82vh;border-radius:10px}
 .lightbox button{position:absolute;top:14px;right:14px}
@@ -424,6 +433,7 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
   <span class="hint">이 휴대폰 · 컴퓨터에 기억돼요. 벤치마킹 평가와 소감은 이 이름의 내 칸에만 저장돼요.</span>
 </section>
 
+<div class="topbar"><span class="ver">버전 <b id="verTag">v1125-1</b> · 적으면 자동 저장 · 지운 줄도 서버에 남아요</span><span class="last" id="lastSave">아직 저장 전</span><button type="button" class="btn pri" id="saveNow">💾 지금 저장 + 백업</button></div>
 <nav class="bigtabs" role="tablist" aria-label="큰 탭">
   <a class="bt" role="tab" href="#tab-pre" data-tab="pre">📗 예습 노트</a>
   <a class="bt" role="tab" href="#tab-note" data-tab="note">✍️ 연수 노트</a>
@@ -1132,6 +1142,7 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
   var stT = null;
   function status(st, err) {
     var el = $("save"); clearTimeout(stT);
+    if (st === "saved") { var ls0 = $("lastSave"); if (ls0) ls0.textContent = "마지막 저장 " + new Date().toLocaleTimeString("ko-KR", { hour: "numeric", minute: "2-digit" }); }
     if (st === "saving") { el.textContent = "저장 중…"; el.className = "savepill"; }
     else if (st === "saved") { el.textContent = "저장됨 ✓"; el.className = "savepill ok"; stT = setTimeout(function () { el.textContent = ""; }, 2500); }
     else if (st === "offline") { el.textContent = "인터넷이 안 돼요 · 적은 건 이 기기에 임시 보관 중이고, 연결되면 자동으로 저장돼요"; el.className = "savepill bad"; }
@@ -1177,7 +1188,15 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
     var r = rowsOf(rows);
     return '<ul class="cks">' + r.map(function (a) {
       var id = a[0], x = a[1];
-      return '<li class="row-ck' + (x.ok ? " done" : "") + '"><input type="checkbox" ' + A(k, path + "." + id + ".ok") + (x.ok ? " checked" : "") + ' aria-label="했어요">' + inp(k, path + "." + id + ".x", x.x, "항목") + delBtn(k, path + "." + id) + '</li>';
+      var pics = "";
+      if (k === K.buy) {
+        var ph = rowsOf(x.ph || {});
+        pics = '<div class="ckpics" data-up="' + esc(k) + '" data-path="' + esc(path + "." + id + ".ph") + '">' +
+          ph.map(function (b) { return '<span class="ckpic"><img data-fk="' + esc(b[1].k) + '" alt="' + esc(x.x || "사진") + ' 사진 · 누르면 크게">' + (me && b[1].by === me ? delBtn(k, path + "." + id + ".ph." + b[0], "✕") : "") + '</span>'; }).join("") +
+          '<input type="hidden" class="upT" value="' + esc((x.x || "").slice(0, 20)) + '"><input type="hidden" class="upM" value="">' +
+          '<label class="btn sm ckadd" for="up_ck_' + esc(id) + '" title="사진 넣기">📷 ' + (ph.length ? "추가" : "사진") + '</label><input type="file" id="up_ck_' + esc(id) + '" class="upF" accept="image/*" hidden><span class="fmsg"></span></div>';
+      }
+      return '<li class="row-ck' + (x.ok ? " done" : "") + (pics ? " withpic" : "") + '"><input type="checkbox" ' + A(k, path + "." + id + ".ok") + (x.ok ? " checked" : "") + ' aria-label="했어요">' + inp(k, path + "." + id + ".x", x.x, "항목") + delBtn(k, path + "." + id) + pics + '</li>';
     }).join("") + '</ul>' + (r.length ? "" : '<div class="empty">아직 없어요</div>') + '<div class="addbar">' + addBtn(k, path, "ck") + '</div>';
   }
 
@@ -1591,6 +1610,25 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
   });
   $("lbClose").onclick = function () { $("lb").hidden = true; };
   $("lb").addEventListener("click", function (e) { if (e.target === $("lb")) $("lb").hidden = true; });
+
+  /* 💾 지금 저장 + 백업: 남은 변경을 바로 보내고, 지금 내용 전체를 백업 문서로 한 벌 더 남김(지우지 않음) */
+  $("saveNow").addEventListener("click", function () {
+    var b = $("saveNow"), lab = $("lastSave");
+    flushAll();
+    var keys = {}; Object.keys(S.srv || {}).concat(Object.keys(SEED), Object.keys(S.pend || {})).forEach(function (k) { if (k.indexOf(PRE) === 0 && k.indexOf(PRE + "file.") !== 0 && k.indexOf(PRE + "bak") !== 0) keys[k] = 1; });
+    var all = {}; Object.keys(keys).forEach(function (k) { all[k] = view(k); });
+    var txt = JSON.stringify({ at: new Date().toISOString(), by: me || "", ver: $("verTag").textContent, data: all });
+    try { localStorage.setItem(PRE + "bak.local", txt); } catch (e) {}
+    if (!db || !online) { lab.textContent = "인터넷이 안 돼서 이 기기에만 백업했어요"; return; }
+    b.disabled = true; lab.textContent = "백업 중…";
+    var d = new Date(), pad = function (n) { return (n < 10 ? "0" : "") + n; };
+    var stamp = d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()) + "-" + pad(d.getHours()) + pad(d.getMinutes()) + pad(d.getSeconds());
+    var parts = [], size = 180000; for (var i = 0; i < txt.length; i += size) parts.push(txt.slice(i, i + size));
+    Promise.all(parts.map(function (part, n) { return db.collection("ops").doc(PRE + "bak." + stamp + ".p" + (n + 1) + "of" + parts.length).set({ v: part, by: "ht", t: firebase.firestore.FieldValue.serverTimestamp() }); }))
+      .then(function () { lab.textContent = "저장 + 백업 완료 " + d.toLocaleTimeString("ko-KR", { hour: "numeric", minute: "2-digit" }); status("saved"); })
+      .catch(function (err) { lab.textContent = "백업하지 못했어요 · 이 기기에는 백업해 뒀어요"; })
+      .then(function () { b.disabled = false; });
+  });
 
   /* 🔎 벤치마킹 · 가게마다 사람별 7항목 /10 */
   var CRIT = ["파사드", "향", "음악", "메뉴", "가격", "플레이팅·디테일", "재미"];
