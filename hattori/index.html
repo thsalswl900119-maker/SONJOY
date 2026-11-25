@@ -681,7 +681,7 @@ body.study .bt[data-tab=plan],body.study #tab-plan,body.study #saveNow,body.stud
   <span class="hint">이 휴대폰 · 컴퓨터에 기억돼요. 벤치마킹 평가와 소감은 이 이름의 내 칸에만 저장돼요.</span>
 </section>
 
-<div class="topbar"><span class="ver">버전 <b id="verTag">v1126-5</b> · 적으면 자동 저장 · 지운 줄도 서버에 남아요</span><span class="last" id="lastSave">아직 저장 전</span><button type="button" class="btn pri" id="saveNow">💾 지금 저장 + 백업</button></div>
+<div class="topbar"><span class="ver">버전 <b id="verTag">v1126-6</b> · 적으면 자동 저장 · 지운 줄도 서버에 남아요</span><span class="last" id="lastSave">아직 저장 전</span><button type="button" class="btn pri" id="saveNow">💾 지금 저장 + 백업</button></div>
 <nav class="bigtabs" role="tablist" aria-label="큰 탭">
   <a class="bt" role="tab" href="#tab-pre" data-tab="pre">📗 예습 노트</a>
   <a class="bt" role="tab" href="#tab-note" data-tab="note">✍️ 연수 노트</a>
@@ -1411,7 +1411,8 @@ body.study .bt[data-tab=plan],body.study #tab-plan,body.study #saveNow,body.stud
   }
   function flushAll() { Object.keys(S.pend).forEach(function (k) { if (!S.timers[k] && !S.busy[k]) flush(k); }); }
   setInterval(function () { if (pendCount()) flushAll(); }, 20000);
-  window.addEventListener("online", flushAll);
+  /* 인터넷 없이 페이지를 연 뒤 연결되면 서버에 다시 붙고 밀린 글을 보냄 (새로고침 안 해도 됨) */
+  window.addEventListener("online", function () { if (!online) boot(); else flushAll(); });
   document.addEventListener("visibilitychange", function () { if (document.visibilityState === "hidden") Object.keys(S.timers).forEach(function (k) { if (S.timers[k]) { clearTimeout(S.timers[k]); flush(k); } }); });
 
   var stT = null;
