@@ -13,6 +13,7 @@
 
 - **링크는 어사이드로 열기(11/20 · 사장님 「무조건 작업 연결할 때 어사이드로 열어줘」)**: 작업 결과 링크(artifact · ops · demo · jpnote · hire 등)를 드릴 때마다 사장님 iMac의 Claude 작업창(send_message · 없으면 iMac 환경에 create_session)에 「어사이드(Aside) 새 탭으로 열기 · 읽기만」을 같이 보낸다. iMac이 꺼져 있으면 그렇다고 알리고 링크만 드림.
 
+- **핫토리 제과연수 = 깃허브 페이지(11/25 사장님 「이거 말고 깃허브에 올린 거 · 지금 작업하는 거 고정」)**: https://thsalswl900119-maker.github.io/SONJOY/hattori/ (`hattori/index.html` · 정리 안내 `hattori/README.md`). 핫토리 연수 얘기가 나오면 artifact 「핫토리 제과연수 노트」(6YXYpgtBpX6k8Coc5B5H19 · 예전 것) 말고 이 페이지를 쓴다.
 - **사장님 1:1 특강 포맷(11/23 · 사장님 「이 포맷을 꼭 기억해서 어떤 업종이 와도」)**: 다른 가게 사장님 수업은 `lecture/README.md` 순서 · 모양 그대로(학원 강의안 PPT형 덱 · 60분 · 진단 → 숫자 → 글쓰기 → 설정 · 대본 · 타이머 · 확인 문제 · 숙제). 예시 `lecture/examples/florist-myeongji.html` · artifact HrhkUmyxH2HsGTRfKRWmm7.
 
 ## 데이터
