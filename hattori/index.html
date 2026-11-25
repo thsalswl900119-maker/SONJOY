@@ -1078,7 +1078,7 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
   SEED[K.files] = { list: {} };
   SEED[K.bench] = { st: rowsOfList("b", BENCH_STORES, ["n", "area", "day"]), ev: {} };
   SEED[K.review] = {};
-  items.forEach(function (it) { SEED[K.cls(it.key)] = { day: "", rec: rowsOfList("i", [["", "", ""], ["", "", ""], ["", "", ""]], ["a", "b", "c"]), steps: "", nums: "", chef: "", fails: "", ans: {}, extra: "", ph: {} }; });
+  items.forEach(function (it) { SEED[K.cls(it.key)] = { day: "", rec: rowsOfList("i", [["", "", ""], ["", "", ""], ["", "", ""]], ["a", "b", "c"]), steps: "", nums: "", chef: "", fails: "", ans: {}, extra: "", cafe: "", ph: {} }; });
   var ALLKEYS = Object.keys(SEED);
 
   /* ---------- 저장소 (서버 + 이 기기 임시 보관) ---------- */
@@ -1409,6 +1409,7 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
       '<div class="ncard"><div class="field"><label>실패 원인과 해결</label>' + ta(k, "fails", v.fails, "예) 시트가 갈라짐 → 굽는 시간 2분 줄이기", 'style="min-height:110px"') + '</div></div></div>' +
       '<div class="ask"><h3>질문과 답</h3>' + it.ask.map(function (q, j) { return '<div class="qa"><label>' + rb(esc(q)) + '</label>' + ta(k, "ans." + j, (v.ans || {})[j], "답") + '</div>'; }).join("") +
       '<div class="field"><label style="font-size:16px">추가 질문 · 메모</label>' + ta(k, "extra", v.extra, "더 물어본 것 · 기억할 것") + '</div></div>' +
+      '<div class="ncard hot"><div class="field"><label>☕ 카페스이에 접목할 것</label><span class="hint" style="color:inherit;opacity:.9">메뉴 · 시즌 · 선물 · 원가 · 직원 교육 쪽으로 바로 해 볼 것</span>' + ta(k, "cafe", v.cafe, "예) 겨울 딸기 쇼트케이크에 시럽 농도 바꿔 보기 · 틴쿠키 답례품 구성", 'style="min-height:110px"') + '</div></div>' +
       '<div class="ncard"><div class="field"><span class="lbl">📷 레시피 · 완성 사진</span><span class="hint">휴대폰 사진을 줄여서 올려요 (긴 변 1280px)</span>' +
       (ph.length ? '<div class="fgrid">' + ph.map(function (a) { return fileCard(k, "ph", a[0], a[1]); }).join("") + '</div>' : '<div class="empty">아직 사진이 없어요</div>') +
       photoForm(k, "ph", "cls") + '</div></div>' +
