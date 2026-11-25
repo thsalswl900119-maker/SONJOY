@@ -681,7 +681,7 @@ body.study .bt[data-tab=plan],body.study #tab-plan,body.study #saveNow,body.stud
   <span class="hint">이 휴대폰 · 컴퓨터에 기억돼요. 벤치마킹 평가와 소감은 이 이름의 내 칸에만 저장돼요.</span>
 </section>
 
-<div class="topbar"><span class="ver">버전 <b id="verTag">v1126-4</b> · 적으면 자동 저장 · 지운 줄도 서버에 남아요</span><span class="last" id="lastSave">아직 저장 전</span><button type="button" class="btn pri" id="saveNow">💾 지금 저장 + 백업</button></div>
+<div class="topbar"><span class="ver">버전 <b id="verTag">v1126-5</b> · 적으면 자동 저장 · 지운 줄도 서버에 남아요</span><span class="last" id="lastSave">아직 저장 전</span><button type="button" class="btn pri" id="saveNow">💾 지금 저장 + 백업</button></div>
 <nav class="bigtabs" role="tablist" aria-label="큰 탭">
   <a class="bt" role="tab" href="#tab-pre" data-tab="pre">📗 예습 노트</a>
   <a class="bt" role="tab" href="#tab-note" data-tab="note">✍️ 연수 노트</a>
@@ -2095,15 +2095,26 @@ body.study .bt[data-tab=plan],body.study #tab-plan,body.study #saveNow,body.stud
       return { blob: dataURLtoBlob(ss.map(function (q) { return q.data().v; }).join("")), n: f.n || "file" };
     });
   }
+  /* 사진은 누르면 받지 않고 화면에서 크게 보기 · PDF 같은 다른 파일만 새 창 */
+  function srcIsImg(src) {
+    var kind = src.slice(0, 2), id = src.slice(2), ty = "";
+    if (kind === "p:") return true;
+    if (kind === "l:") { var r = localFiles.filter(function (f) { return f.id === id; })[0]; ty = r ? r.ty : ""; }
+    if (kind === "s:") { var f = (view(K.files).list || {})[id]; ty = f ? f.ty : ""; }
+    return /^image\//i.test(ty || "");
+  }
+  function showBig(url) { var lb = $("lb"); lb.querySelector("img").src = url; lb.hidden = false; }
   function openFile(src, mode, btn) {
-    var w = mode === "open" ? window.open("", "_blank") : null, old = btn.textContent; btn.disabled = true; btn.textContent = "여는 중…";
+    var img = mode === "open" && srcIsImg(src);
+    var w = mode === "open" && !img ? window.open("", "_blank") : null, old = btn.textContent; btn.disabled = true; if (!btn.querySelector("img")) btn.textContent = "여는 중…";
     fetchSrc(src).then(function (r) {
       var url = URL.createObjectURL(r.blob);
+      if (img) { showBig(url); return; }
       if (mode === "dl") { var a = document.createElement("a"); a.href = url; a.download = r.n; document.body.appendChild(a); a.click(); a.remove(); }
       else if (w) w.location.href = url; else window.open(url, "_blank");
       setTimeout(function () { URL.revokeObjectURL(url); }, 120000);
     }).catch(function (e) { if (w) w.close(); alert("파일을 열지 못했어요 · " + (e && e.message ? e.message : "")); })
-      .then(function () { btn.disabled = false; btn.textContent = old; });
+      .then(function () { btn.disabled = false; if (!btn.querySelector("img")) btn.textContent = old; });
   }
   function frow(o) {
     return '<div class="frow' + (o.local ? " local" : "") + '">' + (o.thumb || '<span class="fic">' + o.icon + '</span>') +
@@ -2282,6 +2293,7 @@ body.study .bt[data-tab=plan],body.study #tab-plan,body.study #saveNow,body.stud
     var lb = $("lb"); lb.querySelector("img").src = im.src; lb.hidden = false;
   });
   $("lbClose").onclick = function () { $("lb").hidden = true; };
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !$("lb").hidden) $("lb").hidden = true; });
   $("lb").addEventListener("click", function (e) { if (e.target === $("lb")) $("lb").hidden = true; });
 
   /* 💾 지금 저장 + 백업: 남은 변경을 바로 보내고, 지금 내용 전체를 백업 문서로 한 벌 더 남김(지우지 않음) */
