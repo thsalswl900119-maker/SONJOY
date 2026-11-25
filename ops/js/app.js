@@ -3899,6 +3899,12 @@
             var val = (av || "—") + " → " + (bv || "—") +
                       (diff && diff !== "—" ? " (" + diff + ")" : "");
             var dcls = /\bup\b/.test(tr.querySelector(".cdiff").className) ? " up" : /\bdown\b/.test(tr.querySelector(".cdiff").className) ? " down" : "";
+            if (formId === "mtForm") {   /* 11/25 비교표 줄 카드: 이름 · 차이 딱지 / 이번 달 큰 숫자 · 작년 · 값이 없으면 메모 */
+              var emp = !av && !bv, key = /총합계|일 매출/.test(name);
+              rows += '<tr class="rpr' + dcls + (key ? " rpkey" : "") + (emp ? " rpempty" : "") + '"><th>' + esc(name) + "</th><td>" + esc(av || "—") + "</td><td>" + esc(bv || "—") +
+                      '</td><td class="rpdiff' + dcls + '">' + (emp ? "✏ 아직 안 적음" : esc(diff && diff !== "—" ? diff : "")) + "</td>" +
+                      (emp && mv ? '<td class="rpmemo">' + esc(mv) + "</td>" : "") + "</tr>";
+            } else
             rows += "<tr><th>" + esc(name) + "</th><td>" + esc(av || "—") + "</td><td>" + esc(bv || "—") +
                     '</td><td class="rpdiff' + dcls + '">' + esc(diff && diff !== "—" ? diff : "") + "</td></tr>";
             lines.push(name + " " + val + (mv ? " — " + mv : ""));
@@ -3906,7 +3912,7 @@
           if (!rows) return;
           any = true;
           var ttl = wrap.querySelector(".cmph").textContent;
-          html += '<div class="rpsec"><h4>' + esc(ttl) + "</h4>" +
+          html += '<div class="rpsec rpsecT"><h4>' + esc(ttl) + "</h4>" +
                   '<table class="rpnums rpcmp"><tr class="rpch"><th></th><td>작년</td><td>이번 달</td><td>차이</td></tr>' + rows + "</table></div>";
           text.push("");
           text.push("[" + ttl + "]");
