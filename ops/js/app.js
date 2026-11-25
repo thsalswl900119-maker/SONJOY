@@ -4051,7 +4051,7 @@
         secN++;
         var tone = "", ico = "";
         if (formId === "mtForm") {
-          var TN = [[/매출/, "money", "💰"], [/유입/, "flow", "🔍"], [/컴플레인/, "warn", "⚠️"], [/응대/, "care", "🙋"], [/시스템/, "sys", "⚙️"], [/맛/, "taste", "🍓"], [/잘한/, "good", "👍"], [/개선/, "fix", "🛠"], [/목표/, "goal", "🎯"], [/준비/, "prep", "📦"]];
+          var TN = [[/매출/, "money", "💰"], [/유입/, "flow", "🔍"], [/컴플레인/, "warn", "⚠️"], [/응대/, "care", "🙋"], [/시스템/, "sys", "⚙️"], [/맛/, "taste", "🍓"], [/잘한/, "good", "👍"], [/개선/, "fix", "🛠"], [/전략/, "goal", "🧭"], [/목표/, "goal", "🎯"], [/준비/, "prep", "📦"]];
           TN.some(function (t) { if (t[0].test(ttl)) { tone = " mt-" + t[1]; ico = /^\W/.test(ttl.trim()) && !/^[가-힣]/.test(ttl.trim()) ? "" : t[2] + " "; return true; } });
         }
         html += '<div class="rpsec' + tone + '"><h4>' + (formId === "mtForm" ? '<em class="mtno">' + secN + "</em>" : "") + esc(ico + ttl) + "</h4>" + items + "</div>";
