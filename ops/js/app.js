@@ -3271,6 +3271,7 @@
     var PERDAY = ["1", "2", "7", "3", "4", "5", "10", "11", "12", "13", "14"];   // 하루 평균으로 비교할 줄 (금액 · 개수)
 
     function recalc() {
+      setTimeout(function () { if (window.__CS_MTREP) window.__CS_MTREP(); }, 0);   /* 11/25 표 숫자가 바뀌면 회의록 미리보기 「한눈에」 카드도 */
       // 합계행 채우기
       ["sales"].forEach(function (t) {
         ["prev", "now"].forEach(function (col) {
@@ -3322,7 +3323,7 @@
         var merged = false;
         if (id === "2" && b !== null) {
           var cy7 = num((document.querySelector('.cin[data-k="cy7"]') || {}).value), cn7 = num((document.querySelector('.cin[data-k="cn7"]') || {}).value);
-          if (cy7 === null && cn7) { b += cn7; merged = true; }
+          if ((cy7 === null || cy7 === 0) && cn7) { b += cn7; merged = true; }   /* 11/25 작년 쿠팡 0 으로 채워도 같게 */
         }
         if (a === null || b === null) { td.textContent = "—"; td.className = "cdiff"; td.title = ""; return; }
         var d = b - a;
@@ -3831,6 +3832,44 @@
       return String(v).replace(/\*\*([\s\S]+?)\*\*/g, "【$1】").replace(/__([\s\S]+?)__/g, "$1").split("\n")
         .map(function (ln) { return ln.replace(/^\s*[★⭐]\s*/, "⭐ ").replace(/^\s*[!！]\s*/, "❗ "); }).join("\n");
     }
+    // 11/25 사장님 「전체를 좀 눈에 들어오게 · 딱 보고 가독성 있게」 — 월말회의 미리보기만: 한눈에 카드 · 줄 앞 「· 」 정리 · 숫자 굵게 · ± 색 · (제안) 상자 · 【소제목】
+    function mtNumHtml(h) {
+      return h.split(/(<[^>]+>)/).map(function (seg) {
+        if (!seg || seg.charAt(0) === "<") return seg;
+        return seg
+          .replace(/([+＋])(\d[\d,.]*%?)/g, '<em class="mtup">$1$2</em>')
+          .replace(/(^|[\s(])([−\-])(\d[\d,.]*%?)/g, '$1<em class="mtdn">$2$3</em>')
+          .replace(/(\d{1,3}(?:,\d{3})+원?|\d+(?:\.\d+)?만(?:원)?|\d+(?:\.\d+)?%)(?![^<]*<\/em>)/g, '<strong class="mtn">$1</strong>');
+      }).join("");
+    }
+    function mtLines(ls) {
+      var raw = ls.map(function (l) { return l.replace(/^\s*[·•\-–]\s+/, ""); });
+      var hs = markHtml(raw);
+      return hs.map(function (h, i) {
+        var r = raw[i];
+        if (/^\(제안\)/.test(r)) return '<i class="rpl mtsug"><em class="mtsugt">제안</em>' + mtNumHtml(h.replace(/^\(제안\)\s*/, "")) + "</i>";
+        var m = r.match(/^【([^】]+)】\s*(.*)$/);
+        if (m) return '<i class="rpl mtsub"><em class="mtsubt">' + esc(m[1]) + "</em>" + (m[2] ? " " + mtNumHtml(esc(m[2])) : "") + "</i>";
+        if (/^※/.test(r)) return '<i class="rpl mtnote">' + mtNumHtml(h) + "</i>";
+        return '<i class="rpl">' + mtNumHtml(h) + "</i>";
+      }).join("");
+    }
+    function mtKpi() {
+      function v(k) { var el = document.querySelector('.cin[data-k="' + k + '"]') || form.querySelector('[data-k="' + k + '"]'); return el ? String(el.value || "").trim() : ""; }
+      function d(id) { var td = document.querySelector('.cdiff[data-for="' + id + '"]'); if (!td) return { t: "", c: "" }; var t = td.textContent.trim(); return { t: t === "—" ? "" : t, c: /\bup\b/.test(td.className) ? "up" : /\bdown\b/.test(td.className) ? "down" : "" }; }
+      var cards = [];
+      function card(lab, val, unit, sub, cls) { if (!val) return; cards.push('<div class="mtk ' + (cls || "") + '"><span class="mtkl">' + esc(lab) + '</span><b class="mtkv">' + esc(val) + '<small>' + esc(unit || "") + '</small></b>' + (sub ? '<span class="mtks">' + esc(sub) + "</span>" : "") + "</div>"); }
+      var t5 = v("cn5"), dd = v("cn25"), d6 = d("6");
+      card("매출 합계", t5, "원", dd ? "영업 " + dd + "일" : "", "wide");
+      card("하루 매출", v("cn6"), "원", d6.t ? "작년보다 " + d6.t : "", d6.c);
+      [["10", "에그타르트"], ["11", "조각케이크"], ["12", "홀케이크"], ["13", "별조각"]].forEach(function (x) {
+        var dx = d(x[0]); card(x[1], v("cn" + x[0]), "개", dx.t ? "작년 " + dx.t : "", dx.c);
+      });
+      var w = v("ag344"), c = v("ag320"), r = v("ag324");
+      if (w) card("폐기 · 서비스", w.replace(/\B(?=(\d{3})+(?!\d))/g, ","), "원", "판매가 기준", "warn");
+      if (c) card("컴플레인", c, "건", r ? "환불 " + r.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "원" : "", "warn");
+      return cards.length ? '<div class="mtkpi"><div class="mtkh">📊 이 달 한눈에</div><div class="mtkg">' + cards.join("") + "</div></div>" : "";
+    }
     function report() {
       var when = mEl.value || thisMonth();
       var head = when.replace("-", "년 ") + "월";
@@ -3839,6 +3878,7 @@
                  (whoEl && whoEl.value ? " · " + esc(whoEl.value) : "") +
                  esc(rankEl && rankEl.value.trim() ? " · " + rankEl.value.trim() : "") +
                  '</div>';
+      if (formId === "mtForm") html += mtKpi();
       var rank = rankEl && rankEl.value.trim() ? " · " + rankEl.value.trim() : "";
       var text = ["[" + title + "] " + head +
                   (whoEl && whoEl.value ? " · " + whoEl.value : "") + rank];
@@ -3936,6 +3976,7 @@
         }
       }
 
+      var secN = 0;
       form.querySelectorAll(".fsec").forEach(function (sec) {
         var items = "", lines = [];
         sec.querySelectorAll(".frow").forEach(function (row) {
@@ -3945,14 +3986,15 @@
           var name = row.querySelector(".flab span").textContent;
           var ls = splitLines(v), hs = markHtml(ls);
           items += '<div class="rpitem"><b>' + esc(name) + "</b><span>" +
-                   (ls.length > 1 ? hs.map(function (l) { return '<i class="rpl">' + l + "</i>"; }).join("") : hs[0]) +
+                   (formId === "mtForm" ? mtLines(ls) : ls.length > 1 ? hs.map(function (l) { return '<i class="rpl">' + l + "</i>"; }).join("") : hs[0]) +
                    "</span></div>";
           lines.push("· " + name + ": " + oneLine(markPlain(v)));
         });
         if (!items) return;
         any = true;
         var ttl = sec.querySelector(".fsh").textContent;
-        html += '<div class="rpsec"><h4>' + esc(ttl) + "</h4>" + items + "</div>";
+        secN++;
+        html += '<div class="rpsec"><h4>' + (formId === "mtForm" ? '<em class="mtno">' + secN + "</em>" : "") + esc(ttl) + "</h4>" + items + "</div>";
         text.push("");
         text.push("[" + ttl + "]");
         text.push(lines.join(NL));
@@ -3966,6 +4008,7 @@
     mEl.value = thisMonth();
     load();
     report();
+    if (formId === "mtForm") { var mtRepT = 0; window.__CS_MTREP = function () { clearTimeout(mtRepT); mtRepT = setTimeout(report, 250); }; }
     mEl.addEventListener("change", function () { load(); report(); });
     if (whoEl) whoEl.addEventListener("change", function () { load(); report(); });
     ins.forEach(function (el) {
