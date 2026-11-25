@@ -635,7 +635,7 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
   <span class="hint">이 휴대폰 · 컴퓨터에 기억돼요. 벤치마킹 평가와 소감은 이 이름의 내 칸에만 저장돼요.</span>
 </section>
 
-<div class="topbar"><span class="ver">버전 <b id="verTag">v1125-9</b> · 적으면 자동 저장 · 지운 줄도 서버에 남아요</span><span class="last" id="lastSave">아직 저장 전</span><button type="button" class="btn pri" id="saveNow">💾 지금 저장 + 백업</button></div>
+<div class="topbar"><span class="ver">버전 <b id="verTag">v1125-10</b> · 적으면 자동 저장 · 지운 줄도 서버에 남아요</span><span class="last" id="lastSave">아직 저장 전</span><button type="button" class="btn pri" id="saveNow">💾 지금 저장 + 백업</button></div>
 <nav class="bigtabs" role="tablist" aria-label="큰 탭">
   <a class="bt" role="tab" href="#tab-pre" data-tab="pre">📗 예습 노트</a>
   <a class="bt" role="tab" href="#tab-note" data-tab="note">✍️ 연수 노트</a>
@@ -1731,7 +1731,7 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
   });
 
   /* ④ 날짜별 일정 · 잠금(잘못 눌러 바뀌는 것 막기) · 「★ 꼭 해야 할 일 및 사기」는 잠금과 상관없이 체크 · 고치기 */
-  var locked = true, openDays = {}, openMore = {};
+  var locked = false, openDays = {}, openMore = {}; /* 일정은 늘 바로 고치기 (잠금 없앰 · 2026-11-25) */
   (function () { var t = todayDay(); openDays[t || 1] = true; })();
   function rowPlace(n, id, r) {
     if (r.pl !== undefined && r.pl !== "") return r.pl;
@@ -1748,7 +1748,7 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
     }).join("") + '</nav>';
     var d = DAYS[curDay - 1] || DAYS[0];
     var k = K.plan(d.n), v = view(k), rows = rowsOf(v.rows), ro = locked ? "readonly" : "";
-    el.innerHTML = tabs + '<div class="lockbar' + (locked ? "" : " open") + '"><button type="button" class="btn ' + (locked ? "" : "pri") + '" id="lockBtn" aria-pressed="' + (!locked) + '">' + (locked ? "✎ 일정 수정하기" : "✔ 수정 끝 · 잠그기") + '</button><span class="hint">' + (locked ? "🔒 일정 표는 잘못 눌러 바뀌지 않게 잠겨 있어요 · 「★ 꼭 해야 할 일 및 사기」는 바로 체크 · 고칠 수 있어요" : "지금 고칠 수 있어요 · 고친 칸은 바로 저장돼요") + '</span><a class="btn sm" href="https://maps.app.goo.gl/dv9QNdypMGAmfNXG8" target="_blank" rel="noopener">🗺 구글 지도 목록 ↗</a></div>' +
+    el.innerHTML = tabs + '<div class="lockbar open"><span class="hint">✎ 칸을 눌러 바로 고쳐요 · 고친 칸은 바로 저장돼요</span><a class="btn sm" href="https://maps.app.goo.gl/dv9QNdypMGAmfNXG8" target="_blank" rel="noopener">🗺 구글 지도 목록 ↗</a></div>' +
       '<div class="dayhead"><b>' + d.d + ' ' + d.n + '일차</b><span>' + d.title + ' · 일정 ' + rows.length + '개</span>' + (td === d.n ? '<span class="today">오늘</span>' : "") + '</div>' +
       '<div class="dbody">' +
       '<div class="must mustck"><b>★ 꼭 해야 할 일 및 사기</b><span class="hint">줄마다 메모 · 📷 사진 · 다 하면 체크</span>' + ckList(k, "must", v.must, { pics: true, more: true, noMap: true, kind: "must" }) + '</div>' +
