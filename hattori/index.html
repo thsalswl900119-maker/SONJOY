@@ -658,6 +658,8 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
 .ptab td{padding:11px 12px;border-bottom:1px solid #EFE6D6;vertical-align:top;line-height:1.5;word-break:keep-all;overflow-wrap:anywhere}
 .ptab tr.phit td{background:#FFE9A8;transition:background 2s}
 .ptab .pd{display:block;color:var(--ink2);font-size:13.5px;margin-top:3px}
+/* 같이 공부하는 분 공유용 (?study) · 예습 · 이론만 · 카페스이 관련은 숨김 */
+body.study .bt[data-tab=note],body.study .bt[data-tab=plan],body.study #tab-note,body.study #tab-plan,body.study #saveNow,body.study #lastSave,body.study #meBox,body.study #nameCard,body.study [data-to-cls],body.study .st-hide{display:none!important}
 </style>
 </head>
 <body>
@@ -665,7 +667,7 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
 
 <header class="top">
   <div>
-    <span class="kick">카페스이 · 빠아빠 4기</span>
+    <span class="kick" id="kick">카페스이 · 빠아빠 4기</span>
     <h1>핫토리 제과연수 2026</h1>
     <p class="sub">도쿄 핫토리영양전문학교 · 2026. 11. 30 ~ 12. 5 · 수업 12/1 ~ 3 · 일본 디저트 9가지</p>
   </div>
@@ -679,7 +681,7 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
   <span class="hint">이 휴대폰 · 컴퓨터에 기억돼요. 벤치마킹 평가와 소감은 이 이름의 내 칸에만 저장돼요.</span>
 </section>
 
-<div class="topbar"><span class="ver">버전 <b id="verTag">v1125-13</b> · 적으면 자동 저장 · 지운 줄도 서버에 남아요</span><span class="last" id="lastSave">아직 저장 전</span><button type="button" class="btn pri" id="saveNow">💾 지금 저장 + 백업</button></div>
+<div class="topbar"><span class="ver">버전 <b id="verTag">v1126-1</b> · 적으면 자동 저장 · 지운 줄도 서버에 남아요</span><span class="last" id="lastSave">아직 저장 전</span><button type="button" class="btn pri" id="saveNow">💾 지금 저장 + 백업</button></div>
 <nav class="bigtabs" role="tablist" aria-label="큰 탭">
   <a class="bt" role="tab" href="#tab-pre" data-tab="pre">📗 예습 노트</a>
   <a class="bt" role="tab" href="#tab-note" data-tab="note">✍️ 연수 노트</a>
@@ -740,7 +742,7 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
 <!-- ==================== 📐 이론 정리 (올해 기본 이론 + 작년 2025 제빵 이론) ==================== -->
 <div class="tabpane note" id="tab-theory" role="tabpanel" hidden>
   <nav class="jump" aria-label="이론 정리 안에서 이동">
-    <a href="#p1">분류 · 거품법 · 가루</a><a href="#p2">재료 역할</a><a href="#lastTheory">작년 제빵 이론</a><a href="#l4">카시빵 · 하드빵</a><a href="#l5">배운 빵</a><a href="#l6">반죽법</a><a href="#l7">일본 밀가루</a><a href="#l8">재료</a><a href="#l9">이스트</a><a href="#l10">물 · 글루텐</a><a href="#l11">베이커스 %</a><a href="#l12">빵 레시피</a><a href="#lastRec">작년 연수 기록</a>
+    <a href="#p1">분류 · 거품법 · 가루</a><a href="#p2">재료 역할</a><a href="#lastTheory">작년 제빵 이론</a><a href="#l4">카시빵 · 하드빵</a><a href="#l5">배운 빵</a><a href="#l6">반죽법</a><a href="#l7">일본 밀가루</a><a href="#l8">재료</a><a href="#l9">이스트</a><a href="#l10">물 · 글루텐</a><a href="#l11">베이커스 %</a><a href="#l12">빵 레시피</a><a href="#lastRec" class="st-hide">작년 연수 기록</a>
   </nav>
   <div class="book pre"><span class="lab">THEORY</span><h2>이론 정리</h2><p>올해 제과 기본 이론과, 작년 제빵 연수에서 정리해 둔 이론을 한곳에 모았어요.</p></div>
   <div class="part" id="p1"><span class="pn">기본 이론 1</span><h2>분류 · 거품법 · 가루</h2><p>9품목이 어떤 과자인지, 어떤 방법으로 만드는지</p></div>
@@ -953,10 +955,10 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
     <div class="tbl"><table style="min-width:640px">
       <thead><tr><th>빵 이름</th><th>모양</th><th>특징 (식감 · 풍미 · 공법)</th><th>노션</th></tr></thead>
       <tbody id="lastRecipes"></tbody></table></div>
-    <p class="hint"><a href="https://app.notion.com/p/2bb69763f923809e941cd1b686192867" target="_blank" rel="noopener">레시피 자료 모음 (노션) ↗</a></p>
+    <p class="hint st-hide"><a href="https://app.notion.com/p/2bb69763f923809e941cd1b686192867" target="_blank" rel="noopener">레시피 자료 모음 (노션) ↗</a></p>
   </section>
-  <div class="part" id="lastRec"><span class="pn">2025 제빵</span><h2>작년 연수 기록</h2><p>모집 내용 · 미리 준비한 것 · 25년 피드백</p></div>
-  <section class="sec" id="l1">
+  <div class="part st-hide" id="lastRec"><span class="pn">2025 제빵</span><h2>작년 연수 기록</h2><p>모집 내용 · 미리 준비한 것 · 25년 피드백</p></div>
+  <section class="sec st-hide" id="l1">
     <div class="sech"><span class="num">1</span><h2>도쿄 핫토리 연수 3기 모집 내용</h2></div>
     <div class="grid2">
       <div class="card"><ul>
@@ -973,13 +975,13 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
     </div>
   </section>
 
-  <section class="sec" id="l2">
+  <section class="sec st-hide" id="l2">
     <div class="sech"><span class="num">2</span><h2>작년에 미리 준비한 것</h2></div>
     <div class="warn"><p>▪️ 비짓재팬 QR 캡처 · 기내 액체류 100ml 이하 · 보조배터리는 기내로</p><p>▪️ 배터리 분리 안 되는 무선 고데기 반입 불가 · 컵 형태 곤약젤리는 한국 반입 불가</p></div>
     <div class="card"><p>왕복 항공권 캡처 · 로밍 · 해외 사용 카드(여권 명의자와 같아야 함) · 여행자보험 · 비짓재팬 QR · 일본 교통카드 · 환전 · 여권 · 개인 짐 · 쉐프복 3벌 · 멀티탭 / 돼지코 · 일정 최종 점검</p></div>
   </section>
 
-  <section class="sec" id="l3">
+  <section class="sec st-hide" id="l3">
     <div class="sech"><span class="num">3</span><h2>25년의 피드백 · 좋은 것 / 안 좋은 것</h2></div>
     <div class="card"><ul>
       <li>매일 숏츠로 공부 영상 올리기 (인스타 + 숏츠)</li>
@@ -1084,7 +1086,7 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
 
 
 <footer>
-  <span>정리 · 손조이 (카페스이) · 같이 쓰는 페이지라 개인정보(숙소 주소 · 카드 · 여권 번호 등)는 적지 말아 주세요</span>
+  <span id="footNote">정리 · 손조이 (카페스이) · 같이 쓰는 페이지라 개인정보(숙소 주소 · 카드 · 여권 번호 등)는 적지 말아 주세요</span>
   <span>커리큘럼 출처 · <a href="https://blog.naver.com/mainssang/224271512975" target="_blank" rel="noopener">빠아빠 마스터클래스 4기 모집 안내</a></span>
 </footer>
 </div>
@@ -1628,8 +1630,15 @@ details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
 
   /* ---------- 큰 탭 · #tab-이름 ---------- */
   var TABS = ["pre", "note", "theory", "plan"];
+  var STUDY = /[?&]study\b/.test(location.search);
+  if (STUDY) {
+    document.body.classList.add("study");
+    $("kick").textContent = "빠아빠 4기 · 같이 공부하는 노트";
+    $("footNote").textContent = "예습 · 이론 공유용 화면이에요 · 수업에서 다르게 배우면 수업 내용이 기준이에요";
+  }
   function showTab(name, keepScroll) {
     if (TABS.indexOf(name) < 0) name = "pre";
+    if (STUDY && name !== "pre" && name !== "theory") name = "pre";
     if (name === "plan") paintLock();
     TABS.forEach(function (t) { $("tab-" + t).hidden = t !== name; });
     document.querySelectorAll(".bt").forEach(function (b) { b.setAttribute("aria-selected", String(b.dataset.tab === name)); });
