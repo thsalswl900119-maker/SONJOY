@@ -1,0 +1,2028 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>핫토리 제과연수 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gaegu:wght@700&family=Noto+Sans+JP:wght@400;700&family=Noto+Sans+KR:wght@400;600;800&display=swap">
+<style>
+/* 핫토리 제과연수 2026 · 카페스이
+   크림 · 브라운(일정 · 준비) + 코럴 · 크림(연수 노트) · 휴대폰 먼저
+   본문 14px 이상 · 입력 16px · 대비 4.5:1 이상 · 단어 단위 줄바꿈 · 640px 이하 카드형 */
+:root{
+  /* 크리스마스 그림 톤 · 크림 종이 · 크리스마스 빨강 · 호랑가시 초록 · 나무 갈색 · 금색 별 · 볼터치 분홍 */
+  --bg:#F7F0E3;--card:#FFFDF8;--raise:#EFE4D0;--ink:#3B2E28;--ink2:#5A4A40;--mute:#6A574B;
+  --line:#DCCDB4;--line2:#C9B396;--br:#A33A32;--br2:#8A5A3B;--brbg:#FBF0D2;
+  --red:#A33A32;--redbg:#F6DCD6;--green:#4C7546;--greenbg:#E3EDDC;
+  --coral:#B8423A;--coral-d:#A33A32;--coral-l:#F6DCD6;--cream:#F7F0E3;--panel:#FFFDF8;--class:#4C7546;--hl:#FBF0D2;
+  --gold:#E3B04B;--goldbg:#FBF0D2;--pink:#F2B8B5;--wood:#8A5A3B;
+  --kr:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --jp:"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;
+  --hd:"Gaegu","Noto Sans KR",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--kr);font-size:16px;line-height:1.65;
+  word-break:keep-all;overflow-wrap:anywhere;-webkit-text-size-adjust:100%;
+  padding:0 max(16px,env(safe-area-inset-right,0px)) 90px max(16px,env(safe-area-inset-left,0px))}
+.wrap{max-width:980px;margin:0 auto}
+h1,h2,h3{margin:0;line-height:1.3;text-wrap:balance}
+p{margin:0}
+ul,ol{margin:0;padding-left:22px}
+li+li{margin-top:5px}
+a{color:var(--br2)}
+button{font:inherit;cursor:pointer}
+input,select,textarea{font:inherit;font-size:16px;color:var(--ink);background:#fff;border:1.5px solid var(--line2);border-radius:10px;padding:9px 11px;width:100%;line-height:1.5}
+textarea{resize:vertical;min-height:46px}
+input[readonly],textarea[readonly]{background:var(--raise);border-color:var(--line)}
+input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid var(--br2);outline-offset:2px}
+input[type=checkbox]{width:22px;height:22px;padding:0;accent-color:var(--br);flex:none}
+.jp{font-family:var(--jp)}
+
+/* 맨 위 */
+.top{padding:20px 0 12px;display:grid;gap:12px}
+.kick{display:inline-block;font-size:14px;font-weight:700;color:#fff;background:var(--br);border-radius:999px;padding:3px 12px}
+.top h1{font-family:var(--hd);font-weight:400;font-size:clamp(32px,7vw,48px);color:var(--br);margin-top:6px}
+.top .sub{font-size:15px;color:var(--ink2)}
+.dd{display:flex;flex-wrap:wrap;gap:8px}
+.ddc{background:var(--card);border:1.5px solid var(--line2);border-radius:14px;padding:8px 14px;display:grid;min-width:104px}
+.ddc span{font-size:14px;color:var(--mute);font-weight:600}
+.ddc b{font-family:var(--hd);font-weight:400;font-size:24px;color:var(--br)}
+.ddc.now{background:var(--br);border-color:var(--br)}
+.ddc.now span,.ddc.now b{color:#fff}
+.me{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:15px}
+.me b{color:var(--br2)}
+.namecard{background:var(--hl);border:1.5px solid #E2C96A;border-radius:14px;padding:14px 16px;display:grid;gap:8px;margin-bottom:12px}
+.namecard .row{display:flex;gap:8px;flex-wrap:wrap}
+.namecard input{flex:1 1 180px;width:auto}
+
+/* 큰 탭 */
+.bigtabs{position:sticky;top:0;z-index:20;background:var(--bg);display:flex;gap:6px;padding:10px 0 8px;overflow-x:auto;border-bottom:2px solid var(--line2)}
+.bt{flex:none;text-decoration:none;font-family:var(--hd);font-size:18px;color:var(--br);background:var(--card);border:1.5px solid var(--line2);border-radius:12px;padding:9px 16px}
+.bt[aria-selected="true"]{background:var(--br);border-color:var(--br);color:#fff}
+.jump{display:flex;gap:6px;overflow-x:auto;padding:10px 0;margin-bottom:6px}
+.jump a{flex:none;text-decoration:none;font-size:14.5px;font-weight:700;color:var(--br);background:var(--card);border:1px solid var(--line2);border-radius:999px;padding:5px 12px}
+.tabpane{display:grid;gap:22px;padding-top:6px}
+
+/* 공통 */
+.btn{border:1.5px solid var(--line2);background:var(--card);color:var(--br);border-radius:10px;padding:8px 14px;font-weight:700;font-size:15px}
+.btn.pri{background:var(--br);border-color:var(--br);color:#fff}
+.btn.sm{padding:6px 11px;font-size:14px}
+.btn:disabled{opacity:.5;cursor:default}
+.x{flex:none;width:36px;height:36px;border:0;background:transparent;color:var(--mute);font-size:20px;border-radius:8px}
+.x.arm{background:var(--redbg);color:var(--red);font-size:13px;font-weight:700;width:auto;padding:0 8px}
+.hint{font-size:14px;color:var(--mute)}
+.empty{color:var(--mute);font-size:15px;background:var(--raise);border:1.5px dashed var(--line2);border-radius:10px;padding:10px 14px}
+.addbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;gap:10px;min-width:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:14px}
+.tbl{overflow-x:auto;border-radius:12px;border:1px solid var(--line);background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--line)}
+th{background:var(--raise);color:var(--ink);font-weight:800;font-size:14.5px;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td:first-child{font-weight:800}
+
+/* ===== 일정 · 준비 (노션 순서) ===== */
+.sec{display:grid;gap:12px;scroll-margin-top:64px}
+.sech{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 12px;border-bottom:2px solid var(--line2);padding-bottom:6px}
+.sech h2{font-family:var(--hd);font-weight:400;font-size:clamp(23px,4.6vw,28px);color:var(--br)}
+.sech .num{font-family:var(--hd);color:#fff;background:var(--br);border-radius:8px;padding:0 9px;font-size:18px}
+.sech small{font-size:14px;color:var(--mute)}
+.warn{background:var(--redbg);border:1.5px solid #E1B2A4;border-radius:12px;padding:12px 14px;display:grid;gap:3px;color:var(--red);font-weight:700;font-size:15px}
+.cks{list-style:none;padding:0;display:grid;gap:6px}
+.cks li{margin:0;display:flex;gap:8px;align-items:center}
+.cks li input[type=text]{flex:1 1 auto;min-width:0}
+.row-ck.done input[type=text]{text-decoration:line-through;color:var(--mute);background:var(--raise)}
+.cur{display:grid;gap:10px}
+.cur .ci{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--br2);border-radius:12px;padding:12px 14px;display:grid;gap:2px}
+.cur .ci b{font-size:16.5px}
+.cur .ci span{font-size:15px;color:var(--ink2)}
+.callout{background:var(--brbg);border:1px solid #E5CFA8;border-radius:12px;padding:12px 14px;font-size:15px;display:grid;gap:4px}
+details.day{background:var(--card);border:1px solid var(--line);border-radius:14px}
+details.day>summary{cursor:pointer;list-style:none;padding:13px 16px;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+details.day>summary::-webkit-details-marker{display:none}
+details.day>summary::before{content:"▸";color:var(--br2);font-size:14px;transition:transform .15s}
+details.day[open]>summary::before{transform:rotate(90deg)}
+details.day>summary b{font-family:var(--hd);font-weight:400;font-size:21px;color:var(--br)}
+details.day>summary small{font-size:14.5px;color:var(--mute);font-weight:700}
+details.day>summary .today{background:var(--red);color:#fff;border-radius:6px;padding:0 7px;font-size:13.5px;font-weight:700}
+.dbody{padding:0 16px 16px;display:grid;gap:10px;min-width:0}
+.lockbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:var(--card);border:1.5px solid var(--line2);border-radius:12px;padding:10px 14px}
+.lockbar.open{border-color:var(--red);background:var(--redbg)}
+.trow{display:grid;gap:6px;align-items:start}
+.trow.plan{grid-template-columns:96px minmax(0,1.1fr) minmax(0,1.5fr) 36px}
+.trow.plan.ro{grid-template-columns:96px minmax(0,1.1fr) minmax(0,1.5fr)}
+.trow.cost{grid-template-columns:minmax(0,1.4fr) 130px minmax(0,1fr) 36px}
+.trow.rec{grid-template-columns:minmax(0,2fr) minmax(0,1fr) minmax(0,1fr) 36px}
+.trow.head span{font-size:14px;font-weight:700;color:var(--mute);padding-left:4px}
+.rows{display:grid;gap:8px}
+.tot{display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:space-between;align-items:center;font-size:16px}
+.tot b{font-family:var(--hd);font-weight:400;font-size:20px;color:var(--br)}
+.grand{background:var(--br);color:#fff;border-radius:14px;padding:14px 16px;display:flex;flex-wrap:wrap;gap:6px 18px;align-items:baseline}
+.grand b{font-family:var(--hd);font-weight:400;font-size:26px}
+.grand span{font-size:15px}
+.startbox{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.startbox input{max-width:200px}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:12px}
+.fcard{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;gap:6px;align-content:start;min-width:0}
+.fcard img{width:100%;border-radius:8px;display:block;background:var(--raise);min-height:90px;object-fit:cover;max-height:260px;cursor:zoom-in}
+.fcard .t{font-weight:800}
+.fcard .m{font-size:14.5px;color:var(--ink2)}
+.fcard .by{font-size:14px;color:var(--mute);display:flex;justify-content:space-between;align-items:center;gap:6px}
+.fform{display:grid;gap:8px}
+.fform .r2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:8px}
+.fmsg{font-size:14.5px;color:var(--mute)}
+.fmsg.bad{color:var(--red);font-weight:700}
+.must{background:#FFF7DD;border:2px solid #C9971F;border-radius:12px;padding:12px 14px;display:grid;gap:6px}
+.must>b{font-family:var(--hd);font-weight:400;font-size:20px;color:#7A4E00}
+.must ol{display:grid;gap:4px}
+.mustn{font-size:15px;font-weight:700;color:var(--red)}
+.shops{display:grid;gap:6px;font-size:15px}
+.shops li b{color:var(--br)}
+
+/* 벤치마킹 */
+.rank{display:grid;gap:6px}
+.rank .rk{display:grid;grid-template-columns:38px minmax(0,1fr) auto;gap:8px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+.rank .rk .n{font-family:var(--hd);font-size:20px;color:var(--br2);text-align:center}
+.rank .rk.top{border-color:#D9B45A;background:#FFF7DD}
+.rank .rk b.s{font-family:var(--hd);font-weight:400;font-size:20px;color:var(--br)}
+.store{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;gap:10px;min-width:0}
+.store .sh{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;justify-content:space-between}
+.store .sh b{font-size:18px}
+.store .sh small{font-size:14px;color:var(--mute)}
+.scores{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:10px}
+.scores label{display:grid;gap:3px;font-size:14px;font-weight:700;color:var(--ink2)}
+.mysum{font-size:15px;font-weight:700;color:var(--br)}
+.others{display:grid;gap:6px}
+.oth{background:var(--raise);border-radius:10px;padding:8px 12px;font-size:14.5px;display:grid;gap:2px}
+.oth b{color:var(--br)}
+.fl{display:grid;gap:4px;font-size:14.5px;font-weight:700;color:var(--ink2)}
+
+/* 소감 */
+.rvgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px}
+.rv{background:var(--card);border:1px solid var(--line);border-top:5px solid var(--br2);border-radius:14px;padding:14px;display:grid;gap:8px}
+.rv.mine{border-top-color:var(--green)}
+.rv h3{font-size:18px}
+.rv .q{font-size:14.5px;font-weight:700;color:var(--ink2)}
+.rv .a{font-size:15.5px;white-space:pre-wrap}
+
+/* ===== 연수 노트 (코럴 · 크림) ===== */
+.tabpane.note{--br:#A33A32;--br2:#8A5A3B;--line2:#DCCDB4}
+.book{border-radius:18px;padding:22px 20px;display:grid;gap:6px;scroll-margin-top:64px}
+.book.pre{background:var(--card);border:3px solid var(--coral)}
+.book.cls{background:var(--class);color:#fff}
+.book .lab{font-family:var(--hd);font-size:15px;letter-spacing:.1em;color:var(--coral-d)}
+.book.cls .lab{color:#F1DDD0}
+.book h2{font-family:var(--hd);font-weight:400;font-size:clamp(30px,6vw,40px);color:var(--coral-d)}
+.book.cls h2{color:#fff}
+.book p{font-size:15.5px}
+.part{background:var(--coral);border-radius:16px;padding:20px 18px;text-align:center;display:grid;gap:4px;scroll-margin-top:64px}
+.part .pn{font-family:var(--hd);color:#FCEFE8;font-size:16px;letter-spacing:.1em}
+.part h2{font-family:var(--hd);font-weight:400;color:#fff;font-size:clamp(25px,5vw,32px)}
+.part p{color:#FFF4EE;font-size:15px}
+.slide{display:grid;gap:14px;min-width:0}
+.chip{display:inline-block;justify-self:start;background:var(--coral);color:#fff;font-family:var(--hd);font-size:15px;padding:4px 12px;border-radius:8px}
+.chip.soft{background:var(--coral-l);color:var(--coral-d)}
+.h2c{font-family:var(--hd);font-weight:400;font-size:clamp(23px,4.4vw,30px);color:var(--coral-d)}
+.ncard{background:var(--panel);border:1px solid #EADBC8;border-radius:14px;padding:16px;display:grid;gap:8px;align-content:start;min-width:0}
+.ncard h3{font-family:var(--hd);font-weight:400;font-size:21px;color:var(--coral-d)}
+.ncard.hot{background:var(--coral);border-color:var(--coral);color:#fff}
+.ncard.hot h3,.ncard.hot b,.ncard.hot label{color:#fff}
+.ncard b{color:var(--coral-d)}
+.note th{background:var(--coral);color:#fff;font-family:var(--hd);font-weight:400;font-size:16px}
+.note td:first-child{color:var(--coral-d)}
+.note .tbl table{min-width:640px}
+.flow{list-style:none;padding:0;display:grid;gap:8px;counter-reset:st}
+.flow li{counter-increment:st;display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:center;margin:0;background:#fff;border:1px solid #EADBC8;border-radius:10px;padding:8px 12px}
+.flow li::before{content:counter(st);font-family:var(--hd);width:32px;height:32px;border-radius:50%;background:var(--coral);color:#fff;display:grid;place-items:center;font-size:17px}
+.fail{list-style:none;padding:0;display:grid;gap:8px}
+.fail li{margin:0;display:grid;gap:1px;padding-bottom:8px;border-bottom:1px dashed var(--coral-l)}
+.fail li:last-child{border-bottom:0;padding-bottom:0}
+.fail .sym{font-weight:800}
+.fail .why{color:var(--ink2);font-size:15px}
+.fail .why::before{content:"→ ";color:var(--coral-d)}
+.ask{background:#F1E2CF;border:1px solid var(--coral-l);border-radius:12px;padding:14px 16px;display:grid;gap:6px}
+.ask h3{font-family:var(--hd);font-weight:400;font-size:20px;color:var(--coral-d)}
+.ask p{font-weight:700;color:var(--coral-d)}
+.ask p::before{content:"▸ "}
+.nums{background:#F3E8D9;border:1.5px dashed #D9B9A6;border-radius:12px;padding:12px 14px;color:var(--ink2);font-size:15px}
+.nums b{color:var(--coral-d)}
+.itabs{display:flex;flex-wrap:wrap;gap:6px}
+.itab{border:1.5px solid var(--coral-l);background:var(--panel);color:var(--coral-d);font-family:var(--hd);font-size:16px;padding:7px 12px;border-radius:10px;display:inline-flex;align-items:center;gap:6px}
+.itab .n{width:23px;height:23px;border-radius:50%;background:var(--coral-l);color:var(--coral-d);display:grid;place-items:center;font-size:13px}
+.itab .ok{font-size:14px;color:var(--green);font-family:var(--kr);font-weight:800}
+.itab[aria-selected="true"]{background:var(--coral);border-color:var(--coral);color:#fff}
+.itab[aria-selected="true"] .n{background:#fff;color:var(--coral)}
+.itab[aria-selected="true"] .ok{color:#fff}
+.itabs.cls .itab[aria-selected="true"]{background:var(--class);border-color:var(--class)}
+.ihead{display:grid;gap:4px}
+.ihead .jpn{color:var(--ink2);font-size:16px;font-family:var(--jp)}
+.uses{display:flex;flex-wrap:wrap;gap:6px}
+.uses span{font-size:14px;padding:2px 10px;border-radius:999px;background:var(--coral-l);color:var(--coral-d);font-weight:700}
+.pager{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.vocab{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,220px),1fr));gap:10px}
+.word{background:var(--panel);border:1px solid #EADBC8;border-radius:12px;padding:12px 14px;display:grid;gap:1px}
+.word .ja{font-family:var(--jp);font-size:20px;font-weight:700;color:var(--coral-d)}
+.word .yomi{font-family:var(--jp);font-size:14px;color:var(--ink2)}
+.word .ko{font-size:15.5px}
+.quiz{display:grid;gap:8px}
+.quiz details{background:var(--panel);border:1px solid #EADBC8;border-radius:12px}
+.quiz summary{cursor:pointer;padding:12px 14px;list-style:none;display:grid;grid-template-columns:32px 1fr;gap:10px;align-items:center;font-weight:700}
+.quiz summary::-webkit-details-marker{display:none}
+.quiz summary .qn{font-family:var(--hd);font-weight:400;width:30px;height:30px;border-radius:50%;background:var(--coral);color:#fff;display:grid;place-items:center}
+.quiz .a{padding:0 14px 14px 56px}
+.quiz .a::before{content:"답 · ";color:var(--coral-d);font-weight:800}
+.clsbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;background:#fff;border:1.5px solid var(--class);border-radius:12px;padding:10px 14px;font-size:15px}
+.field{display:grid;gap:5px;min-width:0}
+.field>label,.field>.lbl{font-family:var(--hd);font-size:18px;color:var(--class)}
+.ncard.hot .field>label{color:#fff}
+.qa{display:grid;gap:3px}
+.qa label{font-weight:700;color:var(--coral-d);font-size:15px}
+.qa label::before{content:"▸ "}
+.state{font-size:14px;font-weight:700;padding:2px 10px;border-radius:8px;background:#fff;color:var(--ink2);border:1px solid var(--coral-l)}
+.state.done{background:var(--green);color:#fff;border-color:var(--green)}
+
+/* ===== 작년 연수 노트 ===== */
+#tab-theory .sech .num{background:var(--green)}
+.lockcard{max-width:440px;margin:24px auto;background:var(--card);border:2px solid var(--br);border-radius:16px;padding:20px;display:grid;gap:10px}
+.lockcard>b{font-family:var(--hd);font-weight:400;font-size:22px;color:var(--br)}
+.lockcard .row{display:flex;gap:8px}
+.lockcard input{flex:1 1 auto;width:auto;letter-spacing:.3em}
+.lastnote{font-size:15px;color:var(--ink2)}
+.tag{display:inline-block;font-size:13.5px;font-weight:700;border-radius:6px;padding:1px 8px;background:var(--greenbg);color:var(--green)}
+.ing{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:10px}
+.ing .card b{color:var(--br)}
+
+/* 후리가나 · 일본어 4열 · 유래 · 접기 */
+ruby{ruby-position:over}
+rt{font-size:max(11px,.55em);color:var(--ink2);font-weight:400;letter-spacing:0}
+.vocab{display:grid;gap:12px}
+.vocab4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media (max-width:1000px){.vocab4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.word{line-height:1.5}
+.word .ja{line-height:2}
+.word .ex{font-family:var(--jp);font-size:14.5px;color:var(--ink2);border-top:1px dashed var(--coral-l);padding-top:4px;margin-top:2px;line-height:2}
+.vgh{font-family:var(--hd);font-size:20px;color:var(--coral-d)}
+.vgh small{font-family:var(--kr);font-size:14px;color:var(--ink2)}
+.ihead .jpn{line-height:2.1}
+.origin{background:#FFFDF8;border:1.5px solid var(--coral-l)}
+.origin p{font-size:15.5px}
+.origin .oline{background:#F1E2CF;border-radius:8px;padding:6px 10px}
+.origin .osrc{font-size:14px;color:var(--ink2)}
+.origin .osrc a{color:var(--coral-d)}
+details.fold{min-width:0}
+details.fold>summary.fsum{list-style:none;cursor:pointer;position:relative;display:block;padding-right:86px}
+details.fold>summary.fsum::-webkit-details-marker{display:none}
+details.fold>summary.fsum::after{content:"▾ 접기";position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:13.5px;font-weight:700;font-family:var(--kr);background:#fff;color:var(--ink);border:1px solid var(--line2);border-radius:999px;padding:2px 10px;white-space:nowrap}
+details.fold:not([open])>summary.fsum::after{content:"▸ 펼치기"}
+details.fold>summary.fsum:focus-visible{outline:3px solid var(--br2);outline-offset:2px;border-radius:14px}
+details.fold>summary.fsum>.part,details.fold>summary.fsum>.sech{margin:0}
+details.fold>summary.fsum>.sech{border-bottom:2px solid var(--line2)}
+.fbody{display:grid;gap:18px;padding-top:14px;min-width:0}
+.sec>details.fold>.fbody,details.fold.secf>.fbody{gap:12px}
+.foldbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+
+/* 저장 상태 · 사진 크게 보기 */
+.savepill{position:fixed;left:50%;transform:translateX(-50%);bottom:max(12px,env(safe-area-inset-bottom,0px));z-index:50;background:var(--ink);color:#fff;font-size:14.5px;font-weight:700;border-radius:999px;padding:8px 16px;max-width:calc(100% - 32px);text-align:center;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+.savepill.ok{background:var(--green)}
+.savepill.bad{background:var(--red)}
+.savepill:empty{display:none}
+.ckpics{flex-basis:100%;display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:2px 0 6px 32px}
+.gmlist summary{cursor:pointer;font-weight:700;margin:6px 0}
+.ckpic{position:relative;display:inline-flex;flex-direction:column;align-items:center;gap:3px;width:104px}
+.ckpic .cap{font-size:12px;line-height:1.3;color:var(--ink,#4a3426);font-weight:700;text-align:center;word-break:keep-all;max-width:104px}
+.ckpic img{width:96px;height:96px;object-fit:cover;border-radius:10px;border:1.5px solid var(--line2);cursor:zoom-in;background:#fff}
+.ckpic .del,.ckpic button{position:absolute;top:-8px;right:-4px}
+.row-ck.withpic{flex-wrap:wrap}
+.lightbox img{max-height:86vh}
+.topbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;background:var(--card);border:1.5px solid var(--line2);border-radius:12px;padding:8px 12px;margin:6px 0 4px}
+.topbar .ver{font-size:14px;color:var(--mute)}
+.topbar .last{font-size:14px;color:var(--mute)}
+.lightbox{position:fixed;inset:0;z-index:60;background:rgba(20,16,12,.9);display:grid;place-items:center;padding:16px}
+.lightbox img{max-width:100%;max-height:82vh;border-radius:10px}
+.lightbox button{position:absolute;top:14px;right:14px}
+footer{font-size:14px;color:var(--mute);border-top:1px solid var(--line2);padding-top:14px;margin-top:30px;display:grid;gap:3px}
+
+/* 휴대폰: 표 줄을 카드처럼 */
+@media (max-width:640px){
+  body{font-size:15.5px}
+  .trow.head{display:none}
+  .trow.plan,.trow.plan.ro{grid-template-columns:minmax(0,1fr) 36px;background:var(--raise);border-radius:10px;padding:8px}
+  .trow.plan.ro{grid-template-columns:minmax(0,1fr)}
+  .trow.plan>.t{width:110px}
+  .trow.plan>:not(.x){grid-column:1}
+  .trow.plan>.x{grid-column:2;grid-row:1}
+  .trow.cost{grid-template-columns:minmax(0,1fr) 36px;background:var(--raise);border-radius:10px;padding:8px}
+  .trow.cost>:not(.x){grid-column:1}
+  .trow.cost>.x{grid-column:2;grid-row:1}
+  .trow.rec{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 36px;background:#fff;border-radius:10px;padding:6px}
+  .trow.rec>:first-child{grid-column:1/3}
+  .trow.rec>.x{grid-column:3;grid-row:1}
+  .quiz .a{padding-left:14px}
+}
+@media (prefers-reduced-motion:no-preference){.ipanel{animation:rise .22s ease-out}}
+@keyframes rise{from{opacity:.4;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* v1125-4 · 지도 · 여러 줄 · 자세히 · 통화 · 자료 모으기 */
+.cks li{flex-wrap:wrap;align-items:flex-start}
+.cks li>input[type=checkbox]{margin-top:10px}
+.cks li>textarea{flex:1 1 200px;min-width:0}
+.row-ck.done>textarea{text-decoration:line-through;color:var(--mute);background:var(--greenbg)}
+.ckmore{flex-basis:100%;padding-left:30px;display:grid;gap:6px}
+.plrow{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:flex-end}
+.pllab{display:grid;gap:3px;font-size:14px;font-weight:700;color:var(--ink2);flex:1 1 220px;min-width:0}
+.maps{display:inline-flex;flex-wrap:wrap;gap:6px;align-items:center}
+.mapp{display:inline-flex;flex-wrap:wrap;gap:4px;align-items:center}
+.mapn{font-size:14px;font-weight:700;color:var(--ink2);font-family:var(--jp)}
+.mapb{display:inline-block;font-size:14px;font-weight:700;text-decoration:none;color:var(--ink);background:var(--card);border:1.5px solid var(--wood);border-radius:999px;padding:3px 10px;white-space:nowrap}
+.mapb:hover{background:var(--goldbg)}
+.trow.plan>.more{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center}
+.dmore{flex-basis:100%;display:grid;gap:8px;background:var(--raise);border-radius:10px;padding:10px}
+.dtext{flex-basis:100%;white-space:pre-wrap;font-size:15px;background:var(--raise);border-radius:10px;padding:8px 10px}
+.mustck{display:grid;gap:8px}
+.mustck .cks li{background:#fff;border-radius:10px;padding:6px}
+.cks li,.cks li.row-ck{display:block!important}
+.ckline{display:flex!important;flex-wrap:nowrap!important;gap:6px;align-items:flex-start;width:100%}
+.ckline>input[type=checkbox]{flex:none;margin-top:10px}
+.ckline>textarea{flex:1 1 auto!important;min-width:0;width:auto}
+.ckline>.ckadd{flex:none;padding:6px 8px;margin-top:2px}
+.ckline>.x{flex:none}
+.row-ck.done .ckline>textarea{text-decoration:line-through;color:var(--mute);background:var(--greenbg)}
+.cks li>.ckpics{padding:4px 0 2px 30px}
+.cks li>.fmsg{display:block;padding-left:30px}
+.cks li>.fmsg:empty{display:none}
+.curref{display:grid;gap:3px;margin-top:6px;font-size:14px;font-weight:700;color:var(--green)}
+.vocab{grid-template-columns:1fr!important}
+.vocab4{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+@media (max-width:760px){.vocab4{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+.word{min-width:0;word-break:keep-all;overflow-wrap:normal}
+.word .ja,.word .yomi,.word .ko,.word .ex{word-break:keep-all;overflow-wrap:break-word}
+.trow.cost{grid-template-columns:minmax(0,1.4fr) 120px 92px minmax(0,1fr) 36px}
+select.cur{padding:9px 6px}
+.r3{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:10px}
+.grand{gap:6px 22px}
+.grand b{font-size:22px}
+.scores label input{font-size:16px;padding:6px 8px}
+.nameinl .row{display:flex;gap:8px;flex-wrap:wrap}
+.nameinl .row input{flex:1 1 180px;width:auto}
+.fgroup{display:grid;gap:8px}
+.fgh{font-family:var(--hd);font-size:20px;color:var(--red)}
+.fgh small{font-family:var(--kr);font-size:14px;color:var(--ink2)}
+.fcard.local{border-style:dashed!important}
+.lbadge{font-size:13.5px;font-weight:700;color:var(--green);background:var(--greenbg);border-radius:8px;padding:2px 8px}
+.lnsmall{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;font-size:14px;color:var(--ink2)}
+.lnsmall a{font-size:14px}
+.shwarn{margin:0}
+@media (max-width:640px){
+  .trow.cost{grid-template-columns:minmax(0,1fr) 96px 36px}
+  .trow.cost>:first-child{grid-column:1/3}
+  .trow.cost>.x{grid-column:3;grid-row:1}
+  .trow.cost>input{grid-column:1}
+  .trow.cost>select{grid-column:2}
+  .trow.cost>textarea:nth-of-type(2){grid-column:1/4}
+  .trow.plan>.more{grid-column:1}
+}
+
+/* ===== 크리스마스 그림 톤 (색 · 질감만 · 그림 없음) ===== */
+html{background:var(--bg)}
+body{background-color:var(--bg);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='%23FFFFFF' opacity='.9'%3E%3Ccircle cx='22' cy='30' r='3'/%3E%3Ccircle cx='150' cy='18' r='2.2'/%3E%3Ccircle cx='205' cy='120' r='3'/%3E%3Ccircle cx='70' cy='160' r='2.4'/%3E%3Ccircle cx='120' cy='220' r='3'/%3E%3C/g%3E%3Cg fill='%23E3B04B' opacity='.22'%3E%3Cpath d='M95 70l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z'/%3E%3Cpath d='M200 200l2 5 5 .5-4 3.5 1 5-4-2.5-4 2.5 1-5-4-3.5 5-.5z'/%3E%3C/g%3E%3Cg fill='%23F2B8B5' opacity='.25'%3E%3Ccircle cx='180' cy='60' r='2'/%3E%3Ccircle cx='40' cy='210' r='2'/%3E%3C/g%3E%3C/svg%3E");background-size:240px 240px}
+.bigtabs{background:rgba(247,240,227,.96);border-bottom:2px dashed var(--wood)}
+.bt{border:1.5px solid var(--wood);border-radius:14px 18px 12px 16px}
+.bt[aria-selected="true"]{background:var(--red);border-color:var(--red);color:#fff;box-shadow:0 2px 0 var(--wood)}
+.top h1{color:var(--red)}
+.top h1::after{content:" ★";color:var(--gold)}
+.kick{background:var(--green)}
+.ddc{border:1.5px solid var(--wood);border-radius:14px 18px 12px 16px}
+.ddc.now{background:var(--green);border-color:var(--green)}
+.sech{border-bottom:2px dashed var(--wood)}
+.sech h2{color:var(--red)}
+.sech .num{background:var(--red)}
+th{background:var(--wood)!important;color:#fff!important}
+.note td:first-child,td:first-child{color:var(--ink)}
+/* 손그림 느낌 테두리 */
+.card,.ncard,.store,.fcard,.rv,.word,.cur .ci,details.day,.lockcard,.tbl,.quiz details{border:1.5px solid var(--wood)!important;border-radius:14px 18px 12px 20px / 18px 12px 20px 14px}
+.cur .ci{border-left:6px solid var(--green)!important}
+.ncard.hot{background:var(--red);border-color:var(--red)!important}
+/* 마스킹테이프 띠 */
+.card,.ncard,.store,.rv,.lockcard{position:relative}
+.card::before,.ncard::before,.store::before,.rv::before,.lockcard::before{content:"";position:absolute;top:-9px;left:50%;width:72px;height:18px;margin-left:-36px;background:rgba(246,220,214,.85);border-left:2px dotted rgba(255,255,255,.9);border-right:2px dotted rgba(255,255,255,.9);transform:rotate(-3deg);pointer-events:none}
+.card:nth-of-type(even)::before,.ncard:nth-of-type(even)::before,.store:nth-of-type(even)::before{background:rgba(251,240,210,.9);transform:rotate(2.5deg)}
+.word::before{display:none}
+/* 폴라로이드 카드 (품목 · 벤치마킹 · 사진) */
+.store,.fcard,.origin,.rv{background:#fff;padding-bottom:26px;box-shadow:0 3px 0 rgba(138,90,59,.18),0 8px 18px rgba(59,46,40,.08)}
+.fcard img{border-radius:4px;border:1px solid var(--line)}
+/* 표지 · PART 띠 */
+.book.pre{background:var(--card);border:3px dashed var(--red)}
+.book .lab{color:var(--green)}
+.book h2{color:var(--red)}
+.book.cls{background:var(--green)}
+.book.cls .lab,.book.cls p{color:#fff}
+.part{background:var(--red);background-image:radial-gradient(circle at 12% 30%,rgba(255,255,255,.22) 0 2px,transparent 3px),radial-gradient(circle at 85% 70%,rgba(255,255,255,.2) 0 2.5px,transparent 3.5px),radial-gradient(circle at 60% 20%,rgba(227,176,75,.45) 0 2px,transparent 3px);border:2px solid var(--wood)}
+.part .pn{color:#FBF0D2}
+.part h2{color:#fff}
+.part p{color:#fff}
+.chip{background:var(--red)}
+.chip.soft{background:var(--goldbg);color:var(--red);border:1px solid var(--gold)}
+.h2c,.ncard h3,.ask h3,.vgh,.lockcard>b{color:var(--red)}
+.ncard b{color:var(--red)}
+.ncard.hot h3,.ncard.hot b{color:#fff}
+.itab{border:1.5px solid var(--wood);background:var(--card);color:var(--ink)}
+.itab .n{background:var(--pink);color:var(--ink)}
+.itab[aria-selected="true"]{background:var(--red);border-color:var(--red);color:#fff}
+.itab[aria-selected="true"] .n{background:#fff;color:var(--red)}
+.itabs.cls .itab[aria-selected="true"]{background:var(--green);border-color:var(--green)}
+.itabs.cls .itab[aria-selected="true"] .n{color:var(--green)}
+.itab .ok{color:var(--green)}
+.flow li{border:1.5px dashed var(--line2)}
+.flow li::before{background:var(--green)}
+.ask{background:var(--goldbg);border:1.5px dashed var(--gold)}
+.ask p,.qa label{color:var(--red)}
+.nums{background:var(--card);border:1.5px dashed var(--wood)}
+.nums b{color:var(--red)}
+.quiz summary .qn{background:var(--green)}
+.quiz .a::before{color:var(--red)}
+.word .ja{color:var(--red)}
+.word .ex{border-top:1px dashed var(--line2)}
+.uses span{background:var(--greenbg);color:#3F6439}
+.origin .oline{background:var(--goldbg)}
+.origin .osrc a,.lastnote a,a{color:var(--wood)}
+.warn{border:1.5px dashed #D9877F;background:var(--redbg)}
+.callout{background:var(--goldbg);border:1.5px dashed var(--gold)}
+.namecard{background:var(--goldbg);border:1.5px solid var(--gold)}
+.must{background:var(--goldbg);border:2px solid var(--gold)}
+.must>b{color:var(--red)}
+.must>b::before{content:"★ ";color:var(--gold)}
+.rank .rk.top{border-color:var(--gold);background:var(--goldbg)}
+.rank .rk .n{color:var(--wood)}
+.rank .rk b.s{color:var(--red)}
+.mysum{color:var(--green)}
+.rv{border-top:6px solid var(--red)!important}
+.rv.mine{border-top-color:var(--green)!important}
+.grand{background:var(--green)}
+.lockbar.open{border-color:var(--red);background:var(--redbg)}
+.btn{border:1.5px solid var(--wood);color:var(--ink);border-radius:12px 14px 10px 14px}
+.btn.pri{background:var(--red);border-color:var(--red);color:#fff}
+input[type=checkbox]{accent-color:var(--green)}
+.row-ck.done input[type=text]{color:var(--mute);background:var(--greenbg)}
+details.fold>summary.fsum::after{border:1.5px solid var(--pink)}
+.savepill.ok{background:var(--green)}
+.savepill.bad{background:var(--red)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div>
+    <span class="kick">카페스이 · 빠아빠 4기</span>
+    <h1>핫토리 제과연수 2026</h1>
+    <p class="sub">도쿄 핫토리영양전문학교 · 2026. 11. 30 ~ 12. 5 · 수업 12/1 ~ 3 · 일본 디저트 9가지</p>
+  </div>
+  <div class="dd" id="dd"></div>
+  <div class="me" id="meBox" hidden></div>
+</header>
+
+<section class="namecard" id="nameCard" hidden>
+  <b>처음 오셨네요. 이름을 한 번만 적어 주세요</b>
+  <div class="row"><input id="nameIn" maxlength="20" placeholder="예) 손조이 · 수복" autocomplete="nickname" aria-label="이름"><button class="btn pri" type="button" id="nameOk">시작하기</button></div>
+  <span class="hint">이 휴대폰 · 컴퓨터에 기억돼요. 벤치마킹 평가와 소감은 이 이름의 내 칸에만 저장돼요.</span>
+</section>
+
+<div class="topbar"><span class="ver">버전 <b id="verTag">v1125-4</b> · 적으면 자동 저장 · 지운 줄도 서버에 남아요</span><span class="last" id="lastSave">아직 저장 전</span><button type="button" class="btn pri" id="saveNow">💾 지금 저장 + 백업</button></div>
+<nav class="bigtabs" role="tablist" aria-label="큰 탭">
+  <a class="bt" role="tab" href="#tab-pre" data-tab="pre">📗 예습 노트</a>
+  <a class="bt" role="tab" href="#tab-note" data-tab="note">✍️ 연수 노트</a>
+  <a class="bt" role="tab" href="#tab-theory" data-tab="theory">📐 이론 정리</a>
+  <a class="bt" role="tab" href="#tab-plan" data-tab="plan">🗓 일정 · 준비 🔒</a>
+</nav>
+
+
+<!-- ==================== 📗 예습 노트 ==================== -->
+<div class="tabpane note" id="tab-pre" role="tabpanel">
+  <nav class="jump" aria-label="예습 노트 안에서 이동">
+    <a href="#p3">품목 예습</a><a href="#p4">수업 일본어</a><a href="#p5">복습 퀴즈</a><a href="#tips">연수 팁</a>
+  </nav>
+  <div class="book pre" id="pre">
+    <span class="lab">BOOK 1</span>
+    <h2>예습 노트</h2>
+    <p>수업 전에 한 번 훑고 가요. 일반 제과 지식이라, 수업에서 다르게 배우면 수업 내용이 기준이에요. 기본 이론은 「📐 이론 정리」 탭에 있어요.</p>
+  </div>
+
+  <div class="part" id="p3"><span class="pn">PART 1</span><h2>품목별 예습</h2><p>흐름 → 핵심 → 흔한 실패 → 수업에서 물어볼 것</p></div>
+  <div class="slide">
+    <div class="itabs" role="tablist" aria-label="예습 품목" id="preTabs"></div>
+    <div id="prePanel" role="tabpanel"></div>
+  </div>
+
+  <div class="part" id="p4"><span class="pn">PART 2</span><h2>수업에서 들리는 일본어 <span id="vocabCount"></span></h2><p>섞기 · 굽기 · 도구 · 재료 · 마무리 · 지시 말투 · 위에 작은 글자가 읽는 법이에요</p></div>
+  <div class="vocab" id="vocab"></div>
+
+  <div class="part" id="p5"><span class="pn">PART 3</span><h2>복습 퀴즈</h2><p>질문을 누르면 답이 열려요</p></div>
+  <div class="quiz" id="quiz"></div>
+
+  <div class="slide" id="tips">
+    <span class="chip">연수 팁</span>
+    <h2 class="h2c">작년 연수에서 배운 것</h2>
+    <div class="grid3">
+      <div class="ncard"><h3>수업 중</h3><ul><li>휴대폰 거치대 꼭 챙기기 (촬영 가능)</li><li>품목 시작할 때 "지금부터 ○○" 말해 두면 녹음 찾기 쉬움</li><li>온도·시간·g은 한 번 더 소리 내 확인</li></ul></div>
+      <div class="ncard"><h3>그날 밤</h3><ul><li>노트북으로 수업 노트에 바로 적기</li><li>레시피 사진은 품목별로 올리기</li><li>궁금한 건 다음 날 아침에 질문</li></ul></div>
+      <div class="ncard"><h3>준비물</h3><ul><li>쉐프복 여벌, 편한 운동화</li><li>충전기 · 보조배터리 · 돼지코</li><li>휴족시간 · 피로회복제 (3일 내내 서 있어요)</li></ul></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ==================== ✍️ 연수 노트 ==================== -->
+<div class="tabpane note" id="tab-note" role="tabpanel" hidden>
+  <div class="book cls" id="cls">
+    <span class="lab">BOOK 2</span>
+    <h2>수업 노트</h2>
+    <p>수업에서 배운 걸 품목별로 적어요. 칸에 쓰면 자동으로 저장되고, 같이 간 사람에게도 바로 보여요.</p>
+  </div>
+  <div class="slide">
+    <div class="clsbar"><span>✎ 수업 기록 <b id="doneCount">0 / 9</b> · 공정 칸을 적으면 ✓</span><span class="hint">레시피 사진은 품목마다 맨 아래에서 올려요</span></div>
+    <div class="itabs cls" role="tablist" aria-label="수업 노트 품목" id="clsTabs"></div>
+    <div id="clsPanel" role="tabpanel"></div>
+  </div>
+</div>
+
+<!-- ==================== 📐 이론 정리 (올해 기본 이론 + 작년 2025 제빵 이론) ==================== -->
+<div class="tabpane note" id="tab-theory" role="tabpanel" hidden>
+  <nav class="jump" aria-label="이론 정리 안에서 이동">
+    <a href="#p1">분류 · 거품법 · 가루</a><a href="#p2">재료 역할</a><a href="#lastTheory">작년 제빵 이론</a><a href="#l4">카시빵 · 하드빵</a><a href="#l5">배운 빵</a><a href="#l6">반죽법</a><a href="#l7">일본 밀가루</a><a href="#l8">재료</a><a href="#l9">이스트</a><a href="#l10">물 · 글루텐</a><a href="#l11">베이커스 %</a><a href="#l12">빵 레시피</a><a href="#lastRec">작년 연수 기록</a>
+  </nav>
+  <div class="book pre"><span class="lab">THEORY</span><h2>이론 정리</h2><p>올해 제과 기본 이론과, 작년 제빵 연수에서 정리해 둔 이론을 한곳에 모았어요.</p></div>
+  <div class="part" id="p1"><span class="pn">기본 이론 1</span><h2>분류 · 거품법 · 가루</h2><p>9품목이 어떤 과자인지, 어떤 방법으로 만드는지</p></div>
+  <div class="slide">
+    <span class="chip">분류</span>
+    <h2 class="h2c">이번 9품목은 네 갈래예요</h2>
+    <div class="grid2">
+      <div class="ncard"><h3>생과자 <ruby>生菓子<rt>なまがし</rt></ruby></h3><p>생크림·과일이 들어가 1~2일 안에 파는 케이크류</p><p><b>롤케이크 · 쇼트케이크 · 과일 산도 · 나마 푸딩 · 수플레 치즈케이크</b></p></div>
+      <div class="ncard"><h3>구움과자 <ruby>焼<rt>や</rt></ruby>き<ruby>菓子<rt>がし</rt></ruby></h3><p>오래 두고 팔 수 있어 선물 세트의 중심</p><p><b>틴쿠키 · 마들렌 · 휘낭시에</b></p></div>
+      <div class="ncard"><h3>화과자 <ruby>和菓子<rt>わがし</rt></ruby></h3><p>쌀가루와 앙금으로 만드는 일본 전통 과자</p><p><b>모찌 · 딸기 다이후쿠</b></p></div>
+      <div class="ncard"><h3>캔디류</h3><p>설탕을 끓여 온도로 식감을 정하는 과자</p><p><b>생 카라멜</b></p></div>
+    </div>
+  </div>
+  <div class="slide">
+    <span class="chip">만드는 방법</span>
+    <h2 class="h2c">반죽 · 거품법 6가지</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>방법</th><th>어떻게</th><th>식감</th><th>주의할 점</th><th>이번 품목</th></tr></thead>
+      <tbody>
+        <tr><td>공립법</td><td>전란+설탕을 중탕으로 데우며 한 번에 거품</td><td>촘촘하고 촉촉</td><td>가루·버터 넣을 때 거품 꺼짐</td><td>쇼트케이크</td></tr>
+        <tr><td>별립법</td><td>노른자·흰자를 나눠 거품, 머랭은 마지막</td><td>가볍고 폭신</td><td>머랭 단단함</td><td>롤케이크 (확인)</td></tr>
+        <tr><td>수플레</td><td>치즈 반죽에 머랭을 섞어 중탕으로 저온 굽기</td><td>입에서 녹음</td><td>온도가 높으면 갈라짐</td><td>수플레 치즈케이크</td></tr>
+        <tr><td>크리밍법</td><td>버터+설탕을 먼저 섞고 계란·가루 순서</td><td>바삭·사브레</td><td>버터 온도</td><td>틴쿠키</td></tr>
+        <tr><td>블렌딩법</td><td>재료를 순서대로 섞고 반죽 휴지</td><td>촉촉·묵직</td><td>휴지 시간</td><td>마들렌 · 휘낭시에</td></tr>
+        <tr><td>쌀가루 반죽</td><td>찹쌀가루+물+설탕을 익히며 치댐</td><td>쫀득·말랑</td><td>굳는 속도</td><td>모찌 · 다이후쿠</td></tr>
+      </tbody></table></div>
+  </div>
+  <div class="slide">
+    <span class="chip">가루</span>
+    <h2 class="h2c">일본 제과에서 쓰는 가루</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>가루</th><th>원료</th><th>특징</th><th>쓰이는 곳</th></tr></thead>
+      <tbody>
+        <tr><td>박력분 <ruby>薄力粉<rt>はくりきこ</rt></ruby></td><td>밀 · 단백질 7~8%</td><td>글루텐이 약해 부드러움. 대표 제품 바이올렛(닛신)</td><td>스펀지 · 쿠키 · 마들렌</td></tr>
+        <tr><td>슈퍼 바이올렛</td><td>밀 · 단백질 7%대</td><td>공기를 잘 품어 결이 고움</td><td>롤케이크 · 쇼트케이크</td></tr>
+        <tr><td>시라타마코 <ruby>白玉粉<rt>しらたまこ</rt></ruby></td><td>찹쌀</td><td>불려서 갈아 말린 가루. 매끈하고 쫄깃</td><td>다이후쿠 · 모찌</td></tr>
+        <tr><td>가타쿠리코 <ruby>片栗粉<rt>かたくりこ</rt></ruby></td><td>감자 전분</td><td>모찌가 손에 안 붙게 하는 덧가루</td><td>모찌 · 다이후쿠</td></tr>
+        <tr><td>콘스타치</td><td>옥수수 전분</td><td>글루텐 없이 식감을 가볍게</td><td>수플레 치즈케이크</td></tr>
+      </tbody></table></div>
+  </div>
+
+  <div class="part" id="p2"><span class="pn">기본 이론 2</span><h2>재료의 역할</h2><p>핵심 한 줄 먼저, 세부는 그 아래</p></div>
+  <div class="grid3" id="ingredients"></div>
+
+  <div class="part" id="lastTheory"><span class="pn">2025 제빵</span><h2>작년 연수에서 정리한 이론</h2><p>25.11.26 ~ 28 · 도쿄 핫토리 제빵연수 3기 · 레시피 사진은 노션에 있어요</p></div>
+  <section class="sec" id="l4">
+    <div class="sech"><span class="num">4</span><h2>카시빵 vs 심플한 하드 계열 빵</h2></div>
+    <div class="grid2">
+      <div class="card"><b>🍞 카시빵 (<ruby>菓子<rt>かし</rt></ruby><ruby>パン<rt>ぱん</rt></ruby>) · 일본식 달콤한 빵 전체</b><ul>
+        <li>버터 · 달걀 · 우유 · 설탕이 들어간 리치한 반죽 · 폭신하고 단맛</li>
+        <li>예) 메론빵 · 크림빵 · 단팥빵 · 카레빵</li>
+        <li>일본 빵집의 60~70%가 카시빵</li>
+        <li>핫토리 레시피는 거의 다 <b>스트레이트법 + 짧은 발효</b> → 빠르고 실용적</li>
+      </ul></div>
+      <div class="card"><b>🥖 하드 계열 빵 (Lean Dough · FWSY)</b><ul>
+        <li>밀가루 · 물 · 소금 · 이스트 4가지만 → 재료와 발효로 승부</li>
+        <li>고온 + 스팀으로 껍질은 단단 · 바삭, 속(크럼)은 쫀득 · 촉촉</li>
+        <li>긴 발효가 핵심 · 오토리즈 · 저온 발효 · 장시간 발효</li>
+        <li>설탕 · 버터가 없어 밀향 + 발효향이 진함</li>
+      </ul></div>
+    </div>
+    <div class="card"><b>하드 계열 빵 종류</b><p>바게트(물 65~70%) · 뤼스틱(물 80% 이상 · 성형 최소) · 캄파뉴(천연발효종 · 호밀) · 파베(네모난 돌 모양) · 바타르(바게트보다 넓고 짧음) · 치아바타(고수분 · 이탈리아식)</p></div>
+    <div class="tbl"><table>
+      <thead><tr><th>항목</th><th>뤼스틱</th><th>치아바타</th></tr></thead>
+      <tbody>
+        <tr><td>나라</td><td>프랑스</td><td>이탈리아</td></tr>
+        <tr><td>수분율</td><td>높음 (70~80%)</td><td>매우 높음 (75~85% 이상)</td></tr>
+        <tr><td>오일</td><td>없음</td><td>올리브오일 들어감</td></tr>
+        <tr><td>맛</td><td>담백 · 고소</td><td>부드럽고 향 있고 약간 기름기</td></tr>
+        <tr><td>식감</td><td>바삭 · 쫀득</td><td>바삭 · 젤리 같은 촉촉함</td></tr>
+        <tr><td>성형</td><td>가스 유지하며 가볍게</td><td>거의 안 만지고 잘라 팬닝</td></tr>
+        <tr><td>기공</td><td>크고 불규칙</td><td>더 크고 젤리처럼 통기공</td></tr>
+      </tbody></table></div>
+  </section>
+
+  <section class="sec" id="l5">
+    <div class="sech"><span class="num">5</span><h2>3일 동안 배운 빵 종류</h2><small>12종류 + 샌드위치 5종류 = 17개 메뉴</small></div>
+    <div class="tbl"><table>
+      <thead><tr><th>빵 종류</th><th>반죽법</th><th>메모</th></tr></thead>
+      <tbody>
+        <tr><td>메론빵</td><td>스트레이트</td><td>크림빵과 같은 기본 반죽</td></tr>
+        <tr><td>단팥빵</td><td>중종</td><td></td></tr>
+        <tr><td>크림빵 (슈크림빵)</td><td>스트레이트</td><td></td></tr>
+        <tr><td>카레빵</td><td>스트레이트</td><td>나폴레옹 (쌀분말 사용)</td></tr>
+        <tr><td>소프트 베이글</td><td>스트레이트</td><td>샌드위치로 만들었음</td></tr>
+        <tr><td>할라피뇨 치즈 베이글</td><td>스트레이트</td><td></td></tr>
+        <tr><td>크루아상</td><td>말아올리는 반죽</td><td>발효버터 또는 코코넛버터 · 샌드위치로 만들었음</td></tr>
+        <tr><td>크루아상 프랑부아즈 (라즈베리)</td><td>말아올리는 반죽</td><td>발효버터 또는 코코넛버터</td></tr>
+        <tr><td>뤼스틱</td><td>오버나이트</td><td>심플한 하드 계열 빵 · 키타노카오리</td></tr>
+        <tr><td>미니 바게트</td><td>오버나이트</td><td>키타노카오리</td></tr>
+        <tr><td>캄파뉴</td><td>폴리쉬</td><td>키타노카오리 + 호밀</td></tr>
+        <tr><td>캄파뉴 오 프뤼이</td><td>폴리쉬</td><td>키타노카오리 + 호밀</td></tr>
+      </tbody></table></div>
+  </section>
+
+  <section class="sec" id="l6">
+    <div class="sech"><span class="num">6</span><h2>반죽법 6가지 비교</h2></div>
+    <div class="tbl"><table style="min-width:760px">
+      <thead><tr><th>반죽법</th><th>정의</th><th>공정 특징</th><th>식감 · 향</th><th>장점</th><th>단점</th><th>맞는 빵</th></tr></thead>
+      <tbody>
+        <tr><td>스트레이트법</td><td>모든 재료를 한 번에 넣고 반죽 → 1차 발효 → 성형</td><td>가장 기본 · 시간 짧음</td><td>깔끔 · 담백</td><td>쉽고 안정적</td><td>풍미는 중간</td><td>기본 식빵 · 카시빵</td></tr>
+        <tr><td>중종법</td><td>반죽 일부를 먼저 반죽 · 숙성 후 본반죽에 섞음 (스펀지)</td><td>1차 발효된 반죽으로 풍미↑</td><td>부드러움 · 보존성↑ · 향↑</td><td>촉촉 · 풍미 진함</td><td>관리 필요</td><td>카시빵 · 단팥빵</td></tr>
+        <tr><td>롤링 (말아올리기)</td><td>밀고 접고 말아서 결을 정리 · 버터층이 안 찢어지게</td><td>장력 · 층 · 결↑</td><td>결이 매끈 · 쫀득</td><td>조직 탄탄</td><td>기술 필요</td><td>크루아상 · 식빵</td></tr>
+        <tr><td>오버나이트법</td><td>냉장(3~8℃)에서 밤새 저온 장시간 발효</td><td>장시간 발효로 풍미↑</td><td>풍미 깊고 보존성↑</td><td>향 · 식감 최고</td><td>시간 오래 걸림</td><td>식빵 · 하드빵 · 카시빵</td></tr>
+        <tr><td>폴리쉬법</td><td>물 = 밀가루 1:1 · 이스트 아주 조금 → 12~18시간 발효 (액체 중종)</td><td>발효 풍미↑ · 촉촉함↑</td><td>산미 · 풍미 · 기공↑</td><td>큰 기공 · 풍미 우수</td><td>다루기 어려움</td><td>바게트 · 하드빵</td></tr>
+        <tr><td>오토리즈</td><td>밀가루 + 물만 미리 섞어 20~60분 휴지 (이스트 · 소금 없음)</td><td>글루텐 자연 형성 · 반죽 시간 단축</td><td>크럼 부드럽고 균일</td><td>신장성↑ · 다루기 쉬움</td><td>시간 · 분리 공정 필요</td><td>바게트 · 하드빵 · 식빵</td></tr>
+      </tbody></table></div>
+  </section>
+
+  <section class="sec" id="l7">
+    <div class="sech"><span class="num">7</span><h2>일본 밀가루</h2></div>
+    <div class="grid2">
+      <div class="card"><b>일본 밀가루는 수분 흡수율이 높다</b><ul>
+        <li>단백질 입자가 균일하고 미세해서 물이 빨리 스며듦</li>
+        <li>전분 입자가 작고 균일해 물을 잘 붙잡음</li>
+        <li>소프트 · 모찌모찌한 빵 문화에 맞춰 「흡수형」으로 제분 → 반죽이 말랑 · 촉촉</li>
+      </ul></div>
+      <div class="card"><b>회분 (<ruby>灰分<rt>かいぶん</rt></ruby> · ash)</b><p>밀가루를 태웠을 때 남는 무기질 양 · 정제도를 알려 줘요.</p><ul><li>낮다 → 껍질을 거의 뺀 고급 흰 밀가루</li><li>높다 → 겨층 포함 · 통밀 · 하드 계열</li></ul>
+        <b>글루텐 = 글리아딘 + 글루테닌 + 물 + 반죽</b><p>글리아딘은 점성(늘어남), 글루테닌은 탄성(되돌아오는 힘). 글루텐이 빵의 구조를 만들어요.</p></div>
+    </div>
+    <div class="tbl"><table style="min-width:820px">
+      <thead><tr><th>종류</th><th>단백질</th><th>제분 특징</th><th>주요 특징</th><th>식감</th><th>대표 용도</th><th>대표 제품</th></tr></thead>
+      <tbody>
+        <tr><td>박력분 <ruby>薄力粉<rt>はくりきこ</rt></ruby></td><td>7~8%</td><td>회분↓ · 입자 매우 고움</td><td>글루텐 약함 · 제과 전용</td><td>바삭 · 부드러움 · 가벼움</td><td>스펀지 · 롤케이크 · 쿠키 · 타르트</td><td>바이올렛 · 슈퍼바이올렛</td></tr>
+        <tr><td>중력분 <ruby>中力粉<rt>ちゅうりきこ</rt></ruby></td><td>8~10%</td><td>박력과 준강력 중간</td><td>일본에선 적게 씀</td><td>적당한 탄력</td><td>우동 · 범용</td><td>—</td></tr>
+        <tr><td>준강력분 <ruby>準強力粉<rt>じゅんきょうりきこ</rt></ruby></td><td>10~11.5%</td><td>회분 중간 · 고흡수</td><td>일본 카시빵 핵심 · 결 고움</td><td>폭신 · 촉촉 · 섬세한 결</td><td>메론빵 · 크림빵 · 카시빵</td><td>리스도르 · 나폴레옹</td></tr>
+        <tr><td>강력분 <ruby>強力粉<rt>きょうりきこ</rt></ruby></td><td>11.5~12.8%</td><td>글루텐 잘 형성</td><td>일본식 식빵 · 모닝롤 기본</td><td>쫀득 · 결 찢어짐</td><td>식빵 · 모닝롤 · 단팥빵</td><td>이글 · 키타노카오리 · 하루요코이</td></tr>
+        <tr><td>초강력분 <ruby>超強力粉<rt>ちょうきょうりきこ</rt></ruby></td><td>13~14%</td><td>글루텐 파워 매우 강함</td><td>단단한 조직 · 흡수↑</td><td>탄력 강하고 쫀쫀</td><td>베이글 · 하드빵</td><td>유메치카라</td></tr>
+        <tr><td>프랑스빵 전용분</td><td>10.5~12% · 회분↑</td><td>회분 높아 풍미 강함</td><td>하드빵 전용</td><td>크러스트 바삭 · 크럼 가벼움</td><td>바게트 · 캄파뉴</td><td>메르베이유</td></tr>
+        <tr><td>전립분 <ruby>全粒粉<rt>ぜんりゅうふん</rt></ruby></td><td>단백질↑ · 회분↑</td><td>겉껍질까지 제분</td><td>영양 · 풍미↑ · 색 진함</td><td>고소 · 거친 질감</td><td>전립분 식빵 · 캄파뉴</td><td>키타노카오리 전립분</td></tr>
+        <tr><td>특수 제분분</td><td>제품마다 다름</td><td>회분 · 단백질 조절</td><td>목적형 (스펀지 · 롤케이크 전용 등)</td><td>특정 공정에 맞춤</td><td>롤케이크 · 스펀지</td><td>슈퍼바이올렛</td></tr>
+      </tbody></table></div>
+    <div class="tbl"><table style="min-width:720px">
+      <thead><tr><th>제품</th><th>회사</th><th>분류</th><th>단백질</th><th>특징</th></tr></thead>
+      <tbody>
+        <tr><td>바이올렛</td><td>닛신제분</td><td>박력분</td><td>7~8%</td><td>일본 제과용 대표 · 입자 고움 · 바삭 · 부드러움</td></tr>
+        <tr><td>슈퍼 바이올렛</td><td>닛신제분</td><td>박력분</td><td>7%대</td><td>스펀지 · 롤케이크 전용 · 공기 포집 + 결 고움</td></tr>
+        <tr><td>리스도르</td><td>닛신제분</td><td>준강력분</td><td>11~11.5%</td><td>일본 카시빵 대표 · 폭신 · 촉촉 · 흡수율 높음</td></tr>
+        <tr><td>나폴레옹</td><td>쇼와제분</td><td>준강력분</td><td>11~12%</td><td>크루아상 · 모닝롤용 · 장력과 부드러움 균형</td></tr>
+        <tr><td>이글</td><td>닛폰제분</td><td>강력분</td><td>11.5~12.5%</td><td>일본 소프트 식빵 기본 · 부드럽고 쫀득</td></tr>
+        <tr><td>키타노카오리</td><td>에베츠제분 (홋카이도)</td><td>강력분</td><td>11.5~12%</td><td>풍미 · 고소함 · 흡수율 최상 · 고급 식빵</td></tr>
+        <tr><td>하루요코이</td><td>에베츠제분 (홋카이도 밀)</td><td>강력분</td><td>11.3~12%</td><td>달콤한 밀향 · 브리오슈 · 식빵</td></tr>
+        <tr><td>유메치카라</td><td>홋카이도 밀 품종</td><td>초강력분</td><td>13~14%</td><td>글루텐 파워 강함 · 하드빵 · 베이글</td></tr>
+        <tr><td>메르베이유</td><td>닛신제분</td><td>프랑스빵용</td><td>11~12% · 회분↑</td><td>바게트 · 하드빵 전용 · 외피 바삭 · 향 좋음</td></tr>
+        <tr><td>키타노카오리 전립분</td><td>에베츠제분</td><td>전립분</td><td>단백질↑ · 회분↑</td><td>영양 · 풍미 강함 · 캄파뉴 · 전립분 식빵</td></tr>
+      </tbody></table></div>
+  </section>
+
+  <section class="sec" id="l8">
+    <div class="sech"><span class="num">8</span><h2>재료별 역할</h2><small>일본 빵은 수분 유지를 위해 설탕 비중이 높은 편</small></div>
+    <div class="ing" id="lastIng"></div>
+  </section>
+
+  <section class="sec" id="l9">
+    <div class="sech"><span class="num">9</span><h2>이스트</h2></div>
+    <div class="grid2">
+      <div class="tbl"><table>
+        <thead><tr><th>구분</th><th>온도</th></tr></thead>
+        <tbody><tr><td>활동 시작</td><td>약 4~5℃</td></tr><tr><td>가장 활발</td><td><b>25~30℃</b></td></tr><tr><td>활동 약해짐</td><td>35℃ 이상</td></tr><tr><td>죽는 온도</td><td><b>50~60℃ 이상</b> (50℃ 넘는 물은 절대 X)</td></tr></tbody></table></div>
+      <div class="card"><b>이스트 잘 쓰는 법</b><ol>
+        <li>소금과 직접 닿지 않게 떨어뜨려 넣기</li>
+        <li>물 온도는 목표 반죽 온도(보통 24~26℃) 기준으로</li>
+        <li>짧은 발효 → 이스트↑ · 긴 발효(중종 · 오버나이트) → 이스트↓ (적을수록 향 깊음)</li>
+        <li>설탕은 적당히 · 많으면 삼투압으로 발효 방해</li>
+        <li>냉장(4~7℃)에서도 아주 천천히 활동 · 시간 관리 필수</li>
+      </ol></div>
+    </div>
+    <div class="tbl"><table>
+      <thead><tr><th>구분</th><th>생이스트</th><th>드라이이스트</th></tr></thead>
+      <tbody>
+        <tr><td>수분</td><td>약 70%</td><td>약 5~8%</td></tr>
+        <tr><td>형태</td><td>말랑</td><td>알갱이 (건조)</td></tr>
+        <tr><td>발효</td><td>빠르고 부드러움</td><td>안정적이고 일정</td></tr>
+        <tr><td>향</td><td>은은하고 깔끔</td><td>상대적으로 또렷</td></tr>
+        <tr><td>보관</td><td>냉장 · 유통기한 짧음</td><td>상온 · 냉장 · 유통기한 김</td></tr>
+        <tr><td>난이도</td><td>높음</td><td>낮음</td></tr>
+        <tr><td>이럴 때</td><td>단팥빵 · 메론빵 · 크림빵 · 중종 · 저온 발효 · 향을 섬세하게</td><td>스트레이트법 · 생산량 많을 때 · 온도 변화 큰 환경 · 교육용</td></tr>
+      </tbody></table></div>
+  </section>
+
+  <section class="sec" id="l10">
+    <div class="sech"><span class="num">10</span><h2>물 · 글루텐</h2></div>
+    <div class="grid2">
+      <div class="card"><b>물은 반죽을 시작하게 하는 스위치</b><ul>
+        <li>단백질 수화 → 글루텐 형성 시작 · 전분 수화 → 부피와 질감</li>
+        <li>이스트 활성화 · 재료 고르게 분산 · 굽는 동안 스팀 역할</li>
+        <li>반죽 온도 = 물 온도 + 마찰열 + 실내 온도 + 밀가루 온도 → 여름엔 차가운 물, 겨울엔 미지근한 물</li>
+        <li>목표 반죽 온도 · 소프트 24~26℃ · 하드 23~25℃</li>
+        <li>연수는 반죽 부드럽고 발효 빠름 · 경수는 글루텐 단단 · 발효 느림 (일본 레시피는 연수 기준이 많음)</li>
+        <li>수돗물 염소는 이스트 방해 → 받아 둔 물이나 정수 · 버터는 물 침투를 막아서 나중에 넣기</li>
+      </ul></div>
+      <div class="tbl"><table>
+        <thead><tr><th>물의 양</th><th>반죽</th><th>결과</th></tr></thead>
+        <tbody><tr><td>적음</td><td>단단함</td><td>볼륨 작고 조직 치밀</td></tr><tr><td>적당</td><td>탄력 있음</td><td>균형 잡힌 빵</td></tr><tr><td>많음</td><td>흐름성</td><td>큰 기공 · 가벼운 식감</td></tr></tbody></table></div>
+    </div>
+  </section>
+
+  <section class="sec" id="l11">
+    <div class="sech"><span class="num">11</span><h2>베이커스 퍼센트</h2></div>
+    <div class="grid2">
+      <div class="card"><p><b>밀가루를 100%로 두고</b> 다른 재료를 상대 비율로 적는 제빵 표기법.</p><ul><li>레시피 늘리고 줄이기 쉬움 (밀가루만 정하면 끝)</li><li>레시피끼리 비교 가능 (「수분 65%면 부드럽겠다」)</li><li>실패 원인 찾기 쉬움 (질기다 → 단백질 · 수분 % / 퍼진다 → 수분 · 설탕 과다)</li></ul></div>
+      <div class="tbl"><table>
+        <thead><tr><th>수분 (물 %)</th><th>반죽 성격</th></tr></thead>
+        <tbody><tr><td>55~58%</td><td>단단한 반죽</td></tr><tr><td>60~65%</td><td>소프트 브레드</td></tr><tr><td>68~75%</td><td>고수분 하드빵</td></tr><tr><td>75% 이상</td><td>매우 흐르는 반죽</td></tr></tbody></table></div>
+    </div>
+  </section>
+
+  <section class="sec" id="l12">
+    <div class="sech"><span class="num">12</span><h2>빵 종류별 레시피</h2><small>레시피 · 사진은 노션에 · 링크는 노션 권한이 있는 사람만 열려요</small></div>
+    <div class="tbl"><table style="min-width:640px">
+      <thead><tr><th>빵 이름</th><th>모양</th><th>특징 (식감 · 풍미 · 공법)</th><th>노션</th></tr></thead>
+      <tbody id="lastRecipes"></tbody></table></div>
+    <p class="hint"><a href="https://app.notion.com/p/2bb69763f923809e941cd1b686192867" target="_blank" rel="noopener">레시피 자료 모음 (노션) ↗</a></p>
+  </section>
+  <div class="part" id="lastRec"><span class="pn">2025 제빵</span><h2>작년 연수 기록</h2><p>모집 내용 · 미리 준비한 것 · 25년 피드백</p></div>
+  <section class="sec" id="l1">
+    <div class="sech"><span class="num">1</span><h2>도쿄 핫토리 연수 3기 모집 내용</h2></div>
+    <div class="grid2">
+      <div class="card"><ul>
+        <li>수업 인원 · 최대 16명 (입금 선착순)</li>
+        <li>수업 날짜 · 2025년 11월 26 · 27 · 28일 (수 · 목 · 금 3일)</li>
+        <li>수업 방식 · 품목별 조별 &amp; 개별 실습 (셰프님 시연 후 실습)</li>
+        <li>통역 · 일본어-한국어 통역관 동행</li>
+        <li>수업 시간 · 오전 9시 ~ 5시 (점심 1시간 · 학교에서 일본식 도시락)</li>
+        <li>비행기 · 숙박은 개별 예약 · 수료증은 학교에서</li>
+      </ul></div>
+      <div class="card"><b>품목 13가지</b><ol>
+        <li>앙빵 (팥빵)</li><li>베이글 → 베이글 샌드</li><li>치즈베이글 → 치즈베이글 샌드</li><li>크림빵</li><li>두 가지 색 크루아상 → 디저트 샌드</li><li>크루아상 → 크루아상 샌드</li><li>치아바타</li><li>루스틱 샐러드 샌드</li><li>루스틱 달걀 샐러드 샌드</li><li>팽 오 레쟁 (건포도빵)</li><li>바게트</li><li>캄파뉴 프뤼이 (과일 캄파뉴)</li><li>캄파뉴</li>
+      </ol></div>
+    </div>
+  </section>
+
+  <section class="sec" id="l2">
+    <div class="sech"><span class="num">2</span><h2>작년에 미리 준비한 것</h2></div>
+    <div class="warn"><p>▪️ 비짓재팬 QR 캡처 · 기내 액체류 100ml 이하 · 보조배터리는 기내로</p><p>▪️ 배터리 분리 안 되는 무선 고데기 반입 불가 · 컵 형태 곤약젤리는 한국 반입 불가</p></div>
+    <div class="card"><p>왕복 항공권 캡처 · 로밍 · 해외 사용 카드(여권 명의자와 같아야 함) · 여행자보험 · 비짓재팬 QR · 일본 교통카드 · 환전 · 여권 · 개인 짐 · 쉐프복 3벌 · 멀티탭 / 돼지코 · 일정 최종 점검</p></div>
+  </section>
+
+  <section class="sec" id="l3">
+    <div class="sech"><span class="num">3</span><h2>25년의 피드백 · 좋은 것 / 안 좋은 것</h2></div>
+    <div class="card"><ul>
+      <li>매일 숏츠로 공부 영상 올리기 (인스타 + 숏츠)</li>
+      <li>블로그 후기 한 편 쓰기</li>
+      <li>숙소는 좀 더 괜찮은 곳으로 · 학교 근처로</li>
+      <li>조식은 굳이 필요 없음</li>
+      <li>피로회복제 챙기기</li>
+      <li>26년에는 직원과 같이? (고민해 보기)</li>
+      <li>노트북 챙겨 오는 게 나음 · 바로 정리</li>
+      <li>옷은 최소한으로</li>
+      <li><b>휴대폰 거치대는 무조건</b></li>
+      <li>안경은 굳이</li>
+      <li><b>일본어 공부 열심히</b></li>
+    </ul></div>
+  </section>
+
+</div>
+
+<!-- ==================== 🗓 일정 · 준비 (노션 순서 · 잠금) ==================== -->
+<div class="tabpane" id="tab-plan" role="tabpanel" hidden>
+  <div class="lockcard" id="planLock">
+    <b>🔒 일정 · 준비는 잠겨 있어요</b>
+    <span class="hint">숫자 비밀번호를 넣으면 열려요 · 이 기기에 기억돼요</span>
+    <div class="row"><input type="password" id="pinIn" inputmode="numeric" autocomplete="off" maxlength="12" aria-label="비밀번호"><button type="button" class="btn pri" id="pinGo">열기</button></div>
+    <span class="fmsg" id="pinMsg"></span>
+  </div>
+  <div id="planBody" class="tabpane" hidden>
+  <nav class="jump" aria-label="일정 · 준비 안에서 이동">
+    <a href="#s1">① 커리큘럼</a><a href="#s2">② 미리 준비</a><a href="#s3">③ 구매</a><a href="#s5">④ 날짜별 일정</a><a href="#s6">⑤ 지출내역</a><a href="#s7">⑥ 자료 · 항공권 · 예약</a><a href="#s8">⑦ 벤치마킹</a><a href="#s9">⑧ 소감 · 피드백</a>
+  </nav>
+  <div class="addbar" style="margin-top:0"><button type="button" class="btn sm" id="planLockBtn">🔒 잠그기</button><span class="hint">이 기기에서 다시 잠가요</span></div>
+
+  <section class="sec" id="s1">
+    <div class="sech"><span class="num">①</span><h2>커리큘럼 및 안내사항</h2><small>개인 실습 위주 · 촬영 · 녹화 가능</small></div>
+    <div class="callout"><b>지금 바로 매출로 이어지는 일본 디저트 실전 연수</b><span>꾸준히 팔리고, 선물용으로 강하고, 카페에서 바로 쓸 수 있는 일본 대표 디저트 9가지</span></div>
+    <div class="cur" id="curList"></div>
+    <p class="hint">출처 · <a href="https://blog.naver.com/mainssang/224271512975" target="_blank" rel="noopener">빠아빠 마스터클래스 4기 모집 안내 ↗</a></p>
+  </section>
+
+  <section class="sec" id="s2">
+    <div class="sech"><span class="num">②</span><h2>미리 준비해야 할 것들</h2><small>다 한 건 체크 → 줄 그어짐</small></div>
+    <div class="warn">
+      <p>▪️ 비짓재팬 등록하고 QR코드 캡처해 두기 (필수는 아니지만 해 두면 편해요)</p>
+      <p>▪️ 기내는 액체류 100ml 이하로 챙기기</p>
+      <p>▪️ 보조배터리는 기내로 챙기기</p>
+      <p>▪️ 배터리가 분리되지 않는 무선 고데기는 반입 불가</p>
+      <p>▪️ 일본에서 한국으로 돌아올 때 「컵 형태의 곤약젤리」는 반입 불가</p>
+    </div>
+    <div id="secPrep"></div>
+  </section>
+
+  <section class="sec" id="s3">
+    <div class="sech"><span class="num">③</span><h2>구매해 와야 할 것들</h2></div>
+    <div id="secBuy"></div>
+  </section>
+
+  <section class="sec" id="s5">
+    <div class="sech"><span class="num">④</span><h2>날짜별 일정</h2><small>1일차 11/30 ~ 6일차 12/5 · 줄마다 📍 지도 · 🚶 길찾기</small></div>
+    <div id="secPlan"></div>
+  </section>
+
+  <section class="sec" id="s6">
+    <div class="sech"><span class="num">⑤</span><h2>날짜별 지출내역</h2><small>¥ 엔 · ₩ 원 섞어 쓰기 · 총 · 남은 돈 · 원 환산은 자동</small></div>
+    <div id="secCost"></div>
+  </section>
+
+  <section class="sec" id="s7">
+    <div class="sech"><span class="num">⑥</span><h2>📁 자료 모으기 · 항공권 · 예약</h2><small>✈️ 항공권 · 🛂 비짓재팬 QR · 🎫 예약 확인 · 🛍 살 것 · 📝 기타 · 캡처 사진으로 올려요</small></div>
+    <div id="secFiles"></div>
+    <div class="card">
+      <b>🗺 내 구글 지도 저장 목록 · 「26년 핫토리 제과연수」 72곳</b>
+      <span class="hint">구글 지도 앱에 저장한 목록이에요 · 앱에서 열면 지도 위에 한 번에 보여요</span>
+      <div class="addbar"><a class="btn pri" href="https://maps.app.goo.gl/dv9QNdypMGAmfNXG8" target="_blank" rel="noopener">🗺 구글 지도에서 목록 열기 ↗</a></div>
+      <details class="gmlist"><summary>장소 이름 · 지도 버튼 펼쳐 보기</summary>
+      <ul class="shops">
+        <li><b>소우소우 교토 아오야마점</b> <span class="maps" data-map="소우소우 교토 아오야마점"></span></li>
+        <li><b>Totopa Sauna</b> <span class="maps" data-map="Totopa Sauna"></span></li>
+        <li><b>포켓몬센터 시부야</b> <span class="maps" data-map="포켓몬센터 시부야"></span></li>
+        <li><b>다이소 하라주쿠</b> <span class="maps" data-map="다이소 하라주쿠"></span></li>
+        <li><b>Seijo Ishii Shinjuku Lumine 1 Store</b> <span class="maps" data-map="Seijo Ishii Shinjuku Lumine 1 Store"></span></li>
+        <li><b>신주쿠 다카시마야</b> <span class="maps" data-map="신주쿠 다카시마야"></span></li>
+        <li><b>My Basket Yoyogi 1-chome Shop</b> <span class="maps" data-map="My Basket Yoyogi 1-chome Shop"></span></li>
+        <li><b>On Store Tokyo Cat Street</b> <span class="maps" data-map="On Store Tokyo Cat Street"></span></li>
+        <li><b>HOKA Harajuku Store</b> <span class="maps" data-map="HOKA Harajuku Store"></span></li>
+        <li><b>HOKA Shibuya</b> <span class="maps" data-map="HOKA Shibuya"></span></li>
+        <li><b>이세탄 신주쿠</b> <span class="maps" data-map="이세탄 신주쿠"></span></li>
+        <li><b>돈카츠 야마베</b> <span class="maps" data-map="돈카츠 야마베"></span></li>
+        <li><b>멘 치라시</b> <span class="maps" data-map="멘 치라시"></span></li>
+        <li><b>Musashino Abura Gakkai Yoyogi branch</b> <span class="maps" data-map="Musashino Abura Gakkai Yoyogi branch"></span></li>
+        <li><b>Yamato Transport Co., Ltd. Yoyogi 2-Chome Center</b> <span class="maps" data-map="Yamato Transport Co., Ltd. Yoyogi 2-Chome Center"></span></li>
+        <li><b>Sawamura Bakery &amp; Restaurant</b> <span class="maps" data-map="Sawamura Bakery &amp; Restaurant"></span></li>
+        <li><b>키디랜드 하라주쿠점</b> <span class="maps" data-map="키디랜드 하라주쿠점"></span></li>
+        <li><b>라포레 하라주쿠</b> <span class="maps" data-map="라포레 하라주쿠"></span></li>
+        <li><b>i2</b> <span class="maps" data-map="i2 東京"></span></li>
+        <li><b>PREMIER MAI</b> <span class="maps" data-map="PREMIER MAI"></span></li>
+        <li><b>에스키스</b> <span class="maps" data-map="에스키스"></span></li>
+        <li><b>Ciest</b> <span class="maps" data-map="Ciest"></span></li>
+        <li><b>La gueule de bois</b> <span class="maps" data-map="La gueule de bois"></span></li>
+        <li><b>AKOMEYA TOKYO NEWoMan SHINJUKU</b> <span class="maps" data-map="AKOMEYA TOKYO NEWoMan SHINJUKU"></span></li>
+        <li><b>AU GAMIN DE TOKIO</b> <span class="maps" data-map="AU GAMIN DE TOKIO"></span></li>
+        <li><b>고쿄 히가시 교엔</b> <span class="maps" data-map="고쿄 히가시 교엔"></span></li>
+        <li><b>Au Bon Vieux Temps</b> <span class="maps" data-map="Au Bon Vieux Temps"></span></li>
+        <li><b>아코메야 식당 도큐 프라자 시부야</b> <span class="maps" data-map="아코메야 식당 도큐 프라자 시부야"></span></li>
+        <li><b>Gourmet Yakimusubi Onimaru Nishi-Shinjuku</b> <span class="maps" data-map="Gourmet Yakimusubi Onimaru Nishi-Shinjuku"></span></li>
+        <li><b>Gajoen Tokyo</b> <span class="maps" data-map="Gajoen Tokyo"></span></li>
+        <li><b>아메리칸</b> <span class="maps" data-map="아메리칸 도쿄"></span></li>
+        <li><b>Tarui Bakery</b> <span class="maps" data-map="Tarui Bakery"></span></li>
+        <li><b>모어댄 베이커리</b> <span class="maps" data-map="모어댄 베이커리"></span></li>
+        <li><b>Shiomi Bakery</b> <span class="maps" data-map="Shiomi Bakery"></span></li>
+        <li><b>코메라쿠</b> <span class="maps" data-map="코메라쿠"></span></li>
+        <li><b>Fukinuki</b> <span class="maps" data-map="Fukinuki"></span></li>
+        <li><b>도쿄도 미술관</b> <span class="maps" data-map="도쿄도 미술관"></span></li>
+        <li><b>타츠키치 신주쿠본점</b> <span class="maps" data-map="타츠키치 신주쿠본점"></span></li>
+        <li><b>move</b> <span class="maps" data-map="move 東京"></span></li>
+        <li><b>H°M&#x27;S WatchStore Omotesando</b> <span class="maps" data-map="H°M&#x27;S WatchStore Omotesando"></span></li>
+        <li><b>PORTER EXCHANGE SHIBUYA</b> <span class="maps" data-map="PORTER EXCHANGE SHIBUYA"></span></li>
+        <li><b>PORTER STAND Shinjuku</b> <span class="maps" data-map="PORTER STAND Shinjuku"></span></li>
+        <li><b>치이카와 파크</b> <span class="maps" data-map="치이카와 파크"></span></li>
+        <li><b>Magical Chiikawa</b> <span class="maps" data-map="Magical Chiikawa"></span></li>
+        <li><b>Chiikawa Land shinjuku</b> <span class="maps" data-map="Chiikawa Land shinjuku"></span></li>
+        <li><b>DAISO</b> <span class="maps" data-map="DAISO 東京"></span></li>
+        <li><b>스탠다드프로덕트</b> <span class="maps" data-map="스탠다드프로덕트"></span></li>
+        <li><b>모모파라다이스 시부야센터가이점</b> <span class="maps" data-map="모모파라다이스 시부야센터가이점"></span></li>
+        <li><b>파르코 시부야</b> <span class="maps" data-map="파르코 시부야"></span></li>
+        <li><b>베주 아랑 뒤카스 도쿄</b> <span class="maps" data-map="베주 아랑 뒤카스 도쿄"></span></li>
+        <li><b>모닥불가 hanare</b> <span class="maps" data-map="모닥불가 hanare"></span></li>
+        <li><b>호보 신주쿠 노렌가이</b> <span class="maps" data-map="호보 신주쿠 노렌가이"></span></li>
+        <li><b>아임 도넛? 글루텐 프리 시부야 아오야마</b> <span class="maps" data-map="아임 도넛? 글루텐 프리 시부야 아오야마"></span></li>
+        <li><b>마루망 스토어</b> <span class="maps" data-map="마루망 스토어"></span></li>
+        <li><b>Kinokuniya Takashimaya Shinjuku</b> <span class="maps" data-map="Kinokuniya Takashimaya Shinjuku"></span></li>
+        <li><b>29 Terrace</b> <span class="maps" data-map="29 Terrace"></span></li>
+        <li><b>미쓰비시1호관미술관</b> <span class="maps" data-map="미쓰비시1호관미술관"></span></li>
+        <li><b>도미닉・부셰 도쿄</b> <span class="maps" data-map="도미닉・부셰 도쿄"></span></li>
+        <li><b>L&#x27;eau</b> <span class="maps" data-map="L&#x27;eau 東京"></span></li>
+        <li><b>도쿄 규쿄도 긴자 본점</b> <span class="maps" data-map="도쿄 규쿄도 긴자 본점"></span></li>
+        <li><b>사푸</b> <span class="maps" data-map="사푸 도쿄"></span></li>
+        <li><b>스카이 라운지 스텔라 가든</b> <span class="maps" data-map="스카이 라운지 스텔라 가든"></span></li>
+        <li><b>Shigetsu</b> <span class="maps" data-map="Shigetsu"></span></li>
+        <li><b>아코메야 도쿄 도큐플라자 시부야</b> <span class="maps" data-map="아코메야 도쿄 도큐플라자 시부야"></span></li>
+        <li><b>아코메야 도쿄 인 라 카구</b> <span class="maps" data-map="아코메야 도쿄 인 라 카구"></span></li>
+        <li><b>구라마에</b> <span class="maps" data-map="구라마에 도쿄"></span></li>
+        <li><b>국립서양미술관</b> <span class="maps" data-map="국립서양미술관"></span></li>
+        <li><b>메이지 신궁 뮤지엄</b> <span class="maps" data-map="메이지 신궁 뮤지엄"></span></li>
+        <li><b>레스토랑 네모</b> <span class="maps" data-map="레스토랑 네모"></span></li>
+        <li><b>로지에(L&#x27;OSIER)</b> <span class="maps" data-map="로지에(L&#x27;OSIER)"></span></li>
+        <li><b>다카다노바바</b> <span class="maps" data-map="다카다노바바"></span></li>
+        <li><b>아임 도넛 글루텐 프리 • 비건</b> <span class="maps" data-map="아임 도넛 글루텐 프리 • 비건"></span></li>
+      </ul>
+      </details>
+    </div>
+    <div class="card">
+      <b>🛒 숙소 근처 마트 · 슈퍼</b>
+      <ul class="shops">
+        <li><b>まいばすけっと <ruby>新宿駅南店<rt>しんじゅくえきみなみてん</rt></ruby></b> · 신주쿠역 남쪽 → 요요기 가는 길 · 7~24시 <span class="maps" data-map="まいばすけっと 新宿駅南店"></span></li>
+        <li><b>まいばすけっと <ruby>代々木<rt>よよぎ</rt></ruby>1<ruby>丁目店<rt>ちょうめてん</rt></ruby></b> · 7~23시 <span class="maps" data-map="まいばすけっと 代々木1丁目店"></span></li>
+        <li><b><ruby>マルマンストア<rt>まるまんすとあ</rt></ruby> <ruby>南新宿店<rt>みなみしんじゅくてん</rt></ruby></b> · 9~23시 <span class="maps" data-map="マルマンストア 南新宿店"></span></li>
+        <li><b>다카시마야 신주쿠 지하</b> · 10:30~19:30 <span class="maps" data-map="高島屋 新宿"></span></li>
+        <li><b><ruby>成城石井<rt>せいじょういしい</rt></ruby> <ruby>ルミネ<rt>るみね</rt></ruby><ruby>新宿<rt>しんじゅく</rt></ruby></b> <span class="maps" data-map="成城石井 ルミネ新宿"></span></li>
+        <li><b>OK<ruby>ストア<rt>すとあ</rt></ruby> <ruby>千駄ヶ谷店<rt>せんだがやてん</rt></ruby></b> · 조금 멂 · ~21:30 <span class="maps" data-map="OKストア 千駄ヶ谷店"></span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec" id="s8">
+    <div class="sech"><span class="num">⑦</span><h2>🔎 벤치마킹</h2><small>가게마다 사람별 7항목 /10 · 🏆 평균 순위 /70 · 내 칸만 저장</small></div>
+    <div id="secBench"></div>
+  </section>
+
+  <section class="sec" id="s9">
+    <div class="sech"><span class="num">⑧</span><h2>💌 소감 · 피드백</h2><small>다녀와서 각자 적어요 · 내 카드만 적을 수 있어요</small></div>
+    <div id="secReview"></div>
+  </section>
+  </div>
+</div>
+
+
+<footer>
+  <span>정리 · 손조이 (카페스이) · 같이 쓰는 페이지라 개인정보(숙소 주소 · 카드 · 여권 번호 등)는 적지 말아 주세요</span>
+  <span>커리큘럼 출처 · <a href="https://blog.naver.com/mainssang/224271512975" target="_blank" rel="noopener">빠아빠 마스터클래스 4기 모집 안내</a></span>
+</footer>
+</div>
+
+<div class="savepill" id="save" role="status" aria-live="polite"></div>
+<div class="lightbox" id="lb" hidden><img alt="크게 보기"><button type="button" class="btn" id="lbClose">닫기</button></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+<script src="../js/config.js"></script>
+<script>
+(function () {
+  "use strict";
+  /* 저장: 서버 ops 컬렉션 · 문서 하나 = 키 하나 · { v: JSON 문자열, by: "ht", t } (규칙: v · by · t만, v 200,000자 이하)
+     키는 전부 hattori26. 로 시작 · 다른 데이터는 읽지도 쓰지도 않음 · 지우기는 del 표시만(문서는 남김)
+     저장할 땐 트랜잭션으로 서버 최신값을 읽고 「내가 바꾼 칸」만 얹어서 씀 · 못 보내면 이 기기(localStorage)에 보관했다가 다시 보냄
+     처음 채워 둔 내용(SEED)은 서버에 값이 없을 때 화면에만 보임 · 누군가 그 문서를 처음 고칠 때 SEED + 고친 칸이 같이 저장됨 */
+  var PRE = "hattori26.";
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
+  var rb = function (s) { return String(s == null ? "" : s).replace(/\{([^|{}]+)\|([^{}]+)\}/g, "<ruby>$1<rt>$2</rt></ruby>"); };
+  var clone = function (o) { return o == null ? o : JSON.parse(JSON.stringify(o)); };
+  function ls(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } return null; }
+  var num = function (v) { return parseInt(String(v == null ? "" : v).replace(/[^\d]/g, ""), 10) || 0; };
+  var yen = function (n) { return n.toLocaleString("ko-KR") + "엔"; };
+  var uid = function (p) { return p + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); };
+
+  /* ---------- 9품목 (예습 · 수업 노트 · 커리큘럼 공통) ---------- */
+  var items = [
+    { key: "dojima", name: "도지마 스타일 롤케이크", short: "도지마롤", jp: "{堂島|どうじま}{ロール|ろーる}{風|ふう}", feat: "폭신한 시트와 크림 밸런스. 재구매율 높은 스테디셀러", use: ["상시 메뉴", "홀케이크 대체"],
+      flow: ["계란 거품 내기 (별립 또는 공립)", "가루를 가볍게 섞고 녹인 버터·우유 넣기", "철판에 얇고 고르게 펴서 짧게 굽기", "식힌 뒤 크림을 두껍게 올리기", "종이로 감싸 말고 냉장에서 모양 잡기"],
+      point: "도지마롤은 크림이 주인공이에요. 시트는 촉촉하고 잘 휘어야 하고, 크림은 많이 넣어도 무너지지 않게 휘핑해요.",
+      fail: [["시트가 갈라짐", "너무 오래 구웠거나 식으면서 마름"], ["크림이 흘러내림", "휘핑이 약하거나 크림 온도가 높음"], ["단면이 찌그러짐", "냉장 휴지 없이 바로 자름"]],
+      ask: ["시트는 별립법인지 공립법인지", "구운 면을 안쪽으로 마는지 바깥으로 마는지", "크림 유지방 %와 설탕 비율", "크림이 많아도 무너지지 않게 마는 요령"],
+      nums: "시트 굽는 온도·시간 · 크림 휘핑 정도" },
+    { key: "short", name: "일본식 딸기 쇼트케이크", short: "쇼트케이크", jp: "{苺|いちご}の{ショートケーキ|しょーとけーき}", feat: "실패 없는 제누아즈. 카페 매출 1순위 디저트", use: ["상시 메뉴", "겨울 딸기 시즌", "홀케이크 예약"],
+      flow: ["전란+설탕을 중탕으로 데우며 거품 내기", "리본 상태가 되면 가루 섞기", "녹인 버터·우유를 따뜻하게 넣기", "굽고 식혀 3장으로 자르기", "시럽 바르고 크림·딸기 샌드 후 아이싱"],
+      point: "제누아즈가 촉촉하고 결이 고와야 해요. 시럽 바르는 양과 아이싱 크림 휘핑 정도가 맛과 모양을 같이 정해요.",
+      fail: [["시트가 안 부풂", "거품이 덜 났거나 버터 넣을 때 꺼짐"], ["시트 바닥이 떡짐", "버터가 가라앉음 (섞기 부족)"], ["아이싱이 거침", "크림을 너무 단단하게 휘핑"]],
+      ask: ["중탕 온도와 거품을 멈추는 기준", "시럽 농도와 한 장에 바르는 양", "샌드용·아이싱용 크림을 몇 {分立|ぶだ}て로 나누는지", "딸기 자르는 방향과 배치"],
+      nums: "계란 중탕 온도 · 굽기 온도·시간" },
+    { key: "cookie", name: "프리미엄 틴쿠키 세트", short: "틴쿠키", jp: "{クッキー|くっきー}{缶|かん}", feat: "여러 향의 티 쿠키 세트. 단가와 선물 수요를 같이 잡는 품목", use: ["선물 · 답례품", "명절"],
+      flow: ["버터를 부드럽게 풀고 설탕 섞기", "계란·가루·향 재료 넣기", "종류별로 성형 (짜기 · 자르기 · 굴리기)", "굽고 완전히 식히기", "건조제와 함께 틴에 채우기"],
+      point: "쿠키 하나보다 「틴 안의 구성」이 상품이에요. 모양·색·식감이 겹치지 않게 고르고, 습기를 막아야 오래 팔 수 있어요.",
+      fail: [["쿠키가 퍼짐", "버터가 너무 무르거나 오래 섞음"], ["눅눅해짐", "덜 식힌 채 담았거나 건조제 없음"], ["향이 약함", "찻잎 분쇄가 거침"]],
+      ask: ["향 재료(차·허브)를 넣는 방법과 양", "틴 하나에 넣는 종류 수와 배치", "유통기한을 며칠로 보는지", "대량으로 만들 때 순서"],
+      nums: "버터 온도 · 쿠키별 굽기 온도·시간" },
+    { key: "caramel", name: "생 카라멜", short: "생 카라멜", jp: "{生|なま}{キャラメル|きゃらめる}", feat: "딱딱하지도 흐르지도 않는 식감. 여러 맛으로 응용", use: ["선물 · 답례품", "계산대 소포장"],
+      flow: ["생크림·설탕·물엿을 냄비에 넣고 끓이기", "계속 저으며 목표 온도까지 졸이기", "불을 끄고 버터 넣기", "틀에 부어 식혀 굳히기", "잘라서 하나씩 포장"],
+      point: "식감은 마지막 온도로 정해져요. 1~2℃ 차이로 딱딱해지거나 흐르니까 온도계와 찬물 테스트를 같이 써요.",
+      fail: [["딱딱함", "너무 높은 온도까지 졸임"], ["흐르고 안 굳음", "온도가 낮음"], ["까끌까끌함", "설탕이 다시 결정이 됨"], ["탄 맛", "바닥을 안 저음"]],
+      ask: ["최종 온도와 찬물 테스트로 보는 상태", "말차·홍차·소금 등 맛 재료 넣는 시점", "보관 온도와 기간", "포장지 종류"],
+      nums: "최종 온도 (가장 중요!)" },
+    { key: "daifuku", name: "전통 모찌 · 딸기 다이후쿠", short: "다이후쿠", jp: "{苺大福|いちごだいふく}", feat: "일본 정통 모찌 기술. 한국에서도 줄 서는 품목", use: ["겨울 딸기 시즌", "SNS"],
+      flow: ["시라타마코+물을 매끈하게 풀기", "설탕 넣고 익히며 치대기", "가타쿠리코 위에서 나누기", "딸기를 앙금으로 감싸기", "모찌로 감싸 오므리기"],
+      point: "익힌 뒤 얼마나 치대느냐로 쫄깃함이 정해지고, 설탕이 많을수록 덜 굳어요. 단면은 실이나 칼로 잘라 보여줘요.",
+      fail: [["금방 딱딱해짐", "설탕 부족, 덧가루 과다"], ["끈적여서 못 다룸", "덜 익음, 덧가루 부족"], ["딸기 물이 나옴", "딸기 물기를 덜 닦음"]],
+      ask: ["시라타마코만 쓰는지 섞는지", "찜기와 전자레인지 중 무엇으로 익히는지", "흰앙금과 팥앙금 중 무엇을 쓰는지", "몇 시간 안에 팔아야 하는지"],
+      nums: "가루:물 비율 · 익히는 시간" },
+    { key: "madeleine", name: "마들렌 · 휘낭시에", short: "마들렌·휘낭시에", jp: "{マドレーヌ|まどれーぬ}・{フィナンシェ|ふぃなんしぇ}", feat: "촉촉하고 속이 꽉 찬 구움과자. 매출을 받쳐주는 기본", use: ["상시 메뉴", "선물 · 답례품"],
+      flow: ["마들렌 — 재료를 순서대로 섞고 냉장 휴지", "휘낭시에 — 버터를 갈색이 될 때까지 끓이기", "휘낭시에 — 흰자·아몬드파우더·가루에 브라운버터", "틀에 버터 바르고 반죽 채우기", "높은 온도에서 짧게 굽기"],
+      point: "마들렌은 차가운 반죽을 높은 온도에 넣어야 가운데 「배꼽(へそ)」이 올라와요. 휘낭시에는 브라운버터 색이 곧 향이에요.",
+      fail: [["마들렌 배꼽이 없음", "휴지 부족, 오븐 온도 낮음"], ["틀에서 안 빠짐", "틀 버터·가루 부족"], ["휘낭시에가 씀", "버터를 너무 태움"], ["속이 퍽퍽", "너무 오래 구움"]],
+      ask: ["반죽 휴지 시간", "브라운버터를 멈추는 색 기준", "꿀이나 전화당을 넣는지", "선물용 포장과 보관 기간"],
+      nums: "휴지 시간 · 굽기 온도·시간" },
+    { key: "sando", name: "과일 산도", short: "과일 산도", jp: "{フルーツサンド|ふるーつさんど}", feat: "단면 비주얼로 SNS 유입. 크림과 과일 배치가 핵심", use: ["SNS", "시즌 과일"],
+      flow: ["식빵 얇게 준비", "크림을 단단하게 휘핑", "자를 선에 맞춰 과일 배치", "크림으로 빈틈 채우고 덮기", "랩으로 감싸 냉장 휴지 후 자르기"],
+      point: "단면이 상품이에요. 자를 선을 먼저 정하고, 그 선에 과일 단면이 오도록 거꾸로 배치해요.",
+      fail: [["단면이 밀림", "냉장 휴지 부족, 칼이 무딤"], ["빵이 젖음", "과일 물기"], ["과일이 빠짐", "크림이 과일 사이를 못 채움"]],
+      ask: ["크림에 마스카르포네 등을 섞는지", "식빵 두께와 종류", "칼 데우는 법과 자르는 법", "판매 가능 시간"],
+      nums: "크림 휘핑 정도 · 냉장 휴지 시간" },
+    { key: "pudding", name: "나마 푸딩 (말차 포함)", short: "나마 푸딩", jp: "{生|なま}{プリン|ぷりん}・{抹茶|まっちゃ}{プリン|ぷりん}", feat: "기본 푸딩에서 말차까지 응용. 전문점도 가능한 품목", use: ["상시 메뉴", "말차 라인"],
+      flow: ["우유·생크림·설탕 데우기", "노른자에 섞어 농도 내기", "체에 거르기", "컵에 담아 굳히기", "카라멜 소스 따로 만들기"],
+      point: "입에서 녹는 부드러움이 핵심이에요. 굽는 푸딩({焼|や}き{プリン|ぷりん})과 방식이 달라서, 수업에서 어느 쪽인지 먼저 확인해요.",
+      fail: [["기포 자국", "거르지 않았거나 세게 저음"], ["분리·덩어리", "노른자가 익음 (온도 높음)"], ["말차 색이 누렇게", "열을 오래 받음"], ["말차 덩어리", "체 없이 넣음"]],
+      ask: ["젤라틴으로 굳히는지, 저온으로 익히는지", "말차 넣는 시점과 양", "카라멜 소스 농도", "보관 기간"],
+      nums: "젤라틴 양 · 데우는 온도 · 냉각 시간" },
+    { key: "souffle", name: "수플레 치즈케이크", short: "수플레 치즈", jp: "{スフレチーズケーキ|すふれちーずけーき}", feat: "오지상 치즈케이크 스타일. 퍽퍽함과 비린 향 잡기", use: ["상시 메뉴", "홀 판매"],
+      flow: ["크림치즈·버터·우유를 중탕으로 녹이기", "노른자·가루 섞기", "흰자로 부드러운 머랭 만들기", "머랭을 나눠 섞기", "중탕으로 낮은 온도에서 천천히 굽기"],
+      point: "머랭은 끝이 살짝 휘는 정도로 부드럽게. 오븐이 뜨거우면 위가 갈라지고, 급하게 식히면 꺼져요.",
+      fail: [["윗면 갈라짐", "머랭 과다, 오븐 온도 높음"], ["꺼지고 주름", "급하게 꺼냄"], ["바닥이 떡짐", "머랭이 꺼짐"], ["비린 향", "레몬·바닐라 처리 부족"]],
+      ask: ["머랭 단단함 기준", "굽는 동안 온도 바꾸는 단계", "중탕 물 온도와 양", "꺼내서 식히는 순서"],
+      nums: "중탕 물 온도 · 단계별 오븐 온도" }
+  ];
+  var ORIGIN = {"dojima": {"t": "2003년 오사카 비즈니스 거리 {堂島|どうじま}(도지마)에 문을 연 파티스리 몽셰르(당시 이름 몽슈슈)의 롤케이크에서 시작됐어요. 입소문으로 퍼져 오사카 대표 선물이 됐고, 지금은 「도지마롤 스타일」이 크림을 듬뿍 넣은 한 바퀴 롤을 가리키는 말처럼 쓰여요. 지금의 「한 바퀴 말이」 모양이 나오기 전, 1주일만 진열됐던 다른 모양이 있었다는 이야기도 있어요.", "line": "오사카 도지마에서 시작된, 크림이 주인공인 롤케이크예요.", "src": [["Impress 식품 뉴스 (2021)", "https://gourmet.watch.impress.co.jp/docs/news/1327443.html"], ["GLTJP · Mon cher 도지마 롤", "https://www.gltjp.com/ko/directory/item/15128/"]]}, "short": {"t": "원형은 서양의 쇼트케이크(비스킷 같은 반죽에 과일 · 크림)예요. 일본에서는 1922년 {不二家|ふじや}(후지야)가 카스텔라에 가까운 스펀지에 생크림을 올려 「쇼트케이크」로 팔기 시작했다는 설이 가장 널리 알려져 있어요(후지야 쪽 설명 기준). 딸기를 올린 모양이 언제 자리 잡았는지는 자료마다 달라요. 집집마다 퍼진 건 냉장고가 보급된 1955년 이후라고 해요.", "line": "서양 쇼트케이크를 일본이 스펀지와 생크림으로 다시 만든, 일본식 케이크의 얼굴이에요.", "src": [["Walkerplus", "https://www.walkerplus.com/article/1103770/"], ["macaroni", "https://macaro-ni.jp/22014?page=2"]]}, "cookie": {"t": "일본에서는 1927년 창업한 {泉屋東京店|いずみやとうきょうてん}(이즈미야 도쿄점)이 일본에서 처음 쿠키를 만들어 판 곳으로 알려져 있어요(가게 쪽 설명). 지금의 디자인 「{クッキー|くっきー}{缶|かん}」 붐은 최근 몇 년 사이 선물 · 손님 접대용으로 커졌고, 나고야 「카페 타나카」의 쿠키캔 브랜드가 선구로 소개되기도 해요. 어느 곳이 처음인지는 설이 여러 개예요.", "line": "뚜껑을 여는 순간이 선물이 되는, 일본 백화점의 대표 구움과자 세트예요.", "src": [["Visit Chiyoda · 이즈미야 도쿄점", "https://visit-chiyoda.tokyo/app/spot/detail/357"], ["도요케이자이 온라인", "https://toyokeizai.net/articles/-/656355"]]}, "caramel": {"t": "부드러운 「{生|なま}{キャラメル|きゃらめる}」를 일본 전국에 알린 건 홋카이도 도카치의 {花畑牧場|はなばたけぼくじょう}(하나바타케 목장 · 다나카 요시타케 대표)이에요. 2000년대 후반 폭발적으로 팔려 통신판매가 한 달 넘게 밀릴 정도였다고 해요. 처음 발매한 해와 누가 처음 「생 카라멜」이라고 불렀는지는 확인하지 못했어요.", "line": "홋카이도 목장 우유를 졸여 만든 「입에서 녹는 캐러멜」로 일본에 퍼졌어요.", "src": [["Walkerplus", "https://www.walkerplus.com/article/14143/"], ["TV도쿄 「솔로몬 유리」", "https://www.tv-tokyo.co.jp/solomon/backnumber/20140119/"]]}, "daifuku": {"t": "다이후쿠 자체는 오래된 화과자지만, 딸기를 통째로 넣은 딸기 다이후쿠는 1985년(쇼와 60년) 무렵 생겼어요. 원조를 주장하는 가게가 여러 곳이고 비슷한 시기에 팔기 시작해서, 어디가 먼저인지는 설이 여러 개예요. 도쿄 신주쿠의 {大角玉屋|おおすみたまや}(오스미타마야)가 「딸기 마메다이후쿠」 원조로 잘 알려져 있어요.", "line": "40년쯤 전에 생긴, 생각보다 젊은 화과자예요.", "src": [["macaroni", "https://macaro-ni.jp/32006"], ["All About", "https://allabout.co.jp/gm/gc/392423/"]]}, "madeleine": {"t": "마들렌 — 18세기 프랑스 로렌 지방 코메르시에서, 스타니스와프 공의 만찬에 하녀 「마들렌」이 조개 모양 과자를 구워 냈다는 전설이 가장 유명해요. 순례자들이 가져왔다는 설, 19세기 제과사가 만들었다는 설도 있어 설이 여러 개예요. 휘낭시에 — 17세기 수녀원 과자에서 시작해, 1890년 무렵 파리 증권거래소 근처 제과사 라스네가 작은 금괴 모양으로 바꿨다는 설이 알려져 있어요. 이름이 금괴 모양 때문인지 금융가 손님 때문인지도 설이 여러 개예요.", "line": "조개 모양은 하녀 마들렌의 전설, 금괴 모양은 파리 금융가 — 이야기가 있는 구움과자예요.", "src": [["Wikipedia · Madeleine", "https://en.wikipedia.org/wiki/Madeleine_(cake)"], ["France.fr", "https://www.france.fr/it/articolo/la-madeleine-il-duca-e-proust/"], ["Wikipedia · Financier", "https://en.wikipedia.org/wiki/Financier_(cake)"], ["Gault&Millau", "https://fr.gaultmillau.com/fr/news/le-financier-son-histoire-et-nos-bonnes-adresses"]]}, "sando": {"t": "과일 산도는 과일 가게가 운영하는 「{フルーツパーラー|ふるーつぱーらー}(후르츠 파라)」 문화에서 자랐어요. 도쿄 {千疋屋総本店|せんびきやそうほんてん}(센비키야 총본점)은 과일 식당 시절부터 이어 온 전통 메뉴로 과일 샌드위치를 내고 있다고 소개돼요. 다만 누가 처음 만들었는지는 확인되지 않았어요. 지금은 카페 · 빵집에서도 흔히 팔아요.", "line": "일본 과일 가게 「후르츠 파라」에서 자란, 과일을 가장 예쁘게 먹는 샌드위치예요.", "src": [["macaroni", "https://macaro-ni.jp/41392"]]}, "pudding": {"t": "1990년대 일본에서 예전의 단단한 커스터드 푸딩 대신, 생크림이 들어가 입에서 녹는 부드러운 푸딩이 붐이 됐어요. 1993년에 나온 파스텔(Pastel)의 「나메라카 푸딩」이 그 시작으로 자주 꼽혀요(「~라고 한다」는 소개가 많아요). 「{生|なま}{プリン|ぷりん}」이라는 이름은 여러 가게가 쓰는 말이라 원조를 하나로 말하기는 어려워요.", "line": "단단한 푸딩에서 「입에서 녹는 푸딩」으로 — 1990년대 일본이 바꾼 푸딩이에요.", "src": [["Walkerplus", "https://www.walkerplus.com/article/38232/"], ["Impress 식품 뉴스", "https://gourmet.watch.impress.co.jp/docs/news/2077766.html"]]}, "souffle": {"t": "일본식 수플레 치즈케이크는 1960년대 셰프 구즈노 도모타로가 베를린에서 먹은 독일 치즈케이크(케제쿠헨)에서 아이디어를 얻었다는 설이 알려져 있어요(영문 위키 기준 · 확실하지 않음). 오사카 「리쿠로 오지상」은 1984년 갓 구운 치즈케이크를 내놓아 크게 퍼뜨렸는데, 두 이야기는 서로 다른 이야기예요.", "line": "독일 치즈케이크를 일본이 폭신하게 바꾼 케이크예요.", "src": [["Wikipedia · Japanese cheesecake", "https://en.wikipedia.org/wiki/Japanese_cheesecake"], ["호시노 리조트 · 리쿠로 오지상", "https://hoshinoresorts.com/jp/guide/area/kinki/rikuro/"]]}};
+  var CUR = {
+    dojima: "부드러움과 크림 밸런스 · 재구매율 높은 스테디셀러 · 도지마롤 스타일의 폭신한 시트",
+    short: "카페 매출 1순위 · 실패 없는 제누아즈 · 진짜 일본 전통 스타일 쇼트케이크",
+    cookie: "단가를 높이고 선물 수요까지 · 다양한 향으로 만드는 티 쿠키 세트",
+    caramel: "정확한 농도 컨트롤 · 딱딱하지도 흐르지도 않는 식감 · 여러 맛으로 응용",
+    daifuku: "한국 트렌드 + 일본 정통 기술 · 일본 전통 스타일 모찌",
+    madeleine: "기본이지만 매출을 책임지는 구움과자 · 촉촉하고 속이 꽉 찬",
+    sando: "SNS 유입 + 비주얼 판매형 메뉴 · 제대로 된 과일 산도",
+    pudding: "전문점 창업까지 가능한 고수익 디저트 · 기본 푸딩에서 말차 푸딩까지",
+    souffle: "오지상 치즈케이크 스타일 · 퍽퍽함과 비린 향 잡기"
+  };
+  var ingredients = [
+    { n: "박력분", core: "뼈대를 만들되 질기지 않게", d: ["글루텐이 약해 부드럽고 가벼움", "체에 쳐서 넣어야 덩어리 없음", "많이 섞으면 질겨짐"] },
+    { n: "설탕", core: "단맛 + 거품 안정 + 촉촉함", d: ["계란 거품을 단단하고 오래가게", "수분을 잡아 촉촉함 유지", "상백당({上白糖|じょうはくとう})은 더 촉촉한 일본 설탕"] },
+    { n: "계란", core: "거품으로 부풀고, 익으며 굳힌다", d: ["흰자 → 머랭으로 공기", "노른자 → 유화, 맛과 색", "실온 계란이 거품이 잘 남"] },
+    { n: "생크림", core: "일본 케이크 맛의 주인공", d: ["유지방 높을수록 진하고 빨리 단단해짐", "차갑게 유지해야 분리 안 됨", "용도별 휘핑 정도가 다름"] },
+    { n: "버터", core: "풍미와 식감을 같이 정한다", d: ["크리밍 → 바삭한 쿠키", "녹인 버터 → 촉촉한 마들렌", "브라운버터 → 고소한 휘낭시에"] },
+    { n: "아몬드파우더", core: "고소함과 촉촉함", d: ["유지가 많아 진한 맛", "휘낭시에의 주재료", "쿠키 식감을 부드럽게"] },
+    { n: "찹쌀가루", core: "모찌의 쫀득함", d: ["글루텐 없이 전분만으로 쫄깃", "설탕이 많으면 덜 굳음", "치대는 정도로 식감이 바뀜"] },
+    { n: "크림치즈", core: "치즈케이크의 맛과 질감", d: ["실온에서 풀어야 덩어리 없음", "레몬이 비린 향을 잡아줌", "브랜드마다 산미가 다름"] },
+    { n: "젤라틴", core: "푸딩이 흔들리는 정도", d: ["찬물에 불린 뒤 따뜻한 액체에", "끓이면 굳는 힘이 약해짐", "조금만 달라도 식감이 크게 바뀜"] }
+  ];
+  var VOCAB = [{"g": "🥣 섞기 · 거품", "w": [["{混|ま}ぜる", "まぜる", "섞다", "{全体|ぜんたい}を{混|ま}ぜます"], ["さっくり{混|ま}ぜる", "さっくりまぜる", "자르듯 가볍게 섞다", "{粉|こな}はさっくり{混|ま}ぜて"], ["{混|ま}ぜすぎ", "まぜすぎ", "너무 많이 섞음", "{混|ま}ぜすぎないでください"], ["{泡立|あわだ}てる", "あわだてる", "거품을 내다", "{卵白|らんぱく}を{泡立|あわだ}てます"], ["{泡|あわ}が{消|き}える", "あわがきえる", "거품이 꺼지다", "{泡|あわ}が{消|き}えないように"], ["{泡|あわ}をつぶさない", "あわをつぶさない", "거품을 꺼뜨리지 않다", ""], ["{角|つの}が{立|た}つ", "つのがたつ", "뿔이 서다", "{角|つの}が{ピン|ぴん}と{立|た}つまで"], ["{リボン|りぼん}{状|じょう}", "りぼんじょう", "리본 상태 · 떨어뜨리면 자국이 남음", ""], ["{メレンゲ|めれんげ}", "めれんげ", "머랭", ""], ["{溶|と}きほぐす", "ときほぐす", "(계란을) 풀다", "{卵|たまご}を{溶|と}きほぐします"], ["{溶|と}かす", "とかす", "녹이다", "{バター|ばたー}を{溶|と}かします"], ["なじませる", "なじませる", "어우러지게 하다 · 스며들게 하다", ""], ["{粉|こな}をふるう", "こなをふるう", "가루를 체에 치다", ""], ["{ダマ|だま}になる", "だまになる", "덩어리지다", "{ダマ|だま}にならないように"], ["{乳化|にゅうか}", "にゅうか", "유화 · 기름과 물이 매끈하게 섞임", ""], ["{分離|ぶんり}する", "ぶんりする", "분리되다", "{分離|ぶんり}したら{温|あたた}めて"], ["{底|そこ}から{混|ま}ぜる", "そこからまぜる", "바닥부터 섞다", ""]]}, {"g": "🔥 굽기 · 온도 · 시간", "w": [["{予熱|よねつ}", "よねつ", "예열", "{オーブン|おーぶん}を{予熱|よねつ}します"], ["{焼|や}く", "やく", "굽다", ""], ["{焼|や}き{色|いろ}", "やきいろ", "구움색", "{焼|や}き{色|いろ}がついたら"], ["{焼|や}きすぎ", "やきすぎ", "너무 구움", ""], ["{湯煎|ゆせん}", "ゆせん", "중탕", ""], ["{湯煎焼|ゆせんや}き", "ゆせんやき", "중탕으로 굽기", ""], ["{煮詰|につ}める", "につめる", "졸이다", ""], ["{沸騰|ふっとう}", "ふっとう", "끓음", "{沸騰|ふっとう}したら{火|ひ}を{止|と}めて"], ["{火|ひ}を{止|と}める", "ひをとめる", "불을 끄다", ""], ["{弱火|よわび} · {中火|ちゅうび} · {強火|つよび}", "よわび · ちゅうび · つよび", "약불 · 중불 · 센불", ""], ["{粗熱|あらねつ}を{取|と}る", "あらねつをとる", "한 김 식히다", ""], ["{冷|ひ}やす", "ひやす", "차갑게 하다 · 식히다", ""], ["{冷|ひ}やし{固|かた}める", "ひやしかためる", "차갑게 굳히다", ""], ["{寝|ね}かせる", "ねかせる", "휴지시키다", "{冷蔵庫|れいぞうこ}で{一晩|ひとばん}{寝|ね}かせます"], ["{常温|じょうおん} · {室温|しつおん}", "じょうおん · しつおん", "상온 · 실온", ""], ["{温度|おんど}", "おんど", "온도", "{何度|なんど}ですか"], ["〜{分|ふん} · 〜{秒|びょう}", "ふん · びょう", "~분 · ~초", "{十分|じゅっぷん}{焼|や}きます"], ["{竹串|たけぐし}を{刺|さ}す", "たけぐしをさす", "대꼬치로 찔러 보다 · 익었는지 확인", "{何|なに}もつかなければOK"]]}, {"g": "🥄 도구", "w": [["{ボウル|ぼうる}", "ぼうる", "볼", ""], ["{泡立|あわだ}て{器|き}", "あわだてき", "거품기", ""], ["{ハンドミキサー|はんどみきさー}", "はんどみきさー", "핸드 믹서", ""], ["{ゴムベラ|ごむべら}", "ごむべら", "고무 주걱", ""], ["{カード|かーど}", "かーど", "스크래퍼", ""], ["{絞|しぼ}り{袋|ぶくろ}", "しぼりぶくろ", "짤주머니", ""], ["{口金|くちがね}", "くちがね", "깍지", ""], ["{型|かた}", "かた", "틀", "{型|かた}に{バター|ばたー}を{塗|ぬ}ります"], ["{天板|てんぱん}", "てんぱん", "오븐 철판", ""], ["{オーブンシート|おーぶんしーと}", "おーぶんしーと", "오븐 시트 · 유산지", ""], ["{網|あみ}", "あみ", "식힘망", ""], ["{鍋|なべ}", "なべ", "냄비", ""], ["{温度計|おんどけい}", "おんどけい", "온도계", ""], ["はかり", "はかり", "저울", ""], ["{回転台|かいてんだい}", "かいてんだい", "돌림판", ""], ["{パレットナイフ|ぱれっとないふ}", "ぱれっとないふ", "스패튤러", ""], ["{茶|ちゃ}こし", "ちゃこし", "작은 체", ""], ["{ラップ|らっぷ}", "らっぷ", "랩", "{ラップ|らっぷ}をして{冷|ひ}やします"]]}, {"g": "🧈 재료", "w": [["{薄力粉|はくりきこ}", "はくりきこ", "박력분", ""], ["{強力粉|きょうりきこ}", "きょうりきこ", "강력분", ""], ["{全卵|ぜんらん}", "ぜんらん", "전란", ""], ["{卵黄|らんおう}", "らんおう", "노른자", ""], ["{卵白|らんぱく}", "らんぱく", "흰자", ""], ["{グラニュー|ぐらにゅー}{糖|とう}", "ぐらにゅーとう", "그래뉴당", ""], ["{上白糖|じょうはくとう}", "じょうはくとう", "상백당 · 촉촉한 일본 설탕", ""], ["{粉糖|ふんとう}", "ふんとう", "슈거파우더", ""], ["{生|なま}{クリーム|くりーむ}", "なまくりーむ", "생크림", ""], ["{乳脂肪|にゅうしぼう}", "にゅうしぼう", "유지방", "{乳脂肪|にゅうしぼう}42%"], ["{無塩|むえん}{バター|ばたー}", "むえんばたー", "무염 버터", ""], ["{焦|こ}がし{バター|ばたー}", "こがしばたー", "브라운버터", ""], ["{アーモンドプードル|あーもんどぷーどる}", "あーもんどぷーどる", "아몬드파우더", ""], ["{白玉粉|しらたまこ}", "しらたまこ", "찹쌀가루", ""], ["{片栗粉|かたくりこ}", "かたくりこ", "감자 전분 · 덧가루", ""], ["{抹茶|まっちゃ}", "まっちゃ", "말차", ""], ["{ゼラチン|ぜらちん}", "ぜらちん", "젤라틴", ""], ["{白餡|しろあん} · こし{餡|あん}", "しろあん · こしあん", "흰앙금 · 고운 팥앙금", ""], ["{クリームチーズ|くりーむちーず}", "くりーむちーず", "크림치즈", ""], ["{水飴|みずあめ}", "みずあめ", "물엿", ""]]}, {"g": "🍓 크림 · 모양 · 마무리", "w": [["{七分立|しちぶだ}て", "しちぶだて", "70% 휘핑 · 떠올리면 흘러내림", ""], ["{八分立|はちぶだ}て", "はちぶだて", "80% 휘핑 · 뿔 끝이 살짝 휨", ""], ["{九分立|くぶだ}て", "くぶだて", "90% 휘핑 · 단단함", ""], ["{ナッペ|なっぺ}", "なっぺ", "크림 아이싱하기", ""], ["{サンド|さんど}する", "さんどする", "사이에 끼우다", ""], ["{シロップ|しろっぷ}を{打|う}つ", "しろっぷをうつ", "시럽을 바르다", ""], ["{絞|しぼ}る", "しぼる", "짜다", "{口金|くちがね}で{絞|しぼ}ります"], ["{巻|ま}く", "まく", "말다", "{手前|てまえ}から{巻|ま}きます"], ["{断面|だんめん}", "だんめん", "단면", ""], ["{艶|つや}", "つや", "윤기", "{艶|つや}が{出|で}るまで"], ["{均|なら}す", "ならす", "평평하게 고르다", ""], ["{切|き}り{分|わ}ける", "きりわける", "잘라 나누다", ""], ["{包|つつ}む", "つつむ", "감싸다", ""], ["{打|う}ち{粉|こ}", "うちこ", "덧가루", ""], ["{生地|きじ}", "きじ", "반죽 · 시트", ""], ["{裏|うら}ごし", "うらごし", "체에 내리다", ""]]}, {"g": "🗣 지시 · 말투 · 칭찬 · 주의", "w": [["{少|すこ}しずつ", "すこしずつ", "조금씩", "{少|すこ}しずつ{加|くわ}えます"], ["{一気|いっき}に", "いっきに", "한 번에", ""], ["{手早|てばや}く", "てばやく", "재빨리", ""], ["ゆっくり", "ゆっくり", "천천히", ""], ["{加|くわ}える", "くわえる", "넣다 · 더하다", ""], ["このくらい", "このくらい", "이 정도", "このくらいの{固|かた}さ"], ["{固|かた}さ · {柔|やわ}らかさ", "かたさ · やわらかさ", "되기 · 부드러움", ""], ["{見|み}ていてください", "みていてください", "보고 계세요", ""], ["{次|つぎ}は", "つぎは", "다음은", ""], ["{触|さわ}らないでください", "さわらないでください", "만지지 마세요", ""], ["{気|き}をつけて", "きをつけて", "조심하세요", ""], ["{熱|あつ}いです", "あついです", "뜨거워요", ""], ["{大丈夫|だいじょうぶ}", "だいじょうぶ", "괜찮아요", ""], ["{上手|じょうず}です", "じょうずです", "잘하시네요", ""], ["いいですね", "いいですね", "좋네요", ""], ["{完成|かんせい}", "かんせい", "완성", ""], ["{試食|ししょく}", "ししょく", "시식", "{試食|ししょく}しましょう"], ["{質問|しつもん}はありますか", "しつもんはありますか", "질문 있어요?", ""]]}];
+  var quiz = [
+    ["공립법과 별립법은 무엇이 다른가요?", "공립법은 전란으로 한 번에 거품을 내고, 별립법은 노른자와 흰자를 나눠 각각 거품을 내요. 별립법이 더 가볍고 폭신해요."],
+    ["생 카라멜의 식감은 무엇으로 정해지나요?", "끓이는 마지막 온도요. 1~2℃ 차이로 딱딱해지거나 흘러요."],
+    ["마들렌 배꼽(へそ)이 올라오려면?", "휴지한 차가운 반죽을 높은 온도의 오븐에 넣어요."],
+    ["휘낭시에에 쓰는 「{焦|こ}がし{バター|ばたー}」는?", "브라운버터. 버터를 갈색이 될 때까지 끓여 고소한 향을 내요."],
+    ["다이후쿠가 금방 딱딱해지는 이유 두 가지는?", "설탕이 부족하거나 덧가루를 너무 많이 썼을 때요."],
+    ["과일 산도에서 과일을 놓는 기준은?", "자를 선을 먼저 정하고, 그 선에 과일 단면이 오도록 배치해요."],
+    ["수플레 치즈케이크 윗면이 갈라지는 이유는?", "머랭이 너무 많거나 단단하고, 오븐 온도가 높을 때요."],
+    ["{七分立|しちぶだ}て와 {八分立|はちぶだ}て의 차이는?", "{七分立|しちぶだ}て는 떠올리면 흘러내리는 정도, {八分立|はちぶだ}て는 뿔 끝이 살짝 휘는 정도예요."],
+    ["틴쿠키가 눅눅해지지 않게 하려면?", "완전히 식힌 뒤 건조제와 함께 담아요."],
+    ["말차 푸딩 색이 누렇게 변하는 이유는?", "말차가 열을 오래 받아서예요. 넣는 시점을 늦춰요."]
+  ];
+
+  /* ---------- 작년(2025 제빵) 정리 ---------- */
+  var lastIng = [
+    ["강력분", "빵의 골격 · 조직 · 기공 · 쫀득한 식감의 중심", "글루텐 형성 · 가스 보유 → 큰 볼륨 · 식빵의 찢어지는 결 · 단백질량에 따라 무게감 · 탄력"],
+    ["준강력분", "일본 카시빵의 폭신 · 촉촉 · 섬세한 결", "강력분보다 부드러움 · 흡수율 높아 촉촉함 유지 · 크루아상 층 유지에 적합 · 저온 발효에도 안정"],
+    ["그래뉴당", "단맛 + 발효 + 조직 + 보습", "효모 먹이 · 수분 잡아 촉촉 · 구움색 · 노화 지연 · 너무 많으면 글루텐 약해져 퍼짐"],
+    ["백설탕", "깨끗한 단맛 · 색 · 보습", "결정이 작아 잘 녹음 · 표면 갈변 일정 · 반죽 작업성"],
+    ["소금", "맛 + 글루텐 안정 + 발효 조절 + 살균", "글루텐을 조여 탄력 · 발효 속도 조절 · 잡균 억제 · 퍼짐 방지"],
+    ["드라이이스트", "발효의 동력 · 풍미 엔진", "CO₂로 부풀림 · 알코올 · 유기산으로 향 · 발효 안정적 · 오버나이트에도 안정"],
+    ["생이스트", "더 부드럽고 깊은 발효 풍미", "향 성분 풍부 · 촉촉한 조직 · 발효 빠름 · 온도에 민감"],
+    ["발효버터", "향미 최강 · 비에누아즈리 핵심", "젖산 향 · 크루아상 층 · 입에서 녹는 질감"],
+    ["몰트", "발효력 · 색 · 풍미를 같이 올리는 맥아", "효모 활성 · 구움색 · 맥아향 · 하드빵 크러스트 향"],
+    ["물", "모든 반죽의 출발점", "글루텐 · 전분 수화 · 발효 매개 · 반죽 온도 조절"],
+    ["쌀가루", "글루텐 없는 부드러움 · 촉촉함", "쫀득함 · 결 고움 · 노화 느림 · 흡수력 강함"],
+    ["쇼트닝", "조직 안정 · 부드러움 · 유화", "결 균일 · 보존성 · 버터보다 작업성 높음"],
+    ["트레할로스", "촉촉함 유지 최고 + 색 안정", "단맛 낮음 · 갈변 억제 · 노화 지연 · 카시빵 촉촉함의 비밀"],
+    ["탈지분유", "고소함 · 영양 · 색", "유당으로 구움색 · 밀크 풍미 · 반죽 보습"],
+    ["전란", "유화 + 풍미 + 기포 + 구조", "반죽 안정 · 색 · 응고로 조직 강화"],
+    ["중종", "빵을 더 맛있게 하는 사전 발효 반죽", "풍미 · 보존성 · 촉촉함 · 발효 안정"],
+    ["파트 페르망테", "발효 반죽이 주는 깊은 향", "하드빵 산미 · 크러스트 풍미 · 가스 보유"],
+    ["베이킹파우더", "화학 팽창", "산 + 염기 반응으로 CO₂ · 빠른 팽창 · 부드러운 기공"],
+    ["버터", "풍미 · 결 · 부드러움 완성", "버터 아로마 · 조직 연화 · 유화"]
+  ];
+  var lastRecipes = [
+    ["크루아상 프레즈", "초승달 또는 말린 삼각형", "크루아상 반죽에 라즈베리 풍미, 산미와 버터의 조화", "2c769763f92380169a47e086d9f74a3e"],
+    ["캄파뉴 오 프뤼이", "둥근 원형, 단면에 과일", "캄파뉴에 건과일·견과류, 산미와 단맛 조화", "2c769763f9238026b283ce3ae48a325d"],
+    ["카레빵", "둥글거나 납작한 원형", "반죽 안에 카레 필링, 튀기거나 구워 풍미 진함", "2c769763f923802f8602f9127759d5ce"],
+    ["소프트 베이글", "링(도넛) 형태", "일반 베이글보다 부드럽고 수분감 있음", "2c769763f92380429b41d39523923f22"],
+    ["크루아상", "초승달 모양", "버터 레이어가 살아 있는 결, 바삭하고 속은 촉촉", "2c769763f9238071b057d2f6579ed3b3"],
+    ["미니 바게트", "짧고 가는 막대형", "바게트보다 작고 가벼움, 바삭한 크러스트", "2c769763f9238086b958dda5fa333bbd"],
+    ["할라피뇨 치즈 베이글", "링 형태, 표면에 치즈", "쫄깃한 반죽 + 매콤한 할라피뇨와 치즈", "2c769763f923809d844bc60cce78f5fe"],
+    ["단팥빵", "둥근 원형, 위에 깨 또는 표시", "일본식 카시빵 대표. 부드럽고 촉촉한 반죽, 단팥의 달콤함이 중심", "2c769763f92380acbe89f32c8ce8be43"],
+    ["메론빵", "둥근 반구형, 격자무늬", "속은 폭신, 겉은 쿠키처럼 바삭한 대비 식감", "2c769763f92380b7ba63da601413ce32"],
+    ["크림빵 (슈크림빵)", "타원형 또는 둥근 형태", "부드러운 반죽 + 크림 필링, 촉촉한 식감", "2c769763f92380c2bc97feb46461b5c0"],
+    ["뤼스틱", "길쭉한 막대형", "고수분 하드빵, 길고 투박한 형태", "2c769763f92380f5bf9cde34fff83ab4"],
+    ["팡 드 캄파뉴", "둥글고 투박한 원형", "전통 하드빵, 발효 풍미 깊음", "2c769763f92380f791fdc5637628b511"]
+  ];
+
+  /* ---------- 일정 · 준비 처음 값 (SEED · 서버에 없을 때만 화면에) ---------- */
+  function rowsOfList(prefix, list, fields) {
+    var o = {};
+    list.forEach(function (a, i) { var r = { o: i + 1 }; fields.forEach(function (f, j) { r[f] = a[j] === undefined ? (f === "ok" ? false : "") : a[j]; }); o[prefix + (i < 9 ? "0" : "") + (i + 1)] = r; });
+    return o;
+  }
+  var DAYS = [
+    { n: 1, d: "11/30 (월)", ymd: [2026, 11, 30], title: "출국 · 도착" },
+    { n: 2, d: "12/1 (화)", ymd: [2026, 12, 1], title: "수업 1일차" },
+    { n: 3, d: "12/2 (수)", ymd: [2026, 12, 2], title: "수업 2일차" },
+    { n: 4, d: "12/3 (목)", ymd: [2026, 12, 3], title: "수업 3일차" },
+    { n: 5, d: "12/4 (금)", ymd: [2026, 12, 4], title: "도쿄 디저트 · 긴자" },
+    { n: 6, d: "12/5 (토)", ymd: [2026, 12, 5], title: "귀국" }
+  ];
+  function classDay(evening, extra) {
+    var r = [["07:00", "기상", ""], ["", "학교 갈 준비", "점심 대용 도시락 챙기기"], ["08:40", "핫토리 수업 (Hattori Nutrition College)", "8:40까지 도착 · 편한 운동화 · 개인 쉐프복 · 휴대폰 충전기 · 펜"], ["12:00", "점심", "도시락 먹기 · 물 챙기기"], ["17:00", "수업 끝", ""]];
+    return r.concat(evening, extra || [["", "혼자 레시피 정리 마무리", "이 페이지 수업 노트에 바로 적기"], ["", "오답노트 보고 자기", ""]]);
+  }
+  var PLAN_ROWS = {
+    1: [["08:20", "김해 출발 BX0717", "캐리어 1개 (45L도 같이)"],
+        ["10:25", "나리타 공항 도착", "나리타 제1터미널 · 밖으로 나오는 시간까지"],
+        ["", "나리타 지하 · 넥스 왕복 티켓 사기", "5,200엔 · 여권 필요 · 교통카드 1장에 10,000엔 충전 · 편의점에서 간단히 · 신주쿠까지 약 1시간 30분"],
+        ["13:00", "신주쿠역 도착", "남쪽출구 코인락커에 캐리어 맡기기"],
+        ["13:10", "★ 포터 (이세탄 본관 2층)", "★ 꼭 사기 · 하울 본삭 미니 네이비 · 없으면 16:15 포터 오모테산도점 (12~20시) · 여권 챙기기"],
+        ["13:45", "장어덮밥 고바야시 (小ばやし · こばやし)", "신주쿠 동쪽출구 2분 · 안 되면 기쿠카와 (菊川 · きくかわ)"],
+        ["14:40", "택배 픽업 (요요기)", ""],
+        ["15:10", "숙소에 짐 두기", "핫토리 학교 근처 숙소 · 체크인 16시 · 얼리 체크인 문의 · 안 되면 락커에 두고 다니기"],
+        ["15:30", "★ 하라주쿠", "★ 꼭 사기 · 호카 하라주쿠 직영점 (신발) · 온러닝 캣스트리트 · 여권 챙기기"],
+        ["16:15", "★ 오모테산도", "★ 꼭 사기 · MATOW 스퀘어 시계 (H°M'S WatchStore 오모테산도 · 19:30 마감 · 저녁 전에) · 넘버슈가 · 피에르 에르메 · 포터 오모테산도점 (12~20시)"],
+        ["17:45", "저녁 (혼자) · 오모테산도", "とんかつ まい泉(まいせん) 青山本店(あおやまほんてん) (카운터석 · 11:00~22:00 무휴) 또는 麺散 (우동 · 월 ~22:00)"],
+        ["19:00", "★ 호카 시부야 직영점", "20시 마감 · 하라주쿠에서 못 샀으면 여기서 · 여권 챙기기"],
+        ["20:00", "마트 + 다이소", "다이소: 빅카메라 신주쿠 8층 · 비타민 · 휴족시간 · 겔 · 1회용 컵 · 햇반 · 후리카케 · 오니기리통"],
+        ["", "산 짐 정리하기", "미리 산 것 다 정리"],
+        ["", "학교 갈 준비하고 쉬기", ""]],
+    2: classDay([["18:00", "레시피 정리 (수복님과)", ""], ["", "저녁", "우마야 (신주쿠) 또는 탄보 (요요기) · 다카시마야 지하 구경 (7시 반까지)"]]),
+    3: classDay([["18:00", "레시피 정리 (수복님과)", ""], ["", "신주쿠 저녁 쇼핑", "알펜도쿄 (온러닝) · 치이카와랜드 · 무인양품 · 세계당 (문구) · 이세탄 지하"]]),
+    4: classDay([["", "레시피 정리 (수복님과)", "오늘 배운 것 보고 정리"], ["18:00", "저녁 · 야키니쿠 시시로", "학교 바로 옆 · 18시 오픈"]], [["", "혼자 레시피 정리 마무리", "이 페이지 수업 노트에 바로 적기"]]),
+    5: [["06:00", "기상 · 일본어 청해 4회", "듣기 + 채점 + 피드백"],
+        ["09:30", "도쿄도미술관 오르세전", "2,400엔 · 예약 필요 없음 · 오픈런"],
+        ["12:00", "가볍게 점심", "미술관 안 레스토랑이나 카페"],
+        ["13:00", "긴자선 타고 긴자로", ""],
+        ["14:00", "페닌슐라 도쿄 애프터눈티", "호텔 디저트 · 예약"],
+        ["16:30", "긴자 디저트 구경", "키쿠노야 (틴 · 18시 마감) · 시세이도 팔러 (틴쿠키) · 긴자 웨스트 · 팡메종 · 이토야 (문구)"],
+        ["18:00", "히가시야 긴자 (HIGASHIYA GINZA)", "19시 마감 · 와가시 매장 구경"],
+        ["19:00", "프렌치 코스 · 셰토모 (긴자)", "히가시야와 같은 건물 11층 · TableCheck로 예약"],
+        ["밤", "숙소 · 짐 싸기", "포터 · 시계는 기내 가방에"]],
+    6: [["06:00", "기상 · 체크아웃", ""],
+        ["07:30", "공항으로 출발", "넥스 왕복표"],
+        ["09:00", "나리타 제1터미널 도착", "면세 환급 받기 (포터 · 시계 · 여권)"],
+        ["11:25", "BX0718 한국으로", ""],
+        ["", "일본어 청해 5회", "비행기 안에서 풀고 공부해 보기"]]
+  };
+  var PLAN_MEMO = {
+    1: "BX0717 김해 08:20 → 나리타 10:25 · 여행자보험 · 로밍 완료 · 캐리어 1개 (45L도 같이)",
+    2: "저녁 후보: 우마야 (신주쿠) · 탄보 (요요기) · 다카시마야 지하 구경 (숙소 근처 · 7시 반까지) · GU",
+    3: "저녁 쇼핑: 알펜도쿄 (온러닝) · 치이카와랜드 · 무인양품 · 세계당 (문구) · 이세탄 지하",
+    4: "저녁: 야키니쿠 시시로 (학교 바로 옆 · 18시 오픈)",
+    5: "미술관 → 페닌슐라 애프터눈티 → 긴자 디저트 → 히가시야 → 셰토모",
+    6: "BX0718 나리타 제1터미널 11:25 → 13:55 · 위탁 수하물 15kg / 기내용 10kg"
+  };
+  var BENCH_STORES = [
+    ["넘버슈가 오모테산도", "오모테산도", "1일차"], ["피에르 에르메 아오야마", "오모테산도", "1일차"], ["다카시마야 신주쿠 지하", "신주쿠", "2일차"],
+    ["이세탄 신주쿠 지하", "신주쿠", "3일차"], ["페닌슐라 애프터눈티", "히비야", "5일차"], ["긴자 키쿠노야", "긴자", "5일차"],
+    ["시세이도 팔러 긴자본점", "긴자", "5일차"], ["긴자 웨스트", "긴자", "5일차"], ["히가시야 긴자", "긴자", "5일차"],
+    ["셰토모", "긴자", "5일차"], ["도쿄 기프트 팔레트", "도쿄역", ""]
+  ];
+  /* 「★ 꼭 해야 할 일 및 사기」 처음 값 (1일차) · 장소 검색어(pl) */
+  var MUST1 = rowsOfList("m", [
+    ["★ 포터 하울 본삭 미니 네이비 · 13:10 이세탄 본관 2층 / 없으면 16:15 포터 오모테산도점 (12~20시)", false, "", "伊勢丹新宿店 本館"],
+    ["★ MATOW 스퀘어 시계 · 16:15 H°M'S WatchStore 오모테산도 (19:30 마감 · 저녁 전에)", false, "", "H°M'S WatchStore 表参道"],
+    ["★ 호카 신발 · 15:30 호카 하라주쿠 직영점 / 19:00 호카 시부야 직영점 (20시 마감)", false, "", "HOKA 原宿 / HOKA Shibuya"],
+    ["🛂 세 가지 다 여권 챙기기 · 12/5 공항에서 면세 환급 · 기내 가방에 넣기", false, "", ""]
+  ], ["x", "ok", "m", "pl"]);
+  /* 일정 줄 기본 장소 검색어 · 줄 id와 할 일 글이 처음 값 그대로일 때만 보여 줌 */
+  var PL_SEED = {
+    1: { r02: "成田空港 第1ターミナル", r03: "成田空港 第1ターミナル", r04: "新宿駅 南口", r05: "伊勢丹新宿店 本館", r06: "小ばやし 新宿 うなぎ", r07: "ヤマト運輸 代々木", r08: "服部栄養専門学校",
+         r09: "HOKA 原宿 / On Tokyo Cat Street", r10: "H°M'S WatchStore 表参道 / NUMBER SUGAR 表参道 / ピエール・エルメ 青山", r11: "とんかつ まい泉 青山本店", r12: "HOKA Shibuya", r13: "ビックカメラ 新宿東口店 / まいばすけっと 新宿駅南店" },
+    2: { r03: "服部栄養専門学校", r07: "高島屋 新宿" },
+    3: { r03: "服部栄養専門学校", r07: "伊勢丹新宿店" },
+    4: { r03: "服部栄養専門学校", r07: "獅子楼 代々木" },
+    5: { r02: "東京都美術館", r05: "ザ・ペニンシュラ東京", r06: "銀座 菊廼舎 / 資生堂パーラー 銀座本店 / 銀座ウエスト 本店 / 伊東屋 銀座", r07: "HIGASHIYA GINZA", r08: "GINZA chez tomo" },
+    6: { r03: "成田空港 第1ターミナル" }
+  };
+  var BENCH_PL = { b01: "NUMBER SUGAR 表参道", b02: "ピエール・エルメ 青山", b03: "高島屋 新宿", b04: "伊勢丹新宿店", b05: "ザ・ペニンシュラ東京", b06: "銀座 菊廼舎",
+    b07: "資生堂パーラー 銀座本店", b08: "銀座ウエスト 本店", b09: "HIGASHIYA GINZA", b10: "GINZA chez tomo", b11: "東京ギフトパレット" };
+  var MUST_NOTE = '<p class="mustn">🛂 세 가지 다 여권 챙기기 · 12/5 공항에서 면세 환급 · 기내 가방에 넣기</p>';
+  var K = {
+    prep: PRE + "prep", buy: PRE + "buy", fb: PRE + "feedback", cost: PRE + "cost", files: PRE + "files", bench: PRE + "bench", review: PRE + "review",
+    plan: function (n) { return PRE + "plan.d" + n; }, costd: function (n) { return PRE + "cost.d" + n; }, cls: function (k) { return PRE + "class." + k; }
+  };
+  var SEED = {};
+  SEED[K.prep] = { rows: rowsOfList("p", [
+    ["미리 예약한 것 캡처해 두기 (왕복 항공권 · 11/30 BX0717 · 12/5 BX0718)", true], ["로밍하기", false], ["해외 사용 가능 카드 (여권 명의자와 같아야 함)", false],
+    ["여행자보험 1명", true], ["비짓재팬 미리 작성해서 QR 준비하기", true], ["일본 교통카드 미리 준비하기 (도착해서 충전)", false],
+    ["환전하기", false], ["여권", false], ["개인 짐", false], ["쉐프복 1벌", false], ["멀티탭 / 돼지코", false], ["일정 최종 점검", false],
+    ["노트북 챙기기 + 백팩 메고 가기", false], ["아이패드 미니 챙겨 가기", false], ["김치 + 신라면 챙기기", false], ["텀블러 챙겨 가기", false]
+  ], ["x", "ok"]) };
+  SEED[K.buy] = {
+    must: rowsOfList("m", [["★ 포터 하울 본삭 미니 네이비 · 13:10 이세탄 본관 2층 / 없으면 16:15 포터 오모테산도점 (12~20시)"], ["★ MATOW 스퀘어 시계 · 16:15 H°M'S WatchStore 오모테산도 (19:30 마감 · 저녁 전에)"],
+      ["★ 호카 신발 · 15:30 호카 하라주쿠 직영점 / 19:00 호카 시부야 직영점 (20시 마감)"]], ["x", "ok"]),
+    now: rowsOfList("n", [["넥스 왕복 티켓 구매"], ["휴족시간 (돌기 있는 것) 3~4통"], ["수면안대 1박스 · 라벤더"], ["비타민 음료 5일치 + 겔 + 얼음컵 2~3개 + 일회용 컵 · 매일 아침 마시기"],
+      ["스이카 남은 잔액도 쓰기 · 급한 택시비로"], ["우유 + 삶은 달걀 (점심용)"], ["햇반 + 후리카케"], ["캡모자 1개"], ["멘소레담 아로마"]], ["x", "ok"]),
+    shop: rowsOfList("s", [["무인양품 보조가방"], ["스탠다드프로덕트 보냉 가방"], ["오니기리 만드는 통 (꼭 사기)"], ["히트텍 2~3장 (검정 · 회색)"], ["긴팔 2~3장"],
+      ["치이카와 키링 2개 정도"], ["온러닝 신발 (살 수 있으면)"], ["민트 1박스"], ["아누아 1병 + 1병 (일본 한정)"]], ["x", "ok"]),
+    memo: "📦 택배 픽업 (요요기) · 배송 도착한 뒤에 가기"
+  };
+  SEED[K.fb] = { good: "", bad: "" };
+  DAYS.forEach(function (d) { SEED[K.plan(d.n)] = { memo: PLAN_MEMO[d.n], rows: rowsOfList("r", PLAN_ROWS[d.n], ["t", "w", "m"]) }; SEED[K.costd(d.n)] = { rows: {} }; });
+  SEED[K.cost] = { start: "", startW: "", fx: "836" };
+  /* 이미 있는 문서에 새 필드가 없을 때 쓰는 기본값 (보기 · 처음 고칠 때만 같이 저장) */
+  var DEF = {};
+  DAYS.forEach(function (d) { DEF[K.plan(d.n)] = { must: d.n === 1 ? MUST1 : {} }; SEED[K.plan(d.n)].must = clone(DEF[K.plan(d.n)].must); });
+  DEF[K.cost] = { startW: "", fx: "836" };
+  SEED[K.files] = { list: {} };
+  SEED[K.bench] = { st: rowsOfList("b", BENCH_STORES, ["n", "area", "day"]), ev: {} };
+  SEED[K.review] = {};
+  items.forEach(function (it) { SEED[K.cls(it.key)] = { day: "", rec: rowsOfList("i", [["", "", ""], ["", "", ""], ["", "", ""]], ["a", "b", "c"]), steps: "", nums: "", chef: "", fails: "", ans: {}, extra: "", cafe: "", ph: {} }; });
+  var ALLKEYS = Object.keys(SEED);
+
+  /* ---------- 저장소 (서버 + 이 기기 임시 보관) ---------- */
+  var S = { srv: {}, pend: {}, timers: {}, busy: {}, again: {} };
+  var db = null, online = false, me = ls(PRE + "me") || "";
+  var imgCache = {};
+  var LSP = PRE + "pending";
+  try { var lp = JSON.parse(ls(LSP) || "{}"); if (lp && typeof lp === "object") S.pend = lp; } catch (e) {}
+  function keepPend() { ls(LSP, JSON.stringify(S.pend)); }
+  function setPath(o, path, v) { var ks = path.split("."), c = o; for (var i = 0; i < ks.length - 1; i++) { if (c[ks[i]] == null || typeof c[ks[i]] !== "object") c[ks[i]] = {}; c = c[ks[i]]; } c[ks[ks.length - 1]] = v; }
+  function getPath(o, path) { return path.split(".").reduce(function (a, k) { return a == null ? undefined : a[k]; }, o); }
+  function fillDef(key, o, paths) { var d = DEF[key]; if (!d) return o; Object.keys(d).forEach(function (f) { if (o[f] === undefined && (!paths || paths.some(function (p) { return p === f || p.indexOf(f + ".") === 0; }))) o[f] = clone(d[f]); }); return o; }
+  function view(key) { var s = S.srv[key], o = s ? fillDef(key, clone(s)) : clone(SEED[key] || {}), p = S.pend[key]; if (p) Object.keys(p).forEach(function (k) { setPath(o, k, p[k]); }); return o; }
+  function pendCount() { return Object.keys(S.pend).filter(function (k) { return S.pend[k] && Object.keys(S.pend[k]).length; }).length; }
+  function put(key, path, val) {
+    if (key.indexOf(PRE) !== 0) return;
+    (S.pend[key] || (S.pend[key] = {}))[path] = val; keepPend(); status("saving");
+    clearTimeout(S.timers[key]); S.timers[key] = setTimeout(function () { flush(key); }, 700);
+  }
+  function flush(key) {
+    S.timers[key] = null;
+    var p = S.pend[key]; if (!p || !Object.keys(p).length) return;
+    if (!db || !online || navigator.onLine === false) { status("offline"); return; }
+    if (S.busy[key]) { S.again[key] = true; return; }
+    S.busy[key] = true;
+    var sent = clone(p), ref = db.collection("ops").doc(key);
+    db.runTransaction(function (tx) {
+      return tx.get(ref).then(function (snap) {
+        var o;
+        if (snap.exists) { try { o = JSON.parse(snap.data().v || "{}"); } catch (e) { o = {}; } fillDef(key, o, Object.keys(sent)); } else o = clone(SEED[key] || {});
+        Object.keys(sent).forEach(function (k) { setPath(o, k, sent[k]); });
+        var v = JSON.stringify(o);
+        if (v.length > 200000) { var er = new Error("big"); er.code = "too-big"; throw er; }
+        tx.set(ref, { v: v, by: "ht", t: firebase.firestore.FieldValue.serverTimestamp() });
+      });
+    }).then(function () {
+      var cur = S.pend[key];
+      if (cur) Object.keys(sent).forEach(function (k) { if (JSON.stringify(cur[k]) === JSON.stringify(sent[k])) delete cur[k]; });
+      if (cur && !Object.keys(cur).length) delete S.pend[key];
+      keepPend(); status(pendCount() ? "saving" : "saved");
+    }).catch(function (err) { status(err && err.code === "too-big" ? "big" : "fail", err); })
+      .then(function () {
+        S.busy[key] = false;
+        if (S.again[key]) { S.again[key] = false; flush(key); }
+      });
+  }
+  function flushAll() { Object.keys(S.pend).forEach(function (k) { if (!S.timers[k] && !S.busy[k]) flush(k); }); }
+  setInterval(function () { if (pendCount()) flushAll(); }, 20000);
+  window.addEventListener("online", flushAll);
+  document.addEventListener("visibilitychange", function () { if (document.visibilityState === "hidden") Object.keys(S.timers).forEach(function (k) { if (S.timers[k]) { clearTimeout(S.timers[k]); flush(k); } }); });
+
+  var stT = null;
+  function status(st, err) {
+    var el = $("save"); clearTimeout(stT);
+    if (st === "saved") { var ls0 = $("lastSave"); if (ls0) ls0.textContent = "마지막 저장 " + new Date().toLocaleTimeString("ko-KR", { hour: "numeric", minute: "2-digit" }); }
+    if (st === "saving") { el.textContent = "저장 중…"; el.className = "savepill"; }
+    else if (st === "saved") { el.textContent = "저장됨 ✓"; el.className = "savepill ok"; stT = setTimeout(function () { el.textContent = ""; }, 2500); }
+    else if (st === "offline") { el.textContent = "인터넷이 안 돼요 · 적은 건 이 기기에 임시 보관 중이고, 연결되면 자동으로 저장돼요"; el.className = "savepill bad"; }
+    else if (st === "big") { el.textContent = "내용이 너무 길어서 저장이 안 돼요 · 조금 줄여 주세요"; el.className = "savepill bad"; }
+    else if (st === "conn") { el.textContent = "연결 중…"; el.className = "savepill"; }
+    else if (st === "noconn") { el.textContent = "서버에 연결하지 못했어요 · 적은 건 이 기기에 보관돼요 · 새로고침해 주세요"; el.className = "savepill bad"; }
+    else { el.textContent = "저장하지 못했어요" + (err && err.code ? " (" + err.code + ")" : "") + " · 이 기기에 보관해 두고 잠시 뒤 다시 보내요"; el.className = "savepill bad"; }
+  }
+
+  /* ---------- 화면 묶음: 서버 값이 바뀌면 다시 그리기 (쓰는 중인 칸은 건드리지 않음) ---------- */
+  var sections = [];
+  function mount(el, keys, render) {
+    var s = { el: el, keys: keys, render: render, dirty: false }; sections.push(s); draw(s);
+    el.addEventListener("focusout", function () { setTimeout(function () { if (s.dirty && !el.contains(document.activeElement)) draw(s); }, 60); });
+    return s;
+  }
+  function draw(s) { s.dirty = false; s.render(s.el); s.el.querySelectorAll("textarea").forEach(grow); loadImgs(s.el); }
+  function typing(el) { var a = document.activeElement; return a && el.contains(a) && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName) && a.type !== "file"; }
+  function matches(s, key) { return s.keys.some(function (k) { return k === key || (k.slice(-1) === "*" && key.indexOf(k.slice(0, -1)) === 0); }); }
+  function fire(key) {
+    sections.forEach(function (s) {
+      if (!matches(s, key)) return;
+      if (typing(s.el)) { s.dirty = true; soft(s.el); } else draw(s);
+    });
+    if (key.indexOf(PRE + "class.") === 0) refreshDone();
+  }
+  function soft(el) {
+    el.querySelectorAll("[data-k][data-p]").forEach(function (i) {
+      if (i === document.activeElement) return;
+      var v = getPath(view(i.dataset.k), i.dataset.p);
+      if (i.type === "checkbox") i.checked = !!v; else if (i.value !== (v == null ? "" : String(v))) i.value = v == null ? "" : v;
+    });
+  }
+  function redrawFor(node) { sections.forEach(function (s) { if (s.el.contains(node)) draw(s); }); }
+  function grow(t) { t.style.height = "auto"; t.style.height = Math.min(t.scrollHeight + 3, 640) + "px"; }
+  function rowsOf(o) { return Object.keys(o || {}).map(function (id) { return [id, o[id]]; }).filter(function (a) { return a[1] && !a[1].del; }).sort(function (a, b) { return (a[1].o || 0) - (b[1].o || 0); }); }
+  var A = function (k, p) { return 'data-k="' + esc(k) + '" data-p="' + esc(p) + '"'; };
+  function inp(k, p, v, ph, extra) { return '<input type="text" ' + A(k, p) + ' value="' + esc(v) + '" placeholder="' + esc(ph) + '" aria-label="' + esc(ph) + '" ' + (extra || "") + '>'; }
+  function ta(k, p, v, ph, extra) { return '<textarea rows="1" ' + A(k, p) + ' placeholder="' + esc(ph) + '" aria-label="' + esc(ph) + '" ' + (extra || "") + '>' + esc(v) + '</textarea>'; }
+  function delBtn(k, path, label) { return '<button type="button" class="x" data-act="del" data-k="' + esc(k) + '" data-path="' + esc(path) + '" aria-label="' + (label || "이 줄 빼기") + '">×</button>'; }
+  function addBtn(k, path, kind, label) { return '<button type="button" class="btn sm" data-act="add" data-k="' + esc(k) + '" data-path="' + esc(path) + '" data-kind="' + kind + '">' + (label || "＋ 줄 추가") + '</button>'; }
+  function capName(t) { return String(t || "").replace(/^\s*★\s*/, "").split(" · ")[0].split(" / ")[0].trim(); }
+  function picsHtml(k, phPath, list, title) {
+    var ph = rowsOf(list || {}), fid = "up_" + (k + "_" + phPath).replace(/[^\w]/g, "_");
+    return '<div class="ckpics" data-up="' + esc(k) + '" data-path="' + esc(phPath) + '">' +
+      ph.map(function (b) { return '<span class="ckpic"><img data-fk="' + esc(b[1].k) + '" alt="' + esc(title || "사진") + ' 사진 · 누르면 크게">' + (capName(title) ? '<span class="cap">' + esc(capName(title)) + '</span>' : "") + (me && b[1].by === me ? delBtn(k, phPath + "." + b[0], "✕") : "") + '</span>'; }).join("") +
+      '<input type="hidden" class="upT" value="' + esc(String(title || "").slice(0, 20)) + '"><input type="hidden" class="upM" value="">' +
+      '<label class="btn sm ckadd" for="' + fid + '" title="사진 넣기">📷 ' + (ph.length ? "추가" : "사진") + '</label><input type="file" id="' + fid + '" class="upF" accept="image/*" hidden><span class="fmsg"></span></div>';
+  }
+  /* 구글 지도 · 길찾기 (API 키 없이 링크만) · 장소는 「 / 」로 여러 개 */
+  function placesOf(q) { return String(q || "").split(/\s+\/\s+|\s*\/\s*(?=[^\d])/).map(function (x) { return x.trim(); }).filter(Boolean); }
+  function mapBtns(q) {
+    var ps = placesOf(q); if (!ps.length) return "";
+    return '<span class="maps">' + ps.map(function (p) {
+      var e = encodeURIComponent(p);
+      return '<span class="mapp">' + (ps.length > 1 ? '<span class="mapn">' + esc(p) + '</span>' : "") +
+        '<a class="mapb" href="https://www.google.com/maps/search/?api=1&amp;query=' + e + '" target="_blank" rel="noopener" aria-label="' + esc(p) + ' 지도">📍 지도</a>' +
+        '<a class="mapb" href="https://www.google.com/maps/dir/?api=1&amp;destination=' + e + '&amp;travelmode=transit" target="_blank" rel="noopener" aria-label="' + esc(p) + ' 길찾기">🚶 길찾기</a></span>';
+    }).join("") + '</span>';
+  }
+  var NOPLACE = /기상|준비|점심|수업 끝|정리|쉬기|자기|청해|짐 싸기|체크아웃|출발|긴자선/;
+  function placeFromText(w) { w = String(w || "").replace(/^[★\s]+/, "").split(" · ")[0].trim(); return !w || NOPLACE.test(w) ? "" : w; }
+  /* 체크 목록 한 줄: [체크][글 칸 · 남은 폭 전부 · 길면 줄바꿈][📷(사진 목록만)][✕] · 사진 썸네일 · 메모는 그 줄 바로 밑
+     사진은 opt.pics 일 때만(꼭 사기 목록) · 다른 목록에 예전에 올린 사진(ph)은 지우지 않고 화면에만 안 보임 */
+  function ckList(k, path, rows, opt) {
+    opt = opt || {};
+    var r = rowsOf(rows), withPics = !!opt.pics;
+    return '<ul class="cks">' + r.map(function (a) {
+      var id = a[0], x = a[1], p = path + "." + id;
+      var more = opt.more ? '<div class="ckmore">' + ta(k, p + ".m", x.m, "메모 (주소 · 예약번호 · 가격 등)") +
+        '<div class="plrow"><label class="pllab">📍 장소<input type="text" ' + A(k, p + ".pl") + ' value="' + esc(x.pl || "") + '" placeholder="예) 伊勢丹新宿店 本館" aria-label="장소 검색어"></label>' + mapBtns(x.pl !== undefined && x.pl !== "" ? x.pl : (x.pl === undefined ? placeFromText(x.x) : "")) + '</div></div>' : "";
+      var picBtn = "", thumbs = "", upAttr = "";
+      if (withPics) {
+        var ph = rowsOf(x.ph || {}), fid = "up_" + (k + "_" + p).replace(/[^\w]/g, "_");
+        upAttr = ' data-up="' + esc(k) + '" data-path="' + esc(p + ".ph") + '"';
+        picBtn = '<label class="btn sm ckadd" for="' + fid + '" title="사진 넣기" aria-label="사진 넣기">📷</label><input type="file" id="' + fid + '" class="upF" accept="image/*" hidden>' +
+          '<input type="hidden" class="upT" value="' + esc(String(x.x || "").slice(0, 20)) + '"><input type="hidden" class="upM" value="">';
+        thumbs = (ph.length ? '<div class="ckpics">' + ph.map(function (b) { return '<span class="ckpic"><img data-fk="' + esc(b[1].k) + '" alt="' + esc(x.x || "사진") + ' 사진 · 누르면 크게">' + (capName(x.x) ? '<span class="cap">' + esc(capName(x.x)) + '</span>' : "") + (me && b[1].by === me ? delBtn(k, p + ".ph." + b[0], "✕") : "") + '</span>'; }).join("") + '</div>' : "") + '<span class="fmsg"></span>';
+      }
+      return '<li class="row-ck' + (x.ok ? " done" : "") + '"' + upAttr + '><div class="ckline"><input type="checkbox" ' + A(k, p + ".ok") + (x.ok ? " checked" : "") + ' aria-label="했어요">' +
+        ta(k, p + ".x", x.x, "항목") + picBtn + delBtn(k, p) + '</div>' + thumbs + more + '</li>';
+    }).join("") + '</ul>' + (r.length ? "" : '<div class="empty">아직 없어요</div>') + '<div class="addbar">' + addBtn(k, path, opt.kind || "ck") + '</div>';
+  }
+  /* 그 자리에서 이름 적기 (맨 위 이름 칸은 숨김 그대로) */
+  function nameBox(why) {
+    return '<div class="callout nameinl"><b>✍️ 이름을 먼저 적어 주세요</b><span class="hint">' + why + ' · 한 번 적으면 이 기기에 기억돼요</span>' +
+      '<div class="row"><input type="text" class="nmIn" maxlength="20" placeholder="예) 손조이 · 수복" autocomplete="nickname" aria-label="이름"><button type="button" class="btn pri" data-act="setname">저장</button></div></div>';
+  }
+  function setName(v) { v = String(v || "").trim().slice(0, 20); if (!v) return false; me = v; ls(PRE + "me", v); $("nameCard").hidden = true; paintMe(); sections.forEach(draw); return true; }
+  function needName() { var b = document.querySelector(".nmIn"); if (b) { b.scrollIntoView({ behavior: "smooth", block: "center" }); b.focus(); } else { $("nameCard").hidden = false; $("nameCard").scrollIntoView({ behavior: "smooth", block: "center" }); $("nameIn").focus(); } }
+
+  /* ---------- 입력 · 누르기 (한곳에서) ---------- */
+  function onField(e) {
+    var t = e.target; if (!t.dataset || !t.dataset.k || !t.dataset.p || t.readOnly || t.disabled) return;
+    var v = t.type === "checkbox" ? t.checked : t.value;
+    put(t.dataset.k, t.dataset.p, v);
+    if (t.type === "checkbox") { var li = t.closest(".row-ck"); if (li) li.classList.toggle("done", t.checked); }
+    if (t.tagName === "TEXTAREA") grow(t);
+    if (t.dataset.k.indexOf(PRE + "cost") === 0) refreshCost();
+    if (t.dataset.k === K.bench) refreshRank();
+    if (t.dataset.k.indexOf(PRE + "class.") === 0) refreshDone();
+  }
+  document.addEventListener("input", onField);
+  document.addEventListener("change", function (e) { if (e.target.type === "checkbox" || e.target.tagName === "SELECT") onField(e); });
+
+  var BLANK = { ck: { x: "", ok: false }, must: { x: "", ok: false, m: "" }, plan: { t: "", w: "", m: "", d: "" }, cost: { n: "", a: "", c: "¥", m: "" }, rec: { a: "", b: "", c: "" } };
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-act]"); if (!b) return;
+    var act = b.dataset.act;
+    if (act === "setname") { var nb = b.closest(".nameinl").querySelector(".nmIn"); if (!setName(nb.value)) nb.focus(); return; }
+    if (act === "add") {
+      var row = clone(BLANK[b.dataset.kind] || {}); row.o = Date.now();
+      put(b.dataset.k, b.dataset.path + "." + uid("r"), row); redrawFor(b); return;
+    }
+    if (act === "del") {
+      if (b.dataset.arm !== "1") { b.dataset.arm = "1"; b.classList.add("arm"); b.textContent = "빼기?"; setTimeout(function () { if (b.isConnected) { b.dataset.arm = ""; b.classList.remove("arm"); b.textContent = "×"; } }, 3500); return; }
+      put(b.dataset.k, b.dataset.path + ".del", (me || "?") + " " + new Date().toISOString()); redrawFor(b); return;
+    }
+  });
+
+  /* ---------- 이름 ---------- */
+  var meKey = function () { return me.replace(/\./g, "·").replace(/\s+/g, " ").trim(); };
+  function paintMe() {
+    $("meBox").innerHTML = me ? '나: <b>' + esc(me) + '</b> <button class="btn sm" type="button" id="meCh">이름 바꾸기</button>' : '<button class="btn sm" type="button" id="meSet">이름 적기</button>';
+    
+    var c = $("meCh"); if (c) c.onclick = function () { $("nameIn").value = me; $("nameCard").hidden = false; $("nameIn").focus(); };
+    var s = $("meSet"); if (s) s.onclick = function () { $("nameCard").hidden = false; $("nameIn").focus(); };
+  }
+  $("nameOk").onclick = function () { var v = $("nameIn").value.trim().slice(0, 20); if (!v) { $("nameIn").focus(); return; } me = v; ls(PRE + "me", v); $("nameCard").hidden = true; paintMe(); sections.forEach(draw); };
+  document.addEventListener("keydown", function (e) { if (e.key === "Enter" && e.target.classList && e.target.classList.contains("nmIn")) { e.preventDefault(); if (!setName(e.target.value)) e.target.focus(); } });
+  $("nameIn").addEventListener("keydown", function (e) { if (e.key === "Enter") $("nameOk").click(); });
+  paintMe();
+
+
+  /* ---------- 접기 · 펼치기: PART · 섹션 · 큰 카드 · 일본어 묶음 (상태는 hattori26.ui.fold) ---------- */
+  var FOLDK = PRE + "ui.fold", foldSt = {};
+  try { foldSt = JSON.parse(ls(FOLDK) || "{}") || {}; } catch (e) { foldSt = {}; }
+  function saveFold() { ls(FOLDK, JSON.stringify(foldSt)); }
+  function wrapFold(head, items, id, cls) {
+    var d = document.createElement("details"); d.className = "fold" + (cls ? " " + cls : ""); d.dataset.fold = id;
+    var sm = document.createElement("summary"); sm.className = "fsum";
+    var body = document.createElement("div"); body.className = "fbody";
+    head.parentNode.insertBefore(d, head);
+    sm.appendChild(head); d.appendChild(sm); d.appendChild(body);
+    items.forEach(function (n) { body.appendChild(n); });
+    d.open = foldSt[id] !== 0;
+    return d;
+  }
+  function buildFolds() {
+    ["tab-pre", "tab-note", "tab-theory", "planBody"].forEach(function (tid) {
+      var pane = $(tid); if (!pane) return;
+      /* ① 섹션(section.sec): 제목 줄 = 접는 머리 */
+      pane.querySelectorAll("section.sec").forEach(function (sec, i) {
+        var h = sec.querySelector(":scope > .sech"); if (!h) return;
+        var rest = [].slice.call(sec.children).filter(function (n) { return n !== h; });
+        wrapFold(h, rest, tid + ":" + (sec.id || "s" + i), "secf");
+      });
+      /* ② 제목 있는 카드 묶음(.slide > .h2c): 칩 + 제목 = 머리 */
+      pane.querySelectorAll(".slide").forEach(function (sl, i) {
+        var h2 = sl.querySelector(":scope > h2.h2c"); if (!h2 || sl.closest(".ipanel")) return;
+        var head = document.createElement("div"); head.style.display = "grid"; head.style.gap = "8px";
+        var chip = sl.querySelector(":scope > .chip"); sl.insertBefore(head, sl.firstChild);
+        if (chip) head.appendChild(chip); head.appendChild(h2);
+        var rest = [].slice.call(sl.children).filter(function (n) { return n !== head; });
+        wrapFold(head, rest, tid + ":slide" + (sl.id || i));
+      });
+      /* ③ PART 띠: 다음 PART · 책 표지 전까지 */
+      var kids = [].slice.call(pane.children), cur = null, list = [];
+      function close() { if (cur) wrapFold(cur, list, tid + ":" + (cur.id || "part")); cur = null; list = []; }
+      kids.forEach(function (n) {
+        if (n.classList.contains("part")) { close(); cur = n; return; }
+        if (n.id === "tips" || n.classList.contains("book") || n.classList.contains("jump") || n.classList.contains("foldbar") || n.classList.contains("addbar")) { close(); return; }
+        if (cur) list.push(n);
+      });
+      close();
+      /* 탭 맨 위 「전부 접기 / 전부 펼치기」 */
+      var bar = document.createElement("div"); bar.className = "foldbar";
+      bar.innerHTML = '<button type="button" class="btn sm" data-foldall="0">▸ 전부 접기</button><button type="button" class="btn sm" data-foldall="1">▾ 전부 펼치기</button>';
+      var jump = pane.querySelector(":scope > .jump");
+      if (jump) jump.parentNode.insertBefore(bar, jump.nextSibling); else pane.insertBefore(bar, pane.firstChild);
+    });
+    /* 수업 일본어 묶음은 그려질 때 이미 details.fold */
+    document.querySelectorAll("details.vgroup").forEach(function (d) { d.open = foldSt[d.dataset.fold] !== 0; });
+  }
+  document.addEventListener("toggle", function (e) {
+    var d = e.target; if (!d.classList || !d.classList.contains("fold")) return;
+    if (d.open) delete foldSt[d.dataset.fold]; else foldSt[d.dataset.fold] = 0;
+    saveFold();
+  }, true);
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-foldall]"); if (!b) return;
+    var open = b.dataset.foldall === "1", pane = b.closest(".tabpane");
+    pane.querySelectorAll("details.fold").forEach(function (d) { d.open = open; if (open) delete foldSt[d.dataset.fold]; else foldSt[d.dataset.fold] = 0; });
+    saveFold();
+  });
+  function openTo(t) { for (var p = t.parentElement; p; p = p.parentElement) if (p.tagName === "DETAILS" && !p.open) p.open = true; }
+  buildFolds();
+
+  /* ---------- D-day ---------- */
+  function dday(y, m, d) { var t = new Date(), a = new Date(t.getFullYear(), t.getMonth(), t.getDate()), b = new Date(y, m - 1, d); return Math.round((b - a) / 86400000); }
+  function todayDay() { for (var i = 0; i < DAYS.length; i++) { var x = DAYS[i].ymd; if (dday(x[0], x[1], x[2]) === 0) return DAYS[i].n; } return 0; }
+  (function () {
+    var chips = [["출국 11/30", 2026, 11, 30], ["수업 12/1", 2026, 12, 1], ["귀국 12/5", 2026, 12, 5]];
+    var td = todayDay();
+    $("dd").innerHTML = (td ? '<div class="ddc now"><span>지금</span><b>' + td + '일차</b></div>' : "") + chips.map(function (c) {
+      var n = dday(c[1], c[2], c[3]);
+      return '<div class="ddc"><span>' + c[0] + '</span><b>' + (n > 0 ? "D-" + n : n === 0 ? "D-DAY" : "지남 ✓") + '</b></div>';
+    }).join("");
+  })();
+
+  /* ---------- 큰 탭 · #tab-이름 ---------- */
+  var TABS = ["pre", "note", "theory", "plan"];
+  function showTab(name, keepScroll) {
+    if (TABS.indexOf(name) < 0) name = "pre";
+    if (name === "plan") paintLock();
+    TABS.forEach(function (t) { $("tab-" + t).hidden = t !== name; });
+    document.querySelectorAll(".bt").forEach(function (b) { b.setAttribute("aria-selected", String(b.dataset.tab === name)); });
+    ls(PRE + "ui.tab", name);
+    if (!keepScroll) window.scrollTo(0, 0);
+  }
+  function goTab(name) { try { history.replaceState(null, "", "#tab-" + name); } catch (x) {} showTab(name, true); }
+  function fromHash() { var m = /^#tab-(\w+)/.exec(location.hash); return m ? m[1] : null; }
+  document.querySelector(".bigtabs").addEventListener("click", function (e) {
+    var a = e.target.closest(".bt"); if (!a) return; e.preventDefault();
+    try { history.replaceState(null, "", "#tab-" + a.dataset.tab); } catch (x) {}
+    showTab(a.dataset.tab);
+  });
+  window.addEventListener("hashchange", function () { var h = fromHash(); if (h) showTab(h); });
+  /* 탭 안 이동 링크: 그 탭을 연 채로 그 자리로 */
+  document.querySelectorAll(".jump").forEach(function (nav) {
+    nav.addEventListener("click", function (e) {
+      var a = e.target.closest("a[href^='#']"); if (!a) return; var t = document.querySelector(a.getAttribute("href")); if (!t) return;
+      e.preventDefault(); openTo(t); t.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+  /* 🗓 일정 · 준비 잠금 · 화면만 가리는 용도 (서버 데이터를 숨기는 것은 아님) · 번호는 해시로만 비교 */
+  var PIN_HASH = "604c3f0292e070afa232eec0dfd853e2cdc3fce8eaefa3fa920fc34d4cb675ce";
+  function sha256(str) { return crypto.subtle.digest("SHA-256", new TextEncoder().encode(str)).then(function (b) { return Array.prototype.map.call(new Uint8Array(b), function (x) { return (x < 16 ? "0" : "") + x.toString(16); }).join(""); }); }
+  function paintLock() { var ok = ls(PRE + "ui.unlock") === PIN_HASH; if (ok && !me) { me = "손조이"; ls(PRE + "me", me); } $("planLock").hidden = ok; $("planBody").hidden = !ok; }
+  function tryPin() {
+    var v = $("pinIn").value.trim(), m = $("pinMsg");
+    if (!v) { $("pinIn").focus(); return; }
+    if (!window.crypto || !crypto.subtle) { m.textContent = "이 브라우저에서는 열 수 없어요 · 주소가 https인지 확인해 주세요"; m.className = "fmsg bad"; return; }
+    sha256("hattori26:" + v).then(function (h) {
+      if (h === PIN_HASH) { ls(PRE + "ui.unlock", h); $("pinIn").value = ""; m.textContent = ""; paintLock(); sections.forEach(draw); }
+      else { m.textContent = "번호가 맞지 않아요"; m.className = "fmsg bad"; $("pinIn").select(); }
+    });
+  }
+  $("pinGo").onclick = tryPin;
+  $("pinIn").addEventListener("keydown", function (e) { if (e.key === "Enter") tryPin(); });
+  $("planLockBtn").onclick = function () { ls(PRE + "ui.unlock", ""); paintLock(); window.scrollTo(0, 0); };
+  paintLock();
+  showTab(fromHash() || ls(PRE + "ui.tab") || "pre", true);
+
+  /* ==================== 📒 연수 노트 ==================== */
+  $("ingredients").innerHTML = ingredients.map(function (i) { return '<div class="ncard"><h3>' + i.n + '</h3><p><b>' + i.core + '</b></p><ul>' + i.d.map(function (x) { return "<li>" + rb(x) + "</li>"; }).join("") + '</ul></div>'; }).join("");
+  $("vocab").innerHTML = VOCAB.map(function (g, gi) {
+    return '<details class="fold vgroup" data-fold="voc' + gi + '"' + (foldSt["voc" + gi] === 0 ? "" : " open") + '><summary class="fsum"><span class="vgh">' + g.g + ' <small>' + g.w.length + '개</small></span></summary><div class="fbody"><div class="vocab4">' +
+      g.w.map(function (v) { return '<div class="word"><span class="ja" lang="ja">' + rb(v[0]) + '</span><span class="yomi" lang="ja">' + v[1] + '</span><span class="ko">' + v[2] + '</span>' + (v[3] ? '<span class="ex" lang="ja">' + rb(v[3]) + '</span>' : "") + '</div>'; }).join("") + '</div></div></details>';
+  }).join("");
+  $("vocabCount").textContent = VOCAB.reduce(function (s, g) { return s + g.w.length; }, 0) + "개";
+  $("quiz").innerHTML = quiz.map(function (q, i) { return '<details><summary><span class="qn">' + (i + 1) + '</span><span>' + rb(q[0]) + '</span></summary><p class="a">' + rb(q[1]) + '</p></details>'; }).join("");
+
+  function originCard(k) {
+    var o = ORIGIN[k]; if (!o) return "";
+    return '<div class="ncard origin"><h3>📜 유래</h3><p>' + rb(o.t) + '</p><p class="oline">☕ 손님께 한 줄 · <b>' + o.line + '</b></p><p class="osrc">출처 · ' + o.src.map(function (x) { return '<a href="' + x[1] + '" target="_blank" rel="noopener">' + x[0] + '</a>'; }).join(" · ") + '</p></div>';
+  }
+  function makeTabs(el, onPick, mark) {
+    el.innerHTML = items.map(function (it, i) { return '<button type="button" class="itab" role="tab" aria-selected="false" data-i="' + i + '"><span class="n">' + (i + 1) + '</span>' + it.short + (mark ? '<span class="ok" data-ok="' + it.key + '"></span>' : "") + '</button>'; }).join("");
+    el.addEventListener("click", function (e) { var b = e.target.closest(".itab"); if (b) onPick(+b.dataset.i); });
+  }
+  function selectTab(el, i) { [].forEach.call(el.children, function (b, j) { b.setAttribute("aria-selected", String(j === i)); }); }
+  function pager(i, attr) { return '<div class="pager"><button type="button" class="btn" ' + attr + '="' + (i - 1) + '"' + (i === 0 ? " disabled" : "") + '>← 이전 품목</button><button type="button" class="btn" ' + attr + '="' + (i + 1) + '"' + (i === items.length - 1 ? " disabled" : "") + '>다음 품목 →</button></div>'; }
+  function recall(k) { var v = parseInt(ls(k), 10); return v >= 0 && v < items.length ? v : 0; }
+
+  var preTabs = $("preTabs"), prePanel = $("prePanel");
+  function showPre(i) {
+    var it = items[i]; selectTab(preTabs, i);
+    prePanel.innerHTML = '<div class="slide ipanel"><div class="ihead"><span class="chip soft">예습 ' + (i + 1) + ' / 9</span><h2 class="h2c">' + it.name + '</h2><span class="jpn" lang="ja">' + rb(it.jp) + '</span><p>' + it.feat + '</p><div class="uses">' + it.use.map(function (u) { return "<span>" + u + "</span>"; }).join("") + '</div></div>' +
+      originCard(it.key) +
+      '<div class="grid2"><div class="ncard"><h3>만드는 흐름</h3><ol class="flow">' + it.flow.map(function (s) { return "<li>" + s + "</li>"; }).join("") + '</ol></div>' +
+      '<div style="display:grid;gap:14px;align-content:start;min-width:0"><div class="ncard hot"><h3>핵심 포인트</h3><p>' + rb(it.point) + '</p></div><div class="ncard"><h3>흔한 실패</h3><ul class="fail">' + it.fail.map(function (f) { return '<li><span class="sym">' + f[0] + '</span><span class="why">' + f[1] + '</span></li>'; }).join("") + '</ul></div></div></div>' +
+      '<div class="ask"><h3>수업에서 물어볼 것</h3>' + it.ask.map(function (q) { return "<p>" + rb(q) + "</p>"; }).join("") + '</div>' +
+      '<div class="nums"><b>▣ 수업 때 받아 적을 숫자</b> · ' + it.nums + '</div>' +
+      '<div><button type="button" class="btn pri" data-to-cls="' + i + '">이 품목 수업 노트 쓰기 ✎</button></div>' + pager(i, "data-pre-go") + '</div>';
+    ls(PRE + "ui.pre", String(i));
+  }
+  makeTabs(preTabs, showPre, false);
+  prePanel.addEventListener("click", function (e) {
+    var g = e.target.closest("[data-pre-go]"); if (g && !g.disabled) { showPre(+g.dataset.preGo); $("p3").scrollIntoView({ behavior: "smooth" }); return; }
+    var c = e.target.closest("[data-to-cls]"); if (c) { showCls(+c.dataset.toCls); goTab("note"); $("cls").scrollIntoView({ behavior: "smooth" }); }
+  });
+  showPre(recall(PRE + "ui.pre"));
+
+  /* 수업 노트 · 품목마다 문서 하나 (hattori26.class.<품목>) */
+  var clsTabs = $("clsTabs"), clsPanel = $("clsPanel"), cur = recall(PRE + "ui.cls");
+  var isDone = function (k) { var v = view(K.cls(k)); return !!String(v.steps || "").trim(); };
+  function refreshDone() {
+    $("doneCount").textContent = items.filter(function (it) { return isDone(it.key); }).length + " / 9";
+    document.querySelectorAll("[data-ok]").forEach(function (s) { s.textContent = isDone(s.dataset.ok) ? "✓" : ""; });
+    var st = clsPanel.querySelector(".state"); if (st) { var d = isDone(items[cur].key); st.textContent = d ? "기록 있음" : "아직 기록 없음"; st.classList.toggle("done", d); }
+  }
+  function renderCls(el) {
+    var it = items[cur], k = K.cls(it.key), v = view(k);
+    selectTab(clsTabs, cur);
+    var rec = rowsOf(v.rec), ph = rowsOf(v.ph);
+    el.innerHTML = '<div class="slide ipanel">' +
+      '<div class="ihead"><div class="uses" style="align-items:center"><span class="chip soft">수업 ' + (cur + 1) + ' / 9</span><span class="state"></span></div><h2 class="h2c">' + it.name + '</h2>' +
+      '<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center"><label class="hint" for="fDay">배운 날</label><select id="fDay" ' + A(k, "day") + ' style="width:auto">' +
+      [["", "선택"], ["1", "1일차 (12/1)"], ["2", "2일차 (12/2)"], ["3", "3일차 (12/3)"]].map(function (o) { return '<option value="' + o[0] + '"' + (String(v.day || "") === o[0] ? " selected" : "") + '>' + o[1] + '</option>'; }).join("") +
+      '</select><button type="button" class="btn sm" data-to-pre="' + cur + '">예습 다시 보기</button></div></div>' +
+      '<div class="ncard"><div class="field"><span class="lbl">배합표</span><span class="hint">재료 · 분량 · 비율(%)을 줄마다 적어요</span>' +
+      '<div class="trow rec head"><span>재료</span><span>분량</span><span>비율</span><span></span></div><div class="rows">' +
+      rec.map(function (a) { var id = a[0], r = a[1], p = "rec." + id; return '<div class="trow rec">' + inp(k, p + ".a", r.a, "재료 (예: 박력분)") + inp(k, p + ".b", r.b, "분량 g") + inp(k, p + ".c", r.c, "비율 %") + delBtn(k, p) + '</div>'; }).join("") +
+      '</div><div class="addbar">' + addBtn(k, "rec", "rec", "＋ 재료 줄 추가") + '</div></div></div>' +
+      '<div class="grid2"><div class="ncard"><div class="field"><label>공정</label><span class="hint">한 줄에 한 단계씩</span>' + ta(k, "steps", v.steps, "예) 전란+설탕 중탕 40℃까지 → 리본 상태까지 고속 휘핑", 'style="min-height:150px"') + '</div></div>' +
+      '<div class="ncard"><div class="field"><label>온도 · 시간</label><span class="hint">' + esc(it.nums) + '</span>' + ta(k, "nums", v.nums, "예) 오븐 170℃ 30분", 'style="min-height:150px"') + '</div></div></div>' +
+      '<div class="grid2"><div class="ncard hot"><div class="field"><label>셰프님 포인트</label>' + ta(k, "chef", v.chef, "셰프님이 강조한 말", 'style="min-height:110px"') + '</div></div>' +
+      '<div class="ncard"><div class="field"><label>실패 원인과 해결</label>' + ta(k, "fails", v.fails, "예) 시트가 갈라짐 → 굽는 시간 2분 줄이기", 'style="min-height:110px"') + '</div></div></div>' +
+      '<div class="ask"><h3>질문과 답</h3>' + it.ask.map(function (q, j) { return '<div class="qa"><label>' + rb(esc(q)) + '</label>' + ta(k, "ans." + j, (v.ans || {})[j], "답") + '</div>'; }).join("") +
+      '<div class="field"><label style="font-size:16px">추가 질문 · 메모</label>' + ta(k, "extra", v.extra, "더 물어본 것 · 기억할 것") + '</div></div>' +
+      '<div class="ncard hot"><div class="field"><label>☕ 카페스이에 접목할 것</label><span class="hint" style="color:inherit;opacity:.9">메뉴 · 시즌 · 선물 · 원가 · 직원 교육 쪽으로 바로 해 볼 것</span>' + ta(k, "cafe", v.cafe, "예) 겨울 딸기 쇼트케이크에 시럽 농도 바꿔 보기 · 틴쿠키 답례품 구성", 'style="min-height:110px"') + '</div></div>' +
+      '<div class="ncard"><div class="field"><span class="lbl">📷 레시피 · 완성 사진</span><span class="hint">휴대폰 사진을 줄여서 올려요 (긴 변 1280px)</span>' +
+      (ph.length ? '<div class="fgrid">' + ph.map(function (a) { return fileCard(k, "ph", a[0], a[1]); }).join("") + '</div>' : '<div class="empty">아직 사진이 없어요</div>') +
+      photoForm(k, "ph", "cls") + '</div></div>' +
+      pager(cur, "data-cls-go") + '</div>';
+    ls(PRE + "ui.cls", String(cur));
+    setTimeout(refreshDone, 0);
+  }
+  makeTabs(clsTabs, function (i) { showCls(i); }, true);
+  var clsSec = mount(clsPanel, [PRE + "class.*"], renderCls);
+  function showCls(i) { cur = i; draw(clsSec); }
+  clsPanel.addEventListener("click", function (e) {
+    var g = e.target.closest("[data-cls-go]"); if (g && !g.disabled) { showCls(+g.dataset.clsGo); $("cls").scrollIntoView({ behavior: "smooth" }); return; }
+    var t = e.target.closest("[data-to-pre]"); if (t) { showPre(+t.dataset.toPre); goTab("pre"); $("p3").scrollIntoView({ behavior: "smooth" }); }
+  });
+  /* 다른 품목 문서가 바뀌어도 지금 보는 품목만 다시 그리면 됨 */
+  clsSec.keys = [PRE + "class.*"];
+
+  /* ==================== 🗓 일정 · 준비 ==================== */
+  mount($("curList"), [K.prep], function (el) {
+    var cur = view(K.prep).cur || {};
+    el.innerHTML = items.map(function (it) { return '<div class="ci"><b>✔ ' + it.name + '</b><span>→ ' + CUR[it.key] + '</span><label class="curref">☕ 카페스이+스이노키친에 참고할 사항' + ta(K.prep, "cur." + it.key, cur[it.key], "적어 두면 자동 저장돼요") + '</label></div>'; }).join("");
+  });
+
+  mount($("secPrep"), [K.prep], function (el) { el.innerHTML = '<div class="card">' + ckList(K.prep, "rows", view(K.prep).rows) + '</div>'; });
+
+  mount($("secBuy"), [K.buy], function (el) {
+    var v = view(K.buy);
+    el.innerHTML = '<div class="card must"><b>★ 꼭 사기 (11/30)</b>' + MUST_NOTE + ckList(K.buy, "must", v.must, { pics: true }) + '</div>' +
+      '<div class="grid2"><div class="card"><b>🛍 가자마자 사야 하는 것</b>' + ckList(K.buy, "now", v.now) + '</div>' +
+      '<div class="card"><b>🏪 가게에 필요한 것 + 내 것</b>' + ckList(K.buy, "shop", v.shop) + '</div></div>' +
+      '<div class="card"><div class="fl">📦 메모 · 택배 픽업' + ta(K.buy, "memo", v.memo, "택배 · 픽업 메모") + '</div></div>';
+  });
+
+  /* ④ 날짜별 일정 · 잠금(잘못 눌러 바뀌는 것 막기) · 「★ 꼭 해야 할 일 및 사기」는 잠금과 상관없이 체크 · 고치기 */
+  var locked = true, openDays = {}, openMore = {};
+  (function () { var t = todayDay(); openDays[t || 1] = true; })();
+  function rowPlace(n, id, r) {
+    if (r.pl !== undefined && r.pl !== "") return r.pl;
+    var seed = ((SEED[K.plan(n)] || {}).rows || {})[id];
+    if (r.pl === undefined && seed && seed.w === r.w && PL_SEED[n] && PL_SEED[n][id]) return PL_SEED[n][id];
+    return r.pl === undefined ? placeFromText(r.w) : "";
+  }
+  var planSec = mount($("secPlan"), [PRE + "plan.*"], function (el) {
+    var td = todayDay();
+    el.innerHTML = '<div class="lockbar' + (locked ? "" : " open") + '"><button type="button" class="btn ' + (locked ? "" : "pri") + '" id="lockBtn" aria-pressed="' + (!locked) + '">' + (locked ? "✎ 일정 수정하기" : "✔ 수정 끝 · 잠그기") + '</button><span class="hint">' + (locked ? "🔒 일정 표는 잘못 눌러 바뀌지 않게 잠겨 있어요 · 「★ 꼭 해야 할 일 및 사기」는 바로 체크 · 고칠 수 있어요" : "지금 고칠 수 있어요 · 고친 칸은 바로 저장돼요") + '</span></div>' +
+      DAYS.map(function (d) {
+        var k = K.plan(d.n), v = view(k), rows = rowsOf(v.rows), must = rowsOf(v.must), ro = locked ? "readonly" : "";
+        var mustDone = must.filter(function (a) { return a[1].ok; }).length;
+        return '<details class="day" data-day="' + d.n + '"' + (openDays[d.n] ? " open" : "") + '><summary><b>' + d.d + ' ' + d.n + '일차</b><small>' + d.title + ' · 일정 ' + rows.length + '개' + (must.length ? ' · ★ ' + mustDone + '/' + must.length : "") + '</small>' + (td === d.n ? '<span class="today">오늘</span>' : "") + '</summary><div class="dbody">' +
+          '<div class="must mustck"><b>★ 꼭 해야 할 일 및 사기</b><span class="hint">줄마다 메모 · 📍 장소 · 📷 사진 · 다 하면 체크</span>' + ckList(k, "must", v.must, { pics: true, more: true, kind: "must" }) + '</div>' +
+          (locked ? (v.memo ? '<div class="callout">' + esc(v.memo) + '</div>' : "") : '<div class="fl">✈ 항공편 · 짐 · 메모' + ta(k, "memo", v.memo, "항공편 · 짐 등 메모") + '</div>') +
+          '<div class="trow plan head' + (locked ? " ro" : "") + '"><span>시간</span><span>할 일</span><span>해야 할 일 + 메모</span>' + (locked ? "" : "<span></span>") + '</div><div class="rows">' +
+          (rows.map(function (a) {
+            var id = a[0], r = a[1], p = "rows." + id, mk = k + "|" + id, pl = rowPlace(d.n, id, r), open = openMore[mk] || (!locked && false);
+            var extra = "";
+            if (locked) {
+              extra = (pl ? mapBtns(pl) : "") + (r.d ? '<button type="button" class="btn sm" data-act="more" data-mk="' + esc(mk) + '">' + (openMore[mk] ? "－ 접기" : "＋ 자세히") + '</button>' + (openMore[mk] ? '<div class="dtext">' + esc(r.d) + '</div>' : "") : "");
+            } else {
+              extra = '<button type="button" class="btn sm" data-act="more" data-mk="' + esc(mk) + '">' + (open ? "－ 접기" : "＋ 자세히") + '</button>' + (pl ? mapBtns(pl) : "") +
+                (open ? '<div class="dmore"><label class="pllab">📍 장소 (구글 지도 검색어)<input type="text" ' + A(k, p + ".pl") + ' value="' + esc(r.pl !== undefined ? r.pl : pl) + '" placeholder="예) 伊勢丹新宿店 本館 · 여러 곳은 「 / 」로" aria-label="장소 검색어"></label>' +
+                  '<div class="fl">📝 자세히 (주소 · 예약번호 · 이동 방법)' + ta(k, p + ".d", r.d, "예) 예약번호 · 몇 번 출구 · 몇 호선 · 걸어서 몇 분") + '</div></div>' : "");
+            }
+            return '<div class="trow plan' + (locked ? " ro" : "") + '">' + inp(k, p + ".t", r.t, "시간", 'class="t" ' + ro) + ta(k, p + ".w", r.w, "할 일", ro) + ta(k, p + ".m", r.m, "해야 할 일 + 메모", ro) + (locked ? "" : delBtn(k, p)) +
+              (extra ? '<div class="more">' + extra + '</div>' : "") + '</div>';
+          }).join("") || '<div class="empty">아직 일정이 없어요</div>') +
+          '</div>' + (locked ? "" : '<div class="addbar">' + addBtn(k, "rows", "plan") + '</div>') + '</div></details>';
+      }).join("");
+  });
+  $("secPlan").addEventListener("click", function (e) {
+    if (e.target.closest("#lockBtn")) { locked = !locked; draw(planSec); return; }
+    var m = e.target.closest('[data-act="more"]'); if (m) { openMore[m.dataset.mk] = !openMore[m.dataset.mk]; draw(planSec); }
+  });
+  $("secPlan").addEventListener("toggle", function (e) { var d = e.target.closest && e.target.closest("details.day"); if (d) openDays[d.dataset.day] = d.open; }, true);
+
+  /* ⑤ 날짜별 지출내역 · 일차마다 문서 하나 · 줄마다 ¥ 엔 / ₩ 원 (c 칸 · 없으면 엔) */
+  var openCost = {};
+  (function () { var t = todayDay(); openCost[t || 1] = true; })();
+  var won = function (n) { return n.toLocaleString("ko-KR") + "원"; };
+  function dayT(n) { var y = 0, w = 0; rowsOf(view(K.costd(n)).rows).forEach(function (a) { var x = num(a[1].a); if (a[1].c === "₩") w += x; else y += x; }); return { y: y, w: w }; }
+  function fxv() { var f = parseFloat(String(view(K.cost).fx == null ? "836" : view(K.cost).fx).replace(/[^\d.]/g, "")); return f > 0 ? f : 836; }
+  function both(y, w) { return [y || !w ? yen(y) : "", w ? won(w) : ""].filter(Boolean).join(" + "); }
+  function setT(id, t) { var e = $(id); if (e) e.textContent = t; }
+  function refreshCost() {
+    var v = view(K.cost), sy = num(v.start), sw = num(v.startW), fx = fxv(), ay = 0, aw = 0;
+    DAYS.forEach(function (d) {
+      var t = dayT(d.n); ay += t.y; aw += t.w;
+      setT("cs" + d.n, both(t.y, t.w));
+      setT("ct" + d.n, both(t.y, t.w));
+      setT("ck" + d.n, won(Math.round(t.y * fx / 100 + t.w)));
+      setT("cl" + d.n, (sy || sw) ? [sy ? yen(sy - ay) : "", sw ? won(sw - aw) : ""].filter(Boolean).join(" · ") : "시작 금액을 적으면 보여요");
+    });
+    setT("cAllY", yen(ay)); setT("cAllW", won(aw)); setT("cAllK", won(Math.round(ay * fx / 100 + aw)));
+    setT("cLeft", (sy || sw) ? [sy ? yen(sy - ay) : "", sw ? won(sw - aw) : ""].filter(Boolean).join(" · ") : "—");
+  }
+  function curSel(k, p, c) { return '<select class="cur" ' + A(k, p) + ' aria-label="통화">' + [["¥", "¥ 엔"], ["₩", "₩ 원"]].map(function (o) { return '<option value="' + o[0] + '"' + ((c || "¥") === o[0] ? " selected" : "") + '>' + o[1] + '</option>'; }).join("") + '</select>'; }
+  mount($("secCost"), [PRE + "cost", PRE + "cost.*"], function (el) {
+    var v = view(K.cost);
+    el.innerHTML = '<div class="card"><div class="r3">' +
+      '<label class="fl">💴 시작 금액 · 엔' + inp(K.cost, "start", v.start, "예) 200000", 'inputmode="numeric"') + '</label>' +
+      '<label class="fl">💳 시작 금액 · 원' + inp(K.cost, "startW", v.startW, "예) 300000", 'inputmode="numeric"') + '</label>' +
+      '<label class="fl">💱 환율 (100엔당 원)' + inp(K.cost, "fx", v.fx, "836", 'inputmode="decimal"') + '</label></div>' +
+      '<span class="hint">줄마다 금액 옆에서 ¥ 엔 / ₩ 원을 골라요 · 「남은 돈」은 통화별로 = 시작 금액 − 그날까지 쓴 돈 · 「원 환산」은 엔 × 환율 ÷ 100 + 원</span></div>' +
+      DAYS.map(function (d) {
+        var k = K.costd(d.n), rows = rowsOf(view(k).rows);
+        return '<details class="day" data-cday="' + d.n + '"' + (openCost[d.n] ? " open" : "") + '><summary><b>' + d.d + ' 지출내역</b><small>총 <span id="cs' + d.n + '"></span></small></summary><div class="dbody">' +
+          '<div class="trow cost head"><span>항목</span><span>금액</span><span>통화</span><span>메모</span><span></span></div><div class="rows">' +
+          (rows.map(function (a) { var id = a[0], r = a[1], p = "rows." + id; return '<div class="trow cost">' + ta(k, p + ".n", r.n, "항목") + inp(k, p + ".a", r.a, "금액", 'inputmode="numeric"') + curSel(k, p + ".c", r.c) + ta(k, p + ".m", r.m, "메모") + delBtn(k, p) + '</div>'; }).join("") || '<div class="empty">아직 지출이 없어요</div>') +
+          '</div><div class="addbar">' + addBtn(k, "rows", "cost", "＋ 지출 추가") + '</div>' +
+          '<div class="tot"><span>총 <b id="ct' + d.n + '"></b></span><span>원 환산 <b id="ck' + d.n + '"></b></span><span>남은 돈 <b id="cl' + d.n + '"></b></span></div></div></details>';
+      }).join("") +
+      '<div class="grand"><span>6일 전체 · 엔 <b id="cAllY">—</b></span><span>원 <b id="cAllW">—</b></span><span>원 환산 총액 <b id="cAllK">—</b></span><span>남은 돈 <b id="cLeft" style="font-size:22px">—</b></span></div>';
+    setTimeout(refreshCost, 0);
+  });
+  $("secCost").addEventListener("toggle", function (e) { var d = e.target.closest && e.target.closest("details.day"); if (d) openCost[d.dataset.cday] = d.open; }, true);
+
+  /* ⑦ 📎 자료함 · 링크와 사진 (사진은 문서 하나에 한 장 · hattori26.file.<시각>_<이름>) */
+  var FIXED_LINKS = [
+    ["빠아빠 마스터클래스 4기 모집 안내", "https://blog.naver.com/mainssang/224271512975", "커리큘럼 · 안내사항 원문"],
+    ["작년 레시피 자료 모음 (노션)", "https://app.notion.com/p/2bb69763f923809e941cd1b686192867", "노션 권한이 있는 사람만 열려요"]
+  ];
+  function fileCard(k, path, id, f) {
+    var mine = me && f.by === me, when = (f.at || "").slice(5, 10).replace("-", "/");
+    var head = f.kind === "photo" ? '<img data-fk="' + esc(f.k) + '" alt="' + esc(f.title || "사진") + '">' :
+      '<a class="t" href="' + esc(f.url) + '" target="_blank" rel="noopener">🔗 ' + esc(f.title || f.url) + ' ↗</a>';
+    return '<div class="fcard">' + head + (f.kind === "photo" && f.title ? '<span class="t">' + esc(f.title) + '</span>' : "") +
+      (f.memo ? '<span class="m">' + esc(f.memo) + '</span>' : "") +
+      '<span class="by"><span>' + esc(f.by || "") + (when ? " · " + when : "") + '</span>' + (mine ? delBtn(k, path + "." + id, "빼기") : "") + '</span></div>';
+  }
+  function photoForm(k, path, tag) {
+    return '<div class="fform" data-up="' + esc(k) + '" data-path="' + esc(path) + '"><div class="r2"><input type="text" class="upT" placeholder="사진 제목 (예: 쇼트케이크 배합표)" aria-label="사진 제목"><input type="text" class="upM" placeholder="메모 (없어도 돼요)" aria-label="사진 메모"></div>' +
+      '<div class="addbar"><label class="btn pri" for="up_' + tag + '">📷 사진 올리기</label><input type="file" id="up_' + tag + '" class="upF" accept="image/*" multiple hidden><span class="fmsg"></span></div></div>';
+  }
+  var CATS = [["air", "✈️ 항공권"], ["vjw", "🛂 비짓재팬"], ["buy", "🛍 살 것"], ["rsv", "🎫 예약 확인"], ["etc", "📝 기타"]];
+  var PRIVATE_CAT = { air: 1, vjw: 1, rsv: 1 };
+  /* 이 기기에만 보관: IndexedDB (서버 · 백업으로 안 보냄) */
+  var LDB = null;
+  function ldb() {
+    if (LDB) return LDB;
+    LDB = new Promise(function (res, rej) {
+      if (!window.indexedDB) { rej(new Error("no-idb")); return; }
+      var rq = indexedDB.open("hattori26-local", 1);
+      rq.onupgradeneeded = function () { rq.result.createObjectStore("files", { keyPath: "id" }); };
+      rq.onsuccess = function () { res(rq.result); }; rq.onerror = function () { rej(rq.error); };
+    });
+    return LDB;
+  }
+  function ldbAll() { return ldb().then(function (d) { return new Promise(function (res, rej) { var r = d.transaction("files").objectStore("files").getAll(); r.onsuccess = function () { res(r.result || []); }; r.onerror = function () { rej(r.error); }; }); }); }
+  function ldbPut(o) { return ldb().then(function (d) { return new Promise(function (res, rej) { var t = d.transaction("files", "readwrite"); t.objectStore("files").put(o); t.oncomplete = function () { res(); }; t.onerror = function () { rej(t.error); }; }); }); }
+  function ldbDel(id) { return ldb().then(function (d) { return new Promise(function (res) { var t = d.transaction("files", "readwrite"); t.objectStore("files").delete(id); t.oncomplete = function () { res(); }; t.onerror = function () { res(); }; }); }); }
+  var localFiles = [];
+  function loadLocal() { ldbAll().then(function (l) { localFiles = l; if (filesSec) draw(filesSec); }).catch(function () { localFiles = []; }); }
+  function saveLocalFiles(files, cat, title, memo, msg, box) {
+    var chain = Promise.resolve();
+    files.forEach(function (file, n) {
+      chain = chain.then(function () {
+        msg.textContent = "사진 줄이는 중… (" + (n + 1) + "/" + files.length + ")"; msg.className = "fmsg";
+        var t = title ? (files.length > 1 ? title + " " + (n + 1) : title) : file.name.replace(/\.[^.]+$/, "");
+        return shrink(file, function (d) { return d; }).then(function (d) {
+          if (!d) { msg.textContent = "사진이 너무 커요 · 다른 사진으로 올려 주세요"; msg.className = "fmsg bad"; return; }
+          return ldbPut({ id: "L" + Date.now() + Math.random().toString(36).slice(2, 6), cat: cat || "etc", title: t, memo: memo, d: d, at: new Date().toISOString() }).then(function () { msg.textContent = "🔒 이 기기에만 보관했어요 ✓"; msg.className = "fmsg"; });
+        }).catch(function () { msg.textContent = "이 기기에 보관하지 못했어요 (개인정보 보호 모드 · 저장 공간 확인)"; msg.className = "fmsg bad"; });
+      });
+    });
+    chain.then(loadLocal);
+  }
+  var filesSec = mount($("secFiles"), [K.files], function (el) {
+    var list = rowsOf(view(K.files).list).reverse(), photos = list.filter(function (a) { return a[1].kind === "photo"; }), links = list.filter(function (a) { return a[1].kind === "link"; });
+    var groups = CATS.map(function (c) {
+      var srv = photos.filter(function (a) { return (a[1].cat || "etc") === c[0]; });
+      var loc = localFiles.filter(function (f) { return (f.cat || "etc") === c[0]; }).sort(function (a, b) { return (b.at || "").localeCompare(a.at || ""); });
+      if (!srv.length && !loc.length) return "";
+      return '<div class="fgroup"><b class="fgh">' + c[1] + ' <small>' + (srv.length + loc.length) + '개</small></b><div class="fgrid">' +
+        loc.map(function (f) { return '<div class="fcard local"><img data-lk="' + esc(f.id) + '" src="' + f.d + '" alt="' + esc(f.title || "사진") + '"><span class="t">' + esc(f.title || "") + '</span>' + (f.memo ? '<span class="m">' + esc(f.memo) + '</span>' : "") +
+          '<span class="lbadge">🔒 이 기기에만 있어요 · 다른 기기 · 다른 사람에겐 안 보여요</span><span class="by"><span>' + esc((f.at || "").slice(5, 10).replace("-", "/")) + '</span><button type="button" class="x" data-act="ldel" data-id="' + esc(f.id) + '" aria-label="이 기기에서 빼기">×</button></span></div>'; }).join("") +
+        srv.map(function (a) { return fileCard(K.files, "list", a[0], a[1]); }).join("") + '</div></div>';
+    }).join("");
+    el.innerHTML = '<div class="card"><b>➕ 자료 올리기</b>' +
+      '<div class="fform" data-up="' + K.files + '" data-path="list"><div class="r2">' +
+      '<label class="fl">종류<select class="upCat" aria-label="자료 종류">' + CATS.map(function (c) { return '<option value="' + c[0] + '">' + c[1] + '</option>'; }).join("") + '</select></label>' +
+      '<label class="fl">어디에 둘까요<select class="upShare" aria-label="보관 방법"><option value="local" selected>🔒 이 기기에만 보관 (서버에 안 보냄)</option><option value="server">👥 같이 보기 (서버)</option></select></label></div>' +
+      '<div class="r2"><input type="text" class="upT" placeholder="제목 (예: 11/30 BX0717 항공권)" aria-label="자료 제목"><input type="text" class="upM" placeholder="메모 (없어도 돼요)" aria-label="자료 메모"></div>' +
+      '<p class="shwarn hint" id="shWarn">🔒 항공권 · 비짓재팬 · 예약 확인은 이름 · 여권 정보가 있어서 기본이 「이 기기에만」이에요. 다른 기기 · 다른 사람에겐 안 보이고, 백업에도 안 들어가요.</p>' +
+      '<div class="addbar"><label class="btn pri" for="up_files">📷 사진 올리기</label><input type="file" id="up_files" class="upF" accept="image/*" multiple hidden><span class="fmsg"></span></div>' +
+      '<p class="hint">PDF는 이 방식으로 못 올려요 · 화면을 사진(캡처)으로 찍어서 올려 주세요</p></div></div>' +
+      (groups || '<div class="empty">아직 올린 자료가 없어요</div>') +
+      '<div class="lnsmall"><b>🔗 링크</b>' + FIXED_LINKS.map(function (l) { return '<a href="' + l[1] + '" target="_blank" rel="noopener">' + l[0] + '</a>'; }).join("") +
+      links.map(function (a) { var f = a[1]; return '<a href="' + esc(f.url) + '" target="_blank" rel="noopener">' + esc(f.title || f.url) + '</a>' + (f.memo ? '<span class="hint">' + esc(f.memo) + '</span>' : ""); }).join("") + '</div>';
+    syncShare(el);
+  });
+  function syncShare(root) {
+    var c = root.querySelector(".upCat"), s = root.querySelector(".upShare"), w = root.querySelector("#shWarn"); if (!c || !s) return;
+    if (w) w.textContent = s.value === "local" ? "🔒 이 기기에만 보관해요 · 다른 기기 · 다른 사람에겐 안 보이고, 백업에도 안 들어가요" + (PRIVATE_CAT[c.value] ? " · 이름 · 여권 정보가 있는 자료라 기본이 「이 기기에만」이에요" : "") : "👥 서버에 올려 같이 봐요 · 링크를 받은 누구나 볼 수 있어요" + (PRIVATE_CAT[c.value] ? " · ⚠ 이름 · 여권번호가 보이면 가리고 올리세요" : "");
+    w.className = "shwarn " + (s.value === "server" && PRIVATE_CAT[c.value] ? "fmsg bad" : "hint");
+  }
+  $("secFiles").addEventListener("change", function (e) {
+    if (e.target.classList.contains("upCat")) { var s = $("secFiles").querySelector(".upShare"); s.value = PRIVATE_CAT[e.target.value] ? "local" : "server"; syncShare($("secFiles")); }
+    if (e.target.classList.contains("upShare")) syncShare($("secFiles"));
+  });
+  $("secFiles").addEventListener("click", function (e) {
+    var b = e.target.closest('[data-act="ldel"]'); if (!b) return;
+    if (b.dataset.arm !== "1") { b.dataset.arm = "1"; b.classList.add("arm"); b.textContent = "빼기?"; return; }
+    ldbDel(b.dataset.id).then(loadLocal);
+  });
+  loadLocal();
+  /* 숙소 근처 마트 카드 지도 버튼 */
+  document.querySelectorAll(".maps[data-map]").forEach(function (m) { m.outerHTML = mapBtns(m.dataset.map); });
+
+  /* 사진 줄이기: 긴 변 1280px · JPEG → 서버 문서 한도(200,000자) 넘으면 더 줄임 */
+  var LIMIT = 200000;
+  function loadImage(file) { return new Promise(function (res, rej) { var u = URL.createObjectURL(file), i = new Image(); i.onload = function () { res(i); }; i.onerror = function () { rej(new Error("img")); }; i.src = u; }); }
+  function shrink(file, wrap) {
+    return loadImage(file).then(function (img) {
+      var sizes = [1280, 1100, 960, 820, 700, 580], qs = [0.8, 0.68, 0.56, 0.45];
+      for (var a = 0; a < sizes.length; a++) {
+        var sc = Math.min(1, sizes[a] / Math.max(img.naturalWidth, img.naturalHeight)), c = document.createElement("canvas");
+        c.width = Math.max(1, Math.round(img.naturalWidth * sc)); c.height = Math.max(1, Math.round(img.naturalHeight * sc));
+        var g = c.getContext("2d"); g.fillStyle = "#fff"; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, 0, 0, c.width, c.height);
+        for (var b = 0; b < qs.length; b++) { var d = c.toDataURL("image/jpeg", qs[b]); if (wrap(d).length <= LIMIT) return d; }
+      }
+      return null;
+    });
+  }
+  var safe = function (s) { return String(s || "").replace(/\.[a-z0-9]+$/i, "").replace(/[^\w가-힣ぁ-んァ-ン一-龥-]+/g, "").slice(0, 24) || "photo"; };
+  document.addEventListener("change", function (e) {
+    var f = e.target; if (!f.classList || !f.classList.contains("upF")) return;
+    var box = f.closest("[data-up]"), msg = box.querySelector(".fmsg"), key = box.dataset.up, path = box.dataset.path;
+    var files = [].slice.call(f.files || []); f.value = "";
+    if (!files.length) return;
+    var title = box.querySelector(".upT").value.trim(), memo = box.querySelector(".upM").value.trim();
+    var catEl = box.querySelector(".upCat"), shEl = box.querySelector(".upShare"), cat = catEl ? catEl.value : "", local = shEl && shEl.value === "local";
+    if (local) { saveLocalFiles(files, cat, title, memo, msg, box); return; }
+    if (!me) { msg.textContent = "이름을 먼저 적어 주세요"; msg.className = "fmsg bad"; needName(); return; }
+    if (!db || !online) { msg.textContent = "인터넷 연결 뒤에 올려 주세요"; msg.className = "fmsg bad"; return; }
+    if (cat && PRIVATE_CAT[cat] && !window.confirm("⚠ 같이 보기(서버)로 올리면 링크를 받은 누구나 볼 수 있어요.\n이름 · 여권번호 · 예약번호가 보이면 가리고 올리세요.\n그래도 올릴까요?")) { msg.textContent = "올리지 않았어요"; msg.className = "fmsg"; return; }
+    var chain = Promise.resolve();
+    files.forEach(function (file, n) {
+      chain = chain.then(function () {
+        msg.textContent = "사진 줄이는 중… (" + (n + 1) + "/" + files.length + ")"; msg.className = "fmsg";
+        var t = title ? (files.length > 1 ? title + " " + (n + 1) : title) : file.name.replace(/\.[^.]+$/, "");
+        var wrap = function (d) { return JSON.stringify({ d: d, n: t, by: me }); };
+        return shrink(file, wrap).then(function (d) {
+          if (!d) { msg.textContent = "사진이 너무 커요 · 다른 사진으로 올려 주세요"; msg.className = "fmsg bad"; return; }
+          var fk = PRE + "file." + Date.now() + "_" + safe(t);
+          msg.textContent = "올리는 중… (" + (n + 1) + "/" + files.length + ")";
+          return db.collection("ops").doc(fk).set({ v: wrap(d), by: "ht", t: firebase.firestore.FieldValue.serverTimestamp() }).then(function () {
+            imgCache[fk] = d;
+            var item = { kind: "photo", k: fk, title: t, memo: memo, by: me, at: new Date().toISOString(), o: Date.now() }; if (cat) item.cat = cat;
+            put(key, path + "." + uid("f"), item);
+            msg.textContent = "올렸어요 ✓"; msg.className = "fmsg";
+          });
+        }).catch(function (err) { msg.textContent = "사진을 올리지 못했어요" + (err && err.code ? " (" + err.code + ")" : "") + " · 다시 해 주세요"; msg.className = "fmsg bad"; });
+      });
+    });
+    chain.then(function () { redrawFor(box); });
+  });
+  function loadImgs(root) {
+    root.querySelectorAll("img[data-fk]").forEach(function (im) {
+      if (im.getAttribute("src")) return;
+      var k = im.dataset.fk; if (k.indexOf(PRE + "file.") !== 0) return;
+      if (imgCache[k]) { im.src = imgCache[k]; return; }
+      if (!db || !online) return;
+      db.collection("ops").doc(k).get().then(function (s) { if (!s.exists) return; try { var o = JSON.parse(s.data().v); imgCache[k] = o.d; im.src = o.d; } catch (e) {} }).catch(function () {});
+    });
+  }
+  document.addEventListener("click", function (e) {
+    var im = e.target.closest("img[data-fk],img[data-lk]"); if (!im || !im.getAttribute("src")) return;
+    var lb = $("lb"); lb.querySelector("img").src = im.src; lb.hidden = false;
+  });
+  $("lbClose").onclick = function () { $("lb").hidden = true; };
+  $("lb").addEventListener("click", function (e) { if (e.target === $("lb")) $("lb").hidden = true; });
+
+  /* 💾 지금 저장 + 백업: 남은 변경을 바로 보내고, 지금 내용 전체를 백업 문서로 한 벌 더 남김(지우지 않음) */
+  $("saveNow").addEventListener("click", function () {
+    var b = $("saveNow"), lab = $("lastSave");
+    flushAll();
+    var keys = {}; Object.keys(S.srv || {}).concat(Object.keys(SEED), Object.keys(S.pend || {})).forEach(function (k) { if (k.indexOf(PRE) === 0 && k.indexOf(PRE + "file.") !== 0 && k.indexOf(PRE + "bak") !== 0) keys[k] = 1; });
+    var all = {}; Object.keys(keys).forEach(function (k) { all[k] = view(k); });
+    var txt = JSON.stringify({ at: new Date().toISOString(), by: me || "", ver: $("verTag").textContent, data: all });
+    try { localStorage.setItem(PRE + "bak.local", txt); } catch (e) {}
+    if (!db || !online) { lab.textContent = "인터넷이 안 돼서 이 기기에만 백업했어요"; return; }
+    b.disabled = true; lab.textContent = "백업 중…";
+    var d = new Date(), pad = function (n) { return (n < 10 ? "0" : "") + n; };
+    var stamp = d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()) + "-" + pad(d.getHours()) + pad(d.getMinutes()) + pad(d.getSeconds());
+    var parts = [], size = 180000; for (var i = 0; i < txt.length; i += size) parts.push(txt.slice(i, i + size));
+    Promise.all(parts.map(function (part, n) { return db.collection("ops").doc(PRE + "bak." + stamp + ".p" + (n + 1) + "of" + parts.length).set({ v: part, by: "ht", t: firebase.firestore.FieldValue.serverTimestamp() }); }))
+      .then(function () { lab.textContent = "저장 + 백업 완료 " + d.toLocaleTimeString("ko-KR", { hour: "numeric", minute: "2-digit" }); status("saved"); })
+      .catch(function (err) { lab.textContent = "백업하지 못했어요 · 이 기기에는 백업해 뒀어요"; })
+      .then(function () { b.disabled = false; });
+  });
+
+  /* 🔎 벤치마킹 · 가게마다 사람별 7항목 /10 */
+  var CRIT = ["파사드", "향", "음악", "메뉴", "가격", "플레이팅·디테일", "재미"];
+  var CRIT_Q = ["간판 · 입구 · 외관 색 · 조명 · 쇼윈도 진열 · 들어가고 싶었나", "들어갈 때 나는 향 · 버터 · 커피 · 향초 · 진하기", "장르 · 볼륨 · 분위기와 맞나 · 조용한가", "메뉴 수 · 대표 메뉴 · 시즌 한정 · 메뉴판 사진 · 설명 방식", "가격대 · 카페스이 비슷한 메뉴와 비교 · 값어치 했나", "접시 · 커트러리 · 포장지 · 리본 · 쇼케이스 이름표 · 손글씨", "기억에 남는 장면 · 사진 찍고 싶은 곳 · 이벤트 · 굿즈"];
+  var BX = [["vt", "🕒 방문 날짜 · 시간 · 대기", "예) 12/4 15:00 · 대기 20분 · 평일인데 꽉 참"], ["ate", "🍰 먹은 것 · 산 것 · 가격 (한 줄에 하나)", "예)\n딸기 쇼트케이크 · 1,200엔 · 시트 촉촉, 크림 덜 달다\n말차 푸딩 · 650엔 · 병 포장"], ["cust", "👥 손님층 · 회전", "나이대 · 혼자/일행 · 포장 비율 · 많이 사 가는 것 · 회전 속도"], ["serv", "🙇 직원 응대 · 주문 동선", "주문 방식 · 설명해 주는 말 · 속도 · 계산대 위치 · 대기 줄 처리"], ["pack", "🎁 포장 · 선물", "상자 · 쇼핑백 · 보냉 · 유통기한 표시 · 선물용 구성 · 포장 가격"], ["good", "👍 좋았던 점 (구체적으로)", "무엇이 · 왜 좋았나"], ["bad", "🤔 아쉬운 점", "무엇이 · 왜 아쉬웠나 · 나라면 어떻게"]];
+  function personTotal(e) { var t = 0, n = 0; for (var i = 0; i < 7; i++) { var x = num(e && e["s" + i]); if (x) { t += Math.min(x, 10); n++; } } return { t: t, n: n }; }
+  function ranking() {
+    var v = view(K.bench);
+    return rowsOf(v.st).map(function (a) {
+      var ev = (v.ev || {})[a[0]] || {}, tots = Object.keys(ev).map(function (p) { return personTotal(ev[p]); }).filter(function (x) { return x.n; });
+      return { id: a[0], n: a[1].n, cnt: tots.length, avg: tots.length ? tots.reduce(function (s, x) { return s + x.t; }, 0) / tots.length : 0 };
+    }).filter(function (x) { return x.cnt; }).sort(function (a, b) { return b.avg - a.avg; });
+  }
+  function refreshRank() {
+    var el = $("rankBox"); if (!el) return;
+    var r = ranking();
+    el.innerHTML = r.length ? r.map(function (x, i) { return '<div class="rk' + (i === 0 ? " top" : "") + '"><span class="n">' + (i === 0 ? "🏆" : i + 1) + '</span><span><b>' + esc(x.n) + '</b> <span class="hint">· ' + x.cnt + '명 평가</span></span><b class="s">' + (Math.round(x.avg * 10) / 10) + ' / 70</b></div>'; }).join("") : '<div class="empty">아직 평가가 없어요 · 가게 카드에서 점수를 매기면 순위가 생겨요</div>';
+    document.querySelectorAll("[data-mysum]").forEach(function (s) { var e = (((view(K.bench).ev || {})[s.dataset.mysum]) || {})[meKey()]; var t = personTotal(e); s.textContent = "내 점수 " + t.t + " / 70" + (t.n < 7 ? " · " + t.n + "/7항목" : ""); });
+  }
+  function storePlace(id, s) { if (s.pl !== undefined && s.pl !== "") return s.pl; var seed = (SEED[K.bench].st || {})[id]; return s.pl === undefined && seed && seed.n === s.n && BENCH_PL[id] ? BENCH_PL[id] : (s.pl === undefined ? s.n : ""); }
+  mount($("secBench"), [K.bench], function (el) {
+    var v = view(K.bench), st = rowsOf(v.st), mk = meKey();
+    el.innerHTML = '<div class="card"><b>🏆 평균 순위 (/70)</b><div class="rank" id="rankBox"></div></div>' +
+      (me ? "" : nameBox("내 점수 칸이 열려요")) +
+      '<div class="card"><b>➕ 가게 추가</b><div class="fform"><div class="r2"><input type="text" id="bnN" placeholder="가게 이름" aria-label="가게 이름"><input type="text" id="bnA" placeholder="동네 · 몇 일차 (예: 긴자 · 5일차)" aria-label="동네"></div><div class="addbar"><button type="button" class="btn pri" id="bnAdd">＋ 가게 추가</button></div></div></div>' +
+      st.map(function (a) {
+        var id = a[0], s = a[1], ev = (v.ev || {})[id] || {}, my = ev[mk] || {}, base = "ev." + id + "." + mk, pl = storePlace(id, s);
+        var others = Object.keys(ev).filter(function (p) { return p !== mk; }).map(function (p) {
+          var e = ev[p] || {}, t = personTotal(e), ph = rowsOf(e.ph);
+          if (!t.n && !e.prod && !e.memo && !e.take && !e.good && !e.bad && !ph.length) return "";
+          return '<div class="oth"><span><b>' + esc(p) + '</b> · ' + t.t + ' / 70</span><span>' + CRIT.map(function (c, i) { return c + " " + (e["s" + i] || "-") + (e["n" + i] ? " (" + esc(e["n" + i]) + ")" : ""); }).join(" · ") + '</span>' +
+            (e.prod ? '<span>🍰 ' + esc(e.prod) + '</span>' : "") + BX.map(function (x) { return e[x[0]] && x[0] !== "good" && x[0] !== "bad" ? '<span>' + x[1].split(" ")[0] + ' ' + esc(e[x[0]]) + '</span>' : ""; }).join("") + (e.good ? '<span>👍 ' + esc(e.good) + '</span>' : "") + (e.bad ? '<span>🤔 ' + esc(e.bad) + '</span>' : "") + (e.memo ? '<span>📝 ' + esc(e.memo) + '</span>' : "") + (e.take ? '<span>⭐ ' + esc(e.take) + '</span>' : "") +
+            (ph.length ? '<span class="ckpics">' + ph.map(function (b) { return '<span class="ckpic"><img data-fk="' + esc(b[1].k) + '" alt="' + esc(p) + ' 사진"></span>'; }).join("") + '</span>' : "") + '</div>';
+        }).join("");
+        return '<div class="store"><div class="sh"><span><b>' + esc(s.n) + '</b> <small>' + esc([s.area, s.day].filter(Boolean).join(" · ")) + '</small></span>' + delBtn(K.bench, "st." + id, "가게 빼기") + '</div>' +
+          '<div class="plrow"><label class="pllab">📍 장소<input type="text" ' + A(K.bench, "st." + id + ".pl") + ' value="' + esc(s.pl !== undefined ? s.pl : pl) + '" placeholder="구글 지도 검색어" aria-label="장소 검색어"></label>' + mapBtns(pl) + '</div>' +
+          (me ? '<div class="scores">' + CRIT.map(function (c, i) {
+            var cv = String(my["s" + i] || "");
+            return '<label>' + c + '<select ' + A(K.bench, base + ".s" + i) + '><option value="">-</option>' + [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(function (n) { return '<option' + (cv === String(n) ? " selected" : "") + '>' + n + '</option>'; }).join("") + '</select>' +
+              ta(K.bench, base + ".n" + i, my["n" + i], CRIT_Q[i]) + '</label>';
+          }).join("") + '</div><span class="mysum" data-mysum="' + id + '"></span>' +
+            '<div class="fl">🍰 대표 제품 · 가격' + ta(K.bench, base + ".prod", my.prod, "예) 생 카라멜 6개입 · 1,080엔 · 가게가 제일 밀고 있는 것") + '</div>' +
+            '<div class="grid2">' + BX.map(function (x) { return '<div class="fl">' + x[1] + ta(K.bench, base + "." + x[0], my[x[0]], x[2], 'style="min-height:64px"') + '</div>'; }).join("") +
+            '<div class="fl">📝 그 밖에 본 것 · 메모' + ta(K.bench, base + ".memo", my.memo, "인테리어 · 좌석 수 · 쇼케이스 배치 · 인상 깊은 말", 'style="min-height:64px"') + '</div></div>' +
+            '<div class="fl">⭐ 카페스이에 가져올 것' + ta(K.bench, base + ".take", my.take, "무엇을 · 언제까지 · 어떻게 (예: 1월 딸기 쇼트 이름표를 손글씨 카드로)", 'style="min-height:80px"') + '</div>' +
+            '<div class="fl">📷 사진' + picsHtml(K.bench, base + ".ph", my.ph, s.n) + '</div>' : "") +
+          (others ? '<div class="others">' + others + '</div>' : "") + '</div>';
+      }).join("");
+    setTimeout(refreshRank, 0);
+  });
+  $("secBench").addEventListener("click", function (e) {
+    if (!e.target.closest("#bnAdd")) return;
+    var n = $("bnN").value.trim(), a = $("bnA").value.trim(); if (!n) { $("bnN").focus(); return; }
+    put(K.bench, "st." + uid("b"), { n: n, area: a, day: "", pl: "", o: Date.now() }); redrawFor($("secBench").firstChild);
+  });
+
+  /* ⑧ 💌 소감 · 피드백 · 내 카드만 적기 (예전 칸 키 a · b · c · d 그대로 + 새 칸 e) · 예전 공동 피드백(hattori26.feedback)도 여기 */
+  var RQ = [["a", "⭐ 이번 연수를 한 줄로", "예) 일본 디저트는 결국 온도와 수분 싸움이었다"],
+    ["r1", "📅 1일차 수업 · 배운 것과 느낀 것", "품목 · 셰프님이 강조한 것 · 내가 잘 안 된 것 · 다시 해 볼 것"],
+    ["r2", "📅 2일차 수업 · 배운 것과 느낀 것", "품목 · 셰프님이 강조한 것 · 내가 잘 안 된 것 · 다시 해 볼 것"],
+    ["r3", "📅 3일차 수업 · 배운 것과 느낀 것", "품목 · 셰프님이 강조한 것 · 내가 잘 안 된 것 · 다시 해 볼 것"],
+    ["best", "🍰 9품목 중 가장 인상 깊은 것 · 이유", "품목 이름 · 왜 · 카페스이에서 팔 수 있을까"],
+    ["b", "💛 좋았던 것", "수업 · 셰프님 · 같이 간 분들 · 벤치마킹 가게 · 일정 중 좋았던 순간을 구체적으로"],
+    ["e", "🤔 아쉬웠던 것 · 다음엔 이렇게", "무엇이 아쉬웠나 → 다음엔 어떻게 할까"],
+    ["c", "💡 새로 알게 된 것 (기술 · 재료 · 도구)", "예) 생크림 유지방 몇 %를 쓰는지 · 시트 굽는 온도 · 일본 재료 이름"],
+    ["trip", "🗓 일정 · 숙소 · 이동 돌아보기", "시간 배분 · 숙소 위치 · 교통 · 짐 · 다음엔 바꿀 것"],
+    ["money", "💴 돈 쓴 것 돌아보기", "잘 산 것 · 안 사도 됐던 것 · 예산 대비"],
+    ["d", "☕ 카페스이에 해 볼 것 (무엇을 · 언제까지)", "예) 1월: 딸기 다이후쿠 시즌 한정 테스트 · 2월: 틴쿠키 답례품 원가 계산"],
+    ["kit", "🍳 스이노키친 수업에 쓸 것", "수업 주제 · 실습 방식 · 수강생에게 보여 줄 사진"],
+    ["edu", "👩‍🍳 직원 교육에 쓸 것", "직원에게 알려 줄 기술 · 레시피 · 응대 방식"],
+    ["tip", "📌 다음에 갈 사람에게 팁", "준비물 · 꼭 가 볼 곳 · 조심할 것"]];
+  mount($("secReview"), [K.review, K.fb], function (el) {
+    var v = view(K.review), mk = meKey(), fb = view(K.fb);
+    var mine = me ? '<div class="rv mine"><h3>' + esc(me) + ' <span class="hint">(나)</span></h3>' + RQ.map(function (q) { return '<div class="fl">' + q[1] + ta(K.review, mk + "." + q[0], (v[mk] || {})[q[0]], q[2], 'style="min-height:64px"') + '</div>'; }).join("") + '</div>' : nameBox("내 소감 · 피드백 카드가 열려요");
+    var others = Object.keys(v).filter(function (p) { return p !== mk && v[p] && RQ.some(function (q) { return String(v[p][q[0]] || "").trim(); }); }).map(function (p) {
+      return '<div class="rv"><h3>' + esc(p) + '</h3>' + RQ.filter(function (q) { return String(v[p][q[0]] || "").trim(); }).map(function (q) { return '<div><div class="q">' + q[1] + '</div><div class="a">' + esc(v[p][q[0]]) + '</div></div>'; }).join("") + '</div>';
+    }).join("");
+    var oldFb = String(fb.good || "").trim() || String(fb.bad || "").trim();
+    el.innerHTML = '<div class="rvgrid">' + mine + others + '</div>' +
+      (oldFb ? '<div class="card"><b>📝 예전에 같이 적은 피드백</b><span class="hint">위에 따로 있던 「26년의 피드백」 칸이에요 · 지우지 않고 여기로 옮겨 보여요</span><div class="grid2"><div class="fl">😊 좋았던 것' + ta(K.fb, "good", fb.good, "좋았던 것") + '</div><div class="fl">🤔 안 좋았던 것 · 다음엔 이렇게' + ta(K.fb, "bad", fb.bad, "아쉬웠던 것") + '</div></div></div>' : "");
+  });
+
+  /* ==================== 📚 작년 연수 노트 ==================== */
+  $("lastIng").innerHTML = lastIng.map(function (x) { return '<div class="card"><b>' + x[0] + '</b><span>✨ ' + x[1] + '</span><span class="hint">' + x[2] + '</span></div>'; }).join("");
+  $("lastRecipes").innerHTML = lastRecipes.map(function (r) { return '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td><td>' + r[2] + '</td><td><a href="https://app.notion.com/p/' + r[3] + '" target="_blank" rel="noopener">사진 보기 ↗</a></td></tr>'; }).join("");
+
+  /* ==================== 서버 연결 ==================== */
+  function boot() {
+    if (!window.firebase || !window.FIREBASE_CONFIG) { status("noconn"); return; }
+    try { firebase.initializeApp(window.FIREBASE_CONFIG); } catch (e) {}
+    db = firebase.firestore();
+    status("conn");
+    firebase.auth().signInAnonymously().then(function () {
+      online = true;
+      ALLKEYS.forEach(function (key) {
+        db.collection("ops").doc(key).onSnapshot(function (s) {
+          var o = null;
+          if (s.exists) { try { o = JSON.parse(s.data().v || "{}"); } catch (e) { o = {}; } }
+          S.srv[key] = o; fire(key);
+        }, function (err) { status("fail", err); });
+      });
+      sections.forEach(function (s) { loadImgs(s.el); });
+      if (pendCount()) flushAll(); else { $("save").textContent = ""; }
+    }).catch(function () { status("noconn"); });
+  }
+  if (pendCount()) status("offline");
+  boot();
+})();
+</script>
+</body>
+</html>
