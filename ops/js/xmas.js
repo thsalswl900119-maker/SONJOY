@@ -261,12 +261,13 @@
         mat: [mt.length ? "주문 " + od + "/" + mt.length + " · 입고 " + ind : "목록 만들기", mt.length && od < mt.length],
         ck: [(late ? "⚠ 밀림 " + late + " · " : "") + done + "/" + L.length + " 완료", late],
         meet: ["결정 칸 " + fn + "/10", fn < 10],
+        mid: [window.__CS_XMMID_N ? (window.__CS_XMMID_N(cur) ? "보고서 " + window.__CS_XMMID_N(cur) + "개" : "아직 없음") : "", 0],
         hist: [hy.length ? hy[0] + "~" + hy[hy.length - 1] + " · " + hy.length + "년" : "", 0]
       };
       Array.prototype.forEach.call(nav.querySelectorAll(".xmn"), function (b) { var v = S[b.dataset.x], sm = b.querySelector(".xns"); if (!v || !sm) return; sm.textContent = v[0]; b.classList.toggle("todo", !!v[1]); });
     } catch (e) {}
   }
-  var STEPS = [["sum", "📋 한눈에"], ["goal", "① 🎯 목표 · 매출"], ["prod", "② 🍰 생산 계획"], ["mat", "③ 🧾 재료 · 부자재"], ["ck", "④ ✅ 할 일 · 달력"], ["meet", "⑤ 🎁 상품 · 결정"], ["hist", "📊 지난 해 · 보고서"]];
+  var STEPS = [["sum", "📋 한눈에"], ["goal", "① 🎯 목표 · 매출"], ["prod", "② 🍰 생산 계획"], ["mat", "③ 🧾 재료 · 부자재"], ["ck", "④ ✅ 할 일 · 달력"], ["meet", "⑤ 🎁 상품 · 결정"], ["mid", "🔎 중간점검 참고자료"], ["hist", "📊 지난 해 · 보고서"]];
   function nextBar(k) {   // 화면 맨 아래 「← 이전 · 다음 →」 — 목표 → 생산 → 재료 → 할 일 → 상품이 이어지게
     var pane = sec.querySelector('.xmpane[data-x="' + k + '"]'); if (!pane) return;
     var b = pane.querySelector(":scope > .xnext"); if (!b) { b = document.createElement("div"); b.className = "xnext"; }
@@ -274,7 +275,7 @@
     var i = STEPS.map(function (x) { return x[0]; }).indexOf(k), pv = STEPS[i - 1], nx = STEPS[i + 1];
     b.innerHTML = (pv ? '<button type="button" class="xnb pv" data-go="' + pv[0] + '">← ' + pv[1] + "</button>" : "<span></span>") + (nx ? '<button type="button" class="xnb nx" data-go="' + nx[0] + '">다음 ' + nx[1] + " →</button>" : "");
   }
-  function paneEl(k) { return k === "hist" ? sec.querySelector('.xmpane[data-x="hist"]') : document.getElementById({ sum: "xmSum", goal: "xmGoal", mat: "xmMat", prod: "xmProdPane", meet: "xmPeak" }[k]); }
+  function paneEl(k) { return k === "hist" ? sec.querySelector('.xmpane[data-x="hist"]') : document.getElementById({ sum: "xmSum", goal: "xmGoal", mat: "xmMat", prod: "xmProdPane", meet: "xmPeak", mid: "xmMid" }[k]); }
   function busy(el) { var a = document.activeElement; return el && a && el.contains(a) && (/INPUT|TEXTAREA|SELECT/.test(a.tagName) || a.isContentEditable); }
   var pend = {};
   // 다시 그릴 때 쓰던 칸으로 돌아가기 (이 화면에서 고친 뒤 · 합계를 바로 바꾸려고)
@@ -301,7 +302,7 @@
     if (busy(el) && !(force === true && !document.activeElement.isContentEditable)) { pend[k] = 1; return; }
     pend[k] = 0;
     var fk = focusKey(el), sy = window.pageYOffset;
-    ({ sum: drawSum, goal: drawGoal, mat: drawMat, prod: function () { drawProd(document.getElementById("xmProd")); drawPlan(document.getElementById("xmPlan")); }, meet: drawPeak, hist: function () { drawHist(document.getElementById("xmHist")); drawRep(document.getElementById("xmRep")); } }[k] || function () {})(el);
+    ({ sum: drawSum, goal: drawGoal, mat: drawMat, prod: function () { drawProd(document.getElementById("xmProd")); drawPlan(document.getElementById("xmPlan")); }, meet: drawPeak, mid: function (el) { if (window.__CS_XMMID) window.__CS_XMMID(el, cur); }, hist: function () { drawHist(document.getElementById("xmHist")); drawRep(document.getElementById("xmRep")); } }[k] || function () {})(el);
     if (fk) { var f2 = el.querySelector(fk); if (f2) { try { f2.focus({ preventScroll: true }); if (f2.setSelectionRange && /text|search/.test(f2.type || "text") && f2.tagName !== "SELECT") f2.setSelectionRange(f2.value.length, f2.value.length); } catch (e) {} window.scrollTo(0, sy); } }
   }
   sec.addEventListener("focusout", function () { setTimeout(function () { var el = paneEl(TAB); if (pend[TAB] && !busy(el)) drawPane(); }, 60); });
