@@ -44,9 +44,14 @@
     var L = list(y), opened = {};
     Array.prototype.forEach.call(el.querySelectorAll("details.xmdr"), function (d) { opened[d.dataset.id] = d.open; });
     var h = '<div class="xmdhead"><h3>🔎 중간점검 참고자료 <small>' + esc(y) + "년 · " + L.length + "개 · 최신이 맨 위</small></h3>"
-      + '<p>광고팀 · 크리스마스 전담팀이 보낸 중간점검 보고서를 날짜별로 요약해 둔 곳입니다. 숫자는 보고서에 적힌 그대로 · <b>정할 것은 사장님이 정하신 뒤 생산 계획 · 재료 표에 옮깁니다</b>(여기 숫자가 계획을 바꾸지 않음).</p></div>';
+      + '<p>광고팀 · 크리스마스 전담팀이 <b>매주 한 번</b> 보내는 중간점검 보고서를 날짜별로 쌓아 두는 곳입니다(새 보고서가 맨 위 · 예전 것은 접혀서 아래). 보고서마다 시스템팀이 발주량을 다시 계산해 <b>발주 · 로스가 최대한 없게</b> 맞춥니다. 숫자는 보고서에 적힌 그대로 · <b>정할 것은 사장님이 정하신 뒤 생산 계획 · 재료 표에 옮깁니다</b>(여기 숫자가 계획을 바꾸지 않음).</p><p class="xmdgoal">🎯 <b>목적(사장님 11/26):</b> 돈이 새지 않고 · 제품 로스가 없고 · 쓸데없는 일을 덜 하고 · 퀄리티는 지키기</p></div>';
+    if (L.length) h += '<div class="xmdidx"><span>📅 날짜별 (매주 쌓임)</span>' + L.map(function (x) { return '<button type="button" class="xmdgo" data-id="' + esc(x.id) + '">' + esc(md(x.d)) + (x.no ? " · " + "①②③④⑤⑥⑦⑧⑨⑩"[x.no - 1] : "") + "</button>"; }).join("") + '<button type="button" class="xmdall">모두 펼치기 / 접기</button></div>';
     if (!L.length) h += '<p class="xmdempty">아직 ' + esc(y) + "년 중간점검 보고서가 없어요.</p>";
     L.forEach(function (x, i) { h += card(x, x.id in opened ? opened[x.id] : i === 0); });
     el.innerHTML = h;
+    if (!el.__mdb) { el.__mdb = 1; el.addEventListener("click", function (e) {
+      var g = e.target.closest(".xmdgo"); if (g) { var d = el.querySelector('details.xmdr[data-id="' + g.dataset.id + '"]'); if (d) { d.open = true; d.scrollIntoView({ block: "start", behavior: "smooth" }); } return; }
+      if (e.target.closest(".xmdall")) { var ds = el.querySelectorAll("details.xmdr"), any = Array.prototype.some.call(ds, function (d) { return !d.open; }); Array.prototype.forEach.call(ds, function (d) { d.open = any; }); }
+    }); }
   };
 })();
