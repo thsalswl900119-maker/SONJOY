@@ -334,6 +334,9 @@
     straw: "📒 25년(12/18~25): <b>340통 받음</b> (망고아저씨 290 외) · 22통 + 손질한 2바구니 남음 → <b>약 316통 씀</b> (계획 때 필요 333)",
     whip: "📒 25년(12/17~26): 12개씩 4번 <b>48개 받음</b> · 남은 수 기록 없음 (계획 때 필요 43)"
   };
+  // 25년 [받은 것, 쓴 것, 남은 것, 금액] — 숫자만 (표 · 합계용)
+  var PKLYN = { b: [68, 42, 26], c: [12, 7, 5], m: [2, 0, 2], shWon: 1739000, cr: [310, 310, 0, 1538800], st: [340, 316, 24, 2900000], wh: [48, null, null, 487600],
+    note: "25년 금액은 기록된 것만 — 시트 82장 1,739,000원(장부 12/4 · 미리 송금 10% 할인) · 생크림 3사 216통 + 녹산 80통 1,538,800원(24일 긴급 14통 금액은 기록 없음 · 남은 수 0으로 봄) · 딸기 망고아저씨 290통 2,900,000원(나머지 50통 금액 기록 없음 · 남은 24 = 22통 + 손질한 2바구니) · 휘핑 48개 487,600원(남은 수 기록 없음). 올해 금액 = 작년 단가 · 시트는 택배비 포함." };
   function pkLy(k) { return PKLY[k] ? "<small class='pklyb'>" + PKLY[k] + "</small>" : ""; }
   function pkLyT(k) { return PKLY[k] ? "  " + PKLY[k].replace(/<[^>]+>/g, "") : ""; }
   function pkLeft(x, y) { var L = PKLEFT[y] || {}; if (x.k === "중간") return "";   /* 반짝(중간)은 작년 「홀 다 팔림」 메모와 다른 품목 (11/25) */ return x.k === "미니" ? L["미니"] : L[(x.k === "조각" ? "조각" : "홀") + "|" + gKey(x)] || ""; }
@@ -363,7 +366,9 @@
     function gin(x) { return '<input type="text" inputmode="decimal" class="xpkex pks2in" data-gt="' + x._id + '" value="' + sum(x._id) + '" aria-label="' + ea2(x.n) + ' 합">'; }
     function oin(path, v) { return '<input type="text" inputmode="numeric" class="xpkex pks2in" data-o="' + path + '" value="' + ea2(v) + '" aria-label="주문 수">'; }
     var NEED = pkNeed(y, D), need = [0, 1, 2].map(function (i) { return r1(D.reduce(function (t, d) { return t + (NEED[d] ? NEED[d][i] : 0); }, 0)); });
-    function nchk(i, have) { var gap = Math.ceil(need[i] - 1e-9) - have; return ' <small class="pks2nd' + (gap > 0 ? " short" : "") + '">지금 예상으로 필요 ' + need[i] + (gap > 0 ? " → " + gap + " 모자람" : " ✔") + "</small>"; }
+    // 여유 기준 (사장님 11/26: 딸기 매일 4통 · 생크림 매일 3통 · 휘핑 한 주 2통) — od.cream/whip/straw.buf
+    var BUFK = ["cream", "whip", "straw"], BUFT = ["매일 끝날 때", "한 주", "매일 끝날 때"];
+    function nchk(i, have) { var oo = (o.pk && o.pk.ord && o.pk.ord[BUFK[i]]) || {}, bf = N(oo.buf), want = Math.ceil(need[i] + bf - 1e-9), gap = want - have; return ' <small class="pks2nd' + (gap > 0 ? " short" : "") + '">지금 예상으로 필요 ' + need[i] + (bf ? " + 여유 " + bf + " (" + BUFT[i] + ") = " + want : "") + (gap > 0 ? " → " + gap + " 모자람" : " ✔ " + (have - want > 0 ? (have - want) + " 더 남음" : "딱 맞음")) + "</small>"; }
     function nm(x) { return String(x.n || "").replace(/\s*\(([^)]{5,})\)?.*$/, ""); }
     /* 11/25 사장님 「목표에 작년 실제 팔았던 것도 · 얼마나 남았고 · 커서 가져다 대면 메모장처럼」 — 작년 같은 날짜(12/21~26) 실제 작업량 · 남은 것 · 주석 */
     var ly = y - 1, seenL = {};
@@ -385,6 +390,7 @@
     function gth(x) { var L = lyInfo(x); return '<th class="pkcm" tabindex="0" data-tip="' + ea2(L.tip) + '">' + esc(nm(x)) + (L.short ? '<small class="pkly">' + esc(L.short) + "</small>" : "") + "</th>"; }
     var tH = hole.reduce(function (t, x) { return t + sum(x._id); }, 0), tM = mini.reduce(function (t, x) { return t + sum(x._id); }, 0), tS = sl.reduce(function (t, x) { return t + sum(x._id); }, 0);
     var h = '<div class="pksum2"><div class="pks2h"><b>📋 예상 주문 계산 요약</b><span class="pks2per"><b>' + mdw(D[0]) + " ~ " + mdw(D[D.length - 1]) + ' 주문 양</b> (시트는 12/1~26 · 목표 칸에 마우스를 올리면 작년 메모)</span><button type="button" class="skbtn" data-a="pkcopy">📋 글 복사</button></div>';
+    if (od && od.buf) { h += '<p class="pks2buf">' + esc(od.buf) + "</p>"; }
     h += '<div class="pks2g"><div class="pks2c"><h5>🎯 목표</h5><table><tbody>' +
       hole.map(function (x) { return "<tr>" + gth(x) + "<td>" + gin(x) + "개" + (x._id === "g0" && wsT ? '<small>예약 ' + r1(sum(x._id) - wsT) + " + 현장 " + wsT + "</small>" : "") + "</td></tr>"; }).join("") +
       mini.map(function (x) { return "<tr>" + gth(x) + "<td>" + gin(x) + "개</td></tr>"; }).join("") +
@@ -404,10 +410,27 @@
       if (bad.length) h += '<div class="pks2bad">⚠ 아래 「올해 예상」(재료 표) 숫자가 받는 날 나눔과 달라요 — ' + bad.map(function (b) { return esc(b[0]) + " 나눔 " + b[1] + " ↔ 재료 표 " + b[2]; }).join(" · ") + " · 받는 날 나눔은 Claude에게 다시 맡겨 주세요</div>";
       var tot = N(Mo.sheet) + N(Mo.ship) + N(Mo.cream) + N(Mo.straw) + N(Mo.whip);
       h += '<div class="pks2tot">💰 시트 · 생크림 · 딸기 · 휘핑 합 <b>' + won(tot) + "</b> <small>(작년 단가로 계산 · 올해 견적 받으면 바뀜)</small></div>";
+      // 📊 작년 vs 올해 합계 표 (11/26 사장님 「합계도 만들어 줘야지」) — 작년 숫자 = PKLYN(25년 파일 · 장부 주석), 올해 = 받는 날 나눔 · 지금 예상 필요
+      (function () {
+        var SN = S.need || [], L = PKLYN, rows = [
+          ["기본 시트", "장", L.b, sum2(S.b), N(SN[0]), null], ["초코 시트", "장", L.c, sum2(S.c), N(SN[1]), null], ["말차 시트", "장", L.m, sum2(S.m), N(SN[2]), null],
+          ["생크림", "통", L.cr, sum2(Cr.n), need[0], N(Mo.cream)], ["딸기 (500g)", "통", L.st, sum2(St.n), need[2], N(Mo.straw)], ["휘핑", "개", L.wh, sum2(Wh.n), need[1], N(Mo.whip)]];
+        function f1(v) { return v == null || v === "" ? "—" : (Math.round(v * 10) / 10).toLocaleString("ko-KR"); }
+        function gap(a, b) { if (!b) return "—"; var g = Math.round((a - b) * 10) / 10; return '<b class="' + (g < 0 ? "neg" : "pos") + '">' + (g > 0 ? "+" : "") + g.toLocaleString("ko-KR") + "</b>"; }
+        function row(r, cls) { return '<tr' + (cls ? ' class="' + cls + '"' : "") + "><th>" + r[0] + " <small>(" + r[1] + ")</small></th><td>" + f1(r[2][0]) + "</td><td>" + f1(r[2][1]) + "</td><td>" + f1(r[2][2]) + "</td><td><b>" + f1(r[3]) + "</b></td><td>" + f1(r[4]) + "</td><td>" + gap(r[3], r[4]) + "</td><td>" + (r[5] ? won(r[5]) : "") + "</td><td>" + (r[2][3] ? won(r[2][3]) : "") + "</td></tr>"; }
+        var sh = rows.slice(0, 3), shT = ["시트 합계", "장", [0, 1, 2].map(function (i) { return sh.reduce(function (t, r) { return t + N(r[2][i]); }, 0); }).concat([L.shWon]), sh.reduce(function (t, r) { return t + r[3]; }, 0), sh.reduce(function (t, r) { return t + r[4]; }, 0), N(Mo.sheet) + N(Mo.ship)];
+        var lyWon = N(L.shWon) + N(L.cr[3]) + N(L.st[3]) + N(L.wh[3]);
+        h += '<div class="pkyy"><h5>📊 작년 vs 올해 합계 <small>작년 = 25년 크리스마스 파일 · 장부 주석 · 올해 필요 = 지금 생산 계획으로 계산 · 「주문 − 필요」 = 남을 양 (− 면 모자람)</small></h5><div class="pkyyw"><table><thead><tr><th>재료</th><th>25년 받은 것</th><th>25년 쓴 것</th><th>25년 남은 것</th><th>올해 주문</th><th>올해 필요</th><th>주문 − 필요</th><th>올해 금액</th><th>25년 금액</th></tr></thead><tbody>'
+          + sh.map(function (r) { return row(r); }).join("") + row(shT, "t") + rows.slice(3).map(function (r) { return row(r); }).join("")
+          + '<tr class="t2"><th>💰 금액 합계</th><td colspan="6"></td><td><b>' + won(tot) + "</b></td><td><b>" + won(lyWon) + '</b></td></tr></tbody></table></div><p class="pkyyn">' + esc(L.note) + "</p></div>";
+        txt.push("", "■ 작년 vs 올해 합계 (25년 받은 → 쓴 · 올해 주문 / 필요)");
+        rows.concat([shT]).forEach(function (r) { txt.push("· " + r[0] + " 25년 " + f1(r[2][0]) + " → " + f1(r[2][1]) + r[1] + " · 올해 " + f1(r[3]) + " / 필요 " + f1(r[4])); });
+        txt.push("· 금액 올해 " + won(tot) + " · 25년 " + won(lyWon) + " (기록된 것만)");
+      })();
       txt = txt.concat(["", "■ 시트 (12/1~26) 기본 " + sum2(S.b) + " · 초코 " + sum2(S.c) + " · 말차 " + sum2(S.m) + " = " + (sum2(S.b) + sum2(S.c) + sum2(S.m)) + "장" + pkLyT("sheet")], S.d.map(function (d, i) { return "· " + d + " 기본 " + S.b[i] + " · 초코 " + S.c[i] + " · 말차 " + S.m[i] + " (" + S.r[i] + ")"; }),
         ["", "■ 생크림 " + sum2(Cr.n) + "통" + pkLyT("cream")], Cr.d.map(function (d, i) { return "· " + d + " " + Cr.w[i] + " " + Cr.n[i] + "통"; }),
         ["", "■ 딸기 (500g) " + sum2(St.n) + "통" + pkLyT("straw")], St.d.map(function (d, i) { return "· " + d + " " + St.n[i] + "통 (" + St.r[i] + ")"; }),
-        ["", "■ 휘핑 " + sum2(Wh.n) + "개 (필요 " + Wh.need + ")" + pkLyT("whip"), "· " + Wh.d.map(function (d, i) { return d + " " + Wh.n[i]; }).join(" · "), "", "■ 금액 약 " + won(tot) + " (작년 단가)"]);
+        ["", "■ 휘핑 " + sum2(Wh.n) + "개 (필요 " + Wh.need + ")" + pkLyT("whip"), "· " + Wh.d.map(function (d, i) { return d + " " + Wh.n[i]; }).join(" · "), "", "■ 금액 약 " + won(tot) + " (작년 단가)"]); if (od && od.buf) txt.push("", od.buf);
     }
     var NT = (PKNOTE[y - 1] || []).map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + (PKNOTE[y - 2] || []).map(function (t) { return '<li class="o">' + String(y - 2).slice(2) + "년 · " + esc(t) + "</li>"; }).join("");
     if (NT) { h += '<div class="pks2memo"><b>📒 ' + String(y - 1).slice(2) + "년 특이사항 · 로스 막기</b><ul>" + NT + "</ul></div>"; txt = txt.concat(["", "■ " + String(y - 1).slice(2) + "년 특이사항 (로스 막기)"], (PKNOTE[y - 1] || []).map(function (t) { return "· " + t; })); }
