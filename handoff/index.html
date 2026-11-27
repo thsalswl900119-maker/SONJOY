@@ -92,6 +92,20 @@ dialog::backdrop{background:rgba(0,0,0,.45)}
 .fm .ok{background:var(--pri);color:#fff}.fm .no{background:var(--bg);color:var(--ink)}
 .hist{font-size:13px;color:var(--mut);margin-top:4px}.hist summary{cursor:pointer}
 .hist div{border-left:3px solid var(--line);padding-left:8px;margin:4px 0}
+.tx .tt{font-weight:800;font-size:15.5px;color:var(--ink);margin-bottom:2px}
+.tx .ln{list-style:none;margin:2px 0 0;padding:0}
+.tx .ln li{display:block;border:0;padding:2px 0 2px 14px;position:relative;line-height:1.55}
+.tx .ln li::before{content:"";position:absolute;left:2px;top:.72em;width:5px;height:5px;border-radius:50%;background:var(--pri);opacity:.6}
+.tx .ln1{line-height:1.55}
+.tx .num{color:var(--pri);font-weight:800}
+.tx .no{color:var(--new);font-weight:800}
+.tx .must{background:var(--mark);font-weight:800;padding:0 2px;border-radius:3px}
+.tx .dc{display:inline-block;font-size:11.5px;font-weight:700;color:var(--mut);background:var(--bg);border:1px solid var(--line);border-radius:5px;padding:0 5px;margin:0 2px;vertical-align:1px;white-space:nowrap}
+.tx .now{display:block;background:var(--nur2);color:var(--nur);font-weight:800;border-radius:8px;padding:5px 9px;margin:3px 0}
+.tx .olds{margin:2px 0 4px}.tx .old{font-size:13px;color:var(--mut);padding:1px 9px}.tx .old .num,.tx .old .no{color:inherit;font-weight:600}
+.tx .now .num{color:var(--nur)}
+.tx .arr{color:var(--mut);font-weight:800}
+.tx .g,.tx .s{vertical-align:2px}
 @media (hover:hover){.act{opacity:.45;transition:opacity .15s}li:hover .act{opacity:1}}
 .act button{font-size:12.5px;padding:2px 9px}
 .guide{background:var(--card);border:1px solid var(--line);border-radius:12px;margin:14px 0;font-size:14px}
@@ -172,6 +186,6 @@ dialog::backdrop{background:rgba(0,0,0,.45)}
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
 <script src="data.enc.js?v=4"></script>
-<script src="app.js?v=4"></script>
+<script src="app.js?v=6"></script>
 </body>
 </html>

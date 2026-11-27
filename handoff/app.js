@@ -137,8 +137,36 @@ const ymL=d=>{const [y,mm]=d.split('-');return y+'년 '+(+mm)+'월'};
 const md=t=>{const x=new Date(t);return (x.getMonth()+1)+'/'+x.getDate()};
 const nm=w=>w?(/님$/.test(w)?w:w+'님'):'';
 function recent(){const n=new Date();const c=new Date(n.getFullYear(),n.getMonth()-2,1);return c.getFullYear()+'-'+String(c.getMonth()+1).padStart(2,'0')}
+// 읽기 쉽게 — 저장된 글은 그대로 두고 화면에서만: 제목 / 한 줄에 한 가지 / 바뀐 것은 「지금」 / 숫자 · 하지 말 것 · 꼭 강조
+const DATEP=/\((\d{2}\.\d{1,2})([^)]*)\)/g;
+function deco(x){ // x = 이미 esc 된 한 줄
+  x=x.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
+  x=x.replace(/(\d+(?:\.\d+)?(?:[×x~–\-]\d+(?:\.\d+)?)?\s?(?:mcg|mg|cc|ml|mL|kg|G|g|개|앰플|vial|%|cm|Fr|unit|mA|도|분|시간|장|번|대|cc\/hr)(?![a-zA-Z]))/g,'<b class="num">$1</b>');
+  x=x.replace(/(장갑\s?)(\d\.\d)/g,'$1<b class="num">$2</b>');
+  x=x.replace(/(안 씀|안 함|안 봄|안 만듦|안 쓸 듯|하지 말고|하지 말기|말 것|말기|금지|사용 안 함|쓰지 않기|붙이지 않기|버리지 말 것|끄지 말 것|뜯지 않기|까지 않음|잠그지 말 것|섞지 말고|놓지 않기|마세요|사용 불가|사용불가|안 됨)/g,'<span class="no">$1</span>');
+  x=x.replace(/(^|[\s(,])X(?=[\s,.)]|$)/g,'$1<span class="no">✕</span>');
+  x=x.replace(/(꼭|무조건|필수|반드시|철저)(?![^,.]*아님)/g,'<span class="must">$1</span>');
+  x=x.replace(DATEP,(m,a,b)=>`<span class="dc">${a}${b.replace(/^,\s*/,' ')}</span>`);
+  return x;
+}
+function lineHtml(l){
+  const parts=l.split(/\s*→\s*/);
+  if(parts.length<2)return deco(l);
+  const dated=parts.filter(x=>/\(\d{2}\.\d{1,2}/.test(x)).length>=2;
+  if(!dated)return parts.map(deco).join(' <span class="arr">→</span> ');
+  // 바뀐 이력: 지금 것을 맨 위에 크게, 예전 것은 아래에 흐리게
+  const now=parts.pop();
+  return `<div class="now">✅ 지금 ${deco(now)}</div><div class="olds">${parts.reverse().map(x=>`<div class="old">예전 · ${deco(x)}</div>`).join('')}</div>`;
+}
 function fmt(t){
-  let h=esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/^⚠/,'<span class="warn">⚠</span>').replace(/\n/g,'<br>');
+  let raw=String(t||''),warn='';
+  if(/^⚠/.test(raw)){warn='<span class="warn">⚠ </span>';raw=raw.replace(/^⚠\s*/,'')}
+  let title='',body=raw,m;
+  if((m=raw.match(/^\*\*(.+?)\*\*\s*((?:\([^)]*\)\s*)?)[:：]?\s*/))){title=m[1]+(m[2]?' '+m[2].trim():'');body=raw.slice(m[0].length)}
+  else if((m=raw.match(/^([^:：\n]{1,30}?)\s*[:：]\s+/))&&!/\d\s*$/.test(m[1])){title=m[1];body=raw.slice(m[0].length)}
+  let lines=esc(body).split(/\n|\s\/\s|(?<=[^\d\s])\.\s+(?=\S)|(?<=\))\.\s+(?=\S)/).map(x=>x.trim().replace(/\.$/,'')).filter(Boolean);
+  let h=(title?`<div class="tt">${warn}${deco(esc(title))}</div>`:'')+
+    (lines.length>1?'<ul class="ln">'+lines.map(l=>`<li>${lineHtml(l)}</li>`).join('')+'</ul>':`<div class="ln1">${title?'':warn}${lineHtml(lines[0]||'')}</div>`);
   if(Q){const re=new RegExp('('+QT.flat().sort((a,b)=>b.length-a.length).map(w=>w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|')+')','gi');h=h.replace(/(<[^>]+>)|([^<]+)/g,(mm,tag,txt)=>tag?tag:txt.replace(re,'<mark>$1</mark>'))}
   return h;
 }
