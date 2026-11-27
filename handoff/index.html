@@ -6,12 +6,12 @@
 <meta name="robots" content="noindex,nofollow">
 <title>회복실 인계 노트</title>
 <style>
-:root{--cer:#8A3FA0;--cer2:#F3E8F7;--bg:#F4F6F8;--card:#fff;--ink:#1D2733;--ink2:#46525F;--mut:#5E6B78;--line:#D9E0E7;--pri:#1F5F8B;--pri2:#E5EFF7;--nur:#2F6B4F;--nur2:#E4F1EA;--new:#B3261E;--mark:#FFF1A8}
-@media (prefers-color-scheme:dark){:root{--bg:#12171D;--card:#1B222A;--ink:#E7ECF1;--ink2:#C3CCD5;--mut:#A3AFBB;--line:#2E3843;--pri:#7FB6E0;--pri2:#1E2E3C;--nur:#86C9A6;--nur2:#1C2E25;--new:#FF8A80;--mark:#5A4E10;--cer:#D3A2E3;--cer2:#2C2033}}
+:root{--cer:#7A3FA0;--cer2:#F1E8F8;--bg:#ECEEFA;--card:#fff;--ink:#1B2150;--ink2:#3F4670;--mut:#585E86;--line:#D3D8EF;--pri:#34419E;--pri2:#E4E7F8;--nur:#1D6B63;--nur2:#E0F1EE;--brand1:#2F3B96;--brand2:#5A68C6;--new:#B3261E;--mark:#FFF1A8}
+@media (prefers-color-scheme:dark){:root{--brand1:#232B6E;--brand2:#3B4795;--bg:#12142A;--card:#1C1F3A;--ink:#E8EAF8;--ink2:#C5C9E6;--mut:#A3A8CC;--line:#2F3358;--pri:#9DA8F0;--pri2:#252A52;--nur:#86C9A6;--nur2:#1C2E25;--new:#FF8A80;--mark:#5A4E10;--cer:#D3A2E3;--cer2:#2C2033}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;word-break:keep-all;overflow-wrap:anywhere}
 .wrap{max-width:980px;margin:0 auto;padding:0 16px 80px}
-header{position:sticky;top:0;z-index:5;background:var(--bg);padding:12px 0 8px;border-bottom:1px solid var(--line)}
+header{position:sticky;top:0;z-index:5;background:var(--bg);padding:0 0 8px;border-bottom:1px solid var(--line)}
 h1{font-size:20px;margin:0 0 2px}
 .sub{color:var(--mut);font-size:13px}
 .tabs{display:flex;gap:6px;margin:10px 0 8px;flex-wrap:wrap}
@@ -46,7 +46,19 @@ mark{background:var(--mark);color:inherit;padding:0 2px;border-radius:3px}
 .warn{color:var(--new);font-weight:700}
 .note{font-size:13px;color:var(--ink2);background:var(--card);border:1px dashed var(--line);border-radius:12px;padding:10px 12px;margin:14px 0}
 .empty{text-align:center;color:var(--mut);padding:40px 0}
-#gate{max-width:380px;margin:18vh auto 0;padding:0 16px;text-align:center}
+#gate{max-width:380px;margin:14vh auto 0;text-align:center}
+.brand{margin:0 -16px 6px;padding:14px 16px 12px;background:linear-gradient(135deg,var(--brand1),var(--brand2));color:#fff;border-radius:0 0 22px 22px;display:flex;gap:12px;align-items:center;box-shadow:0 6px 18px rgba(47,59,150,.22)}
+.brand h1{color:#fff}.brand .sub,.brand .sync{color:#E4E7FF}.brand .sync.bad{color:#FFE08A}
+.emb{flex:none;width:54px;height:54px;border-radius:16px;background:#fff;display:grid;place-items:center;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+.emb i{width:42px;height:42px;border-radius:50%;border:2px solid #6C79D4;box-shadow:inset 0 0 0 3px #fff,inset 0 0 0 4.5px #AEB7EC;display:grid;place-items:center;font-style:normal;font-weight:900;font-size:11px;letter-spacing:.3px;color:var(--brand1)}
+#gate input[type=checkbox]{width:auto;margin:0 6px 0 0;vertical-align:middle}#gate .emb{width:76px;height:76px;margin:0 auto 12px;border-radius:22px}#gate .emb i{width:60px;height:60px;font-size:14px}
+#gate{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:26px 20px;box-shadow:0 10px 30px rgba(47,59,150,.15)}
+body{background:linear-gradient(180deg,#DCE0F7 0,var(--bg) 260px) no-repeat,var(--bg)}
+header{background:transparent}
+@media (prefers-color-scheme:dark){body{background:var(--bg)}}
+.wbtn{background:linear-gradient(135deg,#C62D2D,#A52222)}
+section{box-shadow:0 2px 8px rgba(47,59,150,.06)}
+
 #gate input{width:100%;font-size:17px;padding:12px;border-radius:12px;border:1px solid var(--line);margin:14px 0 8px;background:var(--card);color:var(--ink)}
 #gate button,.btn{font-size:16px;font-weight:700;padding:11px 18px;border-radius:12px;border:0;background:var(--pri);color:#fff;cursor:pointer;width:100%}
 #gate label{font-size:13.5px;color:var(--ink2)}
@@ -91,7 +103,7 @@ dialog::backdrop{background:rgba(0,0,0,.45)}
 </head>
 <body>
 <div id="gate">
-  <h1>🔒 회복실 인계 노트</h1>
+  <div class="emb"><i>PACU</i></div><h1>🔒 회복실 인계 노트</h1>
   <div class="sub">같이 일하는 선생님만 보는 화면이에요.<br>단톡방에서 받은 비밀번호를 넣어 주세요.</div>
   <form id="gf"><input id="gpw" type="password" autocomplete="current-password" placeholder="비밀번호">
   <div id="gerr"></div>
@@ -100,9 +112,10 @@ dialog::backdrop{background:rgba(0,0,0,.45)}
 </div>
 <div class="wrap" id="app" hidden>
   <header>
+    <div class="brand"><div class="emb"><i>PACU</i></div><div>
     <h1 id="ttl">회복실 인계 노트</h1>
     <div class="sub" id="srcl"></div>
-    <div class="sync" id="sync">서버 연결 중…</div>
+    <div class="sync" id="sync">서버 연결 중…</div></div></div>
     <div class="tabs">
       <button class="tab" data-v="prof">👨‍⚕️ 교수님별</button>
       <button class="tab" data-v="nurse">🩺 간호사끼리</button>
@@ -158,7 +171,7 @@ dialog::backdrop{background:rgba(0,0,0,.45)}
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
-<script src="data.enc.js"></script>
-<script src="app.js?v=3"></script>
+<script src="data.enc.js?v=4"></script>
+<script src="app.js?v=4"></script>
 </body>
 </html>

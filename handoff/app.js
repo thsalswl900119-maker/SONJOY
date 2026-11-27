@@ -53,7 +53,11 @@ let D=null, BASE=[], ENT={}, ITEMS=[], V='prof', Q='', db=null, online=false;
 V=LS.get('handoff.view','prof');
 
 async function tryOpen(pw,rem){
-  try{D=await openBase(pw)}catch(e){$('#gerr').textContent='비밀번호가 맞지 않아요.';return}
+  try{D=await openBase(pw)}catch(e){
+    // 휴대폰에 옛 데이터 파일이 남아 있을 수 있음(비밀번호를 바꾼 뒤) → 서버에서 새로 받아 한 번 더
+    try{const t=await (await fetch('data.enc.js?t='+Date.now(),{cache:'no-store'})).text();
+      window.HANDOFF_ENC=JSON.parse(t.slice(t.indexOf('{'),t.lastIndexOf('}')+1));D=await openBase(pw)}
+    catch(e2){$('#gerr').textContent='비밀번호가 맞지 않아요. (띄어쓰기 없이 다시 넣어 보세요)';if(!rem)try{localStorage.removeItem(K)}catch(x){}return}}
   if(rem)LS.set(K,pw);
   SK=await crypto.subtle.importKey('raw',b64(D.sk),{name:'AES-GCM'},false,['encrypt','decrypt']);
   BASE=D.it;
