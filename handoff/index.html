@@ -116,6 +116,9 @@ h2.fh{cursor:pointer;user-select:none}h2.fh .fi{display:inline-grid;place-items:
 .tx details.more .mc{display:none}.tx details.more[open] .mo{display:none}.tx details.more[open] .mc{display:inline}
 .tx details.more[open] summary{display:none}
 .tx .mclose{font-size:13px;font-weight:800;color:var(--pri);background:var(--pri2);border:0;border-radius:20px;padding:2px 11px;margin:3px 0 0 14px;cursor:pointer}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#1E7A4F;color:#fff;font-weight:800;font-size:15px;padding:12px 18px;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.25);z-index:50;opacity:0;transition:opacity .25s;pointer-events:none;max-width:92vw;text-align:center}
+#toast.bad{background:#A8321E}
+li.flash{animation:fl 2.4s ease}@keyframes fl{0%,40%{background:#FFE57A}100%{background:transparent}}
 @media (hover:hover){.act{opacity:.45;transition:opacity .15s}li:hover .act{opacity:1}}
 .act button{font-size:12.5px;padding:2px 9px}
 .guide{background:var(--card);border:1px solid var(--line);border-radius:12px;margin:14px 0;font-size:14px}
@@ -196,6 +199,6 @@ h2.fh{cursor:pointer;user-select:none}h2.fh .fi{display:inline-grid;place-items:
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
 <script src="data.enc.js?v=4"></script>
-<script src="app.js?v=8"></script>
+<script src="app.js?v=9"></script>
 </body>
 </html>

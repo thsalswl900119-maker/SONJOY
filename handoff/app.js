@@ -77,6 +77,8 @@ $('#qx').onclick=()=>{$('#q').value='';Q='';QT=[];$('#qx').hidden=true;draw();$(
 $('#sort').onchange=()=>draw();
 
 // ── 서버 ──
+function toast(t,bad){let el=$('#toast');if(!el){el=document.createElement('div');el.id='toast';document.body.appendChild(el)}
+  el.textContent=t;el.className=bad?'bad':'';el.style.opacity=1;clearTimeout(toast.t);toast.t=setTimeout(()=>el.style.opacity=0,3200)}
 function setSync(t,bad){const s=$('#sync');s.textContent=t;s.classList.toggle('bad',!!bad)}
 function connect(){
   if(!window.firebase||!window.FIREBASE_CONFIG){setSync('⚠ 서버 연결 파일을 못 읽었어요 · 보기만 돼요 (인터넷 확인 후 새로고침)',1);return}
@@ -112,7 +114,13 @@ async function put(o){
   const v=await seal(o);
   const q=LS.get(QK,[]);q.push({id,v});LS.set(QK,q);
   ENT[id]=o;rebuild();
-  setSync('보내는 중…');flushQ().then(()=>{if(!LS.get(QK,[]).length)setSync('✅ 저장됨 · 같이 일하는 선생님 화면에도 보여요')});
+  setSync('보내는 중…');toast('저장하는 중…');
+  flushQ().then(()=>{if(!LS.get(QK,[]).length){setSync('✅ 저장됨 · 같이 일하는 선생님 화면에도 보여요');toast('✅ 저장됐어요 · 모두의 화면에 보여요')}
+    else toast('📵 인터넷이 약해 휴대폰에 먼저 저장했어요 · 연결되면 저절로 올라가요',1)});
+  // 방금 쓴 줄로 이동해서 보여 주기
+  if(o.op==='add'||o.op==='edit'){const tid=o.op==='add'?'e'+id.slice(10):o.id;setTimeout(()=>{const b=document.querySelector(`#list button[data-id="${tid}"]`);
+    if(b){const li=b.closest('li');li.scrollIntoView({block:'center',behavior:'smooth'});li.classList.add('flash');setTimeout(()=>li.classList.remove('flash'),2500)}},150)}
+  return id;
 }
 
 // ── 기본 + 새로 쓴 것 합치기 ──
@@ -288,12 +296,14 @@ function openForm(i,p0,g0){
   EDIT=i||null;
   FP=i?i.p:(p0||(V==='nurse'||V==='cert'?V:'prof'));segOn();fillGroups(i?i.g:g0||null);
   $('#fmt').textContent=i?'✏ 인계 고치기':'✏ 새 인계 쓰기';
-  $('#fs').value=i?i.s:'';$('#ft').value=i?i.t:'';$('#fd').value=today();
+  $('#fs').value=i?i.s:'';$('#ft').value=i?i.t:(LS.get('handoff.draft','')||'');$('#fd').value=today();
   $('#fwho').value=LS.get(WK,'');$('#fw').textContent=i?'고치면 바뀌기 전 글도 「📜 바뀌기 전 글」에 남아요. 날짜는 고친 날로 더해져요.':'';
   $('#fgn').value='';
   dlg.showModal();setTimeout(()=>$('#ft').focus(),50);
 }
 $('#wnew').onclick=()=>openForm(null);
+// 쓰다가 창이 닫혀도 글이 남게(새 인계만 · 이 기기)
+$('#ft').addEventListener('input',()=>{if(!EDIT)LS.set('handoff.draft',$('#ft').value)});
 $('#fno').onclick=()=>dlg.close();
 $('#ft').oninput=()=>{const t=$('#ft').value;
   $('#fw').textContent=/\d{6,}/.test(t)?'⚠ 긴 숫자가 있어요. 환자 등록번호 · 전화번호면 지워 주세요.':(EDIT?'고치면 바뀌기 전 글도 남아요.':'')};
@@ -309,7 +319,7 @@ $('#fm').onsubmit=async e=>{
   LS.set(WK,who);
   const o={p:FP,g,s:$('#fs').value.trim(),t,day:$('#fd').value||today()};
   if(EDIT){if(EDIT.t===t&&EDIT.g===g&&EDIT.s===o.s&&EDIT.p===FP){dlg.close();return}o.op='edit';o.id=EDIT.id}else o.op='add';
-  dlg.close();
+  dlg.close();if(!EDIT)LS.set('handoff.draft','');
   if(V!=='date'&&V!=='new'&&V!==FP){V=FP;LS.set('handoff.view',V)}
   await put(o);
 };
