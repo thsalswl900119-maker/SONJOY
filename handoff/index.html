@@ -6,8 +6,8 @@
 <meta name="robots" content="noindex,nofollow">
 <title>회복실 인계 노트</title>
 <style>
-:root{--bg:#F4F6F8;--card:#fff;--ink:#1D2733;--ink2:#46525F;--mut:#5E6B78;--line:#D9E0E7;--pri:#1F5F8B;--pri2:#E5EFF7;--nur:#2F6B4F;--nur2:#E4F1EA;--new:#B3261E;--mark:#FFF1A8}
-@media (prefers-color-scheme:dark){:root{--bg:#12171D;--card:#1B222A;--ink:#E7ECF1;--ink2:#C3CCD5;--mut:#A3AFBB;--line:#2E3843;--pri:#7FB6E0;--pri2:#1E2E3C;--nur:#86C9A6;--nur2:#1C2E25;--new:#FF8A80;--mark:#5A4E10}}
+:root{--cer:#8A3FA0;--cer2:#F3E8F7;--bg:#F4F6F8;--card:#fff;--ink:#1D2733;--ink2:#46525F;--mut:#5E6B78;--line:#D9E0E7;--pri:#1F5F8B;--pri2:#E5EFF7;--nur:#2F6B4F;--nur2:#E4F1EA;--new:#B3261E;--mark:#FFF1A8}
+@media (prefers-color-scheme:dark){:root{--bg:#12171D;--card:#1B222A;--ink:#E7ECF1;--ink2:#C3CCD5;--mut:#A3AFBB;--line:#2E3843;--pri:#7FB6E0;--pri2:#1E2E3C;--nur:#86C9A6;--nur2:#1C2E25;--new:#FF8A80;--mark:#5A4E10;--cer:#D3A2E3;--cer2:#2C2033}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;word-break:keep-all;overflow-wrap:anywhere}
 .wrap{max-width:980px;margin:0 auto;padding:0 16px 80px}
@@ -52,7 +52,41 @@ mark{background:var(--mark);color:inherit;padding:0 2px;border-radius:3px}
 #gate label{font-size:13.5px;color:var(--ink2)}
 #gerr{color:var(--new);min-height:1.4em;font-size:14px}
 .top{position:fixed;right:16px;bottom:16px;width:46px;height:46px;border-radius:50%;border:0;background:var(--ink);color:var(--bg);font-size:18px;cursor:pointer;opacity:.85}
-@media (max-width:560px){header{position:static}.tab{min-width:0;font-size:13.5px;padding:8px 2px}.tabs{flex-wrap:nowrap}h1{font-size:18px}li{flex-direction:column;gap:4px}.d{flex-direction:row;flex-wrap:wrap;min-width:0}}
+.wbtn{width:100%;margin:10px 0 0;font-size:16px;font-weight:800;padding:11px;border-radius:12px;border:0;background:var(--new);color:#fff;cursor:pointer}
+.sync{font-size:12.5px;color:var(--mut);margin-top:4px}.sync.bad{color:var(--new);font-weight:700}
+.act{display:flex;gap:6px;margin-top:6px}.act button{font-size:13px;border:1px solid var(--line);background:var(--card);color:var(--ink2);border-radius:8px;padding:4px 10px;cursor:pointer}
+.by{display:inline-block;font-size:12.5px;font-weight:700;color:var(--nur);background:var(--nur2);border-radius:6px;padding:0 6px;margin-left:4px}
+.by.ed{color:var(--pri);background:var(--pri2)}
+li.fresh{background:linear-gradient(90deg,var(--mark),transparent 70%)}
+.tab.on[data-v=cert]{background:var(--cer);border-color:var(--cer);color:#fff}
+section.cert>h2{background:var(--cer2);color:var(--cer)}
+.tx .g.c{color:var(--cer)}
+.cdesc{font-size:13.5px;color:var(--ink2);padding:8px 14px 0}
+.cempty{font-size:13.5px;color:var(--mut);padding:8px 14px 10px}
+.cadd{font-size:13.5px;font-weight:700;border:1px dashed var(--cer);color:var(--cer);background:transparent;border-radius:8px;padding:3px 10px;cursor:pointer}
+.crel{margin:4px 14px 10px;border:1px solid var(--line);border-radius:10px}
+.crel summary{padding:8px 10px;cursor:pointer;font-size:13.5px;font-weight:700;color:var(--ink2)}
+dialog{border:0;border-radius:16px;padding:0;width:min(560px,94vw);max-height:92vh;background:var(--card);color:var(--ink)}
+dialog::backdrop{background:rgba(0,0,0,.45)}
+.fm{padding:16px}.fm h2{margin:0 0 10px;font-size:18px}
+.fm label{display:block;font-size:13.5px;font-weight:700;color:var(--ink2);margin:10px 0 4px}
+.fm input,.fm select,.fm textarea{width:100%;font-size:16px;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font-family:inherit}
+.fm textarea{min-height:120px;resize:vertical}
+.fm .row{display:flex;gap:8px}.fm .row>*{flex:1;min-width:0}
+.fm .seg{display:flex;gap:6px}.fm .seg button{flex:1;padding:9px 4px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--ink);font-weight:700;font-size:14.5px;cursor:pointer}
+.fm .seg button.on{border-color:var(--pri);background:var(--pri2);color:var(--pri)}
+.fm .warnbox{font-size:13px;color:var(--new);font-weight:700;margin-top:8px}
+.fm .btns{display:flex;gap:8px;margin-top:14px}.fm .btns button{flex:1;padding:11px;border-radius:12px;border:0;font-size:16px;font-weight:800;cursor:pointer}
+.fm .ok{background:var(--pri);color:#fff}.fm .no{background:var(--bg);color:var(--ink)}
+.hist{font-size:13px;color:var(--mut);margin-top:4px}.hist summary{cursor:pointer}
+.hist div{border-left:3px solid var(--line);padding-left:8px;margin:4px 0}
+@media (hover:hover){.act{opacity:.45;transition:opacity .15s}li:hover .act{opacity:1}}
+.act button{font-size:12.5px;padding:2px 9px}
+.guide{background:var(--card);border:1px solid var(--line);border-radius:12px;margin:14px 0;font-size:14px}
+.guide summary{padding:11px 14px;font-weight:800;cursor:pointer}
+.guide ol{margin:0;padding:0 14px 12px 32px}.guide li{display:list-item;border:0;padding:3px 0}
+@media (max-width:560px){.fm .row{flex-direction:column;gap:0}}
+@media (max-width:560px){header{position:static}.tab{min-width:0;font-size:13px;padding:8px 2px}.tabs{display:grid;grid-template-columns:repeat(3,1fr)}h1{font-size:18px}li{flex-direction:column;gap:4px}.d{flex-direction:row;flex-wrap:wrap;min-width:0}}
 </style>
 </head>
 <body>
@@ -68,9 +102,11 @@ mark{background:var(--mark);color:inherit;padding:0 2px;border-radius:3px}
   <header>
     <h1 id="ttl">회복실 인계 노트</h1>
     <div class="sub" id="srcl"></div>
+    <div class="sync" id="sync">서버 연결 중…</div>
     <div class="tabs">
       <button class="tab" data-v="prof">👨‍⚕️ 교수님별</button>
       <button class="tab" data-v="nurse">🩺 간호사끼리</button>
+      <button class="tab" data-v="cert">🏥 인증 준비</button>
       <button class="tab" data-v="date">📅 날짜별</button>
       <button class="tab" data-v="new">🆕 최근 3달</button>
     </div>
@@ -78,97 +114,51 @@ mark{background:var(--mark);color:inherit;padding:0 2px;border-radius:3px}
       <input id="q" type="search" placeholder="찾기 (예: byfavo, 장갑, 소아)">
       <select id="sort" title="정렬"><option value="new">최신 먼저</option><option value="old">오래된 것 먼저</option></select>
     </div>
+    <button class="wbtn" id="wnew">✏ 새 인계 쓰기</button>
     <div class="chips" id="chips"></div>
   </header>
-  <main id="list"></main>
+  <details class="guide"><summary>📘 처음 쓰는 법 (1분)</summary><ol>
+<li><b>보기</b>: 위 단추로 교수님별 · 간호사끼리 · 인증 준비 · 날짜별을 골라요. 이름 단추를 누르면 그 자리로 가요.</li>
+<li><b>쓰기</b>: 빨간 「✏ 새 인계 쓰기」를 눌러 → 어디에 넣을지 고르고 → 내용 · 내 이름 → 저장. 모두의 화면에 바로 보여요.</li>
+<li><b>바뀐 내용</b>: 원래 줄의 「✏ 고치기」로 고쳐요. 바뀌기 전 글은 자동으로 남아요(📜).</li>
+<li><b>새 교수님 · 새 묶음</b>: 쓰기 칸에서 「＋ 새로 만들기」를 고르면 섹션이 생겨요.</li>
+<li><b>인증 준비</b>: 섹션마다 기존 인계 중 관련된 것이 🔗로 자동으로 모여요. 인증 기준에 맞는 문구를 「＋ 여기에 쓰기」로 채워 가요.</li>
+<li><b>잘못 지웠으면</b>: 맨 아래 「🗑 뺀 인계」에서 ↺ 되살리기.</li>
+<li><b>환자 이름 · 등록번호 · 생년월일은 쓰지 않아요.</b></li></ol></details>
+<main id="list"></main>
   <div class="note">
     · 괄호 안 날짜는 그 내용이 나온 달이에요. 같은 항목이 바뀐 경우 <b>가장 최근 날짜가 지금 기준</b>이에요.<br>
-    · 🆕 빨간 날짜 = 최근 3달 안에 새로 나오거나 바뀐 것.<br>
+    · 🆕 빨간 날짜 = 최근 3달 안에 새로 나오거나 바뀐 것. ✍ 초록 딱지 = 이 화면에서 새로 쓴 인계, ✏ 파란 딱지 = 고친 인계.<br>
+    · 🏥 인증 준비: 병원 인증평가 대비 섹션(제안 분류). 섹션마다 기존 인계 중 관련된 것을 자동으로 같이 보여 줘요.<br>
+    · 쓰면 바로 저장되고 같이 일하는 선생님 화면에도 바로 보여요. 「🗑 빼기」 한 것도 맨 아래에서 되살릴 수 있어요.<br>
     · 26.2부터 교수님 인계사항·월별 인계는 밴드에도 올라가요. 여기 없는 내용은 밴드에서 확인해 주세요.<br>
-    · 환자 정보는 절대 적지 않아요. <a href="#" id="lock">🔒 이 기기에서 잠그기</a>
+    · <b>환자 이름 · 등록번호 · 생년월일은 절대 적지 않아요.</b> <a href="#" id="lock">🔒 이 기기에서 잠그기</a>
   </div>
 </div>
+<dialog id="dlg"><form class="fm" id="fm" method="dialog">
+  <h2 id="fmt">✏ 새 인계 쓰기</h2>
+  <label>어디에 넣을까요?</label>
+  <div class="seg"><button type="button" data-p="prof">👨‍⚕️ 교수님별</button><button type="button" data-p="nurse">🩺 간호사끼리</button><button type="button" data-p="cert">🏥 인증 준비</button></div>
+  <label for="fg" id="fgl">교수님</label>
+  <select id="fg"></select>
+  <input id="fgn" placeholder="새 이름 (예: 홍길동 교수님)" hidden>
+  <div class="row">
+    <div><label for="fs">작은 분류 (없으면 비움)</label><input id="fs" list="fsl" placeholder="예: 소아·신생아"><datalist id="fsl"></datalist></div>
+    <div><label for="fd">날짜</label><input id="fd" type="date"></div>
+  </div>
+  <label for="ft">인계 내용</label>
+  <textarea id="ft" placeholder="예: 척추마취 장갑 6.5로 변경"></textarea>
+  <div class="warnbox" id="fw"></div>
+  <label for="fwho">쓴 사람</label>
+  <input id="fwho" placeholder="내 이름 (이 기기에 기억)">
+  <div class="btns"><button type="button" class="no" id="fno">취소</button><button type="submit" class="ok" id="fok">저장</button></div>
+</form></dialog>
 <button class="top" id="top" title="맨 위로" hidden>↑</button>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+<script src="../js/config.js"></script>
 <script src="data.enc.js"></script>
-<script>
-(function(){
-const $=s=>document.querySelector(s), K='handoff.pw';
-const b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
-async function open(pw){
-  const E=window.HANDOFF_ENC, enc=new TextEncoder();
-  const base=await crypto.subtle.importKey('raw',enc.encode(pw),'PBKDF2',false,['deriveKey']);
-  const key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:b64(E.s),iterations:E.it,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['decrypt']);
-  const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64(E.iv)},key,b64(E.c));
-  return JSON.parse(new TextDecoder().decode(pt));
-}
-let D=null, V='prof', F='', Q='';
-try{V=localStorage.getItem('handoff.view')||'prof'}catch(e){}
-async function tryOpen(pw,rem){
-  try{D=await open(pw)}catch(e){$('#gerr').textContent='비밀번호가 맞지 않아요.';return}
-  if(rem){try{localStorage.setItem(K,pw)}catch(e){}}
-  $('#gate').hidden=true;$('#app').hidden=false;$('#top').hidden=false;
-  $('#ttl').textContent=D.title+' 노트';$('#srcl').textContent=D.src+' · 화면 업데이트 '+D.upd;
-  draw();
-}
-$('#gf').onsubmit=e=>{e.preventDefault();tryOpen($('#gpw').value.trim(),$('#grem').checked)};
-try{const s=localStorage.getItem(K);if(s)tryOpen(s,false)}catch(e){}
-$('#lock').onclick=e=>{e.preventDefault();try{localStorage.removeItem(K)}catch(x){}location.reload()};
-$('#top').onclick=()=>scrollTo({top:0,behavior:'smooth'});
-document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{V=b.dataset.v;F='';try{localStorage.setItem('handoff.view',V)}catch(e){}draw();scrollTo({top:0})});
-$('#q').oninput=e=>{Q=e.target.value.trim().toLowerCase();draw()};
-$('#sort').onchange=draw;
-
-const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const ym=d=>{const [y,m]=d.split('-');return y.slice(2)+'.'+(+m)};
-const ymL=d=>{const [y,m]=d.split('-');return y+'년 '+(+m)+'월'};
-function recent(){const n=new Date();const c=new Date(n.getFullYear(),n.getMonth()-2,1);return c.getFullYear()+'-'+String(c.getMonth()+1).padStart(2,'0')}
-function fmt(t){
-  let h=esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/^⚠/,'<span class="warn">⚠</span>');
-  if(Q){const re=new RegExp('('+Q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');h=h.replace(/(<[^>]+>)|([^<]+)/g,(m,tag,txt)=>tag?tag:txt.replace(re,'<mark>$1</mark>'))}
-  return h;
-}
-const last=i=>i.d.length?i.d[i.d.length-1]:'0000';
-function li(i,showG){
-  const R=recent();
-  const ds=i.d.length?i.d.slice().reverse().map(d=>`<span class="dt${d>=R?' nw':''}">${d>=R?'🆕 ':''}${ym(d)}</span>`).join(''):'<span class="dt">날짜 없음</span>';
-  const g=showG?`<span class="g${i.p==='nurse'?' n':''}">${esc(i.g)}</span>`:'';
-  const s=i.s?`<span class="s">[${esc(i.s)}]</span>`:'';
-  return `<li><div class="d">${ds}</div><div class="tx">${g}${s}${fmt(i.t)}</div></li>`;
-}
-function draw(){
-  document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',b.dataset.v===V));
-  const desc=$('#sort').value==='new';
-  let it=D.it.filter(i=>!Q||(i.t+' '+i.g+' '+i.s).toLowerCase().includes(Q));
-  const L=$('#list'),C=$('#chips');let h='',ch='';
-  const cmp=(a,b)=>desc?last(b).localeCompare(last(a)):last(a).localeCompare(last(b));
-  if(V==='prof'||V==='nurse'){
-    const part=it.filter(i=>i.p===V),groups=[];
-    part.forEach(i=>{if(!groups.includes(i.g))groups.push(i.g)});
-    D.it.filter(i=>i.p===V).forEach(i=>{if(!groups.includes(i.g)&&!Q)groups.push(i.g)});
-    ch=groups.map(g=>`<button class="chip" data-g="${esc(g)}">${esc(g.replace(' 교수님',''))}<b>${part.filter(i=>i.g===g).length}</b></button>`).join('');
-    groups.forEach((g,n)=>{const a=part.filter(i=>i.g===g).sort(cmp);if(!a.length)return;
-      const subs=[...new Set(a.map(i=>i.s))];
-      let body=subs.map(s=>(s?`<h3>${esc(s)}</h3>`:'')+'<ul>'+a.filter(i=>i.s===s).map(i=>li(i,false)).join('')+'</ul>').join('');
-      h+=`<section class="${V}" id="g${n}" data-g="${esc(g)}"><h2>${esc(g)}<small>${a.length}개 · 최근 ${ym(last(a.slice().sort((x,y)=>last(y).localeCompare(last(x)))[0]))}</small></h2>${body}</section>`});
-  }else{
-    const R=recent();
-    if(V==='new')it=it.filter(i=>i.d.some(d=>d>=R));
-    const months=[...new Set(it.flatMap(i=>i.d))].sort();if(desc)months.reverse();
-    const nod=it.filter(i=>!i.d.length);
-    ch=months.map(m=>`<button class="chip" data-m="${m}">${ym(m)}<b>${it.filter(i=>i.d.includes(m)).length}</b></button>`).join('');
-    months.forEach(m=>{const a=it.filter(i=>i.d.includes(m));
-      const pa=a.filter(i=>i.p==='prof'),na=a.filter(i=>i.p==='nurse');
-      h+=`<section class="date" id="m${m}"><h2>${ymL(m)}<small>교수님 ${pa.length} · 간호사 ${na.length}</small></h2>`+
-        (pa.length?'<h3>👨‍⚕️ 교수님별</h3><ul>'+pa.map(i=>li(i,true)).join('')+'</ul>':'')+
-        (na.length?'<h3>🩺 간호사끼리</h3><ul>'+na.map(i=>li(i,true)).join('')+'</ul>':'')+'</section>'});
-    if(nod.length&&V==='date')h+=`<section class="date"><h2>날짜 없는 공지<small>${nod.length}개</small></h2><ul>${nod.map(i=>li(i,true)).join('')}</ul></section>`;
-  }
-  L.innerHTML=h||'<div class="empty">찾는 내용이 없어요.</div>';C.innerHTML=ch;
-  C.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{
-    const el=c.dataset.g?L.querySelector(`section[data-g="${CSS.escape(c.dataset.g)}"]`):document.getElementById('m'+c.dataset.m);
-    if(el){const off=document.querySelector('header').offsetHeight+8;scrollTo({top:el.getBoundingClientRect().top+scrollY-off,behavior:'smooth'})}});
-}
-})();
-</script>
+<script src="app.js?v=2"></script>
 </body>
 </html>
