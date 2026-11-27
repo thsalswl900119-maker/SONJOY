@@ -38,6 +38,17 @@ const CERT=[
  {g:'교육 · 인증 질문 대비',d:'직원 교육 · 조사위원이 자주 묻는 질문과 답 · 기타',kw:[]}
 ];
 const CERTG=CERT.map(c=>c.g);
+// 같은 뜻 낱말(한글 ↔ 영어 · 줄임말) — 한쪽으로 찾아도 둘 다 나오게
+const SYN=[['byfavo','바이파보'],['remi','레미','ultiva','울티바'],['precedex','프리세덱스'],['rocu','로큐','esmeron','에스메론'],['fentanyl','펜타닐','ftn'],
+ ['ketamine','케타민','keta'],['midazolam','미다','mida'],['phenyl','페닐'],['lido','리도','lidocaine'],['sevo','세보'],['spinal','척추','spine'],
+ ['c/sec','씨섹','c-sec','제왕절개'],['glove','장갑','글러브'],['suction','석션'],['pento','pentotal','펜토'],['lumasate','루마세이트'],['acupan','아큐판'],
+ ['nacaine','나카인','naropin','나로핀','ropiva'],['tiva','티바'],['pca','피씨에이'],['bpb','블락','block','신경차단'],['tof','트위치'],['intubation','intu','인튜'],
+ ['extubation','익스튜베이션'],['fiberoptic','파이버'],['airway','에어웨이'],['tube','튜브'],['소아','아기','신생아'],['마약','마약류'],['수혈','혈액'],
+ ['알러지','알레르기','allergy'],['체온','hugger','허거','블랑케트롤'],['차팅','기록','마취기록']];
+const SYNM={};SYN.forEach(g=>g.forEach(w=>SYNM[w]=g));
+function terms(q){return q.split(/\s+/).filter(Boolean).map(w=>{const g=new Set([w]);
+  for(const k in SYNM)if(k.length>1&&(k===w||(w.length>=2&&k.startsWith(w))))SYNM[k].forEach(x=>g.add(x));return[...g]})}
+let QT=[];
 let D=null, BASE=[], ENT={}, ITEMS=[], V='prof', Q='', db=null, online=false;
 V=LS.get('handoff.view','prof');
 
@@ -56,8 +67,9 @@ $('#gf').onsubmit=e=>{e.preventDefault();tryOpen($('#gpw').value.trim(),$('#grem
 {const s=LS.get(K,null);if(s)tryOpen(s,false)}
 $('#lock').onclick=e=>{e.preventDefault();try{localStorage.removeItem(K)}catch(x){}location.reload()};
 $('#top').onclick=()=>scrollTo({top:0,behavior:'smooth'});
-document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{V=b.dataset.v;LS.set('handoff.view',V);draw();scrollTo({top:0})});
-$('#q').oninput=e=>{Q=e.target.value.trim().toLowerCase();draw()};
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{V=b.dataset.v;if(Q){$('#q').value='';Q='';QT=[];$('#qx').hidden=true}LS.set('handoff.view',V);draw();scrollTo({top:0})});
+$('#q').oninput=e=>{Q=e.target.value.trim().toLowerCase();QT=terms(Q);$('#qx').hidden=!Q;draw()};
+$('#qx').onclick=()=>{$('#q').value='';Q='';QT=[];$('#qx').hidden=true;draw();$('#q').focus()};
 $('#sort').onchange=()=>draw();
 
 // ── 서버 ──
@@ -123,7 +135,7 @@ const nm=w=>w?(/님$/.test(w)?w:w+'님'):'';
 function recent(){const n=new Date();const c=new Date(n.getFullYear(),n.getMonth()-2,1);return c.getFullYear()+'-'+String(c.getMonth()+1).padStart(2,'0')}
 function fmt(t){
   let h=esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/^⚠/,'<span class="warn">⚠</span>').replace(/\n/g,'<br>');
-  if(Q){const re=new RegExp('('+Q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');h=h.replace(/(<[^>]+>)|([^<]+)/g,(mm,tag,txt)=>tag?tag:txt.replace(re,'<mark>$1</mark>'))}
+  if(Q){const re=new RegExp('('+QT.flat().sort((a,b)=>b.length-a.length).map(w=>w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|')+')','gi');h=h.replace(/(<[^>]+>)|([^<]+)/g,(mm,tag,txt)=>tag?tag:txt.replace(re,'<mark>$1</mark>'))}
   return h;
 }
 const last=i=>i.d.length?i.d[i.d.length-1]:'0000';
@@ -146,11 +158,22 @@ function draw(){
   if(!D)return;
   document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',b.dataset.v===V));
   const desc=$('#sort').value==='new';
-  const match=i=>!Q||(i.t+' '+i.g+' '+i.s).toLowerCase().includes(Q);
+  const hay=i=>(i.t+' '+i.g+' '+i.s+' '+i.h.map(x=>x.t).join(' ')).toLowerCase();
+  const match=i=>!Q||QT.every(g=>g.some(w=>hay(i).includes(w)));
   let it=ITEMS.filter(i=>!i.del&&match(i));
   const L=$('#list'),C=$('#chips');let h='',ch='';
   const key=i=>last(i)+String(touch(i)).padStart(14,'0');
   const cmp=(a,b)=>desc?key(b).localeCompare(key(a)):key(a).localeCompare(key(b));
+  if(Q){
+    const PN={prof:'👨‍⚕️ 교수님별',nurse:'🩺 간호사끼리',cert:'🏥 인증 준비'};
+    h=`<div class="qhead">🔎 「${esc(Q)}」 찾은 인계 <b>${it.length}</b>개${QT.some(g=>g.length>1)?' <small>(같은 뜻: '+esc(QT.filter(g=>g.length>1).map(g=>g.slice(0,4).join('·')).join(' / '))+')</small>':''}</div>`;
+    ['prof','nurse','cert'].forEach(pp=>{const a=it.filter(i=>i.p===pp).sort(cmp);if(!a.length)return;
+      ch+=`<button class="chip" data-s="${pp}">${PN[pp]}<b>${a.length}</b></button>`;
+      h+=`<section class="${pp}" id="s${pp}"><h2>${PN[pp]}<small>${a.length}개</small></h2><ul>${a.map(i=>li(i,true)).join('')}</ul></section>`});
+    L.innerHTML=it.length?h:h+'<div class="empty">찾는 내용이 없어요. 낱말을 줄이거나 한글/영어로 바꿔 보세요.</div>';C.innerHTML=ch;
+    C.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{const el=document.getElementById('s'+c.dataset.s);if(el)scrollTo({top:el.getBoundingClientRect().top+scrollY-8,behavior:'smooth'})});
+    return;
+  }
   if(V==='prof'||V==='nurse'||V==='cert'){
     const part=it.filter(i=>i.p===V),groups=groupsOf(V).filter(g=>V==='cert'||part.some(i=>i.g===g));
     ch=groups.map(g=>`<button class="chip" data-g="${esc(g)}">${esc(g.replace(' 교수님','').replace(/ · .*/,''))}<b>${part.filter(i=>i.g===g).length}</b></button>`).join('');
