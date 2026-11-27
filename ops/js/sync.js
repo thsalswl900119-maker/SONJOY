@@ -66,7 +66,14 @@
     function joinText(m, s) {
       if (m.indexOf(s) >= 0) return m; if (s.indexOf(m) >= 0) return s;
       var NL = String.fromCharCode(10), ml = m.split(NL);
-      var add = s.split(NL).filter(function (ln) { return ln.trim() && ml.indexOf(ln) < 0; });
+      // 11/27 사고: 쓰는 도중 모습(「…느낌이었」 · 「…안 낙」)이 줄마다 쌓였음 — 내 글 어느 줄의 앞부분이거나(거의) 같은 줄은 옛 모습이라 붙이지 않는다
+      var older = function (ln) {
+        var t = ln.trim(); if (m.indexOf(t) >= 0) return true;
+        if (ln.length < 12) return false;
+        // 앞이 같은 글자 + 뒤가 같은 글자 ≥ 85% → 같은 줄을 쓰던 중간 모습(끝에 이어 쓰기 · 가운데 끼워 쓰기 · 한글 조합 중)
+        return ml.some(function (x) { var n = 0, L = Math.min(x.length, ln.length); while (n < L && x.charCodeAt(n) === ln.charCodeAt(n)) n++; var e = 0; while (e < L - n && x.charCodeAt(x.length - 1 - e) === ln.charCodeAt(ln.length - 1 - e)) e++; return n + e >= ln.length * 0.85; });
+      };
+      var add = s.split(NL).filter(function (ln) { return ln.trim() && ml.indexOf(ln) < 0 && !older(ln); });
       return add.length ? m + NL + add.join(NL) : m;
     }
     function both(bv, mv, sv, x, path, known) {
