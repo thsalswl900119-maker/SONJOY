@@ -158,7 +158,8 @@ function lineHtml(l){
   const now=parts.pop();
   return `<div class="now">✅ 지금 ${deco(now)}</div><div class="olds">${parts.reverse().map(x=>`<div class="old">예전 · ${deco(x)}</div>`).join('')}</div>`;
 }
-function fmt(t){
+const OPEN=new Set();let FOLD=new Set(LS.get('handoff.fold',[]));
+function fmt(t,id){
   let raw=String(t||''),warn='';
   if(/^⚠/.test(raw)){warn='<span class="warn">⚠ </span>';raw=raw.replace(/^⚠\s*/,'')}
   let title='',body=raw,m;
@@ -166,7 +167,9 @@ function fmt(t){
   else if((m=raw.match(/^([^:：\n]{1,30}?)\s*[:：]\s+/))&&!/\d\s*$/.test(m[1])){title=m[1];body=raw.slice(m[0].length)}
   let lines=esc(body).split(/\n|\s\/\s|(?<=[^\d\s])\.\s+(?=\S)|(?<=\))\.\s+(?=\S)/).map(x=>x.trim().replace(/\.$/,'')).filter(Boolean);
   let h=(title?`<div class="tt">${warn}${deco(esc(title))}</div>`:'')+
-    (lines.length>1?'<ul class="ln">'+lines.map(l=>`<li>${lineHtml(l)}</li>`).join('')+'</ul>':`<div class="ln1">${title?'':warn}${lineHtml(lines[0]||'')}</div>`);
+    (lines.length>3&&!Q&&id?'<ul class="ln">'+lines.slice(0,2).map(l=>`<li>${lineHtml(l)}</li>`).join('')+'</ul>'+
+      `<details class="more" data-id="${id}"${OPEN.has(id)?' open':''}><summary><span class="mo">▼ 나머지 ${lines.length-2}줄 더 보기</span><span class="mc">▲ 접기</span></summary><ul class="ln">`+lines.slice(2).map(l=>`<li>${lineHtml(l)}</li>`).join('')+'</ul><button type="button" class="mclose">▲ 접기</button></details>':
+     lines.length>1?'<ul class="ln">'+lines.map(l=>`<li>${lineHtml(l)}</li>`).join('')+'</ul>':`<div class="ln1">${title?'':warn}${lineHtml(lines[0]||'')}</div>`);
   if(Q){const re=new RegExp('('+QT.flat().sort((a,b)=>b.length-a.length).map(w=>w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|')+')','gi');h=h.replace(/(<[^>]+>)|([^<]+)/g,(mm,tag,txt)=>tag?tag:txt.replace(re,'<mark>$1</mark>'))}
   return h;
 }
@@ -184,7 +187,7 @@ function li(i,showG){
   const fresh=Date.now()-touch(i)<48*3600e3?' fresh':'';
   const act=i.del?`<div class="act"><button data-a="undel" data-id="${i.id}">↺ 되살리기</button></div>`
     :`<div class="act"><button data-a="edit" data-id="${i.id}">✏ 고치기</button><button data-a="del" data-id="${i.id}">🗑 빼기</button></div>`;
-  return `<li class="${fresh}"><div class="d">${ds}</div><div class="tx">${g}${s}${fmt(i.t)}${by}${hist}${act}</div></li>`;
+  return `<li class="${fresh}"><div class="d">${ds}</div><div class="tx">${g}${s}${fmt(i.t,i.id)}${by}${hist}${act}</div></li>`;
 }
 function draw(){
   if(!D)return;
@@ -218,7 +221,8 @@ function draw(){
         const rel=c&&c.kw.length?it.filter(i=>i.p!=='cert'&&c.kw.some(k=>(i.t+' '+i.s).toLowerCase().includes(k))).sort(cmp):[];
         extra=(c?`<div class="cdesc">${esc(c.d)}</div>`:'')+(a.length?'':`<div class="cempty">아직 이 섹션에 쓴 인계가 없어요 · <button class="cadd" data-g="${esc(g)}">＋ 여기에 쓰기</button></div>`)+
           (rel.length?`<details class="crel"><summary>🔗 기존 인계 중 관련된 것 ${rel.length}개 (자동으로 찾음 · 보기만)</summary><ul>${rel.map(i=>li(i,true)).join('')}</ul></details>`:'');}
-      h+=`<section class="${V}" data-g="${esc(g)}"><h2>${esc(g)}<small>${a.length}개${top&&top!=='0000'?' · 최근 '+ym(top):''}</small></h2>${extra}${body}</section>`});
+      const fk=V+'|'+g,fo=FOLD.has(fk)&&!Q;
+      h+=`<section class="${V}${fo?' folded':''}" data-g="${esc(g)}" data-fk="${esc(fk)}"><h2 class="fh" title="눌러서 접기 · 펼치기"><span><span class="fi">${fo?'＋':'－'}</span> ${esc(g)}</span><small>${a.length}개${top&&top!=='0000'?' · 최근 '+ym(top):''}</small></h2>${extra}${body}</section>`});
     const dl=ITEMS.filter(i=>i.del&&i.p===V&&match(i));
     if(dl.length)h+=`<section class="${V}"><details><summary style="padding:12px 14px;cursor:pointer;font-weight:700">🗑 뺀 인계 ${dl.length}개 (되살릴 수 있어요)</summary><ul>${dl.map(i=>li(i,true)).join('')}</ul></details></section>`;
   }else{
@@ -235,16 +239,24 @@ function draw(){
     if(nod.length&&V==='date')h+=`<section class="date"><h2>날짜 없는 공지<small>${nod.length}개</small></h2><ul>${nod.map(i=>li(i,true)).join('')}</ul></section>`;
   }
   // 펼쳐 둔 「바뀌기 전 글」은 다시 그려도 그대로
+  if(V==='prof'||V==='nurse'||V==='cert')h=`<div class="foldbar"><button data-fall="0">▾ 모두 펼치기</button><button data-fall="1">▸ 모두 접기 (이름만)</button></div>`+h;
   L.innerHTML=h||'<div class="empty">찾는 내용이 없어요.</div>';C.innerHTML=ch;
   C.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{
     const el=c.dataset.g?L.querySelector(`section[data-g="${CSS.escape(c.dataset.g)}"]`):document.getElementById('m'+c.dataset.m);
+    if(el&&el.classList.contains('folded'))el.querySelector('h2.fh').click();
     if(el){const hd=document.querySelector('header'),off=(getComputedStyle(hd).position==='sticky'?hd.offsetHeight:0)+8;scrollTo({top:el.getBoundingClientRect().top+scrollY-off,behavior:'smooth'})}});
 }
 function groupsOf(p){const g=p==='cert'?CERTG.slice():[];BASE.concat(ITEMS).forEach(i=>{if(i.p===p&&!g.includes(i.g))g.push(i.g)});
   const o=g.indexOf('그 외 교수님');if(o>=0){g.splice(o,1);g.push('그 외 교수님')}return g}
 
 // ── 고치기 · 빼기 단추 ──
+$('#list').addEventListener('toggle',e=>{const d=e.target;if(d.classList&&d.classList.contains('more')){d.open?OPEN.add(d.dataset.id):OPEN.delete(d.dataset.id)}},true);
 $('#list').addEventListener('click',e=>{
+  const mc=e.target.closest('.mclose');if(mc){mc.parentNode.open=false;return}
+  const fh=e.target.closest('h2.fh');if(fh){const sec=fh.parentNode,k=sec.dataset.fk;FOLD.has(k)?FOLD.delete(k):FOLD.add(k);LS.set('handoff.fold',[...FOLD]);
+    sec.classList.toggle('folded',FOLD.has(k));fh.querySelector('.fi').textContent=FOLD.has(k)?'＋':'－';return}
+  const fa=e.target.closest('[data-fall]');if(fa){document.querySelectorAll('#list section[data-fk]').forEach(sec=>{const k=sec.dataset.fk;fa.dataset.fall==='1'?FOLD.add(k):FOLD.delete(k)});
+    if(fa.dataset.fall==='0')OPEN.clear();LS.set('handoff.fold',[...FOLD]);draw();return}
   const ca=e.target.closest('.cadd');if(ca){openForm(null,'cert',ca.dataset.g);return}
   const b=e.target.closest('button[data-a]');if(!b)return;
   const i=ITEMS.find(x=>x.id===b.dataset.id);if(!i)return;

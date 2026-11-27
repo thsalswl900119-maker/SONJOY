@@ -106,6 +106,16 @@ dialog::backdrop{background:rgba(0,0,0,.45)}
 .tx .now .num{color:var(--nur)}
 .tx .arr{color:var(--mut);font-weight:800}
 .tx .g,.tx .s{vertical-align:2px}
+section.folded>*:not(h2){display:none!important}
+h2.fh{cursor:pointer;user-select:none}h2.fh .fi{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--card);font-weight:900;font-size:15px;margin-right:4px;vertical-align:2px}
+.foldbar{display:flex;gap:6px;justify-content:flex-end;margin:12px 0 -4px}
+.foldbar button{font-size:13px;font-weight:700;border:1px solid var(--line);background:var(--card);color:var(--ink2);border-radius:20px;padding:5px 12px;cursor:pointer}
+.tx details.more{margin:0}
+.tx details.more summary{list-style:none;cursor:pointer;display:inline-block;font-size:13px;font-weight:800;color:var(--pri);background:var(--pri2);border-radius:20px;padding:2px 11px;margin:3px 0 0 14px}
+.tx details.more summary::-webkit-details-marker{display:none}
+.tx details.more .mc{display:none}.tx details.more[open] .mo{display:none}.tx details.more[open] .mc{display:inline}
+.tx details.more[open] summary{display:none}
+.tx .mclose{font-size:13px;font-weight:800;color:var(--pri);background:var(--pri2);border:0;border-radius:20px;padding:2px 11px;margin:3px 0 0 14px;cursor:pointer}
 @media (hover:hover){.act{opacity:.45;transition:opacity .15s}li:hover .act{opacity:1}}
 .act button{font-size:12.5px;padding:2px 9px}
 .guide{background:var(--card);border:1px solid var(--line);border-radius:12px;margin:14px 0;font-size:14px}
@@ -186,6 +196,6 @@ dialog::backdrop{background:rgba(0,0,0,.45)}
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script src="../js/config.js"></script>
 <script src="data.enc.js?v=4"></script>
-<script src="app.js?v=6"></script>
+<script src="app.js?v=8"></script>
 </body>
 </html>
