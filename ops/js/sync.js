@@ -71,7 +71,12 @@
         var t = ln.trim(); if (m.indexOf(t) >= 0) return true;
         if (ln.length < 12) return false;
         // 앞이 같은 글자 + 뒤가 같은 글자 ≥ 85% → 같은 줄을 쓰던 중간 모습(끝에 이어 쓰기 · 가운데 끼워 쓰기 · 한글 조합 중)
-        return ml.some(function (x) { var n = 0, L = Math.min(x.length, ln.length); while (n < L && x.charCodeAt(n) === ln.charCodeAt(n)) n++; var e = 0; while (e < L - n && x.charCodeAt(x.length - 1 - e) === ln.charCodeAt(ln.length - 1 - e)) e++; return n + e >= ln.length * 0.85; });
+        if (ml.some(function (x) { var n = 0, L = Math.min(x.length, ln.length); while (n < L && x.charCodeAt(n) === ln.charCodeAt(n)) n++; var e = 0; while (e < L - n && x.charCodeAt(x.length - 1 - e) === ln.charCodeAt(ln.length - 1 - e)) e++; return n + e >= ln.length * 0.85; })) return true;
+        // 11/28 사고: 가운데를 고치고 끝에 이어 쓴 줄(「…드셨음/…계속 구」 → 「…드시고 금방 있다가 가셨음/…구경하러 왔음/…」)은 앞 · 뒤 비교로 못 잡아 옛 모습이 한 줄 더 붙었음
+        // → 서버 줄의 두 글자 조각이 내 글 어느 줄(서버 줄의 60% 넘는 길이)에 80% 넘게 그대로 들어 있으면 같은 줄의 옛 모습
+        var bg = function (t2) { var o = {}; for (var i = 0; i < t2.length - 1; i++) { var k2 = t2.substr(i, 2); o[k2] = (o[k2] || 0) + 1; } return o; };
+        var A = bg(ln), tot = ln.length - 1;
+        return ml.some(function (x) { if (x.length < ln.length * 0.6) return false; var B = bg(x), hit = 0; Object.keys(A).forEach(function (k2) { hit += Math.min(A[k2], B[k2] || 0); }); return hit >= tot * 0.8; });
       };
       var add = s.split(NL).filter(function (ln) { return ln.trim() && ml.indexOf(ln) < 0 && !older(ln); });
       return add.length ? m + NL + add.join(NL) : m;
@@ -339,7 +344,8 @@
     // 11/7 워크샵 동시 접속 「튕김」 — 예전엔 다른 기기가 무엇이든 저장하면 손 뗀 기기는 4초 뒤 화면 전체를 새로 읽었음(맨 위로 · 하위 화면 · 펼친 카드 풀림 · 사진 다시 받기).
     // 화면이 그 자리에서 새 값으로 바꿔 끼우는 키(LIVE)는 새로 읽지 않고, 워크샵 · 벤치마킹 화면을 보는 중엔 어떤 키든 자동 새로고침 안 함(띠만)
     var LIVE = /^cafesui\.(ws|bench|files|log|stock|todo|week|att|sched|offreq|daynotes|weekrep|xmas|qc|cross|price|fruitcap|fruitprice|recipe|mgrchk|fcalc)\b/;
-    function onCalmTab() { return ["tp9", "tp17"].some(function (id) { var p = document.getElementById(id); return p && !p.hidden; }); }
+    // 11/28 — 일지 · 오늘 할 일 · 재고(tp4 · tp2 · tp12)도: 쓰는 중에 잠깐 손을 떼면(4초) 화면 전체가 새로 읽혀 쓰던 글자가 사라지고 화면이 튀었음 → 이 화면들은 그 자리에서 새 값을 받으니 띠만
+    function onCalmTab() { return ["tp9", "tp17", "tp4", "tp2", "tp12"].some(function (id) { var p = document.getElementById(id); return p && !p.hidden; }); }
     function notifyChange() {
       // 다른 컴퓨터에서 바뀐 게 있다 — 쓰는 중이 아니면 바로 새로 읽고, 쓰는 중이면 위에 버튼만 띄운다
       clearTimeout(noticeT);
@@ -382,7 +388,8 @@
         }
         warnBar("csWarnVer", "🔄 새 버전(v0924-" + m[1] + ")이 나왔습니다 — " + (tried === m[1] ? "<u>눌러서 새로 열기</u> (적던 것은 저장됩니다)" : "적던 것은 저장하고 곧 새로 엽니다 · <u>지금 새로 열기</u>"), "ver");
         var b = document.getElementById("csWarnVer"); if (b) b.addEventListener("click", go);
-        if (tried !== m[1]) (function wait() { if (idle()) go(); else setTimeout(wait, 5000); })();
+        // 11/28 — 일지 · 할 일 · 재고 화면에선 3분 동안 손을 안 댔을 때만 자동으로 (배포 때마다 쓰던 중에 화면이 새로 열렸음)
+        if (tried !== m[1]) (function wait() { if (idle() && (!onCalmTab() || Date.now() - lastInput > 180000)) go(); else setTimeout(wait, 5000); })();
       }).catch(function () {});
     }
     setTimeout(checkVer, 20000); setInterval(checkVer, 10 * 60000);
