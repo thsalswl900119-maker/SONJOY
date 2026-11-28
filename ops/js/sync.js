@@ -4,28 +4,37 @@
   //   · Firebase가 없거나(오프라인·차단) 익명 로그인이 꺼져 있으면 이 기기에만 저장하고 위에 표시만 한다.
   (function () {
     var LOCAL_ONLY = /^cafesui\.(me|unlocked|device|syncstate|ui\..*)$/;
-    var origSet = Storage.prototype.setItem, origRem = Storage.prototype.removeItem;
+    var origSet = Storage.prototype.setItem, origRem = Storage.prototype.removeItem, origGet = Storage.prototype.getItem;
+    // 11/28 가게 컴퓨터 사고: 기기 저장소가 꽉 차면 저장이 조용히 실패해 기기에는 「적기 전 값」이 그대로 남고, 화면이 다시 그려질 때마다 방금 적은 숫자가 지워졌음
+    //  → 기기에 못 넣은 값은 이 화면 메모리(failMem)에 들고 있다가 읽을 때 그 값을 준다 (서버로는 그대로 보냄 · 자리가 나면 기기에도 넣음)
+    var failMem = {};
+    window.__CS_FAILMEM = failMem;
+    Storage.prototype.getItem = function (k) { if (this === localStorage && Object.prototype.hasOwnProperty.call(failMem, k)) return failMem[k]; return origGet.call(this, k); };
     // 큰 묶음(레시피)은 기기 저장소에 넣지 않고 메모리에만 — 10/6 사고: 레시피가 기기 저장 한도를 넘겨 그 뒤 저장이 서버로 안 감
     var MEMK = /^cafesui\.recipe\./, mem = {};
     window.__CS_MEM = mem;
     try { var mk = []; for (var mi = 0; mi < localStorage.length; mi++) { var mkk = localStorage.key(mi); if (MEMK.test(mkk)) mk.push(mkk); } mk.forEach(function (x) { origRem.call(localStorage, x); }); } catch (e) {}
     // 기기 저장소가 꽉 차면 이 기기 자동 백업(오래된 것부터)을 지워 자리를 만든다 — 기록 자체(서버에 있음)는 안 지운다
     function freeSpace() {
-      var snaps = [], lls = [];
-      try { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (k.indexOf("cafesui.ui.snap.") === 0) snaps.push(k); else if (k.indexOf("cafesui.ui.lastlog.") === 0) lls.push(k); } } catch (e) { return false; }
-      snaps.sort(); lls.sort();
-      if (snaps.length > 1) { origRem.call(localStorage, snaps[0]); return true; }
-      if (lls.length > 3) { origRem.call(localStorage, lls[0]); return true; }
+      // 지우는 순서: 자동 백업(오래된 것부터 · 다 지워도 됨) → 다른 날 「되돌리기」 기록 → 일지 마지막 저장본(오늘 것 하나만 남김) — 모두 서버에 원본이 있는 이 기기 사본뿐
+      var snaps = [], lls = [], und = [], t = new Date(), td = t.getFullYear() + "-" + String(t.getMonth() + 1).padStart(2, "0") + "-" + String(t.getDate()).padStart(2, "0");
+      try { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (k.indexOf("cafesui.ui.snap.") === 0) snaps.push(k); else if (k.indexOf("cafesui.ui.lastlog.") === 0) lls.push(k); else if (k.indexOf("cafesui.ui.undo.") === 0 && k.slice(16) !== td) und.push(k); } } catch (e) { return false; }
+      snaps.sort(); lls.sort(); und.sort();
+      if (snaps.length) { origRem.call(localStorage, snaps[0]); return true; }
+      if (und.length) { origRem.call(localStorage, und[0]); return true; }
+      if (lls.length > 1) { origRem.call(localStorage, lls[0]); return true; }
       return false;
     }
     window.__CS_FREE = freeSpace;
     function safeSet(k, v) {
-      for (var t = 0; t < 12; t++) {
-        try { origSet.call(localStorage, k, v); return true; }
-        catch (e) { if (!freeSpace()) return false; }
+      for (var t = 0; t < 20; t++) {
+        try { origSet.call(localStorage, k, v); delete failMem[k]; return true; }
+        catch (e) { if (!freeSpace()) break; }
       }
+      failMem[k] = String(v); lsFull = Date.now();
       return false;
     }
+    var lsFull = 0;
     var pending = {}, timers = {}, remote = {}, sent = {}, applying = false, ready = false, first = true, changed = false, changedKeys = [];
     var inflight = 0, retryT = {};
     var boot = {};   // 화면 열 때 이 기기에 있던 값 — 이것과 같은 저장은 「내가 고친 것」이 아니다
@@ -169,11 +178,12 @@
       // 기기가 꽉 차도 서버로는 꼭 보낸다 (자리를 만들어 다시 시도 · 그래도 안 되면 서버에만)
       var prevLocal = null; try { if (k.indexOf("cafesui.") === 0 && !(k in baseOf)) prevLocal = localStorage.getItem(k); } catch (e) {}
       var okLocal = safeSet(k, v);
-      if (applying || k.indexOf("cafesui.") !== 0 || LOCAL_ONLY.test(k)) { if (!okLocal) throw new DOMException("기기 저장 공간이 꽉 찼습니다", "QuotaExceededError"); return; }
+      if (applying || k.indexOf("cafesui.") !== 0 || LOCAL_ONLY.test(k)) { if (!okLocal) { if (k.indexOf("cafesui.") !== 0 || /^cafesui\.ui\.(snap|undo|lastlog)\./.test(k)) delete failMem[k]; throw new DOMException("기기 저장 공간이 꽉 찼습니다", "QuotaExceededError"); } return; }
       if (!ready && boot[k] === String(v)) return;   // 아직 서버 값을 못 받았는데 열 때 값 그대로 다시 저장한 것 — 서버 값을 기다린다
       baseMark(k, prevLocal); markDirty(k); queue(k, String(v));
     };
     Storage.prototype.removeItem = function (k) {
+      if (this === localStorage) delete failMem[k];
       origRem.call(this, k);
       if (this === localStorage && !applying && k.indexOf("cafesui.") === 0 && !LOCAL_ONLY.test(k)) { baseDel(k); markDirty(k); queue(k, null); }
     };
@@ -197,6 +207,7 @@
     } catch (e) { setStatus("err", e.message); return; }
 
     var busy = {}, held = {}, bootPush = {};
+    var dg = { boot: Date.now(), err: [], okAt: 0, sendAt: 0, snapAt: 0, srvAt: 0, errSince: 0, heal: 0, healN: 0 };   // 11/28 — 가게 컴퓨터만 서버로 안 가던 일: 원인을 서버에 남기는 진단 기록 · 끊긴 연결 다시 잇기
     // 일지 저장 기록 (10/23 사장님 「1번」 — 지워져도 되살릴 수 있게) — 서버 ops/「hist.log.<날짜>」 한 문서에 쌓는다.
     // 이름이 cafesui. 로 시작하지 않아 기기 저장소에는 안 들어감(기기 꽉 참 사고 방지) · 서버 규칙상 v · by · t 모양만.
     // 기록 하나 = {at, who, dev, ch: 바뀐 칸 글, rm: 없어진 칸, was: 짧아지거나 지워진 칸의 바로 전 글} · 90초에 한 번(지워지면 바로)
@@ -243,7 +254,7 @@
       var bs = (k in baseOf) ? baseOf[k] : null;
       var useTx = v !== null && objOf(v) && k.indexOf("cafesui.presence.") !== 0 && !MEMK.test(k) && db.runTransaction;
       sent[k] = v;
-      inflight++; busy[k] = 1;
+      inflight++; busy[k] = 1; dg.sendAt = Date.now();
       var ref = col.doc(k), p;
       if (v === null) p = ref.delete().then(function () { return null; });
       else if (!useTx) p = ref.set({ v: v, by: dev, t: firebase.firestore.FieldValue.serverTimestamp() }).then(function () { return v; });
@@ -261,6 +272,7 @@
         });
       });
       p.then(function (out) {
+        dg.okAt = Date.now();
         inflight--; busy[k] = 0; contN[k] = 0; if (REVK.test(k)) { var r1 = revOf(out); if (r1 != null) revK[k] = Math.max(revK[k] || 0, r1); }
         remote[k] = out; sent[k] = out; delete bootPush[k];
         try { histRec(k, out); } catch (eh) {}
@@ -288,6 +300,7 @@
         } else { delete held[k]; baseOf[k] = v; baseSave(); flush(k); }   // 그 사이 또 고친 것 — 방금 보낸 값을 기준으로 이어서 (다음 보내기가 서버 최신 값과 합침)
         setStatus("on");
       }).catch(function (e) {
+        dg.err.push(new Date().toTimeString().slice(0, 8) + " " + k.slice(8, 40) + " " + ((e && (e.code || e.message)) || "?")); if (dg.err.length > 8) dg.err.shift(); if (!dg.errSince) dg.errSince = Date.now();
         inflight--; busy[k] = 0;
         if (!(k in pending)) pending[k] = v;    // 실패 — 다시 보낸다
         // 11/7 시뮬레이션: 여럿이 같은 문서에 동시에 저장하면 서버가 5번 밀어내고(aborted) 8초 뒤에야 다시 보내 그동안 남의 화면에 안 보였음 — 경합은 빨간 표시 없이 곧바로(0.5~1.5초) 다시
@@ -370,6 +383,45 @@
       warnBar("csWarnSave", old ? "⚠ 저장한 내용 <b>" + old + "건</b>이 1분 넘게 서버(다른 컴퓨터)로 안 올라갔습니다 — 인터넷을 확인하고 이 띠를 눌러 주세요 · <u>이 화면을 닫거나 새로고침하지 마세요</u>" : "", "bad");
       var b = document.getElementById("csWarnSave"); if (b && !b.__w) { b.__w = 1; b.addEventListener("click", function () { flushNow(); }); }
     }, 15000);
+    // 🩺 11/28 진단 · 스스로 고치기 — 가게 컴퓨터가 16:26부터 서버로 아무것도 못 보냈는데(새 창도) 화면엔 이유가 안 남았음.
+    //  ① 기기 저장 공간이 꽉 차면 빨간 띠 + 자리 만들기 ② 1분 넘게 못 보내면 연결을 끊었다 다시 이음(2분에 한 번)
+    //  ③ 문제가 있으면 그 상태를 서버 「diag.<기기번호>」에 남김 — Firebase 연결이 막혀도 가도록 일반 인터넷 요청(REST)으로 따로 보냄
+    function lsChars() { var n = 0; try { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); n += k.length + String(origGet.call(localStorage, k) || "").length; } } catch (e) {} return n; }
+    var diagAt = 0;
+    function diagSend(why) {
+      if (Date.now() - diagAt < 120000) return; diagAt = Date.now();
+      try {
+        var nSnap = 0; try { for (var i = 0; i < localStorage.length; i++) if (localStorage.key(i).indexOf("cafesui.ui.snap.") === 0) nSnap++; } catch (e) {}
+        var dirty = dirtyGet();
+        var info = { why: why, ver: (String((document.getElementById("verTag") || {}).textContent || "").match(/v0924-\d+/) || [""])[0], at: new Date().toString().slice(0, 24), me: (function () { try { return localStorage.getItem("cafesui.me") || ""; } catch (e) { return ""; } })(),
+          tab: ((document.querySelector('.tab[aria-selected="true"]') || {}).dataset || {}).p || "", s: state.s, msg: state.msg, ready: ready, first: first, online: navigator.onLine, vis: document.visibilityState,
+          pending: Object.keys(pending).length, inflight: inflight, busy: Object.keys(busy).filter(function (x) { return busy[x]; }).map(function (x) { return x.slice(8, 40); }),
+          dirty: Object.keys(dirty).length, dirtyOld: Object.keys(dirty).filter(function (x) { return Date.now() - dirty[x] > 60000; }).map(function (x) { return x.slice(8, 40); }).slice(0, 12),
+          failMem: Object.keys(failMem).map(function (x) { return x.slice(8, 40); }).slice(0, 12), lsFullAgo: lsFull ? Math.round((Date.now() - lsFull) / 1000) : null, lsChars: lsChars(), snaps: nSnap,
+          bootAgo: Math.round((Date.now() - dg.boot) / 1000), okAgo: dg.okAt ? Math.round((Date.now() - dg.okAt) / 1000) : null, snapAgo: dg.snapAt ? Math.round((Date.now() - dg.snapAt) / 1000) : null, srvAgo: dg.srvAt ? Math.round((Date.now() - dg.srvAt) / 1000) : null,
+          healN: dg.healN, err: dg.err.slice(-8), ua: navigator.userAgent.slice(0, 160) };
+        var u = firebase.auth && firebase.auth().currentUser; if (!u) return;
+        u.getIdToken().then(function (tk) {
+          var url = "https://firestore.googleapis.com/v1/projects/" + cfg.projectId + "/databases/(default)/documents/ops/" + encodeURIComponent("diag." + dev) + "?updateMask.fieldPaths=v&updateMask.fieldPaths=by&updateMask.fieldPaths=t";
+          return fetch(url, { method: "PATCH", headers: { "Content-Type": "application/json", Authorization: "Bearer " + tk }, body: JSON.stringify({ fields: { v: { stringValue: JSON.stringify(info).slice(0, 20000) }, by: { stringValue: dev }, t: { timestampValue: new Date().toISOString() } } }) });
+        }).catch(function () {});
+      } catch (e) {}
+    }
+    window.__CS_DIAG = function () { diagAt = 0; diagSend("손으로"); };
+    setInterval(function () {
+      var now = Date.now(), fm = Object.keys(failMem).length;
+      if (fm) freeSpace() && Object.keys(failMem).forEach(function (k) { safeSet(k, failMem[k]); });
+      fm = Object.keys(failMem).length;
+      warnBar("csWarnFull", fm ? "⚠ 이 컴퓨터(브라우저) 저장 공간이 꽉 찼어요 — 적은 내용은 서버로 보내고 있어요. <b>창을 여러 개 띄우지 말고</b>, 계속되면 사장님께 알려 주세요" : "", "bad");
+      var stuck = (!ready && now - dg.boot > 30000) || (inflight > 0 && dg.sendAt && now - dg.sendAt > 60000 && now - dg.okAt > 60000) || (state.s === "err" && dg.errSince && now - dg.errSince > 60000);
+      if (state.s !== "err") dg.errSince = 0;
+      if (stuck && navigator.onLine && now - dg.heal > 120000 && db.disableNetwork) {   // 끊긴 연결 다시 잇기
+        dg.heal = now; dg.healN++;
+        db.disableNetwork().then(function () { return db.enableNetwork(); }).then(function () { Object.keys(pending).forEach(function (k) { if (!busy[k]) flush(k); }); }).catch(function () {});
+      }
+      if (fm || stuck || (dg.err.length && now - dg.errSince < 600000 && dg.errSince)) diagSend(fm ? "기기 저장 꽉 참" : stuck ? "서버로 못 보냄" : "오류");
+    }, 15000);
+    setTimeout(function () { diagSend("켬"); }, 40000);   // 켤 때 한 번 — 기기 상태(저장 공간 · 버전) 기록
     var verNow = (function () { var m = String((document.getElementById("verTag") || {}).textContent || "").match(/v0924-(\d+)/); return m ? +m[1] : 0; });
     var verAsked = false;
     function checkVer() {
@@ -406,6 +458,7 @@
       listen(q);
       function onSnap(snap) {
         var fromCache = !!(snap.metadata && snap.metadata.fromCache);
+        dg.snapAt = Date.now(); if (!fromCache) dg.srvAt = Date.now();
         var dirty = first ? dirtyGet() : null;
         var memKeys = [];
         applying = true;
@@ -441,7 +494,7 @@
           // 10/6 사고 되살리기(한 번만): 그날 저장이 서버로 못 갔다 — 이 기기에만 남은 10/6 · 10/7 글을 서버 값에 「빈 칸 채우기 · 글 합치기」로 올린다
           if (first && rescue && local !== null && local !== d.v && RESCUE.test(k) && objOf(local) && objOf(d.v)) { baseOf[k] = null; pending[k] = local; bootPush[k] = 1; markDirty(k); return; }   // 지난번에 못 보낸 저장 — 서버 값에 이 기기에서 바꾼 칸만 얹어 올린다 (base 모르면 빈 칸만 채움)
           if (!first && d.by === dev && (k in sent) && d.v !== sent[k]) return;   // 내가 전에 보낸 게 늦게 돌아온 것 (지금 값이 더 새것)
-          if (local !== d.v) { if (!safeSet(k, d.v)) return; changed = true; changedKeys.push(k); }
+          if (local !== d.v) { safeSet(k, d.v); changed = true; changedKeys.push(k); }   /* 기기가 꽉 차도 메모리(failMem)엔 들어감 — 화면엔 알린다 */
         } catch (e1) {} }); } finally { applying = false; }   // 한 칸이 실패해도 멈추지 않는다 (예전엔 여기서 멈춰 그 뒤 저장이 서버로 안 갔음)
         if (first && rescue) { rescue = false; try { origSet.call(localStorage, "cafesui.ui.fix1006", "1"); origSet.call(localStorage, "cafesui.ui.fix1023", "1"); } catch (e) {} }
         if (first) {

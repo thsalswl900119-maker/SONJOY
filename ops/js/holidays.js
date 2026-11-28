@@ -30,7 +30,7 @@
         });
         if (localStorage.getItem(PRE + t)) return;
         var o = dump(); if (!Object.keys(o).length) return;
-        dates().slice(6).forEach(function (d) { localStorage.removeItem(PRE + d); });
+        dates().slice(1).forEach(function (d) { localStorage.removeItem(PRE + d); });   /* 11/28 — 7일치(하루 약 100만 자씩)가 기기 저장 공간을 꽉 채워 가게 컴퓨터 저장이 실패했음 → 어제 것 하나 + 오늘만 (원본은 서버) */
         var txt = JSON.stringify(o);
         // 자리가 모자라면 오래된 백업부터 지우고 다시 (다 지워도 안 되면 백업만 건너뜀 — 기록은 서버에 있음)
         for (;;) {

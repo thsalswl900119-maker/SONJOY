@@ -417,7 +417,8 @@
     function paintHol(d) { var hb = $("#skHol"); if (!hb) return; var hv = (window.__CS_HOL || {})[d]; hb.textContent = hv ? "🇰🇷 " + hv : ""; hb.hidden = !hv; }
     function open(d) {
       paintHol(d);
-      clearTimeout(saveT);
+      if (saveT && cur) { clearTimeout(saveT); saveNow(); }   // 11/28 — 다시 그리기 전에 적던 숫자를 먼저 저장 (예전엔 저장 대기를 버려 방금 적은 숫자가 사라졌음)
+      clearTimeout(saveT); saveT = null;
       cur = d; dateEl.value = d;
       var o = load(d);
       if (!o) {
